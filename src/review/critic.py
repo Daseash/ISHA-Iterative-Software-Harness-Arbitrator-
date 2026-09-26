@@ -2,7 +2,7 @@
 ISHA Critic — LAYA-powered adversarial diff reviewer.
 
 Scores patches on quality, relevance, and safety using calibrated
-probabilities instead of text-only LLM judgment. Implemented in Phase 4.
+probabilities instead of text-only LLM judgment.
 """
 
 from src.agents.state import AgentState
@@ -10,5 +10,26 @@ from src.agents.state import AgentState
 
 def critic_node(state: AgentState) -> AgentState:
     """Adversarial review of the patch using LAYA decision engine."""
-    # TODO: Implement with LayaJudge in Phase 4
+    from src.review.laya_judge import get_judge
+
+    try:
+        judge = get_judge()
+
+        scores = judge.score_patch(state.issue_text, state.plan, state.patch)
+        state.laya_scores = scores
+
+        dangers = judge.check_dangers(state.patch)
+
+        if dangers["flagged"]:
+            state.critic_verdict = "flagged"
+        elif scores["composite"] < 0.4:
+            state.critic_verdict = "low_quality"
+        else:
+            state.critic_verdict = "approved"
+        state.critic_score = scores["composite"]
+        state.laya_scores = {**scores, **dangers}
+    except Exception as exc:
+        state.critic_verdict = "error"
+        state.critic_score = 0.0
+        state.laya_scores = {"error": str(exc)}
     return state
