@@ -69,6 +69,12 @@ def main() -> int:
         action="store_true",
         help="Run the multi-agent fan-out graph (3 strategies, 3 worktrees)",
     )
+    parser.add_argument(
+        "--approve",
+        choices=["auto", "cli"],
+        default="auto",
+        help="Approval gate mode: auto records it silently, cli prompts for y/N",
+    )
     args = parser.parse_args()
 
     issue = args.issue or DEFAULT_ISSUE
@@ -108,7 +114,11 @@ def main() -> int:
     result = graph.invoke(
         state,
         config={
-            "configurable": {"thread_id": args.thread_id, "apply": args.apply}
+            "configurable": {
+                "thread_id": args.thread_id,
+                "apply": args.apply,
+                "approval_mode": args.approve,
+            }
         },
     )
     if isinstance(result, dict):
@@ -139,7 +149,7 @@ def main() -> int:
     )
     flagged = result.critic_verdict == "flagged"
 
-    if args.apply and not args.multi and passed and not flagged and result.patch:
+    if args.apply and not args.multi and passed and result.patch and (not flagged or result.approved is True):
         from src.tools.patch_engine import apply_patch
 
         ok, message = apply_patch(args.repo, result.patch)
@@ -159,6 +169,9 @@ def main() -> int:
               f"{'(in sandbox — pass --apply to write it)' if not args.apply else ''}")
         return 0
     if passed and flagged:
+        if result.approved is True:
+            print("  🤖 ISHA ✅ Flagged patch approved by a human — fix applied")
+            return 0
         print("  🤖 ISHA ⚠️ Tests pass but LAYA flagged the patch — human review required")
         return 2
     print(f"  🤖 ISHA ❌ Fix failed after {result.retry_count} retries")

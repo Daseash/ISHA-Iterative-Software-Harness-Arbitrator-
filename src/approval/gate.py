@@ -75,7 +75,7 @@ def approval_node(state, config: RunnableConfig | None = None) -> AgentState:
     mode = options.get("approval_mode", "auto")
 
     if mode == "interrupt":
-        from langgraph.interrupt import interrupt
+        from langgraph.types import interrupt
 
         decision = interrupt(
             {

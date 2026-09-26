@@ -23,6 +23,13 @@ from src.review.critic import critic_node
 MAX_RETRIES = 3
 
 
+def approval_node(state, config=None) -> AgentState:
+    """Route flagged diffs to the human gate; clear ones skip it."""
+    from src.approval.gate import approval_node as gate
+
+    return gate(state, config)
+
+
 def _route_after_sandbox(state: AgentState) -> str:
     """Retry the coder while tests fail and budget remains, else review."""
     failed = "FAILED" in (state.test_output or "")
@@ -40,6 +47,7 @@ def build_graph():
     workflow.add_node("coder", coder_node)
     workflow.add_node("sandbox", sandbox_node)
     workflow.add_node("critic", critic_node)
+    workflow.add_node("approval", approval_node)
 
     workflow.set_entry_point("planner")
     workflow.add_edge("planner", "regression_test")
@@ -50,7 +58,8 @@ def build_graph():
         _route_after_sandbox,
         {"coder": "coder", "critic": "critic"},
     )
-    workflow.add_edge("critic", END)
+    workflow.add_edge("critic", "approval")
+    workflow.add_edge("approval", END)
 
     return workflow.compile(checkpointer=MemorySaver())
 
@@ -92,13 +101,6 @@ def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
     return updates
 
 
-def approval_node(state, config=None) -> AgentState:
-    """Route flagged diffs to the human gate; clear ones skip it."""
-    from src.approval.gate import approval_node as gate
-
-    return gate(state, config)
-
-
 _MERGED: set = set()
 
 
@@ -118,6 +120,10 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
     if thread_id in _MERGED:
         return state
     _MERGED.add(thread_id)
+
+    # Clean diffs bypass the gate entirely — record that as auto-approved.
+    if state.approved is None and state.critic_verdict in ("approved", "low_quality"):
+        state.approved = True
 
     apply = bool((config or {}).get("configurable", {}).get("apply", False))
     passed = "PASSED" in (state.test_output or "")
