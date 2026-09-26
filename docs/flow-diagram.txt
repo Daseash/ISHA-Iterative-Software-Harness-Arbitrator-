@@ -1,0 +1,66 @@
+User Bug Report / Issue
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Prompt Merger Node    │
+                   │ (Synthesizes follow-ups)│
+                   └────────────┬────────────┘
+                                │
+                                ▼
+         ┌──────────────────────────────────────────────┐
+         │          Heavy Context & Planning            │
+         │      Model: Gemini 2.5 Flash (Flash-only)    │
+         │  - Ingests repo context & issue specs        │
+         │  - Produces structured 2-step fix plan       │
+         └──────────────────────┬───────────────────────┘
+                                │
+                                ▼
+         ┌──────────────────────────────────────────────┐
+         │      Regression Test Generator (RED)         │
+         │      Model: Gemini 2.5 Flash                 │
+         │  - Writes a failing test reproducing the bug │
+         │  - Shared across all agent attempts below    │
+         └──────────────────────┬───────────────────────┘
+                                │
+                                ▼
+         ┌──────────────────────────────────────────────┐
+         │        Multi-Agent Dispatch Node             │
+         │  (LangGraph Send() fan-out, N=2-3 attempts)  │
+         │  - Each attempt gets its OWN git worktree    │
+         │  - Each attempt gets a DIFFERENT strategy    │
+         └───┬──────────────────┬──────────────────┬────┘
+             │                  │                  │
+             ▼                  ▼                  ▼
+   ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐
+   │   Agent 1         │ │   Agent 2         │ │   Agent 3         │
+   │  (worktree 1)     │ │  (worktree 2)     │ │  (worktree 3)     │
+   │ Coder → Sandbox   │ │ Coder → Sandbox   │ │ Coder → Sandbox   │
+   │ → Self-Correct    │ │ → Self-Correct    │ │ → Self-Correct    │
+   │ → Critic (LAYA)   │ │ → Critic (LAYA)   │ │ → Critic (LAYA)   │
+   └────────┬──────────┘ └────────┬──────────┘ └────────┬──────────┘
+            │                     │                     │
+            └─────────────────────┼─────────────────────┘
+                                  ▼
+         ┌──────────────────────────────────────────────┐
+         │        Arbitration Node (LAYA-powered)       │
+         │  - Ranks passing attempts by LAYA composite  │
+         │  - Selects ONE winning worktree/branch       │
+         │  - Danger check before commit                │
+         └──────────────────────┬───────────────────────┘
+                                │
+                   ┌────────────┴────────────┐
+             Flagged?                  Clean?
+                   │                         │
+                   ▼                         │
+      ┌─────────────────────────┐            │
+      │  Human Approval Gate    │            │
+      │  (LangGraph interrupt)  │            │
+      └────────────┬────────────┘            │
+                   │                         │
+                   ▼                         ▼
+         ┌──────────────────────────────────────────────┐
+         │        Git Commit & Langfuse Telemetry       │
+         │  - Merges winning worktree branch            │
+         │  - LAYA final output verification            │
+         │  - Logs all traces to Langfuse               │
+         └──────────────────────────────────────────────┘

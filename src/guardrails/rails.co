@@ -1,0 +1,13 @@
+# ISHA NeMo Guardrails Configuration
+# Implemented in Phase 7
+
+define user express greeting
+  "hello"
+  "hi"
+
+define bot express greeting
+  "Hello! I'm ISHA, your autonomous SWE agent."
+
+define flow greeting
+  user express greeting
+  bot express greeting
