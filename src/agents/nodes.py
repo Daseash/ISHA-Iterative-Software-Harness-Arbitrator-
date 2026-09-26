@@ -9,7 +9,7 @@ messages instead of crashing the graph.
 import re
 from pathlib import Path
 
-from src.agents.state import AgentState
+from src.agents.state import AgentState, coerce_state
 from src.config import call_coder, call_planner
 from src.tools.context_trimmer import trim_traceback
 from src.tools.patch_engine import apply_patch
@@ -47,6 +47,7 @@ def _workdir(state: AgentState) -> str:
 
 def planner_node(state: AgentState) -> AgentState:
     """Generate a structured fix plan from the issue and repo context."""
+    state = coerce_state(state)
     prompt = f"""You are an expert software engineer. Given this bug report and
 repository context, produce a structured 2-step fix plan:
 Step 1: What is the root cause
@@ -70,6 +71,7 @@ Output the plan only."""
 
 def regression_test_node(state: AgentState) -> AgentState:
     """Write a failing test that reproduces the bug (red -> green)."""
+    state = coerce_state(state)
     prompt = f"""Given this bug report and fix plan, write a pytest test that
 REPRODUCES the bug. The test should FAIL right now (red) and
 PASS after the fix is applied (green). Output ONLY the test code.
@@ -94,6 +96,7 @@ REPO PATH: {state.repo_path}"""
 
 def coder_node(state: AgentState) -> AgentState:
     """Generate a unified-diff patch to fix the bug."""
+    state = coerce_state(state)
     if "FAILED" in (state.test_output or ""):
         state.retry_count += 1
 
@@ -131,6 +134,7 @@ RETRY INDEX: {state.retry_count}{retry_hint}"""
 
 def sandbox_node(state: AgentState) -> AgentState:
     """Run tests against the candidate patch in an isolated copy."""
+    state = coerce_state(state)
     if not state.repo_path:
         state.test_output = "FAILED: no repo_path set"
         return state
@@ -143,22 +147,26 @@ def sandbox_node(state: AgentState) -> AgentState:
         state.test_output = f"FAILED: repo path missing: {state.repo_path}"
         return state
 
-    # Real git worktree (Phase 6): operate in place on a clean tree.
-    if state.worktree and (Path(state.worktree) / ".git").exists():
+    # Each attempt works on its own isolated directory: a git worktree
+    # (Phase 6, reset to a clean tree) or a fresh scratch copy.
+    if state.worktree:
         target = Path(state.worktree)
-        import subprocess
+        if not target.exists():
+            state.test_output = f"FAILED: worktree missing: {state.worktree}"
+            return state
+        if (target / ".git").exists():
+            import subprocess
 
-        subprocess.run(
-            ["git", "checkout", "--", "."],
-            cwd=str(target),
-            capture_output=True,
-        )
+            subprocess.run(
+                ["git", "checkout", "--", "."],
+                cwd=str(target),
+                capture_output=True,
+            )
+        else:
+            from src.tools.sandbox import copy_repo
+
+            copy_repo(str(repo), str(target))
     else:
-        # Fresh scratch copy per attempt keeps retries independent.
-        if state.worktree and Path(state.worktree).is_dir():
-            from src.tools.sandbox import cleanup_sandbox
-
-            cleanup_sandbox(state.worktree)
         state.worktree = make_sandbox(str(repo))
         target = Path(state.worktree)
 

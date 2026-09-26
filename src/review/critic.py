@@ -5,11 +5,14 @@ Scores patches on quality, relevance, and safety using calibrated
 probabilities instead of text-only LLM judgment.
 """
 
-from src.agents.state import AgentState
+from langgraph.types import RunnableConfig
+
+from src.agents.state import AgentState, coerce_state
 
 
-def critic_node(state: AgentState) -> AgentState:
+def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
     """Adversarial review of the patch using LAYA decision engine."""
+    state = coerce_state(state)
     from src.review.laya_judge import get_judge
 
     try:
@@ -32,4 +35,19 @@ def critic_node(state: AgentState) -> AgentState:
         state.critic_verdict = "error"
         state.critic_score = 0.0
         state.laya_scores = {"error": str(exc)}
+
+    _record(state, config)
     return state
+
+
+def _record(state: AgentState, config: dict | None) -> None:
+    """Register this branch's attempt so arbitration can fan-in on it."""
+    try:
+        from src.review.arbitration import record_attempt
+
+        thread_id = (
+            (config or {}).get("configurable", {}).get("thread_id", "default")
+        )
+        record_attempt(thread_id, state.model_dump() if hasattr(state, "model_dump") else dict(state))
+    except Exception:
+        pass

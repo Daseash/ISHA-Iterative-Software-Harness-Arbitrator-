@@ -5,8 +5,11 @@ Wires planner -> regression_test -> coder -> sandbox -> critic into a
 cyclic state graph with conditional retry logic.
 """
 
+from pathlib import Path
+
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, StateGraph
+from langgraph.types import RunnableConfig
 
 from src.agents.nodes import (
     coder_node,
@@ -14,7 +17,7 @@ from src.agents.nodes import (
     regression_test_node,
     sandbox_node,
 )
-from src.agents.state import AgentState
+from src.agents.state import AgentState, coerce_state
 from src.review.critic import critic_node
 
 MAX_RETRIES = 3
@@ -53,6 +56,133 @@ def build_graph():
 
 
 compiled_graph = build_graph()
+
+
+# ── Multi-agent graph (Phase 6) ──────────────────────────────────────────── #
+
+def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
+    """Fan-in: score every branch's attempt and keep the LAYA winner."""
+    state = coerce_state(state)
+    from src.review.arbitration import arbitration_node as arbitrate
+    from src.review.arbitration import collect_attempts
+
+    thread_id = (config or {}).get("configurable", {}).get("thread_id", "default")
+    results = collect_attempts(thread_id)
+    winner = arbitrate(results)
+    if not winner:
+        return {}
+
+    updates = {
+        key: winner[key]
+        for key in (
+            "patch",
+            "test_output",
+            "retry_count",
+            "critic_verdict",
+            "critic_score",
+            "worktree",
+            "strategy",
+        )
+        if key in winner
+    }
+    updates["laya_scores"] = {
+        **winner.get("laya_scores", {}),
+        **winner.get("arbitration", {}),
+    }
+    return updates
+
+
+def approval_node(state) -> AgentState:
+    """Route flagged diffs to the human gate; clear ones skip it."""
+    state = coerce_state(state)
+    if state.critic_verdict == "flagged":
+        print("\n  ⚠️  LAYA flagged this patch — human approval required.")
+        print("  Diff:\n" + (state.patch or "(none)")[:1500])
+        state.approved = None
+    else:
+        state.approved = True
+    return state
+
+
+_MERGED: set = set()
+
+
+def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
+    """Apply the winning patch to the real repo, then clean up worktrees."""
+    state = coerce_state(state)
+    from src.review.arbitration import collect_attempts
+    from src.tools.patch_engine import apply_patch
+    from src.tools.worktree_manager import cleanup_all_worktrees
+
+    thread_id = (config or {}).get("configurable", {}).get("thread_id", "default")
+    collect_attempts(thread_id)  # drain any leftovers
+
+    # The merger can be reached by several arbitration fan-out paths;
+    # only the first one per thread does the real work.
+    global _MERGED
+    if thread_id in _MERGED:
+        return state
+    _MERGED.add(thread_id)
+
+    apply = bool((config or {}).get("configurable", {}).get("apply", False))
+    passed = "PASSED" in (state.test_output or "")
+    cleared = state.critic_verdict in ("approved", "low_quality")
+
+    if apply and passed and cleared and state.patch:
+        ok, message = apply_patch(state.repo_path, state.patch)
+        print(f"\n  merger: {'applied' if ok else 'FAILED'} — {message}")
+        from src.tools.git_manager import commit_fix
+
+        if ok and (Path(state.repo_path) / ".git").exists():
+            commit_fix(state.repo_path, f"ISHA: fix via {state.strategy} strategy")
+
+    if state.repo_path:
+        cleanup_all_worktrees(state.repo_path)
+
+    print(
+        f"\n  merger: winner strategy={state.strategy} "
+        f"score={state.critic_score:.3f} verdict={state.critic_verdict}"
+    )
+    return state
+
+
+def build_multi_agent_graph():
+    """Compile the fan-out/fan-in multi-agent ISHA graph."""
+    from src.agents.attempt import attempt_node
+    from src.agents.dispatch import STRATEGIES, dispatch_agents
+
+    workflow = StateGraph(AgentState)
+
+    workflow.add_node("planner", planner_node)
+    workflow.add_node("regression_test", regression_test_node)
+    workflow.add_node("arbitration", arbitration_node)
+    workflow.add_node("approval", approval_node)
+    workflow.add_node("merger", merger_node)
+
+    # One isolated attempt chain per strategy (own worktree + retry budget).
+    for i, _strategy in enumerate(STRATEGIES, start=1):
+        workflow.add_node(f"attempt{i}", attempt_node)
+        workflow.add_edge(f"attempt{i}", "arbitration")
+
+    workflow.set_entry_point("planner")
+    workflow.add_edge("planner", "regression_test")
+    workflow.add_conditional_edges(
+        "regression_test",
+        dispatch_agents,
+        [f"attempt{i}" for i in range(1, len(STRATEGIES) + 1)],
+    )
+    workflow.add_conditional_edges(
+        "arbitration",
+        lambda s: "approval" if s.critic_verdict == "flagged" else "merger",
+        {"approval": "approval", "merger": "merger"},
+    )
+    workflow.add_edge("approval", "merger")
+    workflow.add_edge("merger", END)
+
+    return workflow.compile(checkpointer=MemorySaver())
+
+
+compiled_multi_graph = build_multi_agent_graph()
 
 
 def run_issue(issue_text: str, repo_path: str = "tests/dummy_repo", thread_id: str = "1") -> AgentState:

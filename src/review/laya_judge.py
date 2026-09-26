@@ -1,4 +1,4 @@
-"""
+﻿"""
 ISHA LAYA Judge — typed decision primitives for every judgment point.
 
 Wraps the LAYA decision engine (choice / score / noul) so patch quality,
@@ -7,6 +7,7 @@ probabilities instead of free-text LLM opinions.
 """
 
 import os
+import threading
 
 # Windows: HF hub falls back to file copies instead of privileged symlinks.
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")
@@ -14,6 +15,8 @@ os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")
 import laya  # noqa: E402
 
 _JUDGE = None
+_JUDGE_LOCK = threading.Lock()
+_INFER_LOCK = threading.Lock()
 
 PATCH_QUESTIONS = {
     "fix_quality": {
@@ -64,12 +67,17 @@ class LayaJudge:
         self.device = device
         self.agent = laya.load("convaiinnovations/laya", device=device)
 
+    def _predict(self, state, questions) -> dict:
+        """Serialized inference — parallel agent branches share one model."""
+        with _INFER_LOCK:
+            return self.agent.predict(state, questions)
+
     # ── Patch scoring ────────────────────────────────────────────────── #
 
     def score_patch(self, issue_text: str, plan: str, patch: str) -> dict:
         """Score a candidate patch on quality, relevance, and safety."""
         state = {"issue": issue_text, "plan": plan, "patch_diff": patch}
-        result = self.agent.predict(state, PATCH_QUESTIONS)
+        result = self._predict(state, PATCH_QUESTIONS)
         answers = result["answers"]
         quality = answers["fix_quality"]["score"]
         matches = answers["matches_issue"]["noul"]
@@ -85,7 +93,7 @@ class LayaJudge:
 
     def check_dangers(self, patch: str) -> dict:
         """Check patch for secrets, dangerous operations, logic drift."""
-        result = self.agent.predict({"patch_diff": patch}, DANGER_QUESTIONS)
+        result = self._predict({"patch_diff": patch}, DANGER_QUESTIONS)
         answers = result["answers"]
         secrets = answers["secrets_or_danger"]["noul"]
         drift = answers["logic_drift"]["noul"]
@@ -100,7 +108,7 @@ class LayaJudge:
     def verify_output(self, file_content: str, issue_text: str) -> dict:
         """Final check: does the output file look correct?"""
         state = {"code": file_content, "original_issue": issue_text}
-        result = self.agent.predict(state, VERIFY_QUESTIONS)
+        result = self._predict(state, VERIFY_QUESTIONS)
         probability = result["answers"]["looks_correct"]["noul"]
         return {"correct_probability": probability, "passed": probability >= 0.6}
 
@@ -108,7 +116,7 @@ class LayaJudge:
 
     def classify_issue(self, issue_text: str) -> dict:
         """Classify the issue type and urgency using LAYA presets."""
-        triage_result = self.agent.predict(
+        triage_result = self._predict(
             {"message": issue_text}, laya.triage_questions()
         )
         return triage_result["answers"]
@@ -118,5 +126,7 @@ def get_judge(device: str = "cpu") -> LayaJudge:
     """Return the cached module-level LayaJudge (model loads only once)."""
     global _JUDGE
     if _JUDGE is None:
-        _JUDGE = LayaJudge(device=device)
+        with _JUDGE_LOCK:
+            if _JUDGE is None:
+                _JUDGE = LayaJudge(device=device)
     return _JUDGE

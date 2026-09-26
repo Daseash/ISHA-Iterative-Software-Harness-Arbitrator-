@@ -64,6 +64,11 @@ def main() -> int:
     parser.add_argument(
         "--thread-id", type=str, default="1", help="LangGraph checkpoint thread id"
     )
+    parser.add_argument(
+        "--multi",
+        action="store_true",
+        help="Run the multi-agent fan-out graph (3 strategies, 3 worktrees)",
+    )
     args = parser.parse_args()
 
     issue = args.issue or DEFAULT_ISSUE
@@ -78,8 +83,12 @@ def main() -> int:
         print("  (no --issue given — running the built-in calculator demo bug)")
 
     from src.agents.context import build_repo_context
-    from src.agents.graph import compiled_graph
+    from src.agents.graph import compiled_graph, compiled_multi_graph
     from src.agents.state import AgentState
+
+    graph = compiled_multi_graph if args.multi else compiled_graph
+    if args.multi:
+        print("  Mode:  multi-agent (3 strategies in parallel worktrees)")
 
     state = AgentState(
         issue_text=issue,
@@ -88,11 +97,19 @@ def main() -> int:
     )
 
     print("\n  ▶ Running agentic loop: planner → regression test → coder → sandbox → critic")
-    result = compiled_graph.invoke(
-        state, config={"configurable": {"thread_id": args.thread_id}}
+    result = graph.invoke(
+        state,
+        config={
+            "configurable": {"thread_id": args.thread_id, "apply": args.apply}
+        },
     )
     if isinstance(result, dict):
         result = AgentState(**result)
+
+    # Drain any branch attempts left in the arbitration ledger.
+    from src.review.arbitration import collect_attempts
+
+    collect_attempts(args.thread_id)
 
     _print_section("PLAN", result.plan)
     _print_section("REGRESSION TEST", result.regression_test, limit=800)
@@ -114,14 +131,16 @@ def main() -> int:
     )
     flagged = result.critic_verdict == "flagged"
 
-    if args.apply and passed and not flagged and result.patch:
+    if args.apply and not args.multi and passed and not flagged and result.patch:
         from src.tools.patch_engine import apply_patch
 
         ok, message = apply_patch(args.repo, result.patch)
         print(f"\n  --apply: {'OK' if ok else 'FAILED'} — {message}")
 
     # Tidy up scratch sandboxes created during the run.
-    if result.worktree and Path(result.worktree).name.startswith("isha-sandbox-"):
+    import tempfile
+
+    if result.worktree and Path(result.worktree).parent == Path(tempfile.gettempdir()):
         from src.tools.sandbox import cleanup_sandbox
 
         cleanup_sandbox(result.worktree)

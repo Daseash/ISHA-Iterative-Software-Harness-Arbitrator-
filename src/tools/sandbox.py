@@ -19,17 +19,22 @@ from src.tools.patch_engine import apply_patch
 DEFAULT_TIMEOUT = 180
 
 
-def make_sandbox(repo_path: str, prefix: str = "isha-sandbox-") -> str:
-    """Create a fresh, isolated copy of a repository."""
-    src = Path(repo_path).resolve()
-    dest = Path(tempfile.mkdtemp(prefix=prefix))
-    shutil.rmtree(dest, ignore_errors=True)
+def copy_repo(src: str, dest: str) -> str:
+    """Copy a repository into `dest`, skipping caches, venvs and git metadata."""
+    if os.path.isdir(dest):
+        shutil.rmtree(dest, ignore_errors=True)
     shutil.copytree(
         src,
         dest,
-        ignore=shutil.ignore_patterns(*SKIP_DIRS, "*.pyc", ".git"),
+        ignore=shutil.ignore_patterns(*SKIP_DIRS, "*.pyc"),
     )
-    return str(dest)
+    return dest
+
+
+def make_sandbox(repo_path: str, prefix: str = "isha-sandbox-") -> str:
+    """Create a fresh, isolated copy of a repository."""
+    dest = Path(tempfile.mkdtemp(prefix=prefix))
+    return copy_repo(str(Path(repo_path).resolve()), str(dest))
 
 
 def cleanup_sandbox(sandbox_path: str) -> None:
