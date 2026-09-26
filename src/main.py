@@ -74,6 +74,14 @@ def main() -> int:
     issue = args.issue or DEFAULT_ISSUE
     using_default = args.issue is None
 
+    from src.guardrails.scanner import scan_input_for_injection
+
+    safe, reason = scan_input_for_injection(issue)
+    if not safe:
+        print(BANNER)
+        print(f"  🛑 Blocked by guardrails: {reason}")
+        return 3
+
     print(BANNER)
     print(f"  Agent:  {AGENT_NAME}")
     print(f"  Models: {'Gemini Flash + Groq (live)' if LLM_ENABLED else 'offline deterministic brain (no API keys)'}")

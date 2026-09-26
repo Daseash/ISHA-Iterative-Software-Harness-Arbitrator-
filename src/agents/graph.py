@@ -92,16 +92,11 @@ def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
     return updates
 
 
-def approval_node(state) -> AgentState:
+def approval_node(state, config=None) -> AgentState:
     """Route flagged diffs to the human gate; clear ones skip it."""
-    state = coerce_state(state)
-    if state.critic_verdict == "flagged":
-        print("\n  ⚠️  LAYA flagged this patch — human approval required.")
-        print("  Diff:\n" + (state.patch or "(none)")[:1500])
-        state.approved = None
-    else:
-        state.approved = True
-    return state
+    from src.approval.gate import approval_node as gate
+
+    return gate(state, config)
 
 
 _MERGED: set = set()

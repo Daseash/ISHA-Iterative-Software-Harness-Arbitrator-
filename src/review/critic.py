@@ -23,14 +23,19 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
 
         dangers = judge.check_dangers(state.patch)
 
-        if dangers["flagged"]:
+        # Hard guardrails always win over model judgment.
+        from src.guardrails.scanner import scan_patch_for_secrets
+
+        clean, findings = scan_patch_for_secrets(state.patch)
+
+        if dangers["flagged"] or not clean:
             state.critic_verdict = "flagged"
         elif scores["composite"] < 0.4:
             state.critic_verdict = "low_quality"
         else:
             state.critic_verdict = "approved"
         state.critic_score = scores["composite"]
-        state.laya_scores = {**scores, **dangers}
+        state.laya_scores = {**scores, **dangers, "guardrail_findings": findings}
     except Exception as exc:
         state.critic_verdict = "error"
         state.critic_score = 0.0
