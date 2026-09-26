@@ -59,6 +59,28 @@ VERIFY_QUESTIONS = {
     },
 }
 
+# LAYA consumes a fixed-length token budget: anything past the limit is
+# silently dropped, which would hide the diff behind a long issue report.
+_MAX_ISSUE = 400
+_MAX_PLAN = 200
+_MAX_DIFF = 1500
+_MAX_DANGER_DIFF = 4000
+
+
+def _compact_issue(text: str) -> str:
+    return (text or "").strip()[:_MAX_ISSUE]
+
+
+def _compact_diff(patch: str) -> str:
+    """Keep only the changed lines — that is what the judge scores."""
+    changed = [
+        line
+        for line in (patch or "").splitlines()
+        if line[:1] in "+-" and not line.startswith(("+++", "---"))
+    ]
+    text = "\n".join(changed) if changed else (patch or "")
+    return text[:_MAX_DIFF]
+
 
 class LayaJudge:
     """Wraps LAYA decision engine for all judgment points in the pipeline."""
@@ -76,7 +98,11 @@ class LayaJudge:
 
     def score_patch(self, issue_text: str, plan: str, patch: str) -> dict:
         """Score a candidate patch on quality, relevance, and safety."""
-        state = {"issue": issue_text, "plan": plan, "patch_diff": patch}
+        state = {
+            "issue": _compact_issue(issue_text),
+            "plan": (plan or "").strip()[:_MAX_PLAN],
+            "patch_diff": _compact_diff(patch),
+        }
         result = self._predict(state, PATCH_QUESTIONS)
         answers = result["answers"]
         quality = answers["fix_quality"]["score"]
@@ -93,7 +119,7 @@ class LayaJudge:
 
     def check_dangers(self, patch: str) -> dict:
         """Check patch for secrets, dangerous operations, logic drift."""
-        result = self._predict({"patch_diff": patch}, DANGER_QUESTIONS)
+        result = self._predict({"patch_diff": (patch or "")[:_MAX_DANGER_DIFF]}, DANGER_QUESTIONS)
         answers = result["answers"]
         secrets = answers["secrets_or_danger"]["noul"]
         drift = answers["logic_drift"]["noul"]
@@ -107,7 +133,7 @@ class LayaJudge:
 
     def verify_output(self, file_content: str, issue_text: str) -> dict:
         """Final check: does the output file look correct?"""
-        state = {"code": file_content, "original_issue": issue_text}
+        state = {"code": (file_content or "")[:2000], "original_issue": _compact_issue(issue_text)}
         result = self._predict(state, VERIFY_QUESTIONS)
         probability = result["answers"]["looks_correct"]["noul"]
         return {"correct_probability": probability, "passed": probability >= 0.6}

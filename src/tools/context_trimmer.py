@@ -25,9 +25,8 @@ def trim_traceback(raw_output: str, max_lines: int = 30) -> str:
     out = []
     for line in trimmed:
         # Keep only filename.py:lineno, drop long absolute paths.
-        match = re.search(r'File ".*[\\/]"', line)
-        if match and "line" in line:
-            line = line[: match.start()] + 'File ".../' + _path_re.search(line).group(1) + '"' + line[match.end():]
+        if "line" in line and 'File "' in line:
+            line = _PATH_RE.sub(r'File ".../\1"', line)
         line = re.sub(r"\\", "/", line)
         if len(line) > 240:
             line = line[:240] + " ..."

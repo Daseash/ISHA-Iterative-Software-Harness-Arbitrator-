@@ -164,6 +164,32 @@ def offline_coder(prompt: str) -> str:
     return "".join(diff)
 
 
+def _indent_block(block: str, indent: int) -> list:
+    """Re-indent a 4-space-indented template block to `indent` columns."""
+    pad = " " * indent
+    out = []
+    for line in block.splitlines(keepends=True):
+        out.append(pad + (line[4:] if line.startswith("    ") else line))
+    return out
+
+
+def _insert_point(body: list) -> int:
+    """Index in `body` right after the def line and its docstring."""
+    index = 1
+    if index < len(body):
+        stripped = body[index].lstrip()
+        if stripped.startswith(('"""', "'''")):
+            quote = stripped[:3]
+            if not (len(stripped) > 3 and stripped.count(quote) >= 2):
+                index += 1
+                while index < len(body) and quote not in body[index]:
+                    index += 1
+            index += 1
+    while index < len(body) and (not body[index].strip() or body[index].lstrip().startswith("#")):
+        index += 1
+    return min(index, len(body))
+
+
 def _rewrite(content: str, func: str, issue: str, retry_index: int) -> str | None:
     lines = content.splitlines(keepends=True)
     text = issue.lower()
@@ -188,20 +214,21 @@ def _rewrite(content: str, func: str, issue: str, retry_index: int) -> str | Non
             break
 
     body = lines[start:end]
+    guard_at = _insert_point(body)
 
     if "zero" in text and any("/" in ln for ln in body):
-        if any("ValueError" in ln for ln in body):
+        if any(re.search(r"^\s*raise\s+ValueError", ln) for ln in body):
             return None
         patched = list(body)
-        patched.insert(1, _ZERO_GUARD)
+        patched[guard_at:guard_at] = _indent_block(_ZERO_GUARD, base_indent + 4)
         lines[start:end] = patched
         return "".join(lines)
 
     if any(k in text for k in ("type", "validate", "validation")):
-        if any("TypeError" in ln for ln in body):
+        if any(re.search(r"^\s*raise\s+TypeError", ln) for ln in body):
             return None
         patched = list(body)
-        patched.insert(1, _TYPE_GUARD)
+        patched[guard_at:guard_at] = _indent_block(_TYPE_GUARD, base_indent + 4)
         lines[start:end] = patched
         return "".join(lines)
 
@@ -230,7 +257,14 @@ def _rewrite(content: str, func: str, issue: str, retry_index: int) -> str | Non
 def _locate_target(issue: str, context: str, repo_path: str) -> tuple:
     """Find (function_name, file_path) for the reported bug."""
     words = set(re.findall(r"[a-z_][a-z0-9_]*", issue.lower()))
-    candidates = re.findall(r"def\s+(\w+)\s*\(", context)
+    # Test functions describe the symptom; the target lives in the source module.
+    names = re.findall(r"def\s+(\w+)\s*\(", context)
+    # AST map entries look like "    subtract(self, a: float, b: float)".
+    names += re.findall(r"^\s{2,}(\w+)\s*\([^)]*\)\s*$", context, re.M)
+    candidates = [n for n in dict.fromkeys(names) if not n.startswith("test_")]
+    if repo_path:
+        # Keep only names that resolve to a non-test source file.
+        candidates = [n for n in candidates if _find_file(repo_path, n) is not None]
 
     func = None
     for name in candidates:
@@ -262,6 +296,8 @@ def _find_file(repo_path: str, func: str) -> Path | None:
         return None
     for path in sorted(root.rglob("*.py")):
         if any(part in {"__pycache__", ".git", "venv", ".venv"} for part in path.parts):
+            continue
+        if path.name.startswith(("test_", "conftest")):
             continue
         try:
             content = path.read_text(encoding="utf-8", errors="replace")
