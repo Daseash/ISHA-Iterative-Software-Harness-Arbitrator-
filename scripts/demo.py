@@ -16,9 +16,19 @@ Usage:
 
 import argparse
 import io
+import logging
+import os
 import sys
 import time
+import warnings
 from pathlib import Path
+
+# Suppress internal background worker and third-party library warnings
+warnings.filterwarnings("ignore")
+logging.getLogger("LiteLLM").setLevel(logging.CRITICAL)
+logging.getLogger("litellm").setLevel(logging.CRITICAL)
+logging.getLogger("httpx").setLevel(logging.CRITICAL)
+os.environ["LITELLM_LOG"] = "CRITICAL"
 
 # Windows consoles default to cp1252 which can't print Unicode box chars.
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):

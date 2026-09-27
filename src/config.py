@@ -10,8 +10,17 @@ Runtime modes:
     `src.tools.offline_brain` answers so the pipeline never hard-fails.
 """
 
+import logging
 import os
 import sys
+import warnings
+
+# Suppress internal background worker and third-party library warnings
+warnings.filterwarnings("ignore")
+logging.getLogger("LiteLLM").setLevel(logging.CRITICAL)
+logging.getLogger("litellm").setLevel(logging.CRITICAL)
+logging.getLogger("httpx").setLevel(logging.CRITICAL)
+os.environ["LITELLM_LOG"] = "CRITICAL"
 
 from dotenv import load_dotenv
 
@@ -49,6 +58,7 @@ try:
     import litellm
 
     litellm.suppress_debug_info = True
+    litellm.set_verbose = False
     litellm.drop_params = True
     # Langfuse is traced explicitly from src/observability (Phase 9); the
     # litellm→langfuse callback bridge is version-sensitive and off by default.
@@ -93,7 +103,7 @@ def call_planner(prompt: str) -> str:
             fallbacks=[{PLANNER_MODEL: PLANNER_FALLBACKS}],
         )
         content = resp.choices[0].message.content
-        if not content or content.startswith("["):
+        if not content or content.strip().startswith(("[PLANNER ERROR", "[REGRESSION", "[CODER ERROR")):
             raise ValueError("empty planner response")
         return content
     except Exception as e:
@@ -119,7 +129,7 @@ def call_coder(prompt: str) -> str:
             fallbacks=[{CODER_MODEL: CODER_FALLBACKS}],
         )
         content = resp.choices[0].message.content
-        if not content or content.startswith("["):
+        if not content or content.strip().startswith(("[CODER ERROR", "[PLANNER ERROR")):
             raise ValueError("empty coder response")
         return content
     except Exception as e:
