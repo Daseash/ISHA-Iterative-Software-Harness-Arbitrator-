@@ -1,5 +1,8 @@
 """
-ISHA Eval Suite — runs the platform against the dummy_repo bug fixtures.
+ISHA Eval Suite — runs the platform against bundled target-repo bug fixtures.
+
+The calculator fixture (tests/dummy_repo) was retired from the tree; the suite
+now exits with a clear message unless REPO points at an existing repository.
 
 For every case the single-agent graph runs end-to-end, then the generated
 patch is applied to a pristine copy of the repository and pytest decides
@@ -20,7 +23,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 REPO = ROOT / "tests" / "dummy_repo"
-OUTPUT = ROOT / "eval_results.json"
+OUTPUT = ROOT / "output" / "eval_results.json"
 
 CASES = [
     {
@@ -120,8 +123,15 @@ def run_case(case: dict, index: int) -> dict:
 
 def run_eval() -> int:
     print("=" * 78)
-    print("  ISHA · Eval Suite — dummy_repo bug fixtures")
+    print("  ISHA · Eval Suite — target-repo bug fixtures")
     print("=" * 78)
+
+    if not REPO.is_dir():
+        print(f"\n  🛑 Target fixture not found: {REPO}")
+        print("     The bundled calculator fixture was removed, so these")
+        print("     calculator-specific cases (TestSubtract / TestDivide) cannot run.")
+        print("     Restore tests/dummy_repo, or edit CASES/REPO for your own repo.")
+        return 2
 
     rows = []
     for index, case in enumerate(CASES, start=1):

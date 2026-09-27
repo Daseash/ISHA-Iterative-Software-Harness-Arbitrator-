@@ -25,6 +25,12 @@ def collect_attempts(thread_id: str) -> list:
         return _LEDGER.pop(thread_id, [])
 
 
+def peek_attempts(thread_id: str) -> list:
+    """Return recorded attempts for a thread without draining the ledger."""
+    with _LOCK:
+        return list(_LEDGER.get(thread_id, []))
+
+
 def _as_dict(item) -> dict:
     if isinstance(item, dict):
         return item

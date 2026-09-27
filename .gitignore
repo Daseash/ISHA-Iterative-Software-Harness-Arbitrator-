@@ -1,43 +1,48 @@
-# Python
+# ── Python ─────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 *.egg-info/
+*.egg
 dist/
 build/
-*.egg
 
-# Virtual environments
+# ── Virtual environments ──────────────────────────────────────────────────
 venv/
 .venv/
 env/
 
-# Environment variables
+# ── Environment variables ─────────────────────────────────────────────────
 .env
 
-# IDE
+# ── IDE ───────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Qdrant
+# ── Qdrant ────────────────────────────────────────────────────────────────
 qdrant_storage/
 
-# Git worktrees
+# ── Git worktrees ─────────────────────────────────────────────────────────
 .worktrees/
 
-# OS
+# ── OS ────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-approvals.jsonl
-
-# Pytest
+# ── Pytest ────────────────────────────────────────────────────────────────
 .pytest_cache/
 
-# Results
-results.json
-eval_results.json
+# ── Runtime output (output/ directory) ────────────────────────────────────
+output/*.json
+output/*.jsonl
+!output/.gitkeep
+
+# ── Legacy root-level output (if any remain) ──────────────────────────────
+/approvals.jsonl
+/results.json
+/eval_results.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────
+*.log

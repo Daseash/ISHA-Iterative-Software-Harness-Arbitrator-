@@ -5,3 +5,12 @@ services:
       - "6333:6333"
     volumes:
       - "./qdrant_storage:/qdrant/storage"
+
+  # Image used by ISHA_SANDBOX_MODE=docker test execution (build only).
+  #   docker compose --profile tools build sandbox
+  sandbox:
+    build:
+      context: .
+      dockerfile: sandbox.Dockerfile
+    image: isha-sandbox:latest
+    profiles: ["tools"]

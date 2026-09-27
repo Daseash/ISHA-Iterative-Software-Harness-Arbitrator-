@@ -41,6 +41,10 @@ def _run(issue: str, repo: str, multi: bool) -> None:
     from src.agents.context import build_repo_context
     from src.agents.graph import compiled_graph, compiled_multi_graph
 
+    if not repo or not Path(repo).is_dir():
+        st.error(f"Repository path not found: `{repo}` — enter a path to an existing repo.")
+        return
+
     graph = compiled_multi_graph if multi else compiled_graph
     state = AgentState(issue_text=issue, repo_path=repo, repo_context=build_repo_context(issue, repo))
     st.session_state.thread_id = f"ish-{int(time.time())}"
@@ -165,9 +169,9 @@ with tab_telemetry:
             st.error(f"Guardrail findings: {scores['guardrail_findings']}")
 
         st.subheader("Attempt ledger")
-        from src.review.arbitration import collect_attempts
+        from src.review.arbitration import peek_attempts
 
-        attempts = collect_attempts(st.session_state.thread_id)
+        attempts = peek_attempts(st.session_state.thread_id)
         if attempts:
             st.dataframe(attempts, width="stretch", hide_index=True)
         else:

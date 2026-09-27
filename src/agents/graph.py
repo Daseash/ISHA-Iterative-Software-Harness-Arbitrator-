@@ -101,7 +101,24 @@ def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
     return updates
 
 
-_MERGED: set = set()
+_MERGED: dict[str, float] = {}
+_MERGED_TTL = 300  # seconds — entries expire after 5 minutes
+
+
+def _already_merged(thread_id: str) -> bool:
+    """Return True if this thread was recently merged; register it if not."""
+    import time
+
+    now = time.time()
+    # Expire stale entries so re-runs in long-lived processes work.
+    stale = [k for k, ts in _MERGED.items() if now - ts > _MERGED_TTL]
+    for k in stale:
+        del _MERGED[k]
+
+    if thread_id in _MERGED:
+        return True
+    _MERGED[thread_id] = now
+    return False
 
 
 def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
@@ -116,10 +133,8 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
 
     # The merger can be reached by several arbitration fan-out paths;
     # only the first one per thread does the real work.
-    global _MERGED
-    if thread_id in _MERGED:
+    if _already_merged(thread_id):
         return state
-    _MERGED.add(thread_id)
 
     # Clean diffs bypass the gate entirely — record that as auto-approved.
     if state.approved is None and state.critic_verdict in ("approved", "low_quality"):
@@ -188,7 +203,14 @@ compiled_multi_graph = build_multi_agent_graph()
 
 def run_issue(issue_text: str, repo_path: str = "tests/dummy_repo", thread_id: str = "1") -> AgentState:
     """Convenience wrapper: build state, invoke the graph, return the result."""
+    from pathlib import Path
+
     from src.agents.context import build_repo_context
+
+    if not Path(repo_path).is_dir():
+        raise FileNotFoundError(
+            f"Target repo not found: {repo_path} (the bundled fixture was removed; pass a real repo path)"
+        )
 
     state = AgentState(
         issue_text=issue_text,

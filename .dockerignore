@@ -1,0 +1,3 @@
+# Allow-list: the sandbox image only needs the requirements file.
+*
+!sandbox-requirements.txt

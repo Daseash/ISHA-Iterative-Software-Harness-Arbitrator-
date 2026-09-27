@@ -6,15 +6,23 @@ Standalone showcase of ISHA's full decision loop:
 candidate patches → LAYA scoring → arbitration → danger check → verification.
 
 Usage:
-    python laya_pipeline.py           # demo mode (no API keys needed)
-    python laya_pipeline.py --live    # live mode (uses .env keys when valid)
+    python scripts/laya_demo.py           # demo mode (no API keys needed)
+    python scripts/laya_demo.py --live    # live mode (uses .env keys when valid)
 """
 
 import argparse
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+# Windows consoles default to cp1252 which can't print Unicode characters
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 DEMO_ISSUE = "subtract method in calculator.py returns a+b instead of a-b"
 DEMO_PLAN = (

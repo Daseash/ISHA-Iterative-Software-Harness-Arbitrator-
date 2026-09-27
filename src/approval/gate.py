@@ -19,7 +19,7 @@ from langgraph.types import RunnableConfig
 from src.agents.state import AgentState, coerce_state
 from src.guardrails.scanner import scan
 
-APPROVALS_FILE = os.getenv("ISHA_APPROVALS_FILE", "approvals.jsonl")
+APPROVALS_FILE = os.getenv("ISHA_APPROVALS_FILE", "output/approvals.jsonl")
 _LOCK = threading.Lock()
 
 

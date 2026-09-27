@@ -1,0 +1,3 @@
+# Extra dependencies installed into the isha-sandbox image.
+# Target repos under test often need their own packages here
+# (e.g. numpy, requests). pytest itself is installed by the Dockerfile.

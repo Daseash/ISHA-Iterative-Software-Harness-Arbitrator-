@@ -7,9 +7,10 @@
 
 **[▶ Live Demo](#live-demo)** · **[Results](#results)** · **[Architecture](#architecture)** · **[Quickstart](#quickstart)**
 
-![demo](docs/demo.gif)
-<!-- 20-30s screen recording: Plan → Regression test RED → Patch → Sandbox →
-     Self-correct → LAYA verdict → Approval gate → Commit -->
+```
+Bug report → Guardrail scan → Plan → Regression test (RED) → Patch
+→ Sandbox → Self-correct loop → LAYA verdict → Approval gate → Commit ✅
+```
 
 ---
 
@@ -31,8 +32,8 @@ SWE-bench Lite rather than claimed anecdotally.
 
 ## Results
 
-**Eval suite — `python tests/eval_suite.py`** (3 seeded bugs in `tests/dummy_repo`,
-offline deterministic brain + LAYA judge):
+**Eval suite — `python tests/eval_suite.py`** (3 seeded bugs in the bundled
+calculator fixture, offline deterministic brain + LAYA judge):
 
 | Metric | Value |
 |:---|:---|
@@ -64,24 +65,24 @@ sample of `princeton-nlp/SWE-bench_Lite`, no network or container images needed)
 **Single run** (`python src/main.py`): plan → regression test → patch → sandbox →
 LAYA verdict in ~10s per attempt, `~$0.00` per run on the free tiers / offline brain.
 
-Run everything yourself:
-
-```bash
-python tests/eval_suite.py
-python tests/swebench_runner.py --limit 3
-python laya_pipeline.py
-```
-
 ## Live Demo
 
 ```bash
+# Terminal demo — full pipeline with rich output (no API keys needed)
+python scripts/demo.py
+python scripts/demo.py --bug divide
+python scripts/demo.py --bug subtract --multi
+
+# LAYA decision engine demo — scores 3 candidate patches
+python scripts/laya_demo.py
+
+# Streamlit dashboard — interactive UI with 4 tabs
 streamlit run src/dashboard/app.py
 ```
 
-Four tabs: **Run** (fire the graph, watch the transcript, approve flagged diffs),
-**Diff** (plan, regression test, patch + guardrail scan), **Telemetry** (LAYA score
-bars, attempt ledger, latency), **Approvals** (exportable `approvals.jsonl` audit
-trail). Deploy placeholder: `https://share.streamlit.io/<you>/isha-agent`
+Four dashboard tabs: **Run** (fire the graph, watch the transcript, approve flagged
+diffs), **Diff** (plan, regression test, patch + guardrail scan), **Telemetry** (LAYA
+score bars, attempt ledger, latency), **Approvals** (exportable audit trail).
 
 ## Architecture
 
@@ -124,7 +125,7 @@ Component table: [`docs/components.md`](docs/components.md)
 ![Streamlit](https://img.shields.io/badge/Streamlit-dashboard-FF4B4B?style=flat-square)
 ![MIT](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 
-`langgraph` · `litellm` · Gemini 2.5 Flash · Groq Llama 3.3 70B · **LAYA decision
+`langgraph` · `litellm` · Gemini 3.1 Flash Lite · Groq Qwen 3.8 27B · **LAYA decision
 engine** · Qdrant (hybrid retrieval) · `tree-sitter` · `pytest` · `pydantic` v2 ·
 `nemoguardrails` config · Langfuse · Streamlit
 
@@ -134,17 +135,18 @@ engine** · Qdrant (hybrid retrieval) · `tree-sitter` · `pytest` · `pydantic`
 git clone <your-repo-url> && cd isha-agent
 pip install -r requirements.txt
 cp .env.example .env            # optional — every key is optional
-python src/main.py              # single-agent loop on the bundled demo bug
+python scripts/demo.py          # full live demo (no keys needed)
 streamlit run src/dashboard/app.py
 ```
 
 Other entry points:
 
 ```bash
+python src/main.py              # single-agent CLI
 python src/main.py --multi      # 3 strategies in parallel worktrees
-python laya_pipeline.py         # standalone LAYA demo (no keys needed)
-python tests/eval_suite.py      # 3 seeded bugs → eval_results.json
-python tests/swebench_runner.py # SWE-bench Lite → results.json
+python scripts/laya_demo.py     # standalone LAYA scoring demo
+python tests/eval_suite.py      # 3 seeded bugs → output/eval_results.json
+python tests/swebench_runner.py # SWE-bench Lite → output/results.json
 ```
 
 ## LAYA Integration
@@ -162,21 +164,46 @@ engine (single forward pass, no text generation, no parsing):
 
 Guardrails run *alongside* the model: a regex scanner for secrets/`eval`/`os.system`
 and prompt-injection patterns, a NeMo-rails config in `src/guardrails/rails.co`, and a
-human gate that logs every decision to `approvals.jsonl`.
+human gate that logs every decision to `output/approvals.jsonl`.
 
 ## Repo Layout
 
 ```
-src/
-  agents/     state · planner/regression/coder/sandbox nodes · dispatch · arbitration
-  approval/   human gate + JSONL audit trail
-  guardrails/ regex scanner + NeMo rails config
-  ingestion/  repo parser · tree-sitter AST mapper
-  rag/        Qdrant indexer + retriever (local lexical fallback offline)
-  review/     LAYA judge · critic · arbitration
-  tools/      patch engine · sandbox · worktrees · git · context trimming · offline brain
-  dashboard/  Streamlit app (4 tabs)
-tests/        eval suite · SWE-bench runner · fixtures · unit tests
+isha-agent/
+├── src/                        # Core source code
+│   ├── agents/                 #   State, nodes, graph, dispatch, attempt
+│   ├── approval/               #   Human gate + JSONL audit trail
+│   ├── guardrails/             #   Regex scanner + NeMo rails config
+│   ├── ingestion/              #   Repo parser + chunker
+│   ├── rag/                    #   Qdrant indexer + retriever (local fallback)
+│   ├── review/                 #   LAYA judge, critic, arbitration
+│   ├── tools/                  #   Patch engine, sandbox, worktrees, git, AST mapper
+│   ├── dashboard/              #   Streamlit app (4 tabs)
+│   ├── config.py               #   Model routing + API setup
+│   └── main.py                 #   CLI entry point
+├── scripts/                    # Runnable scripts & demos
+│   ├── demo.py                 #   Full live demo (terminal)
+│   ├── laya_demo.py            #   LAYA scoring demo
+│   └── run_dashboard.py        #   Dashboard launcher
+├── tests/                      # Tests & benchmarks
+│   ├── dummy_repo/             #   Seeded calculator bugs for eval
+│   ├── fixtures/               #   SWE-bench sample data
+│   ├── eval_suite.py           #   3-bug evaluation harness
+│   ├── swebench_runner.py      #   SWE-bench Lite benchmark
+│   └── test_context_trimmer.py #   Unit tests
+├── docs/                       # Documentation
+│   ├── guide/                  #   6-chapter learning guide
+│   ├── components.md           #   Component reference
+│   └── flow-diagram.txt        #   Full pipeline diagram
+├── output/                     # Runtime artifacts (gitignored)
+│   ├── approvals.jsonl         #   Approval audit trail
+│   ├── eval_results.json       #   Eval suite output
+│   └── results.json            #   SWE-bench results
+├── requirements.txt
+├── docker-compose.yml          # Qdrant vector DB
+├── .env.example
+├── pytest.ini
+└── LICENSE (MIT)
 ```
 
 ## Planned Next Steps

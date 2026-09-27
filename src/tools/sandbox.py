@@ -4,6 +4,9 @@ ISHA Sandbox — Local test execution for candidate patches.
 Copies the target repo into an isolated scratch directory, applies the
 candidate patch there (never mutating the real repo), runs pytest and
 captures stdout+stderr for the self-correction loop.
+
+pytest runs on the host by default; set ``ISHA_SANDBOX_MODE=docker`` to
+execute it inside a throwaway container instead (see `docker_sandbox.py`).
 """
 
 import os
@@ -14,6 +17,7 @@ import tempfile
 from pathlib import Path
 
 from src.ingestion.parser import SKIP_DIRS
+from src.tools import docker_sandbox
 from src.tools.patch_engine import apply_patch
 
 DEFAULT_TIMEOUT = 180
@@ -44,11 +48,27 @@ def cleanup_sandbox(sandbox_path: str) -> None:
 
 
 def run_tests(repo_path: str, timeout: int = DEFAULT_TIMEOUT, test_file: str | None = None) -> str:
-    """Execute pytest in a sandboxed directory and return combined output.
+    """Execute pytest for a sandbox and return combined output.
+
+    Runs inside a throwaway Docker container when ``ISHA_SANDBOX_MODE=docker``
+    (see `src/tools/docker_sandbox.py`), falling back to the local subprocess
+    runner whenever Docker is unavailable or fails for infrastructure reasons.
 
     When `test_file` is given only that file runs (the generated regression
     test), otherwise the whole sandbox is exercised.
     """
+    if docker_sandbox.enabled():
+        output = docker_sandbox.run_tests_docker(
+            repo_path, timeout=timeout, test_file=test_file
+        )
+        if output is not None:
+            return output
+    return _run_tests_local(repo_path, timeout=timeout, test_file=test_file)
+
+
+def _run_tests_local(
+    repo_path: str, timeout: int = DEFAULT_TIMEOUT, test_file: str | None = None
+) -> str:
     if not repo_path or not os.path.isdir(repo_path):
         return "FAILED: sandbox directory missing"
 

@@ -30,7 +30,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 FIXTURE = ROOT / "tests" / "fixtures" / "swebench_lite_sample.jsonl"
-RESULTS = ROOT / "results.json"
+RESULTS = ROOT / "output" / "results.json"
 
 # Rough token estimate for cost bookkeeping (USD per 1M prompt tokens).
 _GEMINI_PRICE_PER_M = 0.30
@@ -40,7 +40,7 @@ _GEMINI_PRICE_PER_M = 0.30
 def load_tasks(dataset: str, limit: int) -> tuple:
     """Return (tasks, source_label) for the requested SWE-bench split."""
     try:
-        from datasets import load_dataset
+        from datasets import load_dataset  # pyrefly: ignore[missing-import]
 
         ds = load_dataset(dataset, split="test")
         rows = [ds[i] for i in range(min(limit, len(ds)))]

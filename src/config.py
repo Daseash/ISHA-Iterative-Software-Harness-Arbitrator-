@@ -21,11 +21,20 @@ load_dotenv()
 AGENT_NAME = os.getenv("AGENT_NAME", "ISHA")
 
 # ── Model routing (override via .env when providers rotate model ids) ──────
-PLANNER_MODEL = os.getenv("ISHA_PLANNER_MODEL", "gemini/gemini-2.5-flash")
-CODER_MODEL = os.getenv("ISHA_CODER_MODEL", "groq/llama-3.3-70b-versatile")
+# Verified live: gemini-3.1-flash-lite answers while the flash tier is at 503,
+# and Groq's llama-3.3-70b-versatile has been retired from the free tier.
+PLANNER_MODEL = os.getenv("ISHA_PLANNER_MODEL", "gemini/gemini-3.1-flash-lite")
+CODER_MODEL = os.getenv("ISHA_CODER_MODEL", "groq/qwen/qwen3.8-27b")
 CODER_FALLBACKS = [
     m.strip()
-    for m in os.getenv("ISHA_CODER_FALLBACKS", "gemini/gemini-2.5-flash").split(",")
+    for m in os.getenv(
+        "ISHA_CODER_FALLBACKS", "groq/allam-2-7b,gemini/gemini-3.1-flash-lite"
+    ).split(",")
+    if m.strip()
+]
+PLANNER_FALLBACKS = [
+    m.strip()
+    for m in os.getenv("ISHA_PLANNER_FALLBACKS", "groq/qwen/qwen3.8-27b").split(",")
     if m.strip()
 ]
 
@@ -81,6 +90,7 @@ def call_planner(prompt: str) -> str:
         resp = litellm.completion(
             model=PLANNER_MODEL,
             messages=[{"role": "user", "content": prompt}],
+            fallbacks=[{PLANNER_MODEL: PLANNER_FALLBACKS}],
         )
         content = resp.choices[0].message.content
         if not content or content.startswith("["):
@@ -106,7 +116,7 @@ def call_coder(prompt: str) -> str:
         resp = litellm.completion(
             model=CODER_MODEL,
             messages=[{"role": "user", "content": prompt}],
-            fallbacks=CODER_FALLBACKS,
+            fallbacks=[{CODER_MODEL: CODER_FALLBACKS}],
         )
         content = resp.choices[0].message.content
         if not content or content.startswith("["):

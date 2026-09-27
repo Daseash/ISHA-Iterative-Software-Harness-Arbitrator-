@@ -14,6 +14,13 @@ import argparse
 import sys
 from pathlib import Path
 
+# Windows consoles default to cp1252 which can't print Unicode box chars.
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -24,16 +31,16 @@ DEFAULT_ISSUE = (
 )
 
 
-BANNER = r"""
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║   🤖 ISHA — Autonomous AI Software Engineering Agent          ║
-║                                                               ║
-║   Powered by: Gemini Flash + Groq Llama 3.3 + LAYA Engine    ║
-║   Judgment:   LAYA calibrated probabilities (not heuristics)  ║
-║   Isolation:  Git worktrees (multi-agent safe)                ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
+BANNER = """
++===============================================================+
+|                                                                 |
+|   ISHA -- Autonomous AI Software Engineering Agent              |
+|                                                                 |
+|   Powered by: Gemini 3.1 Flash Lite + Groq Qwen 3.8 + LAYA    |
+|   Judgment:   LAYA calibrated probabilities (not heuristics)    |
+|   Isolation:  Git worktrees (multi-agent safe)                  |
+|                                                                 |
++===============================================================+
 """
 
 
@@ -54,7 +61,7 @@ def main() -> int:
         "--repo",
         type=str,
         default="tests/dummy_repo",
-        help="Path to the target repository (default: tests/dummy_repo)",
+        help="Path to the target repository to analyse and patch",
     )
     parser.add_argument(
         "--apply",
@@ -76,6 +83,13 @@ def main() -> int:
         help="Approval gate mode: auto records it silently, cli prompts for y/N",
     )
     args = parser.parse_args()
+
+    if not Path(args.repo).is_dir():
+        print(BANNER)
+        print(f"  🛑 Target repo not found: {args.repo}")
+        print("     The bundled fixture was removed — pass --repo <path> to any")
+        print("     Python repo you want ISHA to work on.")
+        return 4
 
     issue = args.issue or DEFAULT_ISSUE
     using_default = args.issue is None

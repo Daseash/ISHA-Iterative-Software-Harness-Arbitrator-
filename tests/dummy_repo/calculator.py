@@ -1,38 +1,34 @@
 """
-Calculator module — Target test codebase with intentional bugs.
+Calculator module — demo target for ISHA.
 
-This module contains a simple Calculator class with deliberate bugs
-that ISHA's agentic loop should be able to detect and fix.
-
-Bugs:
-    1. subtract() returns a + b instead of a - b
-    2. divide() doesn't handle division by zero
+Contains seeded bugs for the eval suite:
+  - subtract() uses + instead of -
+  - divide() has no zero-division guard
 """
 
 
 class Calculator:
-    """A simple calculator with intentional bugs for testing ISHA."""
+    """A simple calculator with seeded bugs for ISHA to fix."""
 
     def add(self, a: float, b: float) -> float:
-        """Add two numbers. (Works correctly)"""
+        """Return the sum of two numbers."""
         return a + b
 
     def subtract(self, a: float, b: float) -> float:
-        """Subtract b from a.
+        """Return the difference of two numbers.
 
-        BUG: Returns a + b instead of a - b.
-        ISHA should detect and fix this.
+        BUG: uses + instead of -
         """
-        return a + b  # 🐛 BUG: should be a - b
-
-    def divide(self, a: float, b: float) -> float:
-        """Divide a by b.
-
-        BUG: Doesn't handle division by zero.
-        ISHA should add a proper check and raise ValueError.
-        """
-        return a / b  # 🐛 BUG: no ZeroDivisionError handling
+        return a + b  # BUG: should be a - b
 
     def multiply(self, a: float, b: float) -> float:
-        """Multiply two numbers. (Works correctly)"""
+        """Return the product of two numbers."""
         return a * b
+
+    def divide(self, a: float, b: float) -> float:
+        """Return the quotient of two numbers.
+
+        BUG: no zero-division guard — raises ZeroDivisionError
+        instead of ValueError('Cannot divide by zero').
+        """
+        return a / b  # BUG: missing zero guard
