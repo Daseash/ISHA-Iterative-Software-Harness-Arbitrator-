@@ -11,6 +11,7 @@ Usage:
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -36,7 +37,7 @@ def _run(cmd: list, cwd: Path | None = None, timeout: int = 900) -> str:
         encoding="utf-8",
         errors="replace",
         timeout=timeout,
-        env={"GIT_TERMINAL_PROMPT": "0", "PATH": subprocess.os.environ["PATH"]},
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
     )
     if proc.returncode != 0:
         raise RuntimeError(f"{' '.join(cmd)} -> {proc.stderr.strip()[:400]}")
