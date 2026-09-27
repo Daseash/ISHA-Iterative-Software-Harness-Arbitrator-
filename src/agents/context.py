@@ -9,14 +9,33 @@ from src.ingestion.parser import RepoParser
 from src.rag.indexer import QdrantIndexer
 from src.rag.retriever import CodeRetriever
 from src.tools.ast_mapper import ASTMapper
+from src.tools.dependency_graph import DependencyGraph
 
-MAX_CONTEXT_CHARS = 4000
+MAX_CONTEXT_CHARS = 5500
 
 
 def build_repo_context(issue_text: str, repo_path: str, top_k: int = 4) -> str:
-    """Return 'AST MAP' + 'RELEVANT SNIPPETS' text for the planner prompt."""
+    """Return AST MAP + IMPACT ANALYSIS + RELEVANT SNIPPETS text for the planner prompt."""
     repo_map = ASTMapper().build_map(repo_path)
     chunks = RepoParser().parse(repo_path)
+
+    # Dependency graph & impact analysis
+    dep_graph = DependencyGraph(repo_path)
+    import re
+    tokens = set(re.findall(r"[A-Za-z_][A-Za-z0-9_]*", issue_text))
+    # Filter candidates against known symbols and files in dep_graph
+    entry_points = [
+        sym.name for sym in dep_graph.definitions if sym.name in tokens
+    ]
+    for f in dep_graph.files:
+        stem = f.split("/")[-1].replace(".py", "")
+        if stem in tokens:
+            entry_points.append(f)
+    if not entry_points:
+        entry_points = [t for t in tokens if len(t) > 3][:5]
+
+    impact = dep_graph.analyze_impact(entry_points)
+    impact_report = dep_graph.render_impact_report(impact)
 
     snippets = []
     if chunks:
@@ -39,6 +58,8 @@ def build_repo_context(issue_text: str, repo_path: str, top_k: int = 4) -> str:
     sections = []
     if repo_map:
         sections.append(f"AST MAP:\n{repo_map}")
+    if impact_report:
+        sections.append(impact_report)
     if snippets:
         sections.append("RELEVANT SNIPPETS:\n" + "\n\n".join(snippets))
 

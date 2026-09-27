@@ -87,14 +87,30 @@ score bars, attempt ledger, latency), **Approvals** (exportable audit trail).
 ## Architecture
 
 ```
-Bug report ──► Guardrail scan (prompt injection) ──► Planner
+Bug report ──► Guardrail scan ──► Investigation (baseline tests, grep, full files)
+     ──► Decomposer (hierarchical sub-issues)
+     ──► Plan (AST map + Dependency Graph blast radius)
      ──► Regression test written FIRST (must be RED)
      ──► Dispatch ──► [ attempt 1 │ attempt 2 │ attempt 3 ]   (3 git worktrees,
      │              │  coder → sandbox → self-correct → critic │  3 strategies)
      └──────────────► Arbitration (LAYA composite ranks the attempts)
                       ──► Approval gate (flagged diffs pause for a human)
-                      ──► Merge winner → optional git commit → audit log
+                      ──► Cross-file consistency & full regression check
+                      ──► Checkpoint session ledger ──► Merge winner → Commit ✅
 ```
+
+### Advanced Repo-Level Engineering (v2 Capabilities)
+
+1. **Dependency Graph & Impact Analysis (`src/tools/dependency_graph.py`)**:
+   Constructs repo-level call graphs and import graphs from AST parsing. Computes blast radius, upstream callers, dependent modules, and impacted test suites for target bug entry points.
+2. **Hierarchical Bug Decomposition (`src/agents/decomposer.py`)**:
+   Decomposes complex multi-file bugs into an ordered sequence of atomic sub-issues. Solves each sub-issue sequentially, passing intermediate patches as context.
+3. **Checkpointed & Resumable Sessions (`src/agents/session_manager.py`)**:
+   Persists progress snapshots to `output/sessions/{session_id}.json`. Allows sessions to pause on human review or retry budget limits, and resume without losing state.
+4. **Active Pre-Planning Investigation (`src/agents/investigation.py`)**:
+   Runs baseline tests before touching any code, greps for error symbols, and inspects full suspect source files to give the planner diagnostic proof.
+5. **Cross-File Consistency & Collateral Regression Checks (`src/tools/consistency_checker.py`)**:
+   Validates changed function signatures across all external callers using the dependency graph. Runs the entire repository test suite to catch collateral regressions.
 
 Full diagram: [`docs/flow-diagram.txt`](docs/flow-diagram.txt) ·
 Component table: [`docs/components.md`](docs/components.md)

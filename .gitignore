@@ -24,8 +24,9 @@ env/
 # ── Qdrant ────────────────────────────────────────────────────────────────
 qdrant_storage/
 
-# ── Git worktrees ─────────────────────────────────────────────────────────
+# ── Git worktrees & checkouts ─────────────────────────────────────────────
 .worktrees/
+swebench_checkouts/
 
 # ── OS ────────────────────────────────────────────────────────────────────
 .DS_Store
@@ -37,6 +38,7 @@ Thumbs.db
 # ── Runtime output (output/ directory) ────────────────────────────────────
 output/*.json
 output/*.jsonl
+output/sessions/
 !output/.gitkeep
 
 # ── Legacy root-level output (if any remain) ──────────────────────────────

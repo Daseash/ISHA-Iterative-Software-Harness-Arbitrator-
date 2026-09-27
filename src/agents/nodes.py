@@ -107,6 +107,9 @@ def coder_node(state: AgentState) -> AgentState:
             "pass. Diagnose why and produce a corrected diff.\n"
             "TRIMMED TEST OUTPUT:\n" + trim_traceback(state.test_output)
         )
+    if state.consistency_warnings:
+        warn_str = "\n".join(f"- {w}" for w in state.consistency_warnings)
+        retry_hint += f"\n\nCROSS-FILE INCONSISTENCY WARNINGS:\n{warn_str}\nEnsure all callers are updated."
 
     prompt = f"""Generate a unified diff patch to fix this bug. Output
 ONLY the diff, no explanation. Use standard unified diff format.
@@ -148,7 +151,7 @@ def sandbox_node(state: AgentState) -> AgentState:
         return state
 
     # Each attempt works on its own isolated directory: a git worktree
-    # (Phase 6, reset to a clean tree) or a fresh scratch copy.
+    # or a fresh scratch copy.
     if state.worktree:
         target = Path(state.worktree)
         if not target.exists():
@@ -170,11 +173,19 @@ def sandbox_node(state: AgentState) -> AgentState:
         state.worktree = make_sandbox(str(repo))
         target = Path(state.worktree)
 
+    # 1. Cross-file consistency checks
+    from src.tools.consistency_checker import check_patch_consistency
+
+    warnings = check_patch_consistency(str(target), state.patch)
+    state.consistency_warnings = warnings
+
+    # 2. Apply patch
     ok, message = apply_patch(str(target), state.patch)
     if not ok:
         state.test_output = f"FAILED: patch could not be applied — {message}"
         return state
 
+    # 3. Write and run regression test
     test_file = None
     if state.regression_test and not state.regression_test.startswith("#"):
         try:
@@ -188,7 +199,22 @@ def sandbox_node(state: AgentState) -> AgentState:
     output = run_tests(str(target), test_file=test_file)
     if not output:
         output = "sandbox produced no output"
-    state.test_output = f"{_verdict(output)}\n{output}"
+
+    verdict = _verdict(output)
+
+    # 4. If regression test passes, run full repo test suite to catch collateral breakage
+    if verdict == "PASSED":
+        full_output = run_tests(str(target), test_file=None)
+        state.full_test_output = full_output
+        full_verdict = _verdict(full_output)
+        if full_verdict == "FAILED":
+            state.test_output = (
+                f"FAILED: Collateral regression detected! New test passed, but existing tests failed:\n"
+                f"{full_output}"
+            )
+            return state
+
+    state.test_output = f"{verdict}\n{output}"
     return state
 
 

@@ -11,12 +11,15 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, StateGraph
 from langgraph.types import RunnableConfig
 
+from src.agents.decomposer import decomposer_node
+from src.agents.investigation import investigation_node
 from src.agents.nodes import (
     coder_node,
     planner_node,
     regression_test_node,
     sandbox_node,
 )
+from src.agents.session_manager import save_session
 from src.agents.state import AgentState, coerce_state
 from src.review.critic import critic_node
 
@@ -30,6 +33,19 @@ def approval_node(state, config=None) -> AgentState:
     return gate(state, config)
 
 
+def checkpoint_node(state: AgentState) -> AgentState:
+    """Save persistent session snapshot and progress ledger to disk."""
+    state = coerce_state(state)
+    status = "completed"
+    if state.approved is False:
+        status = "paused_human_review"
+    elif "FAILED" in (state.test_output or ""):
+        status = "paused_budget"
+
+    save_session(state, status=status)
+    return state
+
+
 def _route_after_sandbox(state: AgentState) -> str:
     """Retry the coder while tests fail and budget remains, else review."""
     failed = "FAILED" in (state.test_output or "")
@@ -38,18 +54,46 @@ def _route_after_sandbox(state: AgentState) -> str:
     return "critic"
 
 
+def _route_after_approval(state: AgentState) -> str:
+    """Check if there are remaining sub-issues to solve sequentially."""
+    state = coerce_state(state)
+    if state.approved is False:
+        return "checkpoint"
+
+    sub_issues = state.sub_issues or []
+    next_idx = state.current_sub_issue_index + 1
+    if next_idx < len(sub_issues):
+        state.current_sub_issue_index = next_idx
+        state.sub_issues[next_idx]["status"] = "in_progress"
+        state.retry_count = 0
+        state.test_output = ""
+        state.regression_test = ""
+        state.issue_text = (
+            f"[Sub-issue {next_idx + 1}/{len(sub_issues)}: {state.sub_issues[next_idx].get('title', '')}]\n"
+            f"{state.sub_issues[next_idx].get('description', '')}"
+        )
+        return "planner"
+
+    return "checkpoint"
+
+
 def build_graph():
     """Compile and return the single-agent ISHA state graph."""
     workflow = StateGraph(AgentState)
 
+    workflow.add_node("investigation", investigation_node)
+    workflow.add_node("decomposer", decomposer_node)
     workflow.add_node("planner", planner_node)
     workflow.add_node("regression_test", regression_test_node)
     workflow.add_node("coder", coder_node)
     workflow.add_node("sandbox", sandbox_node)
     workflow.add_node("critic", critic_node)
     workflow.add_node("approval", approval_node)
+    workflow.add_node("checkpoint", checkpoint_node)
 
-    workflow.set_entry_point("planner")
+    workflow.set_entry_point("investigation")
+    workflow.add_edge("investigation", "decomposer")
+    workflow.add_edge("decomposer", "planner")
     workflow.add_edge("planner", "regression_test")
     workflow.add_edge("regression_test", "coder")
     workflow.add_edge("coder", "sandbox")
@@ -59,7 +103,12 @@ def build_graph():
         {"coder": "coder", "critic": "critic"},
     )
     workflow.add_edge("critic", "approval")
-    workflow.add_edge("approval", END)
+    workflow.add_conditional_edges(
+        "approval",
+        _route_after_approval,
+        {"planner": "planner", "checkpoint": "checkpoint"},
+    )
+    workflow.add_edge("checkpoint", END)
 
     return workflow.compile(checkpointer=MemorySaver())
 
@@ -155,6 +204,9 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
     if state.repo_path:
         cleanup_all_worktrees(state.repo_path)
 
+    # Save progress checkpoint
+    save_session(state, status="completed", note=f"Multi-agent winner: {state.strategy}")
+
     print(
         f"\n  merger: winner strategy={state.strategy} "
         f"score={state.critic_score:.3f} verdict={state.critic_verdict}"
@@ -169,6 +221,8 @@ def build_multi_agent_graph():
 
     workflow = StateGraph(AgentState)
 
+    workflow.add_node("investigation", investigation_node)
+    workflow.add_node("decomposer", decomposer_node)
     workflow.add_node("planner", planner_node)
     workflow.add_node("regression_test", regression_test_node)
     workflow.add_node("arbitration", arbitration_node)
@@ -180,7 +234,9 @@ def build_multi_agent_graph():
         workflow.add_node(f"attempt{i}", attempt_node)
         workflow.add_edge(f"attempt{i}", "arbitration")
 
-    workflow.set_entry_point("planner")
+    workflow.set_entry_point("investigation")
+    workflow.add_edge("investigation", "decomposer")
+    workflow.add_edge("decomposer", "planner")
     workflow.add_edge("planner", "regression_test")
     workflow.add_conditional_edges(
         "regression_test",
