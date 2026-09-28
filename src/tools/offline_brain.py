@@ -23,11 +23,43 @@ _OPERATOR_CANDIDATES = {
     "/": ["*", "+", "-"],
 }
 
-_ZERO_GUARD = '    if b == 0:\n        raise ValueError("Cannot divide by zero")\n'
-_TYPE_GUARD = (
-    "    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):\n"
-    '        raise TypeError("operands must be numbers")\n'
-)
+def _param_names(def_line: str) -> list:
+    """Parameter names of a ``def`` line, minus ``self``/``cls``.
+
+    ``def percentage(self, value: float) -> float:`` → ``['value']``
+    """
+    if "(" not in def_line:
+        return []
+    inner = def_line.split("(", 1)[1].rsplit(")", 1)[0]
+    names = []
+    for part in inner.split(","):
+        part = part.strip()
+        if not part or part in ("self", "cls") or part.startswith("*"):
+            continue
+        name = re.split(r"[:=]", part, 1)[0].strip()
+        if name:
+            names.append(name)
+    return names
+
+
+def _zero_guard(params: list) -> str | None:
+    """Zero-division guard built from the function's real parameters.
+
+    Hardcoding ``b`` would raise NameError inside functions that don't
+    have a ``b`` (e.g. ``percentage(value)``), breaking passing tests.
+    """
+    if len(params) < 2:
+        return None
+    second = params[1]
+    return f'    if {second} == 0:\n        raise ValueError("Cannot divide by zero")\n'
+
+
+def _type_guard(params: list) -> str | None:
+    """Type guard built from the function's real parameters."""
+    if not params:
+        return None
+    checks = " or ".join(f"not isinstance({p}, (int, float))" for p in params[:2])
+    return f'    if {checks}:\n        raise TypeError("operands must be numbers")\n'
 
 
 def _sections(prompt: str) -> dict:
@@ -77,6 +109,18 @@ def _root_cause(issue: str, func: str | None) -> dict:
         return {
             "why": f"{where} does not validate operand types before computing.",
             "fix": "raise TypeError when either operand is not an int/float.",
+        }
+    if any(
+        k in text
+        for k in ("denominator", "missing parameter", "missing argument",
+                  "signature", "call site", "callers", "accepts only")
+    ):
+        return {
+            "why": f"{where} is missing a parameter its callers need to supply, "
+                   "so it computes against a hard-coded value instead of the "
+                   "caller's input.",
+            "fix": "add the missing parameter to the signature and update every "
+                   "caller to pass it (definition and call sites in one patch).",
         }
     if any(k in text for k in ("wrong", "instead of", "incorrect", "returns", "minus", "-")):
         return {
@@ -215,20 +259,27 @@ def _rewrite(content: str, func: str, issue: str, retry_index: int) -> str | Non
 
     body = lines[start:end]
     guard_at = _insert_point(body)
+    params = _param_names(lines[start])
 
     if "zero" in text and any("/" in ln for ln in body):
-        if any(re.search(r"^\s*raise\s+ValueError", ln) for ln in body):
+        guard = _zero_guard(params)
+        if guard is None or any(
+            re.search(r"^\s*raise\s+ValueError", ln) for ln in body
+        ):
             return None
         patched = list(body)
-        patched[guard_at:guard_at] = _indent_block(_ZERO_GUARD, base_indent + 4)
+        patched[guard_at:guard_at] = _indent_block(guard, base_indent + 4)
         lines[start:end] = patched
         return "".join(lines)
 
     if any(k in text for k in ("type", "validate", "validation")):
-        if any(re.search(r"^\s*raise\s+TypeError", ln) for ln in body):
+        guard = _type_guard(params)
+        if guard is None or any(
+            re.search(r"^\s*raise\s+TypeError", ln) for ln in body
+        ):
             return None
         patched = list(body)
-        patched[guard_at:guard_at] = _indent_block(_TYPE_GUARD, base_indent + 4)
+        patched[guard_at:guard_at] = _indent_block(guard, base_indent + 4)
         lines[start:end] = patched
         return "".join(lines)
 

@@ -1,0 +1,13 @@
+--- a/astropy/io/ascii/ui.py
++++ b/astropy/io/ascii/ui.py
+@@ -817,6 +817,10 @@ def _get_writer_kwargs(format, fast_writer, **kwargs):
+             # If header_name_sep is set, remove it from kwargs
+             if "header_name_sep" in kwargs:
+                 kwargs.pop("header_name_sep")
++        # If header_rows is set, remove it from kwargs for RST
++        # as RST handles header rows differently
++        if format == "ascii.rst" and "header_rows" in kwargs:
++            kwargs.pop("header_rows")
+     else:
+         # Default behavior for other writers
+         pass

@@ -1,0 +1,175 @@
+{
+  "instance_id": "django__django-11133",
+  "repo": "django/django",
+  "base_commit": "879cc3da6249e920b8d54518a0ae06de835d7373",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617534.6380808
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790617634.0997748
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617759.1582036
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617915.8998146
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790618078.6347194
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790618226.8936768
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790618256.8816586
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/http/response.py: @@ — expected context not found in file: '    @content.setter'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790617381.1886935,
+  "elapsed_s": 883.54,
+  "plan": "@@\n-        # Original handling (simplified)\n-        if isinstance(content, bytes):\n-            self._container = [content]\n-        elif isinstance(content, str):\n-            self._container = [content.encode(self.charset)]\n-        elif hasattr(content, '__iter__'):\n-            self._container = list(content)\n-        else:\n-            raise TypeError(...)\n+        # New handling – recognise any object that supports the buffer\n+        # protocol (bytes, bytearray, memoryview, etc.) as raw binary data.\n+        # This mirrors the behaviour of ``bytes()`` on a memoryview.\n+        if isinstance(content, (bytes, bytearray)):\n+            # ``bytes`` already gives us the correct type; ``bytearray`` is\n+            # converted to an immutable ``bytes`` instance.\n+            self._container = [bytes(content)]\n+        elif isinstance(content, memoryview):\n+            # Convert the memoryview to bytes without copying more than needed.\n+            self._container = [content.tobytes()]\n+        elif isinstance(content, str):\n+            # Encode text using the response charset.\n+            self._container = [content.encode(self.charset)]\n+        elif hasattr(content, '__iter__'):\n+            # Fallback for an iterable of byte‑chunks.\n+            self._container = list(content)\n+        else:\n+            raise TypeError(\n+                \"Content must be a string, bytes, bytearray, memoryview, or an \"\n+                \"iterable yielding bytes.\"\n+            )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "docs/ref/request-response.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4162,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8013
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/models/querysets.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3667,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9134,
+        "vector": 0.6529
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/howto/custom-model-fields.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3596,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9789,
+        "vector": 0.503
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/db/sql.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3552,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.885,
+        "vector": 0.6317
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/testing/tools.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3125,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8762,
+        "vector": 0.3953
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/serialization.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3062,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7756,
+        "vector": 0.5237
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.68375,
+  "laya_scores": {
+    "fix_quality": 1.3307,
+    "matches_issue": 0.7274,
+    "safe_to_apply": 0.6769,
+    "composite": 0.68375,
+    "secrets_or_danger": 0.2399,
+    "logic_drift": 0.3975,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS\n- PERFORMANCE: PASS\n- ROBUSTNESS: PASS\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/http/response.py: @@ — expected context not found in file: '    @content.setter'",
+  "regression_test": "import pytest\nfrom django.http import HttpResponse\n\ndef test_memoryview_content_reproduces_bug():\n    \"\"\"\n    First test: must FAIL before the fix (red), PASS after (green).\n\n    The bug: passing a memoryview to HttpResponse content is currently\n    mis-handled because memoryview supports __iter__ (the old fallthrough\n    branch), casting it to its str representation instead of its bytes.\n    \"\"\"\n    mv = memoryview(b\"My Content\")\n    response = HttpResponse(mv)\n    assert response.content == b\"My Content\"\n\ndef test_bytes_input_still_works():\n    \"\"\"\n    Regression guard: plain bytes content must still round-trip correctly.\n    The fix keeps bytes/bytearray in the first isinstance branch and\n    normalises via bytes(), so behaviour for bytes is unchanged.\n    \"\"\"\n    response = HttpResponse(b\"\\x00\\x01binary\")\n    assert response.content == b\"\\x00\\x01binary\"\n\ndef test_bytearray_input_returned_as_bytes():\n    \"\"\"\n    The fix explicitly includes bytearray in the binary branch and converts\n    it via bytes(content). A senior engineer would pin that bytearray is\n    normalised to an immutable bytes instance rather than leaking the\n    mutable type through to response.content.\n    \"\"\"\n    ba = bytearray(b\"\\xff\\xfe\")\n    response = HttpResponse(ba)\n    assert type(response.content) is bytes\n    assert response.content == b\"\\xff\\xfe\"\n\ndef test_empty_memoryview_yields_empty_bytes():\n    \"\"\"\n    Boundary case: an empty memoryview must produce b\"\", not the str of the\n    repr (which the buggy code would emit, e.g. b'<memory at 0x...>').\n    \"\"\"\n    mv = memoryview(b\"\")\n    response = HttpResponse(mv)\n    assert response.content == b\"\"\n\ndef test_multi_byte_memoryview_with_high_bits():\n    \"\"\"\n    Numeric/representation edge: bytes with values above 127 must survive\n    the conversion to bytes verbatim. Under the old bug, the repr fallback\n    would encode the ASCII representation of the repr string rather than the\n    raw bytes, corrupting any value that isn't a printable ASCII char.\n    \"\"\"\n    raw = bytes([0x80, 0xFF, 0x00, 0x41])\n    mv = memoryview(raw)\n    response = HttpResponse(mv)\n    assert response.content == raw",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

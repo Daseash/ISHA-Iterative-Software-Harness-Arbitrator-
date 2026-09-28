@@ -1,0 +1,165 @@
+{
+  "instance_id": "astropy__astropy-12907",
+  "repo": "astropy/astropy",
+  "base_commit": "d16bfe05a744909de4b27f5875fe0d4ed41ce607",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790611074.7640572
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790611150.6285284
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790611257.4502306
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790611378.4378865
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/modeling/separable.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/modeling/separable.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 3
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790611016.3837812,
+  "elapsed_s": 368.54,
+  "plan": "-    separable_matrix = _separable(transform)\n        -    is_separable = separable_matrix.sum(1)\n        -    is_separable = np.where(is_separable != 1, False, True)\n        +    separable_matrix = separability_matrix(transform)\n        +    is_separable = separable_matrix.any(axis=1)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/modeling/separable.py",
+      "symbol": "astropy/modeling/separable.py::separability_matrix",
+      "line_range": [
+        66,
+        104
+      ],
+      "score": 0.5464,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.6845
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/modeling/core.py",
+      "symbol": "astropy/modeling/core.py::_calculate_separability_matrix",
+      "line_range": [
+        808,
+        816
+      ],
+      "score": 0.4427,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6441,
+        "vector": 0.6612
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/modeling/new-model.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3277,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7979,
+        "vector": 0.6134
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/modeling/compound-models.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.324,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7408,
+        "vector": 0.6857
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/modeling/models.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2943,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7332,
+        "vector": 0.5235
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "CHANGES.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2842,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5844,
+        "vector": 0.709
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6381249999999999,
+  "laya_scores": {
+    "fix_quality": 1.1677,
+    "matches_issue": 0.7308,
+    "safe_to_apply": 0.654,
+    "composite": 0.6381249999999999,
+    "secrets_or_danger": 0.2216,
+    "logic_drift": 0.5652,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- **SECURITY**: PASS - No changes to input handling, path resolution, or execution context that introduce vulnerabilities.\n- **PERFORMANCE**: PASS - Replacing sum/boolean comparison with `any` is logically similar or slightly faster due to short-circuiting; no new N+1 or blocking calls.\n- **ROBUSTNESS**: PASS - The logic change preserves the intent of checking if a row has any True values (indicating separatability), and applies it correctly to the nested matrix provided by `separability_matrix`.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.modeling import models as m\nfrom astropy.modeling.separable import separability_matrix\n\n\ndef test_nested_compound_separability_matrix_is_diagonal():\n    \"\"\"\n    The bug caused the two Linear1D models inside a nested compound model\n    to appear mutually non‑separable (the off‑diagonal entries were True).\n    The correct matrix should be block‑diagonal with *only* the diagonal\n    entries True for each independent Linear1D.\n    \"\"\"\n    cm = m.Linear1D(10) & m.Linear1D(5)          # two independent linear models\n    nested = m.Pix2Sky_TAN() & cm                # nest the compound inside another &\n    mat = separability_matrix(nested)\n\n    # Expected: 4×4 matrix, first 2 rows/cols (Pix2Sky_TAN) are fully separable,\n    # last 2 rows/cols (the two Linear1D) are only separable with their own input.\n    expected = np.array(\n        [[True,  True,  False, False],\n         [True,  True,  False, False],\n         [False, False, True,  False],\n         [False, False, False, True ]],\n        dtype=bool,\n    )\n    assert np.array_equal(mat, expected)\n\n\ndef test_simple_compound_diagonal():\n    \"\"\"A simple compound model (Linear1D & Linear1D) must yield a diagonal matrix.\"\"\"\n    simple = m.Linear1D(10) & m.Linear1D(5)\n    mat = separability_matrix(simple)\n    expected = np.eye(2, dtype=bool)\n    assert np.array_equal(mat, expected)\n\n\ndef test_invalid_input_raises_type_error():\n    \"\"\"Passing a non‑model object to ``separability_matrix`` should raise TypeError.\"\"\"\n    with pytest.raises(TypeError):\n        separability_matrix(42)          # int is not a Model instance\n\n\ndef test_polynomial2d_matrix_shape_and_diagonal():\n    \"\"\"\n    ``Polynomial2D`` has two inputs and one output; the matrix should be\n    1×2 with both entries ``True`` because the single output depends on both inputs.\n    \"\"\"\n    poly = m.Polynomial2D(1)   # linear 2‑D polynomial\n    mat = separability_matrix(poly)\n    expected = np.array([[True, True]], dtype=bool)   # 1 output × 2 inputs\n    assert mat.shape == (1, 2)\n    assert np.array_equal(mat, expected)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\nindex a308e27..adc9e95 100644\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -57,9 +57,8 @@ def is_separable(transform):\n     if transform.n_inputs == 1 and transform.n_outputs > 1:\n         is_separable = np.array([False] * transform.n_outputs).T\n         return is_separable\n-    separable_matrix = _separable(transform)\n-    is_separable = separable_matrix.sum(1)\n-    is_separable = np.where(is_separable != 1, False, True)\n+    separable_matrix = separability_matrix(transform)\n+    is_separable = separable_matrix.any(axis=1)\n     return is_separable\n \n \n",
+  "offline_calls": 0
+}

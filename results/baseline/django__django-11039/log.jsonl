@@ -1,0 +1,7 @@
+{"event": "start", "instance_id": "django__django-11039", "ts": 1790615622.022339}
+{"event": "attempt", "n": 1, "ts": 1790615622.4603248}
+{"event": "model", "ts": 1790615807.445604, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790615912.3363156, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790616037.8194983, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790616075.0463831, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790616111.5468557}

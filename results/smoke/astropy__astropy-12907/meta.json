@@ -1,0 +1,180 @@
+{
+  "instance_id": "astropy__astropy-12907",
+  "repo": "astropy/astropy",
+  "base_commit": "d16bfe05a744909de4b27f5875fe0d4ed41ce607",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790609005.5574713
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790609088.316228
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790609194.8885388
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790609316.2256474
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790609372.0177593
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790609386.6292458
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790609429.1969733
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in astropy/modeling/separable.py: @@ -66,23 +66,24 @@ def is_separable(transform): — expected context not found in file: '        return is_separable'",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1790608966.4282925,
+  "elapsed_s": 470.23,
+  "plan": "separable_matrix = _separable(transform)\n    separable_matrix = np.where(separable_matrix != 0, True, False)\n    if isinstance(transform, CompoundModel) and transform.op == '&':\n        return separable_matrix\n    return separable_matrix",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/modeling/separable.py",
+      "symbol": "astropy/modeling/separable.py::separability_matrix",
+      "line_range": [
+        66,
+        104
+      ],
+      "score": 0.5464,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.6845
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/modeling/core.py",
+      "symbol": "astropy/modeling/core.py::_calculate_separability_matrix",
+      "line_range": [
+        808,
+        816
+      ],
+      "score": 0.4427,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6441,
+        "vector": 0.6612
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/modeling/new-model.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3277,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7979,
+        "vector": 0.6134
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/modeling/compound-models.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.324,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7408,
+        "vector": 0.6857
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/modeling/models.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2943,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7332,
+        "vector": 0.5235
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "CHANGES.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2842,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5844,
+        "vector": 0.709
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.5580499999999999,
+  "laya_scores": {
+    "fix_quality": 1.0593,
+    "matches_issue": 0.5949,
+    "safe_to_apply": 0.578,
+    "composite": 0.5580499999999999,
+    "secrets_or_danger": 0.3,
+    "logic_drift": 0.4614,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS\nThe changes involve standard numerical array operations and model introspection; no external input handling, shell execution, or credential management is involved.\n\n- PERFORMANCE: RISK\nReplacing the boolean mask operation with `np.where` adds a minor redundant step, but the dominant cost remains the `_separable` computation; no significant performance impact or unbounded growth is introduced.\n\n- ROBUSTNESS: PASS\nThe patch fixes the logical error in `is_separable` (which previously implied false separability for nested compounds due to incorrect thresholding) and preserves the correct boolean conversion in `separability_matrix`; no new race conditions or exception swallowing are introduced.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in astropy/modeling/separable.py: @@ -66,23 +66,24 @@ def is_separable(transform): — expected context not found in file: '        return is_separable'",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.modeling import models as m\nfrom astropy.modeling.separable import separability_matrix\n\n\ndef _bool_matrix(arr):\n    \"\"\"Utility to ensure the matrix is a plain bool ndarray.\"\"\"\n    return np.array(arr, dtype=bool)\n\n\ndef test_nested_compound_separability_is_diagonal():\n    \"\"\"\n    Reproduces the reported bug.\n\n    The separability matrix for a nested ``&`` CompoundModel should be block‑diagonal,\n    i.e. the two Linear1D components are independent of each other.\n    The current (buggy) implementation returns ``True`` for the off‑diagonal entries\n    of the lower‑right 2×2 block.\n    \"\"\"\n    # Simple 2‑component compound model (non‑nested) – the reference matrix.\n    cm = m.Linear1D(10) & m.Linear1D(5)\n\n    # Nested compound: a Pix2Sky_TAN model concatenated with the previous compound.\n    nested = m.Pix2Sky_TAN() & cm\n\n    # Expected matrix: block diagonal with a 2×2 True block for Pix2Sky_TAN\n    # and a 2×2 identity for the two Linear1D models.\n    expected = _bool_matrix(\n        [[True,  True,  False, False],\n         [True,  True,  False, False],\n         [False, False, True,  False],\n         [False, False, False, True]]\n    )\n\n    result = separability_matrix(nested)\n\n    assert np.array_equal(result, expected), (\n        \"Nested '&' CompoundModel should produce a block‑diagonal separability matrix.\\n\"\n        f\"Got:\\n{result}\\nExpected:\\n{expected}\"\n    )\n\n\ndef test_simple_compound_separability_is_diagonal():\n    \"\"\"Edge case: a non‑nested '&' compound model should already be block‑diagonal.\"\"\"\n    cm = m.Linear1D(10) & m.Linear1D(5)\n    expected = _bool_matrix(\n        [[True,  False],\n         [False, True]]\n    )\n    assert np.array_equal(separability_matrix(cm), expected)\n\n\ndef test_deeply_nested_compound_preserves_block_diagonal():\n    \"\"\"\n    Edge case: multiple levels of nesting with the '&' operator.\n    All sub‑components should remain independent.\n    \"\"\"\n    left = m.Linear1D(1) & m.Linear1D(2)\n    right = m.Linear1D(3) & m.Linear1D(4)\n    nested = left & right\n\n    # 4×4 identity – each Linear1D model is independent.\n    expected = np.eye(4, dtype=bool)\n\n    assert np.array_equal(separability_matrix(nested), expected)\n\n\ndef test_single_model_returns_scalar_true():\n    \"\"\"Edge case: a solitary model (no compound) is trivially separable.\"\"\"\n    model = m.Polynomial1D(2)\n    result = separability_matrix(model)\n    # The function returns a 1×1 bool array for a single model.\n    assert result.shape == (1, 1)\n    assert result[0, 0] is True\n\n\ndef test_invalid_input_raises_type_error():\n    \"\"\"Edge case: passing something that is not a Model should raise a clear error.\"\"\"\n    with pytest.raises(TypeError):\n        separability_matrix(\"not a model\")",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

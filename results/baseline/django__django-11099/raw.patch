@@ -1,0 +1,14 @@
+--- a/django/contrib/auth/validators.py
++++ b/django/contrib/auth/validators.py
+@@
+-    regex = r'^[\w.@+-]+$'
++    # Use \A and \Z to anchor the pattern to the start and end of the string
++    # without allowing a trailing newline (unlike $ which also matches before
++    # a final newline).
++    regex = r'\A[\w.@+-]+\Z'
+@@
+-    regex = r'^[\w.@+-]+$'
++    # Use \A and \Z to anchor the pattern to the start and end of the string
++    # without allowing a trailing newline (unlike $ which also matches before
++    # a final newline).
++    regex = r'\A[\w.@+-]+\Z'

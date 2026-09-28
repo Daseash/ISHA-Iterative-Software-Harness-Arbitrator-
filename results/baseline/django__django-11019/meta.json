@@ -1,0 +1,201 @@
+{
+  "instance_id": "django__django-11019",
+  "repo": "django/django",
+  "base_commit": "93e892bb645b16ebaf287beb5fe7f3ffe8d10408",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790614739.333619
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790614862.312179
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790614969.189457
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615091.3982143
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615231.9573677
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615372.1086538
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615522.852939
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790615577.4625013
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/forms/widgets.py: @@ — expected context not found in file: '    def __add__(self, other):'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790614704.6881363,
+  "elapsed_s": 880.77,
+  "plan": "['text-editor.js', 'text-editor-extras.js', 'color-picker.js']",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "docs/topics/forms/media.txt",
+      "symbol": "docs/topics/forms/media.txt::Media",
+      "line_range": [
+        57,
+        96
+      ],
+      "score": 0.5209,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.535
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "tests/forms_tests/tests/test_media.py",
+      "symbol": "tests/forms_tests/tests/test_media.py::Media",
+      "line_range": [
+        64,
+        93
+      ],
+      "score": 0.4352,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6247,
+        "vector": 0.649
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/topics/i18n/translation.txt",
+      "symbol": "docs/topics/i18n/translation.txt::MyForm",
+      "line_range": [
+        472,
+        483
+      ],
+      "score": 0.4055,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5723,
+        "vector": 0.5605
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/contrib/admin/helpers.py",
+      "symbol": "django/contrib/admin/helpers.py::media",
+      "line_range": [
+        63,
+        69
+      ],
+      "score": 0.3964,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4032,
+        "vector": 0.7856
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/ref/contrib/admin/index.txt",
+      "symbol": "docs/ref/contrib/admin/index.txt::MyForm",
+      "line_range": [
+        1822,
+        1824
+      ],
+      "score": 0.3848,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.515,
+        "vector": 0.5332
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "tests/model_forms/tests.py",
+      "symbol": "tests/model_forms/tests.py::Media",
+      "line_range": [
+        155,
+        160
+      ],
+      "score": 0.3836,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3467,
+        "vector": 0.8033
+      },
+      "reason": "symbol match"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.8015000000000001,
+  "laya_scores": {
+    "fix_quality": 1.5498,
+    "matches_issue": 0.852,
+    "safe_to_apply": 0.8042,
+    "composite": 0.8015000000000001,
+    "secrets_or_danger": 0.2252,
+    "logic_drift": 0.5003,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No changes to input handling, execution, or sensitive data processing.\n- PERFORMANCE: RISK - The `if filename not in js` check inside the loop results in O(N^2) complexity for large lists of JS files, which could degrade in forms with extremely many distinct widgets/files.\n- ROBUSTNESS: PASS - The logic simplifies to deterministic first-occurrence ordering, removing the complex conflict detection that was the source of the bug; no new race conditions or exception swallowing introduced.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/forms/widgets.py: @@ — expected context not found in file: '    def __add__(self, other):'",
+  "regression_test": "\"\"\"\nTests for the Media order‑resolution bug described in\nhttps://github.com/django/django/issues/… (3+ media objects causing\nMediaOrderConflictWarning).\n\nThe first test asserts the exact JS ordering that the fixed code should\nproduce.  With the current (buggy) implementation the order is different,\nso the test fails (red).  After the fix is applied the test passes (green).\n\nAdditional edge‑case tests verify that:\n* No warning is emitted when only two Media objects are merged.\n* Merging a widget that defines no Media does not affect the final order.\n* Merging three independent Media objects yields the straightforward\n  concatenated order without warnings.\n\"\"\"\n\nimport warnings\n\nimport pytest\n\n# --------------------------------------------------------------------------- #\n# Minimal Django configuration for the test suite\n# --------------------------------------------------------------------------- #\nfrom django.conf import settings\n\nif not settings.configured:\n    settings.configure(\n        SECRET_KEY=\"test-secret-key\",\n        INSTALLED_APPS=[\n            \"django.contrib.contenttypes\",\n            \"django.contrib.auth\",\n        ],\n    )\n\nimport django\n\ndjango.setup()\n\n# --------------------------------------------------------------------------- #\n# Imports needed for the tests\n# --------------------------------------------------------------------------- #\nfrom django import forms\nfrom django.forms.widgets import MediaOrderConflictWarning\n\n\n# --------------------------------------------------------------------------- #\n# Helper widgets used in the main bug reproduction test\n# --------------------------------------------------------------------------- #\nclass ColorPicker(forms.Widget):\n    class Media:\n        js = [\"color-picker.js\"]\n\n\nclass SimpleTextWidget(forms.Widget):\n    class Media:\n        js = [\"text-editor.js\"]\n\n\nclass FancyTextWidget(forms.Widget):\n    class Media:\n        js = [\n            \"text-editor.js\",\n            \"text-editor-extras.js\",\n            \"color-picker.js\",\n        ]\n\n\n# --------------------------------------------------------------------------- #\n# The form that triggers the bug (three widgets with overlapping JS)\n# --------------------------------------------------------------------------- #\nclass MyForm(forms.Form):\n    background_color = forms.CharField(widget=ColorPicker())\n    intro = forms.CharField(widget=SimpleTextWidget())\n    body = forms.CharField(widget=FancyTextWidget())\n\n\n# --------------------------------------------------------------------------- #\n# Primary test – reproduces the bug\n# --------------------------------------------------------------------------- #\ndef test_media_order_three_widgets_is_fixed():\n    \"\"\"\n    With the buggy implementation Django emits a MediaOrderConflictWarning\n    and produces an incorrect order.  After the fix the Media object should\n    contain the JS files in the exact order required by the dependency graph.\n    \"\"\"\n    form_media = MyForm().media\n\n    # The expected order after the fix\n    expected_js = [\"text-editor.js\", \"text-editor-extras.js\", \"color-picker.js\"]\n\n    assert form_media.js == expected_js, (\n        \"Media order is incorrect – the fix for MediaOrderConflictWarning \"\n        \"has not been applied.\"\n    )\n\n\n# --------------------------------------------------------------------------- #\n# Edge‑case 1 – merging only two widgets should NOT raise a warning\n# --------------------------------------------------------------------------- #\ndef test_two_widgets_no_conflict_warning():\n    class WidgetA(forms.Widget):\n        class Media:\n            js = [\"a.js\"]\n\n    class WidgetB(forms.Widget):\n        class Media:\n            js = [\"b.js\", \"a.js\"]\n\n    class TwoWidgetForm(forms.Form):\n        field_a = forms.CharField(widget=WidgetA())\n        field_b = forms.CharField(widget=WidgetB())\n\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter(\"always\")\n        media = TwoWidgetForm().media\n        # No MediaOrderConflictWarning should be emitted\n        assert not any(isinstance(warn.message, MediaOrderConflictWarning) for warn in w)\n\n    # Order: a.js from WidgetA, then b.js (new), then a.js is duplicate and ignored\n    # Django's Media de‑duplicates preserving the first occurrence.\n    assert media.js == [\"a.js\", \"b.js\"]\n\n\n# --------------------------------------------------------------------------- #\n# Edge‑case 2 – a widget without a Media class should not affect ordering\n# --------------------------------------------------------------------------- #\ndef test_widget_without_media_is_ignored():\n    class NoMediaWidget(forms.Widget):\n        pass  # No Media inner class\n\n    class SimpleWidget(forms.Widget):\n        class Media:\n            js = [\"simple.js\"]\n\n    class FormWithEmptyWidget(forms.Form):\n        empty = forms.CharField(widget=NoMediaWidget())\n        simple = forms.CharField(widget=SimpleWidget())\n\n    media = FormWithEmptyWidget().media\n    assert media.js == [\"simple.js\"]\n\n\n# --------------------------------------------------------------------------- #\n# Edge‑case 3 – three independent widgets should concatenate without warnings\n# --------------------------------------------------------------------------- #\ndef test_three_independent_widgets_concatenate_correctly():\n    class W1(forms.Widget):\n        class Media:\n            js = [\"one.js\"]\n\n    class W2(forms.Widget):\n        class Media:\n            js = [\"two.js\"]\n\n    class W3(forms.Widget):\n        class Media:\n            js = [\"three.js\"]\n\n    class ThreeWidgetForm(forms.Form):\n        f1 = forms.CharField(widget=W1())\n        f2 = forms.CharField(widget=W2())\n        f3 = forms.CharField(widget=W3())\n\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter(\"always\")\n        media = ThreeWidgetForm().media\n        # No conflict warning should appear for independent media objects\n        assert not any(isinstance(warn.message, MediaOrderConflictWarning) for warn in w)\n\n    assert media.js == [\"one.js\", \"two.js\", \"three.js\"]",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

@@ -1,0 +1,175 @@
+{
+  "instance_id": "astropy__astropy-14995",
+  "repo": "astropy/astropy",
+  "base_commit": "b16c7d12ccbc7b2d20364b89fb44285bcbfede54",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612121.8185024
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612167.7286162
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612216.08603
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790612355.9730039
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790612503.362446
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612542.4799876
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612568.0990689
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ -30,10 +30,16 @@ — expected context not found in file: '            # Perform the operation with the operand.'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790612062.6125586,
+  "elapsed_s": 513.51,
+  "plan": "# Correction logic inside arithmetic method\n    if self.mask is None and operand.mask is None:\n        result_mask = None\n    elif operand.mask is None:\n        result_mask = self.mask\n    elif self.mask is None:\n        result_mask = operand.mask\n    else:\n        result_mask = handle_mask(self.mask, operand.mask)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/nddata/mixins/ndarithmetic.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4095,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9658,
+        "vector": 0.818
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/nddata/subclassing.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3754,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.5613
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/nddata/mixins/ndarithmetic.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3209,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6888,
+        "vector": 0.7534
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/development/workflow/git_edit_workflow_examples.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2977,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7117,
+        "vector": 0.5788
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/io/fits/appendix/faq.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.296,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6832,
+        "vector": 0.616
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "CHANGES.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2956,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6261,
+        "vector": 0.7078
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.66885,
+  "laya_scores": {
+    "fix_quality": 1.4231,
+    "matches_issue": 0.7061,
+    "safe_to_apply": 0.5462,
+    "composite": 0.66885,
+    "secrets_or_danger": 0.1552,
+    "logic_drift": 0.2159,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS | No changes to input handling, deserialization, or command execution are introduced in this snippet.\n- PERFORMANCE: PASS | The logic reduces unnecessary operations (filtering lists) and explicitly handles `None` cases to avoid errors, which is neutral or slightly positive for efficiency.\n- ROBUSTNESS: FAIL | The patch calls `handle_mask(self.mask, operand.mask)` without ensuring the function exists or handling the case where `handle_mask` might be `None` (if not passed), although the bug report implies it is passed; more critically, it does not handle the case where `handle_mask` itself returns `None` or throws an exception, and the diff appears truncated/broken syntactically in the provided text (missing colon or incomplete loop structure in the original context implied by the `-` lines vs `+` lines mismatch), but strictly looking at the logic: if `handle_mask` is not defined in the scope of the method where this is used (often it's a parameter), it fails. However, the most glaring robustness issue in the *provided diff context* is that it assumes `handle_mask` is defined. In the actual `NDDataArithmeticMixin`, `handle_mask` is a parameter. If it is `None` (default in some contexts), `ans_mask = None()` would crash. The original code didn't crash because it only ran if masks existed, but even then it didn't call `handle_mask`. Wait, looking at the original co"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ -30,10 +30,16 @@ — expected context not found in file: '            # Perform the operation with the operand.'",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.nddata import NDDataRef\n\n\ndef test_mask_propagation_one_operand_missing_mask_raises_before_fix():\n    \"\"\"\n    Regression test: mask propagation must not raise TypeError\n    when only one operand has a mask and handle_mask=np.bitwise_or.\n    \"\"\"\n    array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\n    mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\n\n    nref_nomask = NDDataRef(array)\n    nref_mask = NDDataRef(array, mask=mask)\n\n    # masked * scalar -> should return mask copied over, no TypeError\n    result = nref_mask.multiply(1.0, handle_mask=np.bitwise_or)\n    assert result.mask is not None\n    np.testing.assert_array_equal(result.mask, mask)\n\n    # masked * nomask -> should return mask copied over, no TypeError\n    result = nref_mask.multiply(nref_nomask, handle_mask=np.bitwise_or)\n    assert result.mask is not None\n    np.testing.assert_array_equal(result.mask, mask)\n\n\ndef test_mask_propagation_both_no_mask_returns_none():\n    \"\"\"\n    Both operands without mask: result mask should be None.\n    This case already worked before the fix and must continue to work.\n    \"\"\"\n    array = np.array([1.0, 2.0, 3.0])\n    nref_nomask1 = NDDataRef(array)\n    nref_nomask2 = NDDataRef(array)\n\n    result = nref_nomask1.multiply(nref_nomask2, handle_mask=np.bitwise_or)\n    assert result.mask is None\n\n\ndef test_mask_propagation_both_have_mask_applies_handle_mask():\n    \"\"\"\n    Both operands have masks: handle_mask should be applied element-wise.\n    This case already worked and must continue to work.\n    \"\"\"\n    array = np.array([1.0, 2.0, 3.0])\n    mask1 = np.array([0, 1, 0])\n    mask2 = np.array([0, 1, 1])\n\n    nref1 = NDDataRef(array, mask=mask1)\n    nref2 = NDDataRef(array, mask=mask2)\n\n    result = nref1.multiply(nref2, handle_mask=np.bitwise_or)\n    expected = np.bitwise_or(mask1, mask2)\n    np.testing.assert_array_equal(result.mask, expected)\n\n\ndef test_mask_propagation_nomask_by_mask_reverse_order():\n    \"\"\"\n    Non-masked operand on the left, masked operand on the right:\n    e.g., nref_nomask.multiply(nref_mask). The fix plan handles\n    self.mask is None and operand.mask is not None via the\n    'elif self.mask is None' branch, so this should also work.\n    \"\"\"\n    array = np.array([1.0, 2.0, 3.0])\n    mask = np.array([0, 1, 1])\n\n    nref_nomask = NDDataRef(array)\n    nref_mask = NDDataRef(array, mask=mask)\n\n    result = nref_nomask.multiply(nref_mask, handle_mask=np.bitwise_or)\n    assert result.mask is not None\n    np.testing.assert_array_equal(result.mask, mask)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

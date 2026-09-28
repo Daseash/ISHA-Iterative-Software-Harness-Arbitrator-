@@ -34,24 +34,54 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.config import AGENT_NAME, LLM_ENABLED
+from src.config import (
+    AGENT_NAME,
+    CODER_CHAIN,
+    LLM_ENABLED,
+    OFFLINE_MODE,
+    PLANNER_CHAIN,
+    TARGET_REPO_PATH,
+    _short_name,
+    get_model_log,
+)
 
 DEFAULT_ISSUE = (
     "The subtract method in calculator.py returns a+b instead of a-b"
 )
 
+# Phase 7 — subcommands live in src.cli; with no subcommand the historical
+# single-issue behaviour below runs unchanged.
+_CLI_COMMANDS = ("fix", "bench", "doctor", "report", "ui")
 
-BANNER = """
-+===============================================================+
-|                                                                 |
-|   ISHA -- Autonomous AI Software Engineering Agent              |
-|                                                                 |
-|   Powered by: Gemini 3.1 Flash Lite + Groq Qwen 3.8 + LAYA    |
-|   Judgment:   LAYA calibrated probabilities (not heuristics)    |
-|   Isolation:  Git worktrees (multi-agent safe)                  |
-|                                                                 |
-+===============================================================+
-"""
+
+def _chain_line(label: str, chain: list) -> str:
+    """Render one model chain: 'planner: gemini-3.5-flash (+2 fallbacks)'."""
+    if OFFLINE_MODE:
+        return f"|   {label:<8}: offline deterministic brain (no API keys)     |"
+    primary = _short_name(chain[0])
+    extra = len(chain) - 1
+    suffix = f" (+{extra} fallback{'s' if extra != 1 else ''})" if extra else ""
+    line = f"|   {label:<8}: {primary}{suffix}"
+    return line.ljust(66)[:66] + "|"
+
+
+def build_banner() -> str:
+    """Banner rendered from the live model configuration in config.py."""
+    return (
+        "\n+===============================================================+\n"
+        "|                                                                 |\n"
+        "|   ISHA -- Autonomous AI Software Engineering Agent              |\n"
+        "|                                                                 |\n"
+        + _chain_line("planner", PLANNER_CHAIN) + "\n"
+        + _chain_line("coder", CODER_CHAIN) + "\n"
+        "|   Judgment:   LAYA calibrated probabilities (not heuristics)    |\n"
+        "|   Isolation:  Git worktrees (multi-agent safe)                  |\n"
+        "|                                                                 |\n"
+        "+===============================================================+\n"
+    )
+
+
+BANNER = build_banner()
 
 
 def _print_section(title: str, body: str, limit: int = 1200) -> None:
@@ -62,7 +92,25 @@ def _print_section(title: str, body: str, limit: int = 1200) -> None:
     print(body if body else "(empty)")
 
 
+def _format_model_usage(entries: list) -> str:
+    """Render the model audit log: which model actually answered each step."""
+    if not entries:
+        return "(no model calls recorded)"
+    lines = []
+    for e in entries:
+        line = f"  {e.get('role', '?'):<16} {e.get('model', '?'):<32} [{e.get('position', '?')}]"
+        if e.get("note"):
+            line += f" {e['note']}"
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in _CLI_COMMANDS:
+        from src.cli import main as cli_main
+
+        return cli_main(sys.argv[1:])
+
     parser = argparse.ArgumentParser(
         description=f"{AGENT_NAME} — Autonomous AI Software Engineering Agent"
     )
@@ -70,8 +118,8 @@ def main() -> int:
     parser.add_argument(
         "--repo",
         type=str,
-        default="tests/dummy_repo",
-        help="Path to the target repository to analyse and patch",
+        default=TARGET_REPO_PATH,
+        help="Path to the target repository to analyse and patch (default: TARGET_REPO_PATH env)",
     )
     parser.add_argument(
         "--apply",
@@ -95,7 +143,7 @@ def main() -> int:
     args = parser.parse_args()
 
     if not Path(args.repo).is_dir():
-        print(BANNER)
+        print(build_banner())
         print(f"  🛑 Target repo not found: {args.repo}")
         print("     The bundled fixture was removed — pass --repo <path> to any")
         print("     Python repo you want ISHA to work on.")
@@ -108,13 +156,17 @@ def main() -> int:
 
     safe, reason = scan_input_for_injection(issue)
     if not safe:
-        print(BANNER)
+        print(build_banner())
         print(f"  🛑 Blocked by guardrails: {reason}")
         return 3
 
-    print(BANNER)
+    print(build_banner())
     print(f"  Agent:  {AGENT_NAME}")
-    print(f"  Models: {'Gemini Flash + Groq (live)' if LLM_ENABLED else 'offline deterministic brain (no API keys)'}")
+    if LLM_ENABLED and not OFFLINE_MODE:
+        print(f"  Planner chain: {' -> '.join(_short_name(m) for m in PLANNER_CHAIN)}")
+        print(f"  Coder chain:   {' -> '.join(_short_name(m) for m in CODER_CHAIN)}")
+    else:
+        print("  Models: offline deterministic brain (no API keys)")
     print(f"  Repo:   {args.repo}")
     print(f"  Issue:  {issue}")
     if using_default:
@@ -167,6 +219,7 @@ def main() -> int:
         f"  critic_score:   {result.critic_score:.3f}\n"
         f"  retries:        {result.retry_count}",
     )
+    _print_section("MODEL USAGE", _format_model_usage(result.model_log or get_model_log()))
 
     passed = "PASSED" in (result.test_output or "") and "FAILED" not in (
         result.test_output or ""

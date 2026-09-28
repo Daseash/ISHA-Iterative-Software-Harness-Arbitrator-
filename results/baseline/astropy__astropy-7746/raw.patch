@@ -1,0 +1,12 @@
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@ -1264,7 +1264,11 @@ class WCSBase(object):
+             # Normalized and denormalized.
+             xy = [_parse_axis(x) for x in axes]
+ 
++            if any(len(x) == 0 for x in xy):
++                return [np.array([]) for x in xy]
++
+             if ra_dec_order and sky == 'input':
+                 xy = self._denormalize_sky(xy)
+             output = func(xy, origin)

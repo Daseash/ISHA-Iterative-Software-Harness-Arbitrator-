@@ -53,3 +53,21 @@ def rollback(repo_path: str) -> bool:
     ok, _ = _git(repo_path, "checkout", "--", ".")
     _git(repo_path, "clean", "-fd")
     return ok
+
+
+def clone_repo(github_url: str, target_dir: str) -> str:
+    """Clone a GitHub repository to a local directory.
+
+    Used to fetch external repos for ISHA to analyse and patch.
+    Returns the target directory path on success.
+    """
+    subprocess.run(
+        ["git", "clone", "--depth", "1", github_url, target_dir],
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=120,
+    )
+    return target_dir

@@ -1,0 +1,171 @@
+{
+  "instance_id": "astropy__astropy-14365",
+  "repo": "astropy/astropy",
+  "base_commit": "7269fa3e33e8d02485a647da91a5a2a60a06af61",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790611996.4231882
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790611997.8139024
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612021.4631414
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612045.499577
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/io/ascii/qdp.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1
+    },
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790611954.5426364,
+  "elapsed_s": 98.76,
+  "plan": "line = line.upper()\nparts = line.split()\nif parts[0] == 'READ':",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "docs/io/ascii/read.rst",
+      "symbol": "docs/io/ascii/read.rst::read_rdb_table",
+      "line_range": [
+        750,
+        765
+      ],
+      "score": 0.5112,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.854,
+        "vector": 0.7182
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/ascii/qdp.py",
+      "symbol": "astropy/io/ascii/qdp.py::_get_tables_from_qdp_file",
+      "line_range": [
+        237,
+        344
+      ],
+      "score": 0.5058,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8825,
+        "vector": 0.6396
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/table/construct_table.rst",
+      "symbol": "docs/table/construct_table.rst::MyTable",
+      "line_range": [
+        1046,
+        1159
+      ],
+      "score": 0.4774,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7881,
+        "vector": 0.6279
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/fits/column.py",
+      "symbol": "astropy/io/fits/column.py::_init_from_table",
+      "line_range": [
+        1565,
+        1615
+      ],
+      "score": 0.4711,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6962,
+        "vector": 0.7422
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/io/fits/appendix/history.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3555,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.4444
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/io/unified.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3517,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8618,
+        "vector": 0.6493
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.6699999999999999,
+  "laya_scores": {
+    "fix_quality": 1.3977,
+    "matches_issue": 0.6391,
+    "safe_to_apply": 0.6432,
+    "composite": 0.6699999999999999,
+    "secrets_or_danger": 0.2063,
+    "logic_drift": 0.3624,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: No new injection, secrets, or unsafe execution vectors introduced.\n- PERFORMANCE: No change in algorithmic complexity or query patterns.\n- ROBUSTNESS: The diff shows no functional change to the case-sensitivity logic required to fix the bug; the condition `if not line` remains identical in logic and the regex is still case-sensitive, so the reported crash persists.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom astropy.table import Table\n\n\ndef test_qdp_read_lowercase_command(tmp_path):\n    \"\"\"Minimal reproduction: lowercase QDP commands should be read into a Table.\"\"\"\n    qdp_file = tmp_path / \"test.qdp\"\n    qdp_file.write_text(\"read serr 1 2 \\n1 0.5 1 0.5\\n\")\n\n    table = Table.read(str(qdp_file), format=\"ascii.qdp\")\n\n    # After a READ SERR 1 2, the table should have 2 columns plus id column.\n    # The standard QDP table created by reading data has: ID, col 1 (data), col 2 (SERR).\n    assert len(table) == 1\n    # Values in the first data column\n    assert table[0][1] == pytest.approx(0.5)\n    assert table[0][2] == pytest.approx(0.5)\n\n\ndef test_qdp_read_mixed_case_command(tmp_path):\n    \"\"\"Mixed-case QDP commands should also be parsed correctly.\"\"\"\n    qdp_file = tmp_path / \"mixed.qdp\"\n    qdp_file.write_text(\"Read Serr 1 2\\n10 2.0 3.0\\n\")\n\n    table = Table.read(str(qdp_file), format=\"ascii.qdp\")\n\n    assert len(table) == 1\n    assert table[0][1] == pytest.approx(2.0)\n    assert table[0][2] == pytest.approx(3.0)\n\n\ndef test_qdp_read_uppercase_command_still_works(tmp_path):\n    \"\"\"Upper-case QDP commands (the previously supported form) must continue to work.\"\"\"\n    qdp_file = tmp_path / \"upper.qdp\"\n    qdp_file.write_text(\"READ SERR 1 2\\n5 1.5 2.5\\n\")\n\n    table = Table.read(str(qdp_file), format=\"ascii.qdp\")\n\n    assert len(table) == 1\n    assert table[0][1] == pytest.approx(1.5)\n    assert table[0][2] == pytest.approx(2.5)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -58,7 +58,7 @@ def _line_type(line, delimiter=None):\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n     _line_type_re = re.compile(_type_re)\n     line = line.strip()\n-    if not line:\n+    if not line:\n         return \"comment\"\n     match = _line_type_re.match(line)",
+  "offline_calls": 0
+}

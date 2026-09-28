@@ -1,0 +1,175 @@
+{
+  "instance_id": "django__django-11049",
+  "repo": "django/django",
+  "base_commit": "17455e924e243e7a55e8a38f45966d8cbb27c273",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616272.0844786
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790616274.0383873
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616396.0944834
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616548.2953851
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616714.8553698
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616874.2810018
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790616904.8729832
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/core/validators.py: @@ — expected context not found in file: \"    message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/db/models/fields/__init__.py: @@ — expected context not found in file: \"    help_text = _('Duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/forms/fields.py: @@ — expected context not found in file: \"        error_message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790616111.568319,
+  "elapsed_s": 800.8,
+  "plan": "Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu]",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/duration.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4166,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8034
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/contrib/humanize.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3142,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9896,
+        "vector": 0.2182
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/forms/fields.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3122,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8302,
+        "vector": 0.4694
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3082,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7609,
+        "vector": 0.5596
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/releases/1.8.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2936,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7991,
+        "vector": 0.4109
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/releases/1.2.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2915,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8112,
+        "vector": 0.379
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.72765,
+  "laya_scores": {
+    "fix_quality": 1.4332,
+    "matches_issue": 0.7937,
+    "safe_to_apply": 0.6837,
+    "composite": 0.72765,
+    "secrets_or_danger": 0.175,
+    "logic_drift": 0.4544,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-relevant code changes (only string literals).\n- PERFORMANCE: PASS - No performance impact from minor string constant changes.\n- ROBUSTNESS: PASS - No logic changes that could introduce bugs or stability issues.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/core/validators.py: @@ — expected context not found in file: \"    message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/db/models/fields/__init__.py: @@ — expected context not found in file: \"    help_text = _('Duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/forms/fields.py: @@ — expected context not found in file: \"        error_message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"",
+  "regression_test": "\"\"\"\nRegression test: invalid DurationField error message must document the correct\nformat string.\n\nBug: the error message told users durations must look like\n    \"[DD] [HH:[MM:]]ss[.uuuuuu]\"\nwhich is wrong: seconds are mandatory, minutes are optional, and hours are\noptional (and require minutes). The message should read:\n    \"[DD] [[HH:]MM:]ss[.uuuuuu]\"\n\"\"\"\nimport os\nimport sys\n\nimport pytest\n\n# Make sure Django can be imported from this checkout.\nsys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))\n\nimport django\n\nos.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"tests.test_sqlite\")\ndjango.setup()\n\nfrom django.core.exceptions import ValidationError\nfrom django.db.models import DurationField, TimeField\n\n\ndef _validate(value):\n    \"\"\"Return the message string from the first (and only) validation error.\"\"\"\n    errors = []\n    try:\n        DurationField().to_python(value)\n    except ValidationError as exc:\n        # ValidationError may hold messages or a list of ValidationErrors.\n        for e in exc.error_list:\n            errors.append(str(e))\n    assert errors, \"Expected a ValidationError for invalid duration %r\" % (value,)\n    return errors[0]\n\n\n# --------------------------------------------------------------------------- #\n# Primary bug reproduction (must be RED before fix, GREEN after).\n# --------------------------------------------------------------------------- #\ndef test_invalid_duration_error_message_uses_correct_format_string():\n    \"\"\"The error message for an unparseable duration must show the correct\n    format string with [[HH:]MM:]ss as the core pattern.\"\"\"\n    msg = _validate(\"not a duration at all\")\n    # The corrected format string as documented in the fix plan.\n    assert \"[[HH:]MM:]ss[.uuuuuu]\" in msg, (\n        \"Error message should document the corrected format \"\n        \"'[DD] [[HH:]MM:]ss[.uuuuuu]', got: %r\" % msg\n    )\n    # The old, incorrect string must be gone.\n    assert \"[HH:[MM:]]ss\" not in msg, (\n        \"Error message still contains the old incorrect format '[HH:[MM:]]ss': %r\" % msg\n    )\n\n\n# --------------------------------------------------------------------------- #\n# Edge-case tests (only behavior the fix plan guarantees).\n# --------------------------------------------------------------------------- #\ndef test_invalid_duration_error_message_still_mentions_days_placeholder():\n    \"\"\"The DD placeholder for days remains part of the documented format.\"\"\"\n    msg = _validate(\"\")\n    assert \"[DD]\" in msg, (\n        \"Expected '[DD]' in the format hint, got: %r\" % msg\n    )\n    # Fractional seconds placeholder still present.\n    assert \"[.uuuuuu]\" in msg, (\n        \"Expected '[.uuuuuu]' in the format hint, got: %r\" % msg\n    )\n\n\ndef test_valid_durations_do_not_raise():\n    \"\"\"Formats that the corrected string promises are actually accepted.\n\n    Seconds are mandatory; minutes and hours are optional.\n    \"\"\"\n    valid = [\"5\", \"1:05\", \"2:10:05\", \"1 02:03:04\", \"1.5\"]\n    for v in valid:\n        result = DurationField().to_python(v)\n        # Just ensure no ValidationError for these well-formed inputs.\n        try:\n            DurationField().to_python(v)\n        except ValidationError:\n            pytest.fail(\n                \"Valid duration %r unexpectedly raised ValidationError: \"\n                \"the corrected format string implies it should be accepted.\" % v\n            )\n\n\ndef test_real_invalid_values_still_raise_validation_error():\n    \"\"\"Values that genuinely don't match the documented format must still\n    raise a ValidationError (the fix changes the *message*, not acceptance).\"\"\"\n    bad_values = [\"\", \"abc\", \"14:::5\", \"::\", \"--:--\", \"1:2:3:4\"]\n    for v in bad_values:\n        with pytest.raises(ValidationError):\n            DurationField().to_python(v)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

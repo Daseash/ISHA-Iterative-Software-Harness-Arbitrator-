@@ -95,6 +95,14 @@ def save_session(
     )
 
     out_file.write_text(snapshot.model_dump_json(indent=2), encoding="utf-8")
+
+    # Learn from this attempt: append to the fix-history ledger (dedup'd).
+    try:
+        from src.agents.fix_history import record_fix
+
+        record_fix(state)
+    except Exception:
+        pass
     return state.session_id
 
 

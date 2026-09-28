@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "isha-fix"
+version = "0.2.0"
+description = "Autonomous AI Software Engineering Agent with TDD Red-to-Green Verification"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "ISHA Team"}]
+
+dependencies = [
+    "langgraph",
+    "litellm",
+    "pydantic>=2",
+    "python-dotenv",
+    "pytest",
+    "streamlit",
+]
+
+[project.scripts]
+isha = "src.main:main"
+isha-fix = "src.main:main"
+
+[tool.pyright]
+extraPaths = [
+    ".",
+    "src",
+    "tests/dummy_repo"
+]
+

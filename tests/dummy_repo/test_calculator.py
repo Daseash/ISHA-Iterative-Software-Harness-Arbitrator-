@@ -7,7 +7,10 @@ seeded bugs, which is what ISHA's regression-test-first loop verifies.
 
 import pytest
 
-from calculator import Calculator
+try:
+    from calculator import Calculator
+except ImportError:
+    from tests.dummy_repo.calculator import Calculator
 
 
 class TestAdd:

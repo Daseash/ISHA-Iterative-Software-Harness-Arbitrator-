@@ -32,3 +32,16 @@ class Calculator:
         instead of ValueError('Cannot divide by zero').
         """
         return a / b  # BUG: missing zero guard
+
+    def percentage(self, value: float) -> float:
+        """Return what percentage ``value`` is of some total.
+
+        Example: percentage(25) with total=100 returns 25.0 — but this
+        method only works when the total is 100 because the ``total``
+        parameter is missing entirely.
+
+        BUG: total is hardcoded to 100.  Should accept a ``total``
+        parameter so callers can compute percentages against any
+        denominator, not just 100.
+        """
+        return float(value)  # Only correct when total is 100

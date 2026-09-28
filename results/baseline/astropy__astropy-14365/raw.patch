@@ -1,0 +1,10 @@
+--- a/astropy/io/ascii/qdp.py
++++ b/astropy/io/ascii/qdp.py
+@@ -58,7 +58,7 @@ def _line_type(line, delimiter=None):
+     _type_re = rf"^\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\s*(\!(?P<comment>.*))?\s*$"
+     _line_type_re = re.compile(_type_re)
+     line = line.strip()
+-    if not line:
++    if not line:
+         return "comment"
+     match = _line_type_re.match(line)

@@ -1,0 +1,7 @@
+{"event": "start", "instance_id": "django__django-10914", "ts": 1790613114.4836845}
+{"event": "attempt", "n": 1, "ts": 1790613114.942822}
+{"event": "model", "ts": 1790613219.5037506, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790613221.4695623, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790613292.1763291, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790613319.7830765, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790613347.4479897}

@@ -14,7 +14,9 @@ from langgraph.types import RunnableConfig
 from src.agents.decomposer import decomposer_node
 from src.agents.investigation import investigation_node
 from src.agents.nodes import (
+    candidate_node,
     coder_node,
+    confidence_gate_node,
     planner_node,
     regression_test_node,
     sandbox_node,
@@ -26,11 +28,86 @@ from src.review.critic import critic_node
 MAX_RETRIES = 3
 
 
-def approval_node(state, config=None) -> AgentState:
-    """Route flagged diffs to the human gate; clear ones skip it."""
-    from src.approval.gate import approval_node as gate
+def _blast_escalation(state: AgentState) -> str:
+    """Non-empty reason when fan-out demands human review regardless of critic score."""
+    import os
 
-    return gate(state, config)
+    br = state.blast_radius or {}
+    try:
+        score_threshold = float(os.getenv("ISHA_BLAST_REVIEW_SCORE", "0.4"))
+        caller_threshold = int(os.getenv("ISHA_BLAST_REVIEW_CALLERS", "150"))
+    except ValueError:
+        score_threshold, caller_threshold = 0.4, 150
+
+    score = float(br.get("score", 0) or 0)
+    callers = int(br.get("callers", 0) or 0)
+    if score >= score_threshold:
+        return f"blast radius {score:.2f} >= {score_threshold} — human review regardless of critic score"
+    if callers >= caller_threshold:
+        return f"~{callers} callers >= {caller_threshold} — human review regardless of critic score"
+    return ""
+
+
+def approval_node(state, config=None) -> AgentState:
+    """Route flagged diffs to the human gate; clear ones skip it.
+
+    Escalations (low planner confidence, excessive blast radius) skip the
+    auto-approve path and land in human review regardless of critic score.
+
+    Also advances to the next sub-issue when one exists. This must happen
+    inside a node: LangGraph hands routers a plain dict, so mutations made
+    on a coerced copy in a conditional router are silently discarded and
+    the graph loops on the same sub-issue forever.
+    """
+    from src.approval.gate import approval_node as gate, log_approval
+
+    state = coerce_state(state)
+
+    if state.escalation:
+        # Confidence gate fired before any patch was attempted.
+        state.approved = False
+        log_approval({
+            "issue": state.issue_text,
+            "verdict": state.critic_verdict,
+            "score": state.critic_score,
+            "decision": "escalated",
+            "reason": state.escalation,
+            "patch_preview": (state.patch or "")[:400],
+        })
+        return state
+
+    state = coerce_state(gate(state, config))
+
+    if state.approved is True:
+        reason = _blast_escalation(state)
+        if reason:
+            state.approved = False
+            log_approval({
+                "issue": state.issue_text,
+                "verdict": state.critic_verdict,
+                "score": state.critic_score,
+                "decision": "escalated_blast_radius",
+                "reason": reason,
+                "patch_preview": (state.patch or "")[:1200],
+            })
+            return state
+
+    if state.approved is False:
+        return state
+
+    sub_issues = state.sub_issues or []
+    next_idx = state.current_sub_issue_index + 1
+    if next_idx < len(sub_issues):
+        state.current_sub_issue_index = next_idx
+        state.sub_issues[next_idx]["status"] = "in_progress"
+        state.retry_count = 0
+        state.test_output = ""
+        state.regression_test = ""
+        state.issue_text = (
+            f"[Sub-issue {next_idx + 1}/{len(sub_issues)}: {state.sub_issues[next_idx].get('title', '')}]\n"
+            f"{state.sub_issues[next_idx].get('description', '')}"
+        )
+    return state
 
 
 def checkpoint_node(state: AgentState) -> AgentState:
@@ -54,26 +131,20 @@ def _route_after_sandbox(state: AgentState) -> str:
     return "critic"
 
 
+def _route_after_confidence_gate(state: AgentState) -> str:
+    """Escalate before patching when the planner's confidence is too low."""
+    return "approval" if coerce_state(state).escalation else "regression_test"
+
+
 def _route_after_approval(state: AgentState) -> str:
-    """Check if there are remaining sub-issues to solve sequentially."""
+    """Pure router — no state mutations here (sub-issue advancement lives in approval_node)."""
     state = coerce_state(state)
     if state.approved is False:
         return "checkpoint"
 
     sub_issues = state.sub_issues or []
-    next_idx = state.current_sub_issue_index + 1
-    if next_idx < len(sub_issues):
-        state.current_sub_issue_index = next_idx
-        state.sub_issues[next_idx]["status"] = "in_progress"
-        state.retry_count = 0
-        state.test_output = ""
-        state.regression_test = ""
-        state.issue_text = (
-            f"[Sub-issue {next_idx + 1}/{len(sub_issues)}: {state.sub_issues[next_idx].get('title', '')}]\n"
-            f"{state.sub_issues[next_idx].get('description', '')}"
-        )
+    if state.current_sub_issue_index + 1 < len(sub_issues):
         return "planner"
-
     return "checkpoint"
 
 
@@ -84,8 +155,10 @@ def build_graph():
     workflow.add_node("investigation", investigation_node)
     workflow.add_node("decomposer", decomposer_node)
     workflow.add_node("planner", planner_node)
+    workflow.add_node("confidence_gate", confidence_gate_node)
     workflow.add_node("regression_test", regression_test_node)
     workflow.add_node("coder", coder_node)
+    workflow.add_node("candidates", candidate_node)
     workflow.add_node("sandbox", sandbox_node)
     workflow.add_node("critic", critic_node)
     workflow.add_node("approval", approval_node)
@@ -94,9 +167,15 @@ def build_graph():
     workflow.set_entry_point("investigation")
     workflow.add_edge("investigation", "decomposer")
     workflow.add_edge("decomposer", "planner")
-    workflow.add_edge("planner", "regression_test")
+    workflow.add_edge("planner", "confidence_gate")
+    workflow.add_conditional_edges(
+        "confidence_gate",
+        _route_after_confidence_gate,
+        {"approval": "approval", "regression_test": "regression_test"},
+    )
     workflow.add_edge("regression_test", "coder")
-    workflow.add_edge("coder", "sandbox")
+    workflow.add_edge("coder", "candidates")
+    workflow.add_edge("candidates", "sandbox")
     workflow.add_conditional_edges(
         "sandbox",
         _route_after_sandbox,
@@ -205,7 +284,10 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
         cleanup_all_worktrees(state.repo_path)
 
     # Save progress checkpoint
-    save_session(state, status="completed", note=f"Multi-agent winner: {state.strategy}")
+    status = "completed"
+    if state.approved is False:
+        status = "paused_human_review"
+    save_session(state, status=status, note=f"Multi-agent winner: {state.strategy}")
 
     print(
         f"\n  merger: winner strategy={state.strategy} "
@@ -224,6 +306,7 @@ def build_multi_agent_graph():
     workflow.add_node("investigation", investigation_node)
     workflow.add_node("decomposer", decomposer_node)
     workflow.add_node("planner", planner_node)
+    workflow.add_node("confidence_gate", confidence_gate_node)
     workflow.add_node("regression_test", regression_test_node)
     workflow.add_node("arbitration", arbitration_node)
     workflow.add_node("approval", approval_node)
@@ -237,7 +320,12 @@ def build_multi_agent_graph():
     workflow.set_entry_point("investigation")
     workflow.add_edge("investigation", "decomposer")
     workflow.add_edge("decomposer", "planner")
-    workflow.add_edge("planner", "regression_test")
+    workflow.add_edge("planner", "confidence_gate")
+    workflow.add_conditional_edges(
+        "confidence_gate",
+        _route_after_confidence_gate,
+        {"approval": "approval", "regression_test": "regression_test"},
+    )
     workflow.add_conditional_edges(
         "regression_test",
         dispatch_agents,
@@ -257,15 +345,17 @@ def build_multi_agent_graph():
 compiled_multi_graph = build_multi_agent_graph()
 
 
-def run_issue(issue_text: str, repo_path: str = "tests/dummy_repo", thread_id: str = "1") -> AgentState:
+def run_issue(issue_text: str, repo_path: str | None = None, thread_id: str = "1") -> AgentState:
     """Convenience wrapper: build state, invoke the graph, return the result."""
     from pathlib import Path
 
     from src.agents.context import build_repo_context
+    from src.config import TARGET_REPO_PATH
 
+    repo_path = repo_path or TARGET_REPO_PATH
     if not Path(repo_path).is_dir():
         raise FileNotFoundError(
-            f"Target repo not found: {repo_path} (the bundled fixture was removed; pass a real repo path)"
+            f"Target repo not found: {repo_path} (set TARGET_REPO_PATH in .env or pass --repo)"
         )
 
     state = AgentState(

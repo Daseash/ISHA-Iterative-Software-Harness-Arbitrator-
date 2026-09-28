@@ -1,0 +1,159 @@
+{
+  "instance_id": "django__django-11039",
+  "repo": "django/django",
+  "base_commit": "d5276398046ce4a102776a1e67dcac2884d80dfe",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615807.445604
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790615912.3363156
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790616037.8194983
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790616075.0463831
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/commands/sqlmigrate.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/commands/sqlmigrate.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790615622.0238645,
+  "elapsed_s": 461.07,
+  "plan": "**Step 1 – Root cause**\n`django/core/management/commands/sqlmigrate.py` decides whether to wrap the generated SQL in a transaction by setting `self.output_transaction` (or a local variable) to `migration.atomic`.\nThe decision ignores the database’s capability to roll back DDL. For back‑ends that cannot perform transactional DDL (`connection.features.can_rollback_ddl` is False) the command still prints `BEGIN; … COMMIT;`, which is incorrect and causes the failing test.\n\n**Step 2 – Exact code change**\n\n| File | Location | Change |\n|------|----------|--------|\n| `django/core/management/commands/sqlmigrate.py` | Inside `Command.handle` (after the migration object is retrieved, where `self.output_transaction` / `output_transaction` is assigned) | Replace the existing assignment that uses only `migration.atomic` with a conjunction that also checks the DB feature: <br><br>`self.output_transaction = migration.atomic` → `self.output_transaction = migration.atomic and connection.features.can_rollback_ddl` <br><br>If the code uses a local variable `output_transaction` instead of an attribute, apply the same change to that variable. No other modifications are required. |\n\n*No change to public APIs or other files is needed; the single‑line fix makes the transaction wrapper respect both the migration’s atomic flag **and** the backend’s ability to roll back DDL.*\n\n---",
+  "planner_confidence": 0.86,
+  "localization": [
+    {
+      "file": "tests/migrations/test_commands.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.583,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4984,
+        "vector": 0.3438
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "tests/gis_tests/gis_migrations/test_commands.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4981,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1961,
+        "vector": 0.3425
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "django/core/management/commands/sqlmigrate.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3702,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.5308
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/migrations.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3202,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8258,
+        "vector": 0.5232
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/db/transactions.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3043,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8112,
+        "vector": 0.4542
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2927,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7004,
+        "vector": 0.5683
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7712249999999999,
+  "laya_scores": {
+    "fix_quality": 1.66,
+    "matches_issue": 0.7399,
+    "safe_to_apply": 0.685,
+    "composite": 0.7712249999999999,
+    "secrets_or_danger": 0.0854,
+    "logic_drift": 0.2379,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution introduced.\n- PERFORMANCE: PASS - Simple boolean check in command setup, no hot path impact.\n- ROBUSTNESS: PASS - Fixes incorrect transaction wrapping logic, no new race conditions or bugs.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import io\nfrom unittest import mock\n\nimport pytest\nfrom django.core.management import call_command\nfrom django.db import connection\n\n\ndef _run_sqlmigrate(app_label: str, migration_name: str, *, can_rollback_ddl: bool | None = None) -> str:\n    \"\"\"\n    Helper that runs ``sqlmigrate`` for the given migration and returns the generated SQL.\n    If ``can_rollback_ddl`` is not ``None`` the attribute on the current connection is\n    temporarily monkey‑patched.\n    \"\"\"\n    patch = None\n    if can_rollback_ddl is not None:\n        # ``features`` may be a simple object – patch the attribute directly.\n        patch = mock.patch.object(connection.features, \"can_rollback_ddl\", can_rollback_ddl, create=True)\n        patch.start()\n\n    out = io.StringIO()\n    try:\n        call_command(\"sqlmigrate\", app_label, migration_name, stdout=out)\n    finally:\n        if patch:\n            patch.stop()\n\n    return out.getvalue()\n\n\n@pytest.mark.django_db\ndef test_atomic_migration_without_ddl_rollback_does_not_wrap_transaction():\n    \"\"\"\n    The bug: ``sqlmigrate`` wrapped the SQL in ``BEGIN; … COMMIT;`` even when the\n    backend reported ``can_rollback_ddl = False``.\n    This test expects *no* ``BEGIN;``/``COMMIT;`` when the backend cannot roll back DDL.\n    It will fail (RED) before the fix and pass (GREEN) after the fix.\n    \"\"\"\n    sql = _run_sqlmigrate(\n        app_label=\"migrations\",          # the built‑in test app that ships with Django’s test suite\n        migration_name=\"0001_initial\",   # an atomic migration (the default)\n        can_rollback_ddl=False,\n    )\n    assert \"BEGIN;\" not in sql, \"SQL should not be wrapped in a transaction when DDL rollback is unavailable\"\n    assert \"COMMIT;\" not in sql, \"SQL should not be wrapped in a transaction when DDL rollback is unavailable\"\n\n\n@pytest.mark.django_db\ndef test_atomic_migration_with_ddl_rollback_is_wrapped():\n    \"\"\"\n    When the backend *can* roll back DDL the command should still emit the transaction\n    wrapper for atomic migrations. This confirms the original intended behaviour.\n    \"\"\"\n    sql = _run_sqlmigrate(\n        app_label=\"migrations\",\n        migration_name=\"0001_initial\",\n        can_rollback_ddl=True,\n    )\n    assert \"BEGIN;\" in sql, \"SQL should be wrapped in a transaction when DDL rollback is supported\"\n    assert \"COMMIT;\" in sql, \"SQL should be wrapped in a transaction when DDL rollback is supported\"\n\n\n@pytest.mark.django_db\ndef test_non_atomic_migration_is_never_wrapped():\n    \"\"\"\n    A migration that sets ``atomic = False`` must never be wrapped, irrespective of the\n    backend’s ``can_rollback_ddl`` capability.\n    \"\"\"\n    sql = _run_sqlmigrate(\n        app_label=\"migrations\",\n        migration_name=\"0002_non_atomic\",  # this migration sets ``atomic = False``\n        can_rollback_ddl=False,\n    )\n    assert \"BEGIN;\" not in sql\n    assert \"COMMIT;\" not in sql\n\n    sql = _run_sqlmigrate(\n        app_label=\"migrations\",\n        migration_name=\"0002_non_atomic\",\n        can_rollback_ddl=True,\n    )\n    assert \"BEGIN;\" not in sql\n    assert \"COMMIT;\" not in sql",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..9f6ff99 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,9 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        # Only wrap the output in a transaction if the migration is atomic\n+        # and the current database backend supports transactional DDL.\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+  "offline_calls": 0
+}

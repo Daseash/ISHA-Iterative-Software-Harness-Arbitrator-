@@ -1,0 +1,194 @@
+{
+  "instance_id": "astropy__astropy-7746",
+  "repo": "astropy/astropy",
+  "base_commit": "d5bd3f68bb6d5ce3a61bdce9883ee750d1afade5",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "syntax_error",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790612703.310723
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790612798.9824123
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790612916.9543483
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613040.9585772
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613063.0603473
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613081.395944
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613100.4217725
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "static gate failed: C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name '_ASTROPY_SETUP_'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_P14'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_all'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_safe'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_CELESTIAL'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_SPECTRAL'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_STOKES'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_CELESTIAL'",
+    "gates": {
+      "ok": false,
+      "errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name '_ASTROPY_SETUP_'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_P14'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_all'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_safe'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_CELESTIAL'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_SPECTRAL'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_STOKES'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0borrb4_\\astropy\\wcs\\wcs.py: undefined name 'WCSSUB_CELESTIAL'"
+      ],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0
+    },
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790612673.3302634,
+  "elapsed_s": 435.16,
+  "plan": "# Check for empty input\n        if any(x.size == 0 for x in axes):\n            return [np.array([]) for x in axes]",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/wcs/wcs.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4386,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.9332
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "CHANGES.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3852,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.842,
+        "vector": 0.879
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/wcs/docstrings.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.348,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8208,
+        "vector": 0.6951
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/wcs/index.rst",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3397,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7055,
+        "vector": 0.836
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/wcs/utils.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.328,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6815,
+        "vector": 0.8068
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/visualization/wcsaxes/core.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3223,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7021,
+        "vector": 0.7392
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.5421,
+  "laya_scores": {
+    "fix_quality": 1.0958,
+    "matches_issue": 0.6547,
+    "safe_to_apply": 0.4179,
+    "composite": 0.5421,
+    "secrets_or_danger": 0.7297,
+    "logic_drift": 0.2259,
+    "flagged": true,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No new injection vectors, secrets, or unsafe execution paths introduced.\n- PERFORMANCE: PASS - The check `any(len(x) == 0 ...)` is O(n) where n is the number of axes (small constant) and effectively prevents passing empty arrays to the underlying C function, avoiding potential overhead or errors.\n- ROBUSTNESS: RISK - Returning `[np.array([]) for x in xy]` creates a list of empty arrays, which may not match the expected return type (e.g., if the input was a single list vs multiple lists, or if the user expects the output to reflect the input structure precisely, such as returning the original empty list instances or specific dtypes). However, it correctly prevents the crash described in the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: STATIC GATE — C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: undefined name '_ASTROPY_SETUP_'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: local variable 'err_kw' is assigned to but never used; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_P14'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_all'; C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ha5s4kyy\\astropy\\wcs\\wcs.py: undefined name 'WCSHDO_safe'",
+  "regression_test": "\"\"\"Tests for the empty‑input handling of ``WCS.wcs_pix2world``.\n\nThe original implementation raised ``InconsistentAxisTypesError`` when any\ninput axis array was empty.  The fix adds a guard that returns a pair of\nempty ``numpy.ndarray`` objects instead.\n\"\"\"\n\nimport numpy as np\nimport pytest\nfrom astropy.wcs import WCS\nfrom astropy.utils.data import get_pkg_data_filename\nfrom astropy.wcs.wcs import InconsistentAxisTypesError\n\n\n# Helper to obtain a simple WCS object used by all tests.\n@pytest.fixture(scope=\"module\")\ndef simple_wcs():\n    \"\"\"Return a WCS instance based on the 2MASS header shipped with Astropy.\"\"\"\n    header_path = get_pkg_data_filename(\"data/2MASS_h.fits\")\n    return WCS(header_path)\n\n\ndef test_wcs_pix2world_empty_input_returns_empty_arrays(simple_wcs):\n    \"\"\"\n    The primary regression test.\n\n    Before the fix this call raised ``InconsistentAxisTypesError``.\n    After the fix it should return two empty ``ndarray`` objects.\n    \"\"\"\n    result = simple_wcs.wcs_pix2world([], [], 0)\n\n    # Expect a list of two empty arrays (one per axis)\n    assert isinstance(result, list)\n    assert len(result) == 2\n    for arr in result:\n        assert isinstance(arr, np.ndarray)\n        assert arr.size == 0\n\n\ndef test_wcs_pix2world_numpy_empty_arrays(simple_wcs):\n    \"\"\"\n    Empty input supplied as NumPy arrays (instead of Python lists) should be\n    treated the same way and return empty arrays.\n    \"\"\"\n    result = simple_wcs.wcs_pix2world(np.array([]), np.array([]), 0)\n\n    assert isinstance(result, list)\n    assert len(result) == 2\n    for arr in result:\n        assert isinstance(arr, np.ndarray)\n        assert arr.size == 0\n\n\ndef test_wcs_pix2world_one_axis_empty_returns_empty(simple_wcs):\n    \"\"\"\n    If *any* axis array is empty the function should short‑circuit and return\n    empty results for *all* axes.  This matches the behaviour introduced by the\n    fix.\n    \"\"\"\n    x = np.arange(5)          # non‑empty axis\n    y = np.array([])          # empty axis\n\n    result = simple_wcs.wcs_pix2world(x, y, 0)\n\n    assert isinstance(result, list)\n    assert len(result) == 2\n    # Both output axes must be empty regardless of the non‑empty input axis\n    assert result[0].size == 0\n    assert result[1].size == 0\n\n\ndef test_wcs_pix2world_none_input_raises_type_error(simple_wcs):\n    \"\"\"\n    Passing ``None`` (or any non‑array, non‑list input) should raise a\n    ``TypeError`` – this behaviour is unchanged by the fix.\n    \"\"\"\n    with pytest.raises(TypeError):\n        simple_wcs.wcs_pix2world(None, None, 0)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

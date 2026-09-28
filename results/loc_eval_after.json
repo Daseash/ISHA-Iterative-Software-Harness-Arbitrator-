@@ -1,0 +1,594 @@
+{
+  "generated_at": "2026-09-28 23:22:53",
+  "limit": 30,
+  "mode": "head",
+  "top_k": 8,
+  "scored": 30,
+  "skipped": 0,
+  "hit_rates": {
+    "hit@1": 0.3667,
+    "hit@3": 0.6,
+    "hit@5": 0.6333,
+    "hit@8": 0.6667
+  },
+  "source_hit_rates": {
+    "hit@1": 0.3667,
+    "hit@3": 0.6,
+    "hit@5": 0.6333,
+    "hit@8": 0.6667
+  },
+  "mrr": 0.4847,
+  "elapsed_s": 74.9,
+  "rows": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/modeling/separable.py",
+        "astropy/modeling/core.py",
+        "astropy/modeling/fitting.py",
+        "astropy/modeling/mappings.py",
+        "astropy/modeling/statistic.py",
+        "astropy/convolution/convolve.py",
+        "astropy/modeling/bounding_box.py",
+        "astropy/timeseries/periodograms/bls/core.py"
+      ],
+      "expected": [
+        "astropy/modeling/separable.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "astropy__astropy-14182",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "astropy/io/ascii/connect.py",
+        "astropy/io/ascii/ui.py",
+        "astropy/io/ascii/core.py",
+        "astropy/io/fits/connect.py",
+        "astropy/modeling/core.py",
+        "astropy/io/votable/connect.py",
+        "astropy/time/core.py",
+        "astropy/units/core.py"
+      ],
+      "expected": [
+        "astropy/io/ascii/rst.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "astropy__astropy-14365",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/io/ascii/qdp.py",
+        "astropy/io/fits/column.py",
+        "astropy/io/fits/convenience.py",
+        "astropy/utils/iers/iers.py",
+        "astropy/io/votable/exceptions.py",
+        "astropy/io/ascii/connect.py",
+        "astropy/io/votable/table.py",
+        "astropy/io/fits/util.py"
+      ],
+      "expected": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "astropy__astropy-14995",
+      "rank": 3,
+      "source_rank": 3,
+      "top": [
+        "astropy/nddata/nddata_withmixins.py",
+        "astropy/time/core.py",
+        "astropy/nddata/mixins/ndarithmetic.py",
+        "astropy/io/fits/util.py",
+        "astropy/nddata/nddata.py",
+        "astropy/table/column.py",
+        "astropy/nddata/compat.py",
+        "astropy/config/configuration.py"
+      ],
+      "expected": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "astropy__astropy-6938",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/io/fits/fitsrec.py",
+        "astropy/io/fits/column.py",
+        "astropy/io/fits/hdu/table.py",
+        "astropy/stats/lombscargle/implementations/scipy_impl.py",
+        "astropy/time/formats.py",
+        "astropy/units/tests/py3_test_quantity_annotations.py",
+        "astropy/io/fits/_numpy_hacks.py",
+        "astropy/io/fits/card.py"
+      ],
+      "expected": [
+        "astropy/io/fits/fitsrec.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "astropy__astropy-7746",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/wcs/wcs.py",
+        "astropy/wcs/docstrings.py",
+        "astropy/wcs/utils.py",
+        "astropy/visualization/wcsaxes/core.py",
+        "astropy/visualization/wcsaxes/transforms.py",
+        "astropy/modeling/fitting.py",
+        "astropy/coordinates/sky_coordinate.py",
+        "astropy/wcs/_docutil.py"
+      ],
+      "expected": [
+        "astropy/wcs/wcs.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-10914",
+      "rank": 4,
+      "source_rank": 4,
+      "top": [
+        "django/contrib/auth/models.py",
+        "django/template/defaultfilters.py",
+        "django/core/paginator.py",
+        "django/conf/global_settings.py",
+        "tests/queries/models.py",
+        "django/core/files/uploadedfile.py",
+        "tests/delete_regress/models.py",
+        "django/core/files/temp.py"
+      ],
+      "expected": [
+        "django/conf/global_settings.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-10924",
+      "rank": 8,
+      "source_rank": 8,
+      "top": [
+        "django/forms/fields.py",
+        "django/core/files/storage.py",
+        "tests/dispatch/tests.py",
+        "django/db/utils.py",
+        "tests/test_client_regress/context_processors.py",
+        "django/conf/global_settings.py",
+        "django/core/management/commands/makemessages.py",
+        "django/db/models/fields/__init__.py"
+      ],
+      "expected": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11001",
+      "rank": 2,
+      "source_rank": 2,
+      "top": [
+        "django/db/models/expressions.py",
+        "django/db/models/sql/compiler.py",
+        "tests/queries/models.py",
+        "django/db/backends/mysql/compiler.py",
+        "django/db/models/sql/query.py",
+        "tests/select_related/models.py",
+        "django/db/backends/base/operations.py",
+        "tests/extra_regress/models.py"
+      ],
+      "expected": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11019",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/forms/widgets.py",
+        "django/forms/forms.py",
+        "django/template/context_processors.py",
+        "tests/admin_views/models.py",
+        "tests/generic_inline_admin/models.py",
+        "django/contrib/admin/helpers.py",
+        "tests/forms_tests/tests/test_media.py",
+        "django/forms/formsets.py"
+      ],
+      "expected": [
+        "django/forms/widgets.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11039",
+      "rank": 3,
+      "source_rank": 3,
+      "top": [
+        "django/db/transaction.py",
+        "django/template/defaultfilters.py",
+        "django/core/management/commands/sqlmigrate.py",
+        "tests/migrations/test_commands.py",
+        "tests/gis_tests/gis_migrations/test_commands.py",
+        "django/db/backends/base/base.py",
+        "django/db/migrations/operations/base.py",
+        "django/db/migrations/migration.py"
+      ],
+      "expected": [
+        "django/core/management/commands/sqlmigrate.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11049",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/db/models/fields/__init__.py",
+        "django/utils/dateformat.py",
+        "django/forms/fields.py",
+        "django/contrib/messages/storage/base.py",
+        "django/utils/duration.py",
+        "tests/inspectdb/models.py",
+        "django/utils/translation/trans_real.py",
+        "tests/gis_tests/layermap/models.py"
+      ],
+      "expected": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11099",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/contrib/auth/validators.py",
+        "tests/queries/models.py",
+        "django/db/migrations/recorder.py",
+        "tests/select_related/models.py",
+        "django/db/models/lookups.py",
+        "tests/extra_regress/models.py",
+        "django/db/models/sql/query.py",
+        "django/utils/jslex.py"
+      ],
+      "expected": [
+        "django/contrib/auth/validators.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11133",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/http/response.py",
+        "django/template/response.py",
+        "django/db/models/fields/files.py",
+        "django/utils/cache.py",
+        "django/views/generic/dates.py",
+        "django/db/models/fields/__init__.py",
+        "django/db/backends/postgresql/base.py",
+        "django/contrib/gis/db/models/fields.py"
+      ],
+      "expected": [
+        "django/http/response.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11179",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/db/models/deletion.py",
+        "django/db/models/fields/files.py",
+        "django/db/migrations/autodetector.py",
+        "django/db/models/query.py",
+        "django/db/backends/sqlite3/schema.py",
+        "django/apps/registry.py",
+        "tests/delete_regress/tests.py",
+        "django/core/serializers/__init__.py"
+      ],
+      "expected": [
+        "django/db/models/deletion.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11283",
+      "rank": 2,
+      "source_rank": 2,
+      "top": [
+        "django/db/migrations/writer.py",
+        "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+        "django/contrib/redirects/migrations/0001_initial.py",
+        "django/contrib/auth/migrations/0007_alter_validators_add_error_messages.py",
+        "django/contrib/auth/migrations/0008_alter_user_username_max_length.py",
+        "django/contrib/auth/migrations/0005_alter_user_last_login_null.py",
+        "django/contrib/auth/migrations/0004_alter_user_username_opts.py",
+        "django/contrib/auth/migrations/0009_alter_user_last_name_max_length.py"
+      ],
+      "expected": [
+        "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11422",
+      "rank": 2,
+      "source_rank": 2,
+      "top": [
+        "django/contrib/admin/bin/compress.py",
+        "django/utils/autoreload.py",
+        "django/core/management/__init__.py",
+        "django/template/defaultfilters.py",
+        "django/db/backends/oracle/creation.py",
+        "tests/admin_scripts/configured_settings_manage.py",
+        "tests/i18n/sampleproject/manage.py",
+        "tests/admin_scripts/configured_dynamic_settings_manage.py"
+      ],
+      "expected": [
+        "django/utils/autoreload.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11564",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/templatetags/static.py",
+        "django/conf/global_settings.py",
+        "django/template/context_processors.py",
+        "django/shortcuts.py",
+        "django/conf/urls/static.py",
+        "django/core/management/commands/diffsettings.py",
+        "django/forms/renderers.py",
+        "django/db/migrations/state.py"
+      ],
+      "expected": [
+        "django/conf/__init__.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11583",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/utils/autoreload.py",
+        "django/core/management/__init__.py",
+        "django/urls/base.py",
+        "django/core/management/base.py",
+        "django/db/models/fields/__init__.py",
+        "django/db/backends/oracle/base.py",
+        "django/template/base.py",
+        "django/db/backends/mysql/base.py"
+      ],
+      "expected": [
+        "django/utils/autoreload.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11620",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/http/response.py",
+        "django/template/defaulttags.py",
+        "django/contrib/messages/api.py",
+        "django/template/context_processors.py",
+        "django/core/checks/messages.py",
+        "django/template/base.py",
+        "django/urls/resolvers.py",
+        "django/core/management/base.py"
+      ],
+      "expected": [
+        "django/views/debug.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11630",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/contrib/messages/storage/base.py",
+        "django/db/backends/ddl_references.py",
+        "tests/inspectdb/models.py",
+        "django/core/management/commands/inspectdb.py",
+        "django/db/backends/sqlite3/schema.py",
+        "django/db/backends/base/introspection.py",
+        "django/core/management/sql.py",
+        "django/contrib/gis/db/backends/oracle/models.py"
+      ],
+      "expected": [
+        "django/core/checks/model_checks.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11742",
+      "rank": 2,
+      "source_rank": 2,
+      "top": [
+        "django/utils/regex_helper.py",
+        "django/db/models/fields/__init__.py",
+        "tests/null_queries/models.py",
+        "tests/admin_views/models.py",
+        "tests/forms_tests/tests/test_formsets.py",
+        "django/forms/models.py",
+        "django/db/migrations/questioner.py",
+        "tests/reverse_lookup/models.py"
+      ],
+      "expected": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11797",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/contrib/auth/models.py",
+        "django/utils/regex_helper.py",
+        "django/contrib/auth/context_processors.py",
+        "tests/m2m_through_regress/models.py",
+        "tests/admin_changelist/models.py",
+        "tests/queryset_pickle/models.py",
+        "tests/admin_docs/models.py",
+        "django/db/backends/oracle/introspection.py"
+      ],
+      "expected": [
+        "django/db/models/lookups.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11815",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "tests/queries/models.py",
+        "tests/defer_regress/models.py",
+        "tests/select_related_regress/models.py",
+        "django/contrib/auth/models.py",
+        "tests/delete_regress/models.py",
+        "tests/null_fk/models.py",
+        "tests/backends/models.py",
+        "django/template/defaultfilters.py"
+      ],
+      "expected": [
+        "django/db/migrations/serializer.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11848",
+      "rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/utils/http.py",
+        "django/template/defaultfilters.py",
+        "django/views/generic/dates.py",
+        "django/core/validators.py",
+        "django/db/models/fields/__init__.py",
+        "django/utils/numberformat.py",
+        "django/views/static.py",
+        "django/contrib/auth/tokens.py"
+      ],
+      "expected": [
+        "django/utils/http.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11905",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/template/defaultfilters.py",
+        "django/db/models/sql/query.py",
+        "tests/queries/tests.py",
+        "django/contrib/gis/db/backends/oracle/adapter.py",
+        "django/db/backends/oracle/introspection.py",
+        "django/db/models/sql/datastructures.py",
+        "django/db/models/query.py",
+        "django/contrib/gis/db/models/fields.py"
+      ],
+      "expected": [
+        "django/db/models/lookups.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11910",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/migrations/writer.py",
+        "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+        "django/contrib/auth/migrations/0002_alter_permission_name_max_length.py",
+        "django/contrib/auth/migrations/0009_alter_user_last_name_max_length.py",
+        "django/contrib/auth/migrations/0010_alter_group_name_max_length.py",
+        "django/contrib/auth/migrations/0006_require_contenttypes_0002.py",
+        "django/contrib/contenttypes/migrations/0002_remove_content_type_name.py",
+        "django/contrib/contenttypes/migrations/0001_initial.py"
+      ],
+      "expected": [
+        "django/db/migrations/autodetector.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11964",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "tests/get_or_create/tests.py",
+        "tests/many_to_one/tests.py",
+        "tests/delete_regress/tests.py",
+        "tests/queries/tests.py",
+        "tests/model_forms/tests.py",
+        "tests/basic/tests.py",
+        "tests/generic_relations/tests.py",
+        "tests/schema/tests.py"
+      ],
+      "expected": [
+        "django/db/models/enums.py"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-11999",
+      "rank": 2,
+      "source_rank": 2,
+      "top": [
+        "django/utils/translation/__init__.py",
+        "django/db/models/fields/__init__.py",
+        "django/utils/timezone.py",
+        "tests/test_runner_apps/tagged/tests_inheritance.py",
+        "django/contrib/admin/options.py",
+        "django/contrib/gis/gdal/libgdal.py",
+        "django/db/models/options.py",
+        "tests/delete_regress/models.py"
+      ],
+      "expected": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-12113",
+      "rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/utils.py",
+        "django/db/backends/base/base.py",
+        "django/db/backends/sqlite3/base.py",
+        "django/core/management/base.py",
+        "django/db/backends/oracle/base.py",
+        "django/contrib/sessions/backends/base.py",
+        "django/db/models/base.py",
+        "django/contrib/auth/models.py"
+      ],
+      "expected": [
+        "django/db/backends/sqlite3/creation.py"
+      ],
+      "in_top8": false
+    }
+  ]
+}

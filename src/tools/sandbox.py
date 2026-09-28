@@ -72,12 +72,12 @@ def _run_tests_local(
     if not repo_path or not os.path.isdir(repo_path):
         return "FAILED: sandbox directory missing"
 
-    target = repo_path
+    target = "."
     if test_file:
         candidate = os.path.join(repo_path, test_file)
         if not os.path.exists(candidate):
             return f"FAILED: missing test file {test_file}"
-        target = candidate
+        target = test_file
 
     env = dict(os.environ)
     env["PYTHONIOENCODING"] = "utf-8"

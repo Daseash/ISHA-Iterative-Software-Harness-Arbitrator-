@@ -1,0 +1,168 @@
+{
+  "instance_id": "django__django-11099",
+  "repo": "django/django",
+  "base_commit": "d26b2424437dabeeca94d7900b37d2df4410da0c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617094.189516
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617196.8355756
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790617313.1507602
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790617346.70702
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/auth/validators.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 8,
+      "removed_lines": 2
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790616934.5445416,
+  "elapsed_s": 419.99,
+  "plan": "@@\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline).\n+    regex = r'\\A[\\w.@+-]+\\Z'",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/migrations/recorder.py",
+      "symbol": "django/db/migrations/recorder.py::MigrationRecorder",
+      "line_range": [
+        10,
+        95
+      ],
+      "score": 0.4914,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1767,
+        "vector": 0.2611
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "tests/template_tests/filter_tests/test_unordered_list.py",
+      "symbol": "tests/template_tests/filter_tests/test_unordered_list.py::UnorderedListTests",
+      "line_range": [
+        9,
+        36
+      ],
+      "score": 0.4336,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0,
+        "vector": 0.2123
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "tests/contenttypes_tests/test_order_with_respect_to.py",
+      "symbol": "tests/contenttypes_tests/test_order_with_respect_to.py::OrderWithRespectToGFKTests",
+      "line_range": [
+        8,
+        11
+      ],
+      "score": 0.4257,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0,
+        "vector": 0.166
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "docs/ref/contrib/auth.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.359,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.4647
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/releases/1.10.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3314,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7859,
+        "vector": 0.655
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/releases/1.9.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3289,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8027,
+        "vector": 0.6125
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.60215,
+  "laya_scores": {
+    "fix_quality": 1.2131,
+    "matches_issue": 0.6042,
+    "safe_to_apply": 0.5913,
+    "composite": 0.60215,
+    "secrets_or_danger": 0.1597,
+    "logic_drift": 0.5664,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Fixes a validation bypass allowing newline characters in usernames.\n- PERFORMANCE: PASS - Regex complexity remains O(n), no regressions.\n- ROBUSTNESS: PASS - Strictly tighter validation, no new error modes.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core.exceptions import ValidationError\nfrom django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator\n\n\n@pytest.mark.parametrize(\n    \"validator_cls, username\",\n    [\n        (ASCIIUsernameValidator, \"valid_user-123\"),\n        (UnicodeUsernameValidator, \"用户123\"),  # Unicode letters are allowed\n    ],\n)\ndef test_valid_usernames_pass(validator_cls, username):\n    \"\"\"A normal username should validate without errors.\"\"\"\n    validator = validator_cls()\n    # Should not raise ValidationError\n    validator(username)\n\n\ndef test_empty_username_is_invalid():\n    \"\"\"Empty string should be rejected by both validators.\"\"\"\n    for validator_cls in (ASCIIUsernameValidator, UnicodeUsernameValidator):\n        validator = validator_cls()\n        with pytest.raises(ValidationError):\n            validator(\"\")\n\n\n@pytest.mark.parametrize(\n    \"validator_cls, username\",\n    [\n        (ASCIIUsernameValidator, \"user\\n\"),\n        (ASCIIUsernameValidator, \"user\\r\\n\"),\n        (UnicodeUsernameValidator, \"用户\\n\"),\n        (UnicodeUsernameValidator, \"用户\\r\\n\"),\n    ],\n)\ndef test_trailing_newline_is_invalid(validator_cls, username):\n    \"\"\"\n    The core bug: validators accepted usernames that ended with a newline.\n    After the fix they must raise ValidationError.\n    \"\"\"\n    validator = validator_cls()\n    with pytest.raises(ValidationError):\n        validator(username)\n\n\n@pytest.mark.parametrize(\n    \"validator_cls, username\",\n    [\n        (ASCIIUsernameValidator, \"us\\nername\"),\n        (UnicodeUsernameValidator, \"用\\n户\"),\n    ],\n)\ndef test_newline_inside_username_is_invalid(validator_cls, username):\n    \"\"\"A newline that is not at the very end should also be rejected.\"\"\"\n    validator = validator_cls()\n    with pytest.raises(ValidationError):\n        validator(username)\n\n\n@pytest.mark.parametrize(\n    \"validator_cls, username\",\n    [\n        (ASCIIUsernameValidator, \"user name\"),   # space not allowed\n        (UnicodeUsernameValidator, \"用户 name\"),  # space not allowed\n    ],\n)\ndef test_disallowed_characters_raise_error(validator_cls, username):\n    \"\"\"Characters outside the allowed set should raise ValidationError.\"\"\"\n    validator = validator_cls()\n    with pytest.raises(ValidationError):\n        validator(username)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cf..e1d4b49 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,10 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline).\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +20,10 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline).\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'\n",
+  "offline_calls": 0
+}

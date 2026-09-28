@@ -1,0 +1,175 @@
+{
+  "instance_id": "django__django-10924",
+  "repo": "django/django",
+  "base_commit": "bceadd2788dc2dad53eba0caae172bd8522fd483",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613406.2021194
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613417.4689534
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613460.2865307
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613508.6306725
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613582.6885352
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613707.054247
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613759.8813756
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/db/models/fields/files.py: @@ -350,7 +350,7 @@ class FilePathField(FieldFile): — expected context not found in file: '    def __init__(self, *args, **kwargs):'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790613347.4587736,
+  "elapsed_s": 420.4,
+  "plan": "if path is None:\n            raise ImproperlyConfigured(...)\n        # Allow callable\n        self.path = path",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "tests/i18n/sampleproject/manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4399,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0086,
+        "vector": 0.3085
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "tests/admin_scripts/configured_dynamic_settings_manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4232,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1363,
+        "vector": 0.0
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "tests/admin_scripts/configured_settings_manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4076,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0806,
+        "vector": 0.0
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "docs/ref/models/fields.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3922,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9396,
+        "vector": 0.7597
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/files.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3906,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.6505
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/django-admin.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3835,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9862,
+        "vector": 0.6314
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.815975,
+  "laya_scores": {
+    "fix_quality": 1.7682,
+    "matches_issue": 0.7928,
+    "safe_to_apply": 0.7029,
+    "composite": 0.815975,
+    "secrets_or_danger": 0.1068,
+    "logic_drift": 0.262,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns are introduced.\n- PERFORMANCE: PASS - No significant performance impact; adds a simple `None` check in the constructor.\n- ROBUSTNESS: RISK - Using `None` as a sentinel value is not the standard Django idiom (usually omitted key or empty string causes error); it introduces a magic value that may confuse users or conflict with explicit `None` usage if intended differently.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/db/models/fields/files.py: @@ -350,7 +350,7 @@ class FilePathField(FieldFile): — expected context not found in file: '    def __init__(self, *args, **kwargs):'",
+  "regression_test": "import pytest\nfrom django.core.exceptions import ImproperlyConfigured\nfrom django.db.models import FilePathField\n\n\ndef test_file_path_field_accepts_callable_path():\n    \"\"\"\n    A FilePathField must accept a callable as its `path` argument.\n    The callable is stored as-is and resolved later (e.g. during\n    list_valid_options / formfield / deconstruction), so this bug is\n    purely about whether construction succeeds and the callable is\n    preserved.\n\n    Before the fix: FilePathField.__init__ did `if path:` which is\n    always truthy for a callable, but the real issue in the ticket is\n    that older code validated/normalized path in a way that broke\n    callables (the fix pattern explicitly guarantees callables work).\n    After the fix: the field stores the callable untouched.\n    \"\"\"\n    def path_callable():\n        return \"/some/dynamic/path/\"\n\n    field = FilePathField(path=path_callable)\n    assert field.path is path_callable\n\n\ndef test_file_path_field_callable_returns_string():\n    \"\"\"\n    Edge case: ensure that a callable which returns a string path is\n    stored as the callable object itself (not its return value), so\n    that later resolution callers can invoke it.\n    \"\"\"\n    calls = []\n\n    def get_path():\n        calls.append(1)\n        return \"/returned/path/\"\n\n    field = FilePathField(path=get_path)\n    # The callable must not have been invoked during construction.\n    assert calls == []\n    assert field.path is get_path\n\n\ndef test_file_path_field_none_path_raises_improperly_configured():\n    \"\"\"\n    Edge case: passing None as the path must raise\n    ImproperlyConfigured, as the fix plan explicitly states:\n        if path is None:\n            raise ImproperlyConfigured(...)\n    \"\"\"\n    with pytest.raises(ImproperlyConfigured):\n        FilePathField(path=None)\n\n\ndef test_file_path_field_plain_string_path_still_works():\n    \"\"\"\n    Regression guard: a plain string path (the common case) must still\n    be accepted and stored exactly as given. The fix must not change\n    behavior for non-callable, non-None inputs.\n    \"\"\"\n    field = FilePathField(path=\"/simple/string/path\")\n    assert field.path == \"/simple/string/path\"",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

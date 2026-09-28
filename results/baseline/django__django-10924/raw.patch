@@ -1,0 +1,11 @@
+--- a/django/db/models/fields/files.py
++++ b/django/db/models/fields/files.py
+@@ -350,7 +350,7 @@ class FilePathField(FieldFile):
+     def __init__(self, *args, **kwargs):
+         if "upload_to" in kwargs:
+             raise ValueError("FilePathField doesn't support an upload_to argument.")
+-        if "path" not in kwargs:
++        if "path" not in kwargs or kwargs["path"] is None:
+             raise ImproperlyConfigured(
+                 "FilePathField doesn't allow a path to be empty."
+             )

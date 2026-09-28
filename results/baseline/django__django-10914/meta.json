@@ -1,0 +1,159 @@
+{
+  "instance_id": "django__django-10914",
+  "repo": "django/django",
+  "base_commit": "e7fd69d051eaa67cb17f172a39b57253e9cb831a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613219.5037506
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613221.4695623
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613292.1763291
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790613319.7830765
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/files/storage.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/files/storage.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790613114.4841352,
+  "elapsed_s": 213.13,
+  "plan": "Step 1: What is the root cause\nThe root cause is that Django's `FileSystemStorage.save()` method does not explicitly set the file permissions based on the `FILE_UPLOAD_PERMISSIONS` setting when moving or copying files from the temporary location to the final destination. Python's `tempfile` module creates temporary files with restrictive permissions (typically `0o600`) for security reasons. When these temporary files are moved (via `os.rename` or similar) to the final storage location, they retain these restrictive permissions unless explicitly changed. If the `FILE_UPLOAD_PERMISSIONS` setting is not defined in a project's settings, Django currently does not have a default value, leading to inconsistent file permissions depending on the upload handler (`TemporaryUploadedFile` vs `MemoryUploadedFile`) or system defaults. This results in uploaded files not having the expected standard permissions (e.g., readable by the web server user but writable by the owner, `0o644`).\n\nStep 2: What exact changes to make\n1. **File**: `django/core/files/storage.py`\n   **Function**: `FileSystemStorage.__init__`\n   **Change**: Add an attribute `self.file_permissions_mode = getattr(settings, 'FILE_UPLOAD_PERMISSIONS', 0o644)`. This sets the default permission to `0o644` if the setting is not provided, but allows user override.\n\n2. **File**: `django/core/files/storage.py`\n   **Function**: `FileSystemStorage.save`\n   **Change**:\n   - Locate the part of the `save` method where the file is finalized (after `fchunk` loop or `os.rename`/`shutil.move`).\n   - Add a call to `os.chmod(os.path.abspath(name), self.file_permissions_mode)`.\n   - Ensure this is done for both the \"move\" case (when using `TemporaryUploadedFile` which creates a temp file) and the \"copy\" case, though typically the temp file path is the main suspect for inheriting `0o600`. The standard Django fix for this ticket (#10914) specifically applied `os.chmod` to the final file path after saving if `self.file_permissions_mode` is set.\n\n*Note: While the bug report mentions documentation issues, the primary code fix requested is the default behavior. The permission change must be applied within `FileSystemStorage` to ensure consistency.*",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "docs/ref/files/uploads.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3454,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.3845
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/settings.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3438,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8103,
+        "vector": 0.6879
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/ref/models/fields.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3368,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7696,
+        "vector": 0.7137
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/http/file-uploads.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3349,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9407,
+        "vector": 0.4205
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/auth/default.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3214,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7677,
+        "vector": 0.6262
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "docs/topics/files.txt",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3166,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8316,
+        "vector": 0.4928
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.900575,
+  "laya_scores": {
+    "fix_quality": 1.8112,
+    "matches_issue": 0.935,
+    "safe_to_apply": 0.8561,
+    "composite": 0.900575,
+    "secrets_or_danger": 0.1708,
+    "logic_drift": 0.2496,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - Explicitly setting permissions to 0o644 ensures the file is not world-writable, maintaining security best practices.\n- PERFORMANCE: PASS - A single attribute assignment during initialization has negligible overhead.\n- ROBUSTNESS: PASS - Defines a stable default value, but there is a logical inconsistency because `self._file_permissions_mode` remains `None` if not explicitly passed, potentially bypassing this new default in helper methods like `_save`.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\nimport stat\nimport tempfile\nfrom unittest import mock\n\nimport pytest\n\nfrom django.core.files.storage import FileSystemStorage\nfrom django.core.files.uploadedfile import SimpleUploadedFile, TemporaryUploadedFile\nfrom django.test import override_settings\n\n\n@pytest.fixture\ndef storage(tmp_path):\n    return FileSystemStorage(location=str(tmp_path))\n\n\ndef test_default_upload_permissions_applied(tmp_path):\n    \"\"\"\n    Regression test for ticket #10914.\n\n    Before the fix, FileSystemStorage did not have a default\n    ``FILE_UPLOAD_PERMISSIONS`` and did not reliably chmod uploaded files,\n    so files saved from a TemporaryUploadedFile kept the restrictive\n    permissions (0o600) that the tempfile module assigns.\n    \"\"\"\n    storage = FileSystemStorage(location=str(tmp_path))\n\n    # Simulate a temporary file with the restrictive permissions that\n    # Python's tempfile module creates (0o600).\n    fd, temp_path = tempfile.mkstemp(dir=str(tmp_path))\n    os.write(fd, b\"hello world\")\n    os.close(fd)\n    os.chmod(temp_path, 0o600)\n\n    # Wrap it in a TemporaryUploadedFile, which is what Django uses for\n    # uploads larger than the memory-handling threshold.\n    uploaded_file = TemporaryUploadedFile(\n        name=\"upload.txt\",\n        content_type=\"text/plain\",\n        size=os.path.getsize(temp_path),\n        charset=\"utf-8\",\n    )\n    uploaded_file.file = open(temp_path, \"r\")\n\n    saved_name = storage.save(\"upload.txt\", uploaded_file)\n\n    final_path = os.path.join(str(tmp_path), saved_name)\n    mode = stat.S_IMODE(os.stat(final_path).st_mode)\n\n    # After the fix, the file should have 0o644 by default.\n    assert mode == 0o644, f\"Expected 0o644, got {oct(mode)}\"\n\n\ndef test_custom_file_upload_permissions_respected(tmp_path):\n    \"\"\"\n    If FILE_UPLOAD_PERMISSIONS is explicitly set, that value should be used\n    instead of the default 0o644.\n    \"\"\"\n    storage = FileSystemStorage(location=str(tmp_path))\n\n    fd, temp_path = tempfile.mkstemp(dir=str(tmp_path))\n    os.write(fd, b\"data\")\n    os.close(fd)\n    os.chmod(temp_path, 0o600)\n\n    uploaded_file = TemporaryUploadedFile(\n        name=\"custom.txt\",\n        content_type=\"text/plain\",\n        size=os.path.getsize(temp_path),\n        charset=\"utf-8\",\n    )\n    uploaded_file.file = open(temp_path, \"r\")\n\n    with override_settings(FILE_UPLOAD_PERMISSIONS=0o664):\n        saved_name = storage.save(\"custom_permissions.txt\", uploaded_file)\n\n    final_path = os.path.join(str(tmp_path), saved_name)\n    mode = stat.S_IMODE(os.stat(final_path).st_mode)\n\n    assert mode == 0o664, f\"Expected 0o664, got {oct(mode)}\"\n\n\ndef test_memory_uploaded_file_also_gets_default_permissions(tmp_path):\n    \"\"\"\n    Even when using SimpleUploadedFile (in-memory), the saved file should\n    have the default 0o644 permissions applied consistently.\n    \"\"\"\n    storage = FileSystemStorage(location=str(tmp_path))\n\n    uploaded_file = SimpleUploadedFile(\"memory.txt\", b\"in-memory data\", content_type=\"text/plain\")\n\n    saved_name = storage.save(\"memory.txt\", uploaded_file)\n\n    final_path = os.path.join(str(tmp_path), saved_name)\n    mode = stat.S_IMODE(os.stat(final_path).st_mode)\n\n    assert mode == 0o644, f\"Expected 0o644, got {oct(mode)}\"",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/core/files/storage.py b/django/core/files/storage.py\nindex cbdab1d..10beb66 100644\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -181,6 +181,7 @@ class FileSystemStorage(Storage):\n         self._base_url = base_url\n         self._file_permissions_mode = file_permissions_mode\n         self._directory_permissions_mode = directory_permissions_mode\n+        self.file_permissions_mode = getattr(settings, 'FILE_UPLOAD_PERMISSIONS', 0o644)\n         setting_changed.connect(self._clear_cached_properties)\n \n     def _clear_cached_properties(self, setting, **kwargs):\n",
+  "offline_calls": 0
+}

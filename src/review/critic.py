@@ -36,6 +36,19 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
             state.critic_verdict = "approved"
         state.critic_score = scores["composite"]
         state.laya_scores = {**scores, **dangers, "guardrail_findings": findings}
+
+        # Security & performance checklist — can veto an otherwise-clean diff.
+        if state.patch and "ERROR" not in state.patch[:60]:
+            try:
+                from src.review.checklist import security_perf_checklist
+
+                checklist = security_perf_checklist(state.issue_text, state.patch)
+                if checklist:
+                    state.laya_scores = {**state.laya_scores, "checklist": checklist}
+                    if checklist["verdict"] == "BLOCK":
+                        state.critic_verdict = "flagged"
+            except Exception:
+                pass
     except Exception as exc:
         state.critic_verdict = "error"
         state.critic_score = 0.0

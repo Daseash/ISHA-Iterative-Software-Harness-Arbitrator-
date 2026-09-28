@@ -10,6 +10,7 @@ as context to subsequent steps.
 from __future__ import annotations
 
 import json
+import os
 import re
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -58,8 +59,11 @@ def decompose_issue(
     investigation_report: str = "",
 ) -> List[SubIssue]:
     """Break down an issue into sequential sub-issues if needed."""
-    if not LLM_ENABLED:
-        # Offline fallback: single atomic sub-issue
+    # SWE-bench instances are single, self-contained bugs; spending a call to
+    # be told "this is one issue" only burns a rate-limit window. The single
+    # sub-issue path below is byte-for-byte what a 1-item answer produces.
+    if not LLM_ENABLED or os.getenv("ISHA_BENCH_MODE", "0") == "1":
+        # Offline / benchmark fallback: single atomic sub-issue
         return [
             SubIssue(
                 id=1,

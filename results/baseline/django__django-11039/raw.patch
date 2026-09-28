@@ -1,0 +1,7 @@
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@
+-        self.output_transaction = migration.atomic
++        # Only wrap the output in a transaction if the migration is atomic
++        # and the current database backend supports transactional DDL.
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl

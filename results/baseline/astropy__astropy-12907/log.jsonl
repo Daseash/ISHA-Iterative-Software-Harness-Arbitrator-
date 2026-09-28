@@ -1,0 +1,7 @@
+{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1790611007.5261643}
+{"event": "attempt", "n": 1, "ts": 1790611016.5490417}
+{"event": "model", "ts": 1790611074.7640572, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790611150.6285284, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790611257.4502306, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790611378.4378865, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790611396.4509907}

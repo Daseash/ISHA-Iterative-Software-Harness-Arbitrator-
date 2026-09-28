@@ -1,0 +1,22 @@
+[
+  {
+    "instance_id": "astropy__astropy-12907",
+    "model_patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\nindex a308e27..adc9e95 100644\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -57,9 +57,8 @@ def is_separable(transform):\n     if transform.n_inputs == 1 and transform.n_outputs > 1:\n         is_separable = np.array([False] * transform.n_outputs).T\n         return is_separable\n-    separable_matrix = _separable(transform)\n-    is_separable = separable_matrix.sum(1)\n-    is_separable = np.where(is_separable != 1, False, True)\n+    separable_matrix = separability_matrix(transform)\n+    is_separable = separable_matrix.any(axis=1)\n     return is_separable\n \n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-14365",
+    "model_patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -58,7 +58,7 @@ def _line_type(line, delimiter=None):\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n     _line_type_re = re.compile(_type_re)\n     line = line.strip()\n-    if not line:\n+    if not line:\n         return \"comment\"\n     match = _line_type_re.match(line)",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-6938",
+    "model_patch": "diff --git a/astropy/io/fits/fitsrec.py b/astropy/io/fits/fitsrec.py\nindex 574b407..cb79142 100644\n--- a/astropy/io/fits/fitsrec.py\n+++ b/astropy/io/fits/fitsrec.py\n@@ -1261,7 +1261,7 @@ class FITS_rec(np.recarray):\n \n         # Replace exponent separator in floating point numbers\n         if 'D' in format:\n-            output_field.replace(encode_ascii('E'), encode_ascii('D'))\n+            output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))\n \n \n def _get_recarray_field(array, key):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-10914",
+    "model_patch": "diff --git a/django/core/files/storage.py b/django/core/files/storage.py\nindex cbdab1d..10beb66 100644\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -181,6 +181,7 @@ class FileSystemStorage(Storage):\n         self._base_url = base_url\n         self._file_permissions_mode = file_permissions_mode\n         self._directory_permissions_mode = directory_permissions_mode\n+        self.file_permissions_mode = getattr(settings, 'FILE_UPLOAD_PERMISSIONS', 0o644)\n         setting_changed.connect(self._clear_cached_properties)\n \n     def _clear_cached_properties(self, setting, **kwargs):\n",
+    "model_name_or_path": "isha"
+  }
+]
