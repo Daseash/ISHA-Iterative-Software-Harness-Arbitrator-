@@ -23,8 +23,10 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
+import re
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -40,6 +42,8 @@ RESULTS_DIR = ROOT / "results"
 DEFAULT_INSTANCE_TIMEOUT = int(os.getenv("ISHA_BENCH_INSTANCE_TIMEOUT", "900"))
 DEFAULT_MAX_RETRIES = int(os.getenv("ISHA_BENCH_MAX_RETRIES", "2"))
 BASE_BACKOFF = float(os.getenv("ISHA_BENCH_BACKOFF", "20"))
+# Extra attempts granted only to instances whose diff would not apply.
+APPLY_RETRIES = int(os.getenv("ISHA_BENCH_APPLY_RETRIES", "1"))
 
 
 # ── Environment for a benchmark run ────────────────────────────────────────
@@ -200,7 +204,7 @@ def reset_checkout(repo_path: str) -> None:
 
 
 # ── One instance ───────────────────────────────────────────────────────────
-def _invoke_graph(record: dict, thread_id: str) -> dict:
+def _invoke_graph(record: dict, thread_id: str, notes: list[str] | None = None) -> dict:
     from src.agents.context import build_repo_context
     from src.agents.graph import compiled_graph
     from src.agents.state import AgentState
@@ -214,6 +218,7 @@ def _invoke_graph(record: dict, thread_id: str) -> dict:
         instance_id=record["instance_id"],
         repo_path=repo_path,
         repo_context=build_repo_context(record["problem_statement"], repo_path),
+        context_notes=list(notes or []),
     )
     out = compiled_graph.invoke(
         state,
@@ -231,6 +236,60 @@ def instance_checkout(record: dict) -> Path:
     from src.bench.checkout import checkout_path
 
     return checkout_path(record["instance_id"])
+
+
+def _apply_feedback(repo: Path, info: dict) -> str:
+    """Turn a failed apply into something the next attempt can actually use.
+
+    The dominant way a patch dies is a context line the model invented, so the
+    useful reply is the *verbatim* source around the failure — not another
+    abstract "try again".
+    """
+    message = str(info.get("message") or "")
+    if not message:
+        return ""
+    rel_match = re.search(r"Hunk failed in ([^:]+):", message)
+    rel = rel_match.group(1).strip() if rel_match else ""
+    wanted = ""
+    ctx_match = re.search(r"not found in file: (.+)$", message, re.S)
+    if ctx_match:
+        raw = ctx_match.group(1).strip()
+        try:
+            wanted = str(ast.literal_eval(raw))
+        except Exception:
+            wanted = raw.strip("'\"")
+
+    header = f"PREVIOUS PATCH DID NOT APPLY. {message[:400]}"
+    if not rel:
+        return header
+    target = repo / rel
+    if not target.is_file():
+        return header
+
+    try:
+        lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return header
+
+    idx = None
+    if wanted:
+        probe = wanted.rstrip()
+        idx = next(
+            (i for i, line in enumerate(lines) if line.rstrip() == probe), None
+        )
+    if idx is None:
+        head = "\n".join(f"{i + 1:5d}| {line}" for i, line in enumerate(lines[:80]))
+        return (
+            f"{header}\nThe context line {wanted[:160]!r} does not exist in "
+            f"{rel}. Do not invent it. The file starts:\n{head}"
+        )
+    lo = max(0, idx - 40)
+    hi = min(len(lines), idx + 60)
+    body = "\n".join(f"{i + 1:5d}| {lines[i]}" for i in range(lo, hi))
+    return (
+        f"{header}\nVERBATIM SOURCE OF {rel} LINES {lo + 1}-{hi} — copy these "
+        f"lines character-for-character, changing only what the fix requires:\n{body}"
+    )
 
 
 def run_instance(
@@ -259,6 +318,7 @@ def run_instance(
     from src.config import reset_provider_state
 
     attempt = 0
+    notes: list[str] = []
     meta: dict = {
         "instance_id": record["instance_id"],
         "repo": record["repo"],
@@ -279,7 +339,7 @@ def run_instance(
 
         _append(log_path, {"event": "attempt", "n": attempt, "ts": time.time()})
         pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="isha-bench")
-        future = pool.submit(_invoke_graph, record, f"{thread_id}-{attempt}")
+        future = pool.submit(_invoke_graph, record, f"{thread_id}-{attempt}", notes)
         try:
             outcome = future.result(timeout=timeout)
         except FutureTimeout:
@@ -354,6 +414,18 @@ def run_instance(
                                    "ts": time.time()})
                 time.sleep(wait)
                 continue
+            # A patch the apply engine cannot place is the single largest
+            # bucket of wasted attempts; one retry carrying the *verbatim*
+            # source around the failure converts a good share of them.
+            if (meta["failure_category"] == "patch_apply_failed"
+                    and attempt <= APPLY_RETRIES):
+                feedback = _apply_feedback(instance_checkout(record), info)
+                if feedback:
+                    notes = (notes + [feedback])[-4:]
+                    _append(log_path, {"event": "apply_retry", "attempt": attempt,
+                                       "message": str(info.get("message", ""))[:300],
+                                       "ts": time.time()})
+                    continue
         else:
             meta["failure_category"] = None
 
