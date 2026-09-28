@@ -449,6 +449,10 @@ MINIMAL DIFF RULES (non-negotiable):
 - Keep the diff inside the localized files unless the bug is provably
   cross-file.
 - Every call site of a changed signature must be updated in the SAME diff.
+- The TARGET FILE CONTEXT / CODE CONTEXT sections below are verbatim
+  excerpts of the real files. Copy every context and removal line from them
+  character-for-character. If a line you want to change is not shown, do not
+  invent it — change only what is visible, using exact line numbers.
 
 BUG REPORT:
 {issue}
