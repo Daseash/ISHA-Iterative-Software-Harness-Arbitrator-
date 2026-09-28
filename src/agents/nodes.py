@@ -73,7 +73,7 @@ _PLAN_CHARS = int(os.getenv("ISHA_PLAN_CHARS", "2000"))
 _CODE_BLOCK_CHARS = int(os.getenv("ISHA_CODE_BLOCK_CHARS", "5100"))
 _HISTORY_CHARS = int(os.getenv("ISHA_HISTORY_CHARS", "800"))
 _STYLE_CHARS = int(os.getenv("ISHA_STYLE_CHARS", "600"))
-_HINT_CHARS = int(os.getenv("ISHA_HINT_CHARS", "1000"))
+_HINT_CHARS = int(os.getenv("ISHA_HINT_CHARS", "4000"))
 _PLANNER_AUX_CHARS = int(os.getenv("ISHA_PLANNER_AUX_CHARS", "2500"))
 
 

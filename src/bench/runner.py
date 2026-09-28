@@ -282,14 +282,14 @@ def _apply_feedback(repo: Path, info: dict) -> str:
         return (
             f"{header}\nThe context line {wanted[:160]!r} does not exist in "
             f"{rel}. Do not invent it. The file starts:\n{head}"
-        )
-    lo = max(0, idx - 40)
-    hi = min(len(lines), idx + 60)
+        )[:3800]
+    lo = max(0, idx - 30)
+    hi = min(len(lines), idx + 45)
     body = "\n".join(f"{i + 1:5d}| {lines[i]}" for i in range(lo, hi))
     return (
         f"{header}\nVERBATIM SOURCE OF {rel} LINES {lo + 1}-{hi} — copy these "
         f"lines character-for-character, changing only what the fix requires:\n{body}"
-    )
+    )[:3800]
 
 
 def run_instance(
