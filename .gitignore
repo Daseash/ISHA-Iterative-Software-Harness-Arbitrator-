@@ -51,3 +51,18 @@ data/cache/
 
 # ── Logs ──────────────────────────────────────────────────────────────────
 *.log
+
+# Bench results: results/ stays deliberately TRACKED, because the reports and
+# per-instance meta.json are the evidence behind every published number and a
+# reviewer should be able to read them without re-running the harness.
+# What is ignored is the bulky raw material the reports are derived from:
+# full pytest dumps and harness working dirs run to megabytes per instance and
+# would bloat every clone for no analytical value.
+results/*/harness/logs/
+results/*/logs/
+results/harness_probe/logs/
+
+# ── Local Study & Build Reference Markdown ──────────────────────────────
+docs/WHAT_MAKES_ISHA_UNIQUE.md
+docs/RELEASE_CRITERIA.md
+docs/WHOLE_PROJECT_EXPLANATION.md
