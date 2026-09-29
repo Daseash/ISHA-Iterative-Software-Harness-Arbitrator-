@@ -1,0 +1,152 @@
+[
+  {
+    "instance_id": "astropy__astropy-12907",
+    "model_patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\nindex a308e27..adc9e95 100644\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -57,9 +57,8 @@ def is_separable(transform):\n     if transform.n_inputs == 1 and transform.n_outputs > 1:\n         is_separable = np.array([False] * transform.n_outputs).T\n         return is_separable\n-    separable_matrix = _separable(transform)\n-    is_separable = separable_matrix.sum(1)\n-    is_separable = np.where(is_separable != 1, False, True)\n+    separable_matrix = separability_matrix(transform)\n+    is_separable = separable_matrix.any(axis=1)\n     return is_separable\n \n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-14182",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-14365",
+    "model_patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -58,7 +58,7 @@ def _line_type(line, delimiter=None):\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n     _line_type_re = re.compile(_type_re)\n     line = line.strip()\n-    if not line:\n+    if not line:\n         return \"comment\"\n     match = _line_type_re.match(line)",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-14995",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-6938",
+    "model_patch": "diff --git a/astropy/io/fits/fitsrec.py b/astropy/io/fits/fitsrec.py\nindex 574b407..cb79142 100644\n--- a/astropy/io/fits/fitsrec.py\n+++ b/astropy/io/fits/fitsrec.py\n@@ -1261,7 +1261,7 @@ class FITS_rec(np.recarray):\n \n         # Replace exponent separator in floating point numbers\n         if 'D' in format:\n-            output_field.replace(encode_ascii('E'), encode_ascii('D'))\n+            output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))\n \n \n def _get_recarray_field(array, key):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "astropy__astropy-7746",
+    "model_patch": "diff --git a/astropy/wcs/wcs.py b/astropy/wcs/wcs.py\nindex d3a06f2..762c82f 100644\n--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,8 @@ reduce these to 2 dimensions using the naxis kwarg.\n \n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if any(len(x) == 0 for x in xy):\n+                return [np.array([]) for x in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-10914",
+    "model_patch": "diff --git a/django/core/files/storage.py b/django/core/files/storage.py\nindex cbdab1d..10beb66 100644\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -181,6 +181,7 @@ class FileSystemStorage(Storage):\n         self._base_url = base_url\n         self._file_permissions_mode = file_permissions_mode\n         self._directory_permissions_mode = directory_permissions_mode\n+        self.file_permissions_mode = getattr(settings, 'FILE_UPLOAD_PERMISSIONS', 0o644)\n         setting_changed.connect(self._clear_cached_properties)\n \n     def _clear_cached_properties(self, setting, **kwargs):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-10924",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11001",
+    "model_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 7649c39..d460040 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -366,7 +366,9 @@ class SQLCompiler:\n         if self.query.distinct and not self.query.distinct_fields:\n             select_sql = [t[1] for t in select]\n             for expr, (sql, params, is_ref) in order_by:\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                # Collapse multiline order expressions to a single line before deduplication.\n+                sql_oneline = ' '.join(sql.splitlines())\n+                without_ordering = self.ordering_parts.search(sql_oneline).group(1)\n                 if not is_ref and (without_ordering, params) not in select_sql:\n                     extra_select.append((expr, (without_ordering, params), None))\n         return extra_select\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11019",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11039",
+    "model_patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..9f6ff99 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,9 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        # Only wrap the output in a transaction if the migration is atomic\n+        # and the current database backend supports transactional DDL.\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11049",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11099",
+    "model_patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cf..e1d4b49 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,10 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline).\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +20,10 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline).\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11133",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11179",
+    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4af..e135f7c 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -275,6 +275,8 @@ class Collector:\n         if len(self.data) == 1 and len(instances) == 1:\n             instance = list(instances)[0]\n             if self.can_fast_delete(instance):\n+                for model, obj in self.data.items():\n+                    obj.pk = None\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n                 return count, {model._meta.label: count}\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11283",
+    "model_patch": "diff --git a/django/contrib/auth/migrations/0011_update_proxy_permissions.py b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\nindex 0e66649..c6d4d9b 100644\n--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n+++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n@@ -4,6 +4,9 @@ from django.db.models import Q\n \n def update_proxy_model_permissions(apps, schema_editor, reverse=False):\n     \"\"\"\n+    new_ct = ContentType.objects.filter(\n+        app_label='auth', codename='u12',\n+    ).first()\n     Update the content_type of proxy model permissions to use the ContentType\n     of the proxy model.\n     \"\"\"\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11422",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11564",
+    "model_patch": "diff --git a/django/templatetags/static.py b/django/templatetags/static.py\nindex 39712aa..e1fb3a4 100644\n--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -104,6 +104,13 @@ class StaticNode(template.Node):\n \n     def render(self, context):\n         url = self.url(context)\n+        # Prepend SCRIPT_NAME if a request object is present in the context.\n+        request = context.get('request')\n+        if request:\n+            script_name = request.META.get('SCRIPT_NAME', '')\n+            if script_name:\n+                script_name = script_name.rstrip('/')\n+                url = script_name + '/' + url.lstrip('/')\n         if context.autoescape:\n             url = conditional_escape(url)\n         if self.varname is None:\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11583",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11620",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11630",
+    "model_patch": "diff --git a/django/core/checks/model_checks.py b/django/core/checks/model_checks.py\nindex 5c2266c..b4e8397 100644\n--- a/django/core/checks/model_checks.py\n+++ b/django/core/checks/model_checks.py\n@@ -5,6 +5,8 @@ from itertools import chain\n \n from django.apps import apps\n from django.core.checks import Error, Tags, register\n+from django.conf import settings\n+from django.db import router\n \n \n @register(Tags.models)\n@@ -19,7 +21,9 @@ def check_all_models(app_configs=None, **kwargs):\n         models = chain.from_iterable(app_config.get_models() for app_config in app_configs)\n     for model in models:\n         if model._meta.managed and not model._meta.proxy:\n-            db_table_models[model._meta.db_table].append(model._meta.label)\n+            # Store the model instance instead of just its label to allow\n+            # database-aware duplicate‑table checking later.\n+            db_table_models[model._meta.db_table].append(model)\n         if not inspect.ismethod(model.check):\n             errors.append(\n                 Error(\n@@ -35,12 +39,36 @@ def check_all_models(app_configs=None, **kwargs):\n             indexes[model_index.name].append(model._meta.label)\n         for model_constraint in model._meta.constraints:\n             constraints[model_constraint.name].append(model._meta.label)\n-    for db_table, model_labels in db_table_models.items():\n-        if len(model_labels) != 1:\n+    for db_table, models in db_table_models.items():\n+        # No conflict if only a single model uses this table.\n+        if len(models) <= 1:\n+            continue\n+\n+        # Determine the set of database aliases each model may be migrated to.\n+        model_dbs = {}\n+        for m in models:\n+            allowed = {\n+                alias for alias in settings.DATABASES\n+                if router.allow_migrate(alias, m)\n+            }\n+            model_dbs[m] = allowed\n+\n+        # If any two models share at least one database alias, raise an error.\n+        conflict = False\n+        for i, m1 in enumerate(models):\n+            for m2 in models[i + 1:]:\n+                if model_dbs[m1] & model_dbs[m2]:\n+                    conflict = True\n+                    break\n+            if conflict:\n+                break\n+\n+        if conflict:\n+            labels = [m._meta.label for m in models]\n             errors.append(\n                 Error(\n-                    \"db_table '%s' is used by multiple models: %s.\"\n-                    % (db_table, ', '.join(db_table_models[db_table])),\n+                    \"db_table %r is used by multiple models: %s.\"\n+                    % (db_table, ', '.join(labels)),\n                     obj=db_table,\n                     id='models.E028',\n                 )\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11742",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11797",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11815",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11848",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11905",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11910",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11964",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11999",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-12113",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  }
+]

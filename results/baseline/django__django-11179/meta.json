@@ -1,0 +1,182 @@
+{
+  "instance_id": "django__django-11179",
+  "repo": "django/django",
+  "base_commit": "19fc6376ce67d01ca37a91ef2f55ef769f50513a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667744.408995
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667787.066115
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667834.8492446
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667889.569383
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667940.0873425
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790667968.883674
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/deletion.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790667690.222313,
+  "elapsed_s": 286.4,
+  "plan": "# After the delete query executes successfully\n            for model, obj in self.data.items():\n                obj.pk = None",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3373,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8692,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/fields/files.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2552,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6501,
+        "vector": 0.7724,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/migrations/autodetector.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2434,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.572,
+        "vector": 0.8364,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2353,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5985,
+        "vector": 0.7138,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/backends/sqlite3/schema.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2288,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6081,
+        "vector": 0.6396,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/apps/registry.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2283,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6068,
+        "vector": 0.6381,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 2,
+  "critic_verdict": "flagged",
+  "critic_score": 0.8767250000000001,
+  "laya_scores": {
+    "fix_quality": 1.8479,
+    "matches_issue": 0.8753,
+    "safe_to_apply": 0.7837,
+    "composite": 0.8767250000000001,
+    "secrets_or_danger": 0.1621,
+    "logic_drift": 0.2656,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No new attack surface, secrets, or unsafe code introduced.\n- PERFORMANCE: RISK - Iterating `self.data.items()` inside the `if` block incurs overhead on large collections; should ideally only null PKs for the specific objects in the current fast-delete batch if possible, or accept the negligible cost for small batches.\n- ROBUSTNESS: FAIL - The patch iterates over `self.data` (the collector's entire state) and nullifies PKs for *all* objects currently collected, not just those in `specified_objects` that will actually be fast-deleted, potentially corrupting state for objects intended for deferred or standard deletion.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "```python\nimport pytest\nfrom django.db import models\nfrom django.utils.connection import ConnectionDoesNotExist\n\n\nclass SimpleModel(models.Model):\n    name = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = \"test\"\n\n    def __str__(self):\n        return self.name\n\n\nclass NullableModel(models.Model):\n    name = models.CharField(max_length=100, blank=True, null=True)\n\n    class Meta:\n        app_label = \"test\"\n\n    def __str__(self):\n        return f\"NullableModel({self.name})\" if self.name else \"NullableModel(None)\"\n\n\ndef test_delete_clears_pk_for_model_without_dependencies(db):\n    \"\"\"\n    Creating and deleting a model with no dependencies should set its pk to None.\n    This test should FAIL before the fix (red) and PASS after the fix (green).\n    \"\"\"\n    obj = SimpleModel.objects.create(name=\"test\")\n    original_pk = obj.pk\n    assert original_pk is not None\n\n    obj.delete()\n\n    assert obj.pk is None\n\n\ndef test_delete_sets_pk_to_none_multiple_times(db):\n    \"\"\"\n    Deleting an object multiple times should still result in pk being None.\n    Also verifies that the first delete succeeds and subsequent deletes don't raise.\n    \"\"\"\n    obj = SimpleModel.objects.create(name=\"multi-delete\")\n    original_pk = obj.pk\n    assert original_pk is not None\n\n    # First delete\n    obj.delete()\n    assert obj.pk is None\n\n    # Second delete should not raise (already deleted from DB, but pk is None)\n    # When pk is None, delete() should be a no-op or not raise\n    # Actually, calling delete on an unsaved instance (pk=None) may raise\n    # Let's check: in Django, if pk is None, delete() is a no-op (does nothing)\n    # because there's nothing to delete from the DB\n    # But let's verify it doesn't crash\n    # In Django, Model.delete() with pk=None just returns (0, {})\n    result = obj.delete()\n    assert obj.pk is None\n\n\ndef test_delete_clears_pk_for_model_with_none_field_values(db):\n    \"\"\"\n    Deleting a model instance where nullable fields have None values.\n    Ensures the pk clearing works regardless of field values.\n    \"\"\"\n    obj = NullableModel.objects.create(name=None)\n    original_pk = obj.pk\n    assert original_pk is not None\n    assert obj.name is None\n\n    obj.delete()\n\n    assert obj.pk is None\n    assert obj.name is None\n\n\ndef test_delete_does_not_clear_pk_of_unrelated_objects(db):\n    \"\"\"\n    Deleting one object should not affect the pk of other objects.\n    Ensures the fix only affects the deleted object.\n    \"\"\"\n    obj1 = SimpleModel.objects.create(name=\"first\")\n    obj2 = SimpleModel.objects.create(name=\"second\")\n    pk1 = obj1.pk\n    pk2 = obj2.pk\n    assert pk1 is not None\n    assert pk2 is not None\n    assert pk1 != pk2\n\n    obj1.delete()\n\n    assert obj1.pk is None\n    assert obj2.pk == pk2",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4af..e135f7c 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -275,6 +275,8 @@ class Collector:\n         if len(self.data) == 1 and len(instances) == 1:\n             instance = list(instances)[0]\n             if self.can_fast_delete(instance):\n+                for model, obj in self.data.items():\n+                    obj.pk = None\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n                 return count, {model._meta.label: count}\n",
+  "offline_calls": 0
+}

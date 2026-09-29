@@ -1,0 +1,187 @@
+{
+  "instance_id": "django__django-11422",
+  "repo": "django/django",
+  "base_commit": "df46b329e0900e9e4dc1d60816c1dce6dfc1094e",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669344.3704805
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669449.8482192
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669564.1731563
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669705.0171468
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669850.4142096
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790669991.1339006
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790670019.9460409
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/utils/autoreload.py: @@ — expected context not found in file: '    def start(self):'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790668505.8298788,
+  "elapsed_s": 825.87,
+  "plan": "self._reloader = self.reloader_cls(self.callable)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/bin/compress.py",
+      "symbol": "django/contrib/admin/bin/compress.py::main",
+      "line_range": [
+        17,
+        63
+      ],
+      "score": 0.5082,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2555,
+        "vector": 0.3697,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4565,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3923,
+        "vector": 0.9036,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::main_help_text",
+      "line_range": [
+        162,
+        194
+      ],
+      "score": 0.3636,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5882,
+        "vector": 0.5544,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3453,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1096,
+        "vector": 0.566,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/admin_scripts/configured_settings_manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2797,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1553,
+        "vector": 0.9645,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "tests/i18n/sampleproject/manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2586,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.074,
+        "vector": 0.8827,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.6734499999999999,
+  "laya_scores": {
+    "fix_quality": 1.2913,
+    "matches_issue": 0.7523,
+    "safe_to_apply": 0.6502,
+    "composite": 0.6734499999999999,
+    "secrets_or_danger": 0.1325,
+    "logic_drift": 0.2668,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change removes a function call (`self.callable()`) from an argument, which does not introduce injection, secrets exposure, or unsafe code execution.\n- PERFORMANCE: PASS - Removing the immediate execution of `self.callable()` during initialization is a performance improvement (or at least neutral) by avoiding unnecessary side effects/startup costs if the callable was heavy.\n- ROBUSTNESS: RISK - The diff passes `self.callable` (the method object) instead of `self.callable()` (the result). If `reloader_cls` expects the resolved callable or specific arguments, this change alters the interface. However, given the context of `autoreload`, `reloader_cls` likely wraps a function to be called later. If `self.callable` is a bound method, passing it is correct for deferred execution. If `self.callable` was already a variable holding a static function or string, this is fine. The bug report suggests the *reloader* wasn't tracking the file, unrelated to this startup logic. The change looks like a fix to pass the function reference rather than executing it immediately (which would be a bug if `self.callable` had side effects or was the target function itself). Assuming `self.callable` is a property or method returning the function to run, passing the reference `self.callable` might be incorrect if `reloader_cls` expects the *result*. Wait, looking at standard Django co"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/utils/autoreload.py: @@ — expected context not found in file: '    def start(self):'",
+  "regression_test": "import importlib.util\nimport os\nimport sys\n\nimport pytest\nfrom django.utils import autoreload\n\n\ndef load_module_from_path(path: str, name: str = \"temp_mod\"):\n    \"\"\"\n    Load a module from an arbitrary filesystem location.\n    Returns the imported module object.\n    \"\"\"\n    spec = importlib.util.spec_from_file_location(name, path)\n    module = importlib.util.module_from_spec(spec)\n    assert spec.loader is not None, \"Could not create loader for temporary module\"\n    spec.loader.exec_module(module)  # type: ignore[arg-type]\n    return module\n\n\n@pytest.fixture\ndef temporary_manage_py(tmp_path):\n    \"\"\"\n    Create a temporary ``manage.py``‑like file containing a ``main`` callable.\n    Returns the path to the file and the loaded ``main`` function.\n    \"\"\"\n    manage_path = tmp_path / \"manage.py\"\n    manage_path.write_text(\n        \"\"\"\ndef main():\n    pass\n\"\"\"\n    )\n    mod = load_module_from_path(str(manage_path), name=\"manage\")\n    return manage_path, mod.main\n\n\ndef test_manage_py_is_watched_by_autoreloader(temporary_manage_py):\n    \"\"\"\n    The core regression: the file that defines the callable passed to\n    ``autoreload.get_reloader`` must be part of the reloader's watch list.\n    BEFORE the fix this test fails because ``manage.py`` is missing;\n    AFTER the fix it passes.\n    \"\"\"\n    manage_path, main_callable = temporary_manage_py\n\n    # Obtain a reloader instance for the ``main`` function.\n    reloader = autoreload.get_reloader(main_callable)\n\n    # ``StatReloader`` (the default on most platforms) stores watched file\n    # paths in the ``watched_files`` attribute.\n    watched = getattr(reloader, \"watched_files\", None)\n    assert isinstance(watched, set), \"Reloader does not expose a set of watched files\"\n\n    # The absolute path of the temporary ``manage.py`` must be in the set.\n    assert str(manage_path) in watched\n\n\ndef test_none_callable_raises_type_error():\n    \"\"\"\n    Passing ``None`` (or any non‑callable) to ``get_reloader`` should raise a\n    ``TypeError``.  The fix does not change this behaviour, so the test must\n    stay green.\n    \"\"\"\n    with pytest.raises(TypeError):\n        autoreload.get_reloader(None)  # type: ignore[arg-type]\n\n\ndef test_lambda_callable_is_watched_with_its_source_file(tmp_path):\n    \"\"\"\n    Lambdas defined in a real file should still cause that file to be watched.\n    This checks that the reloader uses ``fn.__code__.co_filename`` correctly.\n    \"\"\"\n    file_path = tmp_path / \"lambda_holder.py\"\n    file_path.write_text(\n        \"\"\"\nmy_lambda = lambda x: x + 1\n\"\"\"\n    )\n    mod = load_module_from_path(str(file_path), name=\"lambda_holder\")\n    # Retrieve the lambda object from the imported module.\n    lambda_fn = getattr(mod, \"my_lambda\")\n\n    reloader = autoreload.get_reloader(lambda_fn)\n\n    watched = getattr(reloader, \"watched_files\", None)\n    assert isinstance(watched, set)\n    # The file that defines the lambda must be watched.\n    assert str(file_path) in watched",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

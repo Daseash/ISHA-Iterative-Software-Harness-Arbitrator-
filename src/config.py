@@ -157,6 +157,13 @@ def _offline(prompt: str) -> str:
 # key).  Remaining models from the same provider are skipped instead of
 # re-paying the same 429/403 for every step of every retry.
 _dead_providers: set = set()
+# Models whose ACCOUNT QUOTA died (a 429 carrying "exceeded your current
+# quota" / "plan and billing").  Gemini quotas are per-model: killing the
+# whole provider would skip flash-lite, which has its own bucket and still
+# works — so the last-resort fallback becomes unreachable exactly when it is
+# needed.  Session-scoped (daily quotas do not recover mid-run), and unlike
+# a provider death it is never cleared by ``reset_provider_state()``.
+_dead_models: set = set()
 
 _AUTH_FATAL_TYPES = {
     "AuthenticationError",    # bad/expired key
@@ -198,15 +205,19 @@ def _provider(model: str) -> str:
     return model.split("/", 1)[0] if "/" in model else model
 
 
+def _quota_fatal(exc: Exception) -> bool:
+    """Account quota/billing exhausted for THIS model (not a TPM window)."""
+    return type(exc).__name__ == "RateLimitError" and any(
+        h in str(exc).lower() for h in _QUOTA_HINTS
+    )
+
+
 def _provider_fatal(exc: Exception) -> bool:
     """Session-fatal for the whole provider (quota exhausted / bad key)."""
     name = type(exc).__name__
     if name in _AUTH_FATAL_TYPES:
         return True
-    if name == "RateLimitError":
-        msg = str(exc).lower()
-        return any(h in msg for h in _QUOTA_HINTS)
-    return False
+    return _quota_fatal(exc)
 
 
 def _model_fatal(exc: Exception) -> bool:
@@ -261,6 +272,20 @@ def _cooldown_remaining(provider: str) -> float:
     return max(0.0, _RATE_COOLDOWN.get(provider, 0.0) - time.monotonic())
 
 
+def _advance_on_rate_limit() -> bool:
+    """Should a 429 advance the chain instead of sleeping and retrying?
+
+    Interactive use wants the strongest model, so it waits the window out.
+    A benchmark run is throughput-bound and already has a per-instance time
+    budget: sleeping 40-60s per call consumed most of the 900s budget and
+    still resolved nothing, while the next model in the chain was warm and
+    immediately usable. Override with ``ISHA_RATE_LIMIT_WAIT=1``.
+    """
+    if os.getenv("ISHA_RATE_LIMIT_WAIT", "").strip() in ("1", "true", "yes"):
+        return False
+    return os.getenv("ISHA_BENCH_MODE", "0") == "1"
+
+
 def _call_chain(chain: list, role: str, prompt: str, temperature: float | None = None) -> str:
     """Try each model in *chain*; first success wins.
 
@@ -297,6 +322,14 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
             print(
                 f"[model] {role}: skipping {_short_name(model)} — "
                 f"provider '{provider}' already marked unavailable",
+                file=sys.stderr,
+            )
+            continue
+        if model in _dead_models:
+            errors.append(f"{_short_name(model)}: skipped (model quota exhausted)")
+            print(
+                f"[model] {role}: skipping {_short_name(model)} — "
+                f"model quota exhausted for this session",
                 file=sys.stderr,
             )
             continue
@@ -350,12 +383,24 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     file=sys.stderr,
                 )
                 if _provider_fatal(e):
-                    _dead_providers.add(provider)
-                    print(
-                        f"[model] provider '{provider}' marked unavailable "
-                        f"for this session ({err_name})",
-                        file=sys.stderr,
-                    )
+                    if _quota_fatal(e):
+                        # Per-model quota (Gemini 3.8/3.5 dead, flash-lite
+                        # has its own bucket) — kill the model, not the
+                        # provider, so the healthy fallback stays reachable.
+                        _dead_models.add(model)
+                        print(
+                            f"[model] {_short_name(model)} quota exhausted — "
+                            f"skipping it for the rest of this session "
+                            f"({err_name})",
+                            file=sys.stderr,
+                        )
+                    else:
+                        _dead_providers.add(provider)
+                        print(
+                            f"[model] provider '{provider}' marked unavailable "
+                            f"for this session ({err_name})",
+                            file=sys.stderr,
+                        )
                     break
                 if _model_fatal(e):
                     break  # this model is unusable — next chain entry
@@ -377,6 +422,18 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     # THIS model instead.
                     wait = min(wait, 60)
                     _note_rate_limit(provider, wait)
+                    if _advance_on_rate_limit():
+                        # A measurement run is throughput-bound: a 40-60s
+                        # sleep per call is most of the instance budget, and
+                        # the fallback is warm.  Record the window so later
+                        # calls skip this provider outright, then move on.
+                        print(
+                            f"[model] {role}: {_short_name(model)} rate limited "
+                            f"— marking '{provider}' rate-limited for {wait:.0f}s "
+                            f"and advancing",
+                            file=sys.stderr,
+                        )
+                        continue
                     print(
                         f"[model] {role}: {_short_name(model)} rate limited — "
                         f"backoff {wait}s (attempt {attempts}/{_MAX_ATTEMPTS})",

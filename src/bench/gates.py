@@ -4,6 +4,10 @@ ISHA Patch Validity Gates — cheap static checks applied before any test run.
 A patch that does not parse is never worth spending a test run on, so every
 candidate goes through:
 
+  0. no-op          the diff has no semantic content — the model reformatted
+                    or re-indented the lines it was told to change without
+                    altering behaviour. Such a patch applies cleanly, compiles,
+                    passes pyflakes and then fails every FAIL_TO_PASS test.
   1. apply        the diff must apply to a clean checkout
   2. compile      ``ast.parse`` / ``py_compile`` on every changed Python file
   3. pyflakes     no undefined names / unused-but-broken imports
@@ -32,6 +36,9 @@ class GateResult:
     changed_files: list[str] = field(default_factory=list)
     added_lines: int = 0
     removed_lines: int = 0
+    # Advisory only — never turns ``ok`` false. Surfaced to the coder and
+    # recorded in meta.json so a risky-but-passing patch is still visible.
+    warnings: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict:
         return {
@@ -40,6 +47,7 @@ class GateResult:
             "changed_files": self.changed_files,
             "added_lines": self.added_lines,
             "removed_lines": self.removed_lines,
+            "warnings": self.warnings,
         }
 
 
@@ -108,6 +116,201 @@ def _message_only(text: str) -> str:
     return text.split(": ", 1)[-1] if ": " in text else text
 
 
+# Two diff sides that are equal after normalisation cannot change behaviour.
+# Whitespace is the common case (re-indentation, quote tidying, trailing
+# spaces), but comment-only edits are caught by the same comparison because
+# the code tokens are unchanged.
+_WS_RE = re.compile(r"\s+")
+
+
+def _normalise_line(line: str) -> str:
+    return _WS_RE.sub("", line)
+
+
+def _strip_comments(lines: list[str]) -> list[str]:
+    """Drop pure-comment / blank content, using the text after ``#``."""
+    out = []
+    for line in lines:
+        stripped = line.split("#", 1)[0]
+        if stripped.strip():
+            out.append(stripped)
+    return out
+
+
+def is_semantic_noop(patch: str) -> bool:
+    """True when the diff cannot change runtime behaviour.
+
+    Compares the removed and added sides of every hunk, ignoring whitespace
+    and comments. A patch where both sides reduce to the same non-empty
+    content is a pure reformat: it applies and compiles perfectly and then
+    leaves the failing tests exactly as failing as before, so it should never
+    be submitted.
+    """
+    removed: list[str] = []
+    added: list[str] = []
+    for line in (patch or "").splitlines():
+        if line.startswith("+++") or line.startswith("---"):
+            continue
+        if line.startswith("+"):
+            added.append(line[1:])
+        elif line.startswith("-"):
+            removed.append(line[1:])
+
+    if not added and not removed:
+        return True
+
+    # Textual comparison first (cheap and exact), then whitespace-insensitive.
+    if added == removed:
+        return True
+
+    return [ _normalise_line(x) for x in _strip_comments(added) ] == [
+        _normalise_line(x) for x in _strip_comments(removed)
+    ]
+
+
+def noop_gate(patch: str) -> GateResult:
+    """Reject patches whose only effect is reformatting the target lines."""
+    added, removed = diff_stats(patch)
+    result = GateResult(
+        ok=not is_semantic_noop(patch),
+        changed_files=changed_files(patch),
+        added_lines=added,
+        removed_lines=removed,
+    )
+    if not result.ok:
+        result.errors.append(
+            "no-op patch: the diff only reformats the lines it touches "
+            "(identical code on both sides once whitespace and comments are "
+            "ignored) — it cannot fix anything, so change the actual logic"
+        )
+    return result
+
+
+# ── Regression risk ─────────────────────────────────────────────────────────
+# A patch that rewrites most of a function's body is the shape that produced
+# the astropy-12907 regression: the right file, a plausible-looking fix, and
+# 6 previously-passing tests turned red. Signature checks cannot see this
+# (the signature was unchanged), and in bench mode no test runs locally, so
+# the only cheap signal left is *how much* of the function was replaced.
+_DEF_LINE_RE = re.compile(r"^\s*(?:async\s+)?(?:def|class)\s+\w+")
+_REWRITE_WARN = 0.6   # replace >=60% of a function's body to warn
+_REWRITE_MIN_LINES = 8  # ignore trivial functions; rewriting 3 lines is not risky
+
+
+def _enclosing_functions(lines: list[str], target: set[int]) -> dict[str, set[int]]:
+    """Map each function name to the 1-based line numbers it spans."""
+    spans: list[tuple[str, int, int]] = []
+    for i, line in enumerate(lines):
+        if not _DEF_LINE_RE.match(line):
+            continue
+        indent = len(line) - len(line.lstrip())
+        end = len(lines)
+        for j in range(i + 1, len(lines)):
+            if not lines[j].strip():
+                continue
+            other = lines[j]
+            if len(other) - len(other.lstrip()) <= indent:
+                end = j
+                break
+        name = re.search(r"(?:def|class)\s+(\w+)", line)
+        spans.append((name.group(1) if name else f"<anon{i}>", i + 1, end))
+
+    out: dict[str, set[int]] = {}
+    for name, start, end in spans:
+        body = set(range(start + 1, end + 1))  # exclude the def line itself
+        if body & target:
+            out[name] = body
+    return out
+
+
+def _hunk_touched_lines(patch: str) -> dict[str, set[int]]:
+    """Per-file 1-based NEW-file line numbers the diff adds or removes.
+
+    A unified diff walks the *new* file. A ``-`` line still occupies a line
+    number (it is deleted from the new file but exists in the old one), so it
+    must advance the cursor or every following line is under-counted. Getting
+    this wrong made a whole-function rewrite look like a two-line change.
+    """
+    touched: dict[str, set[int]] = {}
+    current: str | None = None
+    lineno = 0
+    for line in (patch or "").splitlines():
+        if line.startswith("+++ b/"):
+            current = line[6:].strip()
+            touched.setdefault(current, set())
+            lineno = 0
+            continue
+        if line.startswith("+++ /dev/null"):
+            current = None
+            continue
+        if line.startswith("---") or line.startswith("diff --git") or line.startswith("index "):
+            continue
+        if current is None:
+            continue
+        if line.startswith("@@"):
+            match = re.search(r"\+(\d+)", line)
+            lineno = int(match.group(1)) - 1 if match else 0
+            continue
+        if line.startswith("+"):
+            lineno += 1
+            touched[current].add(lineno)
+        elif line.startswith("-"):
+            # A deleted line still occupies its position in the new file's
+            # numbering, so consecutive removals are consecutive numbers —
+            # clamping to the cursor collapsed them into one.
+            lineno += 1
+            touched[current].add(lineno)
+        elif line.startswith(" ") or not line.strip():
+            lineno += 1
+    return touched
+
+
+def rewrite_risk(repo_path: str, patch: str) -> list[str]:
+    """Warn when a patch replaces most of a function's body.
+
+    Advisory, never fatal: some legitimate fixes *are* large rewrites, so this
+    is surfaced to the coder and recorded rather than used to reject a
+    candidate outright.
+    """
+    touched = _hunk_touched_lines(patch)
+    if not touched:
+        return []
+
+    warnings: list[str] = []
+    for rel, lines_changed in touched.items():
+        if not lines_changed:
+            continue
+        target = Path(repo_path) / rel
+        try:
+            lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue  # deleted file or sandbox-only path
+        if not lines:
+            continue
+        for name, body in _enclosing_functions(lines, lines_changed).items():
+            if len(body) < _REWRITE_MIN_LINES:
+                continue
+            ratio = len(body & lines_changed) / len(body)
+            if ratio >= _REWRITE_WARN:
+                warnings.append(
+                    f"rewrite risk: '{name}' in '{rel}' — the diff replaces "
+                    f"{len(body & lines_changed)}/{len(body)} of its body "
+                    f"({ratio:.0%}). A broad rewrite of one function is the "
+                    f"shape that silently breaks tests that used to pass; "
+                    f"prefer the smallest change that fixes the issue."
+                )
+    return warnings
+
+
+def noop_gate_with_risk(repo_path: str, patch: str) -> GateResult:
+    """No-op rejection plus advisory rewrite warnings."""
+    result = noop_gate(patch)
+    if not result.ok:
+        return result
+    result.warnings = rewrite_risk(repo_path, patch)
+    return result
+
+
 def _baseline_errors(baseline_repo: str | None, rel: str) -> set[str]:
     """Errors the *pristine* file already has.
 
@@ -140,6 +343,13 @@ def compile_gate(repo_path: str, patch: str, baseline_repo: str | None = None) -
         return result
 
     root = Path(repo_path)
+
+    # Gate 0 — pure reformat. Runs before any subprocess work.
+    noop = noop_gate_with_risk(str(root), patch)
+    if not noop.ok:
+        return noop
+    result.warnings = noop.warnings
+
     for rel in files:
         target = root / rel
         if not target.is_file():

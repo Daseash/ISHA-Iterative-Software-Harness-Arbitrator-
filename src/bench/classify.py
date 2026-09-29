@@ -1,9 +1,17 @@
 """
 ISHA Failure Categorisation — why did each instance not resolve?
 
-Six buckets, assigned in this order (first match wins):
+Buckets, assigned in this order (first match wins):
 
-    api_failure          no live model answered / chain exhausted
+    not_run              the instance has no record at all — the runner never
+                         reached it (aborted run, stale slice). Counting
+                         these as api_failure would make an incomplete run
+                         look like a provider outage.
+    api_failure          a live model was called and none of the chain
+                         answered
+    harness_no_output    a patch exists but the official harness produced no
+                         test output at all (image/container problem), which
+                         is an infrastructure failure, not a model one
     timeout              the per-instance time budget ran out
     patch_apply_failed   the generated diff would not apply in the container
     syntax_error         the changed files do not compile / raise on import
@@ -16,6 +24,10 @@ Two pre-solve buckets can also appear when the runner short-circuits an
 instance: ``checkout_failed`` (the mirror would not materialise) and
 ``prefiltered`` (record dropped before solving, still counted in the
 denominator).
+
+``api_failure`` is reserved for real provider failures because the release
+criteria gate on it (must stay under 5%): a category that silently absorbs
+"never ran" and "harness broke" cannot be used for that check.
 
 Gold patches are read **only** here, after the run has finished, and only to
 tell ``localization_wrong`` from ``tests_failed``.  They are never available
@@ -36,6 +48,8 @@ CATEGORIES = [
     "tests_failed",
     "timeout",
     "api_failure",
+    "not_run",
+    "harness_no_output",
     "checkout_failed",
     "prefiltered",
 ]
@@ -71,6 +85,19 @@ def _read(path: Path) -> str:
         return ""
 
 
+def _has_record(meta: dict) -> bool:
+    """Did the runner actually get far enough to say anything about this?
+
+    ``build_breakdown`` passes an empty dict when ``meta.json`` is missing
+    entirely, which is the normal state for an instance in a run that was cut
+    short. Any key the runner always writes counts as a record.
+    """
+    return any(
+        key in meta
+        for key in ("status", "instance_id", "elapsed_s", "model_log", "attempts")
+    )
+
+
 def classify_instance(
     meta: dict,
     harness_log_dir: Path | None,
@@ -80,6 +107,10 @@ def classify_instance(
     """Return the failure bucket for one instance (``""`` when resolved)."""
     if resolved:
         return ""
+
+    # 0. The runner never got to this instance at all.
+    if not _has_record(meta):
+        return "not_run"
 
     patch = meta.get("model_patch", "") or ""
 
@@ -99,9 +130,10 @@ def classify_instance(
     if APPLY_PATCH_FAIL in blob:
         return "patch_apply_failed"
 
-    # 3. Harness never even started the tests (image/container problems).
+    # 3. Harness never even started the tests (image/container problems) —
+    #    an infrastructure failure, so it must not pollute api_failure.
     if not output.strip():
-        return meta.get("failure_category") or "api_failure"
+        return meta.get("failure_category") or "harness_no_output"
 
     # 4. Timed out.
     if TESTS_TIMEOUT in blob or "timed out" in blob.lower():

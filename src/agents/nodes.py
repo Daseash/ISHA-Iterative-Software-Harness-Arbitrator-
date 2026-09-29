@@ -76,6 +76,11 @@ _STYLE_CHARS = int(os.getenv("ISHA_STYLE_CHARS", "600"))
 _HINT_CHARS = int(os.getenv("ISHA_HINT_CHARS", "4000"))
 _PLANNER_AUX_CHARS = int(os.getenv("ISHA_PLANNER_AUX_CHARS", "2500"))
 
+# Phase 2b symbol targeting. Kept small: the block is a *ranking to check*,
+# not a decision, and every symbol named here competes for prompt budget.
+_TARGETING_FILES = int(os.getenv("ISHA_TARGETING_FILES", "3"))
+_TARGETING_SYMBOLS = int(os.getenv("ISHA_TARGETING_SYMBOLS", "4"))
+
 
 def _strip_fences(text: str) -> str:
     """Return the largest fenced block if present, otherwise the raw text."""
@@ -176,15 +181,36 @@ def code_context_section(state: AgentState, targets: list) -> str:
     normalized = [t for t in normalized if t["file"]]
     if not normalized:
         return ""
+
+    # Phase 2b: the file is right, but *which function in it* is the defect is
+    # a separate question the file localizer never asked.  Rank the symbols in
+    # the top files so the coder is pointed at a candidate, not left to guess.
+    targeting = ""
+    try:
+        from src.tools.symbol_target import build_targeting_block, target_file
+
+        ranked: list[dict] = []
+        for t in normalized[:_TARGETING_FILES]:
+            ranked.extend(target_file(
+                state.repo_path, t["file"], state.issue_text or ""
+            ))
+        # Keep the best few across files, and prefer symbols over the bare file.
+        ranked.sort(key=lambda r: -r.get("score", 0))
+        block = build_targeting_block(ranked[:_TARGETING_SYMBOLS])
+        if block:
+            targeting = "\n" + block + "\n"
+    except Exception:
+        targeting = ""
+
     try:
         from src.tools.codebody import build_coder_context
 
         block = build_coder_context(state.repo_path, normalized, state.issue_text)
     except Exception:
-        return ""
+        return targeting
     if block:
-        return "\n" + block + "\n"
-    return ""
+        return targeting + "\n" + block + "\n"
+    return targeting
 
 
 def planner_node(state: AgentState) -> AgentState:
@@ -631,7 +657,11 @@ def _verify_candidates(state: AgentState, candidates) -> None:
         return
 
     meta = vfy.instance_meta(record)
-    if not vfy.image_available(meta["image"]):
+    # Remember whether the image was already on disk: only an image this run
+    # pulled may be dropped again, otherwise verification would delete a
+    # pre-warmed image that the next instance would have to re-download.
+    prewarmed = vfy.image_available(meta["image"])
+    if not prewarmed:
         vfy.pull_image(meta["image"])
     if not vfy.image_available(meta["image"]):
         for cand in candidates:
@@ -645,13 +675,25 @@ def _verify_candidates(state: AgentState, candidates) -> None:
         touched = []
 
     max_verify = int(os.getenv("ISHA_VERIFY_MAX", "3"))
-    for cand in valid[:max(1, max_verify)]:
-        cand.repro = vfy.verify_instance(
-            record,
-            state.regression_test,
-            cand.patch,
-            touched_targets=touched,
-        )
+    try:
+        for cand in valid[:max(1, max_verify)]:
+            cand.repro = vfy.verify_instance(
+                record,
+                state.regression_test,
+                cand.patch,
+                touched_targets=touched,
+            )
+    finally:
+        # Eval images are ~4GB each and a 30-instance run would need ~125GB.
+        # Drop anything this instance pulled so the run stays bounded by one
+        # image, not by the size of the slice.
+        if not prewarmed and os.getenv("ISHA_VERIFY_KEEP_IMAGES", "0") != "1":
+            from src.bench.harness_eval import cleanup_images
+
+            try:
+                cleanup_images()
+            except Exception:
+                pass
 
 
 def sandbox_node(state: AgentState) -> AgentState:

@@ -1,0 +1,10 @@
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -278,6 +278,7 @@ class Collector:
+             else:
+                 self.fast_deletes = [field.remote_field.model for field in fields]
+             if self.can_fast_delete(specified_objects):
++                for model, obj in self.data.items():
++                    obj.pk = None
+                 self.fast_deletes = []
+             return

@@ -1,0 +1,14 @@
+diff --git a/django/contrib/auth/migrations/0011_update_proxy_permissions.py b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+index 0e66649..c6d4d9b 100644
+--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py
++++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+@@ -4,6 +4,9 @@ from django.db.models import Q
+ 
+ def update_proxy_model_permissions(apps, schema_editor, reverse=False):
+     """
++    new_ct = ContentType.objects.filter(
++        app_label='auth', codename='u12',
++    ).first()
+     Update the content_type of proxy model permissions to use the ContentType
+     of the proxy model.
+     """

@@ -1,0 +1,11 @@
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@
+-    def start(self):
+-        if self._reloader is None:
+-            self._reloader = self.reloader_cls(self.callable())
+-            self._reloader.start()
++    def start(self):
++        if self._reloader is None:
++            self._reloader = self.reloader_cls(self.callable)
++            self._reloader.start()

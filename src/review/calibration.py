@@ -217,6 +217,20 @@ def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH) -> dict:
         return {"fitted": False, "n": len(usable),
                 "reason": "need at least 8 labelled candidates"}
 
+    # A single-class store fits confidently to "always resolved" or "never
+    # resolved" and would then gate every candidate on a number with no
+    # evidence behind it. Refuse instead of reporting a fake calibration.
+    positives = sum(1 for r in usable if r["label"])
+    negatives = len(usable) - positives
+    if positives == 0 or negatives == 0:
+        return {"fitted": False, "n": len(usable),
+                "positives": positives, "negatives": negatives,
+                "reason": (
+                    f"labels have a single class ({positives} positive, "
+                    f"{negatives} negative) — fit() needs resolved and "
+                    f"unresolved candidates to learn what separates them"
+                )}
+
     x = [vector(r["features"]) for r in usable]
     y = [1 if r["label"] else 0 for r in usable]
     model = fit_logistic(x, y)

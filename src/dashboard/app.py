@@ -610,9 +610,23 @@ with tab_bench:
         st.markdown("#### Failure breakdown")
         breakdown = payload.get("breakdown") or {}
         if breakdown:
+            # An incomplete run looks like a real result unless it is called
+            # out: `not_run` instances were never attempted, so their share of
+            # the failure buckets says nothing about the agent.
+            not_run = int(breakdown.get("not_run") or 0)
+            if not_run:
+                st.warning(
+                    f"Run incomplete — {not_run} instance(s) were never attempted "
+                    f"(`not_run`) and are counted in the denominator. Every other "
+                    f"bucket below describes only the instances that actually ran.",
+                    icon="⚠️",
+                )
             st.json(breakdown)
         else:
-            st.caption("Run the classifier to populate this: `python -m src.bench.classify <run-id>`")
+            st.caption(
+                "No breakdown in this report yet. Regenerate it with "
+                "`python -m src.bench.report <run-id>`."
+            )
 
         if other != "(none)":
             from src.bench.report import compare as _compare

@@ -1,0 +1,199 @@
+{
+  "instance_id": "django__django-11583",
+  "repo": "django/django",
+  "base_commit": "60dc957a825232fdda9138e2f8878b2ca407a7c9",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790671581.4167287
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790671686.3222077
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790671802.0394015
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790671939.1319625
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790672078.8329806
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790672216.9488773
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790672245.5974
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/utils/autoreload.py: @@ — expected context not found in file: 'def iter_modules_and_files(modules, error_files):'",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790670524.860778,
+  "elapsed_s": 825.74,
+  "plan": "@@\n-def iter_modules_and_files(modules, error_files):\n-    results = set()\n-    for module in modules:\n-        filename = getattr(module, '__file__', None)\n-        if not filename:\n-            continue\n-        try:\n-            path = Path(filename).resolve()\n-        except OSError:\n-            continue\n-        results.add(path)\n-    results.update(error_files)\n-    return results\n+def iter_modules_and_files(modules, error_files):\n+    \"\"\"\n+    Return a set of ``Path`` objects for the given modules plus any previously\n+    errored files.\n+\n+    Some module ``__file__`` values may contain an embedded null byte (for\n+    example, modules loaded from zip archives or frozen modules). ``Path.resolve``\n+    raises ``ValueError`` for such strings, which previously bubbled up and\n+    crashed the autoreloader. We now treat those modules as unwatchable and\n+    simply skip them.\n+    \"\"\"\n+    results = set()\n+    for module in modules:\n+        filename = getattr(module, '__file__', None)\n+        if not filename:\n+            continue\n+        try:\n+            # ``Path.resolve`` can raise OSError or ValueError (embedded NUL).\n+            path = Path(filename).resolve()\n+        except (OSError, ValueError):\n+            # If the path cannot be resolved, ignore this module – it cannot be\n+            # watched reliably.\n+            continue\n+        results.add(path)\n+    # ``error_files`` may contain string paths; normalise them to ``Path``.\n+    results.update(Path(p) if not isinstance(p, Path) else p for p in error_files)\n+    return results",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "django/utils/autoreload.py::iter_all_python_module_files",
+      "line_range": [
+        98,
+        107
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.9391,
+        "vector": 0.3661,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "line_range": [
+        313,
+        389
+      ],
+      "score": 0.9483,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5435,
+        "vector": 0.52,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/urls/base.py",
+      "symbol": "django/urls/base.py::resolve",
+      "line_range": [
+        22,
+        27
+      ],
+      "score": 0.8034,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.0904,
+        "vector": 0.2566,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "line_range": [
+        311,
+        346
+      ],
+      "score": 0.7271,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7982,
+        "vector": 0.2294,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::run_validators",
+      "line_range": [
+        576,
+        591
+      ],
+      "score": 0.7001,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6153,
+        "vector": 0.3856,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/db/backends/oracle/base.py",
+      "symbol": "django/db/backends/oracle/base.py::execute",
+      "line_range": [
+        509,
+        514
+      ],
+      "score": 0.6442,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3828,
+        "vector": 0.404,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.520775,
+  "laya_scores": {
+    "fix_quality": 1.0507,
+    "matches_issue": 0.5192,
+    "safe_to_apply": 0.5132,
+    "composite": 0.520775,
+    "secrets_or_danger": 0.1147,
+    "logic_drift": 0.3677,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No changes to input handling, execution flow, or memory management that would introduce injection, traversal, or unsafe code execution risks.\n- PERFORMANCE: PASS - The `isinstance` check and `Path()` construction are O(1) operations; adding one exception type to the catch tuple has negligible overhead compared to the I/O cost of `resolve()`.\n- ROBUSTNESS: RISK - Catching `ValueError` silently skips any file with an invalid path (e.g., embedded null bytes), meaning the reloader will no longer watch these files, leading to stale code/issues if they are valid but unhandled, though this is better than a crash.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/utils/autoreload.py: @@ — expected context not found in file: 'def iter_modules_and_files(modules, error_files):'",
+  "regression_test": "import types\nimport pathlib\nimport pytest\n\n# The function under test\nfrom django.utils.autoreload import iter_modules_and_files\n\n\ndef test_iter_modules_and_files_skips_embedded_null_byte():\n    \"\"\"\n    The original implementation called ``Path.resolve()`` directly, which\n    raises ``ValueError`` for paths containing an embedded NUL byte.\n    The buggy version therefore propagates the exception and crashes the\n    autoreloader.  After the fix the module should simply be ignored.\n    \"\"\"\n    # Module with an illegal filename (contains a NUL byte)\n    bad_mod = types.SimpleNamespace(__file__=\"bad\\x00module.py\")\n    # A normal module – we use this test file itself\n    good_mod = types.SimpleNamespace(__file__=__file__)\n\n    # No exception should be raised\n    result = iter_modules_and_files([bad_mod, good_mod], error_files=[])\n\n    # The good module must be present (as a resolved ``Path``)\n    assert pathlib.Path(__file__).resolve() in result\n    # The bad module must be absent\n    assert all(\"bad\" not in str(p) for p in result)\n\n\ndef test_iter_modules_and_files_ignores_oserror(monkeypatch):\n    \"\"\"\n    ``Path.resolve`` can also raise ``OSError`` (e.g. permission errors,\n    unreadable files).  The fix should swallow that exception as well.\n    \"\"\"\n    # Module that will trigger an OSError when its path is resolved\n    oserr_mod = types.SimpleNamespace(__file__=\"trigger_oserror.py\")\n    # Normal module for control\n    good_mod = types.SimpleNamespace(__file__=__file__)\n\n    # Preserve the original ``Path.resolve`` implementation\n    original_resolve = pathlib.Path.resolve\n\n    def fake_resolve(self, *args, **kwargs):\n        if self.name == \"trigger_oserror.py\":\n            raise OSError(\"simulated OS error\")\n        return original_resolve(self, *args, **kwargs)\n\n    monkeypatch.setattr(pathlib.Path, \"resolve\", fake_resolve, raising=False)\n\n    result = iter_modules_and_files([oserr_mod, good_mod], error_files=[])\n    # The good module must still be present\n    assert pathlib.Path(__file__).resolve() in result\n    # The module that raised OSError must be ignored\n    assert all(\"trigger_oserror.py\" not in str(p) for p in result)\n\n\ndef test_iter_modules_and_files_handles_missing_file_attribute():\n    \"\"\"\n    Modules that lack a ``__file__`` attribute should simply be skipped.\n    \"\"\"\n    no_file_mod = types.SimpleNamespace()  # no __file__\n    result = iter_modules_and_files([no_file_mod], error_files=[])\n    assert result == set()\n\n\ndef test_iter_modules_and_files_normalises_error_files():\n    \"\"\"\n    ``error_files`` may contain raw strings or ``Path`` objects.\n    The function should return a set of ``Path`` instances that includes them.\n    \"\"\"\n    # Normal module list is empty – we only care about ``error_files``\n    err_str = \"some/error/file.py\"\n    err_path = pathlib.Path(\"another/error/file.py\").resolve()\n\n    result = iter_modules_and_files([], error_files=[err_str, err_path])\n\n    # Both entries must be present as ``Path`` objects\n    assert pathlib.Path(err_str) in result\n    assert err_path in result\n    # Ensure the set contains only ``Path`` objects\n    assert all(isinstance(p, pathlib.Path) for p in result)\n\n\ndef test_iter_modules_and_files_dedupes_duplicate_paths():\n    \"\"\"\n    When multiple modules resolve to the same file, the result should contain\n    only one entry (set semantics).\n    \"\"\"\n    mod1 = types.SimpleNamespace(__file__=__file__)\n    mod2 = types.SimpleNamespace(__file__=__file__)  # duplicate\n\n    result = iter_modules_and_files([mod1, mod2], error_files=[])\n    resolved = pathlib.Path(__file__).resolve()\n    assert result == {resolved}",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

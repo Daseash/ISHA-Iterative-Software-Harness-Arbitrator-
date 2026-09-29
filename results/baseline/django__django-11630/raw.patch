@@ -1,0 +1,65 @@
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@
+ from django.apps import apps
+ from django.core.checks import Error, Tags, register
++from django.conf import settings
++from django.db import router
+
+ @register(Tags.models)
+ def check_all_models(app_configs=None, **kwargs):
+@@
+-    db_table_models = defaultdict(list)
++    db_table_models = defaultdict(list)
+@@
+-        if model._meta.managed and not model._meta.proxy:
+-            db_table_models[model._meta.db_table].append(model._meta.label)
++        if model._meta.managed and not model._meta.proxy:
++            # Store the model instance instead of just its label to allow
++            # database-aware duplicate‑table checking later.
++            db_table_models[model._meta.db_table].append(model)
+@@
+-    for db_table, model_labels in db_table_models.items():
+-        if len(model_labels) != 1:
+-            errors.append(
+-                Error(
+-                    "db_table '%s' is used by multiple models: %s."
+-                    % (db_table, ', '.join(db_table_models[db_table])),
+-                    obj=db_table,
+-                    id='models.E028',
+-                )
+-            )
++    for db_table, models in db_table_models.items():
++        # No conflict if only a single model uses this table.
++        if len(models) <= 1:
++            continue
++
++        # Determine the set of database aliases each model may be migrated to.
++        model_dbs = {}
++        for m in models:
++            allowed = {
++                alias for alias in settings.DATABASES
++                if router.allow_migrate(alias, m)
++            }
++            model_dbs[m] = allowed
++
++        # If any two models share at least one database alias, raise an error.
++        conflict = False
++        for i, m1 in enumerate(models):
++            for m2 in models[i + 1:]:
++                if model_dbs[m1] & model_dbs[m2]:
++                    conflict = True
++                    break
++            if conflict:
++                break
++
++        if conflict:
++            labels = [m._meta.label for m in models]
++            errors.append(
++                Error(
++                    "db_table %r is used by multiple models: %s."
++                    % (db_table, ', '.join(labels)),
++                    obj=db_table,
++                    id='models.E028',
++                )
++            )

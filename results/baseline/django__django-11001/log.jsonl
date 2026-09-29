@@ -1,3 +1,12 @@
-{"event": "start", "instance_id": "django__django-11001", "ts": 1790613804.0596836}
-{"event": "attempt", "n": 1, "ts": 1790613804.668276}
-{"event": "timeout", "attempt": 1, "ts": 1790614704.6810017}
+{"event": "start", "instance_id": "django__django-11001", "ts": 1790666467.8821464}
+{"event": "attempt", "n": 1, "ts": 1790666468.3378093}
+{"event": "error", "attempt": 1, "error": "UnboundLocalError: cannot access local variable 'root' where it is not associated with a value", "backoff_s": 20.0, "ts": 1790666610.1459286}
+{"event": "attempt", "n": 2, "ts": 1790666630.4147854}
+{"event": "error", "attempt": 2, "error": "UnboundLocalError: cannot access local variable 'root' where it is not associated with a value", "backoff_s": 40.0, "ts": 1790666800.4446156}
+{"event": "attempt", "n": 3, "ts": 1790666840.724417}
+{"event": "attempt", "n": 1, "ts": 1790667361.1967819}
+{"event": "model", "ts": 1790667398.1805773, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790667402.3067625, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790667527.1677458, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790667660.2644787, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790667690.1835108}

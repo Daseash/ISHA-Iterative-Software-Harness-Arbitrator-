@@ -1,0 +1,16 @@
+{"event": "start", "instance_id": "django__django-11630", "ts": 1790673960.0130067}
+{"event": "attempt", "n": 1, "ts": 1790673960.4357793}
+{"event": "model", "ts": 1790674118.361164, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674224.4058232, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674349.5384972, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674501.3123956, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674651.0060747, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674809.5622702, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790674838.5674343, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/core/checks/model_checks.py: @@ — expected context not found in file: 'from django.core import checks'", "ts": 1790674878.8538105}
+{"event": "attempt", "n": 2, "ts": 1790674879.1091785}
+{"event": "model", "ts": 1790675023.8557434, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790675041.0545294, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790675180.513487, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790675331.5157986, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790675369.70691}

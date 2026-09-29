@@ -1,0 +1,26 @@
+--- a/django/templatetags/static.py
++++ b/django/templatetags/static.py
+@@
+-    def render(self, context):
+-        url = self.url(context)
+-        if context.autoescape:
+-            url = conditional_escape(url)
+-        if self.varname is None:
+-            return url
+-        context[self.varname] = url
+-        return ''
++    def render(self, context):
++        url = self.url(context)
++        # Prepend SCRIPT_NAME if a request object is present in the context.
++        request = context.get('request')
++        if request:
++            script_name = request.META.get('SCRIPT_NAME', '')
++            if script_name:
++                script_name = script_name.rstrip('/')
++                url = script_name + '/' + url.lstrip('/')
++        if context.autoescape:
++            url = conditional_escape(url)
++        if self.varname is None:
++            return url
++        context[self.varname] = url
++        return ''

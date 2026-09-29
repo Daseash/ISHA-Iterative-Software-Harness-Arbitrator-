@@ -1,0 +1,7 @@
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@
+-                without_ordering = self.ordering_parts.search(sql).group(1)
++                # Collapse multiline order expressions to a single line before deduplication.
++                sql_oneline = ' '.join(sql.splitlines())
++                without_ordering = self.ordering_parts.search(sql_oneline).group(1)
