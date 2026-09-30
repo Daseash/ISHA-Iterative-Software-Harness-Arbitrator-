@@ -27,7 +27,7 @@ import time
 from pathlib import Path
 
 from src.bench import dataset as ds
-from src.bench.classify import gold_files
+from src.bench.classify import gold_files, gold_symbols
 from src.tools.localizer import localize
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -65,18 +65,27 @@ def _chunks_for(record: dict, refresh: bool = False) -> list[dict]:
     return chunks
 
 
-def evaluate(limit: int = 30, mode: str = "head", top_k: int = 8,
+def evaluate(limit: int = 30, mode: str = "dev", top_k: int = 8,
              refresh: bool = False, verbose: bool = True) -> dict:
+    from src.bench.checkout import ensure_all
+
     records = ds.select_slice(ds.load_records(), limit=limit, mode=mode)
+    if verbose:
+        print(f"[loc_eval] preparing checkouts for {len(records)} instances ({mode}) ...")
+    ensure_all(records)
+
     rows = []
     hits = {k: 0 for k in _TOP_K}
+    func_hits = {k: 0 for k in _TOP_K}
     source_hits = {k: 0 for k in _TOP_K}
     rr_sum = 0.0
+    func_rr_sum = 0.0
     started = time.time()
 
     for n, record in enumerate(records, 1):
         iid = record["instance_id"]
         expected = gold_files(record)
+        expected_syms = gold_symbols(record)
         if not expected:
             continue
         checkout = ROOT / "swebench_checkouts" / iid.replace("/", "__")
@@ -98,6 +107,24 @@ def evaluate(limit: int = 30, mode: str = "head", top_k: int = 8,
         for k in hits:
             if rank and rank <= k:
                 hits[k] += 1
+
+        func_rank = 0
+        if expected_syms:
+            func_rank = next(
+                (i + 1 for i, c in enumerate(ranked)
+                 if any(
+                     s == sym or s in sym
+                     for sym in ([c.symbol.split("::")[-1]] + getattr(c, "symbols", []))
+                     for s in expected_syms
+                     if s and sym
+                 )), 0
+            )
+        func_rr = 1.0 / func_rank if func_rank else 0.0
+        func_rr_sum += func_rr
+        for k in func_hits:
+            if func_rank and func_rank <= k:
+                func_hits[k] += 1
+
         source_rank = next(
             (i + 1 for i, f in enumerate(files)
              if f in expected and _is_source(f)), 0
@@ -108,19 +135,26 @@ def evaluate(limit: int = 30, mode: str = "head", top_k: int = 8,
         row = {
             "instance_id": iid,
             "rank": rank or None,
+            "func_rank": func_rank or None,
             "source_rank": source_rank or None,
             "top": files[:top_k],
-            "expected": sorted(expected),
+            "top_symbols": [c.symbol for c in ranked if c.symbol][:top_k],
+            "expected_files": sorted(expected),
+            "expected_symbols": sorted(expected_syms),
             "in_top8": bool(rank and rank <= 8),
         }
         rows.append(row)
         if verbose:
             mark = "OK " if rank and rank <= 8 else "MISS"
-            print(f"[{n}/{len(records)}] {mark} {iid}: rank={rank or '-'} "
-                  f"src_rank={source_rank or '-'} top={files[:3]}")
+            fmark = f" fn_rank={func_rank or '-'}" if expected_syms else ""
+            print(f"[{n}/{len(records)}] {mark} {iid}: rank={rank or '-'}"
+                  f"{fmark} src_rank={source_rank or '-'} top={files[:2]}")
 
     scored = [r for r in rows if "rank" in r]
     n = len(scored) or 1
+    sym_scored = [r for r in rows if r.get("expected_symbols")]
+    n_sym = len(sym_scored) or 1
+
     payload = {
         "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "limit": limit,
@@ -129,8 +163,10 @@ def evaluate(limit: int = 30, mode: str = "head", top_k: int = 8,
         "scored": len(scored),
         "skipped": len(rows) - len(scored),
         "hit_rates": {f"hit@{k}": round(hits[k] / n, 4) for k in _TOP_K},
+        "function_hit_rates": {f"func_hit@{k}": round(func_hits[k] / n_sym, 4) for k in _TOP_K},
         "source_hit_rates": {f"hit@{k}": round(source_hits[k] / n, 4) for k in _TOP_K},
         "mrr": round(rr_sum / n, 4),
+        "func_mrr": round(func_rr_sum / n_sym, 4),
         "elapsed_s": round(time.time() - started, 1),
         "rows": rows,
     }
@@ -144,10 +180,16 @@ def render(payload: dict) -> str:
         "",
         "| Metric | Value |",
         "|---|---|",
-        f"| MRR | {payload['mrr']:.3f} |",
+        f"| MRR (file) | {payload['mrr']:.3f} |",
     ]
     for k in _TOP_K:
-        lines.append(f"| hit@{k} | {payload['hit_rates'][f'hit@{k}']:.1%} |")
+        lines.append(f"| file hit@{k} | {payload['hit_rates'][f'hit@{k}']:.1%} |")
+    lines.append("")
+    lines.append("| Metric (function-level recall) | Value |")
+    lines.append("|---|---|")
+    lines.append(f"| MRR (function) | {payload.get('func_mrr', 0.0):.3f} |")
+    for k in _TOP_K:
+        lines.append(f"| func hit@{k} | {payload.get('function_hit_rates', {}).get(f'func_hit@{k}', 0.0):.1%} |")
     lines.append("")
     lines.append("| Metric (source files only) | Value |")
     lines.append("|---|---|")
@@ -160,7 +202,8 @@ def render(payload: dict) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Score the localizer against gold patches")
     parser.add_argument("--limit", type=int, default=30)
-    parser.add_argument("--mode", default="head", choices=["head", "stratified", "ids"])
+    parser.add_argument("--mode", default="dev", choices=["dev", "final", "train", "head", "stratified", "ids"])
+    parser.add_argument("--slice", dest="mode", help="alias for --mode")
     parser.add_argument("--top-k", type=int, default=8)
     parser.add_argument("--refresh", action="store_true", help="rebuild the chunk cache")
     parser.add_argument("-o", "--out", default="", help="write the payload to this path")

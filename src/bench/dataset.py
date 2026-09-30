@@ -66,6 +66,15 @@ def select_slice(records: list[dict], limit: int, mode: str = "head") -> list[di
     if limit <= 0 or limit >= len(records):
         return list(records)
 
+    if mode in ("dev", "final", "train"):
+        splits_file = DATA_DIR / "splits.json"
+        if splits_file.is_file():
+            splits = json.loads(splits_file.read_text(encoding="utf-8"))
+            wanted = splits.get(mode, [])
+            by_id = {r["instance_id"]: r for r in records}
+            res = [by_id[i] for i in wanted if i in by_id]
+            return res[:limit] if limit > 0 else res
+
     if mode == "ids":
         wanted = [i.strip() for i in os.getenv("ISHA_BENCH_IDS", "").split(",") if i.strip()]
         by_id = {r["instance_id"]: r for r in records}

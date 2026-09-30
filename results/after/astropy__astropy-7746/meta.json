@@ -4,9 +4,368 @@
   "base_commit": "d5bd3f68bb6d5ce3a61bdce9883ee750d1afade5",
   "status": "done",
   "attempts": 1,
-  "failure_category": "timeout",
-  "model_log": [],
-  "patch_info": {},
-  "started_at": 1790699813.1593592,
-  "error": "instance exceeded 1800s"
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "timestamp": 1790748421.1406093
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790748675.9049923
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790748682.0079749
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790748920.4872084
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790748941.7048616
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790749202.0454295
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790749212.4471397
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790749401.0971034
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/wcs/wcs.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790748334.6963575,
+  "elapsed_s": 1074.8,
+  "plan": "if len(xy[0]) == 0:\n        return [np.array([], dtype=np.float64) for _ in xy]",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/wcs/wcs.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.362,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.9332,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/wcs/docstrings.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2886,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8208,
+        "vector": 0.6951,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/wcs/utils.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2672,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6815,
+        "vector": 0.8068,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/visualization/wcsaxes/core.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2642,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7021,
+        "vector": 0.7392,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/visualization/wcsaxes/transforms.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2421,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.63,
+        "vector": 0.7052,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "astropy/modeling/fitting.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.232,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5598,
+        "vector": 0.7674,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.78835,
+  "laya_scores": {
+    "fix_quality": 1.6835,
+    "matches_issue": 0.8302,
+    "safe_to_apply": 0.6397,
+    "composite": 0.78835,
+    "secrets_or_danger": 0.2114,
+    "logic_drift": 0.203,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No user input processing, shell usage, or credential handling is involved.\n- PERFORMANCE: PASS - The check adds negligible overhead (single length check) and prevents downstream errors; it is not in a tight inner loop that would justify micro-optimization concerns in this context.\n- ROBUSTNESS: RISK - The logic `len(xy[0]) == 0` assumes `xy` is always a tuple/list of arrays and that `xy[0]` is subscriptable; if `xy` contains scalars or if the input structure differs from the expected \"list of arrays\" path (which should have been handled by previous logic but may not be strictly guaranteed in all edge cases of the `_array_converter` flow), this could raise an `IndexError` or `TypeError` instead of handling the empty case gracefully or falling through to the original error path. Additionally, it only checks the length of the *first* axis's array, which might be inconsistent if other axes have different lengths (though unlikely for empty inputs, it's a potential fragility).\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.wcs import WCS, InconsistentAxisTypesError\n\n@pytest.fixture\ndef dummy_wcs():\n    \"\"\"Create a minimal WCS object for testing.\"\"\"\n    wcs = WCS(naxis=2)\n    wcs.wcs.crpix = [100, 100]\n    wcs.wcs.cdelt = [-0.06, 0.06]\n    wcs.wcs.crval = [0, 0]\n    wcs.wcs.ctype = [\"RA---TAN\", \"DEC--TAN\"]\n    return wcs\n\ndef test_wcs_pix2world_empty_lists(dummy_wcs):\n    \"\"\"\n    Reproduction of the reported bug: passing empty lists to \n    wcs_pix2world should return empty arrays instead of raising an error.\n    \"\"\"\n    # The reported error: InconsistentAxisTypesError\n    res = dummy_wcs.wcs_pix2world([], [], 0)\n    \n    assert isinstance(res, list)\n    assert len(res) == 2\n    assert len(res[0]) == 0\n    assert len(res[1]) == 0\n    assert isinstance(res[0], np.ndarray)\n    assert res[0].dtype == np.float64\n\ndef test_wcs_pix2world_empty_numpy_arrays(dummy_wcs):\n    \"\"\"Edge case: ensure empty numpy arrays of float type are handled.\"\"\"\n    res = dummy_wcs.wcs_pix2world(np.array([], dtype=float), np.array([], dtype=float), 0)\n    \n    assert len(res[0]) == 0\n    assert len(res[1]) == 0\n\ndef test_wcs_pix2world_single_point(dummy_wcs):\n    \"\"\"Verify standard functionality remains unaffected.\"\"\"\n    res = dummy_wcs.wcs_pix2world([100], [100], 0)\n    \n    # Expected: (crval[0], crval[1]) for (crpix[0], crpix[1])\n    np.testing.assert_allclose(res, [[0], [0]], atol=1e-10)\n\ndef test_wcs_pix2world_invalid_input_length(dummy_wcs):\n    \"\"\"Verify that inconsistent axis lengths still raise an error.\"\"\"\n    # Two x values but only one y value should still raise an error\n    with pytest.raises(ValueError):\n        dummy_wcs.wcs_pix2world([100, 101], [100], 0)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "patch": "--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@\n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if len(xy[0]) == 0:\n+                return [np.array([], dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-d_h2ao34",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/wcs/wcs.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6835,
+        "matches_issue": 0.8302,
+        "safe_to_apply": 0.6397,
+        "composite": 0.78835,
+        "secrets_or_danger": 0.2114,
+        "logic_drift": 0.203,
+        "flagged": false
+      },
+      "laya_combined": 0.7883,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "\n=============================== warnings summary ===============================\nNone\n  Module already imported so cannot be rewritten: astropy.tests.plugins.display\n\n-- Docs: http://doc.pytest.org/en/latest/warnings.html\n1 warnings in 0.00 seconds\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file not found: test_isha_repro.py\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0296,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 3.61,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "minimal_diff",
+      "temperature": 0.15,
+      "patch": "--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@\n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if len(xy[0]) == 0:\n+                return [np.array([], dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6cjwgyy7",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/wcs/wcs.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6835,
+        "matches_issue": 0.8302,
+        "safe_to_apply": 0.6397,
+        "composite": 0.78835,
+        "secrets_or_danger": 0.2114,
+        "logic_drift": 0.203,
+        "flagged": false
+      },
+      "laya_combined": 0.7883,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "\n=============================== warnings summary ===============================\nNone\n  Module already imported so cannot be rewritten: astropy.tests.plugins.display\n\n-- Docs: http://doc.pytest.org/en/latest/warnings.html\n1 warnings in 0.00 seconds\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file not found: test_isha_repro.py\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0296,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 21.35,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "patch": "--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@\n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if len(xy[0]) == 0:\n+                return [np.array([], dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\astropy__astropy-7746-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/wcs/wcs.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6835,
+        "matches_issue": 0.8302,
+        "safe_to_apply": 0.6397,
+        "composite": 0.78835,
+        "secrets_or_danger": 0.2114,
+        "logic_drift": 0.203,
+        "flagged": false
+      },
+      "laya_combined": 0.7883,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "\n=============================== warnings summary ===============================\nNone\n  Module already imported so cannot be rewritten: astropy.tests.plugins.display\n\n-- Docs: http://doc.pytest.org/en/latest/warnings.html\n1 warnings in 0.00 seconds\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file not found: test_isha_repro.py\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0296,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 24.08,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "patch": "--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@\n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if len(xy[0]) == 0:\n+                return [np.array([], dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-d_h2ao34",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: astropy/wcs/wcs.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "astropy/wcs/wcs.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6835,
+      "matches_issue": 0.8302,
+      "safe_to_apply": 0.6397,
+      "composite": 0.78835,
+      "secrets_or_danger": 0.2114,
+      "logic_drift": 0.203,
+      "flagged": false
+    },
+    "laya_combined": 0.7883,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "test_isha_repro.py",
+      "before_exit": 4,
+      "after_exit": 4,
+      "after_output": "\n=============================== warnings summary ===============================\nNone\n  Module already imported so cannot be rewritten: astropy.tests.plugins.display\n\n-- Docs: http://doc.pytest.org/en/latest/warnings.html\n1 warnings in 0.00 seconds\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file not found: test_isha_repro.py\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.0296,
+    "rank_reason": "hand_weighted",
+    "elapsed_s": 3.61,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/astropy/wcs/wcs.py b/astropy/wcs/wcs.py\nindex d3a06f2..1608ae0 100644\n--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,8 @@ reduce these to 2 dimensions using the naxis kwarg.\n \n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            if len(xy[0]) == 0:\n+                return [np.array([], dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)\n",
+  "offline_calls": 0
 }

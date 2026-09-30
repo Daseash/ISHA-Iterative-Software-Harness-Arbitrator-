@@ -1,0 +1,14 @@
+diff --git a/astropy/io/ascii/connect.py b/astropy/io/ascii/connect.py
+index 1501e45..ef385c3 100644
+--- a/astropy/io/ascii/connect.py
++++ b/astropy/io/ascii/connect.py
+@@ -25,6 +25,9 @@ def io_write(format, table, filename, **kwargs):
+     if format != "ascii":
+         format = re.sub(r"^ascii\.", "", format)
+         kwargs["format"] = format
++    # RST writer does not accept ``header_rows``; drop it if present.
++    if kwargs.get("format") == "rst" and "header_rows" in kwargs:
++        kwargs.pop("header_rows")
+     return write(table, filename, **kwargs)
+ 
+ 

@@ -109,6 +109,14 @@ Verify the agent test suite:
 python -m pytest --ignore=tests/dummy_repo
 ```
 
+## ⚠️ Limitations
+
+- **Free-Tier Model Constraints**: Inference is subject to provider rate limits (TPM/RPM) and quota boundaries; fallback chains and local disk caching are used to mitigate quota exhaustion.
+- **Possible Benchmark Contamination**: Commercial and open-weights models may contain public SWE-bench problem instances in their pre-training corpora.
+- **Sample-Size Uncertainty**: Slices of 30 instances have wide binomial confidence intervals; all reported metrics include 95% Wilson intervals to reflect uncertainty transparently.
+- **Language Scope**: Currently specialized for Python codebases (leveraging Python AST, `pyflakes`, `py_compile`, and `pytest`/Django test runners).
+- **Problem Scope**: Optimized for localized, well-defined bug reports and regressions rather than large-scale greenfield system rewrites.
+
 ---
 
 ## 📄 License

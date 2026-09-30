@@ -1,0 +1,7 @@
+{
+  "instance_id": "django__django-11049",
+  "round": 0,
+  "error_message": "Hunk failed in django/core/validators.py: @@ \u2014 expected context not found in file: \"    message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/db/models/fields/__init__.py: @@ \u2014 expected context not found in file: \"    help_text = _('Duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"; Hunk failed in django/forms/fields.py: @@ \u2014 expected context not found in file: \"        error_message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')\"",
+  "cause": "context_mismatch",
+  "patch_size": 696
+}

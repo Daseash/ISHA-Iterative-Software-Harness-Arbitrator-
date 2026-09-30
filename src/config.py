@@ -16,6 +16,7 @@ import logging
 import os
 import re
 import sys
+import threading
 import time
 import warnings
 
@@ -75,6 +76,11 @@ CODER_MODEL = CODER_CHAIN[0]
 PLANNER_FALLBACKS = PLANNER_CHAIN[1:]
 CODER_FALLBACKS = CODER_CHAIN[1:]
 
+# Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
+CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen3.8-27b")
+CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "groq/openai/gpt-oss-120b")
+CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.8-flash")
+
 
 # ── Model availability ─────────────────────────────────────────────────────
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
@@ -128,6 +134,9 @@ def _log_model(role: str, model: str, position: str, note: str = "") -> None:
         "model_full": model,
         "position": position,
         "note": note,
+        # Candidates run in parallel threads; without this a candidate can
+        # attribute another thread's answer to itself.
+        "thread": threading.current_thread().name,
         "timestamp": time.time(),
     }
     _model_log.append(entry)
@@ -272,18 +281,55 @@ def _cooldown_remaining(provider: str) -> float:
     return max(0.0, _RATE_COOLDOWN.get(provider, 0.0) - time.monotonic())
 
 
-def _advance_on_rate_limit() -> bool:
-    """Should a 429 advance the chain instead of sleeping and retrying?
+import hashlib
+import json
+from pathlib import Path
 
-    Interactive use wants the strongest model, so it waits the window out.
-    A benchmark run is throughput-bound and already has a per-instance time
-    budget: sleeping 40-60s per call consumed most of the 900s budget and
-    still resolved nothing, while the next model in the chain was warm and
-    immediately usable. Override with ``ISHA_RATE_LIMIT_WAIT=1``.
-    """
+ROOT = Path(__file__).resolve().parents[1]
+LLM_CACHE_DIR = ROOT / "data" / "cache" / "llm"
+
+
+def _cache_key(model: str, prompt: str, temperature: float | None) -> str:
+    temp_str = f"{temperature:.2f}" if temperature is not None else "default"
+    return hashlib.sha256(f"{model}:{temp_str}:{prompt}".encode("utf-8")).hexdigest()
+
+
+def _get_cached_llm(model: str, prompt: str, temperature: float | None) -> str | None:
+    if os.getenv("ISHA_DISABLE_LLM_CACHE", "0") == "1":
+        return None
+    key = _cache_key(model, prompt, temperature)
+    f = LLM_CACHE_DIR / f"{key}.json"
+    if f.is_file():
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+            return data.get("response")
+        except Exception:
+            return None
+    return None
+
+
+def _set_cached_llm(model: str, prompt: str, temperature: float | None, response: str) -> None:
+    if os.getenv("ISHA_DISABLE_LLM_CACHE", "0") == "1" or not response:
+        return
+    LLM_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    key = _cache_key(model, prompt, temperature)
+    f = LLM_CACHE_DIR / f"{key}.json"
+    try:
+        f.write_text(json.dumps({
+            "model": model,
+            "temperature": temperature,
+            "response": response,
+            "cached_at": time.time(),
+        }, ensure_ascii=False), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def _advance_on_rate_limit() -> bool:
+    """Should a 429 advance the chain instead of sleeping and retrying?"""
     if os.getenv("ISHA_RATE_LIMIT_WAIT", "").strip() in ("1", "true", "yes"):
         return False
-    return os.getenv("ISHA_BENCH_MODE", "0") == "1"
+    return True
 
 
 def _call_chain(chain: list, role: str, prompt: str, temperature: float | None = None) -> str:
@@ -335,12 +381,24 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
             continue
 
         position = "primary" if i == 0 else f"fallback {i}"
+        cached = _get_cached_llm(model, prompt, temperature)
+        if cached:
+            _log_model(role, model, f"{position} [cached]")
+            return cached
+
         attempts = 0
         while True:
             attempts += 1
             # Sleep out a known-limited window before paying for a 429.
             cool = _cooldown_remaining(provider)
             if cool > 0:
+                if _advance_on_rate_limit():
+                    print(
+                        f"[model] {role}: {_short_name(model)} provider "
+                        f"'{provider}' in rate-limit cooldown {cool:.0f}s — advancing",
+                        file=sys.stderr,
+                    )
+                    break
                 spent = time.monotonic() - call_started
                 if spent + cool <= _call_budget():
                     print(
@@ -372,6 +430,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 ):
                     raise ValueError("empty or error response")
                 _log_model(role, model, position)
+                _set_cached_llm(model, prompt, temperature, content)
                 return content
             except Exception as e:
                 err_name = type(e).__name__
@@ -433,7 +492,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                             f"and advancing",
                             file=sys.stderr,
                         )
-                        continue
+                        break
                     print(
                         f"[model] {role}: {_short_name(model)} rate limited — "
                         f"backoff {wait}s (attempt {attempts}/{_MAX_ATTEMPTS})",
@@ -469,9 +528,21 @@ def call_planner(prompt: str, temperature: float | None = None) -> str:
     return _call_chain(PLANNER_CHAIN, "planner", prompt, temperature)
 
 
-def call_coder(prompt: str, temperature: float | None = None) -> str:
-    """Call the coder model chain for patch generation."""
-    return _call_chain(CODER_CHAIN, "coder", prompt, temperature)
+def call_coder(
+    prompt: str,
+    temperature: float | None = None,
+    model: str | None = None,
+) -> str:
+    """Call the coder model chain for patch generation.
+
+    If ``model`` is specified, that model is tried first, followed by the rest
+    of the fallback chain if it fails or rate-limits.
+    """
+    if model:
+        chain = [model] + [m for m in CODER_CHAIN if m != model]
+    else:
+        chain = CODER_CHAIN
+    return _call_chain(chain, "coder", prompt, temperature)
 
 
 def offline_calls(since: int = 0) -> list:

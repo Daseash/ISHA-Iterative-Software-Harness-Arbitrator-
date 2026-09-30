@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-09-30 17:17:26",
+  "limit": 5,
+  "mode": "dev",
+  "top_k": 8,
+  "scored": 5,
+  "skipped": 0,
+  "hit_rates": {
+    "hit@1": 0.6,
+    "hit@3": 0.6,
+    "hit@5": 0.6,
+    "hit@8": 0.6
+  },
+  "function_hit_rates": {
+    "func_hit@1": 0.2,
+    "func_hit@3": 0.2,
+    "func_hit@5": 0.2,
+    "func_hit@8": 0.2
+  },
+  "source_hit_rates": {
+    "hit@1": 0.6,
+    "hit@3": 0.6,
+    "hit@5": 0.6,
+    "hit@8": 0.6
+  },
+  "mrr": 0.6,
+  "func_mrr": 0.2,
+  "elapsed_s": 22.1,
+  "rows": [
+    {
+      "instance_id": "astropy__astropy-14995",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/nddata/mixins/ndarithmetic.py",
+        "astropy/nddata/nddata_withmixins.py",
+        "astropy/nddata/nddata.py",
+        "astropy/__init__.py",
+        "astropy/io/votable/converters.py",
+        "astropy/nddata/__init__.py",
+        "astropy/version.py",
+        "astropy/modeling/functional_models.py"
+      ],
+      "top_symbols": [
+        "astropy/nddata/mixins/ndarithmetic.py::_arithmetic",
+        "astropy/nddata/nddata_withmixins.py::NDDataRef",
+        "astropy/nddata/nddata.py::__init__",
+        "astropy/__init__.py::Conf",
+        "astropy/io/votable/converters.py::_make_masked_array",
+        "astropy/nddata/__init__.py::Conf",
+        "astropy/version.py::split_version",
+        "astropy/modeling/functional_models.py::_parameter_units_for_data_units"
+      ],
+      "expected_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "expected_symbols": [
+        "_arithmetic_mask"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11797",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/models/sql/query.py",
+        "django/db/models/query.py",
+        "django/db/models/fields/__init__.py",
+        "django/contrib/auth/models.py",
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/context_processors.py",
+        "django/core/mail/__init__.py",
+        "django/utils/regex_helper.py"
+      ],
+      "top_symbols": [
+        "django/db/models/sql/query.py::resolve_expression",
+        "django/db/models/query.py::_validate_values_are_expressions",
+        "django/db/models/fields/__init__.py::__reduce__",
+        "django/contrib/auth/models.py::Permission",
+        "django/contrib/auth/__init__.py::authenticate",
+        "django/contrib/auth/context_processors.py::auth",
+        "django/core/mail/__init__.py::send_mail",
+        "django/utils/regex_helper.py::get_quantifier"
+      ],
+      "expected_files": [
+        "django/db/models/lookups.py"
+      ],
+      "expected_symbols": [
+        "process_rhs"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-12470",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/models/fields/related_descriptors.py",
+        "django/db/models/fields/__init__.py",
+        "django/core/serializers/__init__.py",
+        "django/utils/translation/__init__.py",
+        "django/contrib/auth/management/__init__.py",
+        "django/contrib/auth/__init__.py",
+        "tests/queries/models.py",
+        "tests/admin_views/models.py"
+      ],
+      "top_symbols": [
+        "django/db/models/fields/related_descriptors.py::Parent",
+        "django/db/models/fields/__init__.py::get_choices",
+        "django/core/serializers/__init__.py::BadSerializer",
+        "django/utils/translation/__init__.py::TranslatorCommentWarning",
+        "django/contrib/auth/management/__init__.py::get_default_username",
+        "django/contrib/auth/__init__.py::_get_user_session_key",
+        "tests/queries/models.py::Child",
+        "tests/admin_views/models.py::Parent"
+      ],
+      "expected_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "expected_symbols": [
+        "find_ordering_name"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-12589",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "django/db/models/sql/query.py",
+        "django/db/models/query.py",
+        "django/db/models/fields/__init__.py",
+        "django/db/utils.py",
+        "django/db/models/deletion.py",
+        "django/contrib/auth/models.py",
+        "django/utils/regex_helper.py",
+        "django/core/serializers/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/models/sql/query.py::resolve_expression",
+        "django/db/models/query.py::_validate_values_are_expressions",
+        "django/db/models/fields/__init__.py::__init__",
+        "django/db/utils.py::ProgrammingError",
+        "django/db/models/deletion.py::CASCADE",
+        "django/contrib/auth/models.py::Permission",
+        "django/utils/regex_helper.py::next_char",
+        "django/core/serializers/__init__.py::BadSerializer"
+      ],
+      "expected_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "expected_symbols": [
+        "set_group_by"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-12708",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "django/db/backends/base/schema.py",
+        "django/db/backends/sqlite3/schema.py",
+        "django/db/backends/postgresql/schema.py",
+        "django/db/models/indexes.py",
+        "django/db/migrations/writer.py",
+        "django/db/models/fields/__init__.py",
+        "django/core/management/__init__.py",
+        "django/core/serializers/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/backends/base/schema.py::_constraint_names",
+        "django/db/backends/sqlite3/schema.py::__enter__",
+        "django/db/backends/postgresql/schema.py::_field_indexes_sql",
+        "django/db/models/indexes.py::Index",
+        "django/db/migrations/writer.py::as_string",
+        "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+        "django/core/management/__init__.py::find_commands",
+        "django/core/serializers/__init__.py::BadSerializer"
+      ],
+      "expected_files": [
+        "django/db/backends/base/schema.py"
+      ],
+      "expected_symbols": [
+        "alter_index_together"
+      ],
+      "in_top8": true
+    }
+  ]
+}

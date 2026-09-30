@@ -1,11 +1,93 @@
 {
   "run_id": "baseline",
-  "generated_at": "2026-09-29 17:46:06",
+  "generated_at": "2026-09-30 17:22:51",
   "total_instances": 30,
   "resolved": 1,
   "resolve_rate": 0.0333,
+  "resolve_ci_95": [
+    0.0059,
+    0.1667
+  ],
   "instances_with_patch": 12,
   "patch_rate": 0.4,
+  "patch_ci_95": [
+    0.2459,
+    0.5768
+  ],
+  "stage_breakdown": {
+    "localization_hit_file": {
+      "count": 12,
+      "rate": 0.4,
+      "ci_95": [
+        0.2459,
+        0.5768
+      ]
+    },
+    "localization_hit_func": {
+      "count": 1,
+      "rate": 0.0333,
+      "ci_95": [
+        0.0059,
+        0.1667
+      ]
+    },
+    "patch_applied": {
+      "count": 13,
+      "rate": 0.4333,
+      "ci_95": [
+        0.2738,
+        0.608
+      ]
+    },
+    "static_gate_passed": {
+      "count": 12,
+      "rate": 0.4,
+      "ci_95": [
+        0.2459,
+        0.5768
+      ]
+    },
+    "env_ok": {
+      "count": 28,
+      "rate": 0.9333,
+      "ci_95": [
+        0.7868,
+        0.9815
+      ]
+    },
+    "repro_fails_before": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.1135
+      ]
+    },
+    "repro_passes_after": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.1135
+      ]
+    },
+    "zero_regressions": {
+      "count": 23,
+      "rate": 0.7667,
+      "ci_95": [
+        0.5907,
+        0.8821
+      ]
+    },
+    "resolved": {
+      "count": 1,
+      "rate": 0.0333,
+      "ci_95": [
+        0.0059,
+        0.1667
+      ]
+    }
+  },
   "failure_breakdown": {
     "localization_wrong": 2,
     "patch_apply_failed": 8,
@@ -39,7 +121,18 @@
       "elapsed_s": 368.54,
       "critic_score": 0.6381249999999999,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "astropy__astropy-14182",
@@ -50,7 +143,18 @@
       "elapsed_s": 551.03,
       "critic_score": 0.74025,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "astropy__astropy-14365",
@@ -61,7 +165,18 @@
       "elapsed_s": 98.76,
       "critic_score": 0.6699999999999999,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": true,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "astropy__astropy-14995",
@@ -72,7 +187,18 @@
       "elapsed_s": 513.51,
       "critic_score": 0.66885,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "astropy__astropy-6938",
@@ -83,7 +209,18 @@
       "elapsed_s": 84.97,
       "critic_score": 0.714525,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "astropy__astropy-7746",
@@ -94,7 +231,18 @@
       "elapsed_s": 315.67,
       "critic_score": 0.610175,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-10914",
@@ -105,7 +253,18 @@
       "elapsed_s": 213.13,
       "critic_score": 0.900575,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-10924",
@@ -116,7 +275,18 @@
       "elapsed_s": 420.4,
       "critic_score": 0.815975,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11001",
@@ -127,7 +297,18 @@
       "elapsed_s": 307.28,
       "critic_score": 0.360175,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11019",
@@ -138,7 +319,18 @@
       "elapsed_s": 880.77,
       "critic_score": 0.8015000000000001,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11039",
@@ -149,7 +341,18 @@
       "elapsed_s": 461.07,
       "critic_score": 0.7712249999999999,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": true
+      }
     },
     {
       "instance_id": "django__django-11049",
@@ -160,7 +363,18 @@
       "elapsed_s": 800.8,
       "critic_score": 0.72765,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11099",
@@ -171,7 +385,18 @@
       "elapsed_s": 419.99,
       "critic_score": 0.60215,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": false,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11133",
@@ -182,7 +407,18 @@
       "elapsed_s": 883.54,
       "critic_score": 0.68375,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11179",
@@ -193,7 +429,18 @@
       "elapsed_s": 286.4,
       "critic_score": 0.8767250000000001,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11283",
@@ -204,7 +451,18 @@
       "elapsed_s": 469.05,
       "critic_score": 0.6206499999999999,
       "offline_calls": 0,
-      "primary_model": "qwen3.8-27b [primary]"
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11422",
@@ -215,7 +473,18 @@
       "elapsed_s": 825.87,
       "critic_score": 0.6734499999999999,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11564",
@@ -226,7 +495,18 @@
       "elapsed_s": 432.28,
       "critic_score": 0.712275,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11583",
@@ -237,7 +517,18 @@
       "elapsed_s": 825.74,
       "critic_score": 0.520775,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11620",
@@ -248,7 +539,18 @@
       "elapsed_s": 754.52,
       "critic_score": 0.746675,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11630",
@@ -259,7 +561,18 @@
       "elapsed_s": 460.67,
       "critic_score": 0.73285,
       "offline_calls": 0,
-      "primary_model": "gpt-oss-120b [fallback 1]"
+      "primary_model": "gpt-oss-120b [fallback 1]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": false,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11742",
@@ -270,7 +583,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11797",
@@ -281,7 +605,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11815",
@@ -292,7 +627,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11848",
@@ -303,7 +649,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11905",
@@ -314,7 +671,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11910",
@@ -325,7 +693,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11964",
@@ -336,7 +715,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-11999",
@@ -347,7 +737,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     },
     {
       "instance_id": "django__django-12113",
@@ -358,7 +759,18 @@
       "elapsed_s": null,
       "critic_score": null,
       "offline_calls": 0,
-      "primary_model": "n/a"
+      "primary_model": "n/a",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
     }
   ]
 }

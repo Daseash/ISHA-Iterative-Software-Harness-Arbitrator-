@@ -1,0 +1,257 @@
+{
+  "sample_size": 30,
+  "status_counts": {
+    "no_patch_generated": 0,
+    "apply_failed": 8,
+    "gate_failed": 1,
+    "env_failed": 0,
+    "timeout": 9,
+    "tests_failed": 9,
+    "harness_no_output": 2,
+    "resolved": 1
+  },
+  "sum_matches_sample_size": true,
+  "reconciliation_explanation": "Reconciliation of the earlier counting discrepancy:\n1. The baseline run evaluated 30 instances total.\n2. 12 instances successfully produced a valid, gated patch that applied on the host repository.\n3. 18 instances failed during the solving phase before producing a patch: 9 hit the per-instance timeout (timeout), 8 failed diff application on the host checkout (apply_failed), and 1 produced a patch that failed the static AST/compile gate on the host (gate_failed).\n4. The 12 submitted patches were scored by the official SWE-bench harness in Docker:\n   - 1 patch fully resolved the instance (django__django-11039 -> resolved)\n   - 9 patches ran tests inside the official container but failed (tests_failed, including 2 that touched files outside the gold fix)\n   - 2 patches produced no container test output due to harness execution/container errors (harness_no_output)\n5. Total: 1 (resolved) + 9 (tests_failed) + 2 (harness_no_output) + 9 (timeout) + 8 (apply_failed) + 1 (gate_failed) = 30 instances. The earlier table displayed pre-patch host failures alongside post-patch harness test failures in a single flat list, creating the impression that 8 apply failures + 7 test failures + 1 resolved exceeded the 12 produced patches.",
+  "instances": {
+    "astropy__astropy-12907": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 368.54,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "astropy__astropy-14182": {
+      "status": "gate_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 551.03,
+      "attempts": 1,
+      "reason": "Generated diff failed host static compile / AST / pyflakes gates."
+    },
+    "astropy__astropy-14365": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 98.76,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "astropy__astropy-14995": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 513.51,
+      "attempts": 1,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "astropy__astropy-6938": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 84.97,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "astropy__astropy-7746": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 315.67,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-10914": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 213.13,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-10924": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 420.4,
+      "attempts": 1,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11001": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 307.28,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-11019": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 880.77,
+      "attempts": 1,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11039": {
+      "status": "resolved",
+      "has_patch": true,
+      "resolved": true,
+      "elapsed_s": 461.07,
+      "attempts": 1,
+      "reason": "Official SWE-bench harness confirmed patch resolved the issue (all FAIL_TO_PASS tests passed)."
+    },
+    "django__django-11049": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 800.8,
+      "attempts": 1,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11099": {
+      "status": "harness_no_output",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 419.99,
+      "attempts": 1,
+      "reason": "Patch was submitted to the harness, but container execution encountered an error / produced no output."
+    },
+    "django__django-11133": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 883.54,
+      "attempts": 1,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11179": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 286.4,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-11283": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 469.05,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-11422": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 825.87,
+      "attempts": 2,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11564": {
+      "status": "tests_failed",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 432.28,
+      "attempts": 1,
+      "reason": "Patch was generated and applied in the harness container, but test assertions failed."
+    },
+    "django__django-11583": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 825.74,
+      "attempts": 2,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11620": {
+      "status": "apply_failed",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 754.52,
+      "attempts": 2,
+      "reason": "Generated diff could not be applied to the host repository checkout due to context mismatch."
+    },
+    "django__django-11630": {
+      "status": "harness_no_output",
+      "has_patch": true,
+      "resolved": false,
+      "elapsed_s": 460.67,
+      "attempts": 2,
+      "reason": "Patch was submitted to the harness, but container execution encountered an error / produced no output."
+    },
+    "django__django-11742": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.43,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11797": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.53,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11815": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 932.52,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11848": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.46,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11905": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.53,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11910": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.71,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11964": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.46,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-11999": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.46,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    },
+    "django__django-12113": {
+      "status": "timeout",
+      "has_patch": false,
+      "resolved": false,
+      "elapsed_s": 900.46,
+      "attempts": 1,
+      "reason": "Instance solver exceeded the per-instance 900s timeout before a patch could be finalized."
+    }
+  }
+}

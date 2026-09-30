@@ -1,0 +1,7 @@
+{
+  "instance_id": "django__django-11422",
+  "round": 0,
+  "error_message": "Hunk failed in django/utils/autoreload.py: @@ \u2014 expected context not found in file: '    def start(self):'",
+  "cause": "context_mismatch",
+  "patch_size": 384
+}

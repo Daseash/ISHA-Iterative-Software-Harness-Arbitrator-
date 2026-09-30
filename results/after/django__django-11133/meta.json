@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-11133",
+  "repo": "django/django",
+  "base_commit": "879cc3da6249e920b8d54518a0ae06de835d7373",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790764511.0912657
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764810.129785
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764848.7965095
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790765049.679776
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "timestamp": 1790765146.5835123
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-20b: RateLimitError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError",
+      "timestamp": 1790765348.551412
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790765448.9937243
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790765612.5385618
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/http/response.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/http/response.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790764489.6936033,
+  "elapsed_s": 1130.37,
+  "plan": "@content.setter\n    def content(self, value):\n        # Convert memoryview to bytes\n        if isinstance(value, memoryview):\n            value = value.tobytes()\n            \n        if isinstance(value, bytes):\n            self._container = [value]\n        elif isinstance(value, str):\n            value = value.encode(self.charset)\n            self._container = [value]\n        else:\n            # Assume an iterable of bytestrings.\n            self._container = list(value)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/http/response.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4894,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7271,
+        "vector": 0.4798,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/template/response.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2472,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7198,
+        "vector": 0.5605,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/fields/files.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2171,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.676,
+        "vector": 0.4009,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/utils/cache.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2131,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5573,
+        "vector": 0.6151,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/views/generic/dates.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2095,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5015,
+        "vector": 0.7011,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2019,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5695,
+        "vector": 0.4958,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8310500000000001,
+  "laya_scores": {
+    "fix_quality": 1.7783,
+    "matches_issue": 0.8325,
+    "safe_to_apply": 0.7134,
+    "composite": 0.8310500000000001,
+    "secrets_or_danger": 0.1163,
+    "logic_drift": 0.1602,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Logic converts data to bytes without allowing code injection or shell execution.\n- PERFORMANCE: PASS - Single conversion overhead is negligible and prevents potential corruption or inefficient handling.\n- ROBUSTNESS: PASS - Fixes type mismatch and prevents incorrect string representation of binary data.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.http import HttpResponse\n\n# --------------------------------------------------------------------------- #\n# 1️⃣  Minimal reproduction – this test must be **red** before the fix\n# --------------------------------------------------------------------------- #\ndef test_memoryview_content_is_bytes():\n    \"\"\"\n    When a memoryview is passed to HttpResponse, the ``content`` attribute\n    should be the underlying bytes.  In the current (buggy) implementation\n    ``HttpResponse.content`` will return a ``memoryview`` representation\n    (e.g. ``b'<memory at 0x...>'``) instead of the raw bytes.\n    \"\"\"\n    mv = memoryview(b\"Hello, world!\")\n    resp = HttpResponse(mv)\n    # Expect raw bytes, not the memoryview object repr\n    assert resp.content == b\"Hello, world!\"\n\n# --------------------------------------------------------------------------- #\n# 2️⃣  Edge‑case 1 – empty memoryview\n# --------------------------------------------------------------------------- #\ndef test_empty_memoryview_content():\n    \"\"\"\n    An empty memoryview should result in an empty byte string.\n    \"\"\"\n    empty_mv = memoryview(b\"\")\n    resp = HttpResponse(empty_mv)\n    assert resp.content == b\"\"\n\n# --------------------------------------------------------------------------- #\n# 3️⃣  Edge‑case 2 – large memoryview\n# --------------------------------------------------------------------------- #\ndef test_large_memoryview_content():\n    \"\"\"\n    Very large memoryviews should also be handled correctly.\n    \"\"\"\n    large_bytes = b\"a\" * 1024 * 1024  # 1 MB\n    large_mv = memoryview(large_bytes)\n    resp = HttpResponse(large_mv)\n    assert resp.content == large_bytes\n    assert len(resp.content) == len(large_bytes)\n\n# --------------------------------------------------------------------------- #\n# 4️⃣  Edge‑case 3 – memoryview of a bytearray\n# --------------------------------------------------------------------------- #\ndef test_bytearray_memoryview_content():\n    \"\"\"\n    A memoryview created from a bytearray should still be converted to\n    a plain ``bytes`` object.\n    \"\"\"\n    ba = bytearray(b\"bytearray\")\n    mv = memoryview(ba)\n    resp = HttpResponse(mv)\n    assert resp.content == b\"bytearray\"\n\n# --------------------------------------------------------------------------- #\n# 5️⃣  Edge‑case 4 – setting content to a memoryview after construction\n# --------------------------------------------------------------------------- #\ndef test_set_content_to_memoryview():\n    \"\"\"\n    ``HttpResponse.content`` setter should accept a memoryview as well.\n    \"\"\"\n    resp = HttpResponse()\n    mv = memoryview(b\"late assignment\")\n    resp.content = mv\n    assert resp.content == b\"late assignment\"\n\n# --------------------------------------------------------------------------- #\n# 6️⃣  Edge‑case 5 – invalid input should raise TypeError\n# --------------------------------------------------------------------------- #\n@pytest.mark.parametrize(\n    \"bad_input\",\n    [\n        None,          # None is not iterable\n        42,            # int is not iterable\n        [1, 2, 3],     # list of ints, not bytes-like\n    ],\n)\ndef test_invalid_input_raises_type_error(bad_input):\n    \"\"\"\n    ``HttpResponse`` should raise a TypeError when the content is not\n    bytes-like or an iterable of bytestrings.\n    \"\"\"\n    with pytest.raises(TypeError):\n        HttpResponse(bad_input)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "patch": "--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,9 @@\n \n     @content.setter\n     def content(self, value):\n+        # Convert memoryview to bytes\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n         if isinstance(value, bytes):\n             self._container = [value]\n         elif isinstance(value, str):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11133-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/http/response.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/http/response.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7783,
+        "matches_issue": 0.8325,
+        "safe_to_apply": 0.7134,
+        "composite": 0.8310500000000001,
+        "secrets_or_danger": 0.1163,
+        "logic_drift": 0.1602,
+        "flagged": false
+      },
+      "laya_combined": 0.8311,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0423,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 6.76,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "minimal_diff",
+      "temperature": 0.15,
+      "patch": "--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,9 @@\n \n     @content.setter\n     def content(self, value):\n+        # Convert memoryview to bytes\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n         if isinstance(value, bytes):\n             self._container = [value]\n         elif isinstance(value, str):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11133-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/http/response.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/http/response.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7783,
+        "matches_issue": 0.8325,
+        "safe_to_apply": 0.7134,
+        "composite": 0.8310500000000001,
+        "secrets_or_danger": 0.1163,
+        "logic_drift": 0.1602,
+        "flagged": false
+      },
+      "laya_combined": 0.8311,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0423,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 28.16,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "patch": "--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,9 @@\n \n     @content.setter\n     def content(self, value):\n+        # Convert memoryview to bytes\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n         if isinstance(value, bytes):\n             self._container = [value]\n         elif isinstance(value, str):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11133-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/http/response.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/http/response.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7783,
+        "matches_issue": 0.8325,
+        "safe_to_apply": 0.7134,
+        "composite": 0.8310500000000001,
+        "secrets_or_danger": 0.1163,
+        "logic_drift": 0.1602,
+        "flagged": false
+      },
+      "laya_combined": 0.8311,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0423,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 34.61,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "patch": "--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,9 @@\n \n     @content.setter\n     def content(self, value):\n+        # Convert memoryview to bytes\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n         if isinstance(value, bytes):\n             self._container = [value]\n         elif isinstance(value, str):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11133-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/http/response.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/http/response.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.7783,
+      "matches_issue": 0.8325,
+      "safe_to_apply": 0.7134,
+      "composite": 0.8310500000000001,
+      "secrets_or_danger": 0.1163,
+      "logic_drift": 0.1602,
+      "flagged": false
+    },
+    "laya_combined": 0.8311,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "tests/isha_repro.py",
+      "before_exit": 1,
+      "after_exit": 1,
+      "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.0423,
+    "rank_reason": "hand_weighted",
+    "elapsed_s": 6.76,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/http/response.py b/django/http/response.py\nindex 6a84e19..ebbdfb0 100644\n--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,9 @@ class HttpResponse(HttpResponseBase):\n \n     @content.setter\n     def content(self, value):\n+        # Convert memoryview to bytes\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n         # Consume iterators upon assignment to allow repeated iteration.\n         if hasattr(value, '__iter__') and not isinstance(value, (bytes, str)):\n             content = b''.join(self.make_bytes(chunk) for chunk in value)\n",
+  "offline_calls": 1
+}

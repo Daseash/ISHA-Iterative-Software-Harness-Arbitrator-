@@ -1,0 +1,42 @@
+{
+  "weights": [
+    0.0455382845202358,
+    -0.28470918293096337,
+    -0.27356335278811517,
+    0.682342950624459,
+    4.4588030378704,
+    -1.5257198001550272,
+    -0.007343467467143032,
+    -0.06017033538852736
+  ],
+  "bias": -2.0052808224355996,
+  "temperature": 0.35,
+  "n": 60,
+  "brier_raw": 0.0104,
+  "ece_raw": 0.0926,
+  "fitted": true,
+  "mode": "logistic",
+  "features": [
+    "laya_fix_quality",
+    "laya_matches_issue",
+    "laya_safe_to_apply",
+    "gate_ok",
+    "repro_ok",
+    "regression_count",
+    "diff_size",
+    "files_changed"
+  ],
+  "n_total": 75,
+  "n_train": 60,
+  "n_val": 15,
+  "val_ece_raw": 0.0809,
+  "val_ece_scaled": 0.0013,
+  "val_brier_raw": 0.0083,
+  "val_brier_scaled": 0.0,
+  "threshold_balanced": 0.5,
+  "balanced_accuracy": 1.0,
+  "threshold_auto_approve": 0.99,
+  "target_precision": 1.0,
+  "auto_approve_coverage": 0.1333,
+  "threshold": 0.99
+}

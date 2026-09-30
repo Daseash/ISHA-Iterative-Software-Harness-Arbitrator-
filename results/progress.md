@@ -66,3 +66,90 @@ is too small for a lexical prior to reach.
 This raises the ceiling on *which* function gets edited. It does not tell the agent whether
 the edit was right: that still needs a real fail-to-pass test in the loop, which is the next
 piece of work.
+
+## baseline — 2026-09-30 10:22 — 2026-09-30 10:22:12
+
+### baseline
+
+| Metric | Value |
+|---|---|
+| Instances | 30 |
+| **Resolved (official harness)** | **1 / 30 (3.3%)** |
+| Produced a patch | 12 (40.0%) |
+
+Failure breakdown:
+
+| Failure category | Count | Share of unresolved |
+|---|---|---|
+| `localization_wrong` | 2 | 6.9% |
+| `patch_apply_failed` | 8 | 27.6% |
+| `syntax_error` | 1 | 3.4% |
+| `tests_failed` | 7 | 24.1% |
+| `timeout` | 9 | 31.0% |
+| `api_failure` | 0 | 0.0% |
+| `not_run` | 0 | 0.0% |
+| `harness_no_output` | 2 | 6.9% |
+| `checkout_failed` | 0 | 0.0% |
+| `prefiltered` | 0 | 0.0% |
+
+## Phase 6 - LAYA Calibration & Combiner (measured) — 2026-09-30 17:52:05
+
+Fitted on real task outcomes using 75 labelled pairs (60 train / 15 held-out validation) from SWE-bench Lite train split tasks and synthetic mutations. Zero overlap with DEV or FINAL evaluation slices. Raw metrics persisted in [calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json).
+
+| Metric (held-out validation split) | Before Temperature Scaling | After Temperature Scaling (T=0.35) |
+|---|---|---|
+| Expected Calibration Error (ECE) | 0.0809 | 0.0013 |
+| Brier Score | 0.0083 | 0.0000 |
+| Balanced Accuracy | — | 100.0% |
+
+### Decision Gating & Auto-Approve Threshold
+
+- **Auto-Approve Threshold**: `0.99` (target: $\ge$ 90% precision)
+- **Validation Precision**: `100.0%`
+- **Validation Auto-Approve Coverage**: `13.3%`
+- **Routing**: Any candidate patch scoring below `0.99` is routed to human review.
+
+### Logistic Combiner Weights (Hard Signals + LAYA Scores)
+
+| Feature | Learned Weight | Interpretation |
+|---|---|---|
+| `repro_ok` (fails before, passes after) | +4.4588 | Primary positive verification signal |
+| `gate_ok` (compiles, AST clean, applies) | +0.6823 | Mandatory static gate prerequisite |
+| `regression_count` | -1.5257 | Severe penalty for collateral breakage |
+| `laya_fix_quality` | +0.0455 | Architectural quality ranking |
+| `diff_size` | -0.0073 | Penalty for excessive churn |
+| `bias` | -2.0053 | Conservative baseline log-odds |
+
+## Stage A - Measurement, Reconciliation & Environment (measured) — 2026-09-30 18:20:00
+
+Exactly one final status per instance from `{no_patch_generated, apply_failed, gate_failed, env_failed, timeout, tests_failed, harness_no_output, resolved}`. The counts sum to exactly 30 instances. Metrics and per-instance records saved in [stage_table.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/stage_table.json) and [timing.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/timing.json).
+
+### Reconciled Baseline Stage Breakdown (Sample Size: 30)
+
+| Final Status | Count | Share | Status Definition & Stage Location |
+|---|---|---|---|
+| `resolved` | 1 | 3.3% | Verified patch passed official harness test suite |
+| `tests_failed` | 9 | 30.0% | Patch applied in harness container, but test assertions failed |
+| `harness_no_output` | 2 | 6.7% | Patch submitted, but harness container errored / produced no output |
+| `timeout` | 9 | 30.0% | Solver timed out at per-instance limit (900s) before producing patch |
+| `apply_failed` | 8 | 26.7% | Diff could not be placed on host repository checkout (context mismatch) |
+| `gate_failed` | 1 | 3.3% | Diff failed host static compile / AST / pyflakes gates |
+| `env_failed` | 0 | 0.0% | Host or container environment setup failure |
+| `no_patch_generated` | 0 | 0.0% | Model returned empty text / failed to emit diff |
+| **Total** | **30** | **100.0%** | **Matches sample size exactly** |
+
+### Timing & Duration Profile (results/timing.json)
+- **Mean Elapsed Time**: 617.0s (~10.3 min)
+- **Median Elapsed Time**: 754.5s (~12.6 min)
+- **Total Instances Analyzed**: 30 / 30
+
+### Reconciliation of Earlier Discrepancy
+Reconciliation of the earlier counting discrepancy:
+1. The baseline run evaluated 30 instances total.
+2. 12 instances successfully produced a valid, gated patch that applied on the host repository.
+3. 18 instances failed during the solving phase before producing a patch: 9 hit the per-instance timeout (timeout), 8 failed diff application on the host checkout (apply_failed), and 1 produced a patch that failed the static AST/compile gate on the host (gate_failed).
+4. The 12 submitted patches were scored by the official SWE-bench harness in Docker:
+   - 1 patch fully resolved the instance (django__django-11039 -> resolved)
+   - 9 patches ran tests inside the official container but failed (tests_failed, including 2 that touched files outside the gold fix)
+   - 2 patches produced no container test output due to harness execution/container errors (harness_no_output)
+5. Total: 1 (resolved) + 9 (tests_failed) + 2 (harness_no_output) + 9 (timeout) + 8 (apply_failed) + 1 (gate_failed) = 30 instances. The earlier table displayed pre-patch host failures alongside post-patch harness test failures in a single flat list, creating the impression that 8 apply failures + 7 test failures + 1 resolved exceeded the 12 produced patches.

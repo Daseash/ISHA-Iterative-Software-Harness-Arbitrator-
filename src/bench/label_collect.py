@@ -77,7 +77,14 @@ def collect_run(run_id: str, results: Path = RESULTS) -> tuple[list[dict], dict]
     if not run_dir.is_dir():
         return [], {"error": f"no such run: {run_dir}"}
 
-    report = _read(run_dir / "harness" / "harness_report.json") or {}
+    # harness_eval writes <run>/harness_report.json; older runs used
+    # <run>/harness/harness_report.json.  Accept both or every label
+    # comes back 0 and the combiner is fitted on pure noise.
+    report = (
+        _read(run_dir / "harness_report.json")
+        or _read(run_dir / "harness" / "harness_report.json")
+        or {}
+    )
     resolved_ids = set(report.get("resolved_ids") or [])
 
     rows: list[dict] = []

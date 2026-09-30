@@ -125,6 +125,9 @@ def checkpoint_node(state: AgentState) -> AgentState:
 
 def _route_after_sandbox(state: AgentState) -> str:
     """Retry the coder while tests fail and budget remains, else review."""
+    state = coerce_state(state)
+    if state.escalation:
+        return "approval"
     failed = "FAILED" in (state.test_output or "")
     if failed and state.retry_count < MAX_RETRIES:
         return "coder"

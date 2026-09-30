@@ -1,0 +1,222 @@
+{
+  "instance_id": "django__django-11422",
+  "repo": "django/django",
+  "base_commit": "df46b329e0900e9e4dc1d60816c1dce6dfc1094e",
+  "status": "done",
+  "attempts": 3,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770398.4708695
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770400.5686932
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770460.8477898
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770481.1445067
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770481.1591432
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770491.4828613
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770492.4688303
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770515.8595846
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770559.2229428
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770560.2718098
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770573.393408
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: InternalServerError; gpt-oss-120b: InternalServerError; gpt-oss-20b: InternalServerError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: APIConnectionError",
+      "timestamp": 1790770575.059694
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1790769248.063995,
+  "elapsed_s": 211.34,
+  "plan": "Step 1: Root cause — main() computes the wrong expression — the arithmetic operator does not match the documented behaviour in the report.\nStep 2: Edit compress.py — in main(), apply: replace the return expression with the operator the report expects.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/bin/compress.py",
+      "symbol": "django/contrib/admin/bin/compress.py::main",
+      "line_range": [
+        17,
+        63
+      ],
+      "score": 0.5082,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2555,
+        "vector": 0.3697,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4565,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3923,
+        "vector": 0.9036,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::main_help_text",
+      "line_range": [
+        162,
+        194
+      ],
+      "score": 0.3636,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5882,
+        "vector": 0.5544,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3453,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1096,
+        "vector": 0.566,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/admin_scripts/configured_settings_manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2797,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1553,
+        "vector": 0.9645,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "tests/i18n/sampleproject/manage.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2586,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.074,
+        "vector": 0.8827,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.4076,
+  "laya_scores": {
+    "fix_quality": 1.0204,
+    "matches_issue": 0.1731,
+    "safe_to_apply": 0.4369,
+    "composite": 0.4076,
+    "secrets_or_danger": 0.0758,
+    "logic_drift": 0.0992,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "FAILED: no patch to apply",
+  "regression_test": "from calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    calc = Calculator()\n    assert calc.calculate(5, 3) == 2",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 12
+}

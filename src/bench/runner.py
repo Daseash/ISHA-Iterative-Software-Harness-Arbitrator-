@@ -457,6 +457,8 @@ def _categorize_unsolved(meta: dict, info: dict) -> str:
     if meta.get("offline_calls"):
         return "api_failure"
     if meta.get("escalation"):
+        if "no confident fix" in str(meta.get("escalation", "")).lower():
+            return "no_confident_fix"
         return "api_failure"
     if not meta.get("model_log"):
         return "api_failure"
@@ -566,7 +568,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="ISHA resumable SWE-bench runner")
     parser.add_argument("--limit", type=int, default=30)
     parser.add_argument("--run-id", type=str, default="")
-    parser.add_argument("--slice", choices=["head", "stratified", "ids"], default="head")
+    parser.add_argument("--slice", choices=["head", "stratified", "ids", "dev", "final", "train"], default="head")
     parser.add_argument("--timeout", type=int, default=DEFAULT_INSTANCE_TIMEOUT)
     parser.add_argument("--max-retries", type=int, default=DEFAULT_MAX_RETRIES)
     parser.add_argument("--instances", nargs="*", default=None)

@@ -39,7 +39,12 @@ W_DEFS = float(os.getenv("ISHA_LOC_W_DEFS", "0.25"))
 PRIOR_DOC = float(os.getenv("ISHA_LOC_PRIOR_DOC", "0.45"))
 PRIOR_TEST = float(os.getenv("ISHA_LOC_PRIOR_TEST", "0.7"))
 
-_TRACE_FILE_RE = re.compile(r'File "(?P<path>[^"]+)", line (?P<line>\d+)(?:, in (?P<func>[A-Za-z_][\w.]*))?')
+_TRACE_FILE_RE = re.compile(
+    r'(?:File "(?P<path>[^"]+)", line (?P<line>\d+)(?:, in (?P<func>[A-Za-z_][\w.]*))?)'
+    r'|(?:File \'(?P<path_sq>[^\']+)\', line (?P<line_sq>\d+)(?:, in (?P<func_sq>[A-Za-z_][\w.]*))?)'
+    r'|(?:\b(?P<path_colon>[\w./\\-]+\.(?:py|pyx|c|h|cpp)):(?P<line_colon>\d+)(?::\s*in\s*(?P<func_colon>[A-Za-z_][\w.]*))?)'
+)
+_MODULE_RE = re.compile(r"\b([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*){1,5})\b")
 _PATH_RE = re.compile(
     r"(?<![\w/])(?:(?:[\w.\-]+/)+[\w.\-]+|\b[\w.\-]+\b)\.(?:py|pyx|pyi|js|ts|c|h|cpp|go|rs)\b"
 )
@@ -97,14 +102,32 @@ def parse_issue(issue_text: str) -> IssueSeeds:
     text = issue_text or ""
 
     for match in _TRACE_FILE_RE.finditer(text):
-        seeds.traceback_files.append((match.group("path"), int(match.group("line"))))
-        func = match.group("func")
+        path = match.group("path") or match.group("path_sq") or match.group("path_colon")
+        line_str = match.group("line") or match.group("line_sq") or match.group("line_colon")
+        func = match.group("func") or match.group("func_sq") or match.group("func_colon")
+        if path and line_str:
+            seeds.traceback_files.append((path, int(line_str)))
         if func:
             name = func.split(".")[-1]
             if name not in seeds.traceback_funcs:
                 seeds.traceback_funcs.append(name)
             if name not in seeds.symbols:
                 seeds.symbols.append(name)
+
+    # Dotted module candidates (e.g. django.db.models.fields -> django/db/models/fields.py)
+    for mod in _MODULE_RE.findall(text):
+        parts = mod.split(".")
+        if len(parts) >= 2 and all(p.isidentifier() for p in parts):
+            as_path = "/".join(parts) + ".py"
+            if as_path not in seeds.paths:
+                seeds.paths.append(as_path)
+            as_pkg = "/".join(parts) + "/__init__.py"
+            if as_pkg not in seeds.paths:
+                seeds.paths.append(as_pkg)
+            # Add trailing symbol name
+            tail_sym = parts[-1]
+            if tail_sym not in seeds.symbols:
+                seeds.symbols.append(tail_sym)
 
     for line in text.splitlines():
         fn = _FUNC_IN_RE.match(line)
@@ -171,6 +194,7 @@ class Candidate:
     file: str
     score: float
     symbol: str = ""
+    symbols: list[str] = field(default_factory=list)
     line_start: int = 0
     line_end: int = 0
     scores: dict = field(default_factory=dict)
@@ -180,6 +204,7 @@ class Candidate:
         return {
             "file": self.file,
             "symbol": self.symbol,
+            "symbols": self.symbols,
             "line_range": [self.line_start, self.line_end] if self.symbol else [],
             "score": round(self.score, 4),
             "signals": {k: round(v, 4) for k, v in self.scores.items()},
@@ -429,21 +454,113 @@ def localize(
     # Hierarchy step: file -> symbol -> line range for the top files.
     focus = seeds.symbols + seeds.traceback_funcs + list(seeds.exceptions)
     for cand in ranked[: max(top_k * 2, top_k)]:
-        symbol, start, end = _find_symbol_span(repo_path, cand.file, focus)
-        if symbol:
-            cand.symbol = symbol
-            cand.line_start, cand.line_end = start, end
-            cand.score = min(1.0, cand.score + 0.15)
-            cand.reason = "symbol match"
-        elif cand.scores.get("seed", 0) >= 0.7:
-            cand.reason = "named in traceback"
-        elif cand.scores.get("seed", 0) > 0:
-            cand.reason = "named in issue"
-        else:
-            cand.reason = "retrieval"
+        symbol_found = False
+        try:
+            from src.tools.symbol_target import target_file
+            st_targets = target_file(repo_path, cand.file, issue_text)
+            if st_targets:
+                best_st = st_targets[0]
+                cand.symbol = f"{cand.file}::{best_st['symbol']}"
+                cand.symbols = [t["symbol"] for t in st_targets]
+                cand.line_start = best_st["start"]
+                cand.line_end = best_st["end"]
+                cand.score = min(1.0, cand.score + 0.2)
+                cand.reason = best_st.get("reason", "symbol target")
+                symbol_found = True
+        except Exception:
+            pass
 
+        if not symbol_found:
+            symbol, start, end = _find_symbol_span(repo_path, cand.file, focus)
+            if symbol:
+                cand.symbol = symbol
+                cand.line_start, cand.line_end = start, end
+                cand.score = min(1.0, cand.score + 0.15)
+                cand.reason = "symbol match"
+            elif cand.scores.get("seed", 0) >= 0.7:
+                cand.reason = "named in traceback"
+            elif cand.scores.get("seed", 0) > 0:
+                cand.reason = "named in issue"
+            else:
+                cand.reason = "retrieval"
     ranked.sort(key=lambda c: c.score, reverse=True)
+    if os.getenv("ISHA_LOC_ENABLE_LLM_RERANK", "1") == "1":
+        ranked = llm_rerank(issue_text, ranked, top_n=min(len(ranked), max(top_k, 6)))
     return ranked[:top_k]
+
+
+def llm_rerank(
+    issue_text: str,
+    candidates: list[Candidate],
+    top_n: int = 8,
+) -> list[Candidate]:
+    """Re-rank top candidates using a cheap, structured LLM call."""
+    if not candidates or len(candidates) <= 1:
+        return candidates
+
+    pool = candidates[:top_n]
+    rest = candidates[top_n:]
+
+    # Fast short-circuit: if the top candidate is already uniquely strong from stack traces
+    if pool[0].scores.get("seed", 0) >= 0.9 and (len(pool) == 1 or pool[1].scores.get("seed", 0) < 0.5):
+        return candidates
+
+    cand_lines = []
+    for i, c in enumerate(pool, 1):
+        sym_desc = f" (symbol: {c.symbol}, lines {c.line_start}-{c.line_end})" if c.symbol else ""
+        cand_lines.append(f"{i}. {c.file}{sym_desc}")
+
+    prompt = (
+        "You are an expert software engineer localizing a bug in a codebase.\n"
+        "Given the bug report and candidate files retrieved from the codebase, "
+        "re-rank the candidates so that the file most likely to contain the actual defect "
+        "(root cause code that must be edited) appears first.\n"
+        "Exclude tests, docs, and example files unless the bug specifically targets them.\n\n"
+        f"BUG REPORT:\n{issue_text[:1800]}\n\n"
+        f"CANDIDATES:\n" + "\n".join(cand_lines) + "\n\n"
+        "Return ONLY a JSON array of the candidate file paths in ranked order, from most likely to least likely:\n"
+        '["path/to/file1.py", "path/to/file2.py", ...]'
+    )
+
+    try:
+        from src.config import OFFLINE_MODE, call_planner
+        if OFFLINE_MODE:
+            return candidates
+
+        reply = call_planner(prompt)
+        if not reply:
+            return candidates
+
+        import json
+        cleaned = re.sub(r"^```(?:json)?\s*", "", reply.strip(), flags=re.MULTILINE)
+        cleaned = re.sub(r"```\s*$", "", cleaned.strip(), flags=re.MULTILINE).strip()
+        match = re.search(r"\[.*\]", cleaned, re.DOTALL)
+        if match:
+            cleaned = match.group(0)
+        order = json.loads(cleaned)
+        if isinstance(order, list) and order:
+            by_file = {c.file: c for c in pool}
+            reranked = []
+            seen = set()
+            for path_str in order:
+                target_str = str(path_str).replace("\\", "/").strip()
+                cand = by_file.get(target_str)
+                if not cand:
+                    for f, c in by_file.items():
+                        if f.endswith(target_str) or target_str.endswith(f):
+                            cand = c
+                            break
+                if cand and cand.file not in seen:
+                    seen.add(cand.file)
+                    cand.reason = f"llm_rerank #{len(reranked)+1} ({cand.reason})"
+                    reranked.append(cand)
+            for c in pool:
+                if c.file not in seen:
+                    reranked.append(c)
+            return reranked + rest
+    except Exception:
+        return candidates
+    return candidates
 
 
 def find_test_files(

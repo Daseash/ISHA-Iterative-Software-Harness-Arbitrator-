@@ -23,6 +23,9 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -73,7 +76,34 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         _bad("git", "not on PATH — SWE-bench checkouts need it")
         failures += 1
 
-    print("\nDocker (official SWE-bench harness)")
+    print("\nAPI Keys")
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    google_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY", "")
+    if groq_key:
+        _ok("GROQ_API_KEY", f"{groq_key[:6]}...{groq_key[-4:]}")
+    else:
+        _warn("GROQ_API_KEY", "missing — Groq models will be skipped")
+    if google_key:
+        _ok("GOOGLE_API_KEY", f"{google_key[:6]}...{google_key[-4:]}")
+    else:
+        _warn("GOOGLE_API_KEY", "missing — Gemini models will be skipped")
+    if not groq_key and not google_key:
+        _bad("API keys", "no keys configured — running in offline-only mode")
+        failures += 1
+
+    print("\nDisk & Storage")
+    try:
+        total, used, free = shutil.disk_usage(ROOT)
+        free_gb = free / (1024 ** 3)
+        total_gb = total / (1024 ** 3)
+        if free_gb < 15:
+            _warn("disk space", f"{free_gb:.1f} GB free of {total_gb:.1f} GB — Docker images require ~20 GB")
+        else:
+            _ok("disk space", f"{free_gb:.1f} GB free of {total_gb:.1f} GB")
+    except Exception as exc:
+        _bad("disk space", str(exc))
+
+    print("\nDocker & WSL Environment")
     if not _which("docker"):
         _bad("docker", "binary not found — no harness evaluation possible")
         failures += 1
@@ -84,6 +114,29 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         else:
             _bad("docker daemon", out.splitlines()[0] if out else "not running")
             failures += 1
+
+    if _which("wsl"):
+        rc, out = _run(["wsl", "-l", "-v"])
+        if rc == 0:
+            distros = [line.strip() for line in out.splitlines() if line.strip() and not line.startswith("NAME") and not line.startswith("N A M E")]
+            _ok("WSL2 subsystem", f"{len(distros)} distribution(s) registered")
+        else:
+            _warn("WSL2 subsystem", "wsl command failed")
+    else:
+        _warn("WSL2 subsystem", "wsl binary not found on host PATH")
+
+    print("\nVector DB (Qdrant)")
+    qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
+    try:
+        import urllib.request
+        req = urllib.request.Request(f"{qdrant_url.rstrip('/')}/healthz", headers={"User-Agent": "ISHA-doctor"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            if resp.status == 200:
+                _ok("qdrant", f"reachable at {qdrant_url}")
+            else:
+                _warn("qdrant", f"status {resp.status} at {qdrant_url}")
+    except Exception:
+        _warn("qdrant", f"unreachable at {qdrant_url} — local in-memory fallback active")
 
     print("\nPython packages")
     for mod, label in [
@@ -156,9 +209,11 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         model = calibration.load()
         labels = calibration.load_labels()
         if model:
+            n_lbl = model.get('n_labels') or model.get('n_total', '?')
+            ece_val = model.get('ece_scaled') or model.get('val_ece_scaled', '?')
             _ok("laya combiner",
-                f"fitted on {model.get('n_labels')} labels, "
-                f"ece={model.get('ece_scaled')} thr={model.get('threshold')}")
+                f"fitted on {n_lbl} labels, "
+                f"ece={ece_val} thr={model.get('threshold')}")
         elif labels:
             _warn("laya combiner",
                   f"{len(labels)} labels but not fitted — run `isha bench --fit-laya`")
@@ -328,7 +383,7 @@ def _parser() -> argparse.ArgumentParser:
     bench = sub.add_parser("bench", help="run a SWE-bench slice")
     bench.add_argument("--limit", type=int, default=30)
     bench.add_argument("--run-id", default="")
-    bench.add_argument("--slice", choices=["head", "stratified", "ids"], default="head")
+    bench.add_argument("--slice", choices=["head", "stratified", "ids", "dev", "final", "train"], default="head")
     bench.add_argument("--timeout", type=int, default=900)
     bench.add_argument("--max-retries", type=int, default=2)
     bench.add_argument("--instances", nargs="*", default=None)

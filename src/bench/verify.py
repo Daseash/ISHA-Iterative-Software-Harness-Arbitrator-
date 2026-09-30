@@ -158,7 +158,9 @@ def _run(image: str, mounts: dict[str, str], script: str,
     """Run ``script`` in a throwaway container. Returns (exit_code, output)."""
     cmd = [DOCKER, "run", "--rm", "--init"]
     for host, container in mounts.items():
-        cmd += ["--mount", f"type=bind,src={host},dst={container},ro"]
+        # Ensure Windows backslashes are converted to forward slashes for docker daemon
+        clean_host = str(host).replace("\\", "/")
+        cmd += ["--mount", f"type=bind,src={clean_host},dst={container},ro"]
     cmd += [image, "bash", "-lc", script]
 
     try:
@@ -184,11 +186,11 @@ def _script(meta: dict, target: str, cmd: str, use_patch: bool) -> str:
     ]
     if meta["preamble"]:
         lines.append(meta["preamble"])
-    lines.append(f"cp {MOUNT_SRC_NAME} /testbed/{target}")
+    lines.append(f"cp /tmp/{MOUNT_SRC_NAME} /testbed/{target}")
     if use_patch:
         lines.append(
-            f"git apply --whitespace=nowarn {MOUNT_PATCH_NAME} "
-            f"|| git apply --3way --whitespace=nowarn {MOUNT_PATCH_NAME}"
+            f"git apply --whitespace=nowarn /tmp/{MOUNT_PATCH_NAME} "
+            f"|| git apply --3way --whitespace=nowarn /tmp/{MOUNT_PATCH_NAME}"
         )
     lines.append(cmd)
     return "\n".join(lines)

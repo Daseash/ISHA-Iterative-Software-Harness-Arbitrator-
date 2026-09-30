@@ -114,6 +114,9 @@ def _body_text(lines: list[str], span: dict) -> str:
     return "\n".join(lines[span["start"]:span["end"]])
 
 
+_KWARG_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*=")
+
+
 def report_identifiers(issue_text: str) -> set[str]:
     """Symbols the report names.
 
@@ -136,12 +139,18 @@ def report_identifiers(issue_text: str) -> set[str]:
         for called in _CALL_RE.findall(span):
             if called.lower() not in _STOPWORDS:
                 found.add(called)
+        for kw in _KWARG_RE.findall(span):
+            if kw.lower() not in _STOPWORDS:
+                found.add(kw)
 
     for dotted in _DOTTED_RE.findall(text):
         found.add(dotted.split(".")[-1])
     for called in _CALL_RE.findall(text):
         if called.lower() not in _STOPWORDS:
             found.add(called)
+    for kw in _KWARG_RE.findall(text):
+        if kw.lower() not in _STOPWORDS:
+            found.add(kw)
 
     return {t for t in found if _IDENT_SHAPE.match(t)}
 
@@ -290,6 +299,19 @@ def score_symbols(repo_path: str, rel_path: str, issue_text: str) -> list[dict]:
             # hides. It must outrank the entry point, not tie with it.
             score += 2.0
             reasons.append("private helper called by a symbol the report names")
+
+        # Signature parameter matching — if the report specifies a parameter name (e.g. handle_mask=...)
+        sig_lines = []
+        for k in range(span["start"], min(span["start"] + 8, len(lines))):
+            sig_lines.append(lines[k])
+            if ":" in lines[k]:
+                break
+        sig_text = " ".join(sig_lines)
+        sig_params = set(re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_]*)\b", sig_text)) - _STOPWORDS - {"self", "cls", "def", "class", "async", name}
+        param_hits = sig_params & mentioned
+        if param_hits:
+            score += 3.0
+            reasons.append("signature parameter matches report: " + ", ".join(sorted(param_hits)))
 
         lex, hits = _lexical_score(body, terms, self_name=name)
         if lex >= _LEX_MIN:

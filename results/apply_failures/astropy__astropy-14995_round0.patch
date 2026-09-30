@@ -1,0 +1,23 @@
+--- a/astropy/nddata/mixins/ndarithmetic.py
++++ b/astropy/nddata/mixins/ndarithmetic.py
+@@ -30,10 +30,16 @@
+             # Perform the operation with the operand.
+             dataattr = getattr(self, attr)
+             ans = operation(dataattr, getattr(operand, attr))
+-
+-            # Propagate the mask if both operands have a mask.
++            # Propagate the mask.
+             if isinstance(operand, NDData):
+-                masks = [mask for mask in [self.mask, operand.mask] if mask is not None]
+-                if len(masks) == 2:
++                if self.mask is None and operand.mask is None:
++                    ans_mask = None
++                elif operand.mask is None:
++                    ans_mask = self.mask
++                elif self.mask is None:
++                    ans_mask = operand.mask
++                else:
++                    ans_mask = handle_mask(self.mask, operand.mask)
++                if ans_mask is not None:
+                     ans_mask = ans_mask.copy()
+-                    for mask in masks:

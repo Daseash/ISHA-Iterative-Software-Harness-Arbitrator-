@@ -1,3 +1,10 @@
-{"event": "start", "instance_id": "astropy__astropy-6938", "ts": 1790698012.9934738}
-{"event": "attempt", "n": 1, "ts": 1790698013.0990052}
-{"event": "timeout", "attempt": 1, "ts": 1790699813.1581986}
+{"event": "start", "instance_id": "astropy__astropy-6938", "ts": 1790747781.3832545}
+{"event": "attempt", "n": 1, "ts": 1790747781.4890406}
+{"event": "model", "ts": 1790747800.231759, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790747974.9764702, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790748023.07158, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790748024.0515554, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790748139.6536272, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790748203.7590172, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790748318.5758803, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790748334.680622}

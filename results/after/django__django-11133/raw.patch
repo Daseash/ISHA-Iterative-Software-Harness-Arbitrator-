@@ -1,0 +1,12 @@
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@ -308,6 +308,9 @@
+ 
+     @content.setter
+     def content(self, value):
++        # Convert memoryview to bytes
++        if isinstance(value, memoryview):
++            value = value.tobytes()
+         if isinstance(value, bytes):
+             self._container = [value]
+         elif isinstance(value, str):

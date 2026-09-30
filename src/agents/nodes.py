@@ -606,10 +606,74 @@ def candidate_node(state: AgentState) -> AgentState:
         cand.rank_reason = outcome["mode"]
 
     ordered = rank_candidates(candidates)
-    winner = ordered[0] if ordered else None
+    from src.agents.candidates import is_survivor
+    survivors = [c for c in ordered if is_survivor(c)]
+
+    if not survivors and ordered:
+        best = ordered[0]
+        # Run one repair round on the best candidate
+        print(f"[arbitrator] no candidate survived; running 1 repair round on candidate #{best.index}...", file=sys.stderr)
+        try:
+            from src.agents.candidates import _apply, _reset
+            from src.bench.gates import changed_files, compile_gate, diff_stats
+
+            err_hint = ""
+            if best.repro.get("after_output"):
+                err_hint = "TRIMMED TEST TRACEBACK:\n" + trim_traceback(best.repro["after_output"])
+            elif best.gate_errors:
+                err_hint = "STATIC GATE ERRORS:\n" + "\n".join(best.gate_errors)
+            elif best.apply_message:
+                err_hint = "APPLY ERROR:\n" + best.apply_message
+            else:
+                err_hint = "Previous patch failed verification."
+
+            repair_prompt = f"\n\nNO CANDIDATE SURVIVED. Final repair attempt on best candidate:\n{err_hint}\nProduce a corrected minimal diff."
+            raw = call_coder(
+                build_coder_prompt(state, strategy=best.strategy, extra_hint=repair_prompt),
+                temperature=best.temperature,
+                model=best.model or None,
+            )
+            repaired_patch = _extract_diff(raw)
+            if repaired_patch and best.worktree and Path(best.worktree).exists():
+                _reset(best.worktree)
+                ok, msg = _apply(best.worktree, repaired_patch)
+                if ok:
+                    gate = compile_gate(best.worktree, repaired_patch, baseline_repo=state.repo_path)
+                    if gate.ok:
+                        best.patch = repaired_patch
+                        best.apply_ok = True
+                        best.gate_ok = True
+                        best.changed = changed_files(repaired_patch)
+                        best.added, best.removed = diff_stats(repaired_patch)
+                        best.rounds += 1
+                        # If repro was previously run and available, re-verify
+                        if best.repro.get("available") and verify_on:
+                            try:
+                                from src.bench import verify as vfy
+                                from src.bench.dataset import load_records
+
+                                wanted = state.instance_id
+                                record = next((r for r in load_records() if r["instance_id"] == wanted), None)
+                                if record and record.get("image"):
+                                    touched = vfy.touched_targets(record, best.changed, state.repo_path)
+                                    best.repro = vfy.verify_instance(
+                                        record,
+                                        state.regression_test,
+                                        best.patch,
+                                        touched_targets=touched,
+                                    )
+                                    best.regression_count = best.repro.get("regressions", 0)
+                            except Exception:
+                                pass
+                        if is_survivor(best):
+                            survivors = [best]
+                            ordered = [best] + [c for c in ordered if c is not best]
+        except Exception as exc:
+            print(f"[arbitrator] repair round on best candidate #{best.index} failed: {exc}", file=sys.stderr)
 
     state.candidates = [c.as_dict() for c in ordered]
-    if winner and winner.valid:
+    if survivors:
+        winner = survivors[0]
         state.patch = winner.patch
         state.strategy = winner.strategy
         state.laya_scores = {**winner.laya, "combined": winner.combined_score,
@@ -618,11 +682,18 @@ def candidate_node(state: AgentState) -> AgentState:
             **winner.as_dict(),
             "beat": len([c for c in ordered if c is not winner]),
         }
-    elif winner:
-        state.selected_candidate = winner.as_dict()
+        print(f"[arbitrator] winning candidate #{winner.index} "
+              f"model='{winner.model or getattr(state, 'model_name', 'coder')}' "
+              f"strategy='{winner.strategy}' score={winner.combined_score:.3f}",
+              file=sys.stderr)
+    else:
+        state.patch = ""
+        state.escalation = "no confident fix"
+        state.selected_candidate = ordered[0].as_dict() if ordered else {}
         state.context_notes = list(state.context_notes) + [
-            "candidate_node: no candidate passed the gates; keeping coder patch"
+            "candidate_node: no candidate survived verification; reported 'no confident fix'"
         ]
+        print("[arbitrator] no candidate survived verification; reported 'no confident fix'", file=sys.stderr)
 
     cleanup_candidates(candidates, state.repo_path)
     state.model_log = get_model_log()
@@ -676,6 +747,9 @@ def _verify_candidates(state: AgentState, candidates) -> None:
 
     max_verify = int(os.getenv("ISHA_VERIFY_MAX", "3"))
     try:
+        from src.agents.candidates import _apply, _reset
+        from src.bench.gates import changed_files, compile_gate, diff_stats
+
         for cand in valid[:max(1, max_verify)]:
             cand.repro = vfy.verify_instance(
                 record,
@@ -683,6 +757,71 @@ def _verify_candidates(state: AgentState, candidates) -> None:
                 cand.patch,
                 touched_targets=touched,
             )
+            cand.regression_count = cand.repro.get("regressions", 0)
+
+            # Closed loop: on failure, feed the trimmed real pytest traceback back
+            # to the Coder (max 2 rounds, stop early if the same failure repeats).
+            prev_tb = ""
+            for repair_round in range(1, 3):
+                failed_repro = cand.repro.get("available") and cand.repro.get("before_ok") and not cand.repro.get("after_ok")
+                has_regressions = cand.regression_count > 0
+                if not (failed_repro or has_regressions):
+                    break
+
+                raw_output = cand.repro.get("after_output", "")
+                trimmed_tb = trim_traceback(raw_output)
+                if trimmed_tb and trimmed_tb == prev_tb:
+                    print(f"[verifier] candidate #{cand.index} repair round {repair_round}: identical failure repeated, stopping early", file=sys.stderr)
+                    break
+                prev_tb = trimmed_tb
+
+                fail_reason = "reproduction test failed" if failed_repro else f"{cand.regression_count} regression(s) in touched modules"
+                repair_prompt = (
+                    f"\n\nCONTAINER TEST RUN FAILED ({fail_reason}).\n"
+                    "TRIMMED REAL PYTEST TRACEBACK / FAILURE OUTPUT:\n"
+                    f"{trimmed_tb}\n\n"
+                    "Diagnose the failure from the traceback and emit a corrected unified diff patch."
+                )
+                try:
+                    preferred = cand.model or None
+                    raw = call_coder(
+                        build_coder_prompt(state, strategy=cand.strategy, extra_hint=repair_prompt),
+                        temperature=cand.temperature,
+                        model=preferred,
+                    )
+                    new_patch = _extract_diff(raw)
+                    if not new_patch:
+                        break
+
+                    _reset(cand.worktree)
+                    ok, msg = _apply(cand.worktree, new_patch)
+                    if not ok:
+                        break
+                    gate = compile_gate(cand.worktree, new_patch, baseline_repo=state.repo_path)
+                    if not gate.ok:
+                        break
+
+                    new_repro = vfy.verify_instance(
+                        record,
+                        state.regression_test,
+                        new_patch,
+                        touched_targets=touched,
+                    )
+                    cand.patch = new_patch
+                    cand.apply_ok = True
+                    cand.gate_ok = True
+                    cand.repro = new_repro
+                    cand.regression_count = new_repro.get("regressions", 0)
+                    cand.changed = changed_files(new_patch)
+                    cand.added, cand.removed = diff_stats(new_patch)
+                    cand.rounds += 1
+
+                    if new_repro.get("after_ok") and cand.regression_count == 0:
+                        print(f"[verifier] candidate #{cand.index} closed-loop repaired on round {repair_round}", file=sys.stderr)
+                        break
+                except Exception as exc:
+                    print(f"[verifier] candidate #{cand.index} repair error: {exc}", file=sys.stderr)
+                    break
     finally:
         # Eval images are ~4GB each and a 30-instance run would need ~125GB.
         # Drop anything this instance pulled so the run stays bounded by one
@@ -699,6 +838,9 @@ def _verify_candidates(state: AgentState, candidates) -> None:
 def sandbox_node(state: AgentState) -> AgentState:
     """Run tests against the candidate patch in an isolated copy."""
     state = coerce_state(state)
+    if state.escalation == "no confident fix":
+        state.test_output = "NO CONFIDENT FIX: all candidates rejected by gates/verification"
+        return state
     if not state.repo_path:
         state.test_output = "FAILED: no repo_path set"
         return state

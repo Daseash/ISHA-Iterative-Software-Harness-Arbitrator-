@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "django__django-11133", "ts": 1790764489.6929903}
+{"event": "attempt", "n": 1, "ts": 1790764490.4277685}
+{"event": "model", "ts": 1790764511.0912657, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790764810.129785, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790764848.7965095, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790765049.679776, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790765146.5835123, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1790765348.551412, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (6 models): qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-20b: RateLimitError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError"}
+{"event": "model", "ts": 1790765448.9937243, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790765612.5385618, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790765645.5964735}

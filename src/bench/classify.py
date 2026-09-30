@@ -48,6 +48,7 @@ CATEGORIES = [
     "tests_failed",
     "timeout",
     "api_failure",
+    "no_confident_fix",
     "not_run",
     "harness_no_output",
     "checkout_failed",
@@ -70,6 +71,17 @@ def gold_files(record: dict) -> set[str]:
     return set(
         re.findall(r"^\+\+\+ b/(.+)$", record.get("patch", "") or "", re.M)
     )
+
+
+def gold_symbols(record: dict) -> set[str]:
+    """Symbols touched by the official gold patch (analysis only)."""
+    patch = record.get("patch", "") or ""
+    symbols = set()
+    for match in re.finditer(r"^@@\s+-[0-9,]+\s+\+[0-9,]+\s+@@\s*(?:def|class|async def)?\s*([A-Za-z_][A-Za-z0-9_]*)", patch, re.M):
+        sym = match.group(1).strip()
+        if sym and sym not in ("def", "class", "async"):
+            symbols.add(sym)
+    return symbols
 
 
 def patch_files(patch: str) -> set[str]:
@@ -156,13 +168,26 @@ def classify_instance(
     return "tests_failed"
 
 
+STAGE_NAMES = [
+    "localization_hit_file",
+    "localization_hit_func",
+    "patch_applied",
+    "static_gate_passed",
+    "env_ok",
+    "repro_fails_before",
+    "repro_passes_after",
+    "zero_regressions",
+    "resolved",
+]
+
+
 def build_breakdown(
     run_dir: Path,
     records: list[dict],
     report: dict,
     eval_id: str | None = None,
 ) -> dict:
-    """Classify every instance of a run and aggregate the buckets."""
+    """Classify every instance of a run and aggregate the buckets and stage outcomes."""
     resolved_ids = set(report.get("resolved_ids", []) or [])
     log_root = run_dir / "logs" / "run_evaluation"
 
@@ -179,6 +204,8 @@ def build_breakdown(
 
     rows = []
     counts = Counter({c: 0 for c in CATEGORIES})
+    stage_counts = Counter({s: 0 for s in STAGE_NAMES})
+
     for record in records:
         iid = record["instance_id"]
         meta_path = run_dir / iid.replace("/", "__") / "meta.json"
@@ -190,6 +217,55 @@ def build_breakdown(
                 meta = {}
         resolved = iid in resolved_ids
         category = classify_instance(meta, _log_dir(iid), record, resolved)
+
+        gold_f = gold_files(record)
+        gold_s = gold_symbols(record)
+
+        loc_entries = meta.get("localization") or []
+        loc_files = set()
+        loc_symbols = set()
+        for le in loc_entries:
+            if isinstance(le, dict):
+                f = le.get("file")
+                if f:
+                    loc_files.add(f)
+                s = le.get("symbol", "")
+                if s:
+                    loc_symbols.add(s.split("::")[-1])
+        if not loc_files:
+            loc_files = patch_files(meta.get("model_patch", ""))
+
+        loc_hit_file = bool(loc_files & gold_f) if gold_f else False
+        loc_hit_func = bool(loc_symbols & gold_s) if gold_s else loc_hit_file
+
+        patch_applied = bool(meta.get("patch_info", {}).get("applied", False)) or (
+            bool((meta.get("model_patch") or "").strip()) and category != "patch_apply_failed"
+        )
+        static_gate_passed = bool(meta.get("patch_info", {}).get("gates", {}).get("ok", False)) or (
+            patch_applied and category not in ("syntax_error", "patch_apply_failed")
+        )
+        selected_cand = meta.get("selected_candidate") or {}
+        ver = selected_cand.get("verification") or {}
+        env_ok = bool(ver.get("available", False)) or (category not in ("harness_no_output", "checkout_failed"))
+        repro_fails_before = bool(ver.get("before_ok", False))
+        repro_passes_after = bool(ver.get("after_ok", False))
+        zero_regressions = (ver.get("regressions", 0) == 0) if "regressions" in ver else (category != "tests_failed")
+
+        stage_outcomes = {
+            "localization_hit_file": loc_hit_file,
+            "localization_hit_func": loc_hit_func,
+            "patch_applied": patch_applied,
+            "static_gate_passed": static_gate_passed,
+            "env_ok": env_ok,
+            "repro_fails_before": repro_fails_before,
+            "repro_passes_after": repro_passes_after,
+            "zero_regressions": zero_regressions,
+            "resolved": resolved,
+        }
+        for s_name, passed in stage_outcomes.items():
+            if passed:
+                stage_counts[s_name] += 1
+
         rows.append({
             "instance_id": iid,
             "resolved": resolved,
@@ -200,11 +276,12 @@ def build_breakdown(
             "critic_score": meta.get("critic_score"),
             "offline_calls": meta.get("offline_calls", 0),
             "primary_model": _primary_model(meta),
+            "stage_outcomes": stage_outcomes,
         })
         if category:
             counts[category] += 1
 
-    return {"rows": rows, "counts": counts}
+    return {"rows": rows, "counts": counts, "stage_counts": stage_counts}
 
 
 def _primary_model(meta: dict) -> str:

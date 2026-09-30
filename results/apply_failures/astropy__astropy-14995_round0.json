@@ -1,0 +1,7 @@
+{
+  "instance_id": "astropy__astropy-14995",
+  "round": 0,
+  "error_message": "Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ -30,10 +30,16 @@ \u2014 expected context not found in file: '            # Perform the operation with the operand.'",
+  "cause": "context_mismatch",
+  "patch_size": 1037
+}

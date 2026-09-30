@@ -1,0 +1,12 @@
+--- a/django/db/models/sql/compiler.py
++++ b/django/db/models/sql/compiler.py
+@@ -321,7 +321,8 @@
+             else:
+                 sql, params = expr.as_sql(self, self.connection)
+                 # We only get the order_by clause without the ASC/DESC part.
+-                without_ordering = self.ordering_parts.search(sql).group(1)
++                normalized_sql = ' '.join(sql.split())
++                without_ordering = self.ordering_parts.search(normalized_sql).group(1)
+                 if without_ordering in seen:
+                     continue
+                 seen.add(without_ordering)

@@ -1,0 +1,359 @@
+{
+  "instance_id": "django__django-11001",
+  "repo": "django/django",
+  "base_commit": "ef082ebb84f00e38af4e8880d04e8365c2766d34",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790755735.3735666
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790755836.692695
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790756010.8230715
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790756033.5920153
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790756193.044294
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790756323.3962877
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790756449.3049614
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/compiler.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790755490.0449321,
+  "elapsed_s": 967.0,
+  "plan": "# Before:\nwithout_ordering = self.ordering_parts.search(sql).group(1)\n\n# After:\n# Collapse multiline SQL into a single line to ensure the regex \n# identifies the full expression rather than just the final line.\nnormalized_sql = ' '.join(sql.split())\nwithout_ordering = self.ordering_parts.search(normalized_sql).group(1)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/expressions.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4744,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5651,
+        "vector": 0.6926,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/sql/compiler.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.3113,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.5112,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/queries/models.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2847,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2801,
+        "vector": 0.7221,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/backends/mysql/compiler.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2755,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0,
+        "vector": 0.2125,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2365,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6338,
+        "vector": 0.6507,
+        "defs": 0.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/select_related/models.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.2304,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0578,
+        "vector": 0.539,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.773225,
+  "laya_scores": {
+    "fix_quality": 1.4948,
+    "matches_issue": 0.832,
+    "safe_to_apply": 0.7661,
+    "composite": 0.773225,
+    "secrets_or_danger": 0.1226,
+    "logic_drift": 0.4528,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport django\nfrom django.conf import settings\n\n# ----------------------------------------------------------------------\n# Django test‑environment fixture\n# ----------------------------------------------------------------------\n@pytest.fixture(scope=\"module\", autouse=True)\ndef django_setup():\n    \"\"\"\n    Configure a minimal Django project, register a test app and create the\n    database tables in an in‑memory SQLite DB.\n    \"\"\"\n    if not settings.configured:\n        settings.configure(\n            DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": \":memory:\"}},\n            INSTALLED_APPS=[\n                \"django.contrib.contenttypes\",\n                \"django.contrib.auth\",\n                \"testapp\",               # the artificial app defined below\n            ],\n            DEFAULT_AUTO_FIELD=\"django.db.models.AutoField\",\n        )\n    django.setup()\n\n    # ------------------------------------------------------------------\n    # Define a tiny model inside the artificial ``testapp`` app.\n    # ------------------------------------------------------------------\n    from django.db import models\n\n    class MyModel(models.Model):\n        status = models.CharField(max_length=20)\n        accepted_datetime = models.DateTimeField(null=True)\n        preferred_datetime = models.DateTimeField(null=True)\n        created_at = models.DateTimeField(auto_now_add=True)\n\n        class Meta:\n            app_label = \"testapp\"\n\n    # Create the table for the model.\n    from django.db import connection\n    with connection.schema_editor() as schema_editor:\n        schema_editor.create_model(MyModel)\n\n    # expose the model to the test functions\n    globals()[\"MyModel\"] = MyModel\n    yield\n    # (nothing to clean up – the in‑memory DB disappears after the process ends)\n\n\n# ----------------------------------------------------------------------\n# Tests\n# ----------------------------------------------------------------------\ndef test_multiline_rawsql_ordering_is_not_deduped(django_setup):\n    \"\"\"\n    The original bug caused the second multiline ``RawSQL`` clause to be\n    considered a duplicate and removed from the generated ORDER BY part.\n    After the fix both clauses must appear exactly once.\n    \"\"\"\n    from django.db.models.expressions import RawSQL\n\n    qs = (\n        MyModel.objects.all()\n        .order_by(\n            RawSQL(\n                \"\"\"\n                case when status in ('accepted', 'verification')\n                     then 2 else 1 end\n                \"\"\",\n                [],\n            ).desc(),\n            RawSQL(\n                \"\"\"\n                case when status in ('accepted', 'verification')\n                     then (accepted_datetime, preferred_datetime)\n                     else null end\n                \"\"\",\n                [],\n            ).asc(),\n            RawSQL(\n                \"\"\"\n                case when status not in ('accepted', 'verification')\n                     then (accepted_datetime, preferred_datetime, created_at)\n                     else null end\n                \"\"\",\n                [],\n            ).desc(),\n        )\n    )\n    sql = str(qs.query)\n\n    # All three fragments must be present.\n    fragment1 = \"case when status in ('accepted', 'verification') then 2 else 1 end\"\n    fragment2 = (\n        \"case when status in ('accepted', 'verification') \"\n        \"then (accepted_datetime, preferred_datetime) else null end\"\n    )\n    fragment3 = (\n        \"case when status not in ('accepted', 'verification') \"\n        \"then (accepted_datetime, preferred_datetime, created_at) else null end\"\n    )\n    assert fragment1 in sql\n    assert fragment2 in sql\n    assert fragment3 in sql\n\n    # No fragment is silently dropped – each appears exactly once.\n    assert sql.count(fragment1) == 1\n    assert sql.count(fragment2) == 1\n    assert sql.count(fragment3) == 1\n\n\ndef test_single_line_rawsql_ordering_works_normally(django_setup):\n    \"\"\"\n    A single‑line RawSQL should never be considered a duplicate.\n    This verifies the normal code path.\n    \"\"\"\n    from django.db.models.expressions import RawSQL\n\n    qs = MyModel.objects.all().order_by(\n        RawSQL(\"case when status='accepted' then 1 else 0 end\", []).desc(),\n        RawSQL(\"case when status='verification' then 1 else 0 end\", []).asc(),\n    )\n    sql = str(qs.query)\n\n    assert \"case when status='accepted' then 1 else 0 end\" in sql\n    assert \"case when status='verification' then 1 else 0 end\" in sql\n    # both fragments must appear exactly once\n    assert sql.count(\"case when status='accepted' then 1 else 0 end\") == 1\n    assert sql.count(\"case when status='verification' then 1 else 0 end\") == 1\n\n\ndef test_mixed_field_and_rawsql_ordering_is_preserved(django_setup):\n    \"\"\"\n    Mixing a regular field name with a multiline RawSQL must keep both\n    ordering parts.  This also checks that the fix does not break the\n    standard ordering behaviour.\n    \"\"\"\n    from django.db.models.expressions import RawSQL\n\n    qs = MyModel.objects.all().order_by(\n        \"created_at\",\n        RawSQL(\n            \"case when status='accepted' then 1 else 0 end\",\n            [],\n        ).desc(),\n    )\n    sql = str(qs.query)\n\n    # regular field\n    assert \"created_at\" in sql\n    # rawsql fragment\n    assert \"case when status='accepted' then 1 else 0 end\" in sql\n    # both must be present in the ORDER BY clause\n    assert \"ORDER BY\" in sql\n    # each appears once\n    assert sql.count(\"created_at\") == 1\n    assert sql.count(\"case when status='accepted' then 1 else 0 end\") == 1",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -321,7 +321,8 @@\n             else:\n                 sql, params = expr.as_sql(self, self.connection)\n                 # We only get the order_by clause without the ASC/DESC part.\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                normalized_sql = ' '.join(sql.split())\n+                without_ordering = self.ordering_parts.search(normalized_sql).group(1)\n                 if without_ordering in seen:\n                     continue\n                 seen.add(without_ordering)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11001-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4948,
+        "matches_issue": 0.832,
+        "safe_to_apply": 0.7661,
+        "composite": 0.773225,
+        "secrets_or_danger": 0.1226,
+        "logic_drift": 0.4528,
+        "flagged": false
+      },
+      "laya_combined": 0.7732,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.025,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 5.94,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "minimal_diff",
+      "temperature": 0.15,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -321,7 +321,8 @@\n             else:\n                 sql, params = expr.as_sql(self, self.connection)\n                 # We only get the order_by clause without the ASC/DESC part.\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                normalized_sql = ' '.join(sql.split())\n+                without_ordering = self.ordering_parts.search(normalized_sql).group(1)\n                 if without_ordering in seen:\n                     continue\n                 seen.add(without_ordering)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11001-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4948,
+        "matches_issue": 0.832,
+        "safe_to_apply": 0.7661,
+        "composite": 0.773225,
+        "secrets_or_danger": 0.1226,
+        "logic_drift": 0.4528,
+        "flagged": false
+      },
+      "laya_combined": 0.7732,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.025,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 30.77,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -321,7 +321,8 @@\n             else:\n                 sql, params = expr.as_sql(self, self.connection)\n                 # We only get the order_by clause without the ASC/DESC part.\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                normalized_sql = ' '.join(sql.split())\n+                without_ordering = self.ordering_parts.search(normalized_sql).group(1)\n                 if without_ordering in seen:\n                     continue\n                 seen.add(without_ordering)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11001-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4948,
+        "matches_issue": 0.832,
+        "safe_to_apply": 0.7661,
+        "composite": 0.773225,
+        "secrets_or_danger": 0.1226,
+        "logic_drift": 0.4528,
+        "flagged": false
+      },
+      "laya_combined": 0.7732,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.025,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 33.34,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -321,7 +321,8 @@\n             else:\n                 sql, params = expr.as_sql(self, self.connection)\n                 # We only get the order_by clause without the ASC/DESC part.\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                normalized_sql = ' '.join(sql.split())\n+                without_ordering = self.ordering_parts.search(normalized_sql).group(1)\n                 if without_ordering in seen:\n                     continue\n                 seen.add(without_ordering)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11001-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4948,
+      "matches_issue": 0.832,
+      "safe_to_apply": 0.7661,
+      "composite": 0.773225,
+      "secrets_or_danger": 0.1226,
+      "logic_drift": 0.4528,
+      "flagged": false
+    },
+    "laya_combined": 0.7732,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "tests/isha_repro.py",
+      "before_exit": 1,
+      "after_exit": 1,
+      "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.025,
+    "rank_reason": "hand_weighted",
+    "elapsed_s": 5.94,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 7649c39..7ea5465 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -366,7 +366,8 @@ class SQLCompiler:\n         if self.query.distinct and not self.query.distinct_fields:\n             select_sql = [t[1] for t in select]\n             for expr, (sql, params, is_ref) in order_by:\n-                without_ordering = self.ordering_parts.search(sql).group(1)\n+                normalized_sql = ' '.join(sql.split())\n+                without_ordering = self.ordering_parts.search(normalized_sql).group(1)\n                 if not is_ref and (without_ordering, params) not in select_sql:\n                     extra_select.append((expr, (without_ordering, params), None))\n         return extra_select\n",
+  "offline_calls": 0
+}

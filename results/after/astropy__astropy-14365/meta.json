@@ -4,9 +4,354 @@
   "base_commit": "7269fa3e33e8d02485a647da91a5a2a60a06af61",
   "status": "done",
   "attempts": 1,
-  "failure_category": "timeout",
-  "model_log": [],
-  "patch_info": {},
-  "started_at": 1790694412.5819628,
-  "error": "instance exceeded 1800s"
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790745620.3624604
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790745737.763754
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790745857.5559037
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790745974.2052443
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/io/ascii/qdp.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790745466.0565588,
+  "elapsed_s": 508.04,
+  "plan": "**Step 1 – Root cause**\n`astropy/io/ascii/qdp.py` determines the type of each line with a regular‑expression that matches only the upper‑case command words (e.g. `READ`, `SET`, `NEW`, …). The pattern is compiled without any flag, so the match is case‑sensitive. Later the parser compares the extracted command string against literal upper‑case strings. Consequently a perfectly valid QDP file that uses lower‑case (or mixed‑case) commands is classified as “unrecognized line” and raises the `ValueError` shown in the bug report.\n\n**Step 2 – Exact code changes**\n\n| File | Location | Change |\n|------|----------|--------|\n| `astropy/io/ascii/qdp.py` | Definition of `_line_type` (around the compilation of `_line_type_re`) | Replace the compilation line<br>`_line_type_re = re.compile(_type_re)`<br>with<br>`_line_type_re = re.compile(_type_re, re.IGNORECASE)` |\n| `astropy/io/ascii/qdp.py` | In `_get_tables_from_qdp_file` (the main parsing loop) where commands are inspected (e.g. `if command == 'READ':`, `elif command == 'SET':`, `elif command == 'NEW':`, etc.) | Change each comparison to be case‑insensitive, e.g.<br>`if command.upper() == 'READ':`<br>`elif command.upper() == 'SET':`<br>`elif command.upper() == 'NEW':`<br>and similarly for any other command checks (`SERR`, `PLOT`, `ERROR`, …). |\n| `astropy/io/ascii/qdp.py` | Any place where the command token is used to select a parsing branch (including the handling of error specifications) | Ensure the token is normalised with `.upper()` before the `if/elif` chain, e.g.<br>`cmd = command.upper()`<br>`if cmd == 'READ': …` |\n\nThese modifications make the command recogniser case‑insensitive while leaving the rest of the QDP reader unchanged. No other modules need to be touched because the parser’s public interface and return values stay the same.\n\n**Confidence:** 0.97",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/io/ascii/qdp.py",
+      "symbol": "astropy/io/ascii/qdp.py::_get_tables_from_qdp_file",
+      "line_range": [
+        237,
+        344
+      ],
+      "score": 0.4474,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8825,
+        "vector": 0.6396,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/fits/column.py",
+      "symbol": "astropy/io/fits/column.py::_init_from_table",
+      "line_range": [
+        1565,
+        1615
+      ],
+      "score": 0.4131,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6962,
+        "vector": 0.7422,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/fits/convenience.py",
+      "symbol": "astropy/io/fits/convenience.py::table_to_hdu",
+      "line_range": [
+        462,
+        660
+      ],
+      "score": 0.3722,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7101,
+        "vector": 0.3724,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/utils/iers/iers.py",
+      "symbol": "astropy/utils/iers/iers.py::_refresh_table_as_needed",
+      "line_range": [
+        503,
+        510
+      ],
+      "score": 0.357,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5966,
+        "vector": 0.482,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/votable/exceptions.py",
+      "symbol": "astropy/io/votable/exceptions.py::VOTableChangeWarning",
+      "line_range": [
+        246,
+        251
+      ],
+      "score": 0.3539,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6502,
+        "vector": 0.3445,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "astropy/io/ascii/connect.py",
+      "symbol": "astropy/io/ascii/connect.py::_get_connectors_table",
+      "line_range": [
+        35,
+        57
+      ],
+      "score": 0.349,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3158,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7866749999999999,
+  "laya_scores": {
+    "fix_quality": 1.6115,
+    "matches_issue": 0.8223,
+    "safe_to_apply": 0.7129,
+    "composite": 0.7866749999999999,
+    "secrets_or_danger": 0.2112,
+    "logic_drift": 0.1684,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change only adds a regular expression flag to ignore case in pattern matching, introducing no new attack surface, injection vectors, or unsafe operations.\n- PERFORMANCE: PASS - Adding `re.IGNORECASE` to a pre-compiled regex has negligible overhead and does not introduce N+1 queries, unbounded loops, or blocking calls.\n- ROBUSTNESS: PASS - The patch correctly fixes the case sensitivity issue identified in the bug report without introducing swallowed exceptions, mutable defaults, or race conditions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom astropy.table import Table\nimport pathlib\n\n\ndef _make_qdp(tmp_path: pathlib.Path, command_line: str) -> pathlib.Path:\n    \"\"\"\n    Helper to create a minimal QDP file.\n\n    Parameters\n    ----------\n    tmp_path : pathlib.Path\n        Temporary directory supplied by pytest.\n    command_line : str\n        The command line (e.g. ``read serr 1 2``) to write as the first line.\n\n    Returns\n    -------\n    pathlib.Path\n        Path to the created ``test.qdp`` file.\n    \"\"\"\n    content = f\"\"\"\\\n{command_line}\n1 0.5 1 0.5\n\"\"\"\n    file_path = tmp_path / \"test.qdp\"\n    file_path.write_text(content, encoding=\"utf-8\")\n    return file_path\n\n\ndef _assert_basic_table(tbl: Table):\n    \"\"\"Common assertions for the minimal example.\"\"\"\n    # The file contains a single data row with four numbers.\n    assert len(tbl) == 1\n    assert len(tbl.colnames) == 4\n    # Values should be read exactly (type conversion to float is expected).\n    assert list(tbl[0]) == [1.0, 0.5, 1.0, 0.5]\n\n\ndef test_read_lowercase_command_fails_before_fix_and_passes_after(tmp_path):\n    \"\"\"\n    The original bug raises ``ValueError`` for lower‑case QDP commands.\n    After the fix the file should be read successfully.\n    \"\"\"\n    qdp_path = _make_qdp(tmp_path, \"read serr 1 2\")\n    # No exception should be raised after the fix.\n    tbl = Table.read(qdp_path, format=\"ascii.qdp\")\n    _assert_basic_table(tbl)\n\n\ndef test_read_mixedcase_command_is_recognised(tmp_path):\n    \"\"\"\n    Verify that a mixed‑case command (e.g. ``ReAd SErR``) is also accepted.\n    \"\"\"\n    qdp_path = _make_qdp(tmp_path, \"ReAd SErR 1 2\")\n    tbl = Table.read(qdp_path, format=\"ascii.qdp\")\n    _assert_basic_table(tbl)\n\n\ndef test_read_uppercase_command_still_works(tmp_path):\n    \"\"\"\n    Upper‑case commands were already supported; this test guards against regressions.\n    \"\"\"\n    qdp_path = _make_qdp(tmp_path, \"READ SERR 1 2\")\n    tbl = Table.read(qdp_path, format=\"ascii.qdp\")\n    _assert_basic_table(tbl)\n\n\ndef test_invalid_command_raises_value_error(tmp_path):\n    \"\"\"\n    An unrecognised command should still raise the documented ``ValueError``.\n    \"\"\"\n    qdp_path = _make_qdp(tmp_path, \"read unknown 1 2\")\n    with pytest.raises(ValueError, match=\"Unrecognized QDP line\"):\n        Table.read(qdp_path, format=\"ascii.qdp\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ulx0o20_",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/io/ascii/qdp.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6115,
+        "matches_issue": 0.8223,
+        "safe_to_apply": 0.7129,
+        "composite": 0.7866749999999999,
+        "secrets_or_danger": 0.2112,
+        "logic_drift": 0.1684,
+        "flagged": false
+      },
+      "laya_combined": 0.7867,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "Internet access disabled\n\n\u001b[33m\u001b[33mno tests ran\u001b[0m\u001b[33m in 0.00s\u001b[0m\u001b[0m\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file or directory not found: test_isha_repro.py\n\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0289,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 1.62,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "minimal_diff",
+      "temperature": 0.15,
+      "patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9ah1mr2q",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/io/ascii/qdp.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6115,
+        "matches_issue": 0.8223,
+        "safe_to_apply": 0.7129,
+        "composite": 0.7866749999999999,
+        "secrets_or_danger": 0.2112,
+        "logic_drift": 0.1684,
+        "flagged": false
+      },
+      "laya_combined": 0.7867,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "Internet access disabled\n\n\u001b[33m\u001b[33mno tests ran\u001b[0m\u001b[33m in 0.00s\u001b[0m\u001b[0m\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file or directory not found: test_isha_repro.py\n\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0289,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 5.05,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9aw8h0uj",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: astropy/io/ascii/qdp.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6115,
+        "matches_issue": 0.8223,
+        "safe_to_apply": 0.7129,
+        "composite": 0.7866749999999999,
+        "secrets_or_danger": 0.2112,
+        "logic_drift": 0.1684,
+        "flagged": false
+      },
+      "laya_combined": 0.7867,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 4,
+        "after_exit": 4,
+        "after_output": "Internet access disabled\n\n\u001b[33m\u001b[33mno tests ran\u001b[0m\u001b[33m in 0.00s\u001b[0m\u001b[0m\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file or directory not found: test_isha_repro.py\n\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0289,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 5.01,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "patch": "--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ulx0o20_",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: astropy/io/ascii/qdp.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "astropy/io/ascii/qdp.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6115,
+      "matches_issue": 0.8223,
+      "safe_to_apply": 0.7129,
+      "composite": 0.7866749999999999,
+      "secrets_or_danger": 0.2112,
+      "logic_drift": 0.1684,
+      "flagged": false
+    },
+    "laya_combined": 0.7867,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "test_isha_repro.py",
+      "before_exit": 4,
+      "after_exit": 4,
+      "after_output": "Internet access disabled\n\n\u001b[33m\u001b[33mno tests ran\u001b[0m\u001b[33m in 0.00s\u001b[0m\u001b[0m\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nERROR: file or directory not found: test_isha_repro.py\n\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.0289,
+    "rank_reason": "hand_weighted",
+    "elapsed_s": 1.62,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/astropy/io/ascii/qdp.py b/astropy/io/ascii/qdp.py\nindex 83a4f00..768beb0 100644\n--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -68,7 +68,7 @@ def _line_type(line, delimiter=None):\n     _new_re = rf\"NO({sep}NO)+\"\n     _data_re = rf\"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)\"\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)\n     line = line.strip()\n     if not line:\n         return \"comment\"\n",
+  "offline_calls": 0
 }

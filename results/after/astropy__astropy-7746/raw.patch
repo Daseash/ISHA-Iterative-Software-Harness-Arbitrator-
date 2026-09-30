@@ -1,0 +1,10 @@
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@ -1222,6 +1222,9 @@
+             if ra_dec_order and sky == 'input':
+                 xy = self._denormalize_sky(xy)
++            if len(xy[0]) == 0:
++                return [np.array([], dtype=np.float64) for _ in xy]
+             output = func(xy, origin)
+             if ra_dec_order and sky == 'output':
+                 output = self._normalize_sky(output)

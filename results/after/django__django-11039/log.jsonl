@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "django__django-11039", "ts": 1790758447.529008}
+{"event": "attempt", "n": 1, "ts": 1790758448.1249778}
+{"event": "attempt", "n": 1, "ts": 1790760410.2478628}
+{"event": "model", "ts": 1790760759.4964933, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790760784.4232728, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790761004.9462657, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790761061.2518559, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790761302.1601326, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790761357.3028927, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1790761450.2524438, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790761477.8521175}

@@ -1,0 +1,407 @@
+{
+  "instance_id": "django__django-11099",
+  "repo": "django/django",
+  "base_commit": "d26b2424437dabeeca94d7900b37d2df4410da0c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790763479.6636152
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "timestamp": 1790763480.5999675
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790763826.0132432
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790763827.0310779
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790763828.4701276
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790763934.3716004
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764138.7220085
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764202.0492585
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764240.6616166
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "timestamp": 1790764438.7270646
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "timestamp": 1790764444.1147766
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/auth/validators.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true
+  },
+  "started_at": 1790763278.3055315,
+  "elapsed_s": 1168.2,
+  "plan": "# File: django/contrib/auth/validators.py\n\n# Update class ASCIIUsernameValidator:\n@deconstructible\nclass ASCIIUsernameValidator(validators.RegexValidator):\n    regex = r'\\A[\\w.@+-]+\\Z'\n    # ... (rest of class)\n\n# Update class UnicodeUsernameValidator:\n@deconstructible\nclass UnicodeUsernameValidator(validators.RegexValidator):\n    regex = r'\\A[\\w.@+-]+\\Z'\n    # ... (rest of class)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/validators.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.4145,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3627,
+        "vector": 0.6152,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/queries/models.py",
+      "symbol": "tests/queries/models.py::Order",
+      "line_range": [
+        592,
+        602
+      ],
+      "score": 0.3953,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1517,
+        "vector": 0.5203,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/db/migrations/recorder.py",
+      "symbol": "django/db/migrations/recorder.py::MigrationRecorder",
+      "line_range": [
+        10,
+        95
+      ],
+      "score": 0.383,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1767,
+        "vector": 0.2611,
+        "defs": 0.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "tests/select_related/models.py",
+      "symbol": "tests/select_related/models.py::Order",
+      "line_range": [
+        50,
+        57
+      ],
+      "score": 0.3736,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1921,
+        "vector": 0.1787,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    },
+    {
+      "file": "django/db/models/lookups.py",
+      "symbol": "",
+      "line_range": [],
+      "score": 0.372,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2744,
+        "vector": 0.4453,
+        "defs": 1.0
+      },
+      "reason": "retrieval"
+    },
+    {
+      "file": "tests/extra_regress/models.py",
+      "symbol": "tests/extra_regress/models.py::Order",
+      "line_range": [
+        28,
+        32
+      ],
+      "score": 0.3454,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0623,
+        "vector": 0.1129,
+        "defs": 1.0
+      },
+      "reason": "symbol match"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.657975,
+  "laya_scores": {
+    "fix_quality": 1.2497,
+    "matches_issue": 0.7448,
+    "safe_to_apply": 0.6374,
+    "composite": 0.657975,
+    "secrets_or_danger": 0.1401,
+    "logic_drift": 0.2654,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change strictly tightens validation to preclude a potential user enumeration or input normalization confusion vector via trailing newlines.\n- PERFORMANCE: PASS - Replacing `^...$` with `\\A...\\Z` has identical or negligible regex compilation/matching overhead.\n- ROBUSTNESS: PASS - The regex change ensures strict boundary matching without introducing off-by-one errors or race conditions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.auth.validators import (\n    ASCIIUsernameValidator,\n    UnicodeUsernameValidator,\n)\nfrom django.core.exceptions import ValidationError\n\n\nclass TestTrailingNewlineRejected:\n    \"\"\"The primary bug: usernames ending with a newline must be rejected.\"\"\"\n\n    def test_ascii_username_trailing_newline_rejected(self):\n        validator = ASCIIUsernameValidator()\n        with pytest.raises(ValidationError):\n            validator(\"user\\n\")\n\n    def test_unicode_username_trailing_newline_rejected(self):\n        validator = UnicodeUsernameValidator()\n        with pytest.raises(ValidationError):\n            validator(\"user\\n\")\n\n\nclass TestValidUsernamesStillAccepted:\n    \"\"\"Ensure the fix doesn't over-restrict valid usernames.\"\"\"\n\n    def test_ascii_valid_username_accepted(self):\n        validator = ASCIIUsernameValidator()\n        # Should not raise\n        validator(\"user.name+\")\n\n    def test_unicode_valid_username_accepted(self):\n        validator = UnicodeUsernameValidator()\n        # Unicode letters are valid in UnicodeUsernameValidator\n        validator(\"üser\")\n\n    def test_both_validators_accept_simple_username(self):\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            validator(\"john_doe\")\n\n\nclass TestEdgeCases:\n    \"\"\"Boundary and degenerate inputs.\"\"\"\n\n    def test_empty_string_rejected(self):\n        \"\"\"Empty username should be rejected by regex.\"\"\"\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            with pytest.raises(ValidationError):\n                validator(\"\")\n\n    def test_multiple_trailing_newlines_rejected(self):\n        \"\"\"Strings with multiple trailing newlines must also be rejected.\"\"\"\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            with pytest.raises(ValidationError):\n                validator(\"user\\n\\n\")\n\n    def test_usernames_allowed_chars_accepted(self):\n        \"\"\"All allowed special characters . @ + - should be valid.\"\"\"\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            validator(\"a.b@c+d-e_f0\")\n\n    def test_invalid_chars_rejected(self):\n        \"\"\"Characters not in the allowed set must be rejected.\"\"\"\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            with pytest.raises(ValidationError):\n                validator(\"user name\")  # space is not allowed\n\n    def test_newline_in_middle_rejected(self):\n        \"\"\"A newline in the middle of the username is not allowed.\"\"\"\n        for validator in (ASCIIUsernameValidator(), UnicodeUsernameValidator()):\n            with pytest.raises(ValidationError):\n                validator(\"us\\ner\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "patch": "--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _\n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -19,7 +19,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11099-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/validators.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2497,
+        "matches_issue": 0.7448,
+        "safe_to_apply": 0.6374,
+        "composite": 0.657975,
+        "secrets_or_danger": 0.1401,
+        "logic_drift": 0.2654,
+        "flagged": false
+      },
+      "laya_combined": 0.658,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.4941,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 10.13,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "minimal_diff",
+      "temperature": 0.15,
+      "patch": "--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _\n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -19,7 +19,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11099-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/validators.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2497,
+        "matches_issue": 0.7448,
+        "safe_to_apply": 0.6374,
+        "composite": 0.657975,
+        "secrets_or_danger": 0.1401,
+        "logic_drift": 0.2654,
+        "flagged": false
+      },
+      "laya_combined": 0.658,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.4941,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 40.89,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "patch": "--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _\n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -19,7 +19,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11099-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/validators.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2497,
+        "matches_issue": 0.7448,
+        "safe_to_apply": 0.6374,
+        "composite": 0.657975,
+        "secrets_or_danger": 0.1401,
+        "logic_drift": 0.2654,
+        "flagged": false
+      },
+      "laya_combined": 0.658,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "tests/isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.4941,
+      "rank_reason": "hand_weighted",
+      "elapsed_s": 42.59,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "patch": "--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _\n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -19,7 +19,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11099-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/auth/validators.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/auth/validators.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.2497,
+      "matches_issue": 0.7448,
+      "safe_to_apply": 0.6374,
+      "composite": 0.657975,
+      "secrets_or_danger": 0.1401,
+      "logic_drift": 0.2654,
+      "flagged": false
+    },
+    "laya_combined": 0.658,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "tests/isha_repro.py",
+      "before_exit": 1,
+      "after_exit": 1,
+      "after_output": "Testing against Django installed in '/testbed/django'\nSystem check identified no issues (0 silenced).\n\ncp: cannot stat 'isha_repro.py': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nerror: can't open patch 'isha_model.patch': No such file or directory\nE\n======================================================================\nERROR: tests/isha_repro (unittest.loader._FailedTest)\n----------------------------------------------------------------------\nImportError: Failed to import test module: tests/isha_repro\nTraceback (most recent call last):\n  File \"/opt/miniconda3/envs/testbed/lib/python3.6/unittest/loader.py\", line 153, in loadTestsFromName\n    module = __import__(module_name)\nModuleNotFoundError: No module named 'tests/isha_repro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.4941,
+    "rank_reason": "hand_weighted",
+    "elapsed_s": 10.13,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cf..1304f20 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'\n",
+  "offline_calls": 0
+}
