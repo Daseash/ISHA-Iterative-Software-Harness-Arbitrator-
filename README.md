@@ -97,6 +97,12 @@ Verify the agent test suite:
 python -m pytest --ignore=tests/dummy_repo
 ```
 
+## 📊 Results
+
+![ISHA vs Baselines](assets/isha_vs_baselines.png)
+
+---
+
 ## ⚠️ Limitations
 
 - **Free-Tier Model Constraints**: Inference is subject to provider rate limits (TPM/RPM) and quota boundaries; fallback chains and local disk caching are used to mitigate quota exhaustion.
