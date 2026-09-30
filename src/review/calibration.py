@@ -258,11 +258,15 @@ def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH) -> dict:
                     f"unresolved candidates to learn what separates them"
                 )}
 
-    # Deterministic 80/20 train/validation split
+    # Deterministic train/validation split: if >= 300, hold out at least 100 for validation
     rng = random.Random(42)
     indices = list(range(len(usable)))
     rng.shuffle(indices)
-    split_point = max(1, int(len(usable) * 0.8))
+    if len(usable) >= 300:
+        val_size = max(100, int(len(usable) * 0.33))
+        split_point = len(usable) - val_size
+    else:
+        split_point = max(1, int(len(usable) * 0.8))
     train_rows = [usable[i] for i in indices[:split_point]]
     val_rows = [usable[i] for i in indices[split_point:]]
     if not val_rows:

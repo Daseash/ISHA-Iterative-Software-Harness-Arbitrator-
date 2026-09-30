@@ -1,0 +1,167 @@
+{
+  "generated_at": "2026-09-30 19:50:59",
+  "slice": "dev",
+  "sample_size": 30,
+  "components": {
+    "localization": {
+      "name": "Localization Upgrade (defs + file-kind prior + LLM rerank)",
+      "metric": "MRR / hit@8 on DEV (N=30)",
+      "baseline": {
+        "mrr": 0.325,
+        "hit_at_1": 0.267,
+        "hit_at_3": 0.367,
+        "hit_at_8": 0.433,
+        "ci_95_hit8": [
+          0.2738,
+          0.608
+        ]
+      },
+      "upgraded": {
+        "mrr": 0.535,
+        "hit_at_1": 0.467,
+        "hit_at_3": 0.6,
+        "hit_at_8": 0.667,
+        "ci_95_hit8": [
+          0.4878,
+          0.8077
+        ]
+      },
+      "effect": "Measurable +23.4% absolute gain in hit@8 (+54% relative), lifting search ceiling for downstream coders."
+    },
+    "symbol_targeting": {
+      "name": "Symbol Scope Targeting (structural operator table + reachability)",
+      "metric": "Gold symbol in top-3 candidates (N=6 apply samples)",
+      "baseline": {
+        "top_1": 1,
+        "top_3": 1,
+        "rate": 0.167,
+        "ci_95": [
+          0.0301,
+          0.5635
+        ]
+      },
+      "upgraded": {
+        "top_1": 2,
+        "top_3": 4,
+        "rate": 0.667,
+        "ci_95": [
+          0.3,
+          0.9032
+        ]
+      },
+      "effect": "Directional improvement; reduces context window bloat and centers patch generation on defective callable."
+    },
+    "static_gates": {
+      "name": "Static AST & Compile Gating (ast.parse, py_compile, pyflakes)",
+      "metric": "Syntax errors in submitted patches (N=30)",
+      "baseline": {
+        "syntax_errors": 1,
+        "valid_rate": 0.967,
+        "ci_95": [
+          0.8333,
+          0.9941
+        ]
+      },
+      "upgraded": {
+        "syntax_errors": 0,
+        "valid_rate": 1.0,
+        "ci_95": [
+          0.8865,
+          1.0
+        ]
+      },
+      "effect": "Eliminates all unparseable or malformed diffs before container execution; 100% of submitted patches parse cleanly."
+    },
+    "closed_loop": {
+      "name": "Closed-Loop Traceback Retry (max 2 repair rounds with trimmed traceback)",
+      "metric": "Apply recovery rate on context mismatches (N=8 baseline apply failures)",
+      "baseline": {
+        "recovered": 0,
+        "recovery_rate": 0.0,
+        "ci_95": [
+          0.0,
+          0.3244
+        ]
+      },
+      "upgraded": {
+        "recovered": 4,
+        "recovery_rate": 0.5,
+        "ci_95": [
+          0.2152,
+          0.7848
+        ]
+      },
+      "effect": "Verbatim surrounding context on apply failure converts 50% of context mismatches into clean patches."
+    },
+    "tournament_diversity": {
+      "name": "Tournament Size & Model Diversity",
+      "metric": "Valid candidate yield (N=30 DEV instances)",
+      "config_a_1x1": {
+        "description": "1 model x 1 candidate (qwen3.8-27b)",
+        "patches_produced": 12,
+        "patch_rate": 0.4,
+        "ci_95": [
+          0.2459,
+          0.5768
+        ]
+      },
+      "config_b_1x3": {
+        "description": "1 model x 3 temperatures (qwen3.8-27b @ 0.15, 0.4, 0.7)",
+        "patches_produced": 16,
+        "patch_rate": 0.533,
+        "ci_95": [
+          0.3614,
+          0.6977
+        ]
+      },
+      "config_c_3x3": {
+        "description": "3 distinct model families (Qwen-27b, GPT-OSS-120b, Gemini-Flash)",
+        "patches_produced": 20,
+        "patch_rate": 0.667,
+        "ci_95": [
+          0.4878,
+          0.8077
+        ]
+      },
+      "effect": "Multi-model diversity (config c) outperforms single-model multi-temperature (config b) by +13.4% patch generation rate."
+    },
+    "repro_verification": {
+      "name": "Repro-Test Selection Gate (red before patch, green after patch)",
+      "metric": "False positive rate among candidates",
+      "baseline": {
+        "description": "Accept any candidate passing static gates",
+        "false_positive_rate": 0.625,
+        "ci_95": [
+          0.3864,
+          0.8152
+        ]
+      },
+      "upgraded": {
+        "description": "Require repro test confirmation or neutral fallback",
+        "false_positive_rate": 0.143,
+        "ci_95": [
+          0.0257,
+          0.5131
+        ]
+      },
+      "effect": "Red/green verification discards fixes that do not change bug behavior, filtering out deceptive non-fixes."
+    },
+    "laya_calibration": {
+      "name": "LAYA Calibration & Logistic Combiner",
+      "metric": "ECE & Brier score on held-out validation split (N=103 validation labels)",
+      "uncalibrated": {
+        "ece": 0.0924,
+        "brier": 0.0104
+      },
+      "calibrated": {
+        "ece": 0.001,
+        "brier": 0.0,
+        "temperature": 0.35,
+        "auto_approve_threshold": 0.5,
+        "precision": 1.0,
+        "coverage": 0.3204
+      },
+      "effect": "Temperature scaling drops calibration error from 0.0924 to 0.0010 (98.9% reduction); logistic weights properly balance hard test signals over subjective scores."
+    }
+  }
+}

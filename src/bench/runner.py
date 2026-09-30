@@ -101,7 +101,7 @@ def save_checkpoint(path: Path, meta: dict) -> None:
 
 
 # ── Patch normalisation ────────────────────────────────────────────────────
-def canonical_patch(repo_path: str, raw_patch: str) -> tuple[str, dict]:
+def canonical_patch(repo_path: str, raw_patch: str, instance_id: str = "") -> tuple[str, dict]:
     """Apply the LLM diff to a clean checkout and read back ``git diff``.
 
     The **regenerated** diff is what gets submitted: it is produced by git
@@ -110,7 +110,7 @@ def canonical_patch(repo_path: str, raw_patch: str) -> tuple[str, dict]:
     If regeneration is unavailable the raw diff is kept.
     """
     from src.bench.gates import compile_gate
-    from src.tools.patch_engine import apply_patch
+    from src.tools.patch_engine import apply_patch, record_apply_failure, validate_patch
     from src.tools.sandbox import cleanup_sandbox, make_sandbox
 
     info: dict = {"applied": False, "message": "", "gates": {}, "regenerated": False}
@@ -125,6 +125,7 @@ def canonical_patch(repo_path: str, raw_patch: str) -> tuple[str, dict]:
         info["applied"] = ok
         info["message"] = message
         if not ok:
+            record_apply_failure(instance_id, 0, 0, raw_patch, message)
             return "", info
         gate = compile_gate(sandbox, raw_patch, baseline_repo=repo_path)
         info["gates"] = gate.as_dict()
@@ -134,6 +135,11 @@ def canonical_patch(repo_path: str, raw_patch: str) -> tuple[str, dict]:
         if info["git_ready"]:
             regenerated = _git_diff(sandbox)
             if regenerated.strip():
+                val_ok, val_msg = validate_patch(repo_path, regenerated)
+                info["validate_check_ok"] = val_ok
+                info["validate_check_msg"] = val_msg
+                if not val_ok:
+                    record_apply_failure(instance_id, 0, 0, regenerated, f"git apply --check failed: {val_msg}")
                 info["regenerated"] = True
                 return regenerated, info
         info["regenerated"] = False
@@ -177,6 +183,7 @@ def _ensure_git(root) -> bool:
     base = ["git", "-c", "user.email=isha@local", "-c", "user.name=isha"]
     commands = [
         ["git", "init", "-q"],
+        ["git", "config", "core.autocrlf", "false"],
         ["git", "add", "-A"],
         base + ["commit", "-qm", "isha base"],
     ]
@@ -393,7 +400,7 @@ def run_instance(
                                "position": entry.get("position"),
                                "note": entry.get("note", "")})
 
-        patch, info = canonical_patch(str(instance_checkout(record)), state.patch)
+        patch, info = canonical_patch(str(instance_checkout(record)), state.patch, instance_id=record["instance_id"])
         meta["patch_info"] = info
         meta["model_patch"] = patch
         # Always keep the model's own text — it is the only way to see why a

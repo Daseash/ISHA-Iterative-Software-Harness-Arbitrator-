@@ -46,6 +46,7 @@ def create_worktree(repo_path: str, name: str) -> str:
             ok, msg = _git(str(root), "worktree", "add", str(dest), branch)
         if not ok:
             raise RuntimeError(f"git worktree add failed: {msg}")
+        _git(str(dest), "config", "core.autocrlf", "false")
     else:
         if dest.exists():
             shutil.rmtree(dest, ignore_errors=True)

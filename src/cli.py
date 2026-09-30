@@ -346,15 +346,65 @@ def cmd_ui(args: argparse.Namespace) -> int:
     return subprocess.call(cmd, cwd=str(ROOT))
 
 
+def fetch_github_issue(url: str) -> str:
+    """Fetch issue title and body from a GitHub issue URL."""
+    import re
+    import urllib.request
+    m = re.match(r"https?://github\.com/([^/]+)/([^/]+)/issues/(\d+)", url)
+    if not m:
+        return ""
+    owner, repo, num = m.groups()
+    api_url = f"https://api.github.com/repos/{owner}/{repo}/issues/{num}"
+    req = urllib.request.Request(api_url, headers={"User-Agent": "ISHA-Senior-Dev"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            title = data.get("title", "")
+            body = data.get("body", "")
+            return f"{title}\n\n{body}"
+    except Exception as exc:
+        return f"Issue #{num}: could not fetch from GitHub ({exc})"
+
+
+def clone_github_repo(url: str) -> str:
+    """Clone a GitHub repository into an isolated directory for solving."""
+    import re
+    import tempfile
+    m = re.match(r"https?://github\.com/([^/]+)/([^/]+?)(?:\.git)?$", url)
+    slug = f"{m.group(1)}__{m.group(2)}" if m else "remote_repo"
+    dest = Path(tempfile.gettempdir()) / "isha_repos" / slug
+    if not (dest / ".git").exists():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "clone", "--depth", "1", url, str(dest)], check=True, timeout=120)
+    return str(dest)
+
+
 # ── fix ────────────────────────────────────────────────────────────────────
 def cmd_fix(args: argparse.Namespace) -> int:
     from src.main import main as fix_main
 
+    repo = args.repo or args.repo_pos
+    issue = args.issue
+
+    if args.issue_url and not issue:
+        print(f"[fix] fetching issue from {args.issue_url} ...")
+        issue = fetch_github_issue(args.issue_url)
+        if not issue:
+            print(f"[fix] warning: could not fetch issue text from {args.issue_url}")
+
+    if repo and (repo.startswith("https://") or repo.startswith("http://")):
+        print(f"[fix] cloning remote repository from {repo} ...")
+        try:
+            repo = clone_github_repo(repo)
+        except Exception as exc:
+            print(f"[fix] clone failed: {exc}")
+            return 1
+
     forwarded = []
-    if args.issue:
-        forwarded += ["--issue", args.issue]
-    if args.repo:
-        forwarded += ["--repo", args.repo]
+    if issue:
+        forwarded += ["--issue", issue]
+    if repo:
+        forwarded += ["--repo", repo]
     if args.apply:
         forwarded += ["--apply"]
     if args.multi:
@@ -373,8 +423,10 @@ def _parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command")
 
     fix = sub.add_parser("fix", help="solve one issue")
-    fix.add_argument("--issue", default=None)
+    fix.add_argument("repo_pos", nargs="?", default=None, help="Repository path or GitHub repo URL")
     fix.add_argument("--repo", default=None)
+    fix.add_argument("--issue", default=None)
+    fix.add_argument("--issue-url", default=None, help="GitHub issue URL to fetch issue text from")
     fix.add_argument("--apply", action="store_true")
     fix.add_argument("--multi", action="store_true")
     fix.add_argument("--thread-id", default="1")

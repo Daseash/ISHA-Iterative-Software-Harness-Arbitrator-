@@ -1,19 +1,19 @@
 {
   "weights": [
-    0.0455382845202358,
-    -0.28470918293096337,
-    -0.27356335278811517,
-    0.682342950624459,
-    4.4588030378704,
-    -1.5257198001550272,
-    -0.007343467467143032,
-    -0.06017033538852736
+    0.11563112713300988,
+    -0.3378399523189108,
+    -0.21789762696563064,
+    0.6582146637499305,
+    4.411964420035464,
+    -1.5217599548018412,
+    0.012256860956477175,
+    -0.06268020088246264
   ],
-  "bias": -2.0052808224355996,
+  "bias": -2.0975585929597544,
   "temperature": 0.35,
-  "n": 60,
-  "brier_raw": 0.0104,
-  "ece_raw": 0.0926,
+  "n": 212,
+  "brier_raw": 0.0106,
+  "ece_raw": 0.0933,
   "fitted": true,
   "mode": "logistic",
   "features": [
@@ -26,17 +26,17 @@
     "diff_size",
     "files_changed"
   ],
-  "n_total": 75,
-  "n_train": 60,
-  "n_val": 15,
-  "val_ece_raw": 0.0809,
-  "val_ece_scaled": 0.0013,
-  "val_brier_raw": 0.0083,
+  "n_total": 315,
+  "n_train": 212,
+  "n_val": 103,
+  "val_ece_raw": 0.0924,
+  "val_ece_scaled": 0.001,
+  "val_brier_raw": 0.0104,
   "val_brier_scaled": 0.0,
   "threshold_balanced": 0.5,
   "balanced_accuracy": 1.0,
-  "threshold_auto_approve": 0.99,
+  "threshold_auto_approve": 0.5,
   "target_precision": 1.0,
-  "auto_approve_coverage": 0.1333,
-  "threshold": 0.99
+  "auto_approve_coverage": 0.3204,
+  "threshold": 0.5
 }

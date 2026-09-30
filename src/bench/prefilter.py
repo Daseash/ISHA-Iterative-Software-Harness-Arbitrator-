@@ -36,6 +36,13 @@ def prefilter(record: dict) -> str | None:
         return f"prefiltered: problem statement only {len(issue)} chars"
     if len(issue) > MAX_ISSUE_CHARS:
         return f"prefiltered: problem statement {len(issue)} chars exceeds cap"
+
+    issue_lower = issue.lower()
+    arch_terms = ("breaking change", "major rewrite", "system redesign", "database migration", "schema migration", "architectural refactor")
+    for term in arch_terms:
+        if term in issue_lower:
+            return f"prefiltered: {term} ticket unsuitable for autonomous fixing (requires human review)"
+
     return None
 
 

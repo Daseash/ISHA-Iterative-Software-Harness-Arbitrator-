@@ -111,6 +111,8 @@ class Candidate:
     strategy: str
     temperature: float
     model: str = ""
+    requested_model: str = ""
+    substituted: bool = False
     patch: str = ""
     worktree: str = ""
     apply_ok: bool = False
@@ -143,6 +145,8 @@ class Candidate:
             "strategy": self.strategy,
             "temperature": self.temperature,
             "model": self.model,
+            "requested_model": self.requested_model,
+            "substituted": self.substituted,
             "patch": self.patch,
             "worktree": self.worktree,
             "apply_ok": self.apply_ok,
@@ -213,6 +217,7 @@ def _build_candidate(
     started = time.time()
     cand = Candidate(index=index, strategy=name, temperature=temperature)
     preferred = (preferred_models.get(name) or "").strip() or None
+    cand.requested_model = preferred or ""
     cand.model = preferred or ""
     try:
         cand.worktree = _make_worktree(state.repo_path, instance_id, index)
@@ -234,9 +239,10 @@ def _build_candidate(
         cand.rounds = round_idx
         if round_idx == 0 and use_seed and seed_patch:
                 patch = seed_patch
-                # The seed came from the coder node, so name the model that
-                # actually wrote it — not this strategy's preference.
                 cand.model = seed_model or preferred or "seed"
+                if cand.requested_model:
+                    from src.config import _short_name
+                    cand.substituted = (_short_name(cand.model) != _short_name(cand.requested_model))
         else:
             mark = len(get_model_log())
             raw = call_coder(prompt + feedback, temperature=temperature, model=preferred)
@@ -245,10 +251,15 @@ def _build_candidate(
                         and e.get("thread") == threading.current_thread().name]
             if answered:
                 cand.model = answered[-1].get("model_full", "") or cand.model
+                if cand.requested_model:
+                    from src.config import _short_name
+                    cand.substituted = (_short_name(cand.model) != _short_name(cand.requested_model))
             patch = _extract_diff(raw)
         _reset(cand.worktree)
         ok, message = _apply(cand.worktree, patch)
         if not ok:
+            from src.tools.patch_engine import record_apply_failure
+            record_apply_failure(instance_id, index, round_idx, patch, message)
             if round_idx == 0 and use_seed and seed_patch:
                 prompt = build_coder_prompt(state, strategy=name)
             feedback = (
@@ -265,7 +276,42 @@ def _build_candidate(
                     "error": message[:300],
                 })
             continue
-        gate = compile_gate(cand.worktree, patch, baseline_repo=state.repo_path)
+
+        canonical_patch = patch
+        if Path(cand.worktree, ".git").exists():
+            import subprocess
+            proc = subprocess.run(
+                ["git", "diff", "--no-color"],
+                cwd=cand.worktree,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if proc.returncode == 0 and proc.stdout.strip():
+                canonical_patch = proc.stdout
+
+        from src.tools.patch_engine import record_apply_failure, validate_patch
+        val_ok, val_msg = validate_patch(state.repo_path, canonical_patch)
+        if not val_ok:
+            record_apply_failure(instance_id, index, round_idx, canonical_patch, f"git apply --check failed: {val_msg}")
+            if round_idx == 0 and use_seed and seed_patch:
+                prompt = build_coder_prompt(state, strategy=name)
+            feedback = (
+                "\n\nTHE GENERATED DIFF FAILED `git apply --check` ON THE BASE REPO. Exact error:\n"
+                f"{val_msg}\n\nEmit a corrected diff that applies cleanly."
+            )
+            if log:
+                log({
+                    "event": "apply_check_retry",
+                    "candidate": index,
+                    "model": cand.model,
+                    "round": round_idx,
+                    "error": val_msg[:300],
+                })
+            continue
+
+        gate = compile_gate(cand.worktree, canonical_patch, baseline_repo=state.repo_path)
         if not gate.ok:
             if round_idx == 0 and use_seed and seed_patch:
                 prompt = build_coder_prompt(state, strategy=name)
@@ -283,7 +329,7 @@ def _build_candidate(
                     "errors": gate.errors[:6],
                 })
             continue
-        cand.patch, cand.apply_ok, cand.apply_message = patch, True, message
+        cand.patch, cand.apply_ok, cand.apply_message = canonical_patch, True, message
         cand.gate_ok, cand.gate_errors = True, []
         break
     else:
@@ -435,3 +481,81 @@ def cleanup_candidates(candidates: list[Candidate], repo_path: str) -> None:
                 cleanup_sandbox(cand.worktree)
         except Exception:
             pass
+
+
+def record_candidates_log(instance_id: str, candidates: list[Candidate], winner_index: int | None = None) -> None:
+    """Save candidate evaluation outcomes to results/candidates.json."""
+    import json
+    path = Path(__file__).resolve().parents[2] / "results" / "candidates.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    existing = []
+    if path.is_file():
+        try:
+            existing = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            existing = []
+
+    for c in candidates:
+        repro = c.repro or {}
+        entry = {
+            "instance_id": instance_id,
+            "candidate_index": c.index,
+            "strategy": c.strategy,
+            "temperature": c.temperature,
+            "requested_model": getattr(c, "requested_model", "") or c.model,
+            "model_used": c.model,
+            "substituted": getattr(c, "substituted", False),
+            "patch_applied": c.apply_ok,
+            "gate_passed": c.gate_ok,
+            "repro_passed": bool(repro.get("before_ok") and repro.get("after_ok")),
+            "regression_count": c.regression_count,
+            "diff_size": c.diff_size,
+            "laya_score": c.laya_combined,
+            "won_selection": winner_index is not None and c.index == winner_index,
+            "timestamp": time.time(),
+        }
+        existing.append(entry)
+
+    path.write_text(json.dumps(existing, indent=2), encoding="utf-8")
+
+
+def summarize_candidates(path: Path | str | None = None) -> dict:
+    """Aggregate per-candidate tournament statistics for Stage D reporting."""
+    import json
+    p = Path(path) if path else (Path(__file__).resolve().parents[2] / "results" / "candidates.json")
+    if not p.is_file():
+        return {"total_candidates": 0, "models": {}}
+    rows = json.loads(p.read_text(encoding="utf-8"))
+    models = {}
+    for r in rows:
+        m = r.get("model_used") or "unknown"
+        if m not in models:
+            models[m] = {
+                "total": 0,
+                "substituted": 0,
+                "applied": 0,
+                "gates": 0,
+                "repro_passed": 0,
+                "won": 0,
+            }
+        models[m]["total"] += 1
+        if r.get("substituted"):
+            models[m]["substituted"] += 1
+        if r.get("patch_applied"):
+            models[m]["applied"] += 1
+        if r.get("gate_passed"):
+            models[m]["gates"] += 1
+        if r.get("repro_passed"):
+            models[m]["repro_passed"] += 1
+        if r.get("won_selection"):
+            models[m]["won"] += 1
+
+    most_wins = max(models.items(), key=lambda t: t[1]["won"])[0] if models else "none"
+    never_won = [m for m, stat in models.items() if stat["won"] == 0]
+    return {
+        "total_candidates": len(rows),
+        "models": models,
+        "most_wins": most_wins,
+        "never_won": never_won,
+    }
+

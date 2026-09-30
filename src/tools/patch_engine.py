@@ -1,18 +1,27 @@
 """
 ISHA Patch Engine — Apply unified diffs with git, then manual fallback.
 
-Tries `git apply --3way` first (works inside a git worktree) and falls
-back to a hand-rolled hunk applier so patches land in plain copies too.
+Supports:
+  * Unified diffs applied via `git apply --3way` and `git apply`
+  * Robust manual hunk application with exact and fuzzy whitespace matching
+  * SEARCH/REPLACE blocks with fuzzy whitespace tolerance
+  * Line ending preservation (CRLF on Windows vs LF on Linux)
+  * Patch validation via `git apply --check`
+  * Apply failure classification and recording for Stage B reporting
 """
 
+from __future__ import annotations
+
+import json
 import re
 import subprocess
+import time
 from pathlib import Path
 
 _HUNK_RE = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
 
 
-def _run(args: list, cwd: str, text: str, timeout: int = 60) -> tuple:
+def _run(args: list, cwd: str, text: str, timeout: int = 60) -> tuple[bool, str]:
     try:
         proc = subprocess.run(
             args,
@@ -29,16 +38,22 @@ def _run(args: list, cwd: str, text: str, timeout: int = 60) -> tuple:
         return False, str(exc)
 
 
-def apply_patch(repo_path: str, diff_text: str) -> tuple:
-    """Apply a unified diff patch. Returns (success: bool, message: str)."""
+def apply_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
+    """Apply a unified diff patch or SEARCH/REPLACE block. Returns (success: bool, message: str)."""
     if not diff_text or not diff_text.strip():
         return False, "Empty patch"
 
-    diff = _normalize(diff_text)
     root = Path(repo_path)
     if not root.exists():
         return False, f"Repo path does not exist: {repo_path}"
 
+    # 0) If SEARCH/REPLACE markers are detected, try search/replace first
+    if "<<<<<<< SEARCH" in diff_text or "<<<< SEARCH" in diff_text:
+        ok_sr, msg_sr = _apply_search_replace(root, diff_text)
+        if ok_sr:
+            return True, msg_sr
+
+    diff = _normalize(diff_text)
     msg = ""
     # 1) git apply --3way (best fidelity inside a git repo)
     if (root / ".git").exists():
@@ -49,11 +64,90 @@ def apply_patch(repo_path: str, diff_text: str) -> tuple:
         if ok:
             return True, "Applied via git apply --3way"
 
-    # 2) Manual unified-diff hunk application
+    # 2) Manual unified-diff hunk application with line-ending preservation
+    msg_m = ""
     try:
-        return _apply_manual(root, diff)
+        ok_m, msg_m = _apply_manual(root, diff)
+        if ok_m:
+            return True, msg_m
     except Exception as exc:
-        return False, f"Manual apply failed: {exc} (git: {msg})"
+        msg_m = f"Manual apply failed: {exc}"
+
+    # 3) Fallback: try SEARCH/REPLACE parser if not tried already
+    ok_sr, msg_sr = _apply_search_replace(root, diff_text)
+    if ok_sr:
+        return True, msg_sr
+
+    return False, f"{msg_m} (git: {msg}; sr: {msg_sr})"
+
+
+def validate_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
+    """Validate patch on a clean checkout using git apply --check --whitespace=nowarn."""
+    if not diff_text or not diff_text.strip():
+        return False, "Empty patch"
+    root = Path(repo_path)
+    if not (root / ".git").exists():
+        return True, "Not a git repo, skipping git apply --check"
+    diff = _normalize(diff_text)
+    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn", "-"], str(root), diff)
+    return ok, msg
+
+
+def classify_apply_failure(error_msg: str, diff_text: str = "") -> str:
+    """Classify apply failure into {context_mismatch, whitespace, wrong_path, line_endings, malformed_hunk}."""
+    err = (error_msg or "").lower()
+    if any(h in err for h in ("corrupt patch", "malformed", "patch fragment without header", "fatal: git diff header")):
+        return "malformed_hunk"
+    if any(h in err for h in ("no such file", "does not exist", "missing file", "unrecognized file path")):
+        return "wrong_path"
+    if any(h in err for h in ("trailing whitespace", "whitespace error")):
+        return "whitespace"
+    if any(h in err for h in ("carriage return", "crlf", "\\r", "line ending")):
+        return "line_endings"
+    return "context_mismatch"
+
+
+def record_apply_failure(
+    instance_id: str,
+    candidate_idx: int,
+    round_idx: int,
+    patch_text: str,
+    error_msg: str,
+) -> str:
+    """Save failing patch and error to results/apply_failures/ and update summary.json."""
+    failures_dir = Path(__file__).resolve().parents[2] / "results" / "apply_failures"
+    failures_dir.mkdir(parents=True, exist_ok=True)
+
+    cause = classify_apply_failure(error_msg, patch_text)
+    slug = (instance_id or "unknown").replace("/", "__")
+    base_name = f"{slug}_c{candidate_idx}_round{round_idx}"
+
+    try:
+        (failures_dir / f"{base_name}.patch").write_text(patch_text or "", encoding="utf-8")
+        (failures_dir / f"{base_name}.json").write_text(
+            json.dumps({
+                "instance_id": instance_id,
+                "candidate": candidate_idx,
+                "round": round_idx,
+                "error": error_msg,
+                "cause": cause,
+                "timestamp": time.time(),
+            }, indent=2),
+            encoding="utf-8",
+        )
+
+        summary_path = failures_dir / "summary.json"
+        summary = {}
+        if summary_path.is_file():
+            try:
+                summary = json.loads(summary_path.read_text(encoding="utf-8"))
+            except Exception:
+                summary = {}
+        summary[cause] = summary.get(cause, 0) + 1
+        summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+    return cause
 
 
 def _normalize(diff_text: str) -> str:
@@ -68,15 +162,8 @@ def _normalize(diff_text: str) -> str:
     return text.rstrip() + "\n"
 
 
-def _split_files(diff: str) -> list:
-    """Split a multi-file diff into per-file (path, hunks) records.
-
-    Handles both ``diff --git`` headers and plain ``--- a/x`` / ``+++ b/x``
-    pairs: a plain ``---`` while a record is already open starts a NEW file,
-    otherwise every hunk after the first would be applied to the wrong file.
-    A ``---`` line is only treated as a header when the next line is ``+++``,
-    so a removed line whose content starts with ``--`` can't split a hunk.
-    """
+def _split_files(diff: str) -> list[dict]:
+    """Split a multi-file diff into per-file (path, hunks) records."""
     raw = diff.splitlines()
     files = []
     current = None
@@ -123,7 +210,7 @@ def _split_files(diff: str) -> list:
     return [f for f in files if f["hunks"]]
 
 
-def _apply_manual(root: Path, diff: str) -> tuple:
+def _apply_manual(root: Path, diff: str) -> tuple[bool, str]:
     applied = []
     errors = []
     for record in _split_files(diff):
@@ -139,11 +226,15 @@ def _apply_manual(root: Path, diff: str) -> tuple:
                 errors.append(f"Missing file: {rel}")
                 continue
 
-        original = target.read_text(encoding="utf-8", errors="replace").splitlines(keepends=True)
+        raw_bytes = target.read_bytes()
+        is_crlf = b"\r\n" in raw_bytes
+        newline = "\r\n" if is_crlf else "\n"
+
+        original = raw_bytes.decode("utf-8", errors="replace").splitlines(keepends=True)
         updated = list(original)
         failed = False
         for hunk in record["hunks"]:
-            ok, updated = _apply_hunk(updated, hunk)
+            ok, updated = _apply_hunk(updated, hunk, newline=newline)
             if not ok:
                 errors.append(
                     f"Hunk failed in {rel}: {hunk[0]} — expected context "
@@ -152,13 +243,103 @@ def _apply_manual(root: Path, diff: str) -> tuple:
                 failed = True
                 break
         if not failed:
-            target.write_text("".join(updated), encoding="utf-8")
+            target.write_bytes("".join(updated).encode("utf-8"))
             applied.append(rel)
 
     if applied:
         suffix = f"; warnings: {'; '.join(errors)}" if errors else ""
         return True, f"Applied patch to: {', '.join(applied)}{suffix}"
     return False, "; ".join(errors) or "No hunks applied"
+
+
+def _apply_search_replace(root: Path, text: str) -> tuple[bool, str]:
+    """Parse and apply SEARCH/REPLACE blocks with exact and fuzzy matching."""
+    lines = text.splitlines()
+    blocks = []
+    current_file = None
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        file_m = re.match(r"^(?:###?\s*)?(?:File:\s*|Path:\s*|--- a/|\+\+\+ b/)?([a-zA-Z0-9_\-./\\]+\.[a-zA-Z0-9_]+)", line)
+        if file_m and not line.startswith("<<<<"):
+            cand_p = file_m.group(1).replace("\\", "/")
+            if (root / cand_p).is_file():
+                current_file = cand_p
+
+        if line.startswith("<<<<<<< SEARCH") or line.startswith("<<<< SEARCH"):
+            search_lines = []
+            replace_lines = []
+            i += 1
+            while i < len(lines) and not (lines[i].strip().startswith("=======") or lines[i].strip().startswith("====")):
+                search_lines.append(lines[i])
+                i += 1
+            if i < len(lines):
+                i += 1
+            while i < len(lines) and not (lines[i].strip().startswith(">>>>>>> REPLACE") or lines[i].strip().startswith(">>>> REPLACE")):
+                replace_lines.append(lines[i])
+                i += 1
+            blocks.append({
+                "file": current_file,
+                "search": search_lines,
+                "replace": replace_lines,
+            })
+        i += 1
+
+    if not blocks:
+        return False, "No SEARCH/REPLACE blocks found"
+
+    applied = []
+    errors = []
+    for b in blocks:
+        rel = b["file"]
+        search_lines = b["search"]
+        replace_lines = b["replace"]
+
+        target = None
+        if rel and (root / rel).is_file():
+            target = root / rel
+        else:
+            search_exact = "\n".join(search_lines)
+            candidates = []
+            for p in root.rglob("*.py"):
+                if not p.is_file() or any(ign in p.parts for ign in (".git", "venv", ".venv", "__pycache__")):
+                    continue
+                try:
+                    txt = p.read_text(encoding="utf-8", errors="replace")
+                    if search_exact and search_exact in txt:
+                        candidates.append(p)
+                except Exception:
+                    pass
+            if len(candidates) == 1:
+                target = candidates[0]
+                rel = str(target.relative_to(root)).replace("\\", "/")
+
+        if not target or not target.is_file():
+            errors.append(f"Target file not found for block (hint: {rel})")
+            continue
+
+        raw_bytes = target.read_bytes()
+        is_crlf = b"\r\n" in raw_bytes
+        newline = "\r\n" if is_crlf else "\n"
+        file_lines = raw_bytes.decode("utf-8", errors="replace").splitlines(keepends=True)
+        stripped_file = [ln.rstrip("\r\n") for ln in file_lines]
+        stripped_search = [ln.rstrip("\r\n") for ln in search_lines]
+
+        idx = _locate(stripped_file, stripped_search, 0)
+        if idx is None:
+            idx = _locate_fuzzy(stripped_file, stripped_search, 0)
+
+        if idx is not None:
+            new_lines = [f"{line}{newline}" for line in replace_lines]
+            file_lines[idx : idx + len(stripped_search)] = new_lines
+            target.write_bytes("".join(file_lines).encode("utf-8"))
+            applied.append(rel)
+        else:
+            errors.append(f"Search block not found in {rel}")
+
+    if applied:
+        return True, f"Applied SEARCH/REPLACE to: {', '.join(set(applied))}"
+    return False, "; ".join(errors) or "Failed to apply SEARCH/REPLACE blocks"
 
 
 def _context_preview(hunk: list) -> str:
@@ -169,12 +350,8 @@ def _context_preview(hunk: list) -> str:
     return repr(hunk[0][:120])
 
 
-def _apply_hunk(lines: list, hunk: list) -> tuple:
+def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, list]:
     header = _HUNK_RE.match(hunk[0])
-    # LLMs often emit a bare "@@" (or "@@ function signature @@") with no
-    # line numbers.  The line number is only a search hint — _locate falls
-    # back to scanning the whole file — so a missing header must not fail
-    # an otherwise valid hunk.
     start = int(header.group(1)) - 1 if header else 0
 
     body = [ln.rstrip("\r\n") for ln in hunk[1:] if not ln.startswith("\\")]
@@ -183,21 +360,14 @@ def _apply_hunk(lines: list, hunk: list) -> tuple:
     if not old_block:
         return False, lines
 
-    # Fast path: the whole hunk matches the file verbatim.
     idx = _locate(lines, old_block, start)
     if idx is None:
-        # Indentation drift is the most common reason a hand-written hunk
-        # misses; retry on whitespace-normalised content.
         idx = _locate_fuzzy(lines, old_block, start)
     if idx is not None:
-        lines[idx : idx + len(old_block)] = [f"{line}\n" for line in new_block]
+        lines[idx : idx + len(old_block)] = [f"{line}{newline}" for line in new_block]
         return True, lines
 
-    # Slow path: the model restated context it did not copy exactly (a
-    # reworded docstring is the usual culprit).  Apply only the lines it
-    # actually wants changed and take every unchanged line from the file
-    # itself, so the result cannot contain hallucinated text.
-    if _apply_body(lines, body, start):
+    if _apply_body(lines, body, start, newline=newline):
         return True, lines
     return False, lines
 
@@ -229,7 +399,7 @@ def _body_ops(body: list) -> list:
     return ops
 
 
-def _apply_body(lines: list, body: list, start: int) -> bool:
+def _apply_body(lines: list, body: list, start: int, newline: str = "\n") -> bool:
     """Apply a hunk operation-by-operation when the full block will not match."""
     ops = _body_ops(body)
     if not ops:
@@ -239,9 +409,6 @@ def _apply_body(lines: list, body: list, start: int) -> bool:
     changed = 0
     for kind, old, new in ops:
         if kind == "keep":
-            # Context only advances the cursor — it is never written, so a
-            # short forward window is enough and cannot drag the cursor to
-            # an unrelated part of the file.
             idx = _locate_near(lines, old, pos)
             if idx is not None:
                 pos = idx + len(old)
@@ -255,13 +422,13 @@ def _apply_body(lines: list, body: list, start: int) -> bool:
                 idx = _locate_fuzzy(lines, old, pos)
             if idx is None:
                 continue
-            lines[idx : idx + len(old)] = [f"{line}\n" for line in new]
+            lines[idx : idx + len(old)] = [f"{line}{newline}" for line in new]
             pos = idx + len(new)
             anchored = True
             changed += 1
             continue
         if 0 < pos <= len(lines):
-            lines[pos:pos] = [f"{line}\n" for line in new]
+            lines[pos:pos] = [f"{line}{newline}" for line in new]
             pos += len(new)
             changed += 1
     return changed > 0

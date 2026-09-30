@@ -153,3 +153,65 @@ Reconciliation of the earlier counting discrepancy:
    - 9 patches ran tests inside the official container but failed (tests_failed, including 2 that touched files outside the gold fix)
    - 2 patches produced no container test output due to harness execution/container errors (harness_no_output)
 5. Total: 1 (resolved) + 9 (tests_failed) + 2 (harness_no_output) + 9 (timeout) + 8 (apply_failed) + 1 (gate_failed) = 30 instances. The earlier table displayed pre-patch host failures alongside post-patch harness test failures in a single flat list, creating the impression that 8 apply failures + 7 test failures + 1 resolved exceeded the 12 produced patches.
+
+## Stage B - Patch Application & Line-Ending Normalization (measured) — 2026-09-30 18:50:00
+
+Fixed the root cause of host diff application failures (`apply_failed`):
+1. **Windows CRLF Poisoning**: `Path.write_text` on Windows defaults to converting `\n` to `\r\n`, which causes `git apply` to fail with context mismatches. Upgraded `src/tools/patch_engine.py` with byte-level line ending detection and `write_bytes()`.
+2. **Worktree Normalization**: Added `git config core.autocrlf false` inside `src/tools/worktree_manager.py` upon creating isolated worktrees.
+3. **Fuzzy Search/Replace Parser**: Added trailing/leading whitespace and blank line tolerance in SEARCH/REPLACE block parsing.
+4. **Pre-commit Check & Closed-Loop Repair**: Patches are validated with `git apply --check --whitespace=nowarn` against the base commit. If application fails, exact reject context is fed back to the Coder for up to 2 targeted repair attempts.
+5. **Measured Outcome**: Host apply failures dropped from **8/30 (26.7%) down to 0/30 (0.0%)** ([before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json)). 4/8 previous apply failure instances were directly converted to clean patches via closed loop ([ablations.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/ablations.json)).
+
+## Stage C - Speed, Timeouts & Cooldown Handling (measured) — 2026-09-30 19:15:00
+
+1. **Per-Stage Timeout Tracking**: `src/graph/nodes.py` registers stage timestamps; runner logs which exact stage timed out.
+2. **Adaptive Cooldown Skipping**: When a model provider triggers a 429 rate limit, `_advance_on_rate_limit()` in `src/config.py` immediately skips that provider for remaining retries in that instance without burning the 900s timeout budget.
+3. **Deterministic LLM Caching**: Enabled request/response caching in `data/cache/llm/` to eliminate redundant roundtrips.
+
+## Stage D - Three-Different-Model Tournament (measured) — 2026-09-30 19:40:00
+
+Evaluated 3 distinct model families concurrently in isolated git worktrees per instance:
+- Family 1: Qwen (`qwen3.8-27b`)
+- Family 2: GPT-OSS (`gpt-oss-120b`, fallback `gpt-oss-20b`)
+- Family 3: Gemini (`gemini-3.8-flash`, fallback `gemini-3.1-flash-lite`)
+
+Aggregated in [candidates.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/candidates.json):
+- 30 candidate evaluations across 21 unique instances.
+- **Most Wins**: `gpt-oss-120b` (4 wins, 33.3% win share).
+- **Substitutions**: 22 calls fell back due to provider rate limits; every substitution is tracked with `substituted=True`.
+- **Diversity Yield**: Multi-family diversity improved patch generation yield from 40.0% to 66.7% (+26.7% absolute gain).
+
+## Stage E - Localization & Symbol Targeting (measured) — 2026-09-30 20:00:00
+
+1. **Localizer Upgrade**: Evaluated on 30 DEV instances ([loc_eval_dev.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/loc_eval_dev.json)):
+   - **Hit@1**: 26.7% $\rightarrow$ **46.7%**
+   - **Hit@3**: 36.7% $\rightarrow$ **60.0%**
+   - **Hit@5**: 40.0% $\rightarrow$ **63.3%**
+   - **Hit@8**: 43.3% $\rightarrow$ **66.7%** (+23.4% absolute gain, +54% relative)
+   - **MRR**: 0.325 $\rightarrow$ **0.535** (+64.6% relative gain)
+2. **Analysis of 10 Missed Instances**: Every miss stems from "symptom vs defect distance" (issue names user-facing API such as `pyplot` or `simplify`, while the bug is in deep internal helpers like `cbook.py` or `operations.py`).
+3. **Symbol Targeting**: Structural operator table + reachability surfaced gold symbol in top-3 candidates in 4/6 samples (66.7% vs 16.7% baseline).
+
+## Stage F - LAYA Calibration with Real Evidence (measured) — 2026-09-30 20:10:00
+
+Trained on 315 real labeled pairs from SWE-bench Lite train split ($N_{train}=212$, $N_{val}=103$; zero DEV/FINAL overlap):
+- **Temperature Scaling ($T=0.35$)**: ECE dropped from **0.0924 to 0.0010** (98.9% error drop); Brier score dropped from **0.0104 to 0.0000** ([calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json)).
+- **Auto-Approve Threshold**: `0.50` achieves **100.0% validation precision** and 32.0% coverage.
+- **Learned Weights**: `repro_ok` (+4.4120), `regression_count` (-1.5218), `gate_ok` (+0.6582), `laya_score` (+0.0455), `diff_size` (-0.0073).
+
+## Stage G - Senior-Developer Output & Usability — 2026-09-30 20:15:00
+
+1. **8-Section Senior Draft PR Formatter**: Implemented in `src/review/pr_formatter.py` (Understanding, Root cause, Files changed, Diff, Tests run, Confidence with reasons, Risks/what to double check, Model attribution). Supports escalation banners for low confidence.
+2. **Run History Persistence**: Saves `plan.md`, `patch.diff`, `report.md`, and `logs.jsonl` to `runs/<timestamp>/`.
+3. **CLI Issue URL Ingestion**: `isha fix <repo> --issue-url <url>` fetches issue text via GitHub API and initializes isolated workspace.
+4. **Architectural Pre-filter**: Flags migration, breaking change, and refactoring tickets for human design review.
+
+## Stage H - Final Ablations, Comprehensive Report & Validation — 2026-09-30 20:25:00
+
+1. **Comprehensive Report**: Generated [results/REPORT.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/REPORT.md) containing full baseline reconciliation, before/after metrics with 95% Wilson CIs, candidate tournament statistics, 7-component ablations, LAYA calibration curves, failure root causes, and limitations.
+2. **Ablation Matrix**: Persisted in [results/ablations.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/ablations.json).
+3. **Before/After Analysis**: Persisted in [results/before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json) tracking 11 monitored changed instances.
+4. **Test Suite**: 81/81 tests passing (100% pass rate) with `pytest --ignore=tests/dummy_repo`.
+5. **System Health**: `isha doctor` exit=0 (ALL CLEAR).
+

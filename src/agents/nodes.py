@@ -695,6 +695,12 @@ def candidate_node(state: AgentState) -> AgentState:
         ]
         print("[arbitrator] no candidate survived verification; reported 'no confident fix'", file=sys.stderr)
 
+    try:
+        from src.agents.candidates import record_candidates_log
+        record_candidates_log(instance_id, candidates, winner.index if survivors else None)
+    except Exception:
+        pass
+
     cleanup_candidates(candidates, state.repo_path)
     state.model_log = get_model_log()
     return state

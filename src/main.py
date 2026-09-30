@@ -221,6 +221,12 @@ def main() -> int:
     )
     _print_section("MODEL USAGE", _format_model_usage(result.model_log or get_model_log()))
 
+    from src.review.pr_formatter import format_draft_pr, save_run_history
+    pr_doc = format_draft_pr(result, candidate=getattr(result, "selected_candidate", None))
+    run_dir = save_run_history(result, pr_doc)
+    _print_section("SENIOR-DEV DRAFT PR", pr_doc, limit=3000)
+    print(f"\n  💾 Run history saved to: {run_dir}")
+
     passed = "PASSED" in (result.test_output or "") and "FAILED" not in (
         result.test_output or ""
     )

@@ -66,7 +66,7 @@ def mutate_patch(patch: str) -> str:
     return "".join(mutated)
 
 
-def build_labels(limit_instances: int = 35) -> int:
+def build_labels(limit_instances: int = 105) -> int:
     splits_path = ROOT / "data" / "splits.json"
     splits = json.loads(splits_path.read_text(encoding="utf-8"))
     train_ids = set(splits.get("train", []))
@@ -201,4 +201,4 @@ def build_labels(limit_instances: int = 35) -> int:
 
 
 if __name__ == "__main__":
-    build_labels(limit_instances=35)
+    build_labels(limit_instances=105)

@@ -9,10 +9,17 @@ table printed anywhere else in the project is generated from these files.
 from __future__ import annotations
 
 import json
+import math
+import sys
 import time
 from pathlib import Path
 
-import math
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 from src.bench.classify import CATEGORIES, STAGE_NAMES, build_breakdown
 
 ROOT = Path(__file__).resolve().parents[2]
