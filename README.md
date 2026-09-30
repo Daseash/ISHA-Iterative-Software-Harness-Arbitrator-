@@ -32,19 +32,7 @@ cd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent
 pip install -e .
 ```
 
-### 2. Configuration
 
-Copy the example environment file:
-```bash
-cp .env.example .env
-```
-Add your free Groq or Google Gemini API key to `.env`:
-```env
-GROQ_API_KEY=gsk_...
-GOOGLE_API_KEY=AIza...
-```
-
----
 
 ## 💻 Usage
 
