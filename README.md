@@ -226,6 +226,28 @@ isha doctor                                        # environment self-check
 isha ui                                            # launch the dashboard
 ```
 
+#### Command reference
+
+`isha` is a terminal CLI: everything runs to completion and exits — no
+interactive prompts unless you pass `--approve cli`.
+
+| Command | What it does |
+|---|---|
+| `isha` | Prints the banner, then stops with "Target repo not found" — a run needs `--repo <path>` (exit 4). No bare-launch demo. |
+| `isha --repo <path> --issue "..."` | Full loop in the terminal: plan → regression test → patch → sandbox → LAYA verdict; prints PLAN / PATCH / TEST OUTPUT / VERDICT sections and saves run history |
+| `isha ... --apply` | Same, and writes the verified patch into the repo (sandbox-only by default) |
+| `isha ... --multi` | 3 strategies in parallel Git worktrees, arbitrator picks the winner |
+| `isha ... --approve cli` | Human-in-the-loop gate: prompts y/N before applying flagged patches |
+| `isha doctor` | Environment self-check (Python, keys, providers, Docker, disk) |
+| `isha fix --repo ... --issue ...` | Same loop via subcommand (identical behaviour to the flag form) |
+| `isha bench ...` | SWE-bench runner (see Quickstart) |
+| `isha report --run-id ...` | Render / diff run tables from `results/` |
+| `isha ui` | Streamlit dashboard in a browser (the only non-terminal UI) |
+
+Exit codes: `0` fix verified · `1` fix failed after retries · `2` tests
+passed but LAYA flagged (human review) · `3` blocked by guardrails ·
+`4` target repo not found.
+
 ### Option B: Interactive Web Dashboard
 
 ```bash
