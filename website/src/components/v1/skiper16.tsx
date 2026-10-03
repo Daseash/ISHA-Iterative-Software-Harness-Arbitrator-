@@ -126,43 +126,84 @@ export const DemoSkiper16: React.FC = () => {
   });
 
   return (
-    <section className="relative w-full py-24 bg-[#F9F7EF] dark:bg-black transition-colors">
+    <section className="relative w-full py-16 sm:py-24 bg-[#F9F7EF] dark:bg-black transition-colors">
       <div
         ref={container}
-        className="max-w-7xl mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start pb-32"
+        className="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 pb-24"
       >
-        {/* Left Column: Pure Text Stack with 3D Shadow (Only CLI, FIX, GIT HUB - no extra matter) */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full">
-          {projects.map((project, i) => {
-            const targetScale = Math.max(0.7, 1 - (projects.length - i - 1) * 0.08);
-            return (
-              <TextCard
-                key={`text_${i}`}
-                i={i}
-                project={project}
-                progress={scrollYProgress}
-                range={[i * 0.33, 1]}
-                targetScale={targetScale}
-              />
-            );
-          })}
+        {/* Mobile / Tablet Unified Card Stack */}
+        <div className="lg:hidden flex flex-col items-center justify-center w-full space-y-8">
+          {projects.map((project, i) => (
+            <motion.a
+              key={`mobile_${i}`}
+              href={project.link}
+              target={project.link.startsWith("http") ? "_blank" : undefined}
+              rel={project.link.startsWith("http") ? "noreferrer" : undefined}
+              whileTap={{ scale: 0.98 }}
+              className="w-full rounded-3xl overflow-hidden bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 p-5 space-y-4 group cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-2xl sm:text-3xl font-black uppercase tracking-wider ${
+                    i === 0
+                      ? "text-red-600"
+                      : i === 1
+                      ? "text-black dark:text-[#F9F7EF]"
+                      : "text-red-600"
+                  }`}
+                >
+                  {project.title}
+                </span>
+                <span className="p-2 rounded-xl bg-neutral-200/80 dark:bg-neutral-900 text-red-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
+                  ↗
+                </span>
+              </div>
+              <div className="w-full h-52 sm:h-64 rounded-2xl overflow-hidden bg-neutral-900">
+                <img
+                  src={project.src}
+                  alt={project.title}
+                  className="w-full h-full object-cover filter brightness-90 contrast-110 group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </motion.a>
+          ))}
         </div>
 
-        {/* Right Column: Pure Image Card Stack with 3D Shadow (No text on cards, no red border) */}
-        <div className="lg:col-span-6 flex flex-col items-center justify-center w-full">
-          {projects.map((project, i) => {
-            const targetScale = Math.max(0.7, 1 - (projects.length - i - 1) * 0.08);
-            return (
-              <ImageCard
-                key={`img_${i}`}
-                i={i}
-                src={project.src}
-                progress={scrollYProgress}
-                range={[i * 0.33, 1]}
-                targetScale={targetScale}
-              />
-            );
-          })}
+        {/* Desktop Side-by-Side Dual Card Stack (lg+) */}
+        <div className="hidden lg:grid grid-cols-12 gap-16 items-start">
+          {/* Left Column: Pure Text Stack */}
+          <div className="col-span-6 flex flex-col items-center justify-center w-full">
+            {projects.map((project, i) => {
+              const targetScale = Math.max(0.7, 1 - (projects.length - i - 1) * 0.08);
+              return (
+                <TextCard
+                  key={`text_${i}`}
+                  i={i}
+                  project={project}
+                  progress={scrollYProgress}
+                  range={[i * 0.33, 1]}
+                  targetScale={targetScale}
+                />
+              );
+            })}
+          </div>
+
+          {/* Right Column: Pure Image Card Stack */}
+          <div className="col-span-6 flex flex-col items-center justify-center w-full">
+            {projects.map((project, i) => {
+              const targetScale = Math.max(0.7, 1 - (projects.length - i - 1) * 0.08);
+              return (
+                <ImageCard
+                  key={`img_${i}`}
+                  i={i}
+                  src={project.src}
+                  progress={scrollYProgress}
+                  range={[i * 0.33, 1]}
+                  targetScale={targetScale}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

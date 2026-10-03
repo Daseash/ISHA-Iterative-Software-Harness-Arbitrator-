@@ -22,25 +22,25 @@ export const AboutSection: React.FC = () => {
   return (
     <section
       id="about"
-      className="relative w-full py-32 px-6 sm:px-12 bg-transparent text-black dark:text-[#F9F7EF] transition-colors duration-300 border-t border-b border-neutral-200/60 dark:border-neutral-900/60 overflow-visible"
+      className="relative w-full py-16 sm:py-24 md:py-32 px-4 sm:px-8 md:px-12 bg-transparent text-black dark:text-[#F9F7EF] transition-colors duration-300 border-t border-b border-neutral-200/60 dark:border-neutral-900/60 overflow-visible"
     >
       {/* Top & Bottom Progressive Blur (Skiper41) */}
       <ProgressiveBlur
         position="top"
         backgroundColor={blurBg}
-        height="140px"
+        height="120px"
         blurAmount="8px"
       />
       <ProgressiveBlur
         position="bottom"
         backgroundColor={blurBg}
-        height="140px"
+        height="120px"
         blurAmount="8px"
       />
 
-      <div className="max-w-6xl mx-auto relative z-10 py-8">
+      <div className="max-w-6xl mx-auto relative z-10 py-6 sm:py-8">
         {/* ================= PURE TEXT BOX REVEAL (SKIPER70) - NO BOXES ================= */}
-        <div className="max-w-5xl mx-auto px-2 sm:px-6">
+        <div className="max-w-5xl mx-auto px-1 sm:px-6">
           <TextBoxReveal
             highlight={[
               "ISHA",
@@ -67,7 +67,7 @@ export const AboutSection: React.FC = () => {
             ]}
             highlightTextClass="!text-red-600 dark:!text-red-500 font-black"
             highlightBgClass="!bg-red-600/15 dark:!bg-red-600/25"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight text-center leading-[1.4] sm:leading-[1.45]"
+            className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight text-center leading-[1.4] sm:leading-[1.45]"
           >
             ISHA is an autonomous software engineering harness built for reproducible, self-healing code repair.
             <br />

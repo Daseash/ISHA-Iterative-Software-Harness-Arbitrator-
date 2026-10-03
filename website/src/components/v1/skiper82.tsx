@@ -242,36 +242,9 @@ index 4b825dc..91a0f12 100644
             <Wrench className="w-6 h-6 stroke-[3]" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-2xl font-black text-red-600 uppercase tracking-tight">
-                ISHA FIX
-              </h3>
-              <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-black uppercase ${
-                  backendStatus === "online"
-                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                    : backendStatus === "checking"
-                    ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
-                    : "bg-neutral-300/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"
-                }`}
-              >
-                <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    backendStatus === "online"
-                      ? "bg-emerald-500 animate-pulse"
-                      : backendStatus === "checking"
-                      ? "bg-amber-500"
-                      : "bg-neutral-400"
-                  }`}
-                />
-                {backendStatus === "online" ? "LIVE AGENT CONNECTED" : backendStatus === "checking" ? "CONNECTING..." : "STANDBY"}
-              </span>
-            </div>
-            {agentModelInfo && (
-              <p className="text-[11px] font-mono text-neutral-500 dark:text-neutral-400 truncate max-w-sm mt-0.5">
-                Model: {agentModelInfo}
-              </p>
-            )}
+            <h3 className="text-2xl font-black text-red-600 uppercase tracking-tight">
+              ISHA FIX
+            </h3>
           </div>
         </div>
 
