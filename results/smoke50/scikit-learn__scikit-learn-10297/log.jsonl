@@ -1,0 +1,13 @@
+{"event": "start", "instance_id": "scikit-learn__scikit-learn-10297", "ts": 1791044050.7961686}
+{"event": "attempt", "n": 1, "ts": 1791044051.429624}
+{"event": "model", "ts": 1791044082.44668, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791044084.219163, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791044392.2678235, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791044495.673734, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791044709.5385373, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791045024.1394663, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791045355.3534758, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791045692.9517326, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791045709.5051746, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in sklearn/linear_model/ridge.py: @@ -1341,12 +1341,14 @@ — expected context not found in file: 'class RidgeClassifierCV(LinearClassifierMixin, _BaseRidgeCV):' (git: error: corrupt patch at <stdin>:20\nerror: corrupt patch at <stdin>:20; sr: No SEARCH/REPLACE blocks found)", "ts": 1791045721.9440892}
+{"event": "attempt", "n": 2, "ts": 1791045722.0243125}

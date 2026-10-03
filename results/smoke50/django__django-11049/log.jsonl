@@ -1,0 +1,23 @@
+{"event": "start", "instance_id": "django__django-11049", "ts": 1790946780.4744687}
+{"event": "attempt", "n": 1, "ts": 1790946780.9607425}
+{"event": "model", "ts": 1790946834.128224, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790946839.0867155, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790946889.6969955, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790946994.0250883, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790947125.3902428, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790947282.6034524, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790947443.7951741, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790947609.9065404, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790947667.9682353, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/core/validators.py: @@ — expected context not found in file: 'class DurationValidator(BaseValidator):'; Hunk failed in django/forms/fields.py: @@ — expected context not found in file: 'class DurationField(Field):'; Hunk failed in django/db/models/fields/__init__.py: @@ — expect", "ts": 1790947712.118124}
+{"event": "attempt", "n": 2, "ts": 1790947712.6201417}
+{"event": "model", "ts": 1790947750.534508, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790947756.0142324, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790947765.0195186, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790947865.5639546, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1790948000.740622, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790948164.746229, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790948345.9677026, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790948508.2413597, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790948556.0880454, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1790948608.6950893}

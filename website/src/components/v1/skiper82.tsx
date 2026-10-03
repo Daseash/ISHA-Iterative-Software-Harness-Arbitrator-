@@ -21,8 +21,6 @@ export const Skiper82: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingStep, setProcessingStep] = useState("DISPATCHING TO ISHA AGENT...");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
-  const [agentModelInfo, setAgentModelInfo] = useState<string>("");
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -32,50 +30,6 @@ export const Skiper82: React.FC = () => {
     },
   ]);
   const chatBoxRef = useRef<HTMLDivElement>(null);
-
-  // Check live ISHA backend health
-  useEffect(() => {
-    let isMounted = true;
-    const checkBackend = async () => {
-      try {
-        const res = await fetch("/api/status", { signal: AbortSignal.timeout(3000) });
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted) {
-            setBackendStatus("online");
-            const models = data.planner_chain ? data.planner_chain.join(" -> ") : "LLM Multi-Agent";
-            setAgentModelInfo(models);
-          }
-          return;
-        }
-      } catch {
-        // Fallback check direct port 8000
-        try {
-          const direct = await fetch("http://127.0.0.1:8000/api/status", { signal: AbortSignal.timeout(2000) });
-          if (direct.ok) {
-            const data = await direct.json();
-            if (isMounted) {
-              setBackendStatus("online");
-              setAgentModelInfo(data.planner_chain ? data.planner_chain.join(" -> ") : "LLM Multi-Agent");
-            }
-            return;
-          }
-        } catch {
-          // Backend is offline or not started
-        }
-      }
-      if (isMounted) {
-        setBackendStatus("offline");
-      }
-    };
-
-    checkBackend();
-    const interval = setInterval(checkBackend, 10000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
 
   const scrollToBottom = () => {
     if (chatBoxRef.current) {
@@ -184,7 +138,6 @@ export const Skiper82: React.FC = () => {
           duration: data.duration,
         };
         setMessages((prev) => [...prev, ishaResponse]);
-        setBackendStatus("online");
       } else {
         // Fallback response with offline deterministic fix
         const fallbackDiff = `diff --git a/src/calculator.py b/src/calculator.py

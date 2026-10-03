@@ -1,0 +1,25 @@
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@ -5,6 +5,8 @@ from collections import defaultdict
+ from itertools import chain
+ 
+ from django.apps import apps
++from django.conf import settings
+ from django.core.checks import Error, Tags, register
++from django.db import router
+ 
+ 
+@@ -19,7 +21,10 @@ def check_all_models(app_configs=None, **kwargs):
+     for model in models:
+         if model._meta.managed and not model._meta.proxy:
+-            db_table_models[model._meta.db_table].append(model)
++            db_table = model._meta.db_table
++            for alias in settings.DATABASES:
++                if router.allow_migrate(alias, model._meta.app_label, model_name=model._meta.model_name, model=model):
++                    db_table_models[(db_table, alias)].append(model)
+         for index in model._meta.indexes:
+@@ -34,3 +39,3 @@ def check_all_models(app_configs=None, **kwargs):
+ 
+-    for db_table, model_list in db_table_models.items():
++    for (db_table, alias), model_list in db_table_models.items():
+         if len(model_list) > 1:

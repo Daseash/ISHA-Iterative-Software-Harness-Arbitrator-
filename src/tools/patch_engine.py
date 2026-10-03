@@ -17,6 +17,7 @@ import re
 import subprocess
 import time
 from pathlib import Path
+from typing import TypedDict
 
 _HUNK_RE = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
 
@@ -82,14 +83,22 @@ def apply_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
 
 
 def validate_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
-    """Validate patch on a clean checkout using git apply --check --whitespace=nowarn."""
+    """Validate patch on a clean checkout using git apply --check.
+
+    ``--ignore-whitespace`` is required on hosts whose checkout worktree is
+    CRLF (Windows with autocrlf): the regenerated diff is LF, and without it
+    the check false-flags every patch ("patch failed / corrupt patch") even
+    though the harness — which applies the LF diff to the LF container
+    checkout — would apply it cleanly. It still rejects genuinely broken
+    hunks (verified: corrupt context line -> non-zero)."""
     if not diff_text or not diff_text.strip():
         return False, "Empty patch"
     root = Path(repo_path)
     if not (root / ".git").exists():
         return True, "Not a git repo, skipping git apply --check"
     diff = _normalize(diff_text)
-    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn", "-"], str(root), diff)
+    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn",
+                    "--ignore-whitespace", "-"], str(root), diff)
     return ok, msg
 
 
@@ -156,19 +165,26 @@ def _normalize(diff_text: str) -> str:
     if "```" in text:
         blocks = re.findall(r"```(?:diff|patch)?\n(.*?)```", text, flags=re.S)
         if blocks:
-            text = max(blocks, key=len).strip()
+            best_block = max(blocks, key=lambda b: len(b))
+            text = str(best_block).strip()
     if "diff --git" in text:
         text = text[text.index("diff --git"):]
     return text.rstrip() + "\n"
 
 
-def _split_files(diff: str) -> list[dict]:
+class _FileRecord(TypedDict):
+    old: str | None
+    new: str | None
+    hunks: list[list[str]]
+
+
+def _split_files(diff: str) -> list[_FileRecord]:
     """Split a multi-file diff into per-file (path, hunks) records."""
     raw = diff.splitlines()
-    files = []
-    current = None
+    files: list[_FileRecord] = []
+    current: _FileRecord | None = None
 
-    def _new_record():
+    def _new_record() -> _FileRecord:
         return {"old": None, "new": None, "hunks": []}
 
     i = 0

@@ -61,20 +61,24 @@ def _clip(text: str, limit: int) -> str:
     return text[:limit] + f"\n...[context capped at {limit} chars]"
 
 
-_PLANNER_CONTEXT_CHARS = int(os.getenv("ISHA_PLANNER_CONTEXT_CHARS", "5000"))
-_REGRESSION_CONTEXT_CHARS = int(os.getenv("ISHA_REGRESSION_CONTEXT_CHARS", "3500"))
-_CODER_CONTEXT_CHARS = int(os.getenv("ISHA_CODER_CONTEXT_CHARS", "900"))
+# Prompt section budgets.  Larger context measurably improves patch accuracy
+# (the coder stops inventing context lines), but free-tier TPM windows are
+# the binding constraint on throughput — so every number stays env-tunable
+# and the runbook ships a low-bandwidth profile for quota-poor sessions.
+_PLANNER_CONTEXT_CHARS = int(os.getenv("ISHA_PLANNER_CONTEXT_CHARS", "10000"))
+_REGRESSION_CONTEXT_CHARS = int(os.getenv("ISHA_REGRESSION_CONTEXT_CHARS", "6000"))
+_CODER_CONTEXT_CHARS = int(os.getenv("ISHA_CODER_CONTEXT_CHARS", "4000"))
 
 # Per-section budgets for the coder prompt.  Free-tier Groq TPM is measured
 # in tokens; a 34k-char prompt alone exceeds a typical window, so every
 # section is capped before assembly and reported by ``_prompt_stats``.
-_ISSUE_CHARS = int(os.getenv("ISHA_ISSUE_CHARS", "3000"))
-_PLAN_CHARS = int(os.getenv("ISHA_PLAN_CHARS", "2000"))
-_CODE_BLOCK_CHARS = int(os.getenv("ISHA_CODE_BLOCK_CHARS", "5100"))
+_ISSUE_CHARS = int(os.getenv("ISHA_ISSUE_CHARS", "6000"))
+_PLAN_CHARS = int(os.getenv("ISHA_PLAN_CHARS", "3500"))
+_CODE_BLOCK_CHARS = int(os.getenv("ISHA_CODE_BLOCK_CHARS", "8000"))
 _HISTORY_CHARS = int(os.getenv("ISHA_HISTORY_CHARS", "800"))
 _STYLE_CHARS = int(os.getenv("ISHA_STYLE_CHARS", "600"))
-_HINT_CHARS = int(os.getenv("ISHA_HINT_CHARS", "4000"))
-_PLANNER_AUX_CHARS = int(os.getenv("ISHA_PLANNER_AUX_CHARS", "2500"))
+_HINT_CHARS = int(os.getenv("ISHA_HINT_CHARS", "8000"))
+_PLANNER_AUX_CHARS = int(os.getenv("ISHA_PLANNER_AUX_CHARS", "5000"))
 
 # Phase 2b symbol targeting. Kept small: the block is a *ranking to check*,
 # not a decision, and every symbol named here competes for prompt budget.
@@ -88,7 +92,8 @@ def _strip_fences(text: str) -> str:
         return ""
     blocks = _FENCE_RE.findall(text)
     if blocks:
-        return max(blocks, key=len).strip()
+        best_block = max(blocks, key=lambda b: len(b))
+        return str(best_block).strip()
     return text.strip()
 
 
@@ -672,6 +677,7 @@ def candidate_node(state: AgentState) -> AgentState:
             print(f"[arbitrator] repair round on best candidate #{best.index} failed: {exc}", file=sys.stderr)
 
     state.candidates = [c.as_dict() for c in ordered]
+    winner = None
     if survivors:
         winner = survivors[0]
         state.patch = winner.patch
@@ -697,7 +703,7 @@ def candidate_node(state: AgentState) -> AgentState:
 
     try:
         from src.agents.candidates import record_candidates_log
-        record_candidates_log(instance_id, candidates, winner.index if survivors else None)
+        record_candidates_log(instance_id, candidates, winner.index if winner is not None else None)
     except Exception:
         pass
 

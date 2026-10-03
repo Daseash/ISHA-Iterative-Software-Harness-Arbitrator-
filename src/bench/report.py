@@ -14,12 +14,13 @@ import sys
 import time
 from pathlib import Path
 
-if hasattr(sys.stdout, "reconfigure"):
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
+for _stream in (sys.stdout, sys.stderr):
+    _reconf = getattr(_stream, "reconfigure", None)
+    if callable(_reconf):
+        try:
+            _reconf(encoding="utf-8")
+        except Exception:
+            pass
 from src.bench.classify import CATEGORIES, STAGE_NAMES, build_breakdown
 
 ROOT = Path(__file__).resolve().parents[2]

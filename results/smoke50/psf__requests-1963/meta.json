@@ -1,0 +1,247 @@
+{
+  "instance_id": "psf__requests-1963",
+  "repo": "psf/requests",
+  "base_commit": "110048f9837f8441ea536804115e80b69f400277",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028677.5685632
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028677.9019804
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028982.0651255
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028986.538752
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791029290.5831616
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791029395.9270453
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791029406.7827466
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: requests/sessions.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:13"
+  },
+  "started_at": 1791028661.873978,
+  "elapsed_s": 753.24,
+  "plan": "while resp.is_redirect:\n            # We need to copy the *last* prepared request, not the original,\n            # to ensure state changes (like method transitions) persist.\n            prepared_request = resp.request.copy()",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "requests/sessions.py",
+      "symbol": "requests/sessions.py::resolve_redirects",
+      "symbols": [
+        "resolve_redirects",
+        "merge_hooks",
+        "SessionRedirectMixin",
+        "__init__"
+      ],
+      "line_range": [
+        84,
+        186
+      ],
+      "score": 0.694,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6348,
+        "vector": 0.7113,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: http, requests, request, post; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "requests/models.py",
+      "symbol": "requests/models.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "is_redirect",
+        "json"
+      ],
+      "line_range": [
+        274,
+        288
+      ],
+      "score": 0.3933,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4719,
+        "vector": 0.6278,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: http, request, server, method)"
+    },
+    {
+      "file": "requests/api.py",
+      "symbol": "requests/api.py::request",
+      "symbols": [
+        "request",
+        "get",
+        "options",
+        "head"
+      ],
+      "line_range": [
+        17,
+        46
+      ],
+      "score": 0.6944,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4974,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: object, http, session, requests)"
+    },
+    {
+      "file": "requests/packages/urllib3/__init__.py",
+      "symbol": "requests/packages/urllib3/__init__.py::add_stderr_logger",
+      "symbols": [
+        "add_stderr_logger"
+      ],
+      "line_range": [
+        40,
+        56
+      ],
+      "score": 0.4875,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0577,
+        "vector": 0.2337,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: other, method"
+    },
+    {
+      "file": "requests/packages/chardet/__init__.py",
+      "symbol": "requests/packages/chardet/__init__.py::detect",
+      "symbols": [
+        "detect"
+      ],
+      "line_range": [
+        22,
+        32
+      ],
+      "score": 0.4867,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.3473,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: object"
+    },
+    {
+      "file": "requests/packages/urllib3/connectionpool.py",
+      "symbol": "requests/packages/urllib3/connectionpool.py::ConnectionPool",
+      "symbols": [
+        "ConnectionPool",
+        "__init__",
+        "_put_conn",
+        "_make_request"
+      ],
+      "line_range": [
+        57,
+        76
+      ],
+      "score": 0.3957,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5303,
+        "vector": 0.5263,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: object, http, host"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.779875,
+  "laya_scores": {
+    "fix_quality": 1.6233,
+    "matches_issue": 0.8057,
+    "safe_to_apply": 0.6905,
+    "composite": 0.779875,
+    "secrets_or_danger": 0.2804,
+    "logic_drift": 0.2695,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "SECURITY: PASS - The change affects HTTP method semantics during redirects and does not introduce injection, credential leakage, or path traversal vulnerabilities.\nPERFORMANCE: PASS - The change alters the source object for a copy operation but does not introduce N+1 queries, unbounded loops, or blocking calls.\nROBUSTNESS: PASS - The patch correctly fixes the race/state logic error where the original request was reused instead of the most recent response’s request, ensuring proper method preservation across mixed redirect types (e.g., 303 followed by 307).\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "```python\n\"\"\"\nTest for bug: Session.resolve_redirects copies the original request for all\nsubsequent requests, causing incorrect method selection.\n\nBug: After a 303 See Other converts POST -> GET, a subsequent 307/308\nredirect should preserve the GET method. But the code copies the *original*\nrequest, so the method reverts to POST.\n\"\"\"\nimport pytest\nfrom unittest import mock\nfrom collections import namedtuple\n\nfrom requests import Session\nfrom requests.models import Request, Response, PreparedRequest\nfrom requests.exceptions import InvalidSchema\n\n\ndef _make_response(status_code, url, request, location=None):\n    \"\"\"Create a Response object for testing redirect logic.\"\"\"\n    resp = Response()\n    resp.status_code = status_code\n    resp.url = url\n    resp.request = request\n    if location:\n        resp.headers['Location'] = location\n    return resp\n\n\ndef _make_prepared_request(method, url, **kwargs):\n    \"\"\"Create a PreparedRequest from a Request.\"\"\"\n    req = Request(method=method, url=url, **kwargs)\n    prepared = req.prepare()\n    # Set request attribute for redirect logic\n    prepared.request = req\n    return prepared\n\n\nclass TestResolveRedirectsMethodPersistence:\n    \"\"\"Tests that method transitions from intermediate redirects are preserved.\"\"\"\n\n    def test_303_then_307_preserves_get_method(self):\n        \"\"\"\n        Reproduction of the bug: POST /do_something -> 303 -> GET /new_thing\n        -> 307 should preserve GET, not revert to POST.\n\n        The fix ensures that resolve_redirects copies the *last* prepared\n        request (resp.request.copy()), not the original, so method changes\n        from a 303 are preserved in subsequent redirects.\n        \"\"\"\n        session = Session()\n        # Monkey-patch the adapter to avoid network calls\n        session.adapters.clear()\n        adapter = mock.MagicMock()\n        session.mount('http://', adapter)\n\n        # Track all prepare_ requests made\n        calls = []\n\n        def mock_send(request, **kwargs):\n            calls.append(request)\n            return request\n\n        adapter.send.side_effect = mock_send\n\n        # First request: POST\n        original_request = Request(method='POST', url='http://server.example.com/do_something')\n        original_prepared = original_request.prepare()\n        original_prepared.request = original_request\n\n        # Build the redirect chain response\n        resp1 = Response()\n        resp1.status_code = 303\n        resp1.url = 'http://server.example.com/do_something'\n        resp1.request = original_prepared\n        resp1.headers['Location'] = '/new_thing_1513'\n\n        # We need to simulate what resolve_redirects does internally.\n        # Instead of mocking the entire network, let's directly test the\n        # logic by creating the state that resolve_redirects would have.\n\n        # After the 303, the method is changed to GET.\n        # The next response (307) should be based on the POST->GET converted request.\n\n        # For the second hop: GET /new_thing_1513 -> 307 -> //failover.example.com/new_thing_1513\n        # This should preserve GET.\n\n        # Let's use a different approach: mock the whole session.get/post/etc\n        # and inspect the requests that would be sent.\n\n        # Actually, the cleanest way is to use a custom adapter or mock\n        # the session's send method.\n\n        # Let me reset and use a cleaner approach with the actual resolve_redirects.\n\n        # We'll create a mock adapter that returns our predefined responses\n        # in sequence.\n\n        responses_sequence = []\n\n        # Response 1: 303 See Other\n        resp_status_303 = Response()\n        resp_status_303.status_code = 303\n        resp_status_303.url = 'http://server.example.com/do_something'\n        resp_status_303.request = original_prepared\n        resp_status_303.headers['Location'] = 'http://server.example.com/new_thing_1513'\n        responses_sequence.append(resp_status_303)\n\n        # For the second hop, resolve_redirects will prepare a GET request\n        # (because 303 changes POST to GET). Then it sends it, gets 307 back.\n        # Response 2: 307 Temporary Redirect\n        # This response will be created in the mock when the GET is sent.\n        # We need to lazily create it.\n\n        sent_requests = []\n\n        def fake_send(request, **kwargs):\n            sent_requests.append(request)\n            if len(sent_requests) == 1:\n                return resp_status_303\n            else:\n                # Second request: should be GET (converted from POST by 303)\n                assert request.method == 'GET', f\"Expected GET after 303, got {request.method}\"\n                resp_307 = Response()\n                resp_307.status_code = 307\n                resp_307.url = 'http://server.example.com/new_thing_1513'\n                resp_307.request = request\n                resp_307.headers['Location'] = 'http://failover.example.com/new_thing_1513'\n                return resp_307\n\n        adapter.send.side_effect = fake_send\n\n        # Now make the call\n        response = session.request('POST', 'http://server.example.com/do_something')\n\n        # The third hop would be sent to failover.example.com\n        # sent_requests[0] should be the original POST\n        # sent_requests[1] should be the GET (after 303 conversion)\n        # sent_requests[2] should be the GET (preserved from 307 of the GET)\n\n        # But wait - resolve_redirects is called inside session.request.\n        # Let's just check the sent_requests.\n\n        # After POST -> 303, next is GET\n        assert len(sent_requests) >= 2\n        assert sent_requests[0].method == 'POST'\n        assert sent_requests[1].method == 'GET'\n\n        # Now send the 303-converted GET, get 307, and resolve_redirects\n        # should prepare the next request using resp.request.copy()\n        # which is the GET request. So the method should remain GET.\n\n        # If the bug exists, it would copy the ORIGINAL request (POST),\n        # so the next request would be POST.\n\n        # Let's continue the chain mock to get the third response\n        # We need to add more responses to the side_effect\n\n        # Reset and do a more complete test\n        sent_requests.clear()\n        call_count = [0]\n\n        # Pre-create responses\n        post_req = Request(method='POST', url='http://server.example.com/do_something')\n        post_prepared = post_req.prepare()\n        post_prepared.request = post_req\n\n        resp_303 = Response()\n        resp_303.status_code = 303\n        resp_303.url = 'http://server.example.com/do_something'\n        resp_303.request = post_prepared\n        resp_303.headers['Location'] = 'http://server.example.com/new_thing_1513'\n\n        def fake_send2(request, **kwargs):\n            call_count[0] += 1\n            sent_requests.append(request)\n\n            if call_count[0] == 1:\n                # First: POST\n                return resp_303\n            elif call_count[0] == 2:\n                # Second: should be GET (after 303)\n                assert request.method == 'GET', \\\n                    f\"Step 2: Expected GET after 303, got {request.method}\"\n                resp_307 = Response()\n                resp_307.status_code = 307\n                resp_307.url = 'http://server.example.com/new_thing_1513'\n                resp_307.request = request\n                resp_307.headers['Location'] = 'http://failover.example.com/new_thing_1513'\n                return resp_307\n            elif call_count[0] == 3:\n                # Third: should be GET (preserved from 307 of GET)\n                # This is where the bug manifests: if using original request,\n                # method would be POST here.\n                return Response()\n\n        adapter.send.side_effect = fake_send2\n\n        response = session.request('POST', 'http://server.example.com/do_something')\n\n        assert len(sent_requests) == 3\n        assert sent_requests[0].method == 'POST'\n        assert sent_requests[1].method == 'GET'\n        # THIS IS THE KEY ASSERTION: the third request should be GET, not POST\n        assert sent_requests[2].method == 'GET', \\\n            f\"Step 3: Expected GET (preserved after 307), got {sent_requests[2].method}\"\n\n    def test_307_preserves_method_without_prior_303(self",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\nindex 425db22..23d2563 100644\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -88,7 +88,7 @@ class SessionRedirectMixin(object):\n         i = 0\n \n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()\n \n             resp.content  # Consume socket so it can be released\n \n",
+  "offline_calls": 0
+}

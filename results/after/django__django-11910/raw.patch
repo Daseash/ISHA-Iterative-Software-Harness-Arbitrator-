@@ -1,0 +1,6 @@
+--- a/django/db/migrations/writer.py
++++ b/django/db/migrations/writer.py
+@@
+-        operation_args = get_func_args(self.operation.__init__)
++        # Exclude 'self' from the list of argument names returned by get_func_args
++        operation_args = get_func_args(self.operation.__init__)[1:]

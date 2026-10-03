@@ -28,6 +28,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
@@ -39,7 +40,12 @@ if str(ROOT) not in sys.path:
 
 RESULTS_DIR = ROOT / "results"
 
-DEFAULT_INSTANCE_TIMEOUT = int(os.getenv("ISHA_BENCH_INSTANCE_TIMEOUT", "900"))
+# 1800 s: the old 900 s budget cost ~30% of instances to pure timeout on the
+# free-tier chain (backoff + chain-advance + multi-round coder retries).
+DEFAULT_INSTANCE_TIMEOUT = int(os.getenv("ISHA_BENCH_INSTANCE_TIMEOUT", "1800"))
+# Instances solved in parallel. 1 is the safe default (shared provider TPM
+# windows); raise when you hold multiple provider accounts.
+DEFAULT_WORKERS = int(os.getenv("ISHA_BENCH_WORKERS", "1"))
 DEFAULT_MAX_RETRIES = int(os.getenv("ISHA_BENCH_MAX_RETRIES", "2"))
 BASE_BACKOFF = float(os.getenv("ISHA_BENCH_BACKOFF", "20"))
 # Extra attempts granted only to instances whose diff would not apply.
@@ -483,8 +489,13 @@ def run_bench(
     candidates: int | None = None,
     verify: bool | None = None,
     pre_filter: bool = True,
+    workers: int | None = None,
 ) -> Path:
-    """Run (or resume) the benchmark slice. Returns the run directory."""
+    """Run (or resume) the benchmark slice. Returns the run directory.
+
+    ``workers > 1`` solves instances in parallel threads; checkpoints keep
+    the run resumable either way.
+    """
     from src.bench import dataset as ds
     from src.bench.checkout import ensure_all
 
@@ -525,11 +536,13 @@ def run_bench(
     # timeout inside the graph — skip it explicitly and record why.
     failed_checkouts = {str(f).split(":", 1)[0].strip() for f in failures}
 
+    total = len(records)
+    pending: list[tuple[int, dict, Path]] = []
     for idx, record in enumerate(records, start=1):
         path = instance_dir(run_dir, record["instance_id"])
         done = load_checkpoint(path)
         if done and done.get("status") == "done":
-            print(f"  [{idx}/{len(records)}] {record['instance_id']} — skipped (checkpoint)")
+            print(f"  [{idx}/{total}] {record['instance_id']} — skipped (checkpoint)")
             continue
         if record["instance_id"] in failed_checkouts:
             save_checkpoint(path, {
@@ -537,18 +550,40 @@ def run_bench(
                 "failure_category": "checkout_failed", "model_patch": "",
                 "model_log": [], "patch_info": {},
             })
-            print(f"  [{idx}/{len(records)}] {record['instance_id']} — skipped (checkout failed)")
+            print(f"  [{idx}/{total}] {record['instance_id']} — skipped (checkout failed)")
             continue
-        print(f"  [{idx}/{len(records)}] {record['instance_id']} — solving ...", flush=True)
+        pending.append((idx, record, path))
+
+    n_workers = max(1, workers if workers is not None else DEFAULT_WORKERS)
+    print_lock = threading.Lock()
+
+    def _solve_one(item: tuple[int, dict, Path]) -> None:
+        idx, record, path = item
+        with print_lock:
+            print(f"  [{idx}/{total}] {record['instance_id']} — solving ...", flush=True)
         meta = run_instance(record, path, timeout=timeout, max_retries=max_retries,
                             thread_id=f"{run_id}-{idx}")
         patch = (path / "patch.diff").read_text(encoding="utf-8") if (path / "patch.diff").is_file() else ""
-        print(
-            f"      -> {'patch' if patch.strip() else 'NO PATCH'}"
-            f"{' (' + meta['failure_category'] + ')' if meta.get('failure_category') else ''}"
-            f" in {meta.get('elapsed_s', 0)}s",
-            flush=True,
-        )
+        with print_lock:
+            print(
+                f"      [{idx}/{total}] {record['instance_id']}"
+                f" -> {'patch' if patch.strip() else 'NO PATCH'}"
+                f"{' (' + meta['failure_category'] + ')' if meta.get('failure_category') else ''}"
+                f" in {meta.get('elapsed_s', 0)}s",
+                flush=True,
+            )
+
+    if not pending:
+        print(f"[bench] all {total} instances already checkpointed — nothing to do")
+    elif n_workers <= 1:
+        for item in pending:
+            _solve_one(item)
+    else:
+        print(f"[bench] solving {len(pending)} remaining instances with "
+              f"{n_workers} parallel workers")
+        with ThreadPoolExecutor(max_workers=n_workers, thread_name_prefix="isha-parallel") as pool:
+            for _ in pool.map(_solve_one, pending):
+                pass
 
     write_predictions(run_dir, records)
     return run_dir
@@ -585,6 +620,9 @@ def main() -> int:
                         help="skip repro verification inside the harness image")
     parser.add_argument("--no-prefilter", action="store_true",
                         help="run records the pre-filter would drop")
+    parser.add_argument("--workers", type=int, default=None,
+                        help="solve N instances in parallel (default 1: safe on "
+                             "shared provider TPM windows)")
     args = parser.parse_args()
 
     run_dir = run_bench(
@@ -597,6 +635,7 @@ def main() -> int:
         candidates=args.candidates,
         verify=False if args.no_verify else None,
         pre_filter=not args.no_prefilter,
+        workers=args.workers,
     )
     print(f"[bench] wrote {run_dir / 'predictions.json'}")
     return 0

@@ -7,6 +7,7 @@ and RAG retrieval hits so the planner sees structure first, then the most
 relevant source in full for accurate reasoning.
 """
 
+import os
 from pathlib import Path
 
 from src.ingestion.parser import RepoParser
@@ -15,10 +16,15 @@ from src.rag.retriever import CodeRetriever
 from src.tools.ast_mapper import ASTMapper
 from src.tools.dependency_graph import DependencyGraph
 
-MAX_CONTEXT_CHARS = 12000
+# Total assembled context handed to the graph.  Downstream prompts clip this
+# further per role (see src/agents/nodes.py budgets), so the cap here only
+# bounds the worst case.  Raise via ISHA_MAX_CONTEXT_CHARS when running on a
+# quota that tolerates larger prompts.
+MAX_CONTEXT_CHARS = int(os.getenv("ISHA_MAX_CONTEXT_CHARS", "40000"))
+MAX_FILE_LINES = int(os.getenv("ISHA_MAX_FILE_LINES", "400"))
 
 
-def _read_file(repo_path: str, rel: str, max_lines: int = 200) -> str:
+def _read_file(repo_path: str, rel: str, max_lines: int = MAX_FILE_LINES) -> str:
     """Read full file content with line numbers for reference."""
     path = Path(repo_path) / rel
     if not path.is_file():
@@ -113,20 +119,27 @@ def build_repo_context(issue_text: str, repo_path: str, top_k: int = 4) -> str:
                     f"(score {hit.get('score', 0):.3f})\n{content}"
                 )
 
-    # ── Assemble context ───────────────────────────────────────────────────
-    sections = []
+    # ── Assemble context (highest-value sections survive the cap first) ────
+    sections: list[tuple[str, int]] = []
     if repo_map:
-        sections.append(f"AST MAP:\n{repo_map}")
+        sections.append(("AST MAP:\n" + repo_map, 5))
     if impact_report:
-        sections.append(impact_report)
+        sections.append((impact_report, 4))
     if full_files_section:
-        sections.append(full_files_section)
+        sections.append((full_files_section, 3))
     if test_section:
-        sections.append(test_section)
+        sections.append((test_section, 2))
     if snippets:
-        sections.append("RELEVANT SNIPPETS:\n" + "\n\n".join(snippets))
+        sections.append(("RELEVANT SNIPPETS:\n" + "\n\n".join(snippets), 1))
 
-    context = "\n\n".join(sections)
-    if len(context) > MAX_CONTEXT_CHARS:
-        context = context[:MAX_CONTEXT_CHARS] + "\n...[truncated]"
+    kept: list[str] = []
+    total = 0
+    for text, priority in sorted(sections, key=lambda p: p[1], reverse=True):
+        if total + len(text) + 2 <= MAX_CONTEXT_CHARS:
+            kept.append(text)
+            total += len(text) + 2
+    if kept:
+        context = "\n\n".join(kept)
+        if len(context) > MAX_CONTEXT_CHARS:
+            context = context[:MAX_CONTEXT_CHARS] + "\n...[truncated]"
     return context

@@ -1,0 +1,11 @@
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@ -288,6 +288,8 @@ class HttpResponse(BaseHTTPResponse):
+         self.cookies = SimpleCookie()
+         self.closed = False
+         if content is not None:  # Skip if it's主播REDIRECT or similar.
++            if type(content) is memoryview:
++                content = bytes(content)
+             if settings.DEBUG and not _content_overrides_encoding(content):
+                 logger.warning(
+                     'You areSetting the response content with a string while '

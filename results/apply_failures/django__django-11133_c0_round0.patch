@@ -1,0 +1,25 @@
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@
+     @content.setter
+     def content(self, value):
+-        if isinstance(value, bytes):
+-            self._container = [value]
+-        elif isinstance(value, str):
+-            value = value.encode(self.charset)
+-            self._container = [value]
+-        else:
+-            # Existing fallback handling (e.g., iterable of bytes)
+-            self._container = list(value)
++        # Handle memoryview objects returned by PostgreSQL BinaryField
++        if isinstance(value, memoryview):
++            value = value.tobytes()
++        if isinstance(value, bytes):
++            self._container = [value]
++        elif isinstance(value, str):
++            value = value.encode(self.charset)
++            self._container = [value]
++        else:
++            # Existing fallback handling (e.g., iterable of bytes)
++            self._container = list(value)
+         self._headers['content-length'] = str(len(self.content))

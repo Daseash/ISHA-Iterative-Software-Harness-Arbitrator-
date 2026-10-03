@@ -159,7 +159,7 @@ def _run(image: str, mounts: dict[str, str], script: str,
     cmd = [DOCKER, "run", "--rm", "--init"]
     for host, container in mounts.items():
         # Ensure Windows backslashes are converted to forward slashes for docker daemon
-        clean_host = str(host).replace("\\", "/")
+        clean_host = host.replace("\\", "/")
         cmd += ["--mount", f"type=bind,src={clean_host},dst={container},ro"]
     cmd += [image, "bash", "-lc", script]
 
@@ -315,7 +315,7 @@ def _regressions(meta: dict, repro_target: str, touched: list[str],
 # ── Target derivation for touched-module tests ─────────────────────────────
 def touched_targets(record: dict, changed_files: list[str], repo_root: str) -> list[str]:
     """Map changed source files onto their closest existing test files."""
-    from src.tools.codebody import tests_for
+    from src.tools.localizer import find_test_files
 
     out: list[str] = []
     for rel in changed_files:
@@ -323,8 +323,8 @@ def touched_targets(record: dict, changed_files: list[str], repo_root: str) -> l
             out.append(rel)
             continue
         try:
-            for test_file in tests_for(Path(repo_root) / rel):
-                out.append(str(Path(test_file).relative_to(repo_root)).replace("\\", "/"))
+            for test_file, _ in find_test_files(repo_root, [rel], top_k=2):
+                out.append(str(test_file).replace("\\", "/"))
         except Exception:
             continue
     # De-duplicate, keep order, bound the cost of one docker run.

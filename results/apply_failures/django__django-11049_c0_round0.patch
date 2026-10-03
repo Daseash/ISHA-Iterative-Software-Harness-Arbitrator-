@@ -1,0 +1,19 @@
+--- a/django/core/validators.py
++++ b/django/core/validators.py
+@@
+-    message = _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].')
++    message = _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].')
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@
+-        default_error_messages = {
+-            'invalid': _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].'),
+-        }
++        default_error_messages = {
++            'invalid': _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].'),
++        }
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@
+-        kwargs.setdefault('help_text', _('Duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].'))
++        kwargs.setdefault('help_text', _('Duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].'))
