@@ -14,15 +14,31 @@ authors = [{name = "ISHA Team"}]
 dependencies = [
     "langgraph",
     "litellm",
+    "qdrant-client",
+    "tree-sitter",
+    "tree-sitter-python",
+    "docling",
+    "nemoguardrails",
+    "langfuse",
     "pydantic>=2",
-    "python-dotenv",
     "pytest",
+    "docker",
     "streamlit",
+    "laya",
+    "python-dotenv",
+    "swebench",
 ]
 
 [project.scripts]
 isha = "src.main:main"
 isha-fix = "src.main:main"
+
+# The import package is literally `src` (lives at the repo root). Without this,
+# setuptools' auto-discovery treats src/ as a PEP "src layout" container and
+# flattens its contents to the wheel root, breaking `import src.main`.
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
 
 [tool.pyright]
 extraPaths = [

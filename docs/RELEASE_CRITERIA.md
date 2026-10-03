@@ -8,12 +8,12 @@ This document outlines the strict quality, safety, empirical, and developer-expe
 
 | Dimension | Criteria Count | Current Status | Acceptance Bar | Evidence Artifacts |
 |---|---|---|---|---|
-| **1. Empirical Benchmarks** | 5 | 🟢 5/5 Verified | Validated on SWE-bench slices with official harness | [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json), [REPORT.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/REPORT.md) |
-| **2. Engine & Model Resilience** | 4 | 🟢 4/4 Verified | 0% API freeze, robust multi-model fallback | [candidates.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/candidates.json), `tests/` (81/81 green) |
-| **3. Patch Quality & Safety** | 4 | 🟢 4/4 Verified | AST valid, 0 secrets leaked, clean unified diff | [patch_engine.py](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/patch_engine.py), [ablations.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/ablations.json) |
-| **4. TDD & Multi-Agent Arbitration** | 4 | 🟢 4/4 Verified | Red-to-green proof, 3-worktree isolated sandboxes | [candidates.py](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/candidates.py), [calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json) |
-| **5. Developer Experience (DX) & CLI** | 4 | 🟢 4/4 Verified | Global CLI, 1-click patch download & web UI | [cli.py](file:///c:/Users/Eashwar/ISHA/isha-agent/src/cli.py), [pr_formatter.py](file:///c:/Users/Eashwar/ISHA/isha-agent/src/review/pr_formatter.py) |
-| **6. Documentation & Reproducibility** | 4 | 🟢 4/4 Verified | Public README, replication guide, asset charts | [README.md](file:///c:/Users/Eashwar/ISHA/isha-agent/README.md), [BENCHMARK_REPRO.md](file:///c:/Users/Eashwar/ISHA/isha-agent/docs/BENCHMARK_REPRO.md) |
+| **1. Empirical Benchmarks** | 5 | 🟢 5/5 Verified | Validated on SWE-bench slices with official harness | [before_after.json](results/before_after.json), [REPORT.md](results/REPORT.md) |
+| **2. Engine & Model Resilience** | 4 | 🟢 4/4 Verified | 0% API freeze, robust multi-model fallback | [candidates.json](results/candidates.json), `tests/` (81/81 green) |
+| **3. Patch Quality & Safety** | 4 | 🟢 4/4 Verified | AST valid, 0 secrets leaked, clean unified diff | [patch_engine.py](src/tools/patch_engine.py), [ablations.json](results/ablations.json) |
+| **4. TDD & Multi-Agent Arbitration** | 4 | 🟢 4/4 Verified | Red-to-green proof, 3-worktree isolated sandboxes | [candidates.py](src/agents/candidates.py), [calibration.json](results/calibration.json) |
+| **5. Developer Experience (DX) & CLI** | 4 | 🟢 4/4 Verified | Global CLI, 1-click patch download & web UI | [cli.py](src/cli.py), [pr_formatter.py](src/review/pr_formatter.py) |
+| **6. Documentation & Reproducibility** | 4 | 🟢 4/4 Verified | Public README, replication guide, asset charts | [README.md](README.md), [BENCHMARK_REPRO.md](docs/BENCHMARK_REPRO.md) |
 | **Overall** | **25** | **🟢 25/25 Verified** | **All release criteria met** | **Fully Audited & Backed by Data** |
 
 ---

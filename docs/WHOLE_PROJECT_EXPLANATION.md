@@ -153,16 +153,16 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`README.md`](file:///c:/Users/Eashwar/ISHA/isha-agent/README.md) | High-level project documentation, benchmarks, architecture diagrams, and quickstart commands. |
-| [`LICENSE`](file:///c:/Users/Eashwar/ISHA/isha-agent/LICENSE) | Official open-source MIT License granting full usage and attribution rights. |
-| [`.gitignore`](file:///c:/Users/Eashwar/ISHA/isha-agent/.gitignore) | Protects sensitive files: ignores `.env`, virtualenvs, `.pytest_cache`, `output/*.json`, `output/sessions/`, `.worktrees/`, and `swebench_checkouts/`. |
-| [`.env.example`](file:///c:/Users/Eashwar/ISHA/isha-agent/.env.example) | Template configuration file listing optional environment variables (Gemini, Groq, Langfuse, Qdrant, LAYA paths). |
-| [`requirements.txt`](file:///c:/Users/Eashwar/ISHA/isha-agent/requirements.txt) | Core Python dependencies: `langgraph`, `litellm`, `pydantic`, `tree-sitter`, `qdrant-client`, `streamlit`, `pytest`. |
-| [`pytest.ini`](file:///c:/Users/Eashwar/ISHA/isha-agent/pytest.ini) | Pytest configuration registering custom markers (`slow`, `integration`, `laya`). |
-| [`docker-compose.yml`](file:///c:/Users/Eashwar/ISHA/isha-agent/docker-compose.yml) | Compose specification for local services (e.g. Qdrant vector database). |
-| [`sandbox.Dockerfile`](file:///c:/Users/Eashwar/ISHA/isha-agent/sandbox.Dockerfile) | Hardened container environment for executing candidate patches with CPU, memory, and network constraints. |
-| [`sandbox-requirements.txt`](file:///c:/Users/Eashwar/ISHA/isha-agent/sandbox-requirements.txt) | Minimal packages required inside the container sandbox. |
-| [`.dockerignore`](file:///c:/Users/Eashwar/ISHA/isha-agent/.dockerignore) | Excludes local virtual environments and caches from container build contexts. |
+| [`README.md`](README.md) | High-level project documentation, benchmarks, architecture diagrams, and quickstart commands. |
+| [`LICENSE`](LICENSE) | Official open-source MIT License granting full usage and attribution rights. |
+| [`.gitignore`](.gitignore) | Protects sensitive files: ignores `.env`, virtualenvs, `.pytest_cache`, `output/*.json`, `output/sessions/`, `.worktrees/`, and `swebench_checkouts/`. |
+| [`.env.example`](.env.example) | Template configuration file listing optional environment variables (Gemini, Groq, Langfuse, Qdrant, LAYA paths). |
+| [`requirements.txt`](requirements.txt) | Core Python dependencies: `langgraph`, `litellm`, `pydantic`, `tree-sitter`, `qdrant-client`, `streamlit`, `pytest`. |
+| [`pytest.ini`](pytest.ini) | Pytest configuration registering custom markers (`slow`, `integration`, `laya`). |
+| [`docker-compose.yml`](docker-compose.yml) | Compose specification for local services (e.g. Qdrant vector database). |
+| [`sandbox.Dockerfile`](sandbox.Dockerfile) | Hardened container environment for executing candidate patches with CPU, memory, and network constraints. |
+| [`sandbox-requirements.txt`](sandbox-requirements.txt) | Minimal packages required inside the container sandbox. |
+| [`.dockerignore`](.dockerignore) | Excludes local virtual environments and caches from container build contexts. |
 
 ---
 
@@ -170,11 +170,11 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/main.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/main.py) | Main command-line interface for ISHA. Supports single-agent, multi-agent (`--multi`), custom repo targets (`--repo`), and custom issues. |
-| [`src/config.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/config.py) | Central model routing and fallback configuration. Defines the two-tier split: Gemini 3.1 Flash Lite for planning, Groq Qwen 3.8 27B for coding, with graceful fallback to deterministic offline brain. |
-| [`scripts/demo.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/scripts/demo.py) | Interactive live demonstration script displaying colored progress bars, banner, step-by-step TDD outputs, and LAYA scores. |
-| [`scripts/laya_demo.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/scripts/laya_demo.py) | Standalone showcase of the LAYA decision engine scoring 3 competing patches and selecting the calibrated winner. |
-| [`scripts/run_dashboard.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/scripts/run_dashboard.py) | Convenience launcher script for running the Streamlit dashboard (`streamlit run scripts/run_dashboard.py`). |
+| [`src/main.py`](src/main.py) | Main command-line interface for ISHA. Supports single-agent, multi-agent (`--multi`), custom repo targets (`--repo`), and custom issues. |
+| [`src/config.py`](src/config.py) | Central model routing and fallback configuration. Defines the two-tier split: Gemini 3.1 Flash Lite for planning, Groq Qwen 3.8 27B for coding, with graceful fallback to deterministic offline brain. |
+| [`scripts/demo.py`](scripts/demo.py) | Interactive live demonstration script displaying colored progress bars, banner, step-by-step TDD outputs, and LAYA scores. |
+| [`scripts/laya_demo.py`](scripts/laya_demo.py) | Standalone showcase of the LAYA decision engine scoring 3 competing patches and selecting the calibrated winner. |
+| [`scripts/run_dashboard.py`](scripts/run_dashboard.py) | Convenience launcher script for running the Streamlit dashboard (`streamlit run scripts/run_dashboard.py`). |
 
 ---
 
@@ -182,15 +182,15 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/agents/state.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/state.py) | Defines `AgentState` using Pydantic v2. Uses last-write-wins reducers (`_last`) so parallel multi-agent branches can write state keys without `InvalidUpdateError`. |
-| [`src/agents/graph.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/graph.py) | LangGraph topology definitions. Compiles both `compiled_graph` (single-agent with sub-issue loop) and `compiled_multi_graph` (parallel worktrees + arbitration). |
-| [`src/agents/nodes.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/nodes.py) | Core node implementations: `planner_node`, `regression_test_node`, `coder_node`, and `sandbox_node`. |
-| [`src/agents/investigation.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/investigation.py) | Dedicated pre-planning exploration node. Runs baseline tests before code modifications, greps for error symbols, and loads full suspect files. |
-| [`src/agents/decomposer.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/decomposer.py) | Hierarchical bug decomposer. Splits complex or multi-file issues into ordered atomic `SubIssue` objects. |
-| [`src/agents/session_manager.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/session_manager.py) | Manages long-running sessions, checkpointing snapshots to `output/sessions/{session_id}.json` with full progress ledgers and pause/resume capabilities. |
-| [`src/agents/context.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/context.py) | Assembles the prompt context for the planner by combining the AST map, dependency blast radius, and vector search chunks. |
-| [`src/agents/attempt.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/attempt.py) | Executes a single strategy attempt in an isolated worktree through the coder -> sandbox -> self-correct loop. |
-| [`src/agents/dispatch.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/agents/dispatch.py) | LangGraph fan-out router: dispatches the planner output into 3 parallel strategy attempts using `Send` API. |
+| [`src/agents/state.py`](src/agents/state.py) | Defines `AgentState` using Pydantic v2. Uses last-write-wins reducers (`_last`) so parallel multi-agent branches can write state keys without `InvalidUpdateError`. |
+| [`src/agents/graph.py`](src/agents/graph.py) | LangGraph topology definitions. Compiles both `compiled_graph` (single-agent with sub-issue loop) and `compiled_multi_graph` (parallel worktrees + arbitration). |
+| [`src/agents/nodes.py`](src/agents/nodes.py) | Core node implementations: `planner_node`, `regression_test_node`, `coder_node`, and `sandbox_node`. |
+| [`src/agents/investigation.py`](src/agents/investigation.py) | Dedicated pre-planning exploration node. Runs baseline tests before code modifications, greps for error symbols, and loads full suspect files. |
+| [`src/agents/decomposer.py`](src/agents/decomposer.py) | Hierarchical bug decomposer. Splits complex or multi-file issues into ordered atomic `SubIssue` objects. |
+| [`src/agents/session_manager.py`](src/agents/session_manager.py) | Manages long-running sessions, checkpointing snapshots to `output/sessions/{session_id}.json` with full progress ledgers and pause/resume capabilities. |
+| [`src/agents/context.py`](src/agents/context.py) | Assembles the prompt context for the planner by combining the AST map, dependency blast radius, and vector search chunks. |
+| [`src/agents/attempt.py`](src/agents/attempt.py) | Executes a single strategy attempt in an isolated worktree through the coder -> sandbox -> self-correct loop. |
+| [`src/agents/dispatch.py`](src/agents/dispatch.py) | LangGraph fan-out router: dispatches the planner output into 3 parallel strategy attempts using `Send` API. |
 
 ---
 
@@ -198,16 +198,16 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/tools/dependency_graph.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/dependency_graph.py) | Extracts repo-level call graphs, reverse call graphs, import graphs, and reverse import graphs using Python AST. Calculates blast radius and impacted test suites. |
-| [`src/tools/consistency_checker.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/consistency_checker.py) | Cross-file consistency checker. Analyzes diffs for changed function signatures and traverses the call graph to verify all external callers are updated. |
-| [`src/tools/ast_mapper.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/ast_mapper.py) | Uses Tree-sitter / AST parsing to produce a compact, token-efficient map of class and function signatures without bodies. |
-| [`src/tools/patch_engine.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/patch_engine.py) | Robust patch engine. Attempts `git apply --3way` first and falls back to a custom manual hunk applier for non-git environments. |
-| [`src/tools/sandbox.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/sandbox.py) | Local isolated workspace runner. Creates scratch directory copies and executes pytest safely with timeouts. |
-| [`src/tools/docker_sandbox.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/docker_sandbox.py) | Containerized sandbox runner. Mounts workspaces read-only/read-write into Docker containers with CPU and memory limits. |
-| [`src/tools/git_manager.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/git_manager.py) | Git helper routines for checking repository status and committing verified fixes. |
-| [`src/tools/worktree_manager.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/worktree_manager.py) | Manages git worktrees under `.worktrees/`. Provides clean worktree creation, isolation, and teardown for parallel agent branches. |
-| [`src/tools/context_trimmer.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/context_trimmer.py) | Trims verbose Python tracebacks and error messages so self-correction prompts fit comfortably within LLM context windows. |
-| [`src/tools/offline_brain.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/tools/offline_brain.py) | Deterministic offline mock engine providing valid plans and patches for testing without live LLM API keys. |
+| [`src/tools/dependency_graph.py`](src/tools/dependency_graph.py) | Extracts repo-level call graphs, reverse call graphs, import graphs, and reverse import graphs using Python AST. Calculates blast radius and impacted test suites. |
+| [`src/tools/consistency_checker.py`](src/tools/consistency_checker.py) | Cross-file consistency checker. Analyzes diffs for changed function signatures and traverses the call graph to verify all external callers are updated. |
+| [`src/tools/ast_mapper.py`](src/tools/ast_mapper.py) | Uses Tree-sitter / AST parsing to produce a compact, token-efficient map of class and function signatures without bodies. |
+| [`src/tools/patch_engine.py`](src/tools/patch_engine.py) | Robust patch engine. Attempts `git apply --3way` first and falls back to a custom manual hunk applier for non-git environments. |
+| [`src/tools/sandbox.py`](src/tools/sandbox.py) | Local isolated workspace runner. Creates scratch directory copies and executes pytest safely with timeouts. |
+| [`src/tools/docker_sandbox.py`](src/tools/docker_sandbox.py) | Containerized sandbox runner. Mounts workspaces read-only/read-write into Docker containers with CPU and memory limits. |
+| [`src/tools/git_manager.py`](src/tools/git_manager.py) | Git helper routines for checking repository status and committing verified fixes. |
+| [`src/tools/worktree_manager.py`](src/tools/worktree_manager.py) | Manages git worktrees under `.worktrees/`. Provides clean worktree creation, isolation, and teardown for parallel agent branches. |
+| [`src/tools/context_trimmer.py`](src/tools/context_trimmer.py) | Trims verbose Python tracebacks and error messages so self-correction prompts fit comfortably within LLM context windows. |
+| [`src/tools/offline_brain.py`](src/tools/offline_brain.py) | Deterministic offline mock engine providing valid plans and patches for testing without live LLM API keys. |
 
 ---
 
@@ -215,9 +215,9 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/review/laya_judge.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/review/laya_judge.py) | Interfaces with the local LAYA model (`agent.py`). Evaluates patches on 6 calibrated probability metrics: `fix_quality`, `matches_issue`, `safe_to_apply`, `secrets_or_danger`, `logic_drift`, and `composite`. Thread-safe inference lock. |
-| [`src/review/critic.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/review/critic.py) | The critic graph node. Takes the generated patch and test outputs, calls LAYA, and sets the critic verdict (`approved`, `flagged`, or `low_quality`). |
-| [`src/review/arbitration.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/review/arbitration.py) | Collects results from the 3 parallel strategy attempts, scores them with LAYA, and crowns the winning patch. |
+| [`src/review/laya_judge.py`](src/review/laya_judge.py) | Interfaces with the local LAYA model (`agent.py`). Evaluates patches on 6 calibrated probability metrics: `fix_quality`, `matches_issue`, `safe_to_apply`, `secrets_or_danger`, `logic_drift`, and `composite`. Thread-safe inference lock. |
+| [`src/review/critic.py`](src/review/critic.py) | The critic graph node. Takes the generated patch and test outputs, calls LAYA, and sets the critic verdict (`approved`, `flagged`, or `low_quality`). |
+| [`src/review/arbitration.py`](src/review/arbitration.py) | Collects results from the 3 parallel strategy attempts, scores them with LAYA, and crowns the winning patch. |
 
 ---
 
@@ -225,9 +225,9 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/guardrails/scanner.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/guardrails/scanner.py) | Two-phase security scanner. Checks input issues for prompt injection and checks candidate patch diffs for leaked API keys, tokens, or private secrets. |
-| [`src/guardrails/rails.co`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/guardrails/rails.co) | NeMo Guardrails policy definitions and conversational safety rails. |
-| [`src/approval/gate.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/approval/gate.py) | Human-in-the-loop approval gate. Flagged or dangerous diffs pause execution; records an immutable audit log to `output/approvals.jsonl`. |
+| [`src/guardrails/scanner.py`](src/guardrails/scanner.py) | Two-phase security scanner. Checks input issues for prompt injection and checks candidate patch diffs for leaked API keys, tokens, or private secrets. |
+| [`src/guardrails/rails.co`](src/guardrails/rails.co) | NeMo Guardrails policy definitions and conversational safety rails. |
+| [`src/approval/gate.py`](src/approval/gate.py) | Human-in-the-loop approval gate. Flagged or dangerous diffs pause execution; records an immutable audit log to `output/approvals.jsonl`. |
 
 ---
 
@@ -235,9 +235,9 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/ingestion/parser.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/ingestion/parser.py) | Walks codebases and chunks Python files into AST function/class snippets with file metadata and line ranges. |
-| [`src/rag/indexer.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/rag/indexer.py) | Indexes code chunks into Qdrant vector storage (or local in-memory fallback) with dense embeddings and payload filters. |
-| [`src/rag/retriever.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/rag/retriever.py) | Performs hybrid semantic + keyword search over indexed code chunks to retrieve the top relevant code snippets. |
+| [`src/ingestion/parser.py`](src/ingestion/parser.py) | Walks codebases and chunks Python files into AST function/class snippets with file metadata and line ranges. |
+| [`src/rag/indexer.py`](src/rag/indexer.py) | Indexes code chunks into Qdrant vector storage (or local in-memory fallback) with dense embeddings and payload filters. |
+| [`src/rag/retriever.py`](src/rag/retriever.py) | Performs hybrid semantic + keyword search over indexed code chunks to retrieve the top relevant code snippets. |
 
 ---
 
@@ -245,7 +245,7 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`src/dashboard/app.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/src/dashboard/app.py) | Full-featured web dashboard with 4 tabs: **Run** (launch fixes & live graph execution), **Diff** (syntax-highlighted patch review), **Telemetry** (LAYA score bars & latency metrics), and **Approvals** (human review queue). |
+| [`src/dashboard/app.py`](src/dashboard/app.py) | Full-featured web dashboard with 4 tabs: **Run** (launch fixes & live graph execution), **Diff** (syntax-highlighted patch review), **Telemetry** (LAYA score bars & latency metrics), and **Approvals** (human review queue). |
 
 ---
 
@@ -253,14 +253,14 @@ Most AI coding agents generate patches in a single happy path on a toy file and 
 
 | File | Purpose |
 |:---|:---|
-| [`tests/dummy_repo/calculator.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/dummy_repo/calculator.py) | Controlled benchmark repository containing seeded bugs: `subtract()` returns `a + b`, and `divide()` lacks a zero-division guard. |
-| [`tests/dummy_repo/test_calculator.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/dummy_repo/test_calculator.py) | Test suite for the calculator module. |
-| [`tests/eval_suite.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/eval_suite.py) | Automated eval suite running ISHA against all seeded bugs, outputting pass rates and LAYA score tables. |
-| [`tests/swebench_runner.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/swebench_runner.py) | Evaluates LAYA and ISHA against SWE-bench Lite instances. Tests golden patches against 3 negative controls (inverted patch, unrelated patch, dangerous patch). |
-| [`tests/prepare_swebench.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/prepare_swebench.py) | Clones and prepares SWE-bench repository checkouts for local evaluation. |
-| [`tests/test_v2_capabilities.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/test_v2_capabilities.py) | Comprehensive test suite covering the 5 v2 capabilities (dependency graph, decomposition, session manager, investigation, consistency checker). |
-| [`tests/test_docker_sandbox.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/test_docker_sandbox.py) | Unit tests verifying container isolation, volume mounts, resource limits, and fallbacks in the Docker sandbox. |
-| [`tests/test_context_trimmer.py`](file:///c:/Users/Eashwar/ISHA/isha-agent/tests/test_context_trimmer.py) | Unit tests verifying traceback compaction and prompt token minimization. |
+| [`tests/dummy_repo/calculator.py`](tests/dummy_repo/calculator.py) | Controlled benchmark repository containing seeded bugs: `subtract()` returns `a + b`, and `divide()` lacks a zero-division guard. |
+| [`tests/dummy_repo/test_calculator.py`](tests/dummy_repo/test_calculator.py) | Test suite for the calculator module. |
+| [`tests/eval_suite.py`](tests/eval_suite.py) | Automated eval suite running ISHA against all seeded bugs, outputting pass rates and LAYA score tables. |
+| [`tests/swebench_runner.py`](tests/swebench_runner.py) | Evaluates LAYA and ISHA against SWE-bench Lite instances. Tests golden patches against 3 negative controls (inverted patch, unrelated patch, dangerous patch). |
+| [`tests/prepare_swebench.py`](tests/prepare_swebench.py) | Clones and prepares SWE-bench repository checkouts for local evaluation. |
+| [`tests/test_v2_capabilities.py`](tests/test_v2_capabilities.py) | Comprehensive test suite covering the 5 v2 capabilities (dependency graph, decomposition, session manager, investigation, consistency checker). |
+| [`tests/test_docker_sandbox.py`](tests/test_docker_sandbox.py) | Unit tests verifying container isolation, volume mounts, resource limits, and fallbacks in the Docker sandbox. |
+| [`tests/test_context_trimmer.py`](tests/test_context_trimmer.py) | Unit tests verifying traceback compaction and prompt token minimization. |
 
 ---
 

@@ -9,7 +9,7 @@
 [![Architecture: Multi-Agent](https://img.shields.io/badge/Architecture-3-Worktree%20Parallel-purple.svg)](#-architecture)
 [![Inference: Free Tier](https://img.shields.io/badge/Inference-%240.00%20Free%20Tier-success.svg)](#2-configuration)
 [![Release Criteria: 25/25 Verified](https://img.shields.io/badge/Release%20Criteria-25%2F25%20Verified-brightgreen.svg)](docs/RELEASE_CRITERIA.md)
-[![Version: 0.3.0](https://img.shields.io/badge/version-0.3.0-orange.svg)](pyproject.toml)
+[![Version: 0.2.0](https://img.shields.io/badge/version-0.2.0-orange.svg)](pyproject.toml)
 
 ---
 
@@ -166,16 +166,28 @@ isha-agent/
 
 ### 1. Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
-cd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent
+Three ways in, all requiring only Python 3.10+:
 
-# Install dependencies and global CLI
-pip install -e .
+```bash
+# 1) Zero-clone — straight from this repo (deps resolve from PyPI)
+pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
+
+# 2) Clone + one-command installer (creates .venv/, .env template, self-checks)
+git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
+cd ISHA-Iterative-Software-Harness-Arbitrator-
+python install.py            # or: bash install.sh / install.ps1 on Windows
+
+# 3) Docker (agent image + local sandbox, no host Python needed)
+docker build -f Dockerfile -t isha:local .
+docker run --rm -it -e GROQ_API_KEY -e GOOGLE_API_KEY isha:local isha doctor
 ```
 
-Requires Python 3.10+.
+Notes:
+
+- First install downloads a few hundred MB (`docling` pulls torch/CUDA wheels);
+  the benchmark itself runs against local checkouts, no container pulls.
+- Development install: `pip install -e .` from a clone.
+- Full walkthrough + first-run checklist: [docs/INSTALL.md](docs/INSTALL.md).
 
 ### 2. Configuration
 

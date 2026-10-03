@@ -1,3 +1,26 @@
-# Allow-list: the sandbox image only needs the requirements file.
-*
-!sandbox-requirements.txt
+# Exclude heavy/generated/local data from build contexts.
+# Both Dockerfiles COPY only a few files, so the context stays small and
+# no secrets (.env) or gigabyte caches can leak into an image.
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.pytest_cache/
+.streamlit/
+.qdrant/
+qdrant_storage/
+results/
+output/
+data/
+swebench_checkouts/
+live_repos/
+assets/landing/
+isha_fix.egg-info/
+*.egg-info/
+.pyright/
+.vscode/
+.playwright-mcp/
+*.log

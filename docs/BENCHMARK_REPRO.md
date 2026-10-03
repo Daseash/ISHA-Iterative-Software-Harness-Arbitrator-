@@ -35,7 +35,7 @@ Expected output: `81 passed, 2 warnings in ~18s`.
 
 ## 3. Benchmark Dataset Splits
 
-Fixed dataset splits are stored in [`data/splits.json`](file:///c:/Users/Eashwar/ISHA/isha-agent/data/splits.json) (seed 42):
+Fixed dataset splits are stored in [`data/splits.json`](data/splits.json) (seed 42):
 - **DEV Slice** ($N=30$): Used for parameter tuning, localization calibration, and before/after component ablation.
 - **FINAL Slice** ($N=30$): Held-out evaluation slice. Never used during development.
 - **TRAIN Slice** ($N=240$): Label repository for LAYA calibration.
@@ -49,7 +49,7 @@ To evaluate hierarchical BM25 + defs + prior re-ranking on the 30 DEV instances:
 ```bash
 python -m src.bench.loc_eval --slice dev --limit 30
 ```
-Metrics written to [`results/loc_eval_dev.json`](file:///c:/Users/Eashwar/ISHA/isha-agent/results/loc_eval_dev.json):
+Metrics written to [`results/loc_eval_dev.json`](results/loc_eval_dev.json):
 - Hit@1: 46.7%
 - Hit@3: 60.0%
 - Hit@5: 63.3%
@@ -61,14 +61,14 @@ To aggregate candidate outcomes across the 3 distinct model families:
 ```bash
 python -m src.bench.build_candidates_json
 ```
-Metrics written to [`results/candidates.json`](file:///c:/Users/Eashwar/ISHA/isha-agent/results/candidates.json).
+Metrics written to [`results/candidates.json`](results/candidates.json).
 
 ### C. LAYA Calibration & Combiner Evaluation
 To fit the logistic combiner with temperature scaling on held-out validation labels:
 ```bash
 python -m src.review.calibration
 ```
-Metrics written to [`results/calibration.json`](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json):
+Metrics written to [`results/calibration.json`](results/calibration.json):
 - ECE: 0.0010 ($N_{val}=103$)
 - Brier Score: 0.0000
 - Auto-approve threshold $\tau=0.50$ (100.0% precision)
@@ -78,11 +78,11 @@ To compile baseline vs. upgraded metrics with exact 95% Wilson confidence interv
 ```bash
 python -m src.bench.build_before_after
 ```
-Metrics written to [`results/before_after.json`](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json).
+Metrics written to [`results/before_after.json`](results/before_after.json).
 
 ### E. Regenerating Comparison Visualizations
 To re-render the publication comparison plot:
 ```bash
 python -m src.bench.make_plots
 ```
-Graphic generated at [`assets/isha_vs_baselines.png`](file:///c:/Users/Eashwar/ISHA/isha-agent/assets/isha_vs_baselines.png).
+Graphic generated at [`assets/isha_vs_baselines.png`](assets/isha_vs_baselines.png).
