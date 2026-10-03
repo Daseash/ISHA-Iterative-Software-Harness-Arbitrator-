@@ -502,3 +502,15 @@ Made ISHA pullable/runnable for others:
   Watch cadence moved to 40 min (cron wku_102b76ef0001qpvaXdbWREJk1y);
   gate verdict + M-3 only when BOTH main==50 and r2==8.
 
+### Day 2 watch — 22:40 local
+
+- **Main 31/50** (+1: `scikit-learn__scikit-learn-10297` done 22:36).
+  **r2 0/8** — `django__django-11133` in progress since 22:31, first
+  result expected ~23:00-23:30. Both processes alive; no restart needed.
+
+### Day 2 watch — 23:00 local
+
+- **Main 32/50** (+1: `scikit-learn__scikit-learn-10508` done 22:52).
+  **r2 1/8** — first re-solve finished: `django__django-11133` done
+  22:56 (~25 min). Both processes alive; no restart needed.
+
