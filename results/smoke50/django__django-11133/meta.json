@@ -1,0 +1,260 @@
+{
+  "instance_id": "django__django-11133",
+  "repo": "django/django",
+  "base_commit": "879cc3da6249e920b8d54518a0ae06de835d7373",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950198.9229276
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950207.0153792
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950322.4041653
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950425.0144348
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950587.5808926
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790950772.1146705
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790951056.3565521
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790951342.3721173
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790951400.7593653
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/http/response.py: @@ — expected context not found in file: '    @content.setter' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1790949174.6713986,
+  "elapsed_s": 1264.75,
+  "plan": "@content.setter\n    def content(self, value):\n-        if isinstance(value, bytes):\n-            self._container = [value]\n-        elif isinstance(value, str):\n-            value = value.encode(self.charset)\n-            self._container = [value]\n-        else:\n-            # Existing fallback handling (e.g., iterable of bytes)\n-            self._container = list(value)\n+        # ---- NEW: handle memoryview objects ----\n+        # PostgreSQL returns BinaryField data as a memoryview. Convert it to\n+        # a plain bytes object so that HttpResponse stores the actual payload.\n+        if isinstance(value, memoryview):\n+            value = value.tobytes()\n+\n+        if isinstance(value, bytes):\n+            # Raw bytes are stored unchanged.\n+            self._container = [value]\n+        elif isinstance(value, str):\n+            # Text is encoded using the response charset.\n+            value = value.encode(self.charset)\n+            self._container = [value]\n+        else:\n+            # Preserve original behaviour for other iterable‑like values.\n+            self._container = list(value)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/http/response.py",
+      "symbol": "django/http/response.py::__init__",
+      "symbols": [
+        "__init__",
+        "HttpResponseRedirectBase",
+        "HttpResponseNotModified",
+        "HttpResponseBadRequest"
+      ],
+      "line_range": [
+        287,
+        291
+      ],
+      "score": 0.7035,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7271,
+        "vector": 0.5973,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: content; body matches report terms: content, bytes, string)"
+    },
+    {
+      "file": "django/utils/http.py",
+      "symbol": "django/utils/http.py::http_date",
+      "symbols": [
+        "http_date",
+        "_is_safe_url",
+        "urlencode",
+        "urlquote"
+      ],
+      "line_range": [
+        143,
+        156
+      ],
+      "score": 0.5745,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.291,
+        "vector": 0.473,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: current, http, string)"
+    },
+    {
+      "file": "django/views/decorators/http.py",
+      "symbol": "django/views/decorators/http.py::require_http_methods",
+      "symbols": [
+        "require_http_methods",
+        "decorator",
+        "inner",
+        "condition"
+      ],
+      "line_range": [
+        18,
+        44
+      ],
+      "score": 0.5881,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3765,
+        "vector": 0.4079,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: httpresponse, response, http, this)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "__reduce__",
+        "get_pk_value_on_save",
+        "to_python"
+      ],
+      "line_range": [
+        304,
+        321
+      ],
+      "score": 0.6494,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5695,
+        "vector": 0.5167,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: like, this, string, field)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "autocomplete",
+        "fetch_command",
+        "main_help_text"
+      ],
+      "line_range": [
+        41,
+        74
+      ],
+      "score": 0.5545,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2819,
+        "vector": 0.3254,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: django, also, this)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::ping_google",
+      "symbols": [
+        "ping_google",
+        "_get_sitemap_full_url",
+        "get_urls",
+        "Sitemap"
+      ],
+      "line_range": [
+        18,
+        29
+      ],
+      "score": 0.5747,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1262,
+        "vector": 0.8178,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: current, http, this)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.6859999999999999,
+  "laya_scores": {
+    "fix_quality": 1.3656,
+    "matches_issue": 0.7192,
+    "safe_to_apply": 0.6592,
+    "composite": 0.6859999999999999,
+    "secrets_or_danger": 0.1224,
+    "logic_drift": 0.2517,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution vectors are introduced.\n- PERFORMANCE: PASS - `tobytes()` creates a single copy; no N+1, unbounded loops, or significant overhead compared to the default iterable path.\n- ROBUSTNESS: PASS - Correctly normalizes memoryview to bytes, preventing type confusion and ensuring correct serialization.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/http/response.py: @@ — expected context not found in file: '    @content.setter' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "import pytest\nimport django\n\n# Initialise Django settings (required for HttpResponse)\ndjango.setup()\n\nfrom django.http import HttpResponse\n\n\ndef test_memoryview_content_is_converted_to_bytes():\n    \"\"\"\n    The original bug caused HttpResponse.content to be the string\n    representation of a memoryview object. After the fix it should be the\n    actual bytes payload.\n    \"\"\"\n    resp = HttpResponse(memoryview(b\"My Content\"))\n    assert resp.content == b\"My Content\"\n\n\ndef test_empty_memoryview_is_handled():\n    \"\"\"Edge case: zero‑length memoryview should result in empty bytes.\"\"\"\n    resp = HttpResponse(memoryview(b\"\"))\n    assert resp.content == b\"\"\n\n\ndef test_large_memoryview_is_preserved():\n    \"\"\"Edge case: a larger payload should be returned unchanged.\"\"\"\n    payload = b\"a\" * 4096  # 4 KiB of data\n    resp = HttpResponse(memoryview(payload))\n    assert resp.content == payload\n\n\ndef test_str_content_is_encoded():\n    \"\"\"Regular behaviour – a string should be encoded using the response charset.\"\"\"\n    resp = HttpResponse(\"hello\")\n    assert resp.content == b\"hello\"\n\n\ndef test_iterable_of_bytes_is_joined():\n    \"\"\"Non‑memoryview iterables (list of bytes) retain the original behaviour.\"\"\"\n    resp = HttpResponse([b\"foo\", b\"bar\"])\n    assert resp.content == b\"foobar\"\n\n\ndef test_invalid_content_type_raises_type_error():\n    \"\"\"Passing a non‑iterable, non‑bytes, non‑str object should raise TypeError.\"\"\"\n    with pytest.raises(TypeError):\n        HttpResponse(123)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

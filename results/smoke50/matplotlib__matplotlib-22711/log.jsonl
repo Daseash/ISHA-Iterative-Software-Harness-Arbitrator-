@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "matplotlib__matplotlib-22711", "ts": 1791019655.3584085}
+{"event": "attempt", "n": 1, "ts": 1791019655.4962847}
+{"event": "model", "ts": 1791019700.3749971, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791019704.1657088, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791019911.132176, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791020114.0237582, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791020326.5290766, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791020361.1378546, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791020399.699173}

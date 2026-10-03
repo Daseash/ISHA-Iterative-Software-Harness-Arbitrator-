@@ -58,7 +58,7 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
     return state
 
 
-def _record(state: AgentState, config: dict | None) -> None:
+def _record(state: AgentState, config: RunnableConfig | dict | None = None) -> None:
     """Register this branch's attempt so arbitration can fan-in on it."""
     try:
         from src.review.arbitration import record_attempt

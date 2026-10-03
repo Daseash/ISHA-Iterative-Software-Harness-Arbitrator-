@@ -215,3 +215,302 @@ Trained on 315 real labeled pairs from SWE-bench Lite train split ($N_{train}=21
 4. **Test Suite**: 81/81 tests passing (100% pass rate) with `pytest --ignore=tests/dummy_repo`.
 5. **System Health**: `isha doctor` exit=0 (ALL CLEAR).
 
+## Day 1 - Gate before the big run — 2026-10-02
+
+### Incident: `git reset --hard` data loss (recovered)
+While debugging a fixture CRLF issue, a scratch-test chain ran `git reset --hard`
+from inside `tests/dummy_repo` — which is **inside** the main repo, so all
+uncommitted tracked-file edits were reverted to the 09-30 commit.
+
+Recovery (all numbers verified, no estimates):
+- 5 source files held lost post-commit edits, proved via `__pycache__` bytecode
+  that no longer matched the on-disk source: `src/agents/context.py`,
+  `src/agents/nodes.py`, `src/bench/runner.py`, `src/config.py`,
+  `src/review/calibration.py`. (`src/tools/git_manager.py` pyc was stale —
+  pre-commit — and left untouched.)
+- The exact edits were recovered from the Kilo session DB
+  (`%LOCALAPPDATA%`-independent store: `C:\Users\Eashwar\.local\share\kilo\kilo.db`,
+  `part` table, full `oldString`/`newString`). Each file was rebuilt as
+  `git HEAD content + the recorded edits in timestamp order`, then verified by
+  compiling and comparing `co_code` against the surviving pyc — **all 5
+  byte-for-byte match the lost state**.
+- Restored work: context budgets + `ISHA_MAX_CONTEXT_CHARS`/`MAX_FILE_LINES`
+  (context.py), larger per-role prompt budgets (nodes.py), `--workers`
+  parallel solving + 1800 s instance budget (runner.py), thread-local model log
+  (config.py), `fit(artifact=...)` (calibration.py).
+- `src/dashboard/app.py` had a larger uncommitted marketing variant (75 KB,
+  base64-asset landing page). It was **superseded by `website/index.html`**
+  (10-01 16:08, same assets mirrored in `assets/landing/`), so it was not
+  restored.
+- After restore: `pytest tests --ignore=tests/dummy_repo` → **81/81 pass**,
+  `isha doctor` → **ALL CLEAR** (exit 0, 10.4 s).
+
+### Fixture root cause: `git apply` silent skip (fixed)
+The fixture realworld check read 0/2 even with a clean tree and qwen answering.
+Reproduced and bisected: on git 2.54.0.windows.1, `git apply` run from a
+**subdirectory of the repo root** with CWD-relative patch paths silently
+skips the hunk — `git apply -v` prints "Skipped patch 'calculator.py'" and
+exits **0**, leaving the file untouched. Root-relative paths apply cleanly
+from any CWD. (The sandbox-regenerated diff itself is valid — it applies in a
+fresh scratch repo; the preimage blob difference is a red herring.)
+
+Fix in `scripts/realworld.py::_apply_patch`: apply from the toplevel via
+`git apply --directory=<case-repo-relative-path>` and add a post-check that
+fails the case if `git diff --quiet` shows the tree is unchanged, so a
+silent skip can never again register as `patch_applied: true`.
+
+### Gate checklist state
+- `isha doctor` → ALL CLEAR (09:47 and post-restore re-run).
+- Free-tier catalog check → done (Groq `/models` 403s for this key; verified
+  via published free-tier lists + live probes: `qwen3.8-27b` remains the
+  strongest available free primary; chain unchanged in `.env`).
+- 1-instance end-to-end smoke (solve + official-harness grade) → completed:
+  patch applied cleanly in the container, tests ran, instance correctly
+  reported unresolved under this morning's degraded-quota solve
+  (`results/smoke/harness_report.json`, 63 s, image cached from Day 0).
+- Fixture realworld re-run → **2/2 resolved** (11:13, `scorecard.md`):
+  subtract 106.7 s, divide 87.0 s, both critic-approved, verified by the
+  fixture's own test suite.
+- Machine kept awake: `powercfg /change standby-timeout-ac 0`,
+  `standby-timeout-dc 0`, hibernate off (09:4x).
+- Grading capacity note (for Day 5): C: has ~208 GB free; eval images are
+  ~4 GB each, so the official harness can only hold ~50 at a time. Grade in
+  batches of ~50 with docker system prune -f between (tighter than the
+  plan's two-halves mitigation).
+- **smoke50 gate run STARTED 12:40** (`results/smoke50/`, background pid 2720,
+  persistent lifetime): `python -m src.cli bench --limit 50 --slice stratified
+  --run-id smoke50 --timeout 1800 --report`, workers=1 (env default),
+  `ISHA_RATE_LIMIT_WAIT=1` active. Note: the CLI's `--timeout` defaults to 900
+  and would have overridden the restored 1800 s budget — pass `--timeout 1800`
+  explicitly for every campaign run.
+- `lite300` not started: waits for the smoke50 gate verdict (plan.md Day 1).
+
+### `validate_patch` CRLF false-negative fix — 2026-10-02 ~15:50
+`src/tools/patch_engine.py::validate_patch` now runs
+`git apply --check --ignore-whitespace` instead of a plain check. Verified
+before applying: the flag accepts the valid smoke50 regenerated diffs against
+the CRLF host worktree (rc 0) and still rejects a deliberately corrupted
+context line (rc 1). Plain `--ignore-whitespace`-free checks fail on every
+regenerated diff on this host (worktree CRLF vs diff LF). 81/81 tests still
+pass after the change. Only affects process starts after 15:50 — the entries
+already in `results/apply_failures/` are false negatives from the pre-fix
+process; the gate metric is `failure_category == patch_apply_failed` in
+`results/<run>/*/meta.json`.
+
+### Day 1 evening — smoke50 mid-run check, ~18:30 local
+The original smoke50 process (pid 2720) **died ~15:50 local** while starting
+instance 6 (`django__django-11039` left a 141-byte `log.jsonl`, no
+`meta.json`); no python process remained at 18:28. Cause not recoverable
+(session/process boundary) — checkpoints make the loss zero.
+
+Mid-run criteria on the 5 completed instances (all from `meta.json`, no
+estimates):
+
+| Criterion | Gate | Observed | Pass |
+|---|---|---|---|
+| Timeout rate | < 15% | 0/5 (0%) | yes |
+| Offline model calls | < 5% | 0 offline, 0 substitutions across 36 calls | yes |
+| `harness_no_output` | 0 | not yet graded | n/a |
+| Patch yield | ≥ 40% | 5/5 (100%), all host-applied + regenerated | yes |
+
+Per-instance (elapsed / critic composite): astropy-12907 257 s / 0.48
+(critic BLOCK — its `model_patch` inserts a new def mid-docstring; expected
+harness failure, a true negative), django-10914 426 s / 0.85,
+django-10924 6606 s / 0.82 (outlier: 429-storm backoff window dominated wall
+time), django-11001 752 s / 0.67, django-11019 479 s / 0.63.
+
+**Resumed 18:30 local** with the identical command (new pid 23528,
+persistent): 5/50 skipped as checkpoints, solving 6/50. Quota decision:
+429s did not dominate (0 substitutions, 0 offline) → stay on the current
+prompt profile; the low-bandwidth profile is NOT activated.
+
+**Day 1 CLOSED 18:45 local.** 6/50 done — `django__django-11039` patched in
+328.9 s (first instance after the resume; occasional Groq 429s absorbed by
+in-profile 23-60 s backoffs, LLM disk cache serving the repeated planner
+prompts). 7/50 solving. Gate run continues overnight; next checkpoint is
+the ~21:30 local monitor, then the Day-2 gate verdict
+(`isha report --run-id smoke50`).
+
+### Day 2 prep check (ahead of schedule) — 2026-10-02 ~18:50 local
+Lite300 launch prerequisites verified so the launch is minutes after the
+gate verdict:
+- `data/swebench_lite.json` holds exactly **300** Lite instances, 12 repos
+  (django 114, sympy 77, matplotlib 23, scikit-learn 23, pytest 17,
+  sphinx 16, astropy 6, requests 6, pylint 6, xarray 5, seaborn 4, flask 3).
+- All 12 repo mirrors already built — smoke50 checkouts all "up-to-date",
+  so lite300 has zero checkout-prep delay.
+- `--slice head --limit 300` verified against the CLI
+  (`src/bench/dataset.py::select_slice`, `src/bench/runner.py`);
+  `isha report --run-id smoke50` renders on partial data (exit 0).
+- 208 GB free on C: — covers the run plus batched eval-image grading.
+- Only blocker to launching: the gate verdict (no-go rule: lite300 starts
+  only after the gate passes).
+
+### Day 2 morning — 2026-10-03 ~11:15 local
+
+- smoke50 found dead at **11/50** (last meta 10-02 20:42). Forensics:
+  Windows event 1074 at 20:58:17 — **user-initiated power-off** (second at
+  23:55). Not a code crash (no sleep: Wake History Count 0; runner logs
+  per-instance errors, none present). Checkpoints: zero loss.
+- Resume verified: restarted 11:08 with the identical command
+  (`--limit 50 --slice stratified --run-id smoke50 --timeout 1800
+  --report`, `ISHA_RATE_LIMIT_WAIT=1`, workers=1, persistent background
+  bgp_1004520ef001daApIHLaq4sg0t). 11/11 checkpoints skipped;
+  `django__django-11422` (died mid-instance, log-only) correctly re-solved
+  from scratch. Planner landed on qwen primary (cached + live); a Groq 429
+  storm is in progress and being absorbed by in-profile 15-60 s backoffs
+  with NO fallback advance (by `ISHA_RATE_LIMIT_WAIT=1` design).
+- `isha doctor` ALL CLEAR 11:05 (qwen live call ok, Docker 29.8.0 up after
+  morning restart, 203.5 GB free).
+- Apply-failure root cause on the 2 failed instances (11049, 11133): both
+  had their coder on `gpt-oss-120b` fallback because Groq quota was dead
+  that window; the fallback model emitted non-existent context lines
+  (e.g. `class DurationValidator(BaseValidator):`) that `git apply --check`
+  rejects on every hunk; the apply-repair loop ran on the same weak model
+  and could not recover. Real failures, not CRLF false-negatives. Tracked
+  as `mistakes.md` M-2 (open; resolved at the gate verdict — FAIL path
+  re-runs only those instances under a new run-id).
+- Watch: 3-hourly cron will post the gate verdict + early-signal read and
+  launch lite300 on PASS.
+
+### Day 2 mid-morning — targeted re-solve of the 4 degraded-window failures (~11:55 local)
+
+All 4 failures so far (2 `patch_apply_failed`, 2 `syntax_error`) occurred in
+quota-degraded windows where the coder ran on fallback models; none occurred
+on a healthy qwen-primary solve. Per the Day-2 FAIL path (new run-id, no
+profile change):
+- Main `smoke50` checkpointed at **13/50** and paused (zero loss) so a single
+  worker owns the shared Groq TPM window.
+- `smoke50-r1` started (persistent bgp_100580145001ImDrD952CoKetU):
+  `python -m src.cli bench --run-id smoke50-r1 --timeout 1800 --report
+  --instances django__django-11049 django__django-11133
+  django__django-11179 django__django-11422`, `ISHA_RATE_LIMIT_WAIT=1`
+  (429s wait on the primary instead of advancing to the fallback coder).
+- Gate verdict will use the merged view: r1 results for those 4 ids,
+  originals for the other 46. If all 4 re-solve clean, M-2 closes as
+  quota-caused; any repeat becomes a v2 coder-level fix (mistakes.md M-2).
+
+### Day 2 mid-morning — Docker image maintenance (~12:20 local)
+
+Found and fixed a latent Day-0 bug: `.dockerignore` was a sandbox-only
+allow-list (`*` + `!sandbox-requirements.txt`), which made the agent
+`Dockerfile` unbuildable (`COPY requirements.txt` excluded). Rewrote it as
+an exclusion list (no `.env`, no `results/`, `data/`, `swebench_checkouts/`,
+`live_repos/` can enter an image; context stays small for both builds).
+New systematic layout (manifest: `docs/DOCKER_IMAGES.md`):
+- `isha:latest` + `isha:0.2.0` (agent, labels `org.isha.image=agent`,
+  `org.isha.version=0.2.0`), `isha-sandbox:latest` + `isha-sandbox:0.2.0`.
+- `scripts/docker_maintain.ps1` — one command: prune danglings → rebuild
+  both from the pyproject version → print manifest (`-SkipBuild` for
+  prune+manifest only).
+- SWE-bench eval images stay out of scope: transient, pulled from Docker
+  Hub only at Day-5 grading, auto-deleted by `harness_eval.cleanup_images`.
+
+### Day 2 watch — 12:30 local
+
+- r1 **3/4**: `11049` now **ok** (364 s, 0 fallbacks — was
+  patch_apply_failed), `11179` now **ok** (173 s, was syntax_error),
+  `11133` still failing — now `syntax_error` on qwen primary (0 fallbacks;
+  the apply failure was quota-caused, but this instance has a genuine
+  coder-quality miss). `11422` solving.
+- Merged apply-failure count so far: **0** (both original apply failures
+  cleared or re-bucketed) → the <5% apply bar looks safe; the syntax
+  bucket is the live one (2 of 46 so far).
+- Main smoke50: still paused at 13/50 (auto-resumes at r1 4/4).
+- r1 closed 4/4: 11049 ok, 11179 ok, 11133 syntax_error (0 fallbacks —
+  genuine coder miss), 11422 patch_apply_failed (4 fallbacks — quota died
+  mid-instance again). Both errors reserved for the M-3 study list.
+
+### Day 2 watch — 15:00 local
+
+- Main smoke50 resumed 12:17 (bgp_10084aed9001Ph3FLQKYbwTeXl, persistent):
+  now **19/50** (13 ok · 3 apply · 3 syntax raw; merged view subtracts the
+  r1 fixes). Pace ~1.5 instances/hour — Groq 429 storm active, backoffs
+  absorbing, no fallback advance. Process alive; ETA 50/50 early tomorrow
+  morning if the storm persists.
+- Docker images built and tagged (isha 0.2.0/latest 11.2 GB incl. torch,
+  isha-sandbox 0.2.0/latest 220 MB) + manifest + maintain script.
+
+### Day 2 watch — 18:00 local
+
+- **25/50** (16 ok · 5 apply · 4 syntax raw). +6 instances in 3 h — pace
+  recovered. Merged view so far: apply failures 4/25, syntax 3/25 — the
+  429-storm failure mode (quota death → fallback coder) keeps producing
+  apply/syntax misses; each new one is reserved for the M-3 catalogue.
+  Gate-bar watch: apply <5% is currently trending tight; verdict at 50/50.
+- Distribution work (user request "download and run for others"):
+  - pyproject deps synced to the full requirements.txt set (was 6 of 15).
+  - **Wheel packaging bug found + fixed**: setuptools auto-discovery was
+    flattening the `src` package to the wheel root, which would have broken
+    the `isha = src.main:main` entry point for anyone installing the wheel.
+    Fixed with explicit `[tool.setuptools.packages.find] include=["src*"]`.
+    First wheel was broken; rebuilt and verified (142 files, `src/main.py`
+    present, entry points intact, live editable install + `isha --help`
+    still OK after the metadata churn).
+  - `dist/isha_fix-0.2.0-py3-none-any.whl` (374 KB, code-only),
+    `install.ps1` + `install.sh` (venv + install + .env template + self-check),
+    `docs/INSTALL.md` (three install paths + first-run checklist),
+    DOCKER_IMAGES.md now points at INSTALL.md as the preferred path.
+
+### Day 2 — install/distribution path (off the critical path, ~18:30 local)
+
+Made ISHA pullable/runnable for others:
+- `pyproject.toml` dependencies synced to the full `requirements.txt` set
+  (was a 6-package subset — a wheel built from it would have been
+  un-runnable); explicit `[tool.setuptools.packages.find] include=src*`
+  (auto-discovery was flattening the `src` package, breaking the
+  `isha = src.main:main` entry point — first wheel built broken, fixed,
+  validated: 142 files, `src/main.py` present, entry points intact).
+- `dist/isha_fix-0.2.0-py3-none-any.whl` (code-only, 374 KB; deps from PyPI).
+- `install.ps1` / `install.sh` — one command: venv + wheel install (source
+  fallback) + `.env` template + CLI self-check.
+- `docs/INSTALL.md` — three install paths (scripts / pip / docker) + first-
+  run checklist. `docs/DOCKER_IMAGES.md` updated to point at it.
+- Verified the live editable install + `isha --help` still work after the
+  packaging changes (campaign untouched).
+
+### Day 2 — recovery, 20:22 local
+
+- Run had stopped after `pydata__xarray-3364` finished at 18:01:31
+  (last meta write; no python process alive on discovery). **26/50**
+  done (17 ok · 5 apply · 4 syntax raw). No partial instances.
+- Root cause not yet pinned (no crash marker in log; possibly the
+  session-group switch / power state around ~18:00) — tracked as a
+  watch item, not chased mid-run.
+- Resumed as persistent background process (bgp_1023ff9e8001ZrCD59tztTvYCY,
+  python pid 13368), identical profile: `--limit 50 --slice stratified
+  --run-id smoke50 --timeout 1800 --report`, `ISHA_RATE_LIMIT_WAIT=1`.
+  26 checkpoints skipped; now solving 27/50 (pylint-5859).
+- 3-hourly watch cron restored for this session (next fire 21:00 local).
+
+### Day 2 watch — 21:30 local
+
+- **28/50** (post-resume +2: `pylint-dev__pylint-5859` done 20:49,
+  `pytest-dev__pytest-11143` done 21:11). Process alive (pid 13368,
+  resumed 20:21), solving next instance. No restart needed.
+  New ok instances keep improving the merged bars; verdict
+  remains at 50/50. Next check ~00:00 local (10-04).
+
+### Day 2 — r2 launch, 22:35 local
+
+- User priority flip: **clear all errors while 50/50 finishes**.
+  `smoke50-r2` started (persistent, bgp_102b6dbcd0017nqoN7hGkBI8Fk):
+  re-solving the 8 merged-unresolved instances (5 apply-failed,
+  3 syntax) under the identical healthy-quota profile
+  (`ISHA_RATE_LIMIT_WAIT=1`, `--timeout 1800`). Main run keeps running
+  in parallel (30/50 at launch). Merged view now: r2 > r1 > main.
+  Watch cadence moved to 40 min (cron wku_102b76ef0001qpvaXdbWREJk1y);
+  gate verdict + M-3 only when BOTH main==50 and r2==8.
+
+### Day 2 watch — 22:40 local
+
+- **Main 31/50** (+1: `scikit-learn__scikit-learn-10297` done 22:36).
+  **r2 0/8** — `django__django-11133` in progress since 22:31, first
+  result expected ~23:00-23:30. Both processes alive; no restart needed.
+
+### Day 2 watch — 23:00 local
+
+- **Main 32/50** (+1: `scikit-learn__scikit-learn-10508` done 22:52).
+  **r2 1/8** — first re-solve finished: `django__django-11133` done
+  22:56 (~25 min). Both processes alive; no restart needed.
+

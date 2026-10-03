@@ -1,0 +1,15 @@
+--- a/lib/matplotlib/artist.py
++++ b/lib/matplotlib/artist.py
+@@
+-        if np.ndim(data) == 0 and isinstance(self, ScalarMappable):
+-            neighbors = self.norm.inverse(
+-                np.array([data - 0.5, data + 0.5]))
+-            if neighbors is not None:
++        if np.ndim(data) == 0 and isinstance(self, ScalarMappable):
++            # BoundaryNorm is not invertible; guard against crash
++            try:
++                neighbors = self.norm.inverse(
++                    np.array([data - 0.5, data + 0.5]))
++            except (ValueError, AttributeError):
++                neighbors = None
++            if neighbors is not None:

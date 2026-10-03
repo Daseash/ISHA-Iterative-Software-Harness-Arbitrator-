@@ -1,0 +1,244 @@
+{
+  "instance_id": "pallets__flask-4045",
+  "repo": "pallets/flask",
+  "base_commit": "d8c37f43724cd9fb0870f77877b7c4c7e38a19e0",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791027985.2926674
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791027985.5468276
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (6 models): qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-20b: RateLimitError; gpt-oss-20b: RateLimitError; gpt-oss-20b: RateLimitError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted); gemini-3.1-flash-lite: ValueError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028290.0282555
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028363.137297
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028640.6828525
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791028650.7631943
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: src/flask/blueprints.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "src/flask/blueprints.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791027973.4551337,
+  "elapsed_s": 685.83,
+  "plan": "Step 1: Root cause — github_link() does not match the behaviour described in the report.\nStep 2: Edit conf.py — in github_link(), apply: make the return value match the documented behaviour.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/flask/blueprints.py",
+      "symbol": "src/flask/blueprints.py::record",
+      "symbols": [
+        "record",
+        "register_blueprint",
+        "register_template",
+        "app_template_test"
+      ],
+      "line_range": [
+        206,
+        223
+      ],
+      "score": 0.5026,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.755,
+        "vector": 0.9489,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: when, already, blueprint, this)"
+    },
+    {
+      "file": "src/flask/scaffold.py",
+      "symbol": "src/flask/scaffold.py::setupmethod",
+      "symbols": [
+        "setupmethod",
+        "wrapper_func",
+        "get_send_file_max_age",
+        "send_static_file"
+      ],
+      "line_range": [
+        37,
+        58
+      ],
+      "score": 0.4781,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.746,
+        "vector": 0.7637,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: every, error, already, this)"
+    },
+    {
+      "file": "src/flask/app.py",
+      "symbol": "src/flask/app.py::name",
+      "symbols": [
+        "name",
+        "make_config",
+        "templates_auto_reload",
+        "create_global_jinja_loader"
+      ],
+      "line_range": [
+        528,
+        543
+      ],
+      "score": 0.4225,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5344,
+        "vector": 0.7407,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: when, added, this)"
+    },
+    {
+      "file": "src/flask/helpers.py",
+      "symbol": "src/flask/helpers.py::external_url_handler",
+      "symbols": [
+        "external_url_handler",
+        "get_template_attribute",
+        "get_root_path",
+        "flash"
+      ],
+      "line_range": [
+        219,
+        235
+      ],
+      "score": 0.3943,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4431,
+        "vector": 0.6958,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: have, error, when, this)"
+    },
+    {
+      "file": "src/flask/debughelpers.py",
+      "symbol": "src/flask/debughelpers.py::DebugFilesKeyError",
+      "symbols": [
+        "DebugFilesKeyError",
+        "__init__",
+        "FormDataRoutingRedirect",
+        "attach_enctype_error_multidict"
+      ],
+      "line_range": [
+        16,
+        42
+      ],
+      "score": 0.3886,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4217,
+        "vector": 0.6931,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: name, error, should, names)"
+    },
+    {
+      "file": "src/flask/wrappers.py",
+      "symbol": "src/flask/wrappers.py::Response",
+      "symbols": [
+        "Response",
+        "endpoint",
+        "blueprint",
+        "Request"
+      ],
+      "line_range": [
+        102,
+        135
+      ],
+      "score": 0.376,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3126,
+        "vector": 0.8153,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: have, when, added, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.838175,
+  "laya_scores": {
+    "fix_quality": 1.7417,
+    "matches_issue": 0.8564,
+    "safe_to_apply": 0.7546,
+    "composite": 0.838175,
+    "secrets_or_danger": 0.083,
+    "logic_drift": 0.2415,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The patch removes a potential logic flaw (ambiguous names) but does not expose new vectors for injection, traversal, or secret leakage.\n- PERFORMANCE: PASS - The check is an O(L) string scan on a single string during object instantiation, which is negligible and does not affect hot paths.\n- ROBUSTNESS: PASS - The patch explicitly raises a `ValueError` for invalid input, improving robustness by failing fast rather than allowing ambiguous state.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom flask import Blueprint\n\n\ndef test_blueprint_name_with_dot_raises():\n    \"\"\"\n    The core bug: creating a Blueprint with a dot in its name should raise\n    a ValueError.  Before the fix this test fails (no exception raised).\n    \"\"\"\n    with pytest.raises(ValueError) as exc_info:\n        Blueprint(\"my.blueprint\", __name__)\n\n    # The message is not strictly required, but we assert it contains the name\n    # to ensure the correct validation path is taken.\n    assert \"my.blueprint\" in str(exc_info.value)\n\n\ndef test_blueprint_name_without_dot_is_allowed():\n    \"\"\"A normal name should not raise any error.\"\"\"\n    try:\n        bp = Blueprint(\"my_blueprint\", __name__)\n    except Exception as exc:\n        pytest.fail(f\"Unexpected exception {exc!r} for a valid name\")\n    assert isinstance(bp, Blueprint)\n\n\ndef test_blueprint_name_multiple_dots_raises():\n    \"\"\"Multiple dots are also invalid and should raise the same error.\"\"\"\n    with pytest.raises(ValueError) as exc_info:\n        Blueprint(\"a.b.c\", __name__)\n    assert \"a.b.c\" in str(exc_info.value)\n\n\ndef test_blueprint_name_trailing_dot_raises():\n    \"\"\"A trailing dot is still considered a dot in the name.\"\"\"\n    with pytest.raises(ValueError):\n        Blueprint(\"trailing.\", __name__)\n\n\ndef test_blueprint_name_none_raises_type_error():\n    \"\"\"Non‑string names (e.g., None) should raise a TypeError.\"\"\"\n    with pytest.raises(TypeError):\n        Blueprint(None, __name__)  # type: ignore[arg-type]\n\n\ndef test_blueprint_name_non_string_raises_type_error():\n    \"\"\"Passing an integer as the name should raise a TypeError.\"\"\"\n    with pytest.raises(TypeError):\n        Blueprint(123, __name__)  # type: ignore[arg-type]",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\nindex 5fb84d8..83c8cca 100644\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -188,6 +188,10 @@ class Blueprint(Scaffold):\n             template_folder=template_folder,\n             root_path=root_path,\n         )\n+        if \".\" in name:\n+            raise ValueError(\n+                f\"Blueprint name {name!r} cannot contain '.'; it is used for nested blueprints.\"\n+            )\n         self.name = name\n         self.url_prefix = url_prefix\n         self.subdomain = subdomain\n",
+  "offline_calls": 1
+}

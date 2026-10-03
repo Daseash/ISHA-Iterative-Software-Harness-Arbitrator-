@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "psf__requests-1963", "ts": 1791028661.872621}
+{"event": "attempt", "n": 1, "ts": 1791028662.0090158}
+{"event": "model", "ts": 1791028677.5685632, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791028677.9019804, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791028982.0651255, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791028986.538752, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791029290.5831616, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791029395.9270453, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791029406.7827466, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791029416.2659793}

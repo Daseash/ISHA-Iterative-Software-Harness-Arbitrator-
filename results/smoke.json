@@ -1,0 +1,129 @@
+{
+  "run_id": "smoke",
+  "generated_at": "2026-10-02 10:19:28",
+  "total_instances": 1,
+  "resolved": 0,
+  "resolve_rate": 0.0,
+  "resolve_ci_95": [
+    0.0,
+    0.7935
+  ],
+  "instances_with_patch": 1,
+  "patch_rate": 1.0,
+  "patch_ci_95": [
+    0.2065,
+    1.0
+  ],
+  "stage_breakdown": {
+    "localization_hit_file": {
+      "count": 1,
+      "rate": 1.0,
+      "ci_95": [
+        0.2065,
+        1.0
+      ]
+    },
+    "localization_hit_func": {
+      "count": 1,
+      "rate": 1.0,
+      "ci_95": [
+        0.2065,
+        1.0
+      ]
+    },
+    "patch_applied": {
+      "count": 1,
+      "rate": 1.0,
+      "ci_95": [
+        0.2065,
+        1.0
+      ]
+    },
+    "static_gate_passed": {
+      "count": 1,
+      "rate": 1.0,
+      "ci_95": [
+        0.2065,
+        1.0
+      ]
+    },
+    "env_ok": {
+      "count": 1,
+      "rate": 1.0,
+      "ci_95": [
+        0.2065,
+        1.0
+      ]
+    },
+    "repro_fails_before": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.7935
+      ]
+    },
+    "repro_passes_after": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.7935
+      ]
+    },
+    "zero_regressions": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.7935
+      ]
+    },
+    "resolved": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.7935
+      ]
+    }
+  },
+  "failure_breakdown": {
+    "localization_wrong": 0,
+    "patch_apply_failed": 0,
+    "syntax_error": 0,
+    "tests_failed": 1,
+    "timeout": 0,
+    "api_failure": 0,
+    "no_confident_fix": 0,
+    "not_run": 0,
+    "harness_no_output": 0,
+    "checkout_failed": 0,
+    "prefiltered": 0
+  },
+  "official_report": {},
+  "instances": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 164.35,
+      "critic_score": 0.656925,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.1-flash-lite [fallback 5]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": true,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    }
+  ]
+}

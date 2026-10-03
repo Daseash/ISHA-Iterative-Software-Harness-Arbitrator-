@@ -27,3 +27,17 @@ jobs:
       - name: CLI smoke (offline brain, no keys needed)
         run: |
           ISHA_FORCE_OFFLINE=1 python -c "from src.cli import _parser; _parser().parse_args(['bench', '--help'])"
+
+  website-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install website dependencies
+        working-directory: ./website
+        run: npm install
+      - name: Typecheck and build website
+        working-directory: ./website
+        run: npm run build

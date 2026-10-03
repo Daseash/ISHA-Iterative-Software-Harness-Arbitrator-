@@ -1,0 +1,8 @@
+{
+  "instance_id": "django__django-10914",
+  "candidate": 0,
+  "round": 0,
+  "error": "git apply --check failed: error: patch failed: django/conf/global_settings.py:304\nerror: django/conf/global_settings.py: patch does not apply",
+  "cause": "context_mismatch",
+  "timestamp": 1790926572.8456254
+}

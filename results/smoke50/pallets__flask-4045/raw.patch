@@ -1,0 +1,9 @@
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@
+-        self.name = name
++        if "." in name:
++            raise ValueError(
++                f"Blueprint name {name!r} cannot contain '.'; it is used for nested blueprints."
++            )
++        self.name = name

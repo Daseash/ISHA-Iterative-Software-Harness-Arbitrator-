@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "django__django-11179", "ts": 1791008002.2826204}
+{"event": "attempt", "n": 1, "ts": 1791008002.7121096}
+{"event": "model", "ts": 1791008071.0868132, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791008076.5394394, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791008088.816155, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791008106.912228, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791008130.705385, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791008167.5066063, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791008204.6380024}

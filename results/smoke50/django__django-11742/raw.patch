@@ -1,0 +1,55 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -10,6 +10,7 @@
+ from django import forms
+ from django.apps import apps
+ from django.conf import settings
++from django.core import checks
+ from django.core import exceptions
+ from django.utils.datastructures import DictWrapper
+ from django.utils.dateparse import parse_date, parse_datetime, parse_time
+@@ -205,6 +206,7 @@
+         self.help_text = help_text
+         self.error_messages = error_messages or {}
+         self.validators = list(validators)
++        self.run_checks()
+ 
+     def __deepcopy__(self, memodict):
+         # We don't have to deepcopy 'creation_counter', it's just an int.
+@@ -232,6 +234,31 @@
+     def get_internal_type(self):
+         return self.__class__.__name__
+ 
++    def run_checks(self):
++        errors = []
++        errors.extend(self._check_choices_length())
++        return errors
++
++    def _check_choices_length(self):
++        """
++        Ensure that the longest string value in self.choices does not
++        exceed the field's max_length (if one is set).
++        """
++        if not self.choices or self.max_length is None:
++            return []
++
++        errors = []
++        if isinstance(self.max_length, int):
++            for choice_value, _ in self.choices:
++                if isinstance(choice_value, str) and len(choice_value) > self.max_length:
++                    errors.append(
++                        checks.Error(
++                            f'The longest choice value for field "{self.name}" '
++                            f'exceeds its max_length of {self.max_length}.',
++                            obj=self,
++                            id='fields.E003',
++                            hint=f'Increase max_length to at least {len(choice_value)}.',
++                        )
++                    )
++                    break
++        return errors
++
+     def has_default(self):
+         return self.default is not NOT_PROVIDED
+ 
+     def get_default(self):

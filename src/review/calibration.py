@@ -236,8 +236,14 @@ def find_precision_threshold(probs: list[float], labels: list[int], target_preci
     return best_matching or best_overall
 
 
-def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH) -> dict:
-    """Fit the combiner on labelled candidates, evaluate on held-out validation split, and persist."""
+def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH,
+        artifact: Path | str | None = None) -> dict:
+    """Fit the combiner on labelled candidates, evaluate on held-out validation split, and persist.
+
+    ``artifact`` redirects the audit JSON (default ``results/calibration.json``)
+    so e.g. real-label fits can live beside the synthetic-label fit instead of
+    overwriting it.
+    """
     import random
     import time
 
@@ -319,7 +325,7 @@ def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH) -> dict:
     out.write_text(json.dumps(model, indent=2), encoding="utf-8")
 
     # Persist calibration results artifact in results/
-    res_cal_path = ROOT / "results" / "calibration.json"
+    res_cal_path = Path(artifact) if artifact else ROOT / "results" / "calibration.json"
     res_cal_path.parent.mkdir(parents=True, exist_ok=True)
     cal_artifact = {
         "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -366,16 +372,19 @@ _FALLBACK = {"mode": "hand_weighted", "threshold": 0.5, "temperature": 1.0,
 
 def combine(features: dict, model: dict | None = None) -> dict:
     """Score one candidate. Returns probability-ish score + provenance."""
-    model = model if (model or {}).get("fitted") else _FALLBACK
+    active: dict = model if (isinstance(model, dict) and model.get("fitted")) else _FALLBACK
     row = vector(features)
-    raw = sigmoid(sum(w * v for w, v in zip(model["weights"], row)) + model.get("bias", 0.0))
-    score = sigmoid(math.log(max(raw, EPS) / (1 - max(raw, EPS))) / max(model.get("temperature", 1.0), 1e-3))
+    weights: list[float] = list(active.get("weights") or _FALLBACK["weights"])
+    bias: float = float(active.get("bias", 0.0))
+    temperature: float = float(active.get("temperature", 1.0))
+    raw = sigmoid(sum(w * v for w, v in zip(weights, row)) + bias)
+    score = sigmoid(math.log(max(raw, EPS) / (1 - max(raw, EPS))) / max(temperature, 1e-3))
     return {
         "score": round(score, 4),
         "raw": round(raw, 4),
-        "mode": model.get("mode", "hand_weighted"),
-        "threshold": model.get("threshold", 0.5),
-        "temperature": model.get("temperature", 1.0),
-        "fitted_n": model.get("n_labels", 0),
+        "mode": active.get("mode", "hand_weighted"),
+        "threshold": active.get("threshold", 0.5),
+        "temperature": temperature,
+        "fitted_n": active.get("n_labels", 0),
         "features": dict(features),
     }

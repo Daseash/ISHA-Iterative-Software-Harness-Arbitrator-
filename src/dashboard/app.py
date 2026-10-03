@@ -458,12 +458,12 @@ with tab_cli:
                 from src.tools.patch_engine import apply_patch
                 target_p = Path(repo_input).resolve()
                 if target_p.is_dir():
-                    res = apply_patch(patch_str, str(target_p))
-                    if res.applied:
+                    applied, detail = apply_patch(str(target_p), patch_str)
+                    if applied:
                         st.session_state.applied_to_repo = True
                         st.success(f"✅ Successfully written to `{repo_input}`!")
                     else:
-                        st.error(f"Failed to apply: {res.detail}")
+                        st.error(f"Failed to apply: {detail}")
                 else:
                     st.error("Target repo path does not exist.")
         elif st.session_state.applied_to_repo:
@@ -546,7 +546,7 @@ with tab_bench:
     plot_img = Path(__file__).resolve().parents[2] / "assets" / "isha_vs_baselines.png"
     if plot_img.exists():
         st.markdown("#### 📈 Empirical Architecture Comparison (Laya-Style Benchmarks)")
-        st.image(str(plot_img), caption="ISHA vs Agentless, OpenHands, and Commercial LLM Baselines", use_column_width=True)
+        st.image(str(plot_img), caption="ISHA vs Agentless, OpenHands, and Commercial LLM Baselines", use_container_width=True)
         st.markdown("---")
 
     if not runs:

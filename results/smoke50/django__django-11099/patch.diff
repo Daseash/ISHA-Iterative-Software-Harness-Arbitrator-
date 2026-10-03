@@ -1,0 +1,26 @@
+diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py
+index b4878cf..030c845 100644
+--- a/django/contrib/auth/validators.py
++++ b/django/contrib/auth/validators.py
+@@ -7,7 +7,9 @@ from django.utils.translation import gettext_lazy as _
+ 
+ @deconstructible
+ class ASCIIUsernameValidator(validators.RegexValidator):
+-    regex = r'^[\w.@+-]+$'
++    # Use \A and \Z to anchor the pattern to the absolute start and end of the string.
++    # Unlike ^/$, \A/\Z do not allow a trailing newline, preventing usernames like "bob\n".
++    regex = r'\A[\w.@+-]+\Z'
+     message = _(
+         'Enter a valid username. This value may contain only English letters, '
+         'numbers, and @/./+/-/_ characters.'
+@@ -17,7 +19,9 @@ class ASCIIUsernameValidator(validators.RegexValidator):
+ 
+ @deconstructible
+ class UnicodeUsernameValidator(validators.RegexValidator):
+-    regex = r'^[\w.@+-]+$'
++    # Use \A and \Z to anchor the pattern to the absolute start and end of the string.
++    # This disallows a trailing newline in the username.
++    regex = r'\A[\w.@+-]+\Z'
+     message = _(
+         'Enter a valid username. This value may contain only letters, '
+         'numbers, and @/./+/-/_ characters.'

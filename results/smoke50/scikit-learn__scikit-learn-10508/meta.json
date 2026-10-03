@@ -1,0 +1,240 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-10508",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "c753b77ac49e72ebc0fe5e3c2369fe628f975017",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047224.4996097
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047226.9104345
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047536.4255118
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047839.7837658
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048148.0943263
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048165.0532608
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/preprocessing/label.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:15"
+  },
+  "started_at": 1791047193.3820746,
+  "elapsed_s": 979.57,
+  "plan": "y = column_or_1d(y, warn=True)\n\n        # Check if y is empty to avoid issues with np.unique dtype casting\n        if len(y) == 0:\n            return np.array([], dtype=self.classes_.dtype)\n\n        classes = np.unique(y)\n        if len(np.intersect1d(classes, self.classes_, assume_unique=True)) < len(classes):\n            diff = np.setdiff1d(classes, self.classes_, assume_unique=True)\n            raise ValueError(\n                    \"y contains previously unseen labels: %s\" % str(diff))\n        return np.searchsorted(self.classes_, y)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/preprocessing/label.py",
+      "symbol": "sklearn/preprocessing/label.py::_transform",
+      "symbols": [
+        "_transform",
+        "fit",
+        "transform",
+        "fit"
+      ],
+      "line_range": [
+        774,
+        797
+      ],
+      "score": 0.6913,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6008,
+        "vector": 0.8009,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: array, dtype, transform, data)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::config_context",
+      "symbols": [
+        "config_context",
+        "setup_module",
+        "get_config"
+      ],
+      "line_range": [
+        57,
+        96
+      ],
+      "score": 0.7029,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7153,
+        "vector": 0.6593,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: safe, most, last, sklearn"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::safe_mask",
+      "symbols": [
+        "safe_mask",
+        "axis0_safe_slice",
+        "safe_indexing",
+        "shuffle"
+      ],
+      "line_range": [
+        77,
+        101
+      ],
+      "score": 0.6787,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7202,
+        "vector": 0.4474,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: safe, used, array, dtype"
+    },
+    {
+      "file": "sklearn/externals/joblib/numpy_pickle.py",
+      "symbol": "sklearn/externals/joblib/numpy_pickle.py::write_array",
+      "symbols": [
+        "write_array",
+        "_create_array_wrapper",
+        "__init__",
+        "read_array"
+      ],
+      "line_range": [
+        73,
+        94
+      ],
+      "score": 0.5898,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7315,
+        "vector": 0.4114,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: array; body matches report terms: python, cannot, array, numpy"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions",
+      "symbols": [
+        "maybe_cythonize_extensions",
+        "build_from_c_and_cpp_files",
+        "atlas_not_found",
+        "get_blas_info"
+      ],
+      "line_range": [
+        63,
+        84
+      ],
+      "score": 0.5796,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0787,
+        "vector": 0.9574,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: module, args, file"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.531,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1121,
+        "vector": 0.4827,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: sklearn, file"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.727925,
+  "laya_scores": {
+    "fix_quality": 1.6436,
+    "matches_issue": 0.6902,
+    "safe_to_apply": 0.5779,
+    "composite": 0.727925,
+    "secrets_or_danger": 0.0906,
+    "logic_drift": 0.2512,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "SECURITY: PASS | No injection, secrets, or unsafe execution patterns introduced.\nPERFORMANCE: PASS | Early return on empty input avoids unnecessary computation/overhead in a specific edge case.\nROBUSTNESS: PASS | Correctly handles the dtype mismatch edge case described in the bug report without introducing new race conditions or mutable defaults.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport numpy as np\nfrom sklearn.preprocessing import LabelEncoder\n\ndef test_labelencoder_transform_empty_list_str():\n    \"\"\"\n    Reproduce bug: LabelEncoder fails when transforming an empty list \n    if it was fitted on string data.\n    \"\"\"\n    le = LabelEncoder()\n    le.fit([\"a\", \"b\"])\n    # This should return an empty array, but currently raises TypeError\n    result = le.transform([])\n    assert isinstance(result, np.ndarray)\n    assert result.size == 0\n    assert result.dtype.kind in {'i', 'u'}  # Should be integer type\n\ndef test_labelencoder_transform_empty_list_numeric():\n    \"\"\"\n    Verify existing behavior for numeric input (should already work).\n    \"\"\"\n    le = LabelEncoder()\n    le.fit([1, 2])\n    result = le.transform([])\n    assert isinstance(result, np.ndarray)\n    assert result.size == 0\n\ndef test_labelencoder_unseen_labels_error():\n    \"\"\"\n    Verify that providing unseen labels still raises the expected ValueError.\n    \"\"\"\n    le = LabelEncoder()\n    le.fit([\"a\", \"b\"])\n    with pytest.raises(ValueError, match=\"y contains previously unseen labels\"):\n        le.transform([\"c\"])\n\ndef test_labelencoder_handles_none_empty():\n    \"\"\"\n    Ensure that passing an empty list/array doesn't cause issues with None \n    inputs or different empty collection types.\n    \"\"\"\n    le = LabelEncoder()\n    le.fit([\"a\", \"b\"])\n    \n    # Test empty tuple\n    result = le.transform(())\n    assert result.size == 0\n    \n    # Test empty numpy array\n    result = le.transform(np.array([]))\n    assert result.size == 0",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/sklearn/preprocessing/label.py b/sklearn/preprocessing/label.py\nindex 61b8d4a..0c64fa8 100644\n--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -93,6 +93,10 @@ class LabelEncoder(BaseEstimator, TransformerMixin):\n         self : returns an instance of self.\n         \"\"\"\n         y = column_or_1d(y, warn=True)\n+        # Check if y is empty to avoid issues with np.unique dtype casting\n+        if len(y) == 0:\n+            return np.array([], dtype=self.classes_.dtype)\n+\n         self.classes_ = np.unique(y)\n         return self\n \n",
+  "offline_calls": 0
+}

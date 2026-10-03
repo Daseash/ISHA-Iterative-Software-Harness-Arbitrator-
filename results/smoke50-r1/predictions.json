@@ -1,0 +1,22 @@
+[
+  {
+    "instance_id": "django__django-11049",
+    "model_patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -1286,7 +1286,7 @@ class DurationField(Field):\n         self._validators.append(validators.DurationValidator())\n \n     def deconstruct(self):\n-        name, path, args, kwargs = super().deconstruct()\n+        name, path, args, kwargs = super().deconstruct()\n         return name, path, args, kwargs\n \n     def db_type(self, connection):\n--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -275,7 +275,7 @@ class DurationField(Field):\n     default_validators = [validators.validate_duration]\n     default_error_messages = {\n         'invalid': _(\n-            \"Enter a valid duration (now it is in the format [DD] [HH:[MM:]]ss[.uuuuuu]).\"\n+            \"Enter a valid duration (now it is in the format [DD] [[HH:]MM:]ss[.uuuuuu]).\"\n         )\n     }",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11133",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11179",
+    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4af..759f030 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -280,6 +280,10 @@ class Collector:\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n+            for model, instances in self.data.items():\n+                for obj in instances:\n+                    obj.pk = None\n+            self.fast_deletes = []\n             # send pre_delete signals\n             for model, obj in self.instances_with_model():\n                 if not model._meta.auto_created:\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-11422",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  }
+]

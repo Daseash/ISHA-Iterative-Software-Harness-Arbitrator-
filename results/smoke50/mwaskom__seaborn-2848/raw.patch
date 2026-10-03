@@ -1,0 +1,11 @@
+--- a/seaborn/axisgrid.py
++++ b/seaborn/axisgrid.py
+@@ -1976,6 +1976,8 @@
+         self.hue = hue
+         self.hue_order = hue_order
+         self.hue_mask = None
++        if hue is not None and hue_order is not None:
++            data = data[data[hue].isin(hue_order)]
+         self.data = data
+         self.palette = palette
+         self.hue_kws = hue_kws
