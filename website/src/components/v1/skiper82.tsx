@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Sparkles, Code2, Loader2, Wrench, Copy, Check, Terminal } from "lucide-react";
+import { ArrowUp, Sparkles, Code2, Loader2, Copy, Check, Terminal } from "lucide-react";
 
 interface Message {
   id: string;
@@ -191,9 +191,6 @@ index 4b825dc..91a0f12 100644
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-300 dark:border-neutral-800">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-2xl bg-neutral-200/80 dark:bg-neutral-900 text-red-600 shadow-sm">
-            <Wrench className="w-6 h-6 stroke-[3]" />
-          </div>
           <div>
             <h3 className="text-2xl font-black text-red-600 uppercase tracking-tight">
               ISHA FIX
