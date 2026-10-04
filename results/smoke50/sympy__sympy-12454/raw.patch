@@ -1,0 +1,11 @@
+--- a/sympy/matrices/matrices.py
++++ b/sympy/matrices/matrices.py
+@@
+     @property
+     def is_upper(self):
+-        return all(self[i, j].is_zero
+-                   for i in range(1, self.rows)
+-                   for j in range(i))
++        return all(self[i, j].is_zero
++                   for i in range(1, self.rows)
++                   for j in range(min(i, self.cols)))

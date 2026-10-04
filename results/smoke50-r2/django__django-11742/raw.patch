@@ -1,0 +1,37 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -211,6 +211,7 @@
+         return [
+             *self._check_field_name(),
+             *self._check_choices(),
++            *self._check_choices_max_length(),
+             *self._check_db_index(),
+             *self._check_null_item(),
+             *self._check_backend_specific_checks(),
+@@ -279,6 +280,24 @@
+         ]
+         return errors
+ 
++    def _check_choices_max_length(self):
++        if self.choices and self.max_length is not None:
++            for value, _ in self.choices:
++                if isinstance(value, (list, tuple)):
++                    # Handle grouped choices
++                    for subvalue, _ in value:
++                        if subvalue is not None and len(str(subvalue)) > self.max_length:
++                            return [checks.Error(
++                                'Choices contain a value that is too long (length %d) for the field max_length (%d).' % (len(str(subvalue)), self.max_length),
++                                obj=self,
++                                id='fields.E009',
++                            )]
++                elif value is not None and len(str(value)) > self.max_length:
++                    return [checks.Error(
++                        'Choices contain a value that is too long (length %d) for the field max_length (%d).' % (len(str(value)), self.max_length),
++                        obj=self,
++                        id='fields.E009',
++                    )]
++        return []
++
+     def _check_db_index(self):
+         if self.db_index not in (None, True, False):
+             return [

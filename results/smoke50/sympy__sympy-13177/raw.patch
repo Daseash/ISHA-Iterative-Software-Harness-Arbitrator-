@@ -1,0 +1,11 @@
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -107,7 +107,8 @@
+         # n % n = 0
+         # n % 1 = 0
+         if (p == q or p == -q or
+-                p.is_Pow and p.exp.is_Integer and p.base == q or
++                p.is_Pow and p.exp.is_Integer and p.exp.is_positive and
++                p.base == q and q.is_integer or
+                 p.is_integer and q == 1):
+             return S.Zero

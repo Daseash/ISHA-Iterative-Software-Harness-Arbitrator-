@@ -514,3 +514,172 @@ Made ISHA pullable/runnable for others:
   **r2 1/8** — first re-solve finished: `django__django-11133` done
   22:56 (~25 min). Both processes alive; no restart needed.
 
+### Day 2 watch — 01:00 local (10-04)
+
+- **Main 35/50** (newest `sphinx__sphinx-10325` done 23:37). In-flight
+  `sphinx__sphinx-11445` on attempt 1 since ~00:07 — verified ALIVE, not
+  hung: process 13368 holds 2 established HTTPS conns to Google (Gemini)
+  + 957 s cumulative CPU, so it is mid-LLM-round, just slow.
+  **r2 3/8** — `django-11620` ❌ **timeout** (1 attempt vs 1800 s cap),
+  joining `django-11422`'s timeout. Two consecutive r2 timeouts on the
+  two largest django instances: leading hypothesis = budget exhaustion
+  under **dual-worker quota contention** (main + r2 share one free-quota
+  window, each call waits longer) + genuinely large instances — not the
+  apply/syntax failure mode. If the remaining 5 r2 instances land clean,
+  the 2 timeouts go to a small r3 after 50/50. Both processes alive.
+
+### Day 2 watch — 01:50 local (10-04)
+
+- **Main 37/50** (+2: `sphinx-10451` 00:07, `sphinx-11445` 00:37 — both
+  ❌ **timeout**, 1 attempt vs 1800 s cap; large sphinx instances under
+  the shared-quota window). Main now carries 2 timeouts of its own.
+  **r2 4/8** — `django-11742` ❌ still `syntax_error` (qwen primary,
+  1 attempt — genuine coder miss, now 2nd time). r2 on `matplotlib-22835`.
+  Merged timeouts so far: 4 (2 r2 + 2 main) vs <15% bar (≤7 of 50) —
+  watchable. Both processes alive; no restart needed.
+
+### Day 2 watch — 02:25 local (10-04)
+
+- **Main 38/50** (`sympy__sympy-11400` ✅ ok 00:52; 12 left).
+  **r2 5/8** — `matplotlib-22835` ❌ timeout (3rd r2 timeout).
+  Merged timeouts now 5/38 (~13%) vs <15% bar — tight; verdict at 50/50.
+  Both processes alive.
+
+### Day 2 — USER STOP, 02:45 local (10-04)
+
+- User: "stop now, continue later today" (afternoon). Both runs stopped cleanly:
+  - main `smoke50`: **38/50 checkpointed** (zero loss) — was mid-backoff
+    on a Groq 429, not mid-write.
+  - `smoke50-r2`: **5/8 checkpointed** (11133 ✅, 11422 ❌ t, 11620 ❌ t,
+    11742 ❌ syntax, 22835 ❌ t). Left: `matplotlib-23299`,
+    `mwaskom__seaborn-2848`, `pylint-dev__pylint-5859`.
+  - Watch cron wku_102b76ef0001qpvaXdbWREJk1y DELETED (so it can't
+    auto-restart tonight). Dashboard `src/server.py` (pid 6644) left up.
+
+**AFTERNOON RESUME — scheduled 14:00 IST 10-04 (cron wku_1034fcf6f001rB5kXQmb5eDbqZ; exact commands, from `C:\Users\Eashwar\ISHA\isha-agent`):**
+1. `python -m src.cli bench --limit 50 --slice stratified --run-id smoke50 --timeout 1800 --report` (persistent; 38 checkpoints skip in seconds)
+2. `python -m src.cli bench --run-id smoke50-r2 --timeout 1800 --instances matplotlib__matplotlib-23299 mwaskom__seaborn-2848 pylint-dev__pylint-5859` (persistent; 5 checkpoints skip)
+   (both with `ISHA_RATE_LIMIT_WAIT=1`)
+3. Recreate the 40-min watch (same prompt as wku_102b76... — see cron history); it enforces merged view r2>r1>main, auto-restarts dead runs, and at main==50 AND r2==8 builds M-3 + gate verdict + lite300 launch on PASS.
+4. M-3 + r3 decision: if r2's last 3 stay red, small `smoke50-r3` on just those ids after 50/50 (identical profile, new run-id).
+
+### Day 3 — RESUME, 16:50 local (10-04)
+
+- 14:00 IST resume cron did not fire; resumed on user command "start todays task".
+  State verified identical to 02:45 stop: main 38/50, r1 4/4, r2 5/8; no bench
+  process was running.
+- Main `smoke50` resumed persistent: bgp_106a61fb5001PZ7OnsR615sXb3 (pid 25188,
+  cwd isha-agent). r2 resumed persistent with the 3 remaining ids:
+  bgp_106a788f3001PrTB7ajoznJ0MC (pid 25156). Note: r2 runs from the ISHA root
+  cwd — verified harmless: `src` resolves to isha-agent via editable install
+  and results paths are absolute.
+- Watch cron recreated: wku_106af97a8001kI91HtgnR2D0o0 (`*/40 * * * *`, recurring;
+  Day-3 3-run flow, same merged-view rules, gate verdict + lite300 at
+  main==50 AND r2==8, r3 contingency unchanged).
+- Both pids verified alive with rising CPU at resume.
+
+### Day 3 watch — 16:55 local (10-04)
+
+- Main 38/50 (solving `sympy-11870`, ~25 min in), r2 5/8 (solving
+  `matplotlib-23299`). No completions yet — Groq 429 storm active since
+  resume; both absorbing via in-profile backoff (14-60 s, no fallback
+  advance). Both pids alive, CPU rising. No restart.
+  (Entry timestamp corrected: written right after the 16:50 resume.)
+
+### Day 3 status — 17:25 local (10-04), watch re-anchored in new session
+
+- Main **40/50** (+2 since resume: `sympy-11870` ❌ syntax_error,
+  `sympy-11897` ✅ ok; 10 left). In-flight `sympy-12171`. pid 25188 alive
+  (bgp_106a61fb5001PZ7OnsR615sXb3, persistent).
+- r2 **7/8** (+2: `matplotlib-23299` ❌ syntax_error, `seaborn-2848` ✅
+  ok — 2nd r2 clear). In-flight `pylint-dev__pylint-5859` (last; qwen
+  rate-limited, backing off). pid 25156 alive
+  (bgp_106a788f3001PrTB7ajoznJ0MC, persistent).
+- Merged view (40 unique ids done, r2 > r1 > main): ok **31 (77.5%)** ·
+  timeout 5 (12.5%) · syntax 3 (7.5%) · apply_failed 1 (2.5% — only
+  `pylint-5859`, pending r2) · offline 1 instance (2.5%). All gate bars
+  green right now; timeout is the tight bar (≤7 of 50 allowed → at most
+  2 more timeouts among main's last 10).
+- Watch cron: old session's wku_106af97... may or may not still fire; a
+  new 40-min watch now lives in this session (see cron), verdict step
+  idempotent via the GATE VERDICT marker in this file.
+- Note: root `plan.md` and `mistakes.md` no longer exist on disk (both
+  were present through Day 2). This file is the single source of truth;
+  the M-3 catalogue will be written to
+  `isha-agent/results/mistakes.md` at verdict time.
+
+### Day 3 watch — 18:20 local (10-04)
+
+- **r2 COMPLETE 8/8** (exit 0 in 2366 s, pid 25156 gone — normal end).
+  Final: `pylint-5859` ❌ **patch_apply_failed** (2 attempts, 776 s).
+  r2 scoreboard: 11133 ✅ · 11422 ❌ t · 11620 ❌ t · 11742 ❌ syntax ·
+  22835 ❌ t · 23299 ❌ syntax · 2848 ✅ · 5859 ❌ apply → **2 of 8
+  cleared**, 6 stay red.
+- Main **40/50** unchanged (pid 25188 alive, in qwen backoff; in-flight
+  `sympy-12171`). 10 left.
+- Merged (40 unique done): ok 31 · timeout 5 · syntax 3 · apply 1 ·
+  offline 1 — same as 17:25 (5859 was the only r2 outcome pending, and
+  it stayed red). Verdict still gated on main==50 (r2 side now satisfied).
+- r3 contingency (the 6 r2-red ids) stays on the table after 50/50, per
+  the 16:50 resume plan.
+
+### Day 3 watch — 18:55 local (10-04), watch re-anchored again
+
+- Main **43/50** (+3 since 18:20; 7 left). pid 25188 alive
+  (bgp_106a61fb5001PZ7OnsR615sXb3, persistent), in-flight `sympy-12454`
+  [44/50].
+- r2 8/8 final (unchanged). Verdict still gated on main==50.
+- 40-min watch cron re-created in this session:
+  wku_106f8602e001cKzS9NCr1rh3t8, next fire ~19:10 local. Watch steps are
+  idempotent; verdict step keyed on the GATE VERDICT marker.
+
+### Day 3 watch — 19:02 local (10-04)
+
+- Main **43/50**, still in-flight `sympy-12454` [44/50]; no new
+  completion since 18:55. 7 left: 12454, 12481, 13031, 13043, 13146,
+  13177, 13437.
+- Groq 429 storm still heavy: fallback chain now also degraded
+  (gpt-oss-120b/20b rate-limited, gemini-3.8/3.5 500/timeout;
+  gemini-3.1-flash-lite landed `sympy-12419`'s code). Progress is slow
+  (~15 min/instance with backoffs) but steady — no restart.
+
+### Day 3 watch — 19:10 local (10-04)
+
+- Main **44/50**: `sympy-12454` → patch in 856 s. Now in-flight
+  `sympy-12481` [45/50]; 6 left: 12481, 13031, 13043, 13146, 13177, 13437.
+- pid 25188 alive (bgp_106a61fb5001PZ7OnsR615sXb3). r2 8/8 final. No
+  restart, verdict still gated on main==50. Recurring 40-min watch
+  (wku_106f8602e001cKzS9NCr1rh3t8) next fire ~19:50 local.
+
+### Day 3 watch — 20:10 local (10-04)
+
+- Main **47/50** (+3 since 19:10). Outcomes: `sympy-12481` ❌
+  **patch_apply_failed** (1397 s), `sympy-13031` ❌ **patch_apply_failed**
+  (1517 s), `sympy-13043` → patch in 952 s. Now in-flight `sympy-13146`
+  [48/50]; 3 left: 13146, 13177, 13437.
+- pid 25188 alive (bgp_106a61fb5001PZ7OnsR615sXb3, CPU ~2905 s and
+  climbing). 429 storm persists across the whole fallback chain; cadence
+  ~15-18 min/instance. No restart.
+- **Gate-bar watch**: merged patch_apply_failed is now 3 instances
+  (`pylint-5859` from r2 + `sympy-12481` + `sympy-13031`) = 3/50 = 6%
+  if no more — that already exceeds the `<5%` bar even before the last 3
+  finish. Timeout so far still 5/47 (10.6% < 15%). Verdict math to be
+  pinned at 50/50.
+
+### Day 3 watch — 20:50 local (10-04)
+
+- Main **48/50**: `sympy-13146` → patch in 881 s. Now in-flight
+  `sympy-13177` [49/50]; 1 left after that: 13437.
+- pid 25188 alive (bgp_106a61fb5001PZ7OnsR615sXb3). 429 storm continues
+  but patch yield on the last stretch is strong (last 4 outcomes:
+  12481 ❌ apply, 13031 ❌ apply, 13043 ✅ patch, 13146 ✅ patch). No
+  restart.
+
+### Day 3 watch — 21:00 local (10-04)
+
+- Main **48/50** unchanged. `sympy-13177` ~25 min in, still actively
+  calling models through backoffs (last output: qwen backoff 60 s,
+  attempt 2/3) — within the 1800 s per-instance timeout. No restart.
+- 1 left after 13177: `sympy-13437`. Verdict work (M-3 catalogue + gate
+  + lite300 decision) expected at the 21:40 watch or just after.
+

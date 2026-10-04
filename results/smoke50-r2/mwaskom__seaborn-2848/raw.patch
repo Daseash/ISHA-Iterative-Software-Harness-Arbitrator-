@@ -1,0 +1,9 @@
+--- a/seaborn/_core/data.py
++++ b/seaborn/_core/data.py
+@@ -68,6 +68,9 @@ class VectorData(PlotData):
+     def __init__(self, data, vars, scale):
+         super().__init__(data, vars)
+         self.scale = scale
++
++    def __post_init__(self):
++        pass

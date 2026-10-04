@@ -1,0 +1,8 @@
+{
+  "instance_id": "sympy__sympy-13031",
+  "candidate": 0,
+  "round": 0,
+  "error": "Hunk failed in sympy/matrices/dense.py: @@ \u2014 expected context not found in file: '        args = [m for m in args if m.cols > 0]' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+  "cause": "context_mismatch",
+  "timestamp": 1791125179.5208948
+}
