@@ -1,0 +1,8 @@
+{
+  "instance_id": "pylint-dev__pylint-5859",
+  "candidate": 0,
+  "round": 0,
+  "error": "Hunk failed in pylint/lint/pylinter.py: @@ \u2014 expected context not found in file: '        self._notes_regexp = re.compile(r\"^(?:%s):\" % \"|\".join(self.notes))' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+  "cause": "context_mismatch",
+  "timestamp": 1791115369.846404
+}

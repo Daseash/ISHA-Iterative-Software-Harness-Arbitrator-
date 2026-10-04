@@ -1,0 +1,260 @@
+{
+  "instance_id": "django__django-11620",
+  "repo": "django/django",
+  "base_commit": "514efa3129792ec2abb2444f3e7aeb3f21a38386",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012092.5614178
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012099.515002
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012214.3853137
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012319.6396039
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012453.792491
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012603.8270507
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012756.4438078
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012907.3930075
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791012939.226311
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/urls/resolvers.py: @@ — expected context not found in file: '            try:' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791010790.9028883,
+  "elapsed_s": 905.32,
+  "plan": "--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@\n-from django.core.exceptions import ImproperlyConfigured, ViewDoesNotExist\n+from django.core.exceptions import ImproperlyConfigured, ViewDoesNotExist\n+from django.http import Http404                     # ← new import\n@@\n-        for converter, value in zip(self.pattern.converters, args):\n-            try:\n-                value = converter.to_python(value)\n-            except ValueError:\n-                return None\n+        for converter, value in zip(self.pattern.converters, args):\n+            try:\n+                value = converter.to_python(value)\n+            except (ValueError, Http404):   # ← also treat Http404 as non‑match\n+                return None",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/http/response.py",
+      "symbol": "django/http/response.py::BadHeaderError",
+      "symbols": [
+        "BadHeaderError",
+        "__init__",
+        "_convert_to_charset",
+        "set_cookie"
+      ],
+      "line_range": [
+        24,
+        27
+      ],
+      "score": 0.6326,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3598,
+        "vector": 0.7724,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: error, valueerror, value)"
+    },
+    {
+      "file": "django/core/checks/messages.py",
+      "symbol": "django/core/checks/messages.py::CheckMessage",
+      "symbols": [
+        "CheckMessage",
+        "__str__",
+        "__init__",
+        "is_serious"
+      ],
+      "line_range": [
+        9,
+        52
+      ],
+      "score": 0.5223,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1863,
+        "vector": 0.2142,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: message, does, error, method)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "compile_nodelist",
+        "get_exception_info",
+        "__init__"
+      ],
+      "line_range": [
+        142,
+        157
+      ],
+      "score": 0.4901,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8319,
+        "vector": 0.6845,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: default, text, this, that)"
+    },
+    {
+      "file": "django/template/defaulttags.py",
+      "symbol": "django/template/defaulttags.py::CsrfTokenNode",
+      "symbols": [
+        "CsrfTokenNode",
+        "render",
+        "CycleNode",
+        "render"
+      ],
+      "line_range": [
+        50,
+        69
+      ],
+      "score": 0.6266,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3883,
+        "vector": 0.6626,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: text, debug, very, value)"
+    },
+    {
+      "file": "django/contrib/messages/api.py",
+      "symbol": "django/contrib/messages/api.py::add_message",
+      "symbols": [
+        "add_message",
+        "get_level",
+        "set_level",
+        "MessageFailure"
+      ],
+      "line_range": [
+        16,
+        36
+      ],
+      "score": 0.5413,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1425,
+        "vector": 0.4643,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: message, error, django)"
+    },
+    {
+      "file": "django/template/context_processors.py",
+      "symbol": "django/template/context_processors.py::csrf",
+      "symbols": [
+        "csrf",
+        "_get_val",
+        "debug",
+        "tz"
+      ],
+      "line_range": [
+        17,
+        34
+      ],
+      "score": 0.5411,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1345,
+        "vector": 0.479,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: text, debug, value, instead)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.737575,
+  "laya_scores": {
+    "fix_quality": 1.4685,
+    "matches_issue": 0.7734,
+    "safe_to_apply": 0.7084,
+    "composite": 0.737575,
+    "secrets_or_danger": 0.1493,
+    "logic_drift": 0.1819,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No new security contexts (injection, secrets, shell) are introduced.\n- PERFORMANCE: PASS - The change adds an exception class to a tuple; no impact on query counts or memory.\n- ROBUSTNESS: RISK - Catching `Http404` and returning `None` swallows the specific \"404\" intent, forcing the resolver to continue trying other patterns instead of stopping to return the 404 page, which contradicts the bug reporter's request for a technical/handled 404 response and may lead to unexpected 500s or fallbacks if no other pattern matches.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/urls/resolvers.py: @@ — expected context not found in file: '            try:' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "import sys\nimport types\n\nimport pytest\nfrom django.http import Http404, HttpResponse\nfrom django.test import Client, override_settings\nfrom django.urls import path, register_converter\n\n# ---------------------------------------------------------------------------\n# Helper objects used by the temporary URLconf\n# ---------------------------------------------------------------------------\n\nclass Http404Converter:\n    \"\"\"Converter that always raises ``Http404``.\"\"\"\n    regex = r\"\\d+\"\n\n    def to_python(self, value):\n        raise Http404(\"converter‑triggered 404\")\n\n    def to_url(self, value):\n        return value\n\nclass ValueErrorConverter:\n    \"\"\"Converter that always raises ``ValueError`` (the historic behaviour).\"\"\"\n    regex = r\"\\d+\"\n\n    def to_python(self, value):\n        raise ValueError(\"converter‑triggered ValueError\")\n\n    def to_url(self, value):\n        return value\n\nclass EchoConverter:\n    \"\"\"A normal converter that just returns the matched string.\"\"\"\n    regex = r\"\\d+\"\n\n    def to_python(self, value):\n        return value\n\n    def to_url(self, value):\n        return value\n\ndef echo_view(request, val):\n    \"\"\"Very small view used by the test URL patterns.\"\"\"\n    return HttpResponse(f\"got {val}\")\n\n# ---------------------------------------------------------------------------\n# Build a temporary ``urls`` module that will be used as ROOT_URLCONF\n# ---------------------------------------------------------------------------\n\ntest_urls = types.ModuleType(\"test_urls\")\ntest_urls.urlpatterns = [\n    # The path that uses the Http404‑raising converter.\n    path(\"bad/<bad:num>/\", echo_view, name=\"bad\"),\n    # The path that uses the ValueError‑raising converter.\n    path(\"valueerror/<ve:num>/\", echo_view, name=\"valueerror\"),\n    # A normal path that should resolve successfully.\n    path(\"ok/<echo:num>/\", echo_view, name=\"ok\"),\n]\nsys.modules[\"test_urls\"] = test_urls\n\n# ---------------------------------------------------------------------------\n# Fixtures\n# ---------------------------------------------------------------------------\n\n@pytest.fixture\ndef client():\n    \"\"\"Django test client.\"\"\"\n    return Client()\n\n@pytest.fixture(autouse=True)\ndef register_test_converters():\n    \"\"\"\n    Register the converters for the lifetime of the test session.\n    ``autouse=True`` guarantees they are available before any request is made.\n    \"\"\"\n    register_converter(Http404Converter, \"bad\")\n    register_converter(ValueErrorConverter, \"ve\")\n    register_converter(EchoConverter, \"echo\")\n    yield\n    # No explicit teardown needed – the test process ends after the suite.\n\n# ---------------------------------------------------------------------------\n# Tests\n# ---------------------------------------------------------------------------\n\n@override_settings(DEBUG=True, ROOT_URLCONF=\"test_urls\")\ndef test_http404_in_converter_is_treated_as_non_match(client):\n    \"\"\"\n    When DEBUG is True, a ``Http404`` raised from ``to_python`` should be\n    interpreted like a ``ValueError`` – the resolver must treat the pattern as\n    not matching and return the normal 404 response.\n    \"\"\"\n    response = client.get(\"/bad/123/\")\n    assert response.status_code == 404, \"Expected a 404 response, got %s\" % response.status_code\n\n@override_settings(DEBUG=True, ROOT_URLCONF=\"test_urls\")\ndef test_valueerror_in_converter_is_treated_as_non_match(client):\n    \"\"\"\n    Existing behaviour: ``ValueError`` from a converter results in a 404.\n    This test ensures the baseline still works and also serves as an edge‑case.\n    \"\"\"\n    response = client.get(\"/valueerror/123/\")\n    assert response.status_code == 404\n\n@override_settings(DEBUG=True, ROOT_URLCONF=\"test_urls\")\ndef test_successful_converter_allows_view_to_be_called(client):\n    \"\"\"\n    A normal converter must still resolve correctly, proving that the fix does\n    not break the happy path.\n    \"\"\"\n    response = client.get(\"/ok/456/\")\n    assert response.status_code == 200\n    assert b\"got 456\" in response.content",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

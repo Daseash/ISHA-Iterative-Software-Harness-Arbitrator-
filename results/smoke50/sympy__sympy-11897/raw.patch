@@ -1,0 +1,18 @@
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1,6 +1,7 @@
+ """
+ Printers for LaTeX representation of SymPy.
+ """
++
+ 
+ from __future__ import division, print_function
+ 
+@@ -305,6 +306,7 @@ class LatexPrinter(_Printer):
+             # an all-negative Add.
+             if term.is_Add and term.args[0].is_negative:
+                 term = -term
++                term = -term
+ 
+         if expr.is_Pow and expr.base is S.Exp1 and expr.exp.is_negative:
+             # Fix: exp(-x) should be e^{-x}, not 1/e^{x}

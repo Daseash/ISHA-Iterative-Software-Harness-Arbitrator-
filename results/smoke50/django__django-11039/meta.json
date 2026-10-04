@@ -1,0 +1,252 @@
+{
+  "instance_id": "django__django-11039",
+  "repo": "django/django",
+  "base_commit": "d5276398046ce4a102776a1e67dcac2884d80dfe",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946475.28953
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946479.5672522
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946488.6351955
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946514.1464922
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946564.2653148
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946640.7289567
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790946742.1700199
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/commands/sqlmigrate.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/commands/sqlmigrate.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1790946420.1242588,
+  "elapsed_s": 328.88,
+  "plan": "# Show begin/end around output only for atomic migrations\n        # and if the connection supports transactional DDL.\n        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "django/db/transaction.py::savepoint",
+      "symbols": [
+        "savepoint",
+        "savepoint_rollback",
+        "savepoint_commit",
+        "get_rollback"
+      ],
+      "line_range": [
+        43,
+        51
+      ],
+      "score": 0.8546,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7004,
+        "vector": 0.6001,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: current, point, commit, support)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "symbols": [
+        "execute",
+        "main_help_text",
+        "get_commands",
+        "autocomplete"
+      ],
+      "line_range": [
+        301,
+        377
+      ],
+      "score": 0.5311,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1287,
+        "vector": 0.4495,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: point, test, even, because)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "db_check",
+        "db_type",
+        "rel_db_type"
+      ],
+      "line_range": [
+        304,
+        321
+      ],
+      "score": 0.5597,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2142,
+        "vector": 0.5093,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: features, based, connection, consider)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::get_default_username",
+      "symbols": [
+        "get_default_username",
+        "create_permissions",
+        "get_system_username"
+      ],
+      "line_range": [
+        104,
+        145
+      ],
+      "score": 0.542,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1046,
+        "vector": 0.5905,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: current, existing, that, doesn)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "addslashes",
+        "urlizetrunc",
+        "dictsort"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5314,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1146,
+        "vector": 0.4398,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: wraps, only)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::ping_google",
+      "symbols": [
+        "ping_google",
+        "_urls",
+        "get_urls",
+        "GenericSitemap"
+      ],
+      "line_range": [
+        18,
+        29
+      ],
+      "score": 0.5239,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.043,
+        "vector": 0.5677,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: current, that)"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.7220000000000001,
+  "laya_scores": {
+    "fix_quality": 1.5051,
+    "matches_issue": 0.7364,
+    "safe_to_apply": 0.6465,
+    "composite": 0.7220000000000001,
+    "secrets_or_danger": 0.1513,
+    "logic_drift": 0.2123,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns introduced.\n- PERFORMANCE: PASS - No impact on query count or blocking operations.\n- ROBUSTNESS: PASS - Logic is sound and relies on established database feature flags.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "\"\"\"Tests reproducing the sqlmigrate transaction-wrapping bug.\n\nThe bug: `sqlmigrate` wraps its output in BEGIN/COMMIT whenever the\nmigration is atomic, even when the connection does NOT support\ntransactional DDL (`connection.features.can_rollback_ddl is False`).\nThe fix changes `output_transaction` to\n`migration.atomic and connection.features.can_rollback_ddl`.\n\"\"\"\n\nfrom unittest import mock\n\nimport pytest\n\nfrom django.db import connections\nfrom django.db.migrations.loader import MigrationLoader\nfrom django.db.migrations.writer import MigrationWriter\nfrom django.test.utils import CaptureQueriesContext\n\n\ndef _run_sqlmigrate_and_capture(capture):\n    \"\"\"Helper: run `sqlmigrate` for a single migration and return stdout.\"\"\"\n    from django.core.management.commands.sqlmigrate import Command as SqlMigrateCommand\n    import io\n\n    out = io.StringIO()\n    SqlMigrateCommand().handle(\n        \"test\",\n        \"0001_initial\",\n        stdout=out,\n    )\n    return out.getvalue()\n\n\n@pytest.mark.django_db\ndef test_sqlmigrate_no_transaction_when_ddl_not_rollbackable():\n    \"\"\"\n    REPRODUCES THE BUG (must FAIL before fix, PASS after fix).\n\n    Even though the migration is atomic, if the DB cannot roll back DDL,\n    sqlmigrate must NOT wrap its output in BEGIN/COMMIT.\n    \"\"\"\n    connection = connections[\"default\"]\n\n    with CaptureQueriesContext(connection) as ctx:\n        # Mock that the connection does NOT support transactional DDL.\n        with mock.patch.object(\n            connection.features, \"can_rollback_ddl\", False\n        ):\n            # We need to re-create the loader so it picks up the mock.\n            # Force a fresh migration load.\n            import importlib\n            import django.db.migrations.executors\n\n            # The sqlmigrate command builds its own SqlMigrateExecutor; we\n            # mock the feature directly on the live connection object used\n            # by that executor.\n            output = _run_sqlmigrate_and_capture(ctx)\n\n    # After the fix, output must NOT contain BEGIN or COMMIT.\n    assert \"BEGIN\" not in output, (\n        \"sqlmigrate should NOT wrap output in a transaction when \"\n        \"can_rollback_ddl is False, even for atomic migrations.\"\n    )\n    assert \"COMMIT\" not in output, (\n        \"sqlmigrate should NOT wrap output in a transaction when \"\n        \"can_rollback_ddl is False, even for atomic migrations.\"\n    )\n\n\n@pytest.mark.django_db\ndef test_sqlmigrate_transaction_when_atomic_and_ddl_rollbackable():\n    \"\"\"\n    Edge case: atomic migration AND can_rollback_ddl=True →\n    sqlmigrate SHOULD wrap output in BEGIN/COMMIT.\n    \"\"\"\n    connection = connections[\"default\"]\n\n    with mock.patch.object(\n        connection.features, \"can_rollback_ddl\", True\n    ):\n        output = _run_sqlmigrate_and_capture(None)\n\n    assert \"BEGIN\" in output, (\n        \"sqlmigrate SHOULD wrap output in a transaction when the migration \"\n        \"is atomic and can_rollback_ddl is True.\"\n    )\n    assert \"COMMIT\" in output, (\n        \"sqlmigrate SHOULD wrap output in a transaction when the migration \"\n        \"is atomic and can_rollback_ddl is True.\"\n    )\n\n\n@pytest.mark.django_db\ndef test_sqlmigrate_no_transaction_when_non_atomic_even_if_ddl_rollbackable():\n    \"\"\"\n    Edge case: non-atomic migration → no transaction wrapping regardless of\n    can_rollback_ddl. This is the pre-existing behavior that must be\n    preserved.\n    \"\"\"\n    connection = connections[\"default\"]\n\n    # Use a migration that is known to be non-atomic. If no such migration\n    # exists in the test app, we create the condition by patching.\n    with mock.patch.object(\n        connection.features, \"can_rollback_ddl\", True\n    ):\n        output = _run_sqlmigrate_and_capture(None)\n\n    # Determine atomicity of the migration we rendered.\n    # For the default \"test\" app migration 0001_initial, check atomic flag.\n    from django.db.migrations.loader import MigrationLoader as _ML\n    loader = _ML(connection)\n    mig = loader.get_migration(\"test\", \"0001_initial\")\n\n    if not mig.atomic:\n        # Non-atomic: must not have transaction wrapper even though\n        # can_rollback_ddl is True. The fix should not change this.\n        assert \"BEGIN\" not in output\n        assert \"COMMIT\" not in output",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..7c51488 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,8 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        # and if the connection supports transactional DDL.\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+  "offline_calls": 0
+}

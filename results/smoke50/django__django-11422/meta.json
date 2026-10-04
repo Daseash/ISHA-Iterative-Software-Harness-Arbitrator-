@@ -1,0 +1,269 @@
+{
+  "instance_id": "django__django-11422",
+  "repo": "django/django",
+  "base_commit": "df46b329e0900e9e4dc1d60816c1dce6dfc1094e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "syntax_error",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791005999.3547475
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006006.856419
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006026.2024906
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006103.116088
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006135.649464
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006259.0121617
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006392.5302606
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006488.2408853
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791006636.209876
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "static gate failed: C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-k_erdypp\\django\\utils\\autoreload.py: SyntaxError line 116: invalid syntax",
+    "gates": {
+      "ok": false,
+      "errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-k_erdypp\\django\\utils\\autoreload.py: SyntaxError line 116: invalid syntax"
+      ],
+      "changed_files": [
+        "django/utils/autoreload.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791005904.8167381,
+  "elapsed_s": 737.6,
+  "plan": "@functools.lru_cache(maxsize=1)\ndef iter_modules_and_files(modules, extra_files):\n    ...\n    results = set()\n    for filename in itertools.chain(sys_file_paths, extra_files):\n        if not filename:\n            continue\n        path = pathlib.Path(filename)\n        if not path.exists():\n            continue\n        results.add(path.resolve().absolute())\n    return frozenset(results)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "django/utils/autoreload.py::iter_all_python_module_files",
+      "symbols": [
+        "iter_all_python_module_files",
+        "iter_modules_and_files",
+        "get_child_arguments",
+        "trigger_reload"
+      ],
+      "line_range": [
+        99,
+        108
+      ],
+      "score": 0.8996,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3923,
+        "vector": 0.888,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: file, this, python, reloading)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "__init__",
+        "fetch_command",
+        "autocomplete"
+      ],
+      "line_range": [
+        41,
+        74
+      ],
+      "score": 0.659,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5882,
+        "vector": 0.5583,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: install, django, manage, this)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::LazySettings",
+      "symbols": [
+        "LazySettings",
+        "_setup",
+        "__setattr__",
+        "FILE_CHARSET"
+      ],
+      "line_range": [
+        42,
+        131
+      ],
+      "score": 0.6242,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5188,
+        "vector": 0.4126,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: environment, django, file, this)"
+    },
+    {
+      "file": "tests/admin_scripts/configured_dynamic_settings_manage.py",
+      "symbol": "tests/admin_scripts/configured_dynamic_settings_manage.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "__dir__"
+      ],
+      "line_range": [
+        9,
+        13
+      ],
+      "score": 0.6328,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1513,
+        "vector": 0.7127,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: settings"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::_get_sitemap_full_url",
+      "symbols": [
+        "_get_sitemap_full_url",
+        "Sitemap",
+        "get_urls",
+        "_urls"
+      ],
+      "line_range": [
+        30,
+        53
+      ],
+      "score": 0.5904,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1546,
+        "vector": 0.8897,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: install, django, main, auto"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "__getattr__",
+        "ugettext_noop",
+        "ugettext"
+      ],
+      "line_range": [
+        41,
+        66
+      ],
+      "score": 0.567,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2609,
+        "vector": 0.4734,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: will, django, file, autoreload"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.60555,
+  "laya_scores": {
+    "fix_quality": 1.1736,
+    "matches_issue": 0.7014,
+    "safe_to_apply": 0.5472,
+    "composite": 0.60555,
+    "secrets_or_danger": 0.1564,
+    "logic_drift": 0.2956,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - The change only refactors internal iteration logic and does not introduce injection, unsafe execution, or credential exposure.\n- PERFORMANCE: RISK - Moving `lru_cache` to an inner factory-closure function defeats the caching mechanism for multiple loads; if `iter_modules_and_files` is called with distinct module sets as the server runs, the cache hits will drop significantly compared to the module-level cached version, potentially increasing CPU overhead during reload checks.\n- ROBUSTNESS: PASS - The change correctly ensures `iter_modules_and_files` returns a new iterator each time (fixing the stale iterator bug), ensuring `manage.py` is tracked.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "FAILED: STATIC GATE — C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-u9p_0js7\\django\\utils\\autoreload.py: SyntaxError line 116: invalid syntax",
+  "regression_test": "import os\nimport tempfile\nfrom pathlib import Path\n\nimport pytest\n\nfrom django.utils import autoreload\n\n\ndef _clear_cache():\n    autoreload.iter_modules_and_files.cache_clear()\n\n\ndef test_extra_files_are_tracked_by_stat_reloader():\n    \"\"\"\n    Bug: StatReloader did not include `extra_files` (e.g. the *extra* files\n    such as manage.py) in the set of paths its `stat()` method monitors,\n    so editing them never triggered an auto-reload.\n\n    After the fix, `iter_modules_and_files` is the single source of truth\n    for paths to watch and it MUST include the explicitly-passed\n    `extra_files` that exist on disk.\n    \"\"\"\n    _clear_cache()\n    with tempfile.TemporaryDirectory() as tmp:\n        manage_py = Path(tmp) / \"manage.py\"\n        manage_py.write_text(\"# dummy manage.py\\n\")\n\n        files = autoreload.iter_modules_and_files(\n            modules=[], extra_files=[str(manage_py)],\n        )\n\n        expected = manage_py.resolve().absolute()\n        assert expected in files, (\n            \"manager file passed via extra_files is missing from the watched \"\n            \"set; StatReloader therefore will never detect its changes\"\n        )\n\n\ndef test_extra_files_none_and_empty_string_are_skipped():\n    \"\"\"The fix explicitly filters out falsy entries (None and '') from\n    `extra_files`.  Invalid entries must be silently ignored, not crash the\n    watch-loop, and must not be included in the result.\"\"\"\n    _clear_cache()\n    files = autoreload.iter_modules_and_files(modules=[], extra_files=[None, \"\"])\n    assert files == frozenset()\n\n\ndef test_nonexistent_extra_files_are_skipped():\n    \"\"\"A file that does not exist on disk must not crash the iterator and\n    must not appear in the returned set (the fix guards with\n    `path.exists()`).\"\"\"\n    _clear_cache()\n    files = autoreload.iter_modules_and_files(\n        modules=[], extra_files=[\"/definitely/not/a/real/file.py\"],\n    )\n    assert files == frozenset()\n\n\ndef test_result_is_frozen_and_deduplicated():\n    \"\"\"The fixed implementation returns a frozenset of resolved, absolute\n    paths, so:\n      * duplicates (relative + already-absolute form of the same file)\n        collapse to a single entry;\n      * the return type is immutable (frozenset).\"\"\"\n    _clear_cache()\n    with tempfile.TemporaryDirectory() as tmp:\n        target = Path(tmp) / \"m.py\"\n        target.write_text(\"x = 1\\n\")\n        resolved = target.resolve().absolute()\n\n        same_file_twice = [str(target), str(resolved)]\n        result = autoreload.iter_modules_and_files(\n            modules=[], extra_files=same_file_twice,\n        )\n\n        assert type(result) is frozenset\n        assert result == frozenset({resolved})",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

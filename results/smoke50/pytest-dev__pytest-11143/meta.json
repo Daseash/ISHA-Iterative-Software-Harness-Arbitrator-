@@ -1,0 +1,253 @@
+{
+  "instance_id": "pytest-dev__pytest-11143",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "6995257cf470d2143ad1683824962de4071c0eb7",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040819.4262738
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040820.355694
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791041128.2604537
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791041431.678054
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791041739.5807242
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791042053.2328708
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791042059.8864462
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: src/_pytest/assertion/rewrite.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "src/_pytest/assertion/rewrite.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791040798.6758184,
+  "elapsed_s": 1269.27,
+  "plan": "def is_rewrite_disabled(docstring: Optional[str]) -> bool:\n    if not isinstance(docstring, str):\n        return False\n    return \"PYTEST_DONT_REWRITE\" in docstring",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/assertion/rewrite.py",
+      "symbol": "src/_pytest/assertion/rewrite.py::_saferepr",
+      "symbols": [
+        "_saferepr",
+        "_should_repr_global_name",
+        "_format_assertmsg",
+        "_rewrite_test"
+      ],
+      "line_range": [
+        405,
+        418
+      ],
+      "score": 0.9682,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3496,
+        "vector": 0.6732,
+        "defs": 1.0
+      },
+      "reason": "private helper called by a symbol the report names; signature parameter matches report: obj; body matches report terms: config, error, assertion, possible"
+    },
+    {
+      "file": "src/_pytest/python.py",
+      "symbol": "src/_pytest/python.py::_call_with_optional_argument",
+      "symbols": [
+        "_call_with_optional_argument",
+        "_get_first_non_fixture_func",
+        "pytest_cmdline_main",
+        "pytest_configure"
+      ],
+      "line_range": [
+        769,
+        780
+      ],
+      "score": 0.7417,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2946,
+        "vector": 0.9841,
+        "defs": 0.0
+      },
+      "reason": "private helper called by a symbol the report names; signature parameter matches report: func; body matches report terms: argument, func, call, optional"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "install_importhook",
+        "pytest_addoption",
+        "register_assert_rewrite"
+      ],
+      "line_range": [
+        83,
+        88
+      ],
+      "score": 0.7164,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3431,
+        "vector": 0.6715,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: config, mode; body matches report terms: config, init__, root, mode"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "filename_arg",
+        "directory_arg",
+        "pytest_configure"
+      ],
+      "line_range": [
+        108,
+        111
+      ],
+      "score": 0.716,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3393,
+        "vector": 0.6765,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: path; body matches report terms: init__, path"
+    },
+    {
+      "file": "src/_pytest/pathlib.py",
+      "symbol": "src/_pytest/pathlib.py::on_rm_rf_error",
+      "symbols": [
+        "on_rm_rf_error",
+        "ensure_extended_length_path",
+        "rm_rf",
+        "find_prefixed"
+      ],
+      "line_range": [
+        70,
+        78
+      ],
+      "score": 0.6977,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2905,
+        "vector": 0.6259,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: func, path; body matches report terms: error, func, optional, path"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::pytest_cmdline_main",
+      "symbols": [
+        "pytest_cmdline_main",
+        "deselect_by_keyword",
+        "deselect_by_mark",
+        "pytest_collection_modifyitems"
+      ],
+      "line_range": [
+        113,
+        131
+      ],
+      "score": 0.6736,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2205,
+        "vector": 0.5709,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: config; body matches report terms: config, pytest, name, optional"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.5973,
+  "laya_scores": {
+    "fix_quality": 1.2273,
+    "matches_issue": 0.5787,
+    "safe_to_apply": 0.5832,
+    "composite": 0.5973,
+    "secrets_or_danger": 0.1716,
+    "logic_drift": 0.4273,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change adds a type check to prevent errors; it does not introduce injection, secrets, or unsafe execution.\n- PERFORMANCE: PASS - The added `isinstance` check is a negligible O(1) operation in a non-hot loop context.\n- ROBUSTNESS: PASS - The guard `if not isinstance(docstring, str)` prevents potential `TypeError` or unexpected behavior if a non-string object (like an AST node or number) is passed, aligning with the bug report about numbers being mistaken for docstrings.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport sys\nfrom _pytest.assertion.rewrite import is_rewrite_disabled\n\ndef test_is_rewrite_disabled_with_int_first_expression():\n    \"\"\"\n    Reproduction: The bug occurs when the first expression in a file is a number.\n    In the context of the reporter, the 'docstring' argument passed to \n    is_rewrite_disabled is an int (the value of the expression) instead of a string.\n    \"\"\"\n    # This should NOT raise TypeError: argument of type 'int' is not iterable\n    try:\n        result = is_rewrite_disabled(123)\n        assert result is False\n    except TypeError as e:\n        pytest.fail(f\"is_rewrite_disabled raised TypeError with integer input: {e}\")\n\ndef test_is_rewrite_disabled_with_none():\n    \"\"\"Verify handling of None input.\"\"\"\n    assert is_rewrite_disabled(None) is False\n\ndef test_is_rewrite_disabled_with_valid_string():\n    \"\"\"Verify standard functionality with a docstring.\"\"\"\n    assert is_rewrite_disabled(\"Just a normal docstring\") is False\n    assert is_rewrite_disabled(\"PYTEST_DONT_REWRITE\\nSome text\") is True\n\ndef test_is_rewrite_disabled_with_empty_string():\n    \"\"\"Verify behavior with an empty docstring.\"\"\"\n    assert is_rewrite_disabled(\"\") is False",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py\nindex 157903f..60add6e 100644\n--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -743,6 +743,8 @@ class AssertionRewriter(ast.NodeVisitor):\n \n     @staticmethod\n     def is_rewrite_disabled(docstring: str) -> bool:\n+        if not isinstance(docstring, str):\n+            return False\n         return \"PYTEST_DONT_REWRITE\" in docstring\n \n     def variable(self) -> str:\n",
+  "offline_calls": 0
+}

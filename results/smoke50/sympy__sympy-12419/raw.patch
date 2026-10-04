@@ -1,0 +1,15 @@
+--- a/sympy/matrices/expressions/matexpr.py
++++ b/sympy/matrices/expressions/matexpr.py
+@@ -430,10 +430,8 @@ class Identity(MatrixExpr):
+     def cols(self):
+         return self.args[0]
+ 
+     def _entry(self, i, j):
+-        if i == j:
+-            return S.One
+-        else:
+-            return S.Zero
++        from sympy.functions.special.tensor_functions import KroneckerDelta
++        return KroneckerDelta(i, j)
+ 
+     def _eval_determinant(self):

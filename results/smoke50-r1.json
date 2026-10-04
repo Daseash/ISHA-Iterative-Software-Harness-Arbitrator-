@@ -1,0 +1,195 @@
+{
+  "run_id": "smoke50-r1",
+  "generated_at": "2026-10-03 12:16:14",
+  "total_instances": 4,
+  "resolved": 0,
+  "resolve_rate": 0.0,
+  "resolve_ci_95": [
+    0.0,
+    0.4899
+  ],
+  "instances_with_patch": 2,
+  "patch_rate": 0.5,
+  "patch_ci_95": [
+    0.15,
+    0.85
+  ],
+  "stage_breakdown": {
+    "localization_hit_file": {
+      "count": 4,
+      "rate": 1.0,
+      "ci_95": [
+        0.5101,
+        1.0
+      ]
+    },
+    "localization_hit_func": {
+      "count": 1,
+      "rate": 0.25,
+      "ci_95": [
+        0.0456,
+        0.6994
+      ]
+    },
+    "patch_applied": {
+      "count": 3,
+      "rate": 0.75,
+      "ci_95": [
+        0.3006,
+        0.9544
+      ]
+    },
+    "static_gate_passed": {
+      "count": 2,
+      "rate": 0.5,
+      "ci_95": [
+        0.15,
+        0.85
+      ]
+    },
+    "env_ok": {
+      "count": 4,
+      "rate": 1.0,
+      "ci_95": [
+        0.5101,
+        1.0
+      ]
+    },
+    "repro_fails_before": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.4899
+      ]
+    },
+    "repro_passes_after": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.4899
+      ]
+    },
+    "zero_regressions": {
+      "count": 2,
+      "rate": 0.5,
+      "ci_95": [
+        0.15,
+        0.85
+      ]
+    },
+    "resolved": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.4899
+      ]
+    }
+  },
+  "failure_breakdown": {
+    "localization_wrong": 0,
+    "patch_apply_failed": 1,
+    "syntax_error": 1,
+    "tests_failed": 2,
+    "timeout": 0,
+    "api_failure": 0,
+    "no_confident_fix": 0,
+    "not_run": 0,
+    "harness_no_output": 0,
+    "checkout_failed": 0,
+    "prefiltered": 0
+  },
+  "official_report": {},
+  "instances": [
+    {
+      "instance_id": "django__django-11049",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 364.12,
+      "critic_score": 0.7071000000000001,
+      "offline_calls": 0,
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "django__django-11133",
+      "resolved": false,
+      "category": "syntax_error",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 403.61,
+      "critic_score": 0.812575,
+      "offline_calls": 0,
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "django__django-11179",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 173.23,
+      "critic_score": 0.811125,
+      "offline_calls": 0,
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": true,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "django__django-11422",
+      "resolved": false,
+      "category": "patch_apply_failed",
+      "has_patch": false,
+      "attempts": 2,
+      "elapsed_s": 805.39,
+      "critic_score": 0.699975,
+      "offline_calls": 0,
+      "primary_model": "qwen3.8-27b [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    }
+  ]
+}

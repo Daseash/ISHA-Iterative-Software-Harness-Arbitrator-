@@ -1,0 +1,255 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-10297",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "b90661d6a46aa3619d3eec94d5281f5888add501",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791045741.174626
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791045742.81478
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791046048.5393856
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791046050.375963
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791046364.7227087
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791046700.9608164
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791046829.2206147
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047158.9489
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791047179.0950031
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/linear_model/ridge.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791044050.7965965,
+  "elapsed_s": 1465.49,
+  "plan": "Step 1: The root cause is that `RidgeClassifierCV` does not define a `store_cv_values` parameter in its `__init__` method, yet it inherits from `_BaseRidgeCV` which likely handles the logic for storing cross-validation values if the parameter is passed correctly. The class `RidgeClassifierCV` is missing this argument in its signature and it is not being passed to the `super().__init__` call.\n\nStep 2: Modify `sklearn/linear_model/ridge.py`:\n- In the `RidgeClassifierCV.__init__` method, add the argument `store_cv_values=False` to the function signature.\n- Pass this `store_cv_values` argument to the `super(RidgeClassifierCV, self).__init__(...)` call to ensure it is properly initialized in the base class.",
+  "planner_confidence": 1.0,
+  "localization": [
+    {
+      "file": "sklearn/linear_model/ridge.py",
+      "symbol": "sklearn/linear_model/ridge.py::__init__",
+      "symbols": [
+        "__init__",
+        "fit",
+        "__init__",
+        "fit"
+      ],
+      "line_range": [
+        462,
+        473
+      ],
+      "score": 0.5116,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.5133,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: alpha, normalize; body matches report terms: init__, normalize, random, alpha; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::get_config",
+      "symbols": [
+        "get_config",
+        "set_config",
+        "config_context",
+        "setup_module"
+      ],
+      "line_range": [
+        29,
+        39
+      ],
+      "score": 0.574,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.276,
+        "vector": 0.4999,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: that, values, init, parameter"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::gen_batches",
+      "symbols": [
+        "gen_batches",
+        "gen_even_slices",
+        "tosequence",
+        "__init__"
+      ],
+      "line_range": [
+        374,
+        398
+      ],
+      "score": 0.5357,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2047,
+        "vector": 0.3293,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: n; body matches report terms: size, learn, sklearn"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions",
+      "symbols": [
+        "maybe_cythonize_extensions",
+        "atlas_not_found",
+        "build_from_c_and_cpp_files",
+        "get_blas_info"
+      ],
+      "line_range": [
+        63,
+        84
+      ],
+      "score": 0.4999,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0081,
+        "vector": 0.4406,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: learn, error, scikit"
+    },
+    {
+      "file": "sklearn/externals/joblib/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3828,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4045,
+        "vector": 0.3054,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    },
+    {
+      "file": "sklearn/linear_model/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3341,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1713,
+        "vector": 0.386,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7073,
+  "laya_scores": {
+    "fix_quality": 1.4512,
+    "matches_issue": 0.7622,
+    "safe_to_apply": 0.6158,
+    "composite": 0.7073,
+    "secrets_or_danger": 0.2231,
+    "logic_drift": 0.2466,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No changes to input validation, path handling, or external command execution.\n- PERFORMANCE: PASS - The change only modifies constructor argument passing; no computational logic or loop structures are altered.\n- ROBUSTNESS: FAIL - The patch fails to add `store_cv_values` as a stored attribute (e.g., `self.store_cv_values = store_cv_values`), meaning the actual functionality requested in the bug report (enabling the storage of CV values) is not implemented, and the hardcoded `False` prevents the user from actually using the feature.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom sklearn import linear_model as lm\n\n\ndef test_ridge_classifier_cv_store_cv_values_reproduces_bug():\n    \"\"\"First test: reproduces the bug.\n    \n    Before the fix, passing store_cv_values=True to RidgeClassifierCV\n    raises TypeError. After the fix, it should work and populate the\n    cv_values_ attribute.\n    \"\"\"\n    n = 100\n    x = np.random.randn(n, 30)\n    y = np.random.normal(size=n)\n\n    rr = lm.RidgeClassifierCV(\n        alphas=np.arange(0.1, 1000, 0.1),\n        normalize=True,\n        store_cv_values=True\n    ).fit(x, y)\n\n    # With store_cv_values=True, cv_values_ should be stored\n    assert hasattr(rr, 'cv_values_')\n    assert rr.cv_values_ is not None\n\n\ndef test_ridge_classifier_cv_store_cv_values_false():\n    \"\"\"Boundary/edge case: store_cv_values=False (default) should not store cv values.\"\"\"\n    n = 100\n    x = np.random.randn(n, 30)\n    y = np.random.normal(size=n)\n\n    rr = lm.RidgeClassifierCV(\n        alphas=np.arange(0.1, 10, 0.1),\n        normalize=True,\n        store_cv_values=False\n    ).fit(x, y)\n\n    # With store_cv_values=False, cv_values_ should not be populated\n    # (it may not exist or should be None)\n    if hasattr(rr, 'cv_values_'):\n        assert rr.cv_values_ is None\n\n\ndef test_ridge_classifier_cv_store_cv_values_with_single_alpha():\n    \"\"\"Edge case: store_cv_values=True with a single alpha value.\"\"\"\n    n = 50\n    x = np.random.randn(n, 10)\n    y = np.random.normal(size=n)\n\n    rr = lm.RidgeClassifierCV(\n        alphas=[1.0],\n        normalize=False,\n        store_cv_values=True\n    ).fit(x, y)\n\n    assert hasattr(rr, 'cv_values_')\n    assert rr.cv_values_ is not None\n    # Shape should have n_alphas = 1 along the last axis\n    cv_values = rr.cv_values_\n    if cv_values.ndim == 2:\n        # For binary classification, shape is [n_samples, n_alphas]\n        assert cv_values.shape[-1] == 1\n    elif cv_values.ndim == 3:\n        # For multi-output-like, shape is [n_samples, n_responses, n_alphas]\n        assert cv_values.shape[-1] == 1\n\n\ndef test_ridge_classifier_cv_store_cv_values_none_alphas():\n    \"\"\"Edge case: store_cv_values=True with alphas=None (default grid).\"\"\"\n    n = 50\n    x = np.random.randn(n, 10)\n    y = np.random.normal(size=n)\n\n    rr = lm.RidgeClassifierCV(\n        alphas=None,\n        normalize=True,\n        store_cv_values=True\n    ).fit(x, y)\n\n    assert hasattr(rr, 'cv_values_')\n    assert rr.cv_values_ is not None",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/sklearn/linear_model/ridge.py b/sklearn/linear_model/ridge.py\nindex 911c74a..02f23c2 100644\n--- a/sklearn/linear_model/ridge.py\n+++ b/sklearn/linear_model/ridge.py\n@@ -1336,7 +1336,7 @@ class RidgeClassifierCV(LinearClassifierMixin, _BaseRidgeCV):\n                  normalize=False, scoring=None, cv=None, class_weight=None):\n         super(RidgeClassifierCV, self).__init__(\n             alphas=alphas, fit_intercept=fit_intercept, normalize=normalize,\n-            scoring=scoring, cv=cv)\n+            scoring=scoring, cv=cv, store_cv_values=False)\n         self.class_weight = class_weight\n \n     def fit(self, X, y, sample_weight=None):\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,256 @@
+{
+  "instance_id": "astropy__astropy-12907",
+  "repo": "astropy/astropy",
+  "base_commit": "d16bfe05a744909de4b27f5875fe0d4ed41ce607",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925553.5905821
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925556.2376716
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925559.729097
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925559.7484283
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925573.306677
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925615.445892
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925721.7574172
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790925780.330605
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/modeling/separable.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/modeling/separable.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:18"
+  },
+  "started_at": 1790925009.6912622,
+  "elapsed_s": 256.65,
+  "plan": "def _separable(transform):\n    if isinstance(transform, CompoundModel):\n        if transform.oper == '&':\n            mats = [_separable(item) for item in transform.operands]\n            # handles the case where there is a nested compound model\n            offset = 0\n            for m in mats:\n                if isinstance(m, list):\n                    mats[mats.index(m)] = np.hstack(m)\n            # ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/modeling/separable.py",
+      "symbol": "astropy/modeling/separable.py::_cstack",
+      "symbols": [
+        "_cstack",
+        "_cdot",
+        "_separable",
+        "separability_matrix"
+      ],
+      "line_range": [
+        219,
+        249
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.7037,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (implements the operator the report exercises; body matches report terms: compute, model, matrix, modeling)"
+    },
+    {
+      "file": "astropy/modeling/functional_models.py",
+      "symbol": "astropy/modeling/functional_models.py::_parameter_units_for_data_units",
+      "symbols": [
+        "_parameter_units_for_data_units",
+        "_parameter_units_for_data_units",
+        "_parameter_units_for_data_units",
+        "_parameter_units_for_data_units"
+      ],
+      "line_range": [
+        187,
+        192
+      ],
+      "score": 0.5974,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3566,
+        "vector": 0.4854,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (private helper called by a symbol the report names; body matches report terms: inputs, output, outputs)"
+    },
+    {
+      "file": "astropy/io/fits/__init__.py",
+      "symbol": "astropy/io/fits/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        22,
+        61
+      ],
+      "score": 0.5255,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1274,
+        "vector": 0.4055,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: more, astropy, array, other)"
+    },
+    {
+      "file": "astropy/__init__.py",
+      "symbol": "astropy/__init__.py::_initialize_astropy",
+      "symbols": [
+        "_initialize_astropy",
+        "_is_astropy_source",
+        "Conf",
+        "set"
+      ],
+      "line_range": [
+        141,
+        157
+      ],
+      "score": 0.5147,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0954,
+        "vector": 0.3818,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: python, astropy, make)"
+    },
+    {
+      "file": "astropy/stats/bls/__init__.py",
+      "symbol": "astropy/stats/bls/__init__.py::BoxLeastSquares",
+      "symbols": [
+        "BoxLeastSquares",
+        "__init__",
+        "BoxLeastSquaresResults",
+        "__init__"
+      ],
+      "line_range": [
+        19,
+        34
+      ],
+      "score": 0.5106,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1354,
+        "vector": 0.2644,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: compute, longer, astropy, this)"
+    },
+    {
+      "file": "astropy/time/__init__.py",
+      "symbol": "astropy/time/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        4,
+        16
+      ],
+      "score": 0.5156,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0692,
+        "vector": 0.444,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: python, astropy"
+    }
+  ],
+  "retry_count": 2,
+  "critic_verdict": "flagged",
+  "critic_score": 0.4767,
+  "laya_scores": {
+    "fix_quality": 1.03,
+    "matches_issue": 0.417,
+    "safe_to_apply": 0.4598,
+    "composite": 0.4767,
+    "secrets_or_danger": 0.1698,
+    "logic_drift": 0.3189,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No injection, secrets, path traversal, or unsafe execution patterns present.\n- PERFORMANCE: PASS - The change adds negligible computational overhead and does not introduce unbounded loops or blocking calls.\n- ROBUSTNESS: FAIL - The fix is logically incorrect; `_cstack` always returns a NumPy array (which is not a list), so `_cstack_from_list` never performs the intended flattening/restructuring, failing to resolve the bug described (nested `&` models incorrectly broadcasting separability) and potentially introducing redundant/dead code.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "\"\"\"\nTests for separability_matrix bug with nested CompoundModels.\n\nThe bug: separability_matrix incorrectly reports non-separability for\nnested compound models (e.g., m.Pix2Sky_TAN() & m.Linear1D(10) & m.Linear1D(5)\nproduces correct results, but nesting one of these compound models breaks\nthe computation).\n\"\"\"\n\nimport numpy as np\nimport pytest\n\nfrom astropy.modeling.models import (\n    Linear1D,\n    Pix2Sky_TAN,\n    Shift,\n    Scale,\n)\nfrom astropy.modeling.separable import separability_matrix, is_separable\n\n\ndef test_nested_compound_model_separability():\n    \"\"\"\n    Reproduce the bug: nested compound models should have the same\n    separability structure as the equivalent flat model.\n\n    The bug report shows that:\n      - m.Pix2Sky_TAN() & Linear1D(10) & Linear1D(5) gives correct 4x4 matrix\n        with diagonal blocks for each independent sub-model.\n      - But mixing a nested compound model (e.g., a pre-built compound)\n        produces incorrect non-zero off-diagonal entries within blocks.\n\n    After the fix, the separability matrix for a nested compound model\n    should match the flat version's block structure.\n    \"\"\"\n    # Flat model: Pix2Sky_TAN (1 input -> 2 outputs) & Linear1D(10) & Linear1D(5)\n    # Total: n_inputs = 1 + 1 + 1 = 3, n_outputs = 2 + 1 + 1 = 4\n    flat_model = Pix2Sky_TAN() & Linear1D(10) & Linear1D(5)\n    flat_matrix = separability_matrix(flat_model)\n\n    expected_flat = np.array([\n        [True,  False, False],\n        [True,  False, False],\n        [False, True,  False],\n        [False, False, True],\n    ])\n    assert flat_matrix.shape == (4, 3)\n    np.testing.assert_array_equal(flat_matrix, expected_flat)\n\n\ndef test_nested_compound_model_matches_flat():\n    \"\"\"\n    A nested compound model (one compound inside another compound)\n    should produce the same separability matrix as the equivalent flat\n    expression, because separability is about input-output independence,\n    not about how operators are grouped.\n\n    Build a nested model: (Linear1D(10) & Linear1D(5)) & Pix2Sky_TAN()\n    and compare its separability matrix to the flat equivalent.\n    \"\"\"\n    inner = Linear1D(10) & Linear1D(5)\n    outer_nested = Pix2Sky_TAN() & inner\n\n    flat_model = Pix2Sky_TAN() & Linear1D(10) & Linear1D(5)\n\n    nested_matrix = separability_matrix(outer_nested)\n    flat_matrix = separability_matrix(flat_model)\n\n    # Both should have shape (4, 3): 4 outputs (2 from Pix2Sky_TAN, 1 from each Linear1D)\n    assert nested_matrix.shape == (4, 3)\n    assert flat_matrix.shape == (4, 3)\n\n    # The diagonal-block structure must be correct:\n    # Pix2Sky_TAN outputs depend on its own single input (col 0)\n    # Linear1D(10) output depends on its input (col 1)\n    # Linear1D(5) output depends on its input (col 2)\n    expected = np.array([\n        [True,  False, False],\n        [True,  False, False],\n        [False, True,  False],\n        [False, False, True],\n    ])\n    np.testing.assert_array_equal(flat_matrix, expected)\n\n    # The nested version should have the same block-diagonal structure.\n    # Check that each \"block row\" (outputs of each sub-model) only has\n    # True in the column corresponding to that sub-model's input.\n    # Rows 0-1: Pix2Sky_TAN -> col 0\n    assert nested_matrix[0][0] == True\n    assert nested_matrix[1][0] == True\n    # Rows 2: Linear1D(10) -> col 1\n    assert nested_matrix[2][1] == True\n    # Row 3: Linear1D(5) -> col 2\n    assert nested_matrix[3][2] == True\n\n    # Critically, no off-diagonal True values within/in between blocks\n    # that shouldn't be there:\n    # Pix2Sky_TAN rows should NOT depend on Linear1D inputs\n    assert nested_matrix[0][1] == False\n    assert nested_matrix[0][2] == False\n    assert nested_matrix[1][1] == False\n    assert nested_matrix[1][2] == False\n    # Linear1D(10) row should NOT depend on Pix2Sky_TAN or Linear1D(5) inputs\n    assert nested_matrix[2][0] == False\n    assert nested_matrix[2][2] == False\n    # Linear1D(5) row should NOT depend on Pix2Sky_TAN or Linear1D(10) inputs\n    assert nested_matrix[3][0] == False\n    assert nested_matrix[3][1] == False\n\n\ndef test_simple_scalar_model():\n    \"\"\"\n    Edge case: a single non-separable 2D model (e.g., Rotation2D)\n    should correctly report non-separability.\n    \"\"\"\n    from astropy.modeling.models import Rotation2D\n\n    rot = Rotation2D(30)\n    matrix = separability_matrix(rot)\n\n    # Rotation2D: 2 inputs -> 2 outputs, fully coupled\n    assert matrix.shape == (2, 2)\n    expected = np.array([\n        [True, True],\n        [True, True],\n    ])\n    np.testing.assert_array_equal(matrix, expected)\n\n\ndef test_independent_scalar_models_separable():\n    \"\"\"\n    Edge case: two independent 1D scalar models combined with &\n    should give a clean diagonal-like (block-diagonal with 1x1 blocks)\n    matrix.\n    \"\"\"\n    # Shift(1) & Shift(2): each has 1 input, 1 output\n    model = Shift(1) & Shift(2)\n    matrix = separability_matrix(model)\n\n    assert matrix.shape == (2, 2)\n    expected = np.array([\n        [True,  False],\n        [False, True],\n    ])\n    np.testing.assert_array_equal(matrix, expected)\n\n\ndef test_triple_nesting_separability():\n    \"\"\"\n    Edge case: triple-nested compound model to ensure the recursion\n    in the fix handles deeper nesting correctly.\n\n    ((Shift(1) & Scale(2)) & Shift(3))\n    Total: 3 inputs, 3 outputs, each independent\n    \"\"\"\n    deep_nested = (Shift(1) & Scale(2)) & Shift(3)\n    flat_nested = Shift(1) & Scale(2) & Shift(3)\n\n    matrix_deep = separability_matrix(deep_nested)\n    matrix_flat = separability_matrix(flat_nested)\n\n    expected = np.array([\n        [True,  False, False],\n        [False, True,  False],\n        [False, False, True],\n    ])\n\n    assert matrix_deep.shape == (3, 3)\n    assert matrix_flat.shape == (3, 3)\n    np.testing.assert_array_equal(matrix_flat, expected)\n    np.testing.assert_array_equal(matrix_deep, expected)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\nindex a308e27..b07bbb6 100644\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -132,6 +132,14 @@ def _arith_oper(left, right):\n     Function corresponding to one of the arithmetic operators\n     ['+', '-'. '*', '/', '**'].\n \n+def _cstack_from_list(mats):\n+    flat_mats = []\n+    for mat in mats:\n+        if isinstance(mat, list):\n+            flat_mats.extend(mat)\n+        else:\n+            flat_mats.append(mat)\n+    return np.hstack(flat_mats)\n     This always returns a nonseparable output.\n \n \n",
+  "offline_calls": 0
+}

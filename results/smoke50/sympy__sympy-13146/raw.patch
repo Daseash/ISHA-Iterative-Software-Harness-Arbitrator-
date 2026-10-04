@@ -1,0 +1,12 @@
+--- a/sympy/simplify/simplify.py
++++ b/sympy/simplify/simplify.py
+@@ -530,6 +530,9 @@
+     if not isinstance(expr, Basic):
+         return expr
+ 
++    # Simplify the expression to handle floating point exponents
++    expr = powsimp(expr, combine='exp', deep=True)
++
+     if expr.has(BesselBase, Piecewise, exp):
+         expr = besselsimp(expr)
+         expr = piecewise_simplify(expr)

@@ -1,0 +1,239 @@
+{
+  "instance_id": "sympy__sympy-13031",
+  "repo": "sympy/sympy",
+  "base_commit": "2dfa7457f20ee187fbb09b5b6a1631da4458388c",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791123717.2515554
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791123723.7808108
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791124034.4709077
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791124036.3068311
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791124261.4182374
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791124654.4411504
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791124964.404487
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791125121.2356262
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791125164.2602746
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in sympy/matrices/dense.py: @@ — expected context not found in file: '        args = [m for m in args if m.cols > 0]' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791121990.3692324,
+  "elapsed_s": 1516.97,
+  "plan": "Step 1: The root cause is that `Matrix.hstack` and `Matrix.vstack` in `sympy/matrices/matrices.py` filter out matrices that have 0 columns (for `hstack`) or 0 rows (for `vstack`) from the argument list before processing. This causes valid matrices with shape (0, N) or (M, 0) to be ignored, resulting in an incorrect final shape when the empty matrices are part of a concatenation that should contribute to the total dimension. Specifically, the filtering logic assumes that any matrix with a 0-dimension component is \"empty\" and can be discarded, which is incorrect when the other dimension is non-zero.\n\nStep 2: Modify `sympy/matrices/matrices.py` in the `hstack` and `vstack` functions.\n- In `hstack(self, *args)`: Change the line `args = [m for m in args if m.cols > 0]` to `args = [m for m in args if m.rows > 0 or m.cols > 0]`.\n- In `vstack(self, *args)`: Change the line `args = [m for m in args if m.rows > 0]` to `args = [m for m in args if m.rows > 0 or m.cols > 0]`.\n\nThis ensures that matrices that contribute to the dimensions (even if one dimension is 0) are kept for the concatenation logic.",
+  "planner_confidence": 1.0,
+  "localization": [
+    {
+      "file": "sympy/matrices/dense.py",
+      "symbol": "sympy/matrices/dense.py::zeros",
+      "symbols": [
+        "zeros",
+        "as_mutable",
+        "matrix2numpy",
+        "matrix_multiply_elementwise"
+      ],
+      "line_range": [
+        1452,
+        1469
+      ],
+      "score": 0.7903,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.7528,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: returns, matrix; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/matrices/matrices.py",
+      "symbol": "sympy/matrices/matrices.py::_permute_complexity_right",
+      "symbols": [
+        "_permute_complexity_right",
+        "is_echelon",
+        "left_eigenvects",
+        "condition_number"
+      ],
+      "line_range": [
+        587,
+        605
+      ],
+      "score": 0.5007,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8169,
+        "vector": 0.8041,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: sympy, returns, matrix)"
+    },
+    {
+      "file": "sympy/matrices/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.326,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1603,
+        "vector": 0.3411,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in traceback)"
+    },
+    {
+      "file": "sympy/tensor/array/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.4222,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5055,
+        "vector": 0.4233,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in traceback)"
+    },
+    {
+      "file": "sympy/__init__.py",
+      "symbol": "sympy/__init__.py::enable_warnings",
+      "symbols": [
+        "enable_warnings",
+        "__sympy_debug"
+      ],
+      "line_range": [
+        28,
+        31
+      ],
+      "score": 0.5124,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0515,
+        "vector": 0.454,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: sympy)"
+    },
+    {
+      "file": "sympy/physics/units/__init__.py",
+      "symbol": "sympy/physics/units/__init__.py::find_unit",
+      "symbols": [
+        "find_unit"
+      ],
+      "line_range": [
+        186,
+        232
+      ],
+      "score": 0.5279,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.138,
+        "vector": 0.4033,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: sympy)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.619775,
+  "laya_scores": {
+    "fix_quality": 1.1823,
+    "matches_issue": 0.6902,
+    "safe_to_apply": 0.6066,
+    "composite": 0.619775,
+    "secrets_or_danger": 0.1069,
+    "logic_drift": 0.2131,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No new attack vectors, input validation changes are benign.\n- PERFORMANCE: PASS - Negligible overhead added to list comprehension filtering.\n- ROBUSTNESS: PASS - Fixes a logical error where valid empty matrices were incorrectly filtered out.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in sympy/matrices/dense.py: @@ — expected context not found in file: '        args = [m for m in args if m.cols > 0]' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "import pytest\nimport sympy as sp\n\n\ndef test_hstack_zero_row_matrices_reproduces_bug():\n    \"\"\"Reproduces the bug: hstack of matrices with 0 rows should sum columns.\n\n    In the buggy version, matrices with 0 rows are filtered out, so a matrix\n    like Matrix.zeros(0, 2) is discarded. The expected shape for\n    hstack(M1(M2(M3(M4))) where all have 0 rows is (0, total_cols).\n    total_cols = 0 + 1 + 2 + 3 = 6, so expected shape is (0, 6).\n    The bug returns (0, 3) because the (0,2) and (0,0) matrices are dropped.\n    \"\"\"\n    M1 = sp.Matrix.zeros(0, 0)\n    M2 = sp.Matrix.zeros(0, 1)\n    M3 = sp.Matrix.zeros(0, 2)\n    M4 = sp.Matrix.zeros(0, 3)\n    result = sp.Matrix.hstack(M1, M2, M3, M4)\n    assert result.shape == (0, 6)\n\n\ndef test_vstack_zero_col_matrices():\n    \"\"\"vstack of matrices with 0 columns should sum rows.\n\n    Analogous to the hstack bug: matrices with 0 cols are filtered out in\n    the buggy vstack. For vstack of (2, 0), (3, 0), (0, 0), the result\n    should be (5, 0).\n    \"\"\"\n    A = sp.Matrix.zeros(2, 0)\n    B = sp.Matrix.zeros(3, 0)\n    C = sp.Matrix.zeros(0, 0)\n    result = sp.Matrix.vstack(A, B, C)\n    assert result.shape == (5, 0)\n\n\ndef test_hstack_mixed_nonzero_and_zero_row_matrices():\n    \"\"\"hstack with a mix of zero-row and non-zero-row matrices.\n\n    This tests that the fix handles the case where some matrices have 0 rows\n    (contributing only to columns) alongside normal matrices. The key part\n    of the fix is that (0, N) matrices are kept when N > 0.\n\n    Example: hstack of (1, 2) and (0, 3) should give shape (1, 5).\n    The (0, 3) matrix contributes 3 to the column count.\n    \"\"\"\n    A = sp.Matrix.zeros(1, 2)\n    B = sp.Matrix.zeros(0, 3)\n    result = sp.Matrix.hstack(A, B)\n    assert result.shape == (1, 5)\n\n\ndef test_vstack_mixed_nonzero_and_zero_col_matrices():\n    \"\"\"vstack with a mix of zero-col and non-zero-col matrices.\n\n    vstack of (2, 1) and (3, 0) should give shape (5, 1).\n    The (3, 0) matrix contributes 3 to the row count.\n    \"\"\"\n    A = sp.Matrix.zeros(2, 1)\n    B = sp.Matrix.zeros(3, 0)\n    result = sp.Matrix.vstack(A, B)\n    assert result.shape == (5, 1)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

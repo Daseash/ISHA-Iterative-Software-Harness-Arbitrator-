@@ -1,0 +1,242 @@
+{
+  "instance_id": "sympy__sympy-12454",
+  "repo": "sympy/sympy",
+  "base_commit": "d3fcdb72bfcbb560eb45264ac1c03f359436edef",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791118310.35855
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791118316.6772187
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791118535.334151
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791118732.472311
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791118979.8054807
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791119023.5024927
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/matrices/matrices.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/matrices/matrices.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791118175.5947676,
+  "elapsed_s": 856.18,
+  "plan": "@property\n   def is_upper(self):\n       return all(self[i, j].is_zero for i in range(1, self.rows)\n                                      for j in range(min(i, self.cols)))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/matrices/matrices.py",
+      "symbol": "sympy/matrices/matrices.py::_eval_extract",
+      "symbols": [
+        "_eval_extract",
+        "extract",
+        "reshape",
+        "classof"
+      ],
+      "line_range": [
+        138,
+        144
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 1.0,
+        "vector": 0.8865,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: colsList; body matches report terms: cols, indices, rows, extract)"
+    },
+    {
+      "file": "sympy/matrices/dense.py",
+      "symbol": "sympy/matrices/dense.py::matrix_multiply_elementwise",
+      "symbols": [
+        "matrix_multiply_elementwise",
+        "zeros",
+        "__getitem__",
+        "_cholesky"
+      ],
+      "line_range": [
+        1272,
+        1295
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.623,
+        "vector": 0.7308,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: A; body matches report terms: sympy, matrices, error, matrix)"
+    },
+    {
+      "file": "sympy/physics/matrices.py",
+      "symbol": "sympy/physics/matrices.py::msigma",
+      "symbols": [
+        "msigma",
+        "mdft",
+        "pat_matrix",
+        "mgamma"
+      ],
+      "line_range": [
+        10,
+        46
+      ],
+      "score": 0.6846,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1798,
+        "vector": 0.7467,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: indexerror, sympy, index, matrices)"
+    },
+    {
+      "file": "sympy/assumptions/handlers/matrices.py",
+      "symbol": "sympy/assumptions/handlers/matrices.py::MatrixSymbol",
+      "symbols": [
+        "MatrixSymbol",
+        "MatrixSlice",
+        "MatMul_elements",
+        "AskUpperTriangularHandler"
+      ],
+      "line_range": [
+        55,
+        64
+      ],
+      "score": 0.6674,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1808,
+        "vector": 0.6014,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: matrices, matrix)"
+    },
+    {
+      "file": "sympy/utilities/mathml/__init__.py",
+      "symbol": "sympy/utilities/mathml/__init__.py::apply_xsl",
+      "symbols": [
+        "apply_xsl",
+        "c2p"
+      ],
+      "line_range": [
+        20,
+        42
+      ],
+      "score": 0.5349,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1533,
+        "vector": 0.4302,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: code, file, sympy, line)"
+    },
+    {
+      "file": "sympy/utilities/benchmarking.py",
+      "symbol": "sympy/utilities/benchmarking.py::Function",
+      "symbols": [
+        "Function",
+        "Directory",
+        "Module",
+        "Timer"
+      ],
+      "line_range": [
+        60,
+        110
+      ],
+      "score": 0.6483,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6013,
+        "vector": 0.3993,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: py; body matches report terms: range, line, extract, source)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6072500000000001,
+  "laya_scores": {
+    "fix_quality": 1.1227,
+    "matches_issue": 0.7053,
+    "safe_to_apply": 0.601,
+    "composite": 0.6072500000000001,
+    "secrets_or_danger": 0.1254,
+    "logic_drift": 0.249,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security primitives (injection, secrets, shell) are involved.\n- PERFORMANCE: PASS - The change restricts the loop bounds to valid matrix dimensions, preventing invalid range iterations.\n- ROBUSTNESS: PASS - Fixes the IndexError by ensuring column index `j` does not exceed `cols`.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "```python\nimport pytest\nimport sympy\n\n\n# --------------------------------------------------------------------------- #\n# 1.  Reproduce the bug – this test will error out (red) until the fix is\n#     applied.  After the change the property should simply return ``True``.\n# --------------------------------------------------------------------------- #\ndef test_is_upper_tall_matrix():\n    \"\"\"A 4×2 zero matrix is upper‑triangular, but the old implementation\n    raised ``IndexError`` when accessing (3, 2).  The fix replaces the\n    ``range(i)`` loop with ``range(min(i, self.cols))`` to avoid the\n    out‑of‑range access.\"\"\"\n    assert sympy.zeros(4, 2).is_upper is True\n\n\n# --------------------------------------------------------------------------- #\n# 2.  Edge‑case tests that are guaranteed to pass after the fix.\n# --------------------------------------------------------------------------- #\n\ndef test_is_upper_rectangular():\n    # Tall and wide matrices – no IndexError should be raised.\n    assert sympy.zeros(5, 3).is_upper is True\n    assert sympy.zeros(3, 5).is_upper is True\n\n\ndef test_is_upper_empty():\n    # An empty matrix should be considered upper‑triangular.\n    assert sympy.zeros(0, 0).is_upper is True\n\n\ndef test_is_upper_lower_nonzero():\n    # A matrix with a non‑zero entry below the diagonal.\n    M = sympy.Matrix([[1, 2],\n                      [3, 4]])\n    assert M.is_upper is False\n\n\ndef test_is_upper_single_row_and_column():\n    # Special cases: 1×N and N×1 matrices.\n    assert sympy.zeros(1, 5).is_upper is True\n    assert sympy.zeros(5, 1).is_upper is True\n\n\ndef test_is_upper_negative_dimensions():\n    # SymPy raises Value",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/sympy/matrices/matrices.py b/sympy/matrices/matrices.py\nindex 90ea232..c600fe8 100644\n--- a/sympy/matrices/matrices.py\n+++ b/sympy/matrices/matrices.py\n@@ -1112,7 +1112,7 @@ def is_upper(self):\n         \"\"\"\n         return all(self[i, j].is_zero\n                    for i in range(1, self.rows)\n-                   for j in range(i))\n+                   for j in range(min(i, self.cols)))\n \n     @property\n     def is_zero(self):\n",
+  "offline_calls": 0
+}

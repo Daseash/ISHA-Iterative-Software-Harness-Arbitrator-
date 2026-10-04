@@ -1,0 +1,8 @@
+--- a/sympy/matrices/dense.py
++++ b/sympy/matrices/dense.py
+@@
+-        args = [m for m in args if m.cols > 0]
++        args = [m for m in args if m.rows > 0 or m.cols > 0]
+@@
+-        args = [m for m in args if m.rows > 0]
++        args = [m for m in args if m.rows > 0 or m.cols > 0]

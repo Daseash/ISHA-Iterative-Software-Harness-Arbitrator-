@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "mwaskom__seaborn-2848", "ts": 1791113913.0845912}
+{"event": "attempt", "n": 1, "ts": 1791113913.1953325}
+{"event": "model", "ts": 1791113928.0920155, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791113928.6336858, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791114031.3380797, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791114047.4029222, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791114152.2590034, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791114178.602579, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791114190.1048412, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791114200.8597212}

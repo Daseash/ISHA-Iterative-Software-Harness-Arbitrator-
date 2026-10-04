@@ -1,0 +1,9 @@
+--- a/pylint/lint/pylinter.py
++++ b/pylint/lint/pylinter.py
+@@
+ import traceback
++import re
+@@
+-        self._notes_regexp = re.compile(r"^(?:%s):" % "|".join(self.notes))
++        escaped_notes = [re.escape(note) for note in self.notes]
++        self._notes_regexp = re.compile(r"^(?:%s):" % "|".join(escaped_notes))

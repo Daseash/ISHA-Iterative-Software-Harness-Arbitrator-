@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "pydata__xarray-3364", "ts": 1791029416.2751627}
+{"event": "attempt", "n": 1, "ts": 1791029416.4486487}
+{"event": "model", "ts": 1791029517.2712219, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791029517.8041363, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791029823.2741172, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791030026.3695374, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791030333.9194684, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791030642.5735066, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791030679.5735865, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791030691.497854}

@@ -1,0 +1,40 @@
+# pytest-dev__pytest-5103
+
+## Plan
+
+def _pytest_all(iterable):
+            for item in iterable:
+                if not item:
+                    return False
+            return True
+
+## Patch
+
+```diff
+diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py
+index b536468..c149865 100644
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -3,6 +3,20 @@ from __future__ import absolute_import
+ from __future__ import division
+ from __future__ import print_function
+ 
++def _pytest_all(iterable):
++    for item in iterable:
++        if not item:
++            return False
++    return True
++
++
++def _pytest_any(iterable):
++    for item in iterable:
++        if item:
++            return True
++    return False
++
++
+ import pprint
+ 
+ import six
+
+```

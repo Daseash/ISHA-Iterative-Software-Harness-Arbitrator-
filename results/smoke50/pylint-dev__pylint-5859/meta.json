@@ -1,0 +1,256 @@
+{
+  "instance_id": "pylint-dev__pylint-5859",
+  "repo": "pylint-dev/pylint",
+  "base_commit": "182cc539b8154c0710fcea7e522267e42eba8899",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791039692.4931943
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791039693.4415653
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791039838.0518997
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791039840.0763507
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040050.7522712
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040277.7311203
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash",
+      "model_full": "gemini/gemini-3.5-flash",
+      "position": "fallback 4",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040555.1580787
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040769.7613351
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791040785.0160518
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in pylint/lint/pylinter.py: @@ — expected context not found in file: '        if self.notes:' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791039123.1709702,
+  "elapsed_s": 1113.91,
+  "plan": "@@\n-        self._notes_regexp = re.compile(r'^(?:%s):' % '|'.join(self.notes))\n+        # Escape note tags so that tags made only of punctuation are treated\n+        # as literal text rather than regex meta‑characters.\n+        escaped_notes = [re.escape(note) for note in self.notes]\n+        self._notes_regexp = re.compile(r'^(?:%s):' % '|'.join(escaped_notes))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "pylint/lint/pylinter.py",
+      "symbol": "pylint/lint/pylinter.py::_load_reporter_by_class",
+      "symbols": [
+        "_load_reporter_by_class",
+        "PyLinter",
+        "__init__",
+        "load_plugin_modules"
+      ],
+      "line_range": [
+        87,
+        94
+      ],
+      "score": 0.5927,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5095,
+        "vector": 0.8982,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: report, module, astroid)"
+    },
+    {
+      "file": "pylint/config/__init__.py",
+      "symbol": "pylint/config/__init__.py::load_results",
+      "symbols": [
+        "load_results",
+        "save_results",
+        "_get_pdata_path"
+      ],
+      "line_range": [
+        119,
+        130
+      ],
+      "score": 0.5421,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1672,
+        "vector": 0.4606,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: with, pylint)"
+    },
+    {
+      "file": "pylint/__init__.py",
+      "symbol": "pylint/__init__.py::run_pylint",
+      "symbols": [
+        "run_pylint",
+        "run_epylint",
+        "run_pyreverse",
+        "run_symilar"
+      ],
+      "line_range": [
+        21,
+        33
+      ],
+      "score": 0.6248,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4984,
+        "vector": 0.4601,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: option, line, command, pylint)"
+    },
+    {
+      "file": "pylint/epylint.py",
+      "symbol": "pylint/epylint.py::lint",
+      "symbols": [
+        "lint",
+        "py_run",
+        "_get_env",
+        "Run"
+      ],
+      "line_range": [
+        79,
+        139
+      ],
+      "score": 0.5521,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6217,
+        "vector": 0.3265,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: python, output, used, option)"
+    },
+    {
+      "file": "pylint/testutils/configuration_test.py",
+      "symbol": "pylint/testutils/configuration_test.py::get_expected_or_default",
+      "symbols": [
+        "get_expected_or_default"
+      ],
+      "line_range": [
+        30,
+        33
+      ],
+      "score": 0.538,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3004,
+        "vector": 0.481,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: configuration, test, expected, default)"
+    },
+    {
+      "file": "tests/conftest.py",
+      "symbol": "tests/conftest.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_collection_modifyitems",
+        "linter",
+        "reporter"
+      ],
+      "line_range": [
+        61,
+        75
+      ],
+      "score": 0.5402,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3058,
+        "vector": 0.4968,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: option, test, default)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.70015,
+  "laya_scores": {
+    "fix_quality": 1.3956,
+    "matches_issue": 0.7759,
+    "safe_to_apply": 0.6291,
+    "composite": 0.70015,
+    "secrets_or_danger": 0.1111,
+    "logic_drift": 0.2299,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Uses `re.escape` to prevent ReDoS and ensure literal matching of user-provided note tags; no unsafe code execution or injection risks introduced.\n- PERFORMANCE: PASS - `re.escape` and `re.compile` are constant-time operations relative to input length with negligible overhead; no N+1 queries or unbounded loops.\n- ROBUSTNESS: PASS - Fixes a logical bug where punctuation-only tags would match incorrectly due to regex metacharacter interpretation; no race conditions or mutable default arguments.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in pylint/lint/pylinter.py: @@ — expected context not found in file: '        if self.notes:' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "\"\"\"Tests for the --notes option handling punctuation-only note tags (W0511).\"\"\"\nimport re\n\nfrom pylint.lint.pylinter import PyLinter\nfrom pylint.reporters.text import TextReporter\nfrom pylint.reporters.json_reporter import JSONReporter\n\n\ndef _extract_linter(notes: list) -> PyLinter:\n    linter = PyLinter(reporter=TextReporter())\n    linter.notes = list(notes)\n    linter._load_reporter_by_class(\"text\")  # ensure a reporter is set\n    return linter\n\n\ndef _matches_notes(linter: PyLinter, line: str) -> bool:\n    \"\"\"Return True if the linter's notes regexp considers `line` a note.\"\"\"\n    return bool(linter._notes_regexp.search(line))\n\n\ndef test_punctuation_only_note_tag_reported():\n    \"\"\"Reproduction: a note tag that is entirely punctuation ('???') must be\n    treated as literal text, not as regex metacharacters.\n    Pre-fix this line was NOT matched (bug); post-fix it IS matched.\"\"\"\n    linter = _extract_linter([\"YES\", \"???\"])\n    assert _matches_notes(linter, \"YES: yes\")\n    # The bug: this line should be reported but wasn't before the fix.\n    assert _matches_notes(linter, \"???: no\")\n\n\ndef test_mixed_alnum_and_punctuation_tags():\n    \"\"\"Tags containing a mix of alphanumerics and punctuation (e.g. 'BUG(x)',\n    'TODO_1') must still match correctly, with both alphanumerics and literal\n    punctuation preserved by escaping.\"\"\"\n    linter = _extract_linter([\"BUG(x)\", \"TODO_1\", \"$$\"])\n    assert _matches_notes(linter, \"BUG(x): fix\")\n    assert _matches_notes(linter, \"TODO_1: later\")\n    assert _matches_notes(linter, \"$$: dollar things\")\n    # Ensure 'BUG(x)' does not accidentally match 'BUGy' (the (x) is literal).\n    assert not _matches_notes(linter, \"BUGy: nope\")\n\n\ndef test_punctuation_tags_do_not_overmatch():\n    \"\"\"Literal punctuation tags must not behave as regex quantifiers or\n    groupings. '???' must not match '???:' as 'zero-or-more ?:'; it must be an\n    exact literal followed by colon.\"\"\"\n    linter = _extract_linter([\"???\", \"!?\"])\n    # Exact literal matches\n    assert _matches_notes(linter, \"???: first\")\n    assert _matches_notes(linter, \"!?: second\")\n    # '???': as a regex, '?' is not a metacharacter in this context, but the\n    # key regression is that the OLD (unescaped) pattern '^\\s*[???]:' or\n    # '^(?:???):' created a quantified/character-class that failed. Confirm a\n    # line with a DIFFERENT punctuation set is not matched (no over-eager match).\n    assert not _matches_notes(linter, \"XXX: not in list\")\n    assert not _matches_notes(linter, \"!?:?: extra\")  # '!??:' != '!?:'\n\n\ndef test_empty_notes_list_produces_no_match():\n    \"\"\"When no note tags are configured, the regexp should not match any line\n    (no spurious W0511). This guards against the escape/join logic breaking\n    on an empty sequence.\"\"\"\n    linter = _extract_linter([])\n    pattern = linter._notes_regexp\n    # With an empty alternation the pattern is '^(?:):' which matches only a\n    # bare ':' - no normal note line should match.\n    assert not pattern.search(\"TODO: something\")\n    assert not pattern.search(\"FIXME: something\")\n    assert not _matches_notes(linter, \"???\")",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

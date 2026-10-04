@@ -1,0 +1,10 @@
+--- a/sympy/integrals/intpoly.py
++++ b/sympy/integrals/intpoly.py
+@@ -590,7 +590,7 @@ def decompose(expr, separate=False):
+     else:
+         raise TypeError("Input must be a SymPy expression")
+ 
+     if separate:
+-        return list(poly_dict.values())
++        return [poly_dict[key] for key in sorted(poly_dict.keys())]
+     return poly_dict

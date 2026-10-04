@@ -108,17 +108,29 @@ except ImportError:
 # ── Transparent Model Usage Log ────────────────────────────────────────────
 # Every call records which model actually answered so results are auditable.
 
-_model_log: list = []
+# Per-thread by design: benchmark runs solve instances in parallel and the
+# candidate tournament already calls models from worker threads.  A shared
+# list would let one instance's ``clear_model_log()`` wipe another thread's
+# audit trail mid-flight, so each thread keeps its own log.
+_tls = threading.local()
+
+
+def _model_log() -> list:
+    log = getattr(_tls, "model_log", None)
+    if log is None:
+        log = []
+        _tls.model_log = log
+    return log
 
 
 def get_model_log() -> list:
-    """Return the ordered list of model-usage entries."""
-    return list(_model_log)
+    """Return the ordered model-usage entries for this thread."""
+    return list(_model_log())
 
 
 def clear_model_log() -> None:
-    """Reset the model log for a new run."""
-    _model_log.clear()
+    """Reset this thread's model log for a new run."""
+    _model_log().clear()
 
 
 def _short_name(model: str) -> str:
@@ -139,7 +151,7 @@ def _log_model(role: str, model: str, position: str, note: str = "") -> None:
         "thread": threading.current_thread().name,
         "timestamp": time.time(),
     }
-    _model_log.append(entry)
+    _model_log().append(entry)
     # Live visibility on stderr
     label = f"{role}: {entry['model']} ({position})"
     if note:
@@ -551,7 +563,7 @@ def offline_calls(since: int = 0) -> list:
     Used by the benchmark to tell "no live model could answer" (an API
     failure) apart from a genuine model response.
     """
-    return [e for e in _model_log[since:] if e.get("position") == "offline"]
+    return [e for e in _model_log()[since:] if e.get("position") == "offline"]
 
 
 def reset_provider_state() -> None:
