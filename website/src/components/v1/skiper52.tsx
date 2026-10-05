@@ -6,6 +6,8 @@ export interface HoverExpandImage {
   src: string;
   alt: string;
   code: string;
+  stat?: string;
+  detail?: string;
 }
 
 export interface HoverExpandProps {
@@ -23,9 +25,9 @@ export const HoverExpand_001: React.FC<HoverExpandProps> = ({
   className,
   defaultActive = null,
   height = "clamp(18rem, 55vh, 32rem)",
-  expandedWidth = "clamp(14rem, 36vw, 26rem)",
-  collapsedWidth = "clamp(1.8rem, 4.5vw, 3.5rem)",
-  defaultWidth = "clamp(3rem, 8.5vw, 6.5rem)",
+  expandedWidth = "clamp(15rem, 36vw, 24rem)",
+  collapsedWidth = "clamp(1.6rem, 4vw, 3rem)",
+  defaultWidth = "clamp(2.8rem, 8vw, 6.2rem)",
 }) => {
   const [activeImage, setActiveImage] = useState<number | null>(defaultActive);
   const totalCards = images.length;
@@ -72,27 +74,41 @@ export const HoverExpand_001: React.FC<HoverExpandProps> = ({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.35 }}
-                      className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10 pointer-events-none"
+                      className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent z-10 pointer-events-none"
                     />
                   )}
                 </AnimatePresence>
 
-                {/* Number & description tag */}
+                {/* Number, Stat Badge, & description tag */}
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 5 }}
-                      transition={{ duration: 0.4, delay: 0.1 }}
-                      className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-3 sm:p-4 z-20 pointer-events-none"
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.4, delay: 0.08 }}
+                      className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-3.5 sm:p-5 z-20 pointer-events-none space-y-1.5"
                     >
-                      <span className="font-mono text-[10px] sm:text-xs font-bold tracking-widest text-red-500">
-                        {image.code}
-                      </span>
-                      <p className="text-white font-black text-[11px] sm:text-xs tracking-wide line-clamp-1 uppercase mt-0.5">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-mono text-[10px] sm:text-xs font-black tracking-widest text-red-500 uppercase">
+                          {image.code}
+                        </span>
+                        {image.stat && (
+                          <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-mono text-[9px] sm:text-[10px] font-black uppercase tracking-wider shadow-sm">
+                            {image.stat}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-white font-black text-xs sm:text-sm tracking-wide uppercase leading-tight [text-shadow:_0_2px_8px_rgba(0,0,0,0.8)]">
                         {image.alt}
                       </p>
+
+                      {image.detail && (
+                        <p className="text-neutral-300 font-mono text-[10px] sm:text-[11px] leading-tight font-bold line-clamp-2 pt-0.5">
+                          {image.detail}
+                        </p>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -101,7 +117,7 @@ export const HoverExpand_001: React.FC<HoverExpandProps> = ({
                 <div
                   className={cn(
                     "absolute inset-0 transition-opacity duration-300 pointer-events-none z-[5]",
-                    isAnyActive && !isActive ? "opacity-40 bg-black" : "opacity-0"
+                    isAnyActive && !isActive ? "opacity-45 bg-black" : "opacity-0"
                   )}
                 />
 
@@ -127,41 +143,55 @@ export const HoverExpand_001: React.FC<HoverExpandProps> = ({
 };
 
 export const Skiper52: React.FC = () => {
-  const images = [
+  const images: HoverExpandImage[] = [
     {
       src: "/eyes.jpg",
-      alt: "Neural Repo Ingestion",
-      code: "# 01",
+      code: "# 01 · LOCALIZATION",
+      alt: "BM25 + AST Symbol Targeting",
+      stat: "66.7% HIT@8",
+      detail: "MRR 0.535 lexical retrieval & AST function ranking without repo bloat",
     },
     {
       src: "/eyes.jpg",
-      alt: "AST Structural Mapping",
-      code: "# 02",
+      code: "# 02 · TDD SYNTHESIS",
+      alt: "Red-to-Green Repro Test",
+      stat: "100% REPRO",
+      detail: "Synthesizes isolated test that must fail on unfixed code first",
     },
     {
       src: "/eyes.jpg",
-      alt: "TDD Test Synthesis",
-      code: "# 03",
+      code: "# 03 · TOURNAMENT",
+      alt: "3-Worktree Parallel Race",
+      stat: "0 POLLUTION",
+      detail: "Races Direct, Defensive, and Alternative fixes in isolated sandboxes",
     },
     {
       src: "/eyes.jpg",
-      alt: "3-Worktree Parallel Tournament",
-      code: "# 04",
+      code: "# 04 · ARBITRATION",
+      alt: "Minimal Churn Arbitrator",
+      stat: "0.0% AST ERRORS",
+      detail: "Selects cleanest syntax-validated patch turning reproduction green",
     },
     {
       src: "/eyes.jpg",
-      alt: "State Arbitrator",
-      code: "# 05",
+      code: "# 05 · PATCH ENGINE",
+      alt: "Atomic Git Patch Apply",
+      stat: "0/30 FAILURES",
+      detail: "Cross-platform LF normalization & fuzzy context recovery",
     },
     {
       src: "/eyes.jpg",
-      alt: "LAYA Calibrated Decision",
-      code: "# 06",
+      code: "# 06 · LAYA CALIBRATION",
+      alt: "Calibrated Decision Gate",
+      stat: "ECE = 0.0010",
+      detail: "Temperature-scaled T=0.35 gate with 100% auto-approve precision",
     },
     {
       src: "/eyes.jpg",
-      alt: "Closed-Loop Self-Healing",
-      code: "# 07",
+      code: "# 07 · INFERENCE",
+      alt: "Zero-Cost Model Cascade",
+      stat: "$0.00 BUDGET",
+      detail: "Groq LPU + Gemini 3.8 Flash sub-second reasoning chain",
     },
   ];
 
