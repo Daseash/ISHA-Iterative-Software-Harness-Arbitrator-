@@ -128,7 +128,7 @@ export function Skiper29() {
     },
     {
       title: "STATS",
-      href: "#stats",
+      href: "/stats",
     },
     {
       title: "GIT HUB",
