@@ -8,7 +8,7 @@ interface StatsPageProps {
 
 export const StatsPage: React.FC<StatsPageProps> = () => {
   return (
-    <main className="relative w-full h-screen bg-black overflow-hidden select-none">
+    <main className="relative w-full h-screen bg-[#F9F7EF] dark:bg-black overflow-hidden select-none transition-colors duration-300">
       {/* Our floating navbar above the full-screen gallery */}
       <Navbar_001 />
 
