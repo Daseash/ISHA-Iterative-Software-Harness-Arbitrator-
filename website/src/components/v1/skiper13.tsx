@@ -55,7 +55,7 @@ export const Navbar_001: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/20 dark:bg-black/60 backdrop-blur-sm"
           />
         )}
       </AnimatePresence>
@@ -80,7 +80,7 @@ export const Navbar_001: React.FC = () => {
             stiffness: 380,
             damping: 32,
           }}
-          className={`overflow-hidden border border-neutral-800/80 bg-neutral-900/90 dark:bg-black/90 text-white backdrop-blur-2xl shadow-2xl shadow-black/60 transition-colors ${
+          className={`overflow-hidden border border-neutral-300 dark:border-neutral-800/90 bg-[#F9F7EF]/90 dark:bg-black/90 text-black dark:text-[#F9F7EF] backdrop-blur-2xl shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 transition-colors duration-300 ${
             isOpen
               ? "w-[310px] sm:w-[350px] rounded-3xl p-5"
               : "w-[270px] sm:w-[310px] rounded-2xl px-5 py-3"
@@ -94,7 +94,7 @@ export const Navbar_001: React.FC = () => {
               className="flex items-center gap-2.5 group cursor-pointer"
             >
               <div className="h-3 w-3 rounded-full bg-red-600 transition-transform group-hover:scale-125 duration-300 shadow-sm shrink-0" />
-              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white group-hover:text-red-500 transition-colors">
+              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-black dark:text-[#F9F7EF] group-hover:text-red-600 transition-colors">
                 ISHA
               </span>
             </a>
@@ -102,7 +102,7 @@ export const Navbar_001: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-300 hover:text-red-500 transition-colors cursor-pointer py-1 px-2 rounded-lg"
+              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-300 hover:text-red-600 dark:hover:text-red-500 transition-colors cursor-pointer py-1 px-2 rounded-lg"
             >
               {isOpen ? "CLOSE" : "MENU"}
             </button>
@@ -138,7 +138,7 @@ export const Navbar_001: React.FC = () => {
                         {item.name}
                       </span>
                       {item.badge && (
-                        <span className="font-mono text-[9px] sm:text-[10px] text-red-400 font-bold opacity-80 group-hover:opacity-100">
+                        <span className="font-mono text-[9px] sm:text-[10px] text-red-500/80 font-bold opacity-80 group-hover:opacity-100">
                           {item.badge}
                         </span>
                       )}
@@ -147,12 +147,12 @@ export const Navbar_001: React.FC = () => {
                 </nav>
 
                 {/* Sub-links row */}
-                <div className="flex items-center justify-between pt-3 border-t border-neutral-800 text-[11px] font-mono text-neutral-400 font-bold px-2">
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-300 dark:border-neutral-800 text-[11px] font-mono text-neutral-600 dark:text-neutral-400 font-bold px-2">
                   <a
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-#-architecture"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-black dark:hover:text-white transition-colors"
                   >
                     Architecture
                   </a>
@@ -160,24 +160,24 @@ export const Navbar_001: React.FC = () => {
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/blob/main/LICENSE"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-black dark:hover:text-white transition-colors"
                   >
                     MIT License
                   </a>
                 </div>
 
                 {/* Bottom Segmented Pill Row: Exactly matching PB | EN | ES | FR from screenshot */}
-                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-950/80 border border-neutral-800/80 text-center font-mono text-[10px] font-black uppercase text-neutral-400">
+                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-200/70 dark:bg-neutral-950/80 border border-neutral-300/80 dark:border-neutral-800/80 text-center font-mono text-[10px] font-black uppercase text-neutral-600 dark:text-neutral-400">
                   <span className="py-1 rounded-lg bg-red-600 text-white shadow-sm">
                     SWE
                   </span>
-                  <span className="py-1 hover:text-white transition-colors">
+                  <span className="py-1 hover:text-black dark:hover:text-white transition-colors">
                     AST
                   </span>
-                  <span className="py-1 hover:text-white transition-colors">
+                  <span className="py-1 hover:text-black dark:hover:text-white transition-colors">
                     TDD
                   </span>
-                  <span className="py-1 hover:text-white transition-colors">
+                  <span className="py-1 hover:text-black dark:hover:text-white transition-colors">
                     V0.3
                   </span>
                 </div>
