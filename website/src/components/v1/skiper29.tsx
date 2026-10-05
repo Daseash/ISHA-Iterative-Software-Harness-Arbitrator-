@@ -325,6 +325,14 @@ export function Skiper29() {
           </div>
           <div className="flex items-center gap-6">
             <a
+              href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/blob/main/LICENSE"
+              target="_blank"
+              rel="noreferrer"
+              className="font-black hover:text-red-600 transition-colors inline-flex items-center gap-1"
+            >
+              MIT License <ArrowUpRight className="w-3.5 h-3.5 stroke-[3]" />
+            </a>
+            <a
               href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-"
               target="_blank"
               rel="noreferrer"
