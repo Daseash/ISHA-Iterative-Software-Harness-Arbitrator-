@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEventListener } from "usehooks-ts";
 import { ThemeToggleButton1 } from "./skiper4";
@@ -26,6 +26,16 @@ const navItems: NavItem[] = [
 
 export const Navbar_001: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Scroll listener to move bar to top-left corner when scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close on Escape key
   useEventListener("keydown", (event: KeyboardEvent) => {
@@ -50,8 +60,19 @@ export const Navbar_001: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating Pill Nav Bar in Top-Center (Exact Nike Menu style from screenshot) */}
-      <div className="fixed top-5 sm:top-6 left-1/2 -translate-x-1/2 z-50 select-none">
+      {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll */}
+      <motion.div
+        initial={false}
+        animate={{
+          left: isScrolled ? "clamp(1rem, 3vw, 2.5rem)" : "50%",
+          x: isScrolled ? "0%" : "-50%",
+        }}
+        transition={{
+          duration: 0.85,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="fixed top-5 sm:top-6 z-50 select-none"
+      >
         <motion.div
           layout
           transition={{
@@ -164,7 +185,7 @@ export const Navbar_001: React.FC = () => {
             )}
           </AnimatePresence>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Theme Toggle Button: Floating in Top-Right Corner */}
       <div className="fixed top-5 sm:top-6 right-4 sm:right-8 z-50">
