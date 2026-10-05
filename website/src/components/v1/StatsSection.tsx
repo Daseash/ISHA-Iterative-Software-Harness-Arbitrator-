@@ -5,7 +5,7 @@ export const StatsSection: React.FC = () => {
   return (
     <section
       id="stats"
-      className="relative w-full min-h-screen bg-[#F9F7EF] dark:bg-black overflow-hidden select-none border-t border-b border-neutral-300 dark:border-neutral-900 transition-colors duration-300 flex flex-col justify-between"
+      className="relative w-full min-h-screen bg-[#F9F7EF] dark:bg-black overflow-y-auto md:overflow-hidden select-none border-t border-b border-neutral-300 dark:border-neutral-900 transition-colors duration-300 flex flex-col justify-between"
     >
       {/* Below the fix bar: Left corner STATS text in same red font */}
       <div className="w-full px-6 sm:px-10 md:px-14 lg:px-16 pt-8 sm:pt-12 pb-2 text-left z-20">

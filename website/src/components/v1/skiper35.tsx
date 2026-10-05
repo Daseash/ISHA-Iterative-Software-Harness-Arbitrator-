@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Skiper35Item {
@@ -125,75 +125,156 @@ export const Skiper35: React.FC<Skiper35Props> = ({
   defaultActiveIndex = 1,
 }) => {
   const [activeIndex, setActiveIndex] = useState<number>(defaultActiveIndex);
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(max-width: 767px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+    };
+    setIsMobile(mql.matches);
+
+    if (mql.addEventListener) {
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    } else {
+      // @ts-ignore
+      mql.addListener(onChange);
+      return () => mql.removeListener(onChange);
+    }
+  }, []);
 
   return (
     <div
-      className={`relative w-full h-full bg-[#F9F7EF] dark:bg-black overflow-x-auto overflow-y-hidden select-none flex items-stretch [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-colors duration-300 ${className}`}
+      className={`relative w-full h-full bg-[#F9F7EF] dark:bg-black overflow-y-auto md:overflow-y-hidden md:overflow-x-auto select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-colors duration-300 ${className}`}
     >
-      <div className="mx-auto flex w-full h-full flex-col md:flex-row lg:min-w-[1600px] bg-[#F9F7EF] dark:bg-black transition-colors duration-300 pt-2 md:pt-4 pb-6 md:pb-8">
+      <div className="mx-auto flex w-full flex-col md:flex-row md:h-full md:min-w-[1600px] bg-[#F9F7EF] dark:bg-black transition-colors duration-300 pt-2 md:pt-4 pb-24 md:pb-8">
         {items.map((item, index) => {
           const isActive = activeIndex === index;
 
           return (
             <motion.div
               key={item.id}
-              layout
               initial={false}
-              animate={{
-                width: isActive ? "36rem" : "4rem",
-              }}
+              animate={
+                isMobile
+                  ? {
+                      height: isActive ? 390 : 56,
+                      width: "100%",
+                    }
+                  : {
+                      width: isActive ? "36rem" : "4rem",
+                      height: "100%",
+                    }
+              }
               transition={{
                 type: "spring",
                 stiffness: 260,
                 damping: 26,
               }}
-              onMouseEnter={() => setActiveIndex(index)}
-              onClick={() => setActiveIndex(index)}
-              className="lg:border-r relative h-full w-full cursor-pointer border-0 border-neutral-300 dark:border-white/20 md:border-r overflow-hidden shrink-0 transition-colors"
-              style={{
-                height: "100%",
+              onMouseEnter={() => {
+                if (!isMobile) setActiveIndex(index);
               }}
+              onClick={() => setActiveIndex(index)}
+              className={`relative cursor-pointer overflow-hidden shrink-0 transition-colors ${
+                isMobile
+                  ? "w-full border-b border-neutral-300 dark:border-white/20"
+                  : "h-full border-r border-neutral-300 dark:border-white/20"
+              }`}
             >
-              {/* EXACT SKIPER35 ROTATED TEXT CONTAINER WITH LIGHT / DARK SUPPORT */}
-              <div
-                className={`absolute bottom-4 left-[2vw] flex w-[calc(100vh-14rem)] origin-[0_50%] transform justify-between pr-5 text-xl font-medium leading-[2.6vw] tracking-[-0.03em] md:-rotate-90 md:text-[1.8vw] transition-colors duration-200 pointer-events-none z-20 ${
-                  isActive
-                    ? "text-black dark:text-[#f1f1f1]"
-                    : "text-neutral-900/40 dark:text-[#f1f1f1]/30 hover:text-black dark:hover:text-[#f1f1f1]"
-                }`}
-              >
-                <p className="label w-full border-b border-transparent py-2 md:w-auto md:border-0 md:py-0 whitespace-nowrap font-black">
-                  {item.title}
-                </p>
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="year hidden md:block whitespace-nowrap font-mono font-black text-red-600 dark:text-red-500 tracking-wider"
+              {isMobile ? (
+                <div className="w-full h-full flex flex-col justify-start select-none">
+                  {/* HORIZONTAL LABEL ROW ON MOBILE */}
+                  <div
+                    className={`w-full h-14 flex items-center justify-between px-4 sm:px-6 shrink-0 transition-colors ${
+                      isActive
+                        ? "text-black dark:text-white"
+                        : "text-neutral-800/70 dark:text-neutral-300/70 hover:text-black dark:hover:text-white"
+                    }`}
+                  >
+                    <span className="font-bold text-sm sm:text-base tracking-tight truncate pr-2">
+                      {item.title}
+                    </span>
+                    <span
+                      className={`font-mono font-bold text-xs sm:text-sm tracking-wide shrink-0 ${
+                        isActive
+                          ? "text-red-600 dark:text-red-500"
+                          : "text-neutral-500 dark:text-neutral-400"
+                      }`}
                     >
                       {item.metric}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
+                    </span>
+                  </div>
 
-              {/* EXPANDED IMAGE WRAPPER WITH CLEAN OBJECT-CONTAIN - FULLY SHOWS IMAGE */}
-              <motion.div
-                animate={{ opacity: isActive ? 1 : 0 }}
-                transition={{ duration: 0.35 }}
-                className="h-[92%] rounded-2xl md:rounded-3xl p-2 md:p-3 pl-3 md:pl-[4.5vw] md:pr-4 md:pb-4 flex items-center justify-center"
-              >
-                <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-neutral-300 dark:border-neutral-800 bg-white/70 dark:bg-neutral-950/90 shadow-2xl flex items-center justify-center p-2 sm:p-4 transition-colors">
-                  <img
-                    alt={item.title}
-                    className="w-full h-full object-contain filter contrast-105 brightness-100"
-                    src={item.image}
-                  />
+                  {/* EXPANDED IMAGE ON MOBILE (UNDER TITLE) */}
+                  {isActive ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.25 }}
+                      className="flex-1 w-full p-2.5 pt-0 pb-3 min-h-0 flex items-center justify-center overflow-hidden"
+                    >
+                      <div className="w-full h-full rounded-2xl overflow-hidden border border-neutral-300 dark:border-neutral-800 bg-white/70 dark:bg-neutral-950/90 shadow-xl flex items-center justify-center p-3 relative">
+                        <img
+                          alt={item.title}
+                          className="w-full h-full object-contain filter contrast-105 brightness-100"
+                          src={item.image}
+                          loading="lazy"
+                        />
+                      </div>
+                    </motion.div>
+                  ) : null}
                 </div>
-              </motion.div>
+              ) : (
+                <>
+                  {/* EXACT SKIPER35 ROTATED TEXT CONTAINER WITH LIGHT / DARK SUPPORT */}
+                  <div
+                    className={`absolute bottom-4 left-[2vw] flex w-[calc(100vh-14rem)] origin-[0_50%] transform justify-between pr-5 text-xl font-medium leading-[2.6vw] tracking-[-0.03em] md:-rotate-90 md:text-[1.8vw] transition-colors duration-200 pointer-events-none z-20 ${
+                      isActive
+                        ? "text-black dark:text-[#f1f1f1]"
+                        : "text-neutral-900/40 dark:text-[#f1f1f1]/30 hover:text-black dark:hover:text-[#f1f1f1]"
+                    }`}
+                  >
+                    <p className="label w-full border-b border-transparent py-2 md:w-auto md:border-0 md:py-0 whitespace-nowrap font-black">
+                      {item.title}
+                    </p>
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="year hidden md:block whitespace-nowrap font-mono font-black text-red-600 dark:text-red-500 tracking-wider"
+                        >
+                          {item.metric}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* EXPANDED IMAGE WRAPPER WITH CLEAN OBJECT-CONTAIN */}
+                  <motion.div
+                    animate={{ opacity: isActive ? 1 : 0 }}
+                    transition={{ duration: 0.35 }}
+                    className="h-[92%] rounded-2xl md:rounded-3xl p-2 md:p-3 pl-3 md:pl-[4.5vw] md:pr-4 md:pb-4 flex items-center justify-center"
+                  >
+                    <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-neutral-300 dark:border-neutral-800 bg-white/70 dark:bg-neutral-950/90 shadow-2xl flex items-center justify-center p-2 sm:p-4 transition-colors">
+                      <img
+                        alt={item.title}
+                        className="w-full h-full object-contain filter contrast-105 brightness-100"
+                        src={item.image}
+                      />
+                    </div>
+                  </motion.div>
+                </>
+              )}
             </motion.div>
           );
         })}
