@@ -529,9 +529,14 @@ def coder_node(state: AgentState) -> AgentState:
 def candidate_node(state: AgentState) -> AgentState:
     """Phase 4/5/6 — N candidates, verified, then one selected.
 
-    Bench-mode only, and only when ``ISHA_CANDIDATES > 1``; with N = 1 the
-    node is a no-op so the single-candidate path stays byte-identical to the
-    baseline system.
+    Bench-mode only.  With ``ISHA_CANDIDATES > 1`` it generates N diverse
+    candidates.  With N = 1 the node is a no-op — UNLESS
+    ``ISHA_SINGLE_VERIFY=1``, which runs the closed loop on the single seed
+    patch: the generated repro test runs inside the official image and, when
+    the patch demonstrably fails it (after the up-to-2 in-loop repair
+    rounds), the patch is dropped instead of submitted.  A patch that
+    cannot pass its own FAIL_TO_PASS test cannot resolve the instance, so
+    dropping it costs nothing and keeps the record honest.
     """
     state = coerce_state(state)
     if not _bench_mode() or not state.patch or state.patch.startswith("["):
@@ -540,7 +545,7 @@ def candidate_node(state: AgentState) -> AgentState:
         n = int(os.getenv("ISHA_CANDIDATES", "1"))
     except ValueError:
         n = 1
-    if n <= 1:
+    if n <= 1 and os.getenv("ISHA_SINGLE_VERIFY", "0") != "1":
         return state
 
     from src.agents.candidates import (

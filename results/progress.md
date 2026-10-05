@@ -683,3 +683,59 @@ Made ISHA pullable/runnable for others:
 - 1 left after 13177: `sympy-13437`. Verdict work (M-3 catalogue + gate
   + lite300 decision) expected at the 21:40 watch or just after.
 
+### GATE VERDICT — smoke50 50/50 + r2 8/8, written 2026-10-05 ~16:40 IST
+
+- **Both runs complete** (verified from meta.json on disk; main's last
+  instance `sympy-13437` finished the 50th, r2 exit 0 in 2366 s). No bench
+  process running; verdict written late because every watch firing between
+  21:00 local 10-04 and now was interrupted before it could act.
+- **Merged view (r2 > r1 > main, 50 unique):** ok **39 (78%)** · timeout
+  **5 (10%)** · syntax **3 (6%)** · patch_apply_failed **3 (6%)** ·
+  offline <5%.
+- **Gate bars:** yield 78% ✅ (≥40%) · timeout 10% ✅ (<15%, ≤7 allowed,
+  we have 5) · patch_apply_failed **6% ❌ (<5% needs ≤2; we have 3)** ·
+  offline ✅.
+- **VERDICT: FAIL** on the apply-failure bar. Per the sanctioned FAIL
+  path: **lite300 NOT started**. Leading unresolved bucket: **timeout
+  (5 of 11)** — two of the timeouts (`sphinx-10451`, `sphinx-11445`)
+  show `model_log: []` (never completed a single model call inside the
+  1800 s budget — timer-vs-checkout bug candidate flagged for audit).
+- **M-3 study list written** to `isha-agent/results/mistakes.md`
+  (all 11 unresolved ids, verbatim gate/apply-reject messages, model_log
+  breakdowns, per-instance hypothesis + fix). Also in that file: M-1
+  CLOSED, M-4 CLOSED, M-2 updated → converted to a v2 coder-level fix
+  (pre-apply hunk validation + fallback-coder re-grounding).
+- **Day-4 sanctioned next steps:** (1) audit the per-instance timer vs
+  checkout time (one-line code check for the empty-model_log timeouts);
+  (2) implement M-2 (a)+(b); (3) `smoke50-r3` on the 11 ids under a
+  healthy-quota window, solo (no dual-worker contention); re-verdict on
+  the merged view — PASS → lite300.
+- 40-min watch cron retired (flow complete; verdict marker now in this
+  file).
+
+### Day 4 — improvement loop (10-05)
+
+- **Infra fixes implemented** (from M-3 root causes):
+  - `patch_engine.py`: similarity-based hunk locator (`_locate_similar`,
+    mean>=0.85 / >=50% lines >=0.75) for paraphrased context; insert-only
+    hunks now anchor from the header instead of dying; also wired into the
+    SEARCH/REPLACE and per-op apply chains.
+  - `runner.py`: `ISHA_BENCH_TIMEOUT_RETRIES=1` (fresh attempt after a
+    backoff-dominated timeout) and `ISHA_BENCH_SYNTAX_RETRIES=1` (gate
+    errors + verbatim source fed back to the coder) — previously both were
+    terminal on first failure.
+  - `gates.py`: new fatal `unresolvable_imports` gate — a patch that adds an
+    import whose top-level module is not stdlib, not in the checkout tree,
+    and not referenced anywhere in the source is rejected (caught the
+    `import pmxbot` hallucination in pytest-11148 that pyflakes missed).
+- **Patch audit** (`src/bench/audit_patches.py`, results/patch_audit.json):
+  27/50 flagged. 11 red (5 timeout, 3 syntax, 3 apply) + 5 loopholes in
+  "ok" patches: pytest-11148 (import hallucination `pmxbot`), sympy-13437
+  (2-line, critic 0.43), sympy-12419 (critic 0.45), astropy-12907
+  (critic 0.48), matplotlib-22711 (critic 0.49).
+- **smoke50-r3 launched** (bgp_10ae121a600150kMYZOuFLfTn3, workers=1,
+  ISHA_RATE_LIMIT_WAIT=1, 1800 s/instance) on the 16 ids above with all
+  fixes active. Docker daemon confirmed up for the later official-harness
+  grading (eval images pull automatically; ~4 GB each, auto-cleaned).
+- Next: r3 complete -> merged view (r3>r2>r1>main) -> official harness grade
+  of all patched instances -> real x/50 -> M-3 catalogue + lite300 launch.

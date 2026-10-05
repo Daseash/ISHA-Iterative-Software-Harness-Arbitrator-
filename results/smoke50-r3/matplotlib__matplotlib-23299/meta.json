@@ -1,0 +1,253 @@
+{
+  "instance_id": "matplotlib__matplotlib-23299",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "3eadeacc06c9f2ddcdac6ae39819faa9fbee9e39",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791191786.9016056
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791191790.603304
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791191925.6132615
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791192026.050588
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791192348.4143791
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791192718.878795
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791192768.0826695
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: lib/matplotlib/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/matplotlib/__init__.py"
+      ],
+      "added_lines": 8,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791190531.8810155,
+  "elapsed_s": 1016.56,
+  "plan": "@@\n-def get_backend():\n-    \"\"\"\n-    Return the name of the current backend.\n-    \"\"\"\n-    from matplotlib import rcParams, rcsetup\n-    backend = rcParams[\"backend\"]\n-    if backend is None:\n-        backend = rcsetup.defaultBackend\n-    # Import the backend module to ensure it is loaded.\n-    import importlib\n-    importlib.import_module(f\"matplotlib.backends.backend_{backend}\")\n-    return backend\n+def get_backend():\n+    \"\"\"\n+    Return the name of the current backend.\n+\n+    The backend module is imported lazily and only once.  Importing the module\n+    on every call caused the backend's initialization code to run repeatedly,\n+    which clears the global figure manager (``Gcf.figs``) when a figure has\n+    been created inside an ``rc_context``.  By guarding the import with a\n+    ``sys.modules`` check we avoid the side‑effect while preserving the\n+    historical behaviour that the backend is imported on first use.\n+    \"\"\"\n+    from matplotlib import rcParams, rcsetup\n+    import sys\n+    import importlib\n+\n+    backend = rcParams[\"backend\"]\n+    if backend is None:\n+        backend = rcsetup.defaultBackend\n+\n+    # Import the backend module only if it hasn't been imported yet.\n+    module_name = f\"matplotlib.backends.backend_{backend}\"\n+    if module_name not in sys.modules:\n+        importlib.import_module(module_name)\n+\n+    return backend",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::set_loglevel",
+      "symbols": [
+        "set_loglevel",
+        "_auto_draw_if_interactive",
+        "_IonContext",
+        "new_figure_manager_given_figure"
+      ],
+      "line_range": [
+        172,
+        175
+      ],
+      "score": 0.969,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7183,
+        "vector": 0.7872,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: pyplot; body matches report terms: matplotlib, pyplot, this)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::get_backend",
+      "symbols": [
+        "get_backend",
+        "rc_context",
+        "_check_versions",
+        "_ensure_handler"
+      ],
+      "line_range": [
+        1170,
+        1180
+      ],
+      "score": 0.8885,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5891,
+        "vector": 0.3855,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: matplotlib, also, backend; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "get_children",
+        "add_artist"
+      ],
+      "line_range": [
+        2197,
+        2377
+      ],
+      "score": 0.6283,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5314,
+        "vector": 0.4208,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: figure; body matches report terms: this, will, call, figs)"
+    },
+    {
+      "file": "lib/matplotlib/cbook/__init__.py",
+      "symbol": "lib/matplotlib/cbook/__init__.py::_get_running_interactive_framework",
+      "symbols": [
+        "_get_running_interactive_framework",
+        "process",
+        "silent_list",
+        "_strip_comment"
+      ],
+      "line_range": [
+        34,
+        81
+      ],
+      "score": 0.5845,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.37,
+        "vector": 0.3916,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: matplotlib, version, also, backends)"
+    },
+    {
+      "file": "lib/matplotlib/backends/backend_nbagg.py",
+      "symbol": "lib/matplotlib/backends/backend_nbagg.py::create_with_canvas",
+      "symbols": [
+        "create_with_canvas",
+        "connection_info",
+        "FigureManagerNbAgg",
+        "display_js"
+      ],
+      "line_range": [
+        72,
+        85
+      ],
+      "score": 0.5647,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5276,
+        "vector": 0.6272,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: figure; body matches report terms: figure, with, close)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::caching_module_getattr",
+      "symbols": [
+        "caching_module_getattr",
+        "warn_external",
+        "select_matching_signature",
+        "classproperty"
+      ],
+      "line_range": [
+        195,
+        229
+      ],
+      "score": 0.5593,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3454,
+        "vector": 0.233,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: assert, under, this, will)"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7443500000000001,
+  "laya_scores": {
+    "fix_quality": 1.5649,
+    "matches_issue": 0.7594,
+    "safe_to_apply": 0.6531,
+    "composite": 0.7443500000000001,
+    "secrets_or_danger": 0.1172,
+    "logic_drift": 0.1894,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS\n- PERFORMANCE: PASS\n- ROBUSTNESS: RISK\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import matplotlib\n\n# Use a non‑interactive backend so the tests run in head‑less CI.\nmatplotlib.use(\"Agg\", force=True)\n\nimport matplotlib.pyplot as plt\nfrom matplotlib import get_backend, rc_context\nfrom matplotlib._pylab_helpers import Gcf\n\n\ndef _capture_state():\n    \"\"\"\n    Return a tuple that uniquely identifies the current Gcf state:\n    (id of the Gcf singleton, a list of the (num, manager) items currently stored).\n    \"\"\"\n    # ``list(Gcf.figs.items())`` is safe – it copies the OrderedDict contents.\n    return (id(Gcf), list(Gcf.figs.items()))\n\n\ndef teardown_function(_):\n    \"\"\"Close any open figures after each test to avoid cross‑test contamination.\"\"\"\n    plt.close(\"all\")\n    # Reset the Gcf singleton (clears the internal OrderedDict) for a clean start.\n    Gcf.destroy_all()\n\n\ndef test_get_backend_clears_figs_created_inside_rc_context():\n    \"\"\"\n    Reproduce the original bug: a figure created inside an ``rc_context`` is\n    removed from ``Gcf.figs`` after calling ``get_backend()``.\n    \"\"\"\n    with rc_context():\n        fig = plt.figure()\n    before = _capture_state()\n    get_backend()          # the call that previously cleared the figure\n    after = _capture_state()\n    assert before == after, f\"Figures were cleared:\\n before={before}\\n after={after}\"\n\n\ndef test_existing_figure_prevents_clearing():\n    \"\"\"\n    If a figure is created *before* the ``rc_context`` figure, the bug does not\n    trigger – both figures must remain after ``get_backend()``.\n    \"\"\"\n    # Figure created outside the rc_context (makes it the first entry in Gcf.figs)\n    fig1 = plt.figure()\n    with rc_context():\n        fig2 = plt.figure()\n    before = _capture_state()\n    get_backend()\n    after = _capture_state()\n    assert before == after, \"Existing figure should protect the rc_context figure from being cleared\"\n\n\ndef test_multiple_calls_to_get_backend_do_not_clear():\n    \"\"\"\n    After the first import the backend module is cached.  Subsequent calls to\n    ``get_backend`` must not clear any figures, regardless of when they were\n    created.\n    \"\"\"\n    # First figure inside rc_context\n    with rc_context():\n        fig = plt.figure()\n    before_first = _capture_state()\n    get_backend()          # first call – may import the backend\n    after_first = _capture_state()\n    assert before_first == after_first, \"First call cleared figures\"\n\n    # Second call – backend already cached\n    get_backend()\n    after_second = _capture_state()\n    assert before_first == after_second, \"Second call cleared figures\"\n\n\ndef test_get_backend_with_no_figures_is_safe():\n    \"\"\"\n    Calling ``get_backend`` when no figures exist should leave ``Gcf.figs``\n    empty and not raise any errors.\n    \"\"\"\n    assert len(Gcf.figs) == 0, \"Test precondition violated – there should be no figures\"\n    before = _capture_state()\n    get_backend()\n    after = _capture_state()\n    assert before == after, \"State changed unexpectedly when no figures were present\"",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/lib/matplotlib/__init__.py b/lib/matplotlib/__init__.py\nindex c268a56..3000d83 100644\n--- a/lib/matplotlib/__init__.py\n+++ b/lib/matplotlib/__init__.py\n@@ -1133,6 +1133,7 @@ def use(backend, *, force=True):\n     :ref:`backends`\n     matplotlib.get_backend\n     \"\"\"\n+\n     name = validate_backend(backend)\n     # don't (prematurely) resolve the \"auto\" backend setting\n     if rcParams._get_backend_or_none() == name:\n",
+  "offline_calls": 0
+}

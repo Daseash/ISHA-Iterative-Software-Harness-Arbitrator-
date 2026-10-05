@@ -1,0 +1,8 @@
+{
+  "instance_id": "django__django-11742",
+  "candidate": 0,
+  "round": 0,
+  "error": "Hunk failed in django/db/models/fields/__init__.py: @@ \u2014 expected context not found in file: '    def _check_choices(self):' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+  "cause": "context_mismatch",
+  "timestamp": 1791190530.729744
+}

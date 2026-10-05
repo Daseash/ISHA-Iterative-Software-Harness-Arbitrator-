@@ -508,5 +508,22 @@
     "laya_score": 0.7812,
     "won_selection": false,
     "timestamp": 1790770582.8818705
+  },
+  {
+    "instance_id": "django__django-11039",
+    "candidate_index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "model_used": "groq/qwen/qwen3.8-27b",
+    "substituted": false,
+    "patch_applied": true,
+    "gate_passed": true,
+    "repro_passed": false,
+    "regression_count": 1,
+    "diff_size": 4,
+    "laya_score": 0.5882,
+    "won_selection": false,
+    "timestamp": 1791190441.04837
   }
 ]

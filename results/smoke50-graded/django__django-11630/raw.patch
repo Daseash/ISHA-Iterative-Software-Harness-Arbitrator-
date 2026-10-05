@@ -1,0 +1,44 @@
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@
+ from django.apps import apps
+ from django.core.checks import Error, Tags, register
++from django.conf import settings
++from django.db import router
+@@
+     db_table_models = defaultdict(list)
+     indexes = defaultdict(list)
+     constraints = defaultdict(list)
+@@
+-    for model in models:
+-        if model._meta.managed and not model._meta.proxy:
+-            db_table_models[model._meta.db_table].append(model._meta.label)
++    for model in models:
++        if model._meta.managed and not model._meta.proxy:
++            db_table = model._meta.db_table
++            # Determine on which database(s) this model is allowed to migrate.
++            for alias in settings.DATABASES:
++                if router.allow_migrate(alias, model):
++                    db_table_models[(alias, db_table)].append(model._meta.label)
+@@
+-    for db_table, model_labels in db_table_models.items():
+-        if len(model_labels) != 1:
+-            errors.append(
+-                Error(
+-                    "db_table '%s' is used by multiple models: %s."
+-                    % (db_table, ', '.join(db_table_models[db_table])),
+-                    obj=db_table,
+-                    id='models.E028',
+-                )
+-            )
++    for (alias, db_table), model_labels in db_table_models.items():
++        if len(model_labels) != 1:
++            errors.append(
++                Error(
++                    "db_table '%s' is used by multiple models on database '%s': %s."
++                    % (db_table, alias, ', '.join(model_labels)),
++                    obj=db_table,
++                    id='models.E028',
++                )
++            )
+*** End of File ***

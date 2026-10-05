@@ -55,8 +55,13 @@ def install_lf_writes() -> None:
     original = Path.write_text
 
     def write_text(self, data, *args, **kwargs):  # type: ignore[no-untyped-def]
-        if self.suffix in _CONTAINER_SUFFIXES and "newline" not in kwargs:
-            kwargs["newline"] = "\n"
+        if self.suffix in _CONTAINER_SUFFIXES:
+            kwargs.setdefault("newline", "\n")
+        # swebench writes eval.sh / patch files without an explicit encoding;
+        # on Windows that falls back to the cp1252 locale codec and crashes
+        # with UnicodeEncodeError the moment a test spec contains any
+        # non-ASCII character.  Force UTF-8 for everything the harness writes.
+        kwargs.setdefault("encoding", "utf-8")
         return original(self, data, *args, **kwargs)
 
     Path.write_text = write_text  # type: ignore[method-assign]

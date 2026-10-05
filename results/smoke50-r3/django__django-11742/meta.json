@@ -1,0 +1,260 @@
+{
+  "instance_id": "django__django-11742",
+  "repo": "django/django",
+  "base_commit": "fee75d2aed4e58ada6567c464cfd22e89dc65f4a",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189355.7481308
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189361.96328
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189370.2513971
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189517.1645162
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189638.6978235
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791189861.6837568
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791190137.8414178
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791190376.547027
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791190477.1975908
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in django/db/models/fields/__init__.py: @@ — expected context not found in file: '    def _check_choices(self):' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791188392.2145717,
+  "elapsed_s": 1176.11,
+  "plan": "def _check_choices_length(self):\n        if self.choices and self.max_length is not None:\n            for value, _ in self.choices:\n                # Skip None or empty string checks if they are valid \"null\" representations\n                # but strictly string length check\n                if value is not None:\n                    if len(str(value)) > self.max_length:\n                        return [checks.Error(\n                            \"The field %s has a choice value '%s' which is longer than the max_length (%s).\" % (self.name, value, self.max_length),\n                            obj=self,\n                            id='fields.E120',\n                        )]\n        return []",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "check",
+        "_check_field_name"
+      ],
+      "line_range": [
+        135,
+        181
+      ],
+      "score": 0.7446,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7186,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: choices, max_length; body matches report terms: field, choice, choices, save)"
+    },
+    {
+      "file": "django/db/models/enums.py",
+      "symbol": "django/db/models/enums.py::choices",
+      "symbols": [
+        "choices",
+        "__new__",
+        "values",
+        "TextChoices"
+      ],
+      "line_range": [
+        48,
+        51
+      ],
+      "score": 0.5657,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0952,
+        "vector": 0.7657,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: choice, value; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::next_char",
+      "symbols": [
+        "next_char",
+        "walk_to_end",
+        "get_quantifier",
+        "normalize"
+      ],
+      "line_range": [
+        189,
+        209
+      ],
+      "score": 0.585,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2451,
+        "vector": 0.6139,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: long, with, that)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::create_permissions",
+      "symbols": [
+        "create_permissions",
+        "get_system_username",
+        "get_default_username",
+        "_get_builtin_permissions"
+      ],
+      "line_range": [
+        35,
+        88
+      ],
+      "score": 0.6036,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.354,
+        "vector": 0.5837,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: ensure, values, this, value)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "_load_serializers",
+        "serialize"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.641,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5344,
+        "vector": 0.5199,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: long, this, there)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__setattr__",
+      "symbols": [
+        "__setattr__",
+        "configure",
+        "FILE_CHARSET",
+        "__init__"
+      ],
+      "line_range": [
+        81,
+        91
+      ],
+      "score": 0.5412,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1679,
+        "vector": 0.4522,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: values, this, value)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.7209,
+  "laya_scores": {
+    "fix_quality": 1.454,
+    "matches_issue": 0.7776,
+    "safe_to_apply": 0.652,
+    "composite": 0.7209,
+    "secrets_or_danger": 0.1052,
+    "logic_drift": 0.5336,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "SECURITY: PASS - No injection vectors, secrets, or unsafe execution introduced; logic is purely internal validation.\nRISK: N/A - Not applicable.\nROBUSTNESS: PASS - Gracefully handles None values; no mutable defaults or race conditions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in django/db/models/fields/__init__.py: @@ — expected context not found in file: '    def _check_choices(self):' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "import pytest\nimport django\nfrom django.conf import settings\nfrom django.db import models\n\n\n# ----------------------------------------------------------------------\n# Django setup (runs once for the whole test session)\n# ----------------------------------------------------------------------\n@pytest.fixture(scope=\"session\", autouse=True)\ndef django_setup():\n    \"\"\"\n    Configure a minimal Django environment so that model fields can be\n    instantiated and their ``check()`` method exercised.\n    \"\"\"\n    if not settings.configured:\n        settings.configure(\n            INSTALLED_APPS=[],\n            DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": \":memory:\"}},\n        )\n        django.setup()\n\n\n# ----------------------------------------------------------------------\n# Core bug‑reproduction test (must fail before the fix, pass after)\n# ----------------------------------------------------------------------\ndef test_charfield_choice_longer_than_max_length_triggers_error():\n    \"\"\"\n    A ``CharField`` whose ``choices`` contain a value longer than\n    ``max_length`` should raise a ``fields.E120`` error during its\n    ``check()`` call.\n\n    Before the fix this test fails because the error is **not** produced.\n    After the fix it passes.\n    \"\"\"\n    field = models.CharField(\n        max_length=3,\n        choices=[(\"longvalue\", \"Long value\"), (\"ok\", \"OK\")],\n    )\n    errors = field.check()\n    error_ids = [e.id for e in errors]\n    assert \"fields.E120\" in error_ids, \"Expected fields.E120 error for too‑long choice\"\n\n\n# ----------------------------------------------------------------------\n# Edge‑case tests – these should all pass both before and after the fix\n# ----------------------------------------------------------------------\ndef test_no_error_when_max_length_is_sufficient():\n    \"\"\"When max_length comfortably fits all choice values, no error is raised.\"\"\"\n    field = models.CharField(\n        max_length=20,\n        choices=[(\"short\", \"Short\"), (\"mediumlength\", \"Medium\")],\n    )\n    assert field.check() == []\n\n\ndef test_none_choice_value_is_ignored():\n    \"\"\"\n    ``None`` (or ``NULL``) choice values are skipped by the length check,\n    even if max_length is very small.\n    \"\"\"\n    field = models.CharField(max_length=1, choices=[(None, \"None\")])\n    assert field.check() == []\n\n\ndef test_non_string_choice_is_checked_as_string():\n    \"\"\"\n    Non‑string values are cast to ``str`` before length comparison.\n    An integer that becomes a longer string than ``max_length`` should trigger the error.\n    \"\"\"\n    field = models.CharField(\n        max_length=2,\n        choices=[(1234, \"Four digits\"), (\"ok\", \"OK\")],\n    )\n    errors = field.check()\n    error_ids = [e.id for e in errors]\n    assert \"fields.E120\" in error_ids\n\n\ndef test_empty_string_choice_is_allowed():\n    \"\"\"An empty string choice always fits within any positive max_length.\"\"\"\n    field = models.CharField(max_length=5, choices=[(\"\", \"empty\")])\n    assert field.check() == []\n\n\ndef test_max_length_none_disables_check():\n    \"\"\"\n    If ``max_length`` is ``None`` (e.g., for TextField‑like behaviour),\n    the length check should be skipped entirely.\n    \"\"\"\n    field = models.CharField(max_length=None, choices=[(\"verylongvalue\", \"Long\")])\n    # ``check()`` may still run other validators, but it must not contain E120.\n    error_ids = [e.id for e in field.check()]\n    assert \"fields.E120\" not in error_ids",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

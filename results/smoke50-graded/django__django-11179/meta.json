@@ -1,0 +1,244 @@
+{
+  "instance_id": "django__django-11179",
+  "repo": "django/django",
+  "base_commit": "19fc6376ce67d01ca37a91ef2f55ef769f50513a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008071.0868132
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008076.5394394
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008088.816155
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008106.912228
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008130.705385
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791008167.5066063
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/deletion.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791008002.2834191,
+  "elapsed_s": 173.23,
+  "plan": "if self.can_fast_delete(specified_objects):\n            # ... existing code to set self.fast_deletes ...\n            self.fast_delete(specified_objects) \n            # ADD THIS:\n            for model, instances in self.data.items():\n                for obj in instances:\n                    obj.pk = None\n            self.fast_deletes = []\n            return",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::delete",
+      "symbols": [
+        "delete",
+        "PROTECT",
+        "SET",
+        "__init__"
+      ],
+      "line_range": [
+        262,
+        327
+      ],
+      "score": 0.7823,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8692,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: model, update, models, dependencies; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::_load_serializers",
+      "symbols": [
+        "_load_serializers",
+        "sort_dependencies",
+        "BadSerializer",
+        "__call__"
+      ],
+      "line_range": [
+        143,
+        158
+      ],
+      "score": 0.6599,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5925,
+        "vector": 0.5565,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: with, without"
+    },
+    {
+      "file": "django/contrib/contenttypes/management/__init__.py",
+      "symbol": "django/contrib/contenttypes/management/__init__.py::RenameContentType",
+      "symbols": [
+        "RenameContentType",
+        "_rename",
+        "get_contenttypes_and_models",
+        "create_contenttypes"
+      ],
+      "line_range": [
+        6,
+        44
+      ],
+      "score": 0.615,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4616,
+        "vector": 0.4548,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: model, update, with, doesn"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::get_col",
+      "symbols": [
+        "get_col",
+        "cached_col",
+        "__reduce__",
+        "get_pk_value_on_save"
+      ],
+      "line_range": [
+        376,
+        384
+      ],
+      "score": 0.6107,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3937,
+        "vector": 0.5602,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: model, models, django"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::FILE_CHARSET",
+      "symbols": [
+        "FILE_CHARSET",
+        "__delattr__",
+        "__setattr__",
+        "is_overridden"
+      ],
+      "line_range": [
+        118,
+        131
+      ],
+      "score": 0.6019,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4287,
+        "vector": 0.4144,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: django, with, line, call"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "to_locale",
+        "__getattr__",
+        "ugettext_noop"
+      ],
+      "line_range": [
+        41,
+        66
+      ],
+      "score": 0.5859,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3662,
+        "vector": 0.4114,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: django, with, after, delete"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.811125,
+  "laya_scores": {
+    "fix_quality": 1.6885,
+    "matches_issue": 0.8267,
+    "safe_to_apply": 0.7293,
+    "composite": 0.811125,
+    "secrets_or_danger": 0.2076,
+    "logic_drift": 0.2541,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No new attack vectors introduced; operation is internal to ORM deletion logic.\n- PERFORMANCE: RISK - Iterating over all collected instances (`self.data`) to null out PKs adds O(n) overhead to fast deletes, which are designed to be bulk single-SQL operations; this contradicts the \"fast\" path optimization goal for large datasets.\n- ROBUSTNESS: PASS - Correctly clears PKs for instances in the collector, addressing the reported bug where non-dependent models retained stale PKs.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.db import connection, models, transaction\nfrom django.test import TestCase\n\n\nclass CustomPrimaryKey(models.Model):\n    pk = models.IntegerField(primary_key=True)\n    name = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = 'testapp'\n\n\nclass CustomPrimaryKeyTest(TestCase):\n    def test_delete_clears_custom_integer_pk(self):\n        obj = CustomPrimaryKey.objects.create(pk=99, name='x')\n        obj2 = CustomPrimaryKey(pk=99)\n        obj.delete()\n        self.assertIsNone(obj.pk)\n        self.assertIsNone(obj2.pk)\n\n    def test_delete_clears_pk_with_duplicates(self):\n        obj1 = CustomPrimaryKey.objects.create(pk=5, name='a')\n        obj2 = CustomPrimaryKey(pk=5, name='b')\n        obj3 = CustomPrimaryKey(pk=6, name='c')\n        objs = [obj1, obj2, obj3]\n        CustomPrimaryKey.objects.bulk_create([CustomPrimaryKey(pk=5, name='a'), CustomPrimaryKey(pk=5, name='b'), CustomPrimaryKey(pk=6, name='c')])\n        # Reload to ensure proper delete() path\n        o1 = CustomPrimaryKey.objects.get(pk=5, name='a')\n        o2 = CustomPrimaryKey.objects.get(pk=5, name='b')\n        o3 = CustomPrimaryKey.objects.get(pk=6, name='c')\n        o1.delete()\n        self.assertIsNone(o1.pk)\n        o2.delete()\n        self.assertIsNone(o2.pk)\n        o3.delete()\n        self.assertIsNone(o3.pk)\n        self.assertEqual(CustomPrimaryKey.objects.count(), 0)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4af..759f030 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -280,6 +280,10 @@ class Collector:\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n+            for model, instances in self.data.items():\n+                for obj in instances:\n+                    obj.pk = None\n+            self.fast_deletes = []\n             # send pre_delete signals\n             for model, obj in self.instances_with_model():\n                 if not model._meta.auto_created:\n",
+  "offline_calls": 0
+}

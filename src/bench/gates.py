@@ -186,6 +186,80 @@ def noop_gate(patch: str) -> GateResult:
     return result
 
 
+# ── Unresolvable imports ────────────────────────────────────────────────────
+# pyflakes cannot see whether an imported module actually exists: a patch that
+# adds ``import pmxbot`` to pytest compiles, passes pyflakes, applies cleanly,
+# and only dies at harness time when the container does ``import pmxbot``.
+# That class of hallucination is cheap to catch up front: a new import is
+# resolvable when its top-level name is stdlib, present in the checkout tree,
+# or referenced by an import line anywhere in the checkout source (third-party
+# deps like numpy are always referenced).  Anything else is fabricated.
+_NEW_IMPORT_RE = re.compile(
+    r"^\s*(?:import\s+([A-Za-z_][A-Za-z0-9_.]*)|from\s+([A-Za-z_][A-Za-z0-9_.]*)\s+import)"
+)
+_vocab_cache: dict[str, tuple[set[str], set[str]]] = {}
+
+
+def _new_top_level_imports(patch: str) -> set[str]:
+    names: set[str] = set()
+    for line in (patch or "").splitlines():
+        if not line.startswith("+") or line.startswith("+++"):
+            continue
+        m = _NEW_IMPORT_RE.match(line[1:])
+        if m:
+            top = (m.group(1) or m.group(2)).split(".")[0]
+            if top and top != "__future__":
+                names.add(top)
+    return names
+
+
+def _checkout_vocab(baseline_repo: str) -> tuple[set[str], set[str]]:
+    """(top-level names in the tree, names referenced by import lines)."""
+    key = str(baseline_repo)
+    if key in _vocab_cache:
+        return _vocab_cache[key]
+    top: set[str] = set()
+    referenced: set[str] = set()
+    root = Path(baseline_repo)
+    for p in root.iterdir():
+        if p.name.startswith(".") or p.name.startswith("__pycache__"):
+            continue
+        top.add(p.name)
+    seen_import_files = 0
+    for p in root.rglob("*.py"):
+        if any(part.startswith(".") or part == "__pycache__" for part in p.parts[len(root.parts):]):
+            continue
+        seen_import_files += 1
+        if seen_import_files > 20000:
+            break
+        try:
+            with p.open(encoding="utf-8", errors="replace") as fh:
+                for line in fh:
+                    m = _NEW_IMPORT_RE.match(line)
+                    if m:
+                        referenced.add((m.group(1) or m.group(2)).split(".")[0])
+        except OSError:
+            continue
+    result = (top, referenced)
+    _vocab_cache[key] = result
+    return result
+
+
+def unresolvable_imports(baseline_repo: str, patch: str) -> list[str]:
+    """New imports the patch adds that cannot exist in this environment."""
+    if not baseline_repo or not (patch or "").strip():
+        return []
+    top, referenced = _checkout_vocab(baseline_repo)
+    bad: list[str] = []
+    for name in sorted(_new_top_level_imports(patch)):
+        if name in sys.stdlib_module_names:
+            continue
+        if name in top or name in referenced:
+            continue
+        bad.append(name)
+    return bad
+
+
 # ── Regression risk ─────────────────────────────────────────────────────────
 # A patch that rewrites most of a function's body is the shape that produced
 # the astropy-12907 regression: the right file, a plausible-looking fix, and
@@ -349,6 +423,15 @@ def compile_gate(repo_path: str, patch: str, baseline_repo: str | None = None) -
     if not noop.ok:
         return noop
     result.warnings = noop.warnings
+
+    # Gate 0.5 — fabricated module. Runs before any subprocess work.
+    if baseline_repo:
+        for name in unresolvable_imports(baseline_repo, patch):
+            result.errors.append(
+                f"unresolvable import '{name}': that module does not exist in "
+                f"this repository or in the standard library — do not import "
+                f"modules that are not already part of the codebase"
+            )
 
     for rel in files:
         target = root / rel

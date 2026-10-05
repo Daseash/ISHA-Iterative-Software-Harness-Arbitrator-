@@ -12,6 +12,7 @@ Supports:
 
 from __future__ import annotations
 
+import difflib
 import json
 import re
 import subprocess
@@ -344,6 +345,8 @@ def _apply_search_replace(root: Path, text: str) -> tuple[bool, str]:
         idx = _locate(stripped_file, stripped_search, 0)
         if idx is None:
             idx = _locate_fuzzy(stripped_file, stripped_search, 0)
+        if idx is None:
+            idx = _locate_similar(stripped_file, stripped_search, 0)
 
         if idx is not None:
             new_lines = [f"{line}{newline}" for line in replace_lines]
@@ -374,11 +377,16 @@ def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, lis
     old_block = [ln[1:] for ln in body if ln[:1] in (" ", "-")]
     new_block = [ln[1:] for ln in body if ln[:1] in (" ", "+")]
     if not old_block:
+        # Insert-only hunk: nothing to match, anchor from the header offset.
+        if _apply_body(lines, body, start, newline=newline):
+            return True, lines
         return False, lines
 
     idx = _locate(lines, old_block, start)
     if idx is None:
         idx = _locate_fuzzy(lines, old_block, start)
+    if idx is None:
+        idx = _locate_similar(lines, old_block, start)
     if idx is not None:
         lines[idx : idx + len(old_block)] = [f"{line}{newline}" for line in new_block]
         return True, lines
@@ -437,6 +445,8 @@ def _apply_body(lines: list, body: list, start: int, newline: str = "\n") -> boo
             if idx is None:
                 idx = _locate_fuzzy(lines, old, pos)
             if idx is None:
+                idx = _locate_similar(lines, old, pos)
+            if idx is None:
                 continue
             lines[idx : idx + len(old)] = [f"{line}{newline}" for line in new]
             pos = idx + len(new)
@@ -468,6 +478,57 @@ def _locate_near(lines: list, content: list, center: int, span: int = 40) -> int
         if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft:
             return i
     return None
+
+
+_SIMILAR_AVG = 0.85
+_SIMILAR_LINE = 0.75
+
+
+def _locate_similar(lines: list, old_block: list, start: int) -> int | None:
+    """Similarity fallback for paraphrased context lines.
+
+    Weak models sometimes re-emit the surrounding context slightly wrong
+    (renamed local, dropped comma, altered trailing spaces that survived the
+    whitespace pass). Exact and whitespace matching then fail even though the
+    hunk belongs at one obvious place.  Slide a window the size of the old
+    block over the file and keep the position where the lines are *mostly*
+    the same.  Guardrails: only blocks with real content qualify, most
+    non-blank lines must match individually, and the mean similarity has to
+    clear 0.85 — below that, a silent wrong placement is worse than a failed
+    apply.  Callers still run the static gate afterwards.
+    """
+    if not old_block or len(lines) < 3:
+        return None
+    n = len(old_block)
+    if n > len(lines):
+        return None
+    want = [ln.rstrip("\r\n") for ln in old_block]
+    if not any(w.strip() for w in want):
+        return None
+    file_norm = [ln.rstrip("\r\n") for ln in lines]
+
+    best_idx: int | None = None
+    best_score = 0.0
+    for i in range(len(file_norm) - n + 1):
+        window = file_norm[i : i + n]
+        non_blank = 0
+        good = 0
+        total = 0.0
+        for w, c in zip(want, window):
+            if not w.strip() and not c.strip():
+                total += 1.0
+                continue
+            non_blank += 1
+            total += difflib.SequenceMatcher(None, w, c, autojunk=False).ratio()
+            if c.strip() and (w in c or c in w or difflib.SequenceMatcher(None, w, c, autojunk=False).ratio() >= _SIMILAR_LINE):
+                good += 1
+        if non_blank == 0:
+            continue
+        score = total / n
+        if score > best_score and score >= _SIMILAR_AVG and good >= max(1, non_blank // 2):
+            best_score = score
+            best_idx = i
+    return best_idx
 
 
 def _locate_fuzzy(lines: list, old_block: list, start: int) -> int | None:

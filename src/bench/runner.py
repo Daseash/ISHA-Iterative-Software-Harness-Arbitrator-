@@ -50,6 +50,13 @@ DEFAULT_MAX_RETRIES = int(os.getenv("ISHA_BENCH_MAX_RETRIES", "2"))
 BASE_BACKOFF = float(os.getenv("ISHA_BENCH_BACKOFF", "20"))
 # Extra attempts granted only to instances whose diff would not apply.
 APPLY_RETRIES = int(os.getenv("ISHA_BENCH_APPLY_RETRIES", "1"))
+# Instances whose patch applied but failed the static gate (syntax / new
+# pyflakes errors) get one more attempt with the exact gate errors plus the
+# verbatim source around the failing lines fed back to the coder.
+SYNTAX_RETRIES = int(os.getenv("ISHA_BENCH_SYNTAX_RETRIES", "1"))
+# Instances that burned their whole timeout (usually rate-limit backoff, not
+# model work) get one fresh attempt instead of dying terminal.
+TIMEOUT_RETRIES = int(os.getenv("ISHA_BENCH_TIMEOUT_RETRIES", "1"))
 
 
 # ── Environment for a benchmark run ────────────────────────────────────────
@@ -128,9 +135,16 @@ def canonical_patch(repo_path: str, raw_patch: str, instance_id: str = "") -> tu
     try:
         info["git_ready"] = _ensure_git(sandbox)
         ok, message = apply_patch(sandbox, raw_patch)
-        info["applied"] = ok
+        # A "success" that carries per-hunk warnings is a PARTIAL apply: some
+        # file(s) of the diff landed, others did not.  Submitting the raw
+        # diff in that state (the only fallback path) ships hunks the base
+        # tree cannot accept, and the container's patcher errors out instead
+        # of running the tests.  Treat partial applies as failures so the
+        # apply-retry loop gets the verbatim-source feedback.
+        partial = ok and "Hunk failed" in message
+        info["applied"] = ok and not partial
         info["message"] = message
-        if not ok:
+        if not ok or partial:
             record_apply_failure(instance_id, 0, 0, raw_patch, message)
             return "", info
         gate = compile_gate(sandbox, raw_patch, baseline_repo=repo_path)
@@ -305,6 +319,46 @@ def _apply_feedback(repo: Path, info: dict) -> str:
     )[:3800]
 
 
+def _gate_feedback(repo: Path, info: dict) -> str:
+    """Turn a static-gate failure into feedback the next attempt can use."""
+    gates = info.get("gates") or {}
+    errors = list(gates.get("errors") or [])
+    message = str(info.get("message") or "")
+    if not errors and "static gate failed" in message:
+        errors = [message.replace("static gate failed: ", "")]
+    if not errors:
+        return ""
+    header = "PREVIOUS PATCH FAILED THE STATIC GATE. Exact errors:\n" + "\n".join(
+        f"  - {e}" for e in errors[:4]
+    ) + "\nReissue a complete corrected diff. Keep the same fix; only correct " \
+        "the broken syntax / the flagged names."
+    snippets = []
+    for err in errors[:2]:
+        # "<rel/path.py>: SyntaxError line 116: invalid syntax"
+        m = re.match(r"^(?P<file>[^:]+):.*line\s+(?P<line>\d+)", err)
+        if not m:
+            continue
+        rel = m.group("file").strip()
+        line = int(m.group("line"))
+        target = repo / rel
+        if not target.is_file():
+            continue
+        try:
+            lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        lo = max(0, line - 8)
+        hi = min(len(lines), line + 12)
+        body = "\n".join(f"{i + 1:5d}| {lines[i]}" for i in range(lo, hi))
+        snippets.append(
+            f"PRISTINE SOURCE OF {rel} LINES {lo + 1}-{hi} (the error is at "
+            f"line {line}) — copy these lines character-for-character, "
+            f"changing only what the fix requires:\n{body}"
+        )
+    out = header + ("\n\n" + "\n\n".join(snippets) if snippets else "")
+    return out[:3800]
+
+
 def run_instance(
     record: dict,
     path: Path,
@@ -356,13 +410,30 @@ def run_instance(
         try:
             outcome = future.result(timeout=timeout)
         except FutureTimeout:
+            pool.shutdown(wait=False, cancel_futures=True)
+            if attempt <= TIMEOUT_RETRIES:
+                # Most free-tier timeouts are backoff-dominated: the attempt
+                # died inside rate-limit waits, not inside model work.  One
+                # fresh attempt under (hopefully) healthier quota is far
+                # cheaper than letting the instance die terminal.
+                _append(log_path, {"event": "timeout_retry", "attempt": attempt,
+                                   "ts": time.time()})
+                notes = (notes + [
+                    f"PREVIOUS ATTEMPT TIMED OUT AT {timeout}s, MOSTLY INSIDE "
+                    "RATE-LIMIT BACKOFF. Replan from scratch: keep the fix "
+                    "minimal, produce the complete diff in the earliest "
+                    "possible coder round, and do not iterate the patch text."
+                ])[-4:]
+                meta.update({"status": "retrying_after_timeout",
+                             "error": f"attempt {attempt} exceeded {timeout}s"})
+                save_checkpoint(path, meta)
+                continue
             meta.update({
                 "status": "done",
                 "failure_category": "timeout",
                 "error": f"instance exceeded {timeout}s",
             })
             save_checkpoint(path, meta)
-            pool.shutdown(wait=False, cancel_futures=True)
             _append(log_path, {"event": "timeout", "attempt": attempt, "ts": time.time()})
             return meta
         except Exception as exc:  # noqa: BLE001 — recorded, never crashes the run
@@ -436,6 +507,19 @@ def run_instance(
                 if feedback:
                     notes = (notes + [feedback])[-4:]
                     _append(log_path, {"event": "apply_retry", "attempt": attempt,
+                                       "message": str(info.get("message", ""))[:300],
+                                       "ts": time.time()})
+                    continue
+            # A patch that applied but broke syntax (or added new pyflakes
+            # errors) is fixable: the coder saw the whole file, it just
+            # emitted a malformed edit.  Feed the exact gate errors plus the
+            # verbatim source around each failing line back and retry once.
+            if (meta["failure_category"] == "syntax_error"
+                    and attempt <= SYNTAX_RETRIES):
+                feedback = _gate_feedback(instance_checkout(record), info)
+                if feedback:
+                    notes = (notes + [feedback])[-4:]
+                    _append(log_path, {"event": "syntax_retry", "attempt": attempt,
                                        "message": str(info.get("message", ""))[:300],
                                        "ts": time.time()})
                     continue

@@ -1,0 +1,243 @@
+{
+  "instance_id": "django__django-11283",
+  "repo": "django/django",
+  "base_commit": "08a4ee06510ae45562c228eefbdcaac84bd38c7a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953068.5650725
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953077.3709416
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash",
+      "model_full": "gemini/gemini-3.5-flash",
+      "position": "fallback 4",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953383.638494
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953388.0581045
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953610.1618934
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790953874.502843
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+      ],
+      "added_lines": 18,
+      "removed_lines": 4,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1790952984.9410286,
+  "elapsed_s": 897.94,
+  "plan": "old_permissions = Permission.objects.filter(\n            permissions_query,\n            content_type=old_content_type,\n        )\n        for permission in old_permissions:\n            try:\n                duplicate_permission = Permission.objects.get(\n                    codename=permission.codename,\n                    content_type=new_content_type,\n                )\n            except Permission.DoesNotExist:\n                permission.content_type = new_content_type\n                permission.save(update_fields=['content_type'])\n            else:\n                duplicate_permission.user_set.add(*permission.user_set.all())\n                duplicate_permission.group_set.add(*permission.group_set.all())\n                permission.delete()",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+      "symbol": "django/contrib/auth/migrations/0011_update_proxy_permissions.py::update_proxy_model_permissions",
+      "symbols": [
+        "update_proxy_model_permissions",
+        "revert_proxy_model_permissions",
+        "Migration"
+      ],
+      "line_range": [
+        5,
+        32
+      ],
+      "score": 0.5767,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2862,
+        "vector": 0.4593,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: codename, auth, model, update)"
+    },
+    {
+      "file": "django/db/migrations/writer.py",
+      "symbol": "django/db/migrations/writer.py::as_string",
+      "symbols": [
+        "as_string",
+        "basedir",
+        "MigrationWriter",
+        "serialize"
+      ],
+      "line_range": [
+        129,
+        200
+      ],
+      "score": 0.5991,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3862,
+        "vector": 0.4378,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: after, with, exists, here"
+    },
+    {
+      "file": "django/core/cache/__init__.py",
+      "symbol": "django/core/cache/__init__.py::_create_cache",
+      "symbols": [
+        "_create_cache",
+        "CacheHandler",
+        "DefaultCacheProxy",
+        "__getitem__"
+      ],
+      "line_range": [
+        32,
+        56
+      ],
+      "score": 0.5974,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4791,
+        "vector": 0.2716,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: error, first, trying, create"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "_check_null_allowed_for_primary_keys",
+        "get_col",
+        "cached_col"
+      ],
+      "line_range": [
+        133,
+        179
+      ],
+      "score": 0.5803,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3296,
+        "vector": 0.4407,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: error, unique, message, table"
+    },
+    {
+      "file": "django/contrib/contenttypes/management/__init__.py",
+      "symbol": "django/contrib/contenttypes/management/__init__.py::RenameContentType",
+      "symbols": [
+        "RenameContentType",
+        "_rename",
+        "inject_rename_contenttypes_operations",
+        "get_contenttypes_and_models"
+      ],
+      "line_range": [
+        6,
+        44
+      ],
+      "score": 0.5763,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.38,
+        "vector": 0.3025,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: with, migrate, integrityerror, error"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "ugettext_noop",
+        "ugettext",
+        "ungettext"
+      ],
+      "line_range": [
+        41,
+        66
+      ],
+      "score": 0.5742,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3595,
+        "vector": 0.3279,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: after, effect, with, utils"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7045499999999999,
+  "laya_scores": {
+    "fix_quality": 1.3854,
+    "matches_issue": 0.7725,
+    "safe_to_apply": 0.6603,
+    "composite": 0.7045499999999999,
+    "secrets_or_danger": 0.1633,
+    "logic_drift": 0.3117,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, credentials, or unsafe eval/shell usage introduced.  \n- PERFORMANCE: RISK - Adds per‑permission queries and loops, causing an N+1 query pattern that can slow migrations on large datasets.  \n- ROBUSTNESS: PASS - No swallowed exceptions or mutable defaults; logic handles missing duplicates explicitly.  \n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.auth.models import Group, Permission, User\nfrom django.contrib.contenttypes.models import ContentType\nfrom django.db import IntegrityError, connection\nfrom django.db.migrations.autodetector import MigrationAutodetector\nfrom django.db.migrations.loader import MigrationLoader\nfrom django.db.migrations.state import ModelState, ProjectState\n\nfrom django.contrib.auth.migrations import (\n    update_proxy_model_permissions,\n)\n\n\n@pytest.mark.django_db\ndef test_update_proxy_permissions_with_existing_duplicate_permission():\n    \"\"\"\n    Regression test for Ticket #11283.\n\n    When a permission with the same codename already exists for the target\n    (proxy) content type, the buggy code used a plain .update() which raised\n    IntegrityError due to the unique constraint on (content_type, codename).\n    The fixed code must merge users/groups onto the duplicate and delete the\n    old permission instead of raising.\n    \"\"\"\n    content_type_a = ContentType.objects.create(\n        app_label=\"app\", model=\"agency\"\n    )\n    content_type_b = ContentType.objects.create(\n        app_label=\"app\", model=\"agency2\"\n    )\n\n    # Permission on the old (concrete) content type whose target\n    # (proxy) content type already has a permission with the same codename.\n    old_permission = Permission.objects.create(\n        codename=\"add_agency\",\n        name=\"Can add agency\",\n        content_type=content_type_a,\n    )\n    duplicate_permission = Permission.objects.create(\n        codename=\"add_agency\",\n        name=\"Can add agency (existing)\",\n        content_type=content_type_b,\n    )\n\n    # Attach users and groups to the old permission to verify they are\n    # merged onto the duplicate after the migration executes.\n    user = User.objects.create_user(username=\"testuser\", password=\"secret\")\n    group = Group.objects.create(name=\"testgroup\")\n    old_permission.user_set.add(user)\n    old_permission.group_set.add(group)\n\n    # Helper to simulate the migration's queryset filtering without needing\n    # the full Django project state / app registry wiring.\n    # The migration builds `permissions_query` matching codenames for a proxy\n    # model and filters by old_content_type. We invoke the fix's logic by\n    # constructing an equivalent queryset and running the same operations.\n\n    # The buggy line was:\n    #   Permission.objects.filter(\n    #       permissions_query, content_type=old_content_type\n    #   ).update(content_type=new_content_type)\n    # which raises IntegrityError here.\n\n    # The fixed code is inlined here to match the fix plan exactly.\n    permissions_query = Permission.objects.none().query  # placeholder\n    # Actually, we need the real permissions_query. The migration only\n    # processes proxy models. We simulate by passing the specific query\n    # that the migration would build for a proxy with codename 'add_agency'.\n    from django.db.models import Q\n\n    permissions_query = Q(codename__in=[\"add_agency\", \"change_agency\", \"delete_agency\", \"view_agency\"])\n\n    old_content_type = content_type_a\n    new_content_type = content_type_b\n\n    old_permissions = Permission.objects.filter(\n        permissions_query,\n        content_type=old_content_type,\n    )\n    for permission in old_permissions:\n        try:\n            dup = Permission.objects.get(\n                codename=permission.codename,\n                content_type=new_content_type,\n            )\n        except Permission.DoesNotExist:\n            permission.content_type = new_content_type\n            permission.save(update_fields=[\"content_type\"])\n        else:\n            dup.user_set.add(*permission.user_set.all())\n            dup.group_set.add(*permission.group_set.all())\n            permission.delete()\n\n    # Verify the old permission was deleted.\n    assert not Permission.objects.filter(pk=old_permission.pk).exists()\n\n    # Verify users and groups were merged onto the duplicate.\n    duplicate_permission.refresh_from_db()\n    assert duplicate_permission.user_set.exists()\n    assert user in duplicate_permission.user_set.all()\n    assert duplicate_permission.group_set.exists()\n    assert group in duplicate_permission.group_set.all()\n\n\n@pytest.mark.django_db\ndef test_update_proxy_permissions_no_duplicate_exists():\n    \"\"\"\n    When there is no existing permission for the target content type, the\n    old permission should simply be updated in place (content_type changed)\n    without any deletion or merge.\n    \"\"\"\n    content_type_a = ContentType.objects.create(\n        app_label=\"app\", model=\"agency\"\n    )\n    content_type_b = ContentType.objects.create(\n        app_label=\"app\", model=\"agency2\"\n    )\n\n    old_permission = Permission.objects.create(\n        codename=\"change_agency\",\n        name=\"Can change agency\",\n        content_type=content_type_a,\n    )\n\n    user = User.objects.create_user(username=\"no_dup_user\", password=\"secret\")\n    old_permission.user_set.add(user)\n\n    from django.db.models import Q\n\n    permissions_query = Q(codename__in=[\"add_agency\", \"change_agency\", \"delete_agency\", \"view_agency\"])\n    old_content_type = content_type_a\n    new_content_type = content_type_b\n\n    old_permissions = Permission.objects.filter(\n        permissions_query,\n        content_type=old_content_type,\n    )\n    for permission in old_permissions:\n        try:\n            Permission.objects.get(\n                codename=permission.codename,\n                content_type=new_content_type,\n            )\n        except Permission.DoesNotExist:\n            permission.content_type = new_content_type\n            permission.save(update_fields=[\"content_type\"])\n        else:\n            # Duplicate branch – should not be hit\n            raise AssertionError(\"Unexpected duplicate permission found\")\n\n    # Permission should now point to the new content type.\n    old_permission.refresh_from_db()\n    assert old_permission.content_type == new_content_type\n    assert old_permission.user_set.count() == 1\n    assert user in old_permission.user_set.all()\n\n\n@pytest.mark.django_db\ndef test_update_proxy_permissions_multiple_permissions_no_duplicates():\n    \"\"\"\n    Multiple old permissions with different codenames, none of which have\n    duplicates in the target content type. All should be updated in place.\n    \"\"\"\n    content_type_a = ContentType.objects.create(\n        app_label=\"app\", model=\"agency\"\n    )\n    content_type_b = ContentType.objects.create(\n        app_label=\"app\", model=\"agency2\"\n    )\n\n    perm1 = Permission.objects.create(\n        codename=\"add_agency\",\n        name=\"Can add agency\",\n        content_type=content_type_a,\n    )\n    perm2 = Permission.objects.create(\n        codename=\"delete_agency\",\n        name=\"Can delete agency\",\n        content_type=content_type_a,\n    )\n\n    from django.db.models import Q\n\n    permissions_query = Q(codename__in=[\"add_agency\", \"change_agency\", \"delete_agency\", \"view_agency\"])\n    old_content_type = content_type_a\n    new_content_type = content_type_b\n\n    old_permissions = Permission.objects.filter(\n        permissions_query,\n        content_type=old_content_type,\n    )\n    for permission in old_permissions:\n        try:\n            Permission.objects.get(\n                codename=permission.codename,\n                content_type=new_content_type,\n            )\n        except Permission.DoesNotExist:\n            permission.content_type = new_content_type\n            permission.save(update_fields=[\"content_type\"])\n        else:\n            raise AssertionError(\"Unexpected duplicate permission found\")\n\n    perm1.refresh_from_db()\n    perm2.refresh_from_db()\n    assert perm1.content_type == new_content_type\n    assert perm2.content_type == new_content_type\n    assert Permission.objects.filter(content_type=old_content_type).count() == 0\n    assert Permission.objects.filter(content_type=new_content_type).count() == 2\n\n\n@pytest.mark.django_db\ndef test_update_proxy_permissions_empty_permission_set():\n    \"\"\"\n    When there are no permissions matching the old content type and query,\n    the migration should be a no-op (no errors, no changes).\n    \"\"\"\n    content_type_a = ContentType.objects.create(\n        app_label=\"app\", model=\"agency\"\n    )\n    content_type_b = ContentType.objects.create(\n        app_label=\"app\", model=\"agency2\"\n    )\n\n    # No permissions created at all.\n    from django.db.models import Q\n\n    permissions_query = Q(codename__in=[\"add_agency\", \"change_agency\", \"delete_agency\", \"view_agency\"])\n    old_content_type = content_type_a\n    new_content_type = content_type_b\n\n    old_permissions = Permission.objects.filter(\n        permissions_query,\n        content_type=old_content_type,\n    )\n    assert old_permissions.count() == 0\n\n    # Running the loop over an empty queryset should not raise.\n    for permission in old_permissions:\n        try:\n            Permission.objects.get(\n                codename=permission.codename,\n                content_type=new_content_type,\n            )\n        except Permission.DoesNotExist:\n            permission.content_type = new_content_type\n            permission.save(update_fields=[\"content_type\"])\n        else:\n            pass\n\n    assert Permission.objects.count() == 0",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/contrib/auth/migrations/0011_update_proxy_permissions.py b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\nindex 0e66649..0684b98 100644\n--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n+++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n@@ -24,10 +24,24 @@ def update_proxy_model_permissions(apps, schema_editor, reverse=False):\n         proxy_content_type = ContentType.objects.get_for_model(Model, for_concrete_model=False)\n         old_content_type = proxy_content_type if reverse else concrete_content_type\n         new_content_type = concrete_content_type if reverse else proxy_content_type\n-        Permission.objects.filter(\n+        # Update permissions for proxy models, handling possible duplicates.\n+        old_permissions = Permission.objects.filter(\n             permissions_query,\n             content_type=old_content_type,\n-        ).update(content_type=new_content_type)\n+        )\n+        for permission in old_permissions:\n+            try:\n+                duplicate_permission = Permission.objects.get(\n+                    codename=permission.codename,\n+                    content_type=new_content_type,\n+                )\n+            except Permission.DoesNotExist:\n+                permission.content_type = new_content_type\n+                permission.save(update_fields=['content_type'])\n+            else:\n+                duplicate_permission.user_set.add(*permission.user_set.all())\n+                duplicate_permission.group_set.add(*permission.group_set.all())\n+                permission.delete()\n \n \n def revert_proxy_model_permissions(apps, schema_editor):\n",
+  "offline_calls": 0
+}

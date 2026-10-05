@@ -1,0 +1,13 @@
+diff --git a/sklearn/linear_model/ridge.py b/sklearn/linear_model/ridge.py
+index 911c74a..02f23c2 100644
+--- a/sklearn/linear_model/ridge.py
++++ b/sklearn/linear_model/ridge.py
+@@ -1336,7 +1336,7 @@ class RidgeClassifierCV(LinearClassifierMixin, _BaseRidgeCV):
+                  normalize=False, scoring=None, cv=None, class_weight=None):
+         super(RidgeClassifierCV, self).__init__(
+             alphas=alphas, fit_intercept=fit_intercept, normalize=normalize,
+-            scoring=scoring, cv=cv)
++            scoring=scoring, cv=cv, store_cv_values=False)
+         self.class_weight = class_weight
+ 
+     def fit(self, X, y, sample_weight=None):

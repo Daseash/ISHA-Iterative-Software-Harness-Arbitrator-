@@ -1,0 +1,242 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-10949",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "3b5abf76597ce6aff76192869f92647c1b5259e7",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048205.475692
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048207.5899734
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048516.1678634
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048619.1577094
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791048930.2944496
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791049253.9245508
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791049276.1389854
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/utils/validation.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/utils/validation.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:21"
+  },
+  "started_at": 1791048178.9217904,
+  "elapsed_s": 1105.18,
+  "plan": "# Specifically in sklearn/utils/validation.py:\n# Inside check_array, look for where array-likes are converted to np.ndarray.\n# 1. Capture original dtype if hasattr(X, \"dtype\")\n# 2. Perform the standard conversion to ensure it's an ndarray.\n# 3. If warn_on_dtype is True and input_dtype != array.dtype, issue the warning.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/utils/validation.py",
+      "symbol": "sklearn/utils/validation.py::_ensure_sparse_format",
+      "symbols": [
+        "_ensure_sparse_format",
+        "check_array",
+        "check_X_y",
+        "_shape_repr"
+      ],
+      "line_range": [
+        256,
+        346
+      ],
+      "score": 0.7504,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.4619,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: dtype; body matches report terms: scipy, converted, when, validation)"
+    },
+    {
+      "file": "sklearn/utils/tests/test_validation.py",
+      "symbol": "sklearn/utils/tests/test_validation.py::test_np_matrix",
+      "symbols": [
+        "test_np_matrix",
+        "test_memmap",
+        "test_ordering",
+        "test_check_array_force_all_finite_valid"
+      ],
+      "line_range": [
+        108,
+        116
+      ],
+      "score": 0.5116,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.8268,
+        "vector": 0.6743,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: validation, input, code)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::Bunch",
+      "symbols": [
+        "Bunch",
+        "__setstate__",
+        "axis0_safe_slice",
+        "safe_indexing"
+      ],
+      "line_range": [
+        32,
+        77
+      ],
+      "score": 0.6848,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.64,
+        "vector": 0.6649,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: when, with, learn, scikit)"
+    },
+    {
+      "file": "sklearn/exceptions.py",
+      "symbol": "sklearn/exceptions.py::NotFittedError",
+      "symbols": [
+        "NotFittedError",
+        "ChangedBehaviorWarning",
+        "ConvergenceWarning",
+        "DataConversionWarning"
+      ],
+      "line_range": [
+        18,
+        39
+      ],
+      "score": 0.61,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3961,
+        "vector": 0.5085,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: validation, sklearn, with, learn)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        80,
+        93
+      ],
+      "score": 0.5632,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2842,
+        "vector": 0.3925,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: sklearn, with, numpy, learn)"
+    },
+    {
+      "file": "sklearn/externals/joblib/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3784,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4449,
+        "vector": 0.1848,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.7404249999999999,
+  "laya_scores": {
+    "fix_quality": 1.5653,
+    "matches_issue": 0.7551,
+    "safe_to_apply": 0.6413,
+    "composite": 0.7404249999999999,
+    "secrets_or_danger": 0.0931,
+    "logic_drift": 0.2538,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns introduced.\n- PERFORMANCE: PASS - Adds negligible overhead (attribute access and comparison) to the validation path; no loops or blocking calls.\n- ROBUSTNESS: RISK - The check `hasattr(array, 'dtype')` may behave unexpectedly for non-numpy/pandas objects if they expose a non-numpy `dtype` attribute, though `None` fallback handles missing attributes safely. Note: The patch places `input_dtype = None` in the `else` branch only if `warn_on_dtype` is false OR object lacks `dtype`, but the logic `if warn_on_dtype and hasattr...` combined with `else: input_dtype = None` means if `warn_on_dtype` is False, `input_dtype` is still set to `None` (not an issue), but if `warn_on_dtype` is True and the object lacks `dtype`, it is `None`. However, the structure `if warn_on_dtype and hasattr(...): ... else: ...` assigns `None` in the `else` block regardless of *why* the `if` failed. This is slightly messy but functionally equivalent to checking `if warn_on_dtype:` inside the else block for the warning logic, provided `input_dtype` is only used in the subsequent warning check. It is robust enough. A minor logical nuance: if `warn_on_dtype` is `False`, `input_dtype` is set to `None`. If `warn_on_dtype` is `True` but `array` has no `dtype`, it's `None`. In both cases, the subsequent `if warn_on_dtype and input_dtype is not Non"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "# test_check_array_warn_on_dtype.py\nimport pandas as pd\nimport pytest\nfrom sklearn.utils.validation import check_array\nfrom sklearn.exceptions import DataConversionWarning\n\n\ndef test_warn_on_dtype_dataframe_issues_warning():\n    \"\"\"Bug reproduction: DataFrame with object dtype should trigger a warning.\"\"\"\n    df = pd.DataFrame([[1, 2, 3], [2, 3, 4]], dtype=object)\n    # The original implementation does **not** emit the warning, so this test\n    # fails (red). After the fix it should emit DataConversionWarning (green).\n    with pytest.warns(DataConversionWarning, match=\"Data with input dtype object\"):\n        check_array(df, warn_on_dtype=True)\n\n\ndef test_warn_on_dtype_dataframe_no_warning_when_dtype_matches():\n    \"\"\"No warning when the input dtype already matches the target dtype.\"\"\"\n    df = pd.DataFrame([[1.0, 2.0, 3.0], [2.0, 3.0, 4.0]], dtype=float)\n    with pytest.warns(None) as record:\n        check_array(df, warn_on_dtype=True)\n    assert not record.list, \"No warning should be raised for matching dtype\"\n\n\ndef test_warn_on_dtype_flag_off_does_not_warn():\n    \"\"\"warn_on_dtype=False must suppress the warning even if conversion occurs.\"\"\"\n    df = pd.DataFrame([[1, 2, 3], [2, 3, 4]], dtype=object)\n    with pytest.warns(None) as record:\n        check_array(df, warn_on_dtype=False)\n    assert not record.list, \"Warning should be suppressed when warn_on_dtype=False\"\n\n\ndef test_warn_on_dtype_empty_dataframe_no_warning():\n    \"\"\"An empty DataFrame should not raise a warning (nothing to convert).\"\"\"\n    df = pd.DataFrame([], dtype=object)\n    with pytest.warns(None) as record:\n        check_array(df, warn_on_dtype=True)\n    assert not record.list, \"Empty DataFrames should not emit DataConversionWarning\"",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/sklearn/utils/validation.py b/sklearn/utils/validation.py\nindex fe1f723..6652dae 100644\n--- a/sklearn/utils/validation.py\n+++ b/sklearn/utils/validation.py\n@@ -429,6 +429,16 @@ def check_array(array, accept_sparse=False, accept_large_sparse=True,\n         Make sure that the 2D array has some minimum number of features\n         (columns). The default value of 1 rejects empty datasets.\n         This check is only enforced when the input data has effectively 2\n+        if warn_on_dtype and hasattr(array, 'dtype'):\n+            input_dtype = array.dtype\n+        else:\n+            input_dtype = None\n+\n+\n+        if warn_on_dtype and input_dtype is not None and \\\n+           input_dtype != array.dtype:\n+            warnings.warn(\"Data with input dtype %s was converted to %s.\"\n+                          % (input_dtype, array.dtype), DataConversionWarning)\n         dimensions or is originally 1D and ``ensure_2d`` is True. Setting to 0\n         disables this check.\n \n",
+  "offline_calls": 0
+}

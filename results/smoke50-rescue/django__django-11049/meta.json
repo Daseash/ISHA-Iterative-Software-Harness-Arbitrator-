@@ -1,0 +1,252 @@
+{
+  "instance_id": "django__django-11049",
+  "repo": "django/django",
+  "base_commit": "17455e924e243e7a55e8a38f45966d8cbb27c273",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007212.8973725
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007216.849728
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007226.0745661
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007239.3464422
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007295.3446555
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007370.8596737
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791007495.2248077
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/__init__.py; warnings: Hunk failed in django/forms/fields.py: @@ -275,7 +275,7 @@ class DurationField(Field): — expected context not found in file: '    default_validators = [validators.validate_duration]'",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py",
+        "django/forms/fields.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791007136.642312,
+  "elapsed_s": 364.12,
+  "plan": "### Step 1: What is the root cause\nThe root cause is a **documentation/UX error** in the format strings used for the `DurationField`. The current format string in error messages and help text is `\"[DD] [HH:[MM:]]ss[.uuuuuu]\"`. This string is ambiguous and incorrect because it implies a gap in required components (suggesting that hours and minutes can be skipped individually or that the delimiter before seconds might be missing), whereas the actual parser (`django.utils.dateparse.parse_duration`) requires seconds, allows optional minutes, and optional hours only if minutes are present. The correct and unambiguous format representation matching the parser's logic is `\"[DD] [[HH:]MM:]ss[.uuuuuu]\"`.\n\nAdditionally, the `DurationField` model field does not provide a default `help_text` explaining this syntax, leading to user confusion when the field is invalid.\n\n### Step 2: What exact changes to make\n\n**1. File: `django/core/validators.py`**\n- **Function/Class:** `DurationValidator`\n- **Change:** Update the `message` attribute.\n- **From:** `message = _('Enter a valid duration.')` (or `_'Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].'` depending on current state)\n- **To:** `message = _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].')`\n*(Note: Ensure the validator's default message is updated to include the format hint if it previously lacked it, or just correct the format if it already had it. The bug report explicitly states the current message contains the wrong format, so we are correcting the format string.)*\n\n**2. File: `django/db/models/fields/__init__.py`**\n- **Function/Class:** `DurationField` `__init__` method\n- **Change:**\n  1. Check if `help_text` is provided in `kwargs`.\n  2. If not, set it to the corrected format string.\n  3. Specifically, inside `DurationField.__init__`, add or modify the help text assignment to:\n     `data['help_text'] = data.get('help_text') or _('Duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].')`\n     *(Alternatively, if the class has a default `description` or similar, ensure it reflects the correct format. The past fix excerpt shows `help_text = _('Duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].')` being set.)*\n\n**3. File: `django/forms/fields.py`**\n- **Function/Class:** `DurationField` class (likely inheriting from `Field`)\n- **Change:** Check if this file contains a separate `DurationField` definition for forms (distinct from db models). If the error message in the form field is separate, update its `default_error_messages` invalid message to `_('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].')`.\n*(Note: Based on standard Django structure, `django/forms/fields.py` often has a `DurationField` that uses `DurationValidator`. If it relies on the validator's message, no change is needed here unless it overrides `default_error_messages`. The past fix excerpt hints at a change in `django/forms/fields.py`, so it's safer to verify/update the `default_error_messages` dictionary there if it exists.)*\n\n**Summary of String Change:**\nReplace all instances of:\n`[DD] [HH:[MM:]]ss[.uuuuuu]`\nWith:\n`[DD] [[HH:]MM:]ss[.uuuuuu]`\n\nIn the following locations:\n1. `django/core/validators.py` -> `DurationValidator.message`\n2. `django/db/models/fields/__init__.py` -> `DurationField` default help text\n3. `django/forms/fields.py` -> `DurationField` default error message (if defined locally)",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "bound_data",
+        "widget_attrs",
+        "has_changed"
+      ],
+      "line_range": [
+        57,
+        118
+      ],
+      "score": 0.655,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.513,
+        "vector": 0.6396,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: error, default, django, with)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "_check_field_name",
+        "_check_db_index",
+        "_check_null_allowed_for_primary_keys"
+      ],
+      "line_range": [
+        133,
+        179
+      ],
+      "score": 0.7074,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7609,
+        "vector": 0.5596,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: error, default, help_text, provided)"
+    },
+    {
+      "file": "django/utils/duration.py",
+      "symbol": "django/utils/duration.py::_get_duration_components",
+      "symbols": [
+        "_get_duration_components",
+        "duration_string",
+        "duration_iso_string"
+      ],
+      "line_range": [
+        4,
+        17
+      ],
+      "score": 0.5464,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8034,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: seconds, hours, duration, minutes)"
+    },
+    {
+      "file": "django/utils/dateformat.py",
+      "symbol": "django/utils/dateformat.py::__init__",
+      "symbols": [
+        "__init__",
+        "f",
+        "O",
+        "P"
+      ],
+      "line_range": [
+        46,
+        58
+      ],
+      "score": 0.6613,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6346,
+        "vector": 0.4391,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: default, django, support, format)"
+    },
+    {
+      "file": "django/contrib/messages/storage/base.py",
+      "symbol": "django/contrib/messages/storage/base.py::_get",
+      "symbols": [
+        "_get",
+        "_store",
+        "_get_level",
+        "_loaded_messages"
+      ],
+      "line_range": [
+        82,
+        96
+      ],
+      "score": 0.5484,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2431,
+        "vector": 0.3133,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: error, this, message, should)"
+    },
+    {
+      "file": "tests/inspectdb/models.py",
+      "symbol": "tests/inspectdb/models.py::PeopleMoreData",
+      "symbols": [
+        "PeopleMoreData",
+        "ColumnTypes",
+        "People",
+        "Message"
+      ],
+      "line_range": [
+        18,
+        23
+      ],
+      "score": 0.4349,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1576,
+        "vector": 0.3847,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: message, field)"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.7071000000000001,
+  "laya_scores": {
+    "fix_quality": 1.4283,
+    "matches_issue": 0.7561,
+    "safe_to_apply": 0.644,
+    "composite": 0.7071000000000001,
+    "secrets_or_danger": 0.2427,
+    "logic_drift": 0.449,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, unsafe eval/exec, or path traversal introduced.\n- PERFORMANCE: PASS - No N+1 queries, unbounded loops, or blocking calls; changes are static string and no-op refactor.\n- ROBUSTNESS: PASS - No swallowed exceptions, mutable defaults, or race conditions; `deconstruct` change is functionally identical (no-op).\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core.exceptions import ValidationError\nfrom django.core.validators import DurationValidator\nfrom django.forms import DurationField\n\n\ndef test_error_message_format():\n    validator = DurationValidator()\n    with pytest.raises(ValidationError) as exc_info:\n        validator(\"14:00\")\n    message = str(exc_info.value)\n    # The current (buggy) format says seconds are optional-ish via \"ss\" but\n    # the actual parser requires seconds. The fix should present the correct\n    # format where minutes are optional and hours are optional if minutes\n    # are provided.\n    assert \"[DD] [[HH:]MM:]ss[.uuuuuu]\" in message\n    # And the old, incorrect format should NOT be present.\n    assert \"[DD] [HH:[MM:]]ss[.uuuuuu]\" not in message\n\n\ndef test_invalid_duration_raises_documented_error():\n    \"\"\"An invalid duration string should raise ValidationError with the corrected format hint.\"\"\"\n    validator = DurationValidator()\n    # \"xyz\" is clearly invalid\n    with pytest.raises(ValidationError) as exc_info:\n        validator(\"xyz\")\n    message = str(exc_info.value)\n    # The error message should mention the expected duration format\n    assert \"[DD] [[HH:]MM:]ss[.uuuuuu]\" in message\n\n\ndef test_valid_duration_does_not_raise():\n    \"\"\"Valid duration strings in all supported formats should not raise.\"\"\"\n    validator = DurationValidator()\n    valid_durations = [\n        \"0\",\n        \"00\",\n        \"00:00\",\n        \"00:00:00\",\n        \"14:00\",       # 14 minutes\n        \"01:14:00\",    # 1 hour, 14 minutes\n        \"1:00\",        # 1 minute\n        \"01\",          # 1 second\n        \"1:00:00\",     # 1 hour\n        \"00:00:01\",    # 1 second\n        \"1:00:00.000001\",\n        \"123:45:67\",   # valid if days/hours/minutes/seconds within range\n    ]\n    for dur in valid_durations:\n        try:\n            validator(dur)\n        except ValidationError:\n            pytest.fail(f\"Validator raised for valid duration: {dur}\")\n\n\ndef test_edge_case_empty_string():\n    \"\"\"Empty string should raise ValidationError with the correct format hint.\"\"\"\n    validator = DurationValidator()\n    with pytest.raises(ValidationError) as exc_info:\n        validator(\"\")\n    message = str(exc_info.value)\n    assert \"[DD] [[HH:]MM:]ss[.uuuuuu]\" in message\n\n\ndef test_edge_case_whitespace_only():\n    \"\"\"Whitespace-only input should raise ValidationError.\"\"\"\n    validator = DurationValidator()\n    with pytest.raises(ValidationError):\n        validator(\"   \")\n\n\ndef test_numeric_boundary_zero():\n    \"\"\"Zero duration is valid.\"\"\"\n    validator = DurationValidator()\n    # Should not raise\n    validator(\"0\")\n    validator(\"00\")\n    validator(\"00:00\")\n    validator(\"00:00:00\")\n\n\ndef test_large_but_valid_duration():\n    \"\"\"A large but syntactically valid duration should not raise.\"\"\"\n    validator = DurationValidator()\n    # 99999 days, 99 hours, 99 minutes, 99 seconds — syntactically valid\n    # (actual range limits are enforced by the parser/datatype, not format)\n    validator(\"99999:99:99:99\")\n\n\ndef test_negative_duration_rejected():\n    \"\"\"Negative durations should be rejected.\"\"\"\n    validator = DurationValidator()\n    with pytest.raises(ValidationError):\n        validator(\"-1:00:00\")\n    with pytest.raises(ValidationError):\n        validator(\"-1\")",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -469,5 +469,5 @@ class DurationField(Field):\n class DurationField(Field):\n     default_error_messages = {\n-        'invalid': _('Enter a valid duration.'),\n+        'invalid': _('Enter a valid duration (now it is in the format [DD] [[HH:]MM:]ss[.uuuuuu]).'),\n         'overflow': _('The number of days must be between {min_days} and {max_days}.')\n     }\n",
+  "offline_calls": 0,
+  "rescue": true
+}

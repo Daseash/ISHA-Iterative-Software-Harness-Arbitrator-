@@ -1,0 +1,22 @@
+{"event": "start", "instance_id": "django__django-10914", "ts": 1790925795.2378895}
+{"event": "attempt", "n": 1, "ts": 1790925795.9769034}
+{"event": "model", "ts": 1790925846.6863737, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790925850.8325343, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790925858.8994575, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790925900.971467, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790925927.265192, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790925966.4030054, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926005.3532493, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926042.958965, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926077.3441274, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/conf/global_settings.py: @@ -137,7 +137,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000 — expected context not found in file: '#: Sets the default to, e.g., 0o644.' (git: error: repository lacks the necessary blob to perform 3-way merge.\nFalling back to direct application...\nerror: p", "ts": 1790926120.0362978}
+{"event": "attempt", "n": 2, "ts": 1790926120.445279}
+{"event": "model", "ts": 1790926157.0429578, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790926161.8007636, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1790926171.2987642, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926206.409709, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926244.0136178, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1790926376.968335, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790926509.9775057, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1790926538.433397, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1790926574.205198}

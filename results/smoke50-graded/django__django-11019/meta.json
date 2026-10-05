@@ -1,0 +1,243 @@
+{
+  "instance_id": "django__django-11019",
+  "repo": "django/django",
+  "base_commit": "93e892bb645b16ebaf287beb5fe7f3ffe8d10408",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790935933.7360396
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790935937.84534
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790936073.8158092
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790936177.7566755
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790936339.6408348
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1790936373.1865165
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/widgets.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/widgets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: patch failed: django/forms/widgets.py:138\nerror: django/forms/widgets.py: patch does not apply"
+  },
+  "started_at": 1790934953.5430636,
+  "elapsed_s": 479.12,
+  "plan": "Step 1: What is the root cause\nThe root cause is in `Media.merge()` within `django/forms/widgets.py`. The algorithm uses `last_insert_index` to track where new items should be placed. When merging a list, it iterates through the second list in reverse. If an item already exists in the `combined_list` at a position `index` greater than `last_insert_index`, it incorrectly triggers a `MediaOrderConflictWarning`. This logic fails to account for the relative order being inherently satisfied; it treats any later appearance of an already-inserted item as a conflict, even if that order is consistent with the dependency chain already established.\n\nStep 2: What exact changes to make\nModify `django/forms/widgets.py` in the `merge` static method. Specifically, update the `if` condition when an item is found at an existing index to correctly identify actual order conflicts. When an item is found in `combined_list`, it should only be considered a conflict if its current `index` is less than `last_insert_index`, meaning it appeared earlier than a file that depends on it (or vice-versa, depending on the traversal logic).\n\nFile: `django/forms/widgets.py`\nInside the `Media.merge` method:\n- Change the `else` block starting at line 140.\n- Update the condition `if index > last_insert_index:` to `if index < last_insert_index:`.\n- Ensure that `last_insert_index` is updated correctly to `index` when a conflict is NOT occurring, ensuring we maintain the pointer to the most recently inserted item's position to guide subsequent placements.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/forms/widgets.py",
+      "symbol": "django/forms/widgets.py::Input",
+      "symbols": [
+        "Input",
+        "Textarea",
+        "MultiWidget",
+        "ChoiceWidget"
+      ],
+      "line_range": [
+        283,
+        301
+      ],
+      "score": 0.959,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4553,
+        "vector": 0.3767,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: Widget; body matches report terms: text, django, forms, class)"
+    },
+    {
+      "file": "django/forms/forms.py",
+      "symbol": "django/forms/forms.py::Form",
+      "symbols": [
+        "Form",
+        "__init__",
+        "order_fields",
+        "as_table"
+      ],
+      "line_range": [
+        494,
+        500
+      ],
+      "score": 0.6261,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4843,
+        "vector": 0.459,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: that, order, class; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/admin/widgets.py",
+      "symbol": "django/contrib/admin/widgets.py::__init__",
+      "symbols": [
+        "__init__",
+        "RelatedFieldWidgetWrapper",
+        "FilteredSelectMultiple",
+        "get_context"
+      ],
+      "line_range": [
+        235,
+        257
+      ],
+      "score": 0.6654,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2298,
+        "vector": 0.4832,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: widget; body matches report terms: objects, widget, form)"
+    },
+    {
+      "file": "django/contrib/gis/forms/widgets.py",
+      "symbol": "django/contrib/gis/forms/widgets.py::BaseGeometryWidget",
+      "symbols": [
+        "BaseGeometryWidget",
+        "Media",
+        "get_context",
+        "OpenLayersWidget"
+      ],
+      "line_range": [
+        13,
+        75
+      ],
+      "score": 0.6116,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.096,
+        "vector": 0.3131,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: Widget; body matches report terms: text, that, here, django)"
+    },
+    {
+      "file": "django/contrib/gis/admin/widgets.py",
+      "symbol": "django/contrib/gis/admin/widgets.py::get_context",
+      "symbols": [
+        "get_context",
+        "OpenLayersWidget",
+        "map_options"
+      ],
+      "line_range": [
+        18,
+        80
+      ],
+      "score": 0.5748,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.0406,
+        "vector": 0.1218,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: text, that, here, django)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::CommaSeparatedIntegerField",
+      "symbols": [
+        "CommaSeparatedIntegerField",
+        "EmailField",
+        "SlugField",
+        "URLField"
+      ],
+      "line_range": [
+        1098,
+        1113
+      ],
+      "score": 0.5633,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2638,
+        "vector": 0.436,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: CharField; body matches report terms: charfield, description, class)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.629125,
+  "laya_scores": {
+    "fix_quality": 1.3343,
+    "matches_issue": 0.6729,
+    "safe_to_apply": 0.5093,
+    "composite": 0.629125,
+    "secrets_or_danger": 0.1189,
+    "logic_drift": 0.1943,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No security-sensitive changes (injection, secrets, etc.) are present in this logic fix.\n- PERFORMANCE: PASS - The change modifies a comparison condition within an existing loop; it does not introduce N+1 queries, unbounded memory growth, or new blocking calls.\n- ROBUSTNESS: FAIL - The patch reverses the inequality (`>` to `<`), which inverts the conflict detection logic, likely causing valid order constraints to be flagged as conflicts or ignoring actual conflicts, rather than fixing the specific edge case described.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import warnings\n\nimport pytest\nfrom django import forms\n\n# --------------------------------------------------------------------------- #\n# Django settings – minimal configuration required for the form/media logic #\n# --------------------------------------------------------------------------- #\n@pytest.fixture(scope=\"session\", autouse=True)\ndef django_setup():\n    \"\"\"Configure Django for the test session.\"\"\"\n    from django.conf import settings\n\n    if not settings.configured:\n        settings.configure(\n            INSTALLED_APPS=[\n                \"django.contrib.contenttypes\",\n                \"django.contrib.auth\",\n            ],\n            DATABASES={\"default\": {\"ENGINE\": \"django.db.backends.sqlite3\", \"NAME\": \":memory:\"}},\n            SECRET_KEY=\"test\",\n        )\n        import django\n\n        django.setup()\n\n\n# --------------------------------------------------------------------------- #\n# Widgets used in the original bug report                                    #\n# --------------------------------------------------------------------------- #\nclass ColorPicker(forms.Widget):\n    class Media:\n        js = [\"color-picker.js\"]\n\n\nclass SimpleTextWidget(forms.Widget):\n    class Media:\n        js = [\"text-editor.js\"]\n\n\nclass FancyTextWidget(forms.Widget):\n    class Media:\n        js = [\"text-editor.js\", \"text-editor-extras.js\", \"color-picker.js\"]\n\n\n# --------------------------------------------------------------------------- #\n# Helper to capture MediaOrderConflictWarning warnings                     #\n# --------------------------------------------------------------------------- #\ndef get_media_and_warnings(form_class):\n    \"\"\"Instantiate *form_class* and return its media together with any warnings.\"\"\"\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter(\"always\", category=UserWarning)\n        form = form_class()\n        media = form.media\n    return media, w\n\n\n# --------------------------------------------------------------------------- #\n# 1️⃣  Core reproduction test – the warning should be emitted before fix   #\n# --------------------------------------------------------------------------- #\ndef test_media_order_conflict_warning_is_raised(django_setup):\n    class MyForm(forms.Form):\n        background_color = forms.CharField(widget=ColorPicker())\n        intro = forms.CharField(widget=SimpleTextWidget())\n        body = forms.CharField(widget=FancyTextWidget())\n\n    media, caught_warnings = get_media_and_warnings(MyForm)\n\n    # The warning type used by Django for this problem\n    from django.forms.widgets import MediaOrderConflictWarning\n\n    # At least one warning of the expected type must be present\n    assert any(isinstance(w.message, MediaOrderConflictWarning) for w in caught_warnings)\n\n    # The merged JS order reflects the pre‑fix (incorrect) ordering\n    # (order is not important for the bug detection, but we assert it exists)\n    assert isinstance(media.js, list)\n    assert \"text-editor-extras.js\" in media.js\n    assert \"text-editor.js\" in media.js\n    assert \"color-picker.js\" in media.js\n\n\n# --------------------------------------------------------------------------- #\n# 2️⃣  Edge case – only two widgets sharing a dependency should NOT warn     #\n# --------------------------------------------------------------------------- #\ndef test_no_warning_with_two_dependent_widgets(django_setup):\n    class TwoWidgetForm(forms.Form):\n        intro = forms.CharField(widget=SimpleTextWidget())\n        body = forms.CharField(widget=FancyTextWidget())\n\n    media, caught_warnings = get_media_and_warnings(TwoWidgetForm)\n\n    from django.forms.widgets import MediaOrderConflictWarning\n\n    # No conflict warning should be raised\n    assert not any(isinstance(w.message, MediaOrderConflictWarning) for w in caught_warnings)\n\n    # JS order must contain the dependency first, then the extra\n    assert media.js == [\"text-editor.js\", \"text-editor-extras.js\", \"color-picker.js\"]\n\n\n# --------------------------------------------------------------------------- #\n# 3️⃣  Edge case – a form with no widget media should never warn            #\n# --------------------------------------------------------------------------- #\ndef test_form_without_media_never_warns(django_setup):\n    class EmptyMediaForm(forms.Form):\n        name = forms.CharField()  # default widget (no Media class)\n\n    media, caught_warnings = get_media_and_warnings(EmptyMediaForm)\n\n    from django.forms.widgets import MediaOrderConflictWarning\n\n    assert not any(isinstance(w.message, MediaOrderConflictWarning) for w in caught_warnings)\n    # Empty media should have empty collections\n    assert media.js == []\n    assert media.css == {}\n\n\n# --------------------------------------------------------------------------- #\n# 4️⃣  Edge case – duplicate identical files across widgets (no conflict)   #\n# --------------------------------------------------------------------------- #\nclass DuplicateJsWidget(forms.Widget):\n    class Media:\n        js = [\"shared.js\"]\n\n\ndef test_duplicate_js_files_do_not_trigger_warning(django_setup):\n    class DuplicateForm(forms.Form):\n        field1 = forms.CharField(widget=DuplicateJsWidget())\n        field2 = forms.CharField(widget=DuplicateJsWidget())\n\n    media, caught_warnings = get_media_and_warnings(DuplicateForm)\n\n    from django.forms.widgets import MediaOrderConflictWarning\n\n    assert not any(isinstance(w.message, MediaOrderConflictWarning) for w in caught_warnings)\n    # The duplicated file should appear only once in the final list\n    assert media.js == [\"shared.js\"]",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/forms/widgets.py b/django/forms/widgets.py\nindex 02aa32b..8d4eaf2 100644\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -138,7 +138,7 @@ class Media:\n                 # Add path to combined_list since it doesn't exist.\n                 combined_list.insert(last_insert_index, path)\n             else:\n-                if index > last_insert_index:\n+                if index < last_insert_index:\n                     warnings.warn(\n                         'Detected duplicate Media files in an opposite order:\\n'\n                         '%s\\n%s' % (combined_list[last_insert_index], combined_list[index]),\n",
+  "offline_calls": 0
+}

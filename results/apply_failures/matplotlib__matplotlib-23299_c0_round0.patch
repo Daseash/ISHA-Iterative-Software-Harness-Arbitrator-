@@ -16,10 +16,21 @@
 +def get_backend():
 +    """
 +    Return the name of the current backend.
++
++    The backend module is imported lazily and only once. Importing it on every
++    call can clear the global figure manager when a figure was created inside
++    an ``rc_context``. Guard the import with a ``sys.modules`` check.
 +    """
 +    from matplotlib import rcParams, rcsetup
++    import sys
++    import importlib
++
 +    backend = rcParams["backend"]
 +    if backend is None:
 +        backend = rcsetup.defaultBackend
-+    # Do not import the backend module here to avoid unintended side effects.
++
++    module_name = f"matplotlib.backends.backend_{backend}"
++    if module_name not in sys.modules:
++        importlib.import_module(module_name)
++
 +    return backend

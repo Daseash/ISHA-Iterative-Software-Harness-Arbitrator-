@@ -1,0 +1,28 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@
+-    def _check_choices(self):
+-        # existing implementation...
+-        return []
++    def _check_choices(self):
++        # existing implementation...
++        return []
++
++    def _check_choices_length(self):
++        """
++        Ensure that max_length, if set, is sufficient for all choice values.
++        """
++        if self.choices and self.max_length is not None:
++            for value, _ in self.choices:
++                if value is not None:
++                    if len(str(value)) > self.max_length:
++                        return [checks.Error(
++                            "The field %s has a choice value '%s' which is longer than the max_length (%s)." % (self.name, value, self.max_length),
++                            obj=self,
++                            id='fields.E120',
++                        )]
++        return []
+@@
+-        errors.extend(self._check_choices())
++        errors.extend(self._check_choices())
++        errors.extend(self._check_choices_length())

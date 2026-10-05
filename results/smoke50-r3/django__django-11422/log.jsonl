@@ -1,0 +1,22 @@
+{"event": "start", "instance_id": "django__django-11422", "ts": 1791183890.1944814}
+{"event": "attempt", "n": 1, "ts": 1791183895.9974518}
+{"event": "attempt", "n": 1, "ts": 1791187435.3329225}
+{"event": "model", "ts": 1791187469.564129, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791187474.6261609, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791187484.1780038, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791187512.952243, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791187551.4271734, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791187756.697394, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791187894.607473, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791187934.4252229, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791188030.1286552, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/utils/autoreload.py: @@ -93,6 +93,12 @@ def iter_modules_and_files(): — expected context not found in file: '        for module in tuple(sys.modules):' (git: error: corrupt patch at <stdin>:10\nerror: corrupt patch at <stdin>:10; sr: No SEARCH/REPLACE blocks found)", "ts": 1791188055.1094954}
+{"event": "attempt", "n": 2, "ts": 1791188055.358166}
+{"event": "model", "ts": 1791188080.5473955, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791188083.491268, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791188088.3829942, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791188088.4012175, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791188108.7561207, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791188193.1238625, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791188248.4335473, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791188392.2006278}

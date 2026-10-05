@@ -1,0 +1,245 @@
+{
+  "instance_id": "django__django-11583",
+  "repo": "django/django",
+  "base_commit": "60dc957a825232fdda9138e2f8878b2ca407a7c9",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010227.2788787
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010231.4495754
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010343.0279694
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010447.0151916
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010579.5310574
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791010735.8653536
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/autoreload.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/autoreload.py"
+      ],
+      "added_lines": 21,
+      "removed_lines": 11,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791010073.258477,
+  "elapsed_s": 668.27,
+  "plan": "@@\n-    for filename in itertools.chain(sys_file_paths, extra_files):\n-        if not filename:\n-            continue\n-        path = Path(filename)\n-        try:\n-            resolved_path = path.resolve(strict=True).absolute()\n-        except FileNotFoundError:\n-            # The module could have been removed, don't fail loudly if this\n-            # is the case.\n-            continue\n-        results.add(resolved_path)\n+    for filename in itertools.chain(sys_file_paths, extra_files):\n+        # Skip empty entries.\n+        if not filename:\n+            continue\n+        # Guard against paths that contain an embedded null byte.  pathlib\n+        # cannot handle such strings and raises ValueError when we try to\n+        # resolve them.  These paths are not useful for watching anyway, so\n+        # we simply ignore them.\n+        if isinstance(filename, str) and '\\0' in filename:\n+            continue\n+        path = Path(filename)\n+        try:\n+            # Resolve the path strictly; if the file has disappeared or the\n+            # resolve fails for any OS‑level reason we just ignore it.\n+            resolved_path = path.resolve(strict=True).absolute()\n+        except (FileNotFoundError, OSError, ValueError):\n+            # The module could have been removed, could be a broken symlink,\n+            # or could contain an invalid byte sequence – don’t let this\n+            # abort the reloader.\n+            continue\n+        results.add(resolved_path)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "django/utils/autoreload.py::watched_roots",
+      "symbols": [
+        "watched_roots",
+        "iter_all_python_module_files",
+        "iter_modules_and_files",
+        "watched_files"
+      ],
+      "line_range": [
+        463,
+        468
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.91,
+        "vector": 0.4502,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: watched_files; body matches report terms: path, file, watched_files, frozenset)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "__init__",
+        "fetch_command",
+        "execute"
+      ],
+      "line_range": [
+        390,
+        393
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5448,
+        "vector": 0.9969,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: argv; body matches report terms: execute, manage, management, line; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/urls/base.py",
+      "symbol": "django/urls/base.py::reverse",
+      "symbols": [
+        "reverse",
+        "is_valid_path",
+        "translate_url",
+        "resolve"
+      ],
+      "line_range": [
+        28,
+        89
+      ],
+      "score": 0.852,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.0848,
+        "vector": 0.2566,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: share, resolve, that, path"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "execute",
+        "handle",
+        "handle"
+      ],
+      "line_range": [
+        311,
+        346
+      ],
+      "score": 0.7977,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7983,
+        "vector": 0.4008,
+        "defs": 0.0
+      },
+      "reason": "named in the issue; signature parameter matches report: argv; body matches report terms: check, traceback, django, path; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::pre_save",
+      "symbols": [
+        "pre_save",
+        "pre_save",
+        "pre_save",
+        "pre_save"
+      ],
+      "line_range": [
+        1245,
+        1252
+      ],
+      "score": 0.7449,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5774,
+        "vector": 0.4214,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: add; body matches report terms: auto, super"
+    },
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::subclass_exception",
+      "symbols": [
+        "subclass_exception",
+        "_prepare",
+        "ModelState",
+        "__init__"
+      ],
+      "line_range": [
+        48,
+        61
+      ],
+      "score": 0.727,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3752,
+        "vector": 0.6936,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: that, used, base"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6482749999999999,
+  "laya_scores": {
+    "fix_quality": 1.3008,
+    "matches_issue": 0.7035,
+    "safe_to_apply": 0.5888,
+    "composite": 0.6482749999999999,
+    "secrets_or_danger": 0.1541,
+    "logic_drift": 0.3591,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or path traversal vulnerabilities introduced; input is effectively sanitized by skipping invalid entries.\n- PERFORMANCE: PASS - Adds a simple string check and exception handling; no N+1, unbounded growth, or blocking calls.\n- ROBUSTNESS: PASS - Increases robustness by catching `ValueError` (null bytes) and `OSError` (broken symlinks/I/O errors) instead of letting the reloader crash intermittently.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\nimport sys\nimport pytest\nfrom pathlib import Path\n\n# The functions we need live in django.utils.autoreload\nfrom django.utils import autoreload\n\n\ndef test_iter_modules_and_files_ignores_embedded_null_byte():\n    \"\"\"\n    The original implementation tried to resolve a Path that contained an\n    embedded null byte, which raises ``ValueError: embedded null byte``.\n    After the fix the filename is simply skipped.\n    \"\"\"\n    bad_path = \"some\\0invalid.py\"\n    # No modules, only the extra file that contains a null byte.\n    result = autoreload.iter_modules_and_files([], frozenset([bad_path]))\n    # The iterator should finish without raising and yield nothing.\n    assert set(result) == set()\n\n\ndef test_iter_modules_and_files_skips_empty_and_none_filenames():\n    \"\"\"\n    Empty strings and ``None`` are falsy and should be ignored.\n    \"\"\"\n    result = autoreload.iter_modules_and_files([], frozenset([\"\", None]))\n    assert set(result) == set()\n\n\ndef test_iter_modules_and_files_resolves_valid_file(tmp_path):\n    \"\"\"\n    A normal existing file should be resolved and returned as an absolute Path.\n    \"\"\"\n    # Create a temporary Python file.\n    file_path = tmp_path / \"module.py\"\n    file_path.write_text(\"# dummy module\")\n\n    # Provide the file path as an extra entry.\n    result = autoreload.iter_modules_and_files([], frozenset([str(file_path)]))\n    resolved = Path(str(file_path)).resolve(strict=True).absolute()\n    assert set(result) == {resolved}\n\n\n@pytest.mark.skipif(\n    not hasattr(os, \"symlink\"),\n    reason=\"OS does not support symlinks (e.g., Windows without admin rights)\",\n)\ndef test_iter_modules_and_files_ignores_broken_symlink(tmp_path):\n    \"\"\"\n    ``Path.resolve(strict=True)`` raises ``FileNotFoundError`` for a broken\n    symlink. The fix catches this and simply skips the entry.\n    \"\"\"\n    target = tmp_path / \"nonexistent.py\"\n    link = tmp_path / \"broken_link.py\"\n    os.symlink(str(target), str(link))\n\n    result = autoreload.iter_modules_and_files([], frozenset([str(link)]))\n    # The broken symlink should be ignored, not cause an exception.\n    assert set(result) == set()\n\n\ndef test_iter_modules_and_files_deduplicates_paths(tmp_path):\n    \"\"\"\n    The function returns a set, so duplicate entries should collapse into a\n    single resolved path.\n    \"\"\"\n    file_path = tmp_path / \"dup.py\"\n    file_path.write_text(\"# duplicate test\")\n    dup_str = str(file_path)\n\n    result = autoreload.iter_modules_and_files(\n        [], frozenset([dup_str, dup_str])\n    )\n    resolved = Path(dup_str).resolve(strict=True).absolute()\n    assert set(result) == {resolved}",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 25c3b44..ad3b4ce 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -134,14 +134,24 @@ def iter_modules_and_files(modules, extra_files):\n \n     results = set()\n     for filename in itertools.chain(sys_file_paths, extra_files):\n+        # Skip empty entries.\n         if not filename:\n             continue\n+        # Guard against paths that contain an embedded null byte.  pathlib\n+        # cannot handle such strings and raises ValueError when we try to\n+        # resolve them. These paths are not useful for watching anyway, so\n+        # we simply ignore them.\n+        if isinstance(filename, str) and '\\0' in filename:\n+            continue\n         path = Path(filename)\n         try:\n+            # Resolve the path strictly; if the file has disappeared or the\n+            # resolve fails for any OS‑level reason we just ignore it.\n             resolved_path = path.resolve(strict=True).absolute()\n-        except FileNotFoundError:\n-            # The module could have been removed, don't fail loudly if this\n-            # is the case.\n+        except (FileNotFoundError, OSError, ValueError):\n+            # The module could have been removed, could be a broken symlink,\n+            # or could contain an invalid byte sequence – don’t let this\n+            # abort the reloader.\n             continue\n         results.add(resolved_path)\n     return frozenset(results)\n",
+  "offline_calls": 0,
+  "rescue": true
+}

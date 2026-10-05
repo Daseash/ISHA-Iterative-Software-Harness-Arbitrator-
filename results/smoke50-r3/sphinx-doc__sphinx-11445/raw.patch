@@ -1,0 +1,19 @@
+--- a/sphinx/environment/adapters/toctree.py
++++ b/sphinx/environment/adapters/toctree.py
+@@ -107,6 +107,13 @@
+     def get_toc_for(self, docname: str, env: BuildEnvironment) -> nodes.bullet_list:
+         doctree = env.get_doctree(docname)
+-        tocs = doctree.traverse(nodes.bullet_list)
++        # Find the first section, or the first domain directive title,
++        # that acts as the title of the document.
++        for node in doctree.findall(lambda n: isinstance(n, (nodes.section, nodes.desc))):
++            if isinstance(node, nodes.section):
++                break
++            elif isinstance(node, nodes.desc) and node.get('desctype') == 'directive':
++                break
++        else:
++            return nodes.bullet_list()
++        tocs = doctree.findall(nodes.bullet_list)
+         if not tocs:
+             return nodes.bullet_list()
+         return tocs[0].deepcopy()

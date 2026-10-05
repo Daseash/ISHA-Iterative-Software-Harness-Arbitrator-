@@ -1,0 +1,22 @@
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -1170,10 +1170,16 @@
+     """
+     Return the name of the current backend.
+     """
+-    from matplotlib import rcParams, rcsetup
++    from matplotlib import rcParams, rcsetup, sys
++    import importlib
++
+     backend = rcParams["backend"]
+     if backend is None:
+         backend = rcsetup.defaultBackend
++
+     # Import the backend module to ensure it is loaded.
+-    import importlib
+-    importlib.import_module(f"matplotlib.backends.backend_{backend}")
++    module_name = f"matplotlib.backends.backend_{backend}"
++    if module_name not in sys.modules:
++        importlib.import_module(module_name)
++
+     return backend

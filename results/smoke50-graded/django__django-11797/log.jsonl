@@ -1,0 +1,22 @@
+{"event": "start", "instance_id": "django__django-11797", "ts": 1791016241.2299926}
+{"event": "attempt", "n": 1, "ts": 1791016241.6382165}
+{"event": "model", "ts": 1791016308.2800045, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791016314.6891217, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791016587.328157, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791016589.195834, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791016713.5004625, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791017008.9601226, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791017289.257833, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791017610.14445, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791017662.0745733, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/db/models/sql/query.py: @@ -1025,7 +1025,7 @@ class Query: — expected context not found in file: '        elif self.group_by:' (git: error: corrupt patch at <stdin>:11\nerror: corrupt patch at <stdin>:11; sr: No SEARCH/REPLACE blocks found)", "ts": 1791017719.7110598}
+{"event": "attempt", "n": 2, "ts": 1791017720.1171727}
+{"event": "model", "ts": 1791017771.5677283, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791017778.6646717, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791018030.944666, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791018033.637486, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791018258.0922477, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791018574.7105117, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791018883.7733967, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791018939.096673, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791018999.853143}

@@ -1,0 +1,21 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1286,7 +1286,7 @@ class DurationField(Field):
+         self._validators.append(validators.DurationValidator())
+ 
+     def deconstruct(self):
+-        name, path, args, kwargs = super().deconstruct()
++        name, path, args, kwargs = super().deconstruct()
+         return name, path, args, kwargs
+ 
+     def db_type(self, connection):
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -275,7 +275,7 @@ class DurationField(Field):
+     default_validators = [validators.validate_duration]
+     default_error_messages = {
+         'invalid': _(
+-            "Enter a valid duration (now it is in the format [DD] [HH:[MM:]]ss[.uuuuuu])."
++            "Enter a valid duration (now it is in the format [DD] [[HH:]MM:]ss[.uuuuuu])."
+         )
+     }

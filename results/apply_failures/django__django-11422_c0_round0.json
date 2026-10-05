@@ -2,7 +2,7 @@
   "instance_id": "django__django-11422",
   "candidate": 0,
   "round": 0,
-  "error": "No hunks applied (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
-  "cause": "context_mismatch",
-  "timestamp": 1791009973.1383255
+  "error": "Hunk failed in django/utils/autoreload.py: @@ -93,6 +93,12 @@ def iter_modules_and_files(): \u2014 expected context not found in file: '        for module in tuple(sys.modules):' (git: error: corrupt patch at <stdin>:10\nerror: corrupt patch at <stdin>:10; sr: No SEARCH/REPLACE blocks found)",
+  "cause": "malformed_hunk",
+  "timestamp": 1791188054.247847
 }
