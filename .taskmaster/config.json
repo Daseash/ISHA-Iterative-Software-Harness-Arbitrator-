@@ -1,0 +1,16 @@
+{
+  "version": "0.43.1",
+  "projectRoot": ".",
+  "tasksPath": ".taskmaster/tasks.json",
+  "ai": {
+    "mainModel": "claude-3-7-sonnet",
+    "researchModel": "gemini-2.0-flash",
+    "fallbackModel": "gpt-4o-mini"
+  },
+  "workflow": {
+    "autoExpand": true,
+    "maxSubtasks": 5,
+    "enforceDependencies": true,
+    "ponytailMode": "full"
+  }
+}

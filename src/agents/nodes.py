@@ -473,9 +473,12 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
 ONLY the diff, no explanation. Use standard unified diff format
 (--- a/path  +++ b/path  @@ hunk headers).
 
-MINIMAL DIFF RULES (non-negotiable):
+MINIMAL DIFF RULES (non-negotiable — PONYTAIL LAZY-SENIOR MODE):
 - Change only what the fix requires. No refactors, no renames, no
   reformatting, no comment/docstring edits, no unrelated cleanups.
+- Does standard library or existing helper in this codebase already do this? Reuse it.
+- Can it be one line? Make it one line. Minimal diff wins.
+- Bug fix = root cause, not symptom. Fix where all callers route through.
 - Do not touch test files unless the fix itself requires it.
 - Keep the diff inside the localized files unless the bug is provably
   cross-file.

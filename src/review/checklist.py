@@ -17,6 +17,7 @@ Answer each item with PASS, RISK, or FAIL plus a one-line reason:
 - SECURITY: injection, secrets/credentials, path traversal, unsafe eval/exec, shell=True
 - PERFORMANCE: N+1 queries, unbounded loops / memory growth, blocking calls in hot paths
 - ROBUSTNESS: swallowed exceptions, mutable default args, off-by-one, race conditions
+- PONYTAIL / YAGNI: unrequested abstractions, unnecessary dependencies, bloated scaffolding
 
 End with exactly one line: VERDICT: PASS or VERDICT: BLOCK
 Use BLOCK only when this diff clearly introduces a security hole or a

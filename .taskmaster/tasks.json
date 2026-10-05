@@ -1,0 +1,290 @@
+{
+  "$schema": "https://raw.githubusercontent.com/eyaltoledano/claude-task-master/main/schema/tasks.schema.json",
+  "project": {
+    "name": "ISHA",
+    "description": "Iterative Software Harness Arbitrator \u2014 Autonomous SWE Agent with Pareto-Optimal Cost and Verified Safety",
+    "version": "1.0.0",
+    "updatedAt": "2026-10-05T20:58:00Z"
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "SWE-Bench Smoke-50 Harness & Evaluator",
+      "description": "Implement official SWE-bench docker sandboxes, batch execution harness, and automated patch grader.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "bench",
+        "harness",
+        "docker"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "1.1",
+          "title": "Docker sandbox lifecycle management",
+          "status": "done"
+        },
+        {
+          "id": "1.2",
+          "title": "Batch runner for smoke-50 benchmark slice",
+          "status": "done"
+        },
+        {
+          "id": "1.3",
+          "title": "Grading report generator and JSON log aggregator",
+          "status": "done"
+        }
+      ],
+      "details": "Successfully graded 34/34 instances under official SWE-bench image testbed."
+    },
+    {
+      "id": 2,
+      "title": "Laya Calibrated Gating & Safety Checklist",
+      "description": "Probability calibration gate and security/robustness critic to eliminate false approvals.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "laya",
+        "calibration",
+        "safety"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "2.1",
+          "title": "Platt / isotonic regression calibration model",
+          "status": "done"
+        },
+        {
+          "id": "2.2",
+          "title": "Brier score and ECE calculation utilities",
+          "status": "done"
+        },
+        {
+          "id": "2.3",
+          "title": "Security & performance LLM review checklist",
+          "status": "done"
+        }
+      ],
+      "details": "Achieved ECE = 0.0010 and 100.0% precision at tau=0.50 threshold."
+    },
+    {
+      "id": 3,
+      "title": "AST Patch Hygiene & Symbol Targeter",
+      "description": "Static code analysis to localize bug blast radius and generate pristine syntax-valid unified diffs.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "ast",
+        "hygiene",
+        "tools"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "3.1",
+          "title": "Symbol target extraction via Python ast",
+          "status": "done"
+        },
+        {
+          "id": "3.2",
+          "title": "Caller tracing and blast radius calculation",
+          "status": "done"
+        },
+        {
+          "id": "3.3",
+          "title": "Unified diff patch cleaner and validator",
+          "status": "done"
+        }
+      ],
+      "details": "Maintained 0.0% patch abort rate and eliminated syntax error regressions."
+    },
+    {
+      "id": 4,
+      "title": "Production Web Interface & Interactive Dashboard",
+      "description": "Modern frontend with Skiper components, light/dark themes, sound effects, and Vercel hosting.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "frontend",
+        "website",
+        "design"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "4.1",
+          "title": "Interactive hero with sound design and preloader",
+          "status": "done"
+        },
+        {
+          "id": "4.2",
+          "title": "Floating navigation bar with section anchors",
+          "status": "done"
+        },
+        {
+          "id": "4.3",
+          "title": "Production deployment at isha-ai.vercel.app and isha-agent.vercel.app",
+          "status": "done"
+        }
+      ],
+      "details": "Live, responsive web portal demonstrating ISHA capabilities."
+    },
+    {
+      "id": 5,
+      "title": "Mobile-Responsive Accordion Optimization for Stats Gallery",
+      "description": "Adapt Skiper35 benchmark gallery for phones and compact screens.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "mobile",
+        "skiper35",
+        "responsive"
+      ],
+      "dependencies": [
+        4
+      ],
+      "subtasks": [
+        {
+          "id": "5.1",
+          "title": "Vertical accordion animation on screens < 768px",
+          "status": "done"
+        },
+        {
+          "id": "5.2",
+          "title": "Horizontal row alignment for collapsed stats",
+          "status": "done"
+        },
+        {
+          "id": "5.3",
+          "title": "Touch-friendly tapping and vertical page scroll",
+          "status": "done"
+        }
+      ],
+      "details": "Accurately matches skiper35 mobile specification with butter-smooth spring physics."
+    },
+    {
+      "id": 6,
+      "title": "Ponytail Lazy Senior Developer Engine Integration",
+      "description": "Implement Dietrich Gebert's Ponytail ladder to enforce the shortest working diff and eliminate code bloat.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "ponytail",
+        "minimalism",
+        "yagni"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "6.1",
+          "title": "Install .agents/skills/ponytail/SKILL.md",
+          "status": "done"
+        },
+        {
+          "id": "6.2",
+          "title": "Create project AGENTS.md rulebook",
+          "status": "done"
+        },
+        {
+          "id": "6.3",
+          "title": "Embed Ponytail ladder into coder prompt and review checklist",
+          "status": "done"
+        }
+      ],
+      "details": "He says nothing. He writes one line. It works. Deletion over addition."
+    },
+    {
+      "id": 7,
+      "title": "Claude-Task-Master Setup & MCP Orchestration",
+      "description": "Setup Taskmaster AI structure, MCP server configuration, and CLI utilities for project task management.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "taskmaster",
+        "mcp",
+        "workflow"
+      ],
+      "dependencies": [],
+      "subtasks": [
+        {
+          "id": "7.1",
+          "title": "Initialize .taskmaster/tasks.json schema and config",
+          "status": "done"
+        },
+        {
+          "id": "7.2",
+          "title": "Create .vscode/mcp.json and MCP configuration",
+          "status": "done"
+        },
+        {
+          "id": "7.3",
+          "title": "Add local taskmaster CLI utility script",
+          "status": "in-progress"
+        }
+      ],
+      "details": "Centralized task tracking preventing context decay across multi-turn agent sessions."
+    },
+    {
+      "id": 8,
+      "title": "Multi-Model Arena & Worktree Tournament",
+      "description": "Orchestrate 3 parallel git worktrees running diverse LLMs with state arbitration.",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "arena",
+        "tournament",
+        "worktrees"
+      ],
+      "dependencies": [
+        1,
+        2,
+        6
+      ],
+      "subtasks": [
+        {
+          "id": "8.1",
+          "title": "Git worktree isolation harness",
+          "status": "pending"
+        },
+        {
+          "id": "8.2",
+          "title": "Candidate ranking and vote arbitrator",
+          "status": "pending"
+        }
+      ],
+      "details": "Selects highest-scoring patch across multiple candidate generation branches."
+    },
+    {
+      "id": 9,
+      "title": "SWE-Bench Lite (300 Instances) Full Evaluation",
+      "description": "Scale evaluation from Smoke-50 to the complete SWE-bench Lite test set.",
+      "status": "pending",
+      "priority": "medium",
+      "tags": [
+        "swebench",
+        "full",
+        "automation"
+      ],
+      "dependencies": [
+        1,
+        3,
+        6
+      ],
+      "subtasks": [
+        {
+          "id": "9.1",
+          "title": "Rate limit quota balancer for free-tier providers",
+          "status": "pending"
+        },
+        {
+          "id": "9.2",
+          "title": "Checkpoint recovery and result aggregator",
+          "status": "pending"
+        }
+      ],
+      "details": "Generate audited leaderboard submission for SWE-bench Lite."
+    }
+  ]
+}
