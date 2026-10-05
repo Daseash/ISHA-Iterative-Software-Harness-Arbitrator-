@@ -155,7 +155,7 @@ export function Skiper29() {
       </svg>
 
       {/* ================= PHOTO 1: HOVER EXPAND GALLERY (SKIPER 52 - 5 SECTIONS) ================= */}
-      <section className="relative w-full h-screen min-h-screen overflow-hidden bg-black flex items-center justify-center pt-16">
+      <section className="relative w-full h-screen min-h-screen overflow-hidden bg-[#F9F7EF] dark:bg-black transition-colors duration-300 flex items-center justify-center pt-16">
         <motion.div
           style={{ y: yBg1 }}
           className="relative w-full max-w-7xl mx-auto flex items-center justify-center z-10 px-4"

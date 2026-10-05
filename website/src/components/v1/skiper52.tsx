@@ -38,7 +38,7 @@ export const HoverExpand_001: React.FC<HoverExpandProps> = ({
             return (
               <motion.div
                 key={index}
-                className="relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl shadow-black/80 bg-neutral-900 border border-neutral-800/80 group shrink-0"
+                className="relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl shadow-neutral-900/15 dark:shadow-black/80 bg-neutral-200 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800/80 group shrink-0 transition-colors"
                 initial={false}
                 animate={{
                   width: isActive
@@ -137,7 +137,7 @@ export const Skiper52: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-full w-full items-center justify-center overflow-hidden bg-black py-8">
+    <div className="flex h-full w-full items-center justify-center overflow-hidden bg-[#F9F7EF] dark:bg-black transition-colors duration-300 py-8">
       <HoverExpand_001 images={images} />
     </div>
   );
