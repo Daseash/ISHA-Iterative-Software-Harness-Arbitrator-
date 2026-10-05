@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
   { name: "ABOUT", href: "#about", badge: "02" },
   { name: "CLI", href: "#cli", badge: "03" },
   { name: "FIX", href: "#fix", badge: "04" },
-  { name: "STATS", href: "#stats", badge: "05" },
+  { name: "STATS", href: "/stats", badge: "05" },
   {
     name: "GIT HUB",
     href: "https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-",
