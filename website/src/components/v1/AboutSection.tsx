@@ -57,6 +57,8 @@ export const AboutSection: React.FC = () => {
               "LiteLLM",
               "Gemini",
               "Groq",
+              "Qwen",
+              "GPT-OSS",
               "NeMo",
               "Langfuse",
               "SWE-bench",
@@ -78,7 +80,7 @@ export const AboutSection: React.FC = () => {
             The calibrated LAYA Decision Engine replaces noisy heuristics with on-device calibrated probability arbitration and Tree-Sitter AST structural parsing to guarantee syntactically valid patches.
             <br />
             <br />
-            Operating on a zero-cost inference frontier, LiteLLM cascades from Gemini 2.5 Flash for massive 1M+ context repository ingestion to ultra-fast Groq Llama 3.3 70B for responsive real-time repair loops.
+            Operating on a zero-cost inference frontier, LiteLLM cascades from Gemini 3.8 Flash for massive 1M+ context repository ingestion to ultra-fast Groq Qwen 3.8 27B and GPT-OSS 120B for responsive real-time repair loops and multi-model tournaments.
             <br />
             <br />
             Secured with NeMo Guardrails and Langfuse observability, ISHA achieved 66.7% resolution on SWE-bench slices with 0% patch apply failures, an 81/81 green test suite, and $0.00 average inference cost.

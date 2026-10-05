@@ -63,8 +63,7 @@ export function Skiper29() {
   const yBg1 = useTransform(scrollYProgress, [0, 0.4], ["0%", "-20%"]);
   const yBg2 = useTransform(scrollYProgress, [0.3, 0.7], ["0%", "-25%"]);
 
-  const ishaLines = [
-    "ISHA",
+  const subLines = [
     "ITERATIVE",
     "SOFTWARE",
     "HARNESS",
@@ -168,22 +167,29 @@ export function Skiper29() {
         >
           <motion.div
             style={{ scale: heroScale }}
-            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center space-y-4 text-center"
+            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center"
           >
-            {/* 5 Lines of Rolling Text: ISHA in bold red, remaining 4 lines in black/cream */}
-            <div className="w-full flex flex-col items-center justify-center gap-2 sm:gap-3 md:gap-3.5 py-2">
-              {ishaLines.map((line, index) => (
-                <div key={index} className="flex justify-center items-center w-full py-0.5 relative z-20">
+            {/* ISHA hero title - same size and original gap preserved */}
+            <div className="flex justify-center items-center w-full py-0.5 relative z-20 mb-2 sm:mb-3 md:mb-3.5">
+              <RollingText
+                text="ISHA"
+                speed={0.05}
+                duration={3.5}
+                repeatDelay={1.5}
+                className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-red-600 dark:text-red-500 uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
+              />
+            </div>
+
+            {/* Down all texts: kept attached together (no gap) and decreased in size */}
+            <div className="flex flex-col items-center justify-center w-full gap-0 -space-y-0.5 sm:-space-y-1 relative z-20">
+              {subLines.map((line, index) => (
+                <div key={index} className="flex justify-center items-center w-full py-0 leading-none">
                   <RollingText
                     text={line}
                     speed={0.05}
                     duration={3.5}
                     repeatDelay={1.5}
-                    className={`${
-                      index === 0
-                        ? "text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-red-600 dark:text-red-500 uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
-                        : "text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 dark:text-[#F9F7EF] uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
-                    }`}
+                    className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-neutral-900 dark:text-[#F9F7EF] uppercase leading-none [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
                   />
                 </div>
               ))}
