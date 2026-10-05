@@ -1,5 +1,6 @@
 import React from "react";
 import { TrendingUp, Zap, ShieldCheck, BarChart3 } from "lucide-react";
+import { HoverExpand_001 } from "./skiper52";
 
 export const StatsSection: React.FC = () => {
   const statsMetrics = [
@@ -17,6 +18,62 @@ export const StatsSection: React.FC = () => {
       value: "0.0%",
       label: "REGRESSION FAILURE RATE",
       icon: ShieldCheck,
+    },
+  ];
+
+  const benchmarkGallery = [
+    {
+      src: "/isha_vs_baselines.png",
+      alt: "Panel A: SWE-bench Lite Gains",
+      code: "# 01",
+    },
+    {
+      src: "/isha_vs_baselines.png",
+      alt: "Panel B: $0.00 Cost Frontier",
+      code: "# 02",
+    },
+    {
+      src: "/isha_vs_baselines.png",
+      alt: "Panel C: LAYA Calibration",
+      code: "# 03",
+    },
+    {
+      src: "/isha_vs_baselines.png",
+      alt: "Panel D: Component Ablations",
+      code: "# 04",
+    },
+    {
+      src: "/isha_vs_baselines.png",
+      alt: "Verified 25/25 Quality Criteria",
+      code: "# 05",
+    },
+  ];
+
+  const arbitrationGallery = [
+    {
+      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop",
+      alt: "Candidate 1: Direct AST Fix",
+      code: "# 01",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop",
+      alt: "Candidate 2: Defensive Checks",
+      code: "# 02",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop",
+      alt: "Candidate 3: Alternative Caller Fix",
+      code: "# 03",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop",
+      alt: "Isolated Worktree Sandboxes",
+      code: "# 04",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop",
+      alt: "Calibrated State Arbitrator",
+      code: "# 05",
     },
   ];
 
@@ -52,10 +109,10 @@ export const StatsSection: React.FC = () => {
           })}
         </div>
 
-        {/* Visual Benchmark Cards / Image Data Showcase Slots */}
+        {/* Visual Benchmark Cards with Hover Expand Gallery */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Card 1: Benchmark Comparison Frame */}
-          <div className="rounded-3xl bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 p-8 sm:p-10 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 space-y-6">
+          <div className="rounded-3xl bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 p-6 sm:p-8 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-300 dark:border-neutral-800">
               <span className="text-lg font-black uppercase tracking-tight text-black dark:text-[#F9F7EF]">
                 BENCHMARK EVALUATION
@@ -63,17 +120,19 @@ export const StatsSection: React.FC = () => {
               <BarChart3 className="w-6 h-6 stroke-[3] text-red-600" />
             </div>
 
-            <div className="h-64 sm:h-72 w-full rounded-2xl overflow-hidden shadow-inner bg-neutral-900 flex items-center justify-center relative group">
-              <img
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
-                alt="Benchmark Evaluation Graph"
-                className="w-full h-full object-cover filter brightness-85 contrast-110 group-hover:scale-105 transition-transform duration-500"
+            <div className="h-72 sm:h-80 w-full rounded-2xl overflow-hidden shadow-inner bg-neutral-200/50 dark:bg-neutral-900/60 flex items-center justify-center relative p-2">
+              <HoverExpand_001
+                images={benchmarkGallery}
+                height="17rem"
+                expandedWidth="clamp(11rem, 24vw, 16rem)"
+                collapsedWidth="clamp(1.8rem, 3.5vw, 2.8rem)"
+                defaultWidth="clamp(2.8rem, 5.5vw, 4.2rem)"
               />
             </div>
           </div>
 
           {/* Card 2: Autonomous Multi-Agent Execution Frame */}
-          <div className="rounded-3xl bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 p-8 sm:p-10 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 space-y-6">
+          <div className="rounded-3xl bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 p-6 sm:p-8 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-neutral-300 dark:border-neutral-800">
               <span className="text-lg font-black uppercase tracking-tight text-black dark:text-[#F9F7EF]">
                 MULTI-AGENT ARBITRATION
@@ -81,11 +140,13 @@ export const StatsSection: React.FC = () => {
               <Zap className="w-6 h-6 stroke-[3] text-red-600" />
             </div>
 
-            <div className="h-64 sm:h-72 w-full rounded-2xl overflow-hidden shadow-inner bg-neutral-900 flex items-center justify-center relative group">
-              <img
-                src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2070&auto=format&fit=crop"
-                alt="Multi-Agent Execution Pipeline"
-                className="w-full h-full object-cover filter brightness-85 contrast-110 group-hover:scale-105 transition-transform duration-500"
+            <div className="h-72 sm:h-80 w-full rounded-2xl overflow-hidden shadow-inner bg-neutral-200/50 dark:bg-neutral-900/60 flex items-center justify-center relative p-2">
+              <HoverExpand_001
+                images={arbitrationGallery}
+                height="17rem"
+                expandedWidth="clamp(11rem, 24vw, 16rem)"
+                collapsedWidth="clamp(1.8rem, 3.5vw, 2.8rem)"
+                defaultWidth="clamp(2.8rem, 5.5vw, 4.2rem)"
               />
             </div>
           </div>

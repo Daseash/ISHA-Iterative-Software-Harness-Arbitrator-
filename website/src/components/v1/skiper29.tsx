@@ -74,7 +74,7 @@ export function Skiper29() {
   const eyesGallery = [
     {
       src: "/eyes.jpg",
-      alt: "Autonomous Code Repair",
+      alt: "Neural Repo Ingestion",
       code: "# 01",
     },
     {
@@ -84,18 +84,28 @@ export function Skiper29() {
     },
     {
       src: "/eyes.jpg",
-      alt: "Git Worktree Tournament",
+      alt: "TDD Test Synthesis",
       code: "# 03",
     },
     {
       src: "/eyes.jpg",
-      alt: "LAYA Calibrated Decision",
+      alt: "3-Worktree Parallel Tournament",
       code: "# 04",
     },
     {
       src: "/eyes.jpg",
-      alt: "Closed-Loop TDD Engine",
+      alt: "State Arbitrator",
       code: "# 05",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "LAYA Calibrated Decision",
+      code: "# 06",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "Closed-Loop Self-Healing",
+      code: "# 07",
     },
   ];
 
