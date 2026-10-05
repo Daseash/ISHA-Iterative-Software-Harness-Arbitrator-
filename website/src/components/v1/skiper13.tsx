@@ -11,10 +11,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: "HOME", href: "#hero", badge: "01" },
-  { name: "ABOUT", href: "#about", badge: "02" },
-  { name: "CLI", href: "#cli", badge: "03" },
-  { name: "FIX", href: "#fix", badge: "04" },
+  { name: "HOME", href: "/#hero", badge: "01" },
+  { name: "ABOUT", href: "/#about", badge: "02" },
+  { name: "CLI", href: "/#cli", badge: "03" },
+  { name: "FIX", href: "/#fix", badge: "04" },
   { name: "STATS", href: "/stats", badge: "05" },
   {
     name: "GIT HUB",
@@ -90,7 +90,7 @@ export const Navbar_001: React.FC = () => {
           {/* Top Bar: Always has our exact top-left ISHA logo + MENU / CLOSE button */}
           <div className="flex items-center justify-between w-full">
             <a
-              href="#hero"
+              href="/"
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-2.5 group cursor-pointer"
             >

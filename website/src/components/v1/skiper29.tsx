@@ -8,7 +8,6 @@ import { DemoSkiper16 } from "./skiper16";
 import { AboutSection } from "./AboutSection";
 import { Skiper82 } from "./skiper82";
 import { CliSection } from "./CliSection";
-import { StatsSection } from "./StatsSection";
 import { LinePath } from "./skiper19";
 import { HoverExpand_001 } from "./skiper52";
 import { ArrowUpRight } from "lucide-react";
@@ -279,9 +278,6 @@ export function Skiper29() {
           </div>
         </div>
       </section>
-
-      {/* ================= STATS SECTION: BENCHMARKS & IMAGE DATA SLOTS ================= */}
-      <StatsSection />
 
       {/* ================= SITEMAP SECTION ================= */}
       <section id="sitemap" className="relative py-20 px-6 md:px-12 bg-[#F9F7EF] dark:bg-black transition-colors">

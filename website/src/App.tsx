@@ -22,7 +22,6 @@ export const DemoSkiper29 = () => {
       setShowPreloader(false);
     }, 2500);
 
-    // Route listener
     const handleLocationChange = () => {
       const p = window.location.pathname.toLowerCase();
       const h = window.location.hash.toLowerCase();
@@ -37,20 +36,50 @@ export const DemoSkiper29 = () => {
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
 
-    // Global tactile click sound and client-side link interception for STATS
+    // Global click listener to handle navigation between /stats and / sections flawlessly
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       const anchor = target?.closest("a") as HTMLAnchorElement | null;
 
       if (anchor) {
         const href = anchor.getAttribute("href");
-        if (href === "/stats" || href === "#stats") {
-          e.preventDefault();
-          sounds.playClick();
-          window.history.pushState({}, "", "/stats");
-          setCurrentRoute("stats");
-          window.scrollTo({ top: 0, behavior: "instant" });
-          return;
+        if (href && !anchor.target) {
+          // Navigating to STATS page
+          if (href === "/stats" || href === "#stats") {
+            e.preventDefault();
+            sounds.playClick();
+            window.history.pushState({}, "", "/stats");
+            setCurrentRoute("stats");
+            window.scrollTo({ top: 0, behavior: "instant" });
+            return;
+          }
+
+          // Navigating back to HOME or any section on HOME
+          if (
+            href === "/" ||
+            href === "/#hero" ||
+            href === "#hero" ||
+            href.startsWith("/#") ||
+            href.startsWith("#")
+          ) {
+            e.preventDefault();
+            sounds.playClick();
+            const hash = href.includes("#") ? href.substring(href.indexOf("#")) : "";
+            window.history.pushState({}, "", hash ? `/${hash}` : "/");
+            setCurrentRoute("home");
+
+            setTimeout(() => {
+              if (hash) {
+                const el = document.querySelector(hash);
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" });
+                  return;
+                }
+              }
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }, 80);
+            return;
+          }
         }
       }
 
@@ -74,24 +103,13 @@ export const DemoSkiper29 = () => {
     };
   }, []);
 
-  const handleBackHome = () => {
-    sounds.playClick();
-    window.history.pushState({}, "", "/");
-    setCurrentRoute("home");
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
   return (
     <main className="relative min-h-screen bg-[#F9F7EF] dark:bg-black transition-colors duration-300">
       <AnimatePresence mode="wait">
         {showPreloader && currentRoute === "home" && <Preloader_002 />}
       </AnimatePresence>
 
-      {currentRoute === "stats" ? (
-        <StatsPage onBack={handleBackHome} />
-      ) : (
-        <Skiper29 />
-      )}
+      {currentRoute === "stats" ? <StatsPage /> : <Skiper29 />}
     </main>
   );
 };
