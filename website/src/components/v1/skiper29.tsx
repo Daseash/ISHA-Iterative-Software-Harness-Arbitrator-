@@ -10,6 +10,7 @@ import { Skiper82 } from "./skiper82";
 import { CliSection } from "./CliSection";
 import { StatsSection } from "./StatsSection";
 import { LinePath } from "./skiper19";
+import { HoverExpand_001 } from "./skiper52";
 import { ArrowUpRight } from "lucide-react";
 
 export function Skiper29() {
@@ -70,6 +71,34 @@ export function Skiper29() {
     "ARBITRATOR",
   ];
 
+  const eyesGallery = [
+    {
+      src: "/eyes.jpg",
+      alt: "Autonomous Code Repair",
+      code: "# 01",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "AST Structural Mapping",
+      code: "# 02",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "Git Worktree Tournament",
+      code: "# 03",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "LAYA Calibrated Decision",
+      code: "# 04",
+    },
+    {
+      src: "/eyes.jpg",
+      alt: "Closed-Loop TDD Engine",
+      code: "# 05",
+    },
+  ];
+
   const sitemapScreenshotLinks = [
     {
       title: "HOME",
@@ -125,22 +154,14 @@ export function Skiper29() {
         </defs>
       </svg>
 
-      {/* ================= PHOTO 1: FULL SCREEN OCCUPIED, ZOOMED OUT & CLEAR ================= */}
-      <section className="relative w-full h-screen min-h-screen overflow-hidden bg-black">
-        <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-          {/* Background Parallax Layer */}
-          <motion.div
-            style={{ y: yBg1 }}
-            className="absolute inset-0 w-full h-[115%] -top-[7%] flex items-center justify-center"
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30 z-10 pointer-events-none" />
-            <img
-              src="/eyes.jpg"
-              alt="ISHA Vision System"
-              className="w-full h-full object-cover object-center scale-100 filter brightness-95 contrast-110"
-            />
-          </motion.div>
-        </div>
+      {/* ================= PHOTO 1: HOVER EXPAND GALLERY (SKIPER 52 - 5 SECTIONS) ================= */}
+      <section className="relative w-full h-screen min-h-screen overflow-hidden bg-black flex items-center justify-center pt-16">
+        <motion.div
+          style={{ y: yBg1 }}
+          className="relative w-full max-w-7xl mx-auto flex items-center justify-center z-10 px-4"
+        >
+          <HoverExpand_001 images={eyesGallery} defaultActive={2} />
+        </motion.div>
       </section>
 
       {/* ================= CONTINUOUS FLOW: BEHIND ISHA TEXT TILL END OF ABOUT SECTION ================= */}
