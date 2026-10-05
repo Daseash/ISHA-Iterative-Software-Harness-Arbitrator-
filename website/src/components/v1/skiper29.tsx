@@ -169,19 +169,19 @@ export function Skiper29() {
             style={{ scale: heroScale }}
             className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center"
           >
-            {/* ISHA hero title - same size and original gap preserved */}
-            <div className="flex justify-center items-center w-full py-0.5 relative z-20 mb-2 sm:mb-3 md:mb-3.5">
+            {/* ISHA hero title: Big & Spaced */}
+            <div className="flex justify-center items-center w-full py-0.5 relative z-20 mb-8 sm:mb-10 md:mb-12">
               <RollingText
                 text="ISHA"
                 speed={0.05}
                 duration={3.5}
                 repeatDelay={1.5}
-                className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-red-600 dark:text-red-500 uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
+                className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-red-600 dark:text-red-500 uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
               />
             </div>
 
-            {/* Down all texts: kept attached together (no gap) and decreased in size */}
-            <div className="flex flex-col items-center justify-center w-full gap-0 -space-y-0.5 sm:-space-y-1 relative z-20">
+            {/* Down all texts: Kept attached with NO gap and decreased in size */}
+            <div className="flex flex-col items-center justify-center w-full gap-0 space-y-0 leading-none relative z-20">
               {subLines.map((line, index) => (
                 <div key={index} className="flex justify-center items-center w-full py-0 leading-none">
                   <RollingText
@@ -189,7 +189,7 @@ export function Skiper29() {
                     speed={0.05}
                     duration={3.5}
                     repeatDelay={1.5}
-                    className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-neutral-900 dark:text-[#F9F7EF] uppercase leading-none [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
+                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-widest text-neutral-900 dark:text-[#F9F7EF] uppercase leading-none [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
                   />
                 </div>
               ))}

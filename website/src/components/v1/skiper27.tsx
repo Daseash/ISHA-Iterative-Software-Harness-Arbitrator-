@@ -25,7 +25,7 @@ export const RollingText: React.FC<RollingTextProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`inline-flex flex-wrap items-center justify-center select-none leading-none ${className}`}
+      className={`inline-flex flex-nowrap whitespace-nowrap items-center justify-center select-none leading-none ${className}`}
     >
       {characters.map((char, index) => {
         // Calculate staggered timing and delay from center outward to edges
