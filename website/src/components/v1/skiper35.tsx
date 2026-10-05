@@ -130,7 +130,7 @@ export const Skiper35: React.FC<Skiper35Props> = ({
     <div
       className={`relative w-full h-full bg-[#F9F7EF] dark:bg-black overflow-x-auto overflow-y-hidden select-none flex items-stretch [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden transition-colors duration-300 ${className}`}
     >
-      <div className="mx-auto flex w-full h-full flex-col md:flex-row lg:min-w-[1600px] bg-[#F9F7EF] dark:bg-black transition-colors duration-300 pt-20 md:pt-24 pb-6 md:pb-8">
+      <div className="mx-auto flex w-full h-full flex-col md:flex-row lg:min-w-[1600px] bg-[#F9F7EF] dark:bg-black transition-colors duration-300 pt-2 md:pt-4 pb-6 md:pb-8">
         {items.map((item, index) => {
           const isActive = activeIndex === index;
 
@@ -156,7 +156,7 @@ export const Skiper35: React.FC<Skiper35Props> = ({
             >
               {/* EXACT SKIPER35 ROTATED TEXT CONTAINER WITH LIGHT / DARK SUPPORT */}
               <div
-                className={`absolute bottom-4 left-[2vw] flex w-[calc(100vh-9rem)] origin-[0_50%] transform justify-between pr-5 text-xl font-medium leading-[2.6vw] tracking-[-0.03em] md:-rotate-90 md:text-[1.8vw] transition-colors duration-200 pointer-events-none z-20 ${
+                className={`absolute bottom-4 left-[2vw] flex w-[calc(100vh-14rem)] origin-[0_50%] transform justify-between pr-5 text-xl font-medium leading-[2.6vw] tracking-[-0.03em] md:-rotate-90 md:text-[1.8vw] transition-colors duration-200 pointer-events-none z-20 ${
                   isActive
                     ? "text-black dark:text-[#f1f1f1]"
                     : "text-neutral-900/40 dark:text-[#f1f1f1]/30 hover:text-black dark:hover:text-[#f1f1f1]"
