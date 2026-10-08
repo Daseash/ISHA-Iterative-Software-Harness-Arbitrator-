@@ -245,9 +245,13 @@ def _provider(model: str) -> str:
 
 
 def _quota_fatal(exc: Exception) -> bool:
-    """Account quota/billing exhausted for THIS model (not a TPM window)."""
+    """Account quota/billing exhausted for THIS model (not a transient RPM/TPM window)."""
+    msg = str(exc).lower()
+    # If the error explicitly mentions per-minute or per-day sliding window, it's transient
+    if any(m in msg for m in ("per minute", "per_minute", "queries per minute", "requests per minute", "tpm", "rpm")):
+        return False
     return type(exc).__name__ == "RateLimitError" and any(
-        h in str(exc).lower() for h in _QUOTA_HINTS
+        h in msg for h in _QUOTA_HINTS
     )
 
 
