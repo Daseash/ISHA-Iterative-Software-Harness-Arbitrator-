@@ -54,7 +54,7 @@ Status: **CLOSED 2026-10-05** (verdict day)
   reached 2026-10-04 ~21:40 IST.
 
 ## M-2 — Quota-death → fallback coder hallucinates file context → apply/syntax failures
-Status: **OPEN** (converted to v2 coder-level fix)
+Status: **OPEN** (converted to v2 coder-level fix) — **Day-4 v2 fix in flight**
 - Symptom: when the Groq primary (qwen3.8-27b) is 429-dead, the coder role
   gets answered by fallback models (gpt-oss-120b/20b, gemini-flash-lite),
   which then emit patches against *imagined* file content → hunk context
@@ -64,16 +64,39 @@ Status: **OPEN** (converted to v2 coder-level fix)
   gpt-oss-120b fallback** and apply-failed again (2nd time); sympy-12481/
   13031 apply-failed with coder calls entirely on gpt-oss/gemini-lite
   fallbacks; sympy-11870 syntax on 1 fallback call.
+- Evidence (Day 4, r3, new run-id): the hunk-locator infra fix
+  (similarity-based hunk locator + insert-only anchoring in patch_engine.py,
+  plus the timeout/syntax retry gates) cleared 11422/11620/11445/23299, but
+  r3 confirmed **3 MORE apply failures** on the fallback-coder-contaminated
+  ids:
+  - django-11742 — 3rd consecutive red, now **apply-failed**: reject `Hunk
+    failed in django/db/models/fields/__init__.py: @@ — expected context
+    not found in file: '    def _check_choices(self):'`; all 4 coder
+    answers on gpt-oss-120b fallback.
+  - matplotlib-22835 — 3rd cross-run red, now **apply-failed**: reject
+    `Hunk failed in lib/matplotlib/artist.py: @@ — expected context not
+    found in file: '        if np.ndim(data) == 0 and isinstance(self,
+    ScalarMappable):'`; all 4 coder answers on gpt-oss-120b fallback.
+  - pylint-5859 — 3rd time, reject line **identical** to r2
+    (pylinter.py `self._notes_regexp = ...`); coders gpt-oss-20b,
+    gemini-3.5-flash, offline-brain — zero qwen coder answers, 1 offline
+    call.
+  The apply bucket is now **5 ids: 5859 / 12481 / 13031 / 11742 / 22835**.
+  The Day-4 hunk-locator fix cleared the uncontaminated ids but not the
+  fallback-coder-contaminated ones — every remaining apply failure has
+  fallback-dominated coder calls, confirming the weakness is coder-level.
 - Root cause confirmed, but the fallback-coder weakness is coder-level:
   even one fallback answer contaminates the patch.
-- Fix (v2, targeted): (a) pre-apply hunk validation against the real checkout
-  before accepting a patch (cheap static check, catches context drift early);
-  (b) on fallback-coder answer, re-ground: force the patch to be regenerated
-  with the exact file lines in context (re-fetch on the retry path);
-  (c) optionally gate fallback coder answers behind a stricter LAYA
-  safe_to_apply floor.
-- Close condition: r3 (or fixed pipeline) clears the 3 apply-failures without
-  fallback-coder contamination; then delete this entry.
+- Fix (v2, in flight): (a) pre-apply hunk validation against the real
+  checkout before accepting a patch (cheap static check, catches context
+  drift early); (b) on fallback-coder answer, re-ground: force the patch
+  to be regenerated with the exact file lines in context (re-fetch on the
+  retry path); (c) gate fallback coder answers behind a stricter LAYA
+  safe_to_apply floor. Targeted research pass: results/research_m2.md.
+- Close condition: the v2 coder-level fix (verbatim-context re-grounding +
+  pre-apply hunk validation + fallback safe_to_apply floor) lands, then
+  smoke50-r4 (new run-id, new profile) must clear **>=3 of the 5 apply ids**
+  (5859/11742/12481/13031/22835); then delete this entry.
 
 ## M-4 — Unexplained main-run stop ~18:02 Day 2
 Status: **CLOSED 2026-10-05** (verdict day)
@@ -86,6 +109,30 @@ Status: **CLOSED 2026-10-05** (verdict day)
   completed its last instance). If a stop ever recurs, escalate to
   scheduled-task/VM hosting.
 
+## M-5 — pallets__flask-4045: improvement-loop patch breaks a previously-passing test
+Status: **OPEN** (Day-4 true verdict, after the UTF-8 harness fix)
+- Symptom: the Day-4 improvement-loop patch for `pallets__flask-4045`
+  **passed** the FAIL_TO_PASS test `test_dotted_name_not_allowed` but
+  **broke** the PASS_TO_PASS test
+  `test_route_decorator_custom_endpoint_with_dots` (official swebench
+  harness verdict — every other P2P test green).
+- Evidence: results/smoke50-rescue2/harness_report.json (same round
+  resolved django-11049; flask-4045 the sole unresolved instance; 0 infra
+  errors after the UTF-8 harness fix).
+- Root cause: no changed-behavior scope check in the critic/LAYA checklist
+  — the patch adds a `raise` inside `Blueprint.__init__` that rejects
+  dotted names, which also rejects inputs that were previously permitted
+  (custom endpoints with dots). FAIL_TO_PASS green + P2P red is the "fixed
+  the issue by changing previously-permitted behavior" failure class.
+- Fix in flight: **BEHAVIOR SCOPE checklist item (v2)** — the critic must
+  verify the diff changes only the behavior the issue demands, and must
+  list any previously-permitted input the new code now rejects (e-Otter++
+  "fails for the right reason" critic; see results/research_m2.md).
+- Close condition: flask-4045 re-solved post-v2 with both FAIL_TO_PASS
+  green and no P2P breakage (official harness verdict), OR marked
+  out-of-reach with evidence (harness report showing the P2P breakage is
+  caused by the unavoidable shape of the fix).
+
 ---
 
 ## M-3 — Smoke50 unresolved instances (study list, final merged view)
@@ -94,6 +141,12 @@ Built at main==50/50 AND r2==8/8 from meta.json evidence (gate/apply-reject
 messages quoted verbatim; model_log positions = which models answered).
 All 11 below have `status: done` with a failure_category or no usable patch.
 Status: **open** — feed for `smoke50-r3` / Day-4 improvement loop.
+**Day-4 r3 partial results (9/16 done at ~13:20 UTC 10-05):** 5 cleared
+(11422, 11620, 11445, 11870, 23299); 4 still red (11742, 22835, 5859
+apply-failed; 10451 timeout); 2 not yet done in r3 (12481 in progress,
+13031 not started). Per-instance r3 notes are appended below each entry.
+Note: the Day-4 flask-4045 P2P regression is tracked as M-5 (new entry),
+not part of this 11.
 
 ### Bucket: timeout (5) — LEADING BUCKET
 Common pattern: the 3 r2 instances ran **in parallel with the main run**
@@ -109,19 +162,41 @@ path).
    whole 30-min budget; solver never reaches coder rounds. Fix: r3 solo on
    healthy quota; if it still times out, raise the per-instance timeout for
    >50k-LOC repos only.
+   Day-4 r3: **CLEARED** (ok — django/utils/autoreload.py patched; was
+   timeout).
 2. **django__django-11620** (r2) — timeout, 1 attempt, cap. Prior: main
    apply-failed (6 gpt-oss-120b answers). Same hypothesis/fix as 11422.
+   Day-4 r3: **CLEARED** (ok — django/urls/resolvers.py patched; was
+   timeout).
 3. **matplotlib__matplotlib-22835** (r2) — timeout, 3rd cross-run timeout
    (main + r2 + earlier re-solve all timed out under storm windows).
    Hypothesis: same contention/budget issue. Fix: same as 11422.
+   Day-4 r3: now **patch_apply_failed** (3rd cross-run red; first time
+   apply): reject `Hunk failed in lib/matplotlib/artist.py: @@ — expected
+   context not found in file: '        if np.ndim(data) == 0 and
+   isinstance(self, ScalarMappable):'`; all 4 coder answers on
+   gpt-oss-120b fallback. Same M-2 root cause; joins the 5-id apply bucket,
+   needs M-2 v2 first.
 4. **sphinx-doc__sphinx-10451** (main) — timeout, 1 attempt, cap;
    `model_log: []`, last event `error: instance exceeded 1800s`. Hypothesis:
    stalled at the very first LLM round (checkout+backoff loop) — the
    1800 s clock starts at instance start, so a long checkout/backoff window
    can burn the entire budget before any model call. Fix: check whether the
    per-instance timer should exclude checkout/prep time; re-run in r3 solo.
+   Day-4 r3: still **timeout** (2nd consecutive; 0 model calls in BOTH
+   attempts, each exactly 1800 s). Timer audit (Day 4) concluded: NOT
+   checkout — the 1800 s clock starts after checkout/prep, and sphinx prep
+   measured only 11.2 s. Real mode: backoff-dominated chain calls — one
+   chain call has a 300 s wall budget but under 429 storms can repeat up to
+   6x inside one 1800 s attempt with zero logged responses (and
+   `model_log: []` is a forensics blind spot — in-flight entries are
+   discarded on FutureTimeout, so it is not proof of zero calls). Fix in
+   flight: v2.1 per-call event streaming + attempt-level early-abort when
+   no model has answered and >~50% of the attempt budget is spent.
 5. **sphinx-doc__sphinx-11445** (main) — timeout, identical signature to
    10451 (`model_log: []`, exceeded 1800s). Fix: same as 10451.
+   Day-4 r3: **CLEARED** (ok — sphinx/environment/collectors/toctree.py
+   patched; was timeout).
 
 ### Bucket: syntax_error (3)
 6. **django__django-11742** (r2) — syntax_error, 2nd consecutive occurrence
@@ -130,6 +205,11 @@ path).
    twice across different model mixes; likely a genuinely hard issue.
    Fix: r3 with the M-2 (b) re-grounding fix active; if it fails again,
    accept as out-of-reach for the free tier and label it in the study list.
+   Day-4 r3: now **patch_apply_failed** (was syntax in main + r2): reject
+   `Hunk failed in django/db/models/fields/__init__.py: @@ — expected
+   context not found in file: '    def _check_choices(self):'`; all 4
+   coder answers on gpt-oss-120b fallback. Joined the 5-id apply bucket;
+   M-2 v2 first.
 7. **sympy__sympy-11870** (main) — syntax_error, 1 attempt, 782 s,
    retry_count 3. Gate message: `static gate failed: .../trigsimp.py:
    redefinition of unused 'symbols' from line 5`. Models: qwen primary
@@ -140,6 +220,8 @@ path).
    Fix: (a) this is a clean one-shot retry candidate for r3; (b) add a
    pyflakes pre-check to the LAYA checklist so redundant-import patches get
    blocked with a reason.
+   Day-4 r3: **CLEARED** (ok — sympy/simplify/trigsimp.py patched; was
+   syntax).
 8. **matplotlib__matplotlib-23299** (r2) — syntax_error, 1 attempt, 872 s.
    Gate message: `no-op patch: the diff only reformats the lines it touches
    (identical code on both sides ...)`. Models: planner qwen primary (+
@@ -151,6 +233,8 @@ path).
    needed, so the coder fills the diff with comment/whitespace edits.
    Fix: r3 with plan-quality check — if planner output shares no code tokens
    with the target file, force a plan retry before coding.
+   Day-4 r3: **CLEARED** (ok — lib/matplotlib/__init__.py patched; was
+   no-op syntax).
 
 ### Bucket: patch_apply_failed (3)
 9. **pylint-dev__pylint-5859** (r2, 2nd time — main also apply-failed) —
@@ -162,6 +246,9 @@ path).
    fallback 1** — textbook M-2 signature (quota-dead window, fallback coder
    hallucinated the file context). Fix: M-2 (a)+(b); r3 candidate only after
    the re-grounding fix is in.
+   Day-4 r3: still **patch_apply_failed** (3rd time; reject line identical
+   to r2; coders gpt-oss-20b / gemini-3.5-flash / offline-brain — zero
+   qwen coder answers, 1 offline call). M-2 v2 first.
 10. **sympy__sympy-12481** (main) — patch_apply_failed, 2 attempts,
     1397.8 s. Reject message: `Hunk failed in sympy/combinatorics/
     permutations.py: @@ — expected context not found in file: '        if
@@ -169,12 +256,14 @@ path).
     coders gemini-lite ×2, gpt-oss-20b (fb2), gpt-oss-120b (fb1) — zero
     qwen coder answers (primary 429-dead for the whole coding phase).
     Same M-2 root cause. Fix: M-2 (a)+(b); r3 candidate.
+    Day-4 r3: in flight at ~13:20 UTC (log only, no meta yet).
 11. **sympy__sympy-13031** (main) — patch_apply_failed, 2 attempts,
     1516.97 s. Reject message: `Hunk failed in sympy/matrices/dense.py:
     @@ — expected context not found in file: '        args = [m for m in
     args if m.cols > 0]'`. Models: planner qwen primary + gemini-lite;
     coders gpt-oss-20b, gemini-lite ×2, gpt-oss-120b — again no qwen coder
     answer. Same M-2 root cause. Fix: M-2 (a)+(b); r3 candidate.
+    Day-4 r3: not started at ~13:20 UTC.
 
 ### Cross-cutting summary for Day 4
 - 6 of 11 (all 3 apply-failures + 23299 + 11742, and the fallback-heavy
@@ -185,3 +274,9 @@ path).
 - 3 of 11 (11870, 10451, 11445) are cheap r3 retry candidates as-is;
   5859/12481/13031 need the M-2 fix first; 11742/23299 may be genuinely
   out of reach for the free tier (mark after r3).
+- **Day-4 r3 status (updated):** 5 of 11 cleared by the hunk-locator +
+  retry-gate infra fixes (11422/11620/11445/11870/23299). All 4 still red
+  are fallback-coder-contaminated apply failures (11742/22835/5859 — the
+  5-id apply bucket with 12481/13031) or the backoff-stalled timeout
+  (10451, audit conclusion: backoff-dominated chain calls, not checkout).
+  M-2 v2 close condition: r4 clears >=3 of the 5 apply ids.

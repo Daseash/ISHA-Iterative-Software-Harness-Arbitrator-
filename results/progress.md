@@ -739,3 +739,121 @@ Made ISHA pullable/runnable for others:
   grading (eval images pull automatically; ~4 GB each, auto-cleaned).
 - Next: r3 complete -> merged view (r3>r2>r1>main) -> official harness grade
   of all patched instances -> real x/50 -> M-3 catalogue + lite300 launch.
+
+### Day 4 — session 2, 2026-10-05 ~11:45 UTC (user: "continue todos")
+
+State found on disk (the plan.md board was stale — this file + results/ won):
+- r3 had run 7/16 and DIED mid-run: done = 11422 ✅ (autoreload.py, 202 s,
+  critic 0.736), 11620 ✅ (resolvers.py, 528 s), 23299 ✅ (__init__.py,
+  1017 s, critic-flagged) · still red: 11742 ❌ apply, 22835 ❌ apply,
+  5859 ❌ apply (3rd time), 10451 ❌ timeout (2nd consecutive, 0 model calls
+  in BOTH attempts, each exactly 1800 s) · partial at death: 11445 (died in
+  attempt 2, raw.patch present), 11870 (attempt 1, no model events) ·
+  never started: 12481, 13031, pytest-11148, sympy-13437, sympy-12419,
+  astropy-12907, matplotlib-22711.
+- NOTE: r3 was actually running with 2 parallel workers (10451 and 11445
+  overlap in log timestamps) even though the launch log claimed workers=1 —
+  the dual-worker contention hypothesis from M-3 applies to r3 too.
+
+- **Docker/harness state found**: `smoke50-rescue` holds a harness eval of
+  4 instances (isha.smoke50-rescue.json): submitted 4, completed 3 —
+  **resolved: django-11099, django-11583** · unresolved: django-11049 ·
+  error (infra): pallets__flask-4045. `smoke50-rescue2` re-solved 11049 +
+  flask-4045 (new patches in predictions.json) but is NOT yet graded.
+  So official-harness evidence so far: 2/4 resolved.
+
+- **Timer-vs-checkout audit (Day-4 action #1) — CONCLUDED:**
+  - The 1800 s clock starts per-attempt AFTER checkout prep
+    (`ensure_all` runs before the pending loop; `future.result(timeout)`
+    bounds each attempt), so checkout time is NOT charged to the budget.
+  - `build_repo_context` on the sphinx-10451 checkout measures **11.2 s
+    total** (AST map 5.2 s, parser 3.0 s, dep-graph 1.5 s, Qdrant index
+    6.3 s, retrieval 4.9 s) — prep is not the cause.
+  - `model_log: []` does NOT prove "zero model calls": model events land in
+    meta/log.jsonl only when an attempt COMPLETES (`outcome["model_log"]`);
+    a `FutureTimeout` mid-call discards in-flight entries. Forensics blind
+    spot confirmed.
+  - The real failure mode: a single chain call has a 300 s wall budget
+    (`ISHA_CALL_BUDGET`), but backoff-dominated calls under 429 storms can
+    repeat up to 6× within one 1800 s attempt with zero logged responses —
+    exactly the 10451/11445 signature, now reproduced 3× across runs.
+  - v2.1 candidates (implement between runs, new run-id per profile):
+    (a) stream per-call events (model-try / fail / backoff) to log.jsonl as
+    they happen; (b) attempt-level early-abort when no model has answered
+    and >~50% of the attempt budget is spent; (c) consider
+    ISHA_CALL_BUDGET=180 for bench runs.
+
+- **r3 RESUMED 11:5x UTC** (bgp_10c050b5b001O0KJMAXimEPtHW, pid 6900) with
+  the 9 remaining ids, same profile, `ISHA_RATE_LIMIT_WAIT=1`,
+  `ISHA_BENCH_WORKERS=1` explicit, `--timeout 1800`, run from the
+  isha-agent cwd so the campaign `.env` is authoritative. Checkpoints
+  (7 done) skip in seconds; 11445/11870 re-solve from scratch (no meta).
+  Doctor ALL CLEAR before launch (qwen primary live, Docker 29.8.0 up).
+  Hiccup: first relaunch was started from the ISHA-root cwd where `.env` is
+  NOT visible — killed within ~1 min before any meta was written; the key
+  turn out to also live in the host environment, but the isha-agent cwd is
+  the sanctioned launch point and is used now.
+
+- **Hourly watch cron** wku_10c062856001endr7lGIkCpP4q (10 * * * *):
+  keep-alive (relaunch identical command if the bench process dies before
+  16/16 — checkpoints make this lossless) + progress line + at 16/16:
+  merged-view verdict (r3>r2>r1>main), M-3 updates, lite300 launch on PASS.
+  r3 process lifetime is session (persistent flag failed to apply 5×);
+  the watch cron is the keep-alive; worst case a session-boundary death
+  costs one partial instance (M-4 precedent).
+
+### Day 4 — watch 12:40 UTC
+
+- r3 **7/16**, bench process alive (python pid 26400; in-flight 11445
+  attempt cycle). No relaunch needed.
+- **Docker scorecard so far (34 unique patched instances):**
+  - `smoke50-graded` (34 submitted, pre-improvement-loop patches, verified
+    byte-identical to main smoke50): 30 completed — **resolved 4**
+    (django-10914, django-11039, django-11133, pytest-11143), 26
+    unresolved, 1 ambiguous (pytest-5103 no_tests_collected), 4 infra
+    errors (11049, 11099, 11583, flask-4045).
+  - `smoke50-rescue` (re-grade of those 4): **resolved 11099, 11583**;
+    11049 unresolved; flask-4045 errored again.
+  - `smoke50-rescue2` (11049 + flask-4045 re-solved on the
+    improvement-loop pipeline, graded 12:3x): **django-11049 RESOLVED**
+    (first improvement-loop patch through the official harness);
+    flask-4045 error again.
+  - **Total: 7 of 33 uniquely graded resolved (21.2%); flask-4045 pending.**
+- **flask-4045 infra error root-caused:** patch applied cleanly in the
+  container and the tests RAN (5.47 s, ~256 KB output) — then the official
+  swebench harness crashed host-side at `run_evaluation.py:372`
+  `open(path, "w")` (no encoding → Windows cp1252) with
+  `UnicodeEncodeError` on non-ASCII test output. Same class as the old
+  CRLF bug. Fixed in `src/bench/harness_eval.py::install_lf_writes` —
+  additionally injects a UTF-8-defaulting `open` into the
+  `swebench.harness.run_evaluation` module namespace (idempotent,
+  no-op elsewhere). 81/81 tests green after. rescue2 re-graded with the
+  fix (bgp_10c2064cb001vqEgXdxqSvWQ6r) — will also re-confirm 11049.
+- NOTE for the verdict: the smoke50-graded round graded PRE-improvement-loop
+  patches; r3's new ok patches (11422, 11620, 23299 so far) are not yet
+  Docker-graded. The post-loop real-x/50 needs: r3 remaining 8 + a grading
+  pass over r3's ok patches.
+
+### Day 4 — UTF-8 harness fix + flask-4045 true verdict (12:5x UTC)
+
+- Extended `harness_eval.py::install_lf_writes` to inject a UTF-8-defaulting
+  `open` into BOTH `swebench.harness.run_evaluation` (3 unencoded text
+  writes) and `swebench.harness.grading` (1 unencoded read, line 127) —
+  idempotent, module-namespace-only, no-op outside the harness. 81/81 tests.
+- Re-graded rescue2: **django-11049 resolved (re-confirmed)**;
+  **pallets__flask-4045 now has a TRUE verdict: unresolved** —
+  FAIL_TO_PASS `test_dotted_name_not_allowed` PASSED but
+  `test_route_decorator_custom_endpoint_with_dots` FAILED (genuine
+  regression in the improvement-loop patch, all PASS_TO_PASS green).
+  No more infra errors in the campaign: 0 error instances.
+- **Final smoke50 Docker scorecard: 34/34 patched instances graded —
+  7 resolved (10914, 11039, 11133, 11143, 11099, 11583, 11049),
+  27 unresolved.** Real x/50 at this point: **7/50 (14%)**, before r3's
+  patches are graded. r3 at 8/16, process alive (pid 26400).
+
+### Day 4 — session 2, 2026-10-05 ~11:45</think>
+
+<tool_call>
+<function=read>
+<parameter=filePath>
+C:\Users\Eashwar\ISHA\isha-agent\results\progress.md
