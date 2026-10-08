@@ -1,0 +1,107 @@
+[
+  {
+    "instance_id": "astropy__astropy-14182",
+    "model_patch": "diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py\nindex abdeba8..e5a4a24 100644\n--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -57,8 +57,8 @@ class RST(FixedWidth):\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, **kwargs):\n+        super().__init__(delimiter_pad=None, bookend=False, **kwargs)\n \n     def write(self, lines):\n         lines = super().write(lines)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "astropy__astropy-14365",
+    "model_patch": "diff --git a/astropy/io/ascii/qdp.py b/astropy/io/ascii/qdp.py\nindex 83a4f00..768beb0 100644\n--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -68,7 +68,7 @@ def _line_type(line, delimiter=None):\n     _new_re = rf\"NO({sep}NO)+\"\n     _data_re = rf\"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)\"\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)\n     line = line.strip()\n     if not line:\n         return \"comment\"",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "astropy__astropy-6938",
+    "model_patch": "diff --git a/astropy/io/fits/fitsrec.py b/astropy/io/fits/fitsrec.py\nindex 574b407..cb79142 100644\n--- a/astropy/io/fits/fitsrec.py\n+++ b/astropy/io/fits/fitsrec.py\n@@ -1261,7 +1261,7 @@ class FITS_rec(np.recarray):\n \n         # Replace exponent separator in floating point numbers\n         if 'D' in format:\n-            output_field.replace(encode_ascii('E'), encode_ascii('D'))\n+            output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))\n \n \n def _get_recarray_field(array, key):",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "astropy__astropy-7746",
+    "model_patch": "diff --git a/astropy/wcs/wcs.py b/astropy/wcs/wcs.py\nindex d3a06f2..1d34950 100644\n--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@ reduce these to 2 dimensions using the naxis kwarg.\n \n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            # Guard against empty input arrays: return empty outputs without invoking wcslib.\n+            if any(arr.size == 0 for arr in xy):\n+                return [np.empty(0, dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-10914",
+    "model_patch": "diff --git a/django/conf/global_settings.py b/django/conf/global_settings.py\nindex acee988..bdeec80 100644\n--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@ -304,7 +304,7 @@ FILE_UPLOAD_TEMP_DIR = None\n \n # The numeric mode to set newly-uploaded files to. The value should be a mode\n # you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.\n-FILE_UPLOAD_PERMISSIONS = None\n+FILE_UPLOAD_PERMISSIONS = 0o644\n \n # The numeric mode to assign to newly-created directories, when uploading files.\n # The value should be a mode as you'd pass to os.chmod;",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-10924",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 0c64748..1712f2e 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -1422,6 +1422,10 @@ class DateTimeField(DateField):\n             value = timezone.make_aware(value, default_timezone)\n         return value\n \n+    @property\n+    def path(self):\n+        return self._path() if callable(self._path) else self._path\n+\n     def get_db_prep_value(self, value, connection, prepared=False):\n         # Casts datetimes into the format expected by the backend\n         if not prepared:",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11001",
+    "model_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 7649c39..57150f9 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -32,7 +32,7 @@ class SQLCompiler:\n         self.select = None\n         self.annotation_col_map = None\n         self.klass_info = None\n-        self.ordering_parts = re.compile(r'(.*)\\s(ASC|DESC)(.*)')\n+        self.ordering_parts = re.compile(r'(.*)\\s(ASC|DESC)(.*)', re.DOTALL)\n         self._meta_ordering = None\n \n     def setup_query(self):",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11019",
+    "model_patch": "diff --git a/django/forms/widgets.py b/django/forms/widgets.py\nindex 02aa32b..8d4eaf2 100644\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -138,7 +138,7 @@ class Media:\n                 # Add path to combined_list since it doesn't exist.\n                 combined_list.insert(last_insert_index, path)\n             else:\n-                if index > last_insert_index:\n+                if index < last_insert_index:\n                     warnings.warn(\n                         'Detected duplicate Media files in an opposite order:\\n'\n                         '%s\\n%s' % (combined_list[last_insert_index], combined_list[index]),",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11039",
+    "model_patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..6635944 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -55,8 +55,8 @@ class Command(BaseCommand):\n                 migration_name, app_label))\n         targets = [(app_label, migration.name)]\n \n-        # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        # Show begin/end around output for atomic migrations\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11049",
+    "model_patch": "diff --git a/django/forms/fields.py b/django/forms/fields.py\nindex a977256..c41e9b3 100644\n--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -393,7 +393,7 @@ class DateField(BaseTemporalField):\n     widget = DateInput\n     input_formats = formats.get_format_lazy('DATE_INPUT_FORMATS')\n     default_error_messages = {\n-        'invalid': _('Enter a valid date.'),\n+        'invalid': _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].'),\n     }\n \n     def to_python(self, value):",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11099",
+    "model_patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cf..1304f20 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11133",
+    "model_patch": "diff --git a/django/http/response.py b/django/http/response.py\nindex 6a84e19..db5308b 100644\n--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -308,6 +308,8 @@ class HttpResponse(HttpResponseBase):\n \n     @content.setter\n     def content(self, value):\n+        if isinstance(value, memoryview):\n+            value = bytes(value)\n         # Consume iterators upon assignment to allow repeated iteration.\n         if hasattr(value, '__iter__') and not isinstance(value, (bytes, str)):\n             content = b''.join(self.make_bytes(chunk) for chunk in value)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11179",
+    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4af..1a7e1bc 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -274,6 +274,9 @@ class Collector:\n         # Optimize for the case with a single obj and no dependencies\n         if len(self.data) == 1 and len(instances) == 1:\n             instance = list(instances)[0]\n+            for model, instances in self.data.items():\n+                for obj in instances:\n+                    setattr(obj, model._meta.pk.attname, None)\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11283",
+    "model_patch": "diff --git a/django/contrib/auth/migrations/0011_update_proxy_permissions.py b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\nindex 0e66649..2bd26c6 100644\n--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n+++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n@@ -24,10 +24,24 @@ def update_proxy_model_permissions(apps, schema_editor, reverse=False):\n         proxy_content_type = ContentType.objects.get_for_model(Model, for_concrete_model=False)\n         old_content_type = proxy_content_type if reverse else concrete_content_type\n         new_content_type = concrete_content_type if reverse else proxy_content_type\n-        Permission.objects.filter(\n+        if old_content_type == new_content_type:\n+            continue\n+        for permission in Permission.objects.filter(\n             permissions_query,\n             content_type=old_content_type,\n-        ).update(content_type=new_content_type)\n+        ):\n+            try:\n+                new_permission = Permission.objects.get(\n+                    codename=permission.codename,\n+                    content_type=new_content_type,\n+                )\n+            except Permission.DoesNotExist:\n+                permission.content_type = new_content_type\n+                permission.save(update_fields=['content_type'])\n+            else:\n+                new_permission.user_set.add(*permission.user_set.all())\n+                new_permission.group_set.add(*permission.group_set.all())\n+                permission.delete()\n \n \n def revert_proxy_model_permissions(apps, schema_editor):",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11422",
+    "model_patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 7ca0d68..543b3f0 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -103,7 +103,11 @@ def iter_all_python_module_files():\n     # aren't loaded on the fly.\n     keys = sorted(sys.modules)\n     modules = tuple(m for m in map(sys.modules.__getitem__, keys) if not isinstance(m, weakref.ProxyTypes))\n-    return iter_modules_and_files(modules, frozenset(_error_files))\n+    results = set(iter_modules_and_files(modules, frozenset(_error_files)))\n+    if main_module := sys.modules.get('__main__'):\n+        if main_file := getattr(main_module, '__file__', None):\n+            results.add(pathlib.Path(main_file).resolve().absolute())\n+    return frozenset(results)\n \n \n @functools.lru_cache(maxsize=1)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11564",
+    "model_patch": "diff --git a/django/templatetags/static.py b/django/templatetags/static.py\nindex 39712aa..930d9bc 100644\n--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -104,6 +104,13 @@ class StaticNode(template.Node):\n \n     def render(self, context):\n         url = self.url(context)\n+        request = context.get('request')\n+        if request:\n+            script_name = request.META.get('SCRIPT_NAME', '')\n+            if script_name and not url.startswith('http'):\n+                if not script_name.endswith('/'):\n+                    script_name += '/'\n+                url = script_name + url.lstrip('/')\n         if context.autoescape:\n             url = conditional_escape(url)\n         if self.varname is None:",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11583",
+    "model_patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 25c3b44..7d7002f 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -134,14 +134,16 @@ def iter_modules_and_files(modules, extra_files):\n \n     results = set()\n     for filename in itertools.chain(sys_file_paths, extra_files):\n-        if not filename:\n+        # Skip empty entries or entries that contain an embedded null byte,\n+        # which pathlib cannot handle and would raise ValueError.\n+        if not filename or '\\0' in filename:\n             continue\n-        path = Path(filename)\n         try:\n-            resolved_path = path.resolve(strict=True).absolute()\n-        except FileNotFoundError:\n-            # The module could have been removed, don't fail loudly if this\n-            # is the case.\n+            # Resolve the path strictly (must exist). Any problem \u2013 missing\n+            # file, unreadable symlink, or malformed path \u2013 is ignored so that\n+            # the autoreloader continues to function.\n+            resolved_path = Path(filename).resolve(strict=True).absolute()\n+        except (FileNotFoundError, OSError, ValueError):\n             continue\n         results.add(resolved_path)\n     return frozenset(results)",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11630",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 94effe4..e3a804e 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -46,6 +46,42 @@ __all__ = [\n class Empty:\n     pass\n \n+def check_model_db_table_unique(app_configs=None, **kwargs):\n+    \"\"\"\n+    Ensure that no two models have the same database table name for the same database.\n+    \"\"\"\n+    from django.apps import apps\n+    from itertools import chain\n+    from django.db import connections, router\n+    errors = []\n+    if app_configs is None:\n+        models = apps.get_models()\n+    else:\n+        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)\n+    table_names_per_db = {alias: {} for alias in connections}\n+    for model in models:\n+        app_label = model._meta.app_label\n+        model_name = model._meta.model_name\n+        for alias in connections:\n+            if router.allow_migrate(alias, app_label, model_name=model_name):\n+                db_table = model._meta.db_table\n+                if db_table in table_names_per_db[alias]:\n+                    collided_model = table_names_per_db[alias][db_table]\n+                    errors.append(checks.Error(\n+                        \"db_table '%s' is used by multiple models: %s.%s, %s.%s\" % (\n+                            db_table,\n+                            collided_model._meta.app_label,\n+                            collided_model.__name__,\n+                            model._meta.app_label,\n+                            model.__name__\n+                        ),\n+                        hint=None,\n+                        id='models.E028',\n+                    ))\n+                else:\n+                    table_names_per_db[alias][db_table] = model\n+    return errors\n+\n \n class NOT_PROVIDED:\n     pass",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11815",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 27b5cbd..4622b0f 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -120,9 +120,9 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n-        v_string, v_imports = serializer_factory(self.value.value).serialize()\n+        v_string, v_imports = serializer_factory(self.value.name).serialize()\n         imports = {'import %s' % module, *v_imports}\n-        return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports\n+        return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports\n \n \n class FloatSerializer(BaseSimpleSerializer):",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11905",
+    "model_patch": "diff --git a/django/db/models/sql/datastructures.py b/django/db/models/sql/datastructures.py\nindex c2c347b..104b7bb 100644\n--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -53,6 +53,11 @@ class Join:\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation",
+    "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-11910",
+    "model_patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261..40dc732 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,",
+    "model_name_or_path": "ISHA-v1"
+  }
+]
