@@ -68,9 +68,23 @@ CODER_CHAIN = _parse_chain(
     "openrouter/nvidia/nemotron-3-super-120b-a12b:free,gemini/gemini-3.1-flash-lite,gemini/gemini-3.8-flash",
 )
 
+LOCALIZER_CHAIN = _parse_chain(
+    "ISHA_LOCALIZER_MODEL", "gemini/gemini-3.1-flash-lite",
+    "ISHA_LOCALIZER_FALLBACKS",
+    "openrouter/nvidia/nemotron-3-super-120b-a12b:free,groq/qwen/qwen3.8-27b",
+)
+
+CRITIC_CHAIN = _parse_chain(
+    "ISHA_CRITIC_MODEL", "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "ISHA_CRITIC_FALLBACKS",
+    "gemini/gemini-3.1-flash-lite,groq/qwen/qwen3.8-27b",
+)
+
 # Backward-compatible aliases
 PLANNER_MODEL = PLANNER_CHAIN[0]
 CODER_MODEL = CODER_CHAIN[0]
+LOCALIZER_MODEL = LOCALIZER_CHAIN[0]
+CRITIC_MODEL = CRITIC_CHAIN[0]
 PLANNER_FALLBACKS = PLANNER_CHAIN[1:]
 CODER_FALLBACKS = CODER_CHAIN[1:]
 
@@ -78,6 +92,11 @@ CODER_FALLBACKS = CODER_CHAIN[1:]
 CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen3.8-27b")
 CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "openrouter/nvidia/nemotron-3-super-120b-a12b:free")
 CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.1-flash-lite")
+
+# Architecture defaults: 3 diverse tournament candidates by default
+DEFAULT_CANDIDATES = int(os.getenv("ISHA_CANDIDATES", "3"))
+DEFAULT_IMPROVE_ROUNDS = int(os.getenv("ISHA_IMPROVE_ROUNDS", "3"))
+DEFAULT_CONVERGENCE_DELTA = float(os.getenv("ISHA_CONVERGENCE_DELTA", "0.0"))
 
 
 # ── Model availability ─────────────────────────────────────────────────────

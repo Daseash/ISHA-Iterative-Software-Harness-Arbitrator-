@@ -409,6 +409,12 @@ def cmd_fix(args: argparse.Namespace) -> int:
         forwarded += ["--apply"]
     if args.multi:
         forwarded += ["--multi"]
+    if getattr(args, "candidates", None) is not None:
+        forwarded += ["--candidates", str(args.candidates)]
+    if getattr(args, "improve", False):
+        forwarded += ["--improve"]
+    if getattr(args, "max_rounds", None) is not None:
+        forwarded += ["--max-rounds", str(args.max_rounds)]
     forwarded += ["--thread-id", args.thread_id]
     argv = sys.argv
     try:
@@ -429,6 +435,9 @@ def _parser() -> argparse.ArgumentParser:
     fix.add_argument("--issue-url", default=None, help="GitHub issue URL to fetch issue text from")
     fix.add_argument("--apply", action="store_true")
     fix.add_argument("--multi", action="store_true")
+    fix.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default: 3)")
+    fix.add_argument("--improve", "--loop", action="store_true", help="Run autonomous improvement loop until convergence")
+    fix.add_argument("--max-rounds", type=int, default=3, help="Max improvement loop rounds (default: 3)")
     fix.add_argument("--thread-id", default="1")
     fix.set_defaults(func=cmd_fix)
 

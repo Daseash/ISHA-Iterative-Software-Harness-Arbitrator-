@@ -135,12 +135,33 @@ def main() -> int:
         help="Run the multi-agent fan-out graph (3 strategies, 3 worktrees)",
     )
     parser.add_argument(
+        "--candidates",
+        type=int,
+        default=3,
+        help="Number of diverse strategy candidates to generate (default: 3)",
+    )
+    parser.add_argument(
+        "--improve",
+        "--loop",
+        action="store_true",
+        help="Run autonomous improvement loop until delta convergence",
+    )
+    parser.add_argument(
+        "--max-rounds",
+        type=int,
+        default=3,
+        help="Maximum improvement loop rounds (default: 3)",
+    )
+    parser.add_argument(
         "--approve",
         choices=["auto", "cli"],
         default="auto",
         help="Approval gate mode: auto records it silently, cli prompts for y/N",
     )
     args = parser.parse_args()
+
+    # Configure candidate tournament count across the process
+    os.environ["ISHA_CANDIDATES"] = str(max(1, args.candidates))
 
     if not Path(args.repo).is_dir():
         print(build_banner())
@@ -169,6 +190,9 @@ def main() -> int:
         print("  Models: offline deterministic brain (no API keys)")
     print(f"  Repo:   {args.repo}")
     print(f"  Issue:  {issue}")
+    print(f"  Tournament: {args.candidates} candidates with multi-model arbitration")
+    if args.improve:
+        print(f"  Improvement Loop: active (up to {args.max_rounds} self-repair rounds with convergence)")
     if using_default:
         print("  (no --issue given — running the built-in calculator demo bug)")
 
@@ -199,6 +223,17 @@ def main() -> int:
     )
     if isinstance(result, dict):
         result = AgentState(**result)
+
+    # If autonomous improvement loop is requested, run iterative self-repair until convergence
+    if args.improve and not args.multi:
+        from src.agents.improvement_loop import ImprovementLoopConfig, run_improvement_loop
+        loop_cfg = ImprovementLoopConfig(
+            max_iterations=args.max_rounds,
+            candidates_per_round=args.candidates,
+        )
+        loop_res = run_improvement_loop(result, loop_cfg)
+        result = loop_res.best_state
+        print(f"\n  [improvement-loop] {loop_res.stopping_reason} (converged={loop_res.converged}, rounds={loop_res.iterations_run})")
 
     # Drain any branch attempts left in the arbitration ledger.
     from src.review.arbitration import collect_attempts

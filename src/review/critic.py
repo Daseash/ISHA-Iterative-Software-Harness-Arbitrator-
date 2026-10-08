@@ -25,25 +25,12 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
 
         # Hard guardrails always win over model judgment.
         from src.guardrails.scanner import scan_patch_for_secrets
-        # Helper to detect if current attempt used fallback model
-        def _is_fallback_attempt(state):
-            """Check if the current patch attempt used a fallback model."""
-            if not state.model_log:
-                return False
-            # Look for the most recent coder entry
-            for entry in reversed(state.model_log):
-                if entry.get("role") == "coder":
-                    position = entry.get("position", "")
-                    return "fallback" in position.lower()
-            return False
 
-        # Helper to detect if current attempt used fallback model
-        def _is_fallback_attempt(state):
+        def _is_fallback_attempt(st):
             """Check if the current patch attempt used a fallback model."""
-            if not state.model_log:
+            if not st.model_log:
                 return False
-            # Look for the most recent coder entry
-            for entry in reversed(state.model_log):
+            for entry in reversed(st.model_log):
                 if entry.get("role") == "coder":
                     position = entry.get("position", "")
                     return "fallback" in position.lower()

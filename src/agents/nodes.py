@@ -406,6 +406,15 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
         notes = "\n".join(f"- {n}" for n in state.context_notes[-8:])
         retry_hint += f"\n\nVALIDATION NOTES:\n{notes}"
 
+    # Verbatim compiler / indentation syntax error handling
+    if "STATIC GATE" in (state.test_output or "") or "SyntaxError" in (state.test_output or "") or "IndentationError" in (state.test_output or ""):
+        retry_hint += (
+            "\n\nCRITICAL COMPILER / INDENTATION SYNTAX ERROR:\n"
+            "Your previous patch produced a compiler syntax or indentation error.\n"
+            "INSPECT THE VERBATIM CODE LINES IN THE ERROR OUTPUT CAREFULLY.\n"
+            "Ensure exact 4-space Python indentation and that all blocks are correctly closed.\n"
+        )
+
     # M-2 Grounding: If previous attempt failed on git apply or hunk context mismatch,
     # strictly mandate verbatim copying of context lines from the actual files.
     apply_failed = (
@@ -575,12 +584,13 @@ def candidate_node(state: AgentState) -> AgentState:
     dropping it costs nothing and keeps the record honest.
     """
     state = coerce_state(state)
-    if not _bench_mode() or not state.patch or state.patch.startswith("["):
+    if not state.patch or state.patch.startswith("["):
         return state
     try:
-        n = int(os.getenv("ISHA_CANDIDATES", "1"))
-    except ValueError:
-        n = 1
+        from src.config import DEFAULT_CANDIDATES
+        n = int(os.getenv("ISHA_CANDIDATES", str(DEFAULT_CANDIDATES)))
+    except Exception:
+        n = 3
     if n <= 1 and os.getenv("ISHA_SINGLE_VERIFY", "0") != "1":
         return state
 
@@ -946,20 +956,23 @@ def sandbox_node(state: AgentState) -> AgentState:
         state.test_output = f"FAILED: patch could not be applied — {message}"
         return state
 
-    # 2b. Bench mode: the host has no environment for these repos (and the
-    #     official harness is the ground truth), so gate on static validity
-    #     instead of a local pytest run.  Apply errors and syntax errors
-    #     still fail loudly and feed straight back into the retry loop.
-    if _bench_mode():
-        from src.bench.gates import compile_gate
+    # 2b. Static compile & syntax gate with verbatim surrounding context:
+    # Fails fast on SyntaxError, IndentationError, ast.parse failure before running dynamic tests
+    from src.bench.gates import compile_gate, format_gate_errors_with_context
 
-        gate = compile_gate(str(target), state.patch, baseline_repo=state.repo_path)
-        if not gate.ok:
-            state.context_notes = list(state.context_notes) + [
-                f"static gate rejected the patch: {e}" for e in gate.errors[:5]
-            ]
-            state.test_output = "FAILED: STATIC GATE — " + "; ".join(gate.errors[:6])
-            return state
+    gate = compile_gate(str(target), state.patch, baseline_repo=state.repo_path)
+    if not gate.ok:
+        gate_ctx = format_gate_errors_with_context(str(target), gate.errors)
+        state.context_notes = list(state.context_notes) + [
+            f"static gate rejected the patch: {e}" for e in gate.errors[:5]
+        ]
+        state.test_output = (
+            "FAILED: STATIC GATE (COMPILER/SYNTAX ERROR):\n"
+            + (gate_ctx or "; ".join(gate.errors[:6]))
+        )
+        return state
+
+    if _bench_mode():
 
         # GAP 1 & GAP 6: Dynamic verification inside the agent loop.
         # When dynamic feedback is enabled or docker sandbox is available, run the
