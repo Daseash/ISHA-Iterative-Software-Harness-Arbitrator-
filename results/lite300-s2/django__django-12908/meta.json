@@ -1,0 +1,400 @@
+{
+  "instance_id": "django__django-12908",
+  "repo": "django/django",
+  "base_commit": "49ae7ce50a874f8a04cd910882fb9571ff3a0d7a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458910.4163356
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458916.8017945
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458940.5412107
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458953.7749822
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458991.9842327
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459169.2515256
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 2,
+      "warnings": [
+        "rewrite risk: 'distinct' in 'django/db/models/query.py' — the diff replaces 8/13 of its body (62%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791458836.1697464,
+  "elapsed_s": 340.85,
+  "plan": "# In django/db/models/query.py, within the QuerySet class\n\ndef distinct(self, *field_names):\n    if self.query.combinator and field_names:\n        raise NotSupportedError(\n            'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n        )\n    # ... existing implementation ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::contribute_to_class",
+      "symbols": [
+        "contribute_to_class",
+        "BigIntegerField",
+        "PositiveBigIntegerField",
+        "PositiveIntegerField"
+      ],
+      "line_range": [
+        755,
+        782
+      ],
+      "score": 0.6135,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.407,
+        "vector": 0.556,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: name; body matches report terms: should, name, user, this)"
+    },
+    {
+      "file": "django/db/models/aggregates.py",
+      "symbol": "django/db/models/aggregates.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "resolve_expression",
+        "as_sql"
+      ],
+      "line_range": [
+        24,
+        30
+      ],
+      "score": 0.718,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8486,
+        "vector": 0.4658,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: distinct, filter; body matches report terms: name, filter, distinct)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "escape_filter",
+        "safeseq",
+        "slice_filter"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.7235,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2574,
+        "vector": 0.4301,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: will, should, filter)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::update_last_login",
+      "symbols": [
+        "update_last_login",
+        "_user_get_permissions",
+        "get_by_natural_key",
+        "_user_has_perm"
+      ],
+      "line_range": [
+        14,
+        22
+      ],
+      "score": 0.5891,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3347,
+        "vector": 0.4619,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: user; body matches report terms: last, user)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::serialize",
+      "symbols": [
+        "serialize",
+        "BadSerializer",
+        "unregister_serializer",
+        "deserialize"
+      ],
+      "line_range": [
+        122,
+        131
+      ],
+      "score": 0.584,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4375,
+        "vector": 0.2471,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: value, objects, using, queryset)"
+    },
+    {
+      "file": "django/__init__.py",
+      "symbol": "django/__init__.py::setup",
+      "symbols": [
+        "setup"
+      ],
+      "line_range": [
+        8,
+        24
+      ],
+      "score": 0.7196,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.2053,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: name, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.71095,
+  "laya_scores": {
+    "fix_quality": 1.4551,
+    "matches_issue": 0.721,
+    "safe_to_apply": 0.6677,
+    "composite": 0.71095,
+    "secrets_or_danger": 0.1215,
+    "logic_drift": 0.3061,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No changes to input handling or execution context.\n- PERFORMANCE: PASS - Adds a schema-level validation check which is computationally negligible.\n- ROBUSTNESS: PASS - Correctly replaces an implicit failure/no-op with an explicit `NotSupportedError`.\n- PONYTAIL / YAGNI: PASS - The added error handling is necessary to maintain API predictability given the current database limitations.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core.exceptions import NotSupportedError\nfrom django.db import models\nfrom django.db.models import Value, IntegerField\nfrom myapp.models import Sample  # Assuming the model is imported from the app\n\n@pytest.mark.django_db\ndef test_union_annotated_diff_distinct_reproduction():\n    \"\"\"\n    Test that calling .distinct(field) on a unioned annotated queryset \n    raises NotSupportedError as per the fix plan.\n    \"\"\"\n    qs = Sample.objects.all()\n    qs1 = qs.filter(name='Dub').annotate(rank=Value(0, IntegerField()))\n    qs2 = qs.filter(name='Sam1').annotate(rank=Value(1, IntegerField()))\n    \n    union_qs = qs1.union(qs2)\n    \n    # This should trigger the NotSupportedError after the fix\n    with pytest.raises(NotSupportedError, match=\"DISTINCT ON fields are not supported\"):\n        union_qs.order_by('name').distinct('name')\n\n@pytest.mark.django_db\ndef test_union_no_args_distinct_allowed():\n    \"\"\"\n    Verifies that calling .distinct() without arguments on a union \n    remains supported (as the fix only targets distinct with fields).\n    \"\"\"\n    qs1 = Sample.objects.filter(name='Dub')\n    qs2 = Sample.objects.filter(name='Sam1')\n    \n    union_qs = qs1.union(qs2)\n    # .distinct() without fields should still work or be ignored/handled\n    # as per existing framework behavior, not restricted by the fix.\n    try:\n        union_qs.distinct().count()\n    except NotSupportedError:\n        pytest.fail(\"distinct() without arguments should not be blocked.\")\n\n@pytest.mark.django_db\ndef test_union_annotated_invalid_field_distinct():\n    \"\"\"\n    Verify that providing a non-existent field to distinct() on a union \n    still raises NotSupportedError (or FieldError, but the block happens first).\n    \"\"\"\n    qs1 = Sample.objects.filter(name='Dub').annotate(rank=Value(0, IntegerField()))\n    qs2 = qs.filter(name='Sam1').annotate(rank=Value(1, IntegerField()))\n    \n    union_qs = qs1.union(qs2)\n    \n    with pytest.raises(NotSupportedError, match=\"DISTINCT ON fields are not supported\"):\n        union_qs.distinct('non_existent_field')\n\n@pytest.mark.django_db\ndef test_union_empty_queryset_distinct_check():\n    \"\"\"\n    Boundary test: Verify that unioning with an empty queryset \n    still respects the distinct() restriction.\n    \"\"\"\n    qs1 = Sample.objects.filter(name='Dub').annotate(rank=Value(0, IntegerField()))\n    qs_empty = Sample.objects.none()\n    \n    union_qs = qs1.union(qs_empty)\n    \n    with pytest.raises(NotSupportedError, match=\"DISTINCT ON fields are not supported\"):\n        union_qs.distinct('name')",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eeccefa6..63b5a99d0a 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1138,8 +1138,12 @@ class QuerySet:\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n-        assert not self.query.is_sliced, \\\n-            \"Cannot create distinct fields once a slice has been taken.\"\n+        assert self.query.can_filter(), \\\n+            \"Cannot call distinct() after %s()\" % self.query.combinator\n+        if self.query.combinator and field_names:\n+            raise NotSupportedError(\n+                'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n+            )\n         obj = self._chain()\n         obj.query.add_distinct_fields(*field_names)\n         return obj\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12908-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4551,
+        "matches_issue": 0.721,
+        "safe_to_apply": 0.6677,
+        "composite": 0.71095,
+        "secrets_or_danger": 0.1215,
+        "logic_drift": 0.3061,
+        "flagged": false
+      },
+      "laya_combined": 0.7109,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 80.59,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eeccefa6..f119dacc0e 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1020,6 +1020,10 @@ class QuerySet:\n \n     def select_for_update(self, nowait=False, skip_locked=False, of=()):\n         \"\"\"\n+        if self.query.combinator and field_names:\n+            raise NotSupportedError(\n+                'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n+            )\n         Return a new QuerySet instance that will select objects with a\n         FOR UPDATE lock.\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12908-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6762,
+        "matches_issue": 0.789,
+        "safe_to_apply": 0.7358,
+        "composite": 0.8002499999999999,
+        "secrets_or_danger": 0.1047,
+        "logic_drift": 0.4152,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 23.82,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eeccefa6..f119dacc0e 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1020,6 +1020,10 @@ class QuerySet:\n \n     def select_for_update(self, nowait=False, skip_locked=False, of=()):\n         \"\"\"\n+        if self.query.combinator and field_names:\n+            raise NotSupportedError(\n+                'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n+            )\n         Return a new QuerySet instance that will select objects with a\n         FOR UPDATE lock.\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12908-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6762,
+        "matches_issue": 0.789,
+        "safe_to_apply": 0.7358,
+        "composite": 0.8002499999999999,
+        "secrets_or_danger": 0.1047,
+        "logic_drift": 0.4152,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 83.89,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eeccefa6..63b5a99d0a 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1138,8 +1138,12 @@ class QuerySet:\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n-        assert not self.query.is_sliced, \\\n-            \"Cannot create distinct fields once a slice has been taken.\"\n+        assert self.query.can_filter(), \\\n+            \"Cannot call distinct() after %s()\" % self.query.combinator\n+        if self.query.combinator and field_names:\n+            raise NotSupportedError(\n+                'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n+            )\n         obj = self._chain()\n         obj.query.add_distinct_fields(*field_names)\n         return obj\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12908-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/query.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/query.py"
+    ],
+    "added_lines": 6,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4551,
+      "matches_issue": 0.721,
+      "safe_to_apply": 0.6677,
+      "composite": 0.71095,
+      "secrets_or_danger": 0.1215,
+      "logic_drift": 0.3061,
+      "flagged": false
+    },
+    "laya_combined": 0.7109,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0067,
+    "rank_reason": "logistic",
+    "elapsed_s": 80.59,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eecce..63b5a99 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1138,8 +1138,12 @@ class QuerySet:\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n-        assert not self.query.is_sliced, \\\n-            \"Cannot create distinct fields once a slice has been taken.\"\n+        assert self.query.can_filter(), \\\n+            \"Cannot call distinct() after %s()\" % self.query.combinator\n+        if self.query.combinator and field_names:\n+            raise NotSupportedError(\n+                'DISTINCT ON fields are not supported when using union(), intersection(), or difference().'\n+            )\n         obj = self._chain()\n         obj.query.add_distinct_fields(*field_names)\n         return obj\n",
+  "offline_calls": 0
+}

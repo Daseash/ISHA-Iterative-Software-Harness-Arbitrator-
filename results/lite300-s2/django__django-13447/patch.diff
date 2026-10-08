@@ -1,0 +1,39 @@
+diff --git a/django/contrib/admin/sites.py b/django/contrib/admin/sites.py
+index 837dabf..83eda79 100644
+--- a/django/contrib/admin/sites.py
++++ b/django/contrib/admin/sites.py
+@@ -430,7 +430,7 @@ class AdminSite:
+                     return HttpResponsePermanentRedirect(path)
+         raise Http404
+ 
+-    def _build_app_dict(self, request, label=None):
++    def build_app_dict(self, request, label=None):
+         """
+         Build the app dictionary. The optional `label` parameter filters models
+         of a specific app.
+@@ -464,6 +464,7 @@ class AdminSite:
+                 'name': capfirst(model._meta.verbose_name_plural),
+                 'object_name': model._meta.object_name,
+                 'perms': perms,
++                    'model': model,
+                 'admin_url': None,
+                 'add_url': None,
+             }
+@@ -519,7 +520,7 @@ class AdminSite:
+         Display the main admin index page, which lists all of the installed
+         apps that have been registered in this site.
+         """
+-        app_list = self.get_app_list(request)
++        app_list = self.build_app_dict(request)
+ 
+         context = {
+             **self.each_context(request),
+@@ -534,7 +535,7 @@ class AdminSite:
+         return TemplateResponse(request, self.index_template or 'admin/index.html', context)
+ 
+     def app_index(self, request, app_label, extra_context=None):
+-        app_dict = self._build_app_dict(request, app_label)
++        app_dict = self.build_app_dict(request, app_label)
+         if not app_dict:
+             raise Http404('The requested admin page does not exist.')
+         # Sort the models alphabetically within each app.

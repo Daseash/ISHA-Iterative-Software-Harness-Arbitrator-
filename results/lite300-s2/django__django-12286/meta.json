@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12286",
+  "repo": "django/django",
+  "base_commit": "979f61abd322507aafced9627702362e541ec34e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454658.4257004
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454667.16584
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454692.273543
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454703.6406987
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454735.2076116
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454987.7189791
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/checks/translation.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/checks/translation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791454556.4495268,
+  "elapsed_s": 439.05,
+  "plan": "Step 1: The root cause\nThe `translation.E004` system check, located in `django/core/checks/translation.py` (which is responsible for validating `LANGUAGE_CODE` against `LANGUAGES`), performs a strict check to ensure `LANGUAGE_CODE` is present in `LANGUAGES`. However, it fails to account for the logic described in the Django documentation: when a sublanguage (e.g., `de-at`) is provided but not explicitly listed in `LANGUAGES`, Django is designed to fall back to the base language (e.g., `de`). The system check does not implement this fallback logic, causing it to erroneously raise `E004` when a valid sublanguage is used that relies on a base language defined in `LANGUAGES`.\n\nStep 2: Exact changes\nFile: `django/core/checks/translation.py`\nIn the function performing the `translation.E004` check (typically named `check_language_code_is_in_languages`), modify the validation logic to verify if the `LANGUAGE_CODE` is either present in the `LANGUAGES` setting OR if its base language part (the part before the hyphen) is present in `LANGUAGES`.\n\nSpecifically, update the check to perform the following logic:\n1. Retrieve `LANGUAGE_CODE` and `LANGUAGES`.\n2. Check if `LANGUAGE_CODE` is in `LANGUAGES` (the current logic).\n3. If not, split `LANGUAGE_CODE` by `'-'` to get the base language code.\n4. Verify if this base language code exists within the keys of the `LANGUAGES` setting.\n5. Only trigger the `translation.E004` error if neither the full `LANGUAGE_CODE` nor its base language part exists in the defined `LANGUAGES`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "__getattr__",
+        "ugettext_noop",
+        "ugettext"
+      ],
+      "line_range": [
+        42,
+        67
+      ],
+      "score": 0.5913,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2384,
+        "vector": 0.7227,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: setting, settings, django, have)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::SettingsReference",
+      "symbols": [
+        "SettingsReference",
+        "_setup",
+        "__setattr__",
+        "configure"
+      ],
+      "line_range": [
+        31,
+        42
+      ],
+      "score": 0.5911,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3231,
+        "vector": 0.5447,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: value, setting, settings)"
+    },
+    {
+      "file": "django/utils/translation/trans_real.py",
+      "symbol": "django/utils/translation/trans_real.py::reset_cache",
+      "symbols": [
+        "reset_cache",
+        "DjangoTranslation",
+        "__init__",
+        "__repr__"
+      ],
+      "line_range": [
+        50,
+        60
+      ],
+      "score": 0.7605,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7946,
+        "vector": 0.9325,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: some, setting, language_code, check)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::CommandError",
+      "symbols": [
+        "CommandError",
+        "SystemCheckError",
+        "CommandParser",
+        "handle_default_options"
+      ],
+      "line_range": [
+        17,
+        31
+      ],
+      "score": 0.6763,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5985,
+        "vector": 0.6395,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: some, description, this, raised)"
+    },
+    {
+      "file": "django/templatetags/i18n.py",
+      "symbol": "django/templatetags/i18n.py::GetAvailableLanguagesNode",
+      "symbols": [
+        "GetAvailableLanguagesNode",
+        "render",
+        "GetLanguageInfoListNode",
+        "do_get_available_languages"
+      ],
+      "line_range": [
+        11,
+        19
+      ],
+      "score": 0.6476,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5269,
+        "vector": 0.5486,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: setting, settings, available, languages)"
+    },
+    {
+      "file": "django/core/cache/__init__.py",
+      "symbol": "django/core/cache/__init__.py::_create_cache",
+      "symbols": [
+        "_create_cache",
+        "CacheHandler",
+        "__getitem__",
+        "DefaultCacheProxy"
+      ],
+      "line_range": [
+        32,
+        56
+      ],
+      "score": 0.5775,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.179,
+        "vector": 0.731,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: setting, settings, error)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.740725,
+  "laya_scores": {
+    "fix_quality": 1.6071,
+    "matches_issue": 0.75,
+    "safe_to_apply": 0.6058,
+    "composite": 0.740725,
+    "secrets_or_danger": 0.1257,
+    "logic_drift": 0.3978,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, code logic does not interact with external inputs or system shell.\n- PERFORMANCE: PASS, split and dictionary lookup are constant-time O(1) operations.\n- ROBUSTNESS: FAIL, the patch as written is unreachable code because the function returns before reaching the new lines.\n- PONYTAIL / YAGNI: PASS, the logic addresses the reported bug directly without over-engineering.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.conf import settings\nfrom django.core.checks.translation import check_language_code_is_in_languages\n\ndef test_language_code_sublanguage_fallback_repro():\n    \"\"\"\n    Reproduces the bug where LANGUAGE_CODE=\"de-at\" fails validation\n    even when \"de\" is in LANGUAGES.\n    \"\"\"\n    # Mock settings where \"de\" is available, but \"de-at\" is not explicitly listed.\n    languages = [('de', 'German')]\n    \n    # This should pass because 'de' is the base language of 'de-at'.\n    # Before the fix, this returns an error list.\n    errors = check_language_code_is_in_languages(None, language_code='de-at', languages=languages)\n    \n    assert len(errors) == 0, f\"Expected no errors for sublanguage fallback, but got: {errors}\"\n\ndef test_language_code_full_match_still_works():\n    \"\"\"\n    Edge case: Ensure an exact match in LANGUAGES still passes.\n    \"\"\"\n    languages = [('es-ar', 'Argentinian Spanish')]\n    errors = check_language_code_is_in_languages(None, language_code='es-ar', languages=languages)\n    \n    assert len(errors) == 0\n\ndef test_language_code_invalid_raises_error():\n    \"\"\"\n    Edge case: Ensure a completely unknown language code still raises E004.\n    \"\"\"\n    languages = [('en', 'English')]\n    errors = check_language_code_is_in_languages(None, language_code='fr-ca', languages=languages)\n    \n    assert len(errors) == 1\n    assert errors[0].id == 'translation.E004'\n\ndef test_language_code_complex_sublanguage_not_found():\n    \"\"\"\n    Edge case: Even with sublanguage logic, if neither base nor sub exist, it must fail.\n    Checking for something like 'de-xy' where 'de' is present, but 'de-xy' isn't explicitly\n    supported if the system were to check for the specific sub-tag validation.\n    Wait: The fix plan implies base check IS sufficient. If base 'de' exists, 'de-xy' should pass.\n    This test verifies that logic.\n    \"\"\"\n    languages = [('de', 'German')]\n    # 'de-xx' is not in languages, but 'de' is.\n    errors = check_language_code_is_in_languages(None, language_code='de-xx', languages=languages)\n    \n    # If the fix is implemented correctly, this should pass (no error)\n    assert len(errors) == 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07ff8..b4d315af24 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):\n     if not isinstance(tag, str) or not language_code_re.match(tag):\n         return [Error(E001.msg.format(tag), id=E001.id)]\n     return []\n+    if settings.LANGUAGE_CODE.split('-')[0] in dict(settings.LANGUAGES):\n+        return []\n \n \n @register(Tags.translation)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12286-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/translation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/translation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6071,
+        "matches_issue": 0.75,
+        "safe_to_apply": 0.6058,
+        "composite": 0.740725,
+        "secrets_or_danger": 0.1257,
+        "logic_drift": 0.3978,
+        "flagged": false
+      },
+      "laya_combined": 0.7407,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 144.47,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07ff8..b4d315af24 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):\n     if not isinstance(tag, str) or not language_code_re.match(tag):\n         return [Error(E001.msg.format(tag), id=E001.id)]\n     return []\n+    if settings.LANGUAGE_CODE.split('-')[0] in dict(settings.LANGUAGES):\n+        return []\n \n \n @register(Tags.translation)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12286-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/translation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/translation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6071,
+        "matches_issue": 0.75,
+        "safe_to_apply": 0.6058,
+        "composite": 0.740725,
+        "secrets_or_danger": 0.1257,
+        "logic_drift": 0.3978,
+        "flagged": false
+      },
+      "laya_combined": 0.7407,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 141.91,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07ff8..2af6900c0d 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):\n     if not isinstance(tag, str) or not language_code_re.match(tag):\n         return [Error(E001.msg.format(tag), id=E001.id)]\n     return []\n+    if settings.LANGUAGE_CODE.split('-')[0] in [lang for lang, name in settings.LANGUAGES]:\n+        return []\n \n \n @register(Tags.translation)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12286-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/translation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/translation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6097,
+        "matches_issue": 0.8034,
+        "safe_to_apply": 0.6615,
+        "composite": 0.76865,
+        "secrets_or_danger": 0.0928,
+        "logic_drift": 0.321,
+        "flagged": false
+      },
+      "laya_combined": 0.7687,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 138.86,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07ff8..b4d315af24 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):\n     if not isinstance(tag, str) or not language_code_re.match(tag):\n         return [Error(E001.msg.format(tag), id=E001.id)]\n     return []\n+    if settings.LANGUAGE_CODE.split('-')[0] in dict(settings.LANGUAGES):\n+        return []\n \n \n @register(Tags.translation)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12286-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/checks/translation.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/checks/translation.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6071,
+      "matches_issue": 0.75,
+      "safe_to_apply": 0.6058,
+      "composite": 0.740725,
+      "secrets_or_danger": 0.1257,
+      "logic_drift": 0.3978,
+      "flagged": false
+    },
+    "laya_combined": 0.7407,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 144.47,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07..b4d315a 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):\n     if not isinstance(tag, str) or not language_code_re.match(tag):\n         return [Error(E001.msg.format(tag), id=E001.id)]\n     return []\n+    if settings.LANGUAGE_CODE.split('-')[0] in dict(settings.LANGUAGES):\n+        return []\n \n \n @register(Tags.translation)\n",
+  "offline_calls": 0
+}

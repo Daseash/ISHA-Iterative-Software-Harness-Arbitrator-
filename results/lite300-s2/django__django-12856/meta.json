@@ -1,0 +1,412 @@
+{
+  "instance_id": "django__django-12856",
+  "repo": "django/django",
+  "base_commit": "8328811f048fed0dd22573224def8c65410c9f2e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458525.0026875
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458531.4207575
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458554.703441
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458570.7547266
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458596.2368698
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458799.4304073
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/base.py, django/db/models/constraints.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/base.py",
+        "django/db/models/constraints.py"
+      ],
+      "added_lines": 15,
+      "removed_lines": 0,
+      "warnings": [
+        "rewrite risk: 'check' in 'django/db/models/constraints.py' — the diff replaces 8/8 of its body (100%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791458457.632112,
+  "elapsed_s": 349.56,
+  "plan": "### Step 1: Root Cause\nThe Django system check framework performs validation on model constraints, but the `UniqueConstraint` class in `django/db/models/constraints.py` does not currently implement a `check` method that validates if the fields referenced in the constraint actually exist on the model. While legacy `unique_together` constraints are validated via `models.E012` in `django/db/models/base.py`, `UniqueConstraint` objects are initialized and stored in the model's `Meta.constraints` without a corresponding verification that the field names provided in the `fields` argument are valid fields for that model.\n\n### Step 2: Exact Changes\nI need to add a `check` method to the `UniqueConstraint` class in `django/db/models/constraints.py` and ensure the model validation logic triggers this check.\n\n1.  **File:** `django/db/models/constraints.py`\n    *   Add a `check(self, model)` method to the `UniqueConstraint` class. This method should:\n        *   Iterate through the `self.fields` list.\n        *   Use `model._meta.get_field(field_name)` to verify if the field exists.\n        *   Catch `FieldDoesNotExist` exceptions and return a list containing a `checks.Error` (e.g., code `models.E012`) indicating that the constraint refers to a non-existent field.\n\n2.  **File:** `django/db/models/base.py`\n    *   In the `ModelBase.__new__` or the model validation stage (specifically within the `check` method for models), ensure that `model._meta.constraints` are iterated over.\n    *   Call the `check()` method on each `UniqueConstraint` instance and aggregate any errors returned into the model's system check results.\n\nBy implementing the `check` method within the constraint class and invoking it during model validation, we mirror the existing behavior for `unique_together` and ensure that developers receive immediate feedback if they misspell or remove a field used in a `UniqueConstraint`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "execute",
+        "autocomplete",
+        "main_help_text"
+      ],
+      "line_range": [
+        42,
+        75
+      ],
+      "score": 0.5868,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2747,
+        "vector": 0.6091,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: settings, exist, this, that)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__str__",
+      "symbols": [
+        "__str__",
+        "_check_null_allowed_for_primary_keys",
+        "__reduce__",
+        "db_check"
+      ],
+      "line_range": [
+        178,
+        188
+      ],
+      "score": 0.6554,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4843,
+        "vector": 0.7448,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: models, attached, fields, model)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::create_permissions",
+      "symbols": [
+        "create_permissions",
+        "get_default_username",
+        "_get_builtin_permissions"
+      ],
+      "line_range": [
+        35,
+        88
+      ],
+      "score": 0.5841,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3247,
+        "vector": 0.483,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: models, need, exist, check)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::unregister_serializer",
+      "symbols": [
+        "unregister_serializer",
+        "_load_serializers",
+        "BadSerializer",
+        "get_serializer"
+      ],
+      "line_range": [
+        85,
+        93
+      ],
+      "score": 0.6339,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4973,
+        "vector": 0.5378,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: exist, this, doesn)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_setup",
+      "symbols": [
+        "_setup",
+        "__setattr__",
+        "SettingsReference",
+        "configure"
+      ],
+      "line_range": [
+        49,
+        65
+      ],
+      "score": 0.5836,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4163,
+        "vector": 0.288,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: need, settings, this)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "stringformat",
+        "dictsort",
+        "dictsortreversed"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5663,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2362,
+        "vector": 0.4767,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: check, which, when)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.64235,
+  "laya_scores": {
+    "fix_quality": 1.4857,
+    "matches_issue": 0.5476,
+    "safe_to_apply": 0.5361,
+    "composite": 0.64235,
+    "secrets_or_danger": 0.1485,
+    "logic_drift": 0.6295,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS. No security implications identified in this validation logic.\n- PERFORMANCE: PASS. The check runs during model validation (startup/migrations), not in request paths.\n- ROBUSTNESS: FAIL. The code block in `django/db/models/base.py` is unreachable because it is placed after the `return` statement in the `_check_local_fields` method.\n- PONYTAIL / YAGNI: PASS. This is a requested fix for parity with `unique_together` validation.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core import checks\nfrom django.db import models\nfrom django.db.models import UniqueConstraint\n\n@pytest.mark.django_db\ndef test_unique_constraint_nonexistent_field_fails():\n    \"\"\"\n    REPRODUCTION: UniqueConstraint with a non-existent field should raise a system check error.\n    \"\"\"\n    class InvalidModel(models.Model):\n        name = models.CharField(max_length=100)\n\n        class Meta:\n            constraints = [\n                UniqueConstraint(fields=['nonexistent_field'], name='invalid_constraint')\n            ]\n\n    errors = InvalidModel.check()\n    # Check for E012 or similar error codes (expecting a failure here)\n    assert any(error.id == 'models.E012' for error in errors), \\\n        f\"Expected models.E012 error, but got: {errors}\"\n\n@pytest.mark.django_db\ndef test_unique_constraint_valid_fields_pass():\n    \"\"\"\n    EDGE CASE: Valid fields in UniqueConstraint should pass system checks.\n    \"\"\"\n    class ValidModel(models.Model):\n        name = models.CharField(max_length=100)\n        email = models.EmailField()\n\n        class Meta:\n            constraints = [\n                UniqueConstraint(fields=['name', 'email'], name='valid_constraint')\n            ]\n\n    errors = ValidModel.check()\n    assert not errors, f\"Expected no errors, but got: {errors}\"\n\n@pytest.mark.django_db\ndef test_unique_constraint_multiple_fields_some_invalid():\n    \"\"\"\n    EDGE CASE: If some fields are invalid, it should still report an error.\n    \"\"\"\n    class PartiallyInvalidModel(models.Model):\n        name = models.CharField(max_length=100)\n\n        class Meta:\n            constraints = [\n                UniqueConstraint(fields=['name', 'invalid_field'], name='partial_invalid')\n            ]\n\n    errors = PartiallyInvalidModel.check()\n    assert any(error.id == 'models.E012' for error in errors)\n\n@pytest.mark.django_db\ndef test_unique_constraint_empty_fields_list():\n    \"\"\"\n    EDGE CASE: An empty list of fields is invalid in UniqueConstraint logic (or at least \n    invalid for the field existence check).\n    \"\"\"\n    class EmptyConstraintModel(models.Model):\n        name = models.CharField(max_length=100)\n\n        class Meta:\n            constraints = [\n                UniqueConstraint(fields=[], name='empty_constraint')\n            ]\n    \n    # Depending on implementation, empty list might trigger E012 or another error\n    # but the framework should definitely report a check failure.\n    errors = EmptyConstraintModel.check()\n    assert len(errors) > 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\nindex 7bb3fa4706..6edb82c229 100644\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1311,6 +1311,10 @@ class Model(metaclass=ModelBase):\n                 )\n         return errors\n \n+        for constraint in cls._meta.constraints:\n+            for error in constraint.check(cls):\n+                errors.setdefault(error.id, []).append(error)\n+\n     @classmethod\n     def _check_model(cls):\n         errors = []\ndiff --git a/django/db/models/constraints.py b/django/db/models/constraints.py\nindex 64bd60484e..06d7cd6f9a 100644\n--- a/django/db/models/constraints.py\n+++ b/django/db/models/constraints.py\n@@ -1,5 +1,7 @@\n from enum import Enum\n \n+from django.core.exceptions import FieldDoesNotExist\n+from django.core import checks\n from django.db.models.query_utils import Q\n from django.db.models.sql.query import Query\n \n@@ -95,6 +97,15 @@ class UniqueConstraint(BaseConstraint):\n         self.deferrable = deferrable\n         super().__init__(name)\n \n+    def check(self, model):\n+        errors = []\n+        for field_name in self.fields:\n+            try:\n+                model._meta.get_field(field_name)\n+            except FieldDoesNotExist:\n+                errors.append(checks.Error(\"UniqueConstraint.fields contains non-existent field '%s'.\" % field_name, obj=model, id='models.E012'))\n+        return errors\n+\n     def _get_condition_sql(self, model, schema_editor):\n         if self.condition is None:\n             return None\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/constraints.py, django/db/models/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/base.py",
+        "django/db/models/constraints.py"
+      ],
+      "added_lines": 15,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4857,
+        "matches_issue": 0.5476,
+        "safe_to_apply": 0.5361,
+        "composite": 0.64235,
+        "secrets_or_danger": 0.1485,
+        "logic_drift": 0.6295,
+        "flagged": false
+      },
+      "laya_combined": 0.6423,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0085,
+      "rank_reason": "logistic",
+      "elapsed_s": 21.38,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/constraints.py\n+++ b/django/db/models/constraints.py\n@@ -1,5 +1,7 @@\n+from django.core.exceptions import FieldDoesNotExist\n from django.db.models.query_utils import Q\n from django.db.models.sql.query import Query\n+from django.core import checks\n\n class BaseConstraint:\n@@ -10,6 +12,16 @@ class BaseConstraint:\n     def __repr__(self):\n         return '<%s: name=%r>' % (self.__class__.__name__, self.name)\n\n+    def check(self, model):\n+        return []\n+\n\n class CheckConstraint(BaseConstraint):\n     def __init__(self, *, check, name):\n@@ -52,6 +64,16 @@ class UniqueConstraint(BaseConstraint):\n         self.condition = condition\n         self.deferrable = deferrable\n         super().__init__(name)\n+\n+    def check(self, model):\n+        errors = []\n+        for field_name in self.fields:\n+            try:\n+                model._meta.get_field(field_name)\n+            except FieldDoesNotExist:\n+                errors.append(checks.Error(\"UniqueConstraint refers to the nonexistent field '%s'.\" % field_name, obj=model, id='models.E012'))\n+        return errors\n\n     def __repr__(self):\n         return '<UniqueConstraint: fields=%r name=%r%s%s>' % (\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1651,6 +1651,8 @@ class Model(metaclass=ModelBase):\n             if hasattr(constraint, 'check'):\n                 errors.extend(constraint.check(cls))\n\n+        for constraint in cls._meta.constraints:\n+            errors.extend(constraint.check(cls))\n+\n         return errors\n\n     def _check_local_fields(self):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c3\\django\\db\\models\\constraints.py: SyntaxError line 10: unexpected indent",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c3\\django\\db\\models\\base.py: undefined name 'errors'"
+      ],
+      "changed_files": [
+        "django/db/models/constraints.py",
+        "django/db/models/base.py"
+      ],
+      "added_lines": 17,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5178,
+        "matches_issue": 0.5844,
+        "safe_to_apply": 0.5281,
+        "composite": 0.657575,
+        "secrets_or_danger": 0.2367,
+        "logic_drift": 0.4679,
+        "flagged": false
+      },
+      "laya_combined": 0.6576,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0013,
+      "rank_reason": "logistic",
+      "elapsed_s": 88.29,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1650,6 +1650,11 @@ class Model(metaclass=ModelBase):\n             if not isinstance(constraint, BaseConstraint):\n                 errors.append(\n                     checks.Error(\n                         'Meta.constraints contains non-constraint %r' % constraint,\n                         obj=cls,\n                         id='models.E020',\n                     )\n                 )\n+            else:\n+                errors.extend(constraint.check(cls))\n         return errors\n \n     @classmethod\n--- a/django/db/models/constraints.py\n+++ b/django/db/models/constraints.py\n@@ -1,4 +1,6 @@\n+from django.core import checks\n+from django.core.exceptions import FieldDoesNotExist\n from django.db.models.query_utils import Q\n from django.db.models.sql.query import Query\n \n@@ -32,6 +34,16 @@ class UniqueConstraint(BaseConstraint):\n         self.condition = condition\n         self.deferrable = deferrable\n         super().__init__(name)\n+\n+    def check(self, model):\n+        errors = []\n+        for field_name in self.fields:\n+            try:\n+                model._meta.get_field(field_name)\n+            except FieldDoesNotExist:\n+                errors.append(checks.Error(\"UniqueConstraint refers to the nonexistent field '%s'.\" % field_name, obj=model, id='models.E012'))\n+        return errors\n \n     def _get_condition_sql(self, model, schema_editor):\n         if self.condition is None:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c2\\django\\db\\models\\base.py: undefined name 'constraint'"
+      ],
+      "changed_files": [
+        "django/db/models/base.py",
+        "django/db/models/constraints.py"
+      ],
+      "added_lines": 13,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4512,
+        "matches_issue": 0.6324,
+        "safe_to_apply": 0.5397,
+        "composite": 0.655825,
+        "secrets_or_danger": 0.2551,
+        "logic_drift": 0.4713,
+        "flagged": false
+      },
+      "laya_combined": 0.6558,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0012,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.94,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\nindex 7bb3fa4706..6edb82c229 100644\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1311,6 +1311,10 @@ class Model(metaclass=ModelBase):\n                 )\n         return errors\n \n+        for constraint in cls._meta.constraints:\n+            for error in constraint.check(cls):\n+                errors.setdefault(error.id, []).append(error)\n+\n     @classmethod\n     def _check_model(cls):\n         errors = []\ndiff --git a/django/db/models/constraints.py b/django/db/models/constraints.py\nindex 64bd60484e..06d7cd6f9a 100644\n--- a/django/db/models/constraints.py\n+++ b/django/db/models/constraints.py\n@@ -1,5 +1,7 @@\n from enum import Enum\n \n+from django.core.exceptions import FieldDoesNotExist\n+from django.core import checks\n from django.db.models.query_utils import Q\n from django.db.models.sql.query import Query\n \n@@ -95,6 +97,15 @@ class UniqueConstraint(BaseConstraint):\n         self.deferrable = deferrable\n         super().__init__(name)\n \n+    def check(self, model):\n+        errors = []\n+        for field_name in self.fields:\n+            try:\n+                model._meta.get_field(field_name)\n+            except FieldDoesNotExist:\n+                errors.append(checks.Error(\"UniqueConstraint.fields contains non-existent field '%s'.\" % field_name, obj=model, id='models.E012'))\n+        return errors\n+\n     def _get_condition_sql(self, model, schema_editor):\n         if self.condition is None:\n             return None\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12856-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/constraints.py, django/db/models/base.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/base.py",
+      "django/db/models/constraints.py"
+    ],
+    "added_lines": 15,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4857,
+      "matches_issue": 0.5476,
+      "safe_to_apply": 0.5361,
+      "composite": 0.64235,
+      "secrets_or_danger": 0.1485,
+      "logic_drift": 0.6295,
+      "flagged": false
+    },
+    "laya_combined": 0.6423,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0085,
+    "rank_reason": "logistic",
+    "elapsed_s": 21.38,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\nindex 7bb3fa4..6edb82c 100644\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1311,6 +1311,10 @@ class Model(metaclass=ModelBase):\n                 )\n         return errors\n \n+        for constraint in cls._meta.constraints:\n+            for error in constraint.check(cls):\n+                errors.setdefault(error.id, []).append(error)\n+\n     @classmethod\n     def _check_model(cls):\n         errors = []\ndiff --git a/django/db/models/constraints.py b/django/db/models/constraints.py\nindex 64bd604..06d7cd6 100644\n--- a/django/db/models/constraints.py\n+++ b/django/db/models/constraints.py\n@@ -1,5 +1,7 @@\n from enum import Enum\n \n+from django.core.exceptions import FieldDoesNotExist\n+from django.core import checks\n from django.db.models.query_utils import Q\n from django.db.models.sql.query import Query\n \n@@ -95,6 +97,15 @@ class UniqueConstraint(BaseConstraint):\n         self.deferrable = deferrable\n         super().__init__(name)\n \n+    def check(self, model):\n+        errors = []\n+        for field_name in self.fields:\n+            try:\n+                model._meta.get_field(field_name)\n+            except FieldDoesNotExist:\n+                errors.append(checks.Error(\"UniqueConstraint.fields contains non-existent field '%s'.\" % field_name, obj=model, id='models.E012'))\n+        return errors\n+\n     def _get_condition_sql(self, model, schema_editor):\n         if self.condition is None:\n             return None\n",
+  "offline_calls": 0
+}

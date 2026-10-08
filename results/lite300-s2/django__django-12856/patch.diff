@@ -1,0 +1,43 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 7bb3fa4..6edb82c 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1311,6 +1311,10 @@ class Model(metaclass=ModelBase):
+                 )
+         return errors
+ 
++        for constraint in cls._meta.constraints:
++            for error in constraint.check(cls):
++                errors.setdefault(error.id, []).append(error)
++
+     @classmethod
+     def _check_model(cls):
+         errors = []
+diff --git a/django/db/models/constraints.py b/django/db/models/constraints.py
+index 64bd604..06d7cd6 100644
+--- a/django/db/models/constraints.py
++++ b/django/db/models/constraints.py
+@@ -1,5 +1,7 @@
+ from enum import Enum
+ 
++from django.core.exceptions import FieldDoesNotExist
++from django.core import checks
+ from django.db.models.query_utils import Q
+ from django.db.models.sql.query import Query
+ 
+@@ -95,6 +97,15 @@ class UniqueConstraint(BaseConstraint):
+         self.deferrable = deferrable
+         super().__init__(name)
+ 
++    def check(self, model):
++        errors = []
++        for field_name in self.fields:
++            try:
++                model._meta.get_field(field_name)
++            except FieldDoesNotExist:
++                errors.append(checks.Error("UniqueConstraint.fields contains non-existent field '%s'." % field_name, obj=model, id='models.E012'))
++        return errors
++
+     def _get_condition_sql(self, model, schema_editor):
+         if self.condition is None:
+             return None

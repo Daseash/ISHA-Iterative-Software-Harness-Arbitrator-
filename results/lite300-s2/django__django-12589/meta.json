@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12589",
+  "repo": "django/django",
+  "base_commit": "895f28f9cbed817c00ab68770433170d83132d90",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457062.4353037
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457069.6750822
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457084.7067356
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457088.616632
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457127.7538602
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457336.920704
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/compiler.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791456991.2825577,
+  "elapsed_s": 352.54,
+  "plan": "### Step 1: Root cause\nThe root cause is a regression in how Django handles `GROUP BY` generation for annotated queries. In Django 3.0, when a `values()` call includes an annotation that is also used in a `Count()` aggregation, the `SQLCompiler` incorrectly simplifies the `GROUP BY` clause to use the column alias (e.g., `\"status\"`) instead of the full expression (e.g., the `Subquery` object). \n\nIn SQL, referencing a column alias in the `GROUP BY` clause that conflicts with an existing column name or is otherwise ambiguous causes a `ProgrammingError`. Django 2.2 correctly used the full expression (the `Subquery`) in the `GROUP BY` clause, ensuring no ambiguity. The fix requires ensuring that when generating the `GROUP BY` clause, expressions that are not simple column references (like `Subquery` or complex annotations) are rendered as their full SQL representation rather than just their alias.\n\n### Step 2: Exact changes to make\nThe fix lies in `django/db/models/sql/compiler.py` (which manages the SQL compilation and `GROUP BY` clause construction).\n\n1.  **File**: `django/db/models/sql/compiler.py`\n    *   Locate the `get_group_by` method within the `SQLCompiler` class.\n    *   Modify the logic that determines what to add to the `group_by` list. Currently, it likely collects aliases for annotations.\n    *   Ensure that for expressions that are instances of `BaseExpression` (or specifically `Subquery` / `ExpressionWrapper`), the compiler uses the full expression (or a safe unique representation) in the `GROUP BY` clause instead of the alias if that alias is ambiguous or refers to a subquery. \n    *   Specifically, update the code loop that iterates over the `annotation_select` to check if the expression should be grouped by its definition rather than its alias.\n\n*(Note: While the issue report points to `query.py` as a potential location, the actual generation of SQL strings for `GROUP BY` occurs in `django/db/models/sql/compiler.py` during the compilation phase. The logic to distinguish between an alias-reference and an expression-reference for `GROUP BY` is found there.)*",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::resolve_expression",
+      "symbols": [
+        "resolve_expression",
+        "update_join_types",
+        "RawQuery",
+        "__init__"
+      ],
+      "line_range": [
+        1024,
+        1048
+      ],
+      "score": 0.7032,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6833,
+        "vector": 0.7277,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: query; body matches report terms: query, join, field, annotation)"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::_validate_values_are_expressions",
+      "symbols": [
+        "_validate_values_are_expressions",
+        "__init__",
+        "in_bulk",
+        "_update"
+      ],
+      "line_range": [
+        1355,
+        1364
+      ],
+      "score": 0.633,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.468,
+        "vector": 0.592,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (private helper called by a symbol the report names; signature parameter matches report: values; body matches report terms: query, join, values, error)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "BigIntegerField",
+        "__init__"
+      ],
+      "line_range": [
+        131,
+        177
+      ],
+      "score": 0.6137,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4011,
+        "vector": 0.5699,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: blank, null, verbose_name; body matches report terms: class, blank, field, count)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::CASCADE",
+      "symbols": [
+        "CASCADE",
+        "SET_NULL",
+        "ProtectedError",
+        "RestrictedError"
+      ],
+      "line_range": [
+        23,
+        31
+      ],
+      "score": 0.6545,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5917,
+        "vector": 0.471,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: field, model, null; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::Permission",
+      "symbols": [
+        "Permission",
+        "Group",
+        "PermissionsMixin",
+        "PermissionManager"
+      ],
+      "line_range": [
+        33,
+        79
+      ],
+      "score": 0.6291,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4918,
+        "vector": 0.4677,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: Model; body matches report terms: class, models, field, django)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::next_char",
+      "symbols": [
+        "next_char",
+        "get_quantifier",
+        "Choice",
+        "NonCapture"
+      ],
+      "line_range": [
+        193,
+        213
+      ],
+      "score": 0.5933,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2967,
+        "vector": 0.5758,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: class, with, next, that)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.652525,
+  "laya_scores": {
+    "fix_quality": 1.3409,
+    "matches_issue": 0.6908,
+    "safe_to_apply": 0.5784,
+    "composite": 0.652525,
+    "secrets_or_danger": 0.1038,
+    "logic_drift": 0.2403,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to query execution context that introduce injection.\n- PERFORMANCE: PASS, No negative impact on query execution planning or complexity.\n- ROBUSTNESS: PASS, Corrects the regression in SQL generation where ambiguous group-by clauses were incorrectly created.\n- PONYTAIL / YAGNI: PASS, Necessary fix to address a regression in Django 3.0's SQL compiler logic.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.db.models import Count, OuterRef, Q, Subquery\nfrom django.test import TestCase\n\n# Models defined in the bug report\nclass A(models.Model):\n    bs = models.ManyToManyField('B', through=\"AB\", related_name=\"a\")\n\nclass B(models.Model):\n    pass\n\nclass AB(models.Model):\n    a = models.ForeignKey(A, on_delete=models.CASCADE, related_name=\"ab_a\")\n    b = models.ForeignKey(B, on_delete=models.CASCADE, related_name=\"ab_b\")\n    status = models.IntegerField()\n\nclass C(models.Model):\n    a = models.ForeignKey(A, null=True, blank=True, on_delete=models.SET_NULL, related_name=\"c\")\n    status = models.IntegerField()\n\n@pytest.mark.django_db\nclass TestGroupByCategoryAnnotationBug(TestCase):\n    def test_group_by_ambiguous_annotation_reproduction(self):\n        \"\"\"\n        Reproduction of the bug where annotating with a Subquery and then\n        grouping by that annotation results in a ProgrammingError (ambiguous column).\n        \"\"\"\n        a_obj = A.objects.create()\n        b_obj = B.objects.create()\n        AB.objects.create(a=a_obj, b=b_obj, status=1)\n\n        ab_query = AB.objects.filter(a=OuterRef(\"pk\"), b=b_obj.pk)\n        filter_conditions = Q(pk=a_obj.pk) | Q(ab_a__b=b_obj.pk)\n        \n        query = A.objects.filter(filter_conditions).annotate(\n            status=Subquery(ab_query.values(\"status\")),\n            c_count=Count(\"c\"),\n        )\n        \n        # This triggers the Group By clause generation\n        # The expected behavior is that this executes without ProgrammingError\n        result = list(query.values(\"status\").annotate(total_count=Count(\"status\")))\n        assert len(result) > 0\n        assert \"total_count\" in result[0]\n\n    def test_empty_queryset_handling(self):\n        \"\"\"\n        Verify that the query works correctly when no records exist.\n        \"\"\"\n        query = A.objects.annotate(\n            status=Subquery(AB.objects.filter(a=OuterRef(\"pk\")).values(\"status\")[:1])\n        ).values(\"status\").annotate(total_count=Count(\"status\"))\n        \n        # Should return an empty list rather than crashing\n        assert list(query) == []\n\n    def test_multiple_annotations_grouping(self):\n        \"\"\"\n        Verify that grouping by a simple field alongside the ambiguous subquery annotation \n        works as expected.\n        \"\"\"\n        a = A.objects.create()\n        # Ensure we have data\n        AB.objects.create(a=a, b=B.objects.create(), status=10)\n        \n        query = A.objects.annotate(\n            status=Subquery(AB.objects.filter(a=OuterRef(\"pk\")).values(\"status\")[:1])\n        ).values(\"id\", \"status\").annotate(total_count=Count(\"status\"))\n        \n        result = list(query)\n        assert len(result) == 1\n        assert result[0]['status'] == 10\n        assert result[0]['total_count'] == 1",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 63ca817355..6514a264d4 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -95,7 +95,7 @@ class SQLCompiler:\n         if self.query.group_by is None:\n             return []\n         expressions = []\n-        if self.query.group_by is not True:\n+        if self.query.group_by is True or (self.query.group_by is None and self.query.annotations):\n             # If the group by is set to a list (by .values() call most likely),\n             # then we need to add everything in it to the GROUP BY clause.\n             # Backwards compatibility hack for setting query.group_by. Remove\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12589-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3409,
+        "matches_issue": 0.6908,
+        "safe_to_apply": 0.5784,
+        "composite": 0.652525,
+        "secrets_or_danger": 0.1038,
+        "logic_drift": 0.2403,
+        "flagged": false
+      },
+      "laya_combined": 0.6525,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 115.72,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -62,7 +62,7 @@ class SQLCompiler:\n                 # Group by the select clause.\n                 continue\n             if alias in self.query.annotation_select:\n-                group_by_cols = self.query.annotation_select[alias].get_group_by_cols()\n+                group_by_cols = self.query.annotation_select[alias].get_source_expressions()\n             else:\n                 group_by_cols = [col]\n             for col in group_by_cols:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12589-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3758,
+        "matches_issue": 0.7621,
+        "safe_to_apply": 0.5866,
+        "composite": 0.681125,
+        "secrets_or_danger": 0.1154,
+        "logic_drift": 0.156,
+        "flagged": false
+      },
+      "laya_combined": 0.6811,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 119.4,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -68,7 +68,7 @@ class SQLCompiler:\n         # The select, klass_info, and annotations are needed by QuerySet.iterator()\n         # these are set as a side-effect of executing the query. Note that we calculate\n         # separately a list of extra select columns needed for grammatical correctness\n-        self.select = None\n+        self.select = []\n         self.annotation_col_map = None\n         self.klass_info = None\n         self.ordering_group_by = None\n@@ -118,7 +118,10 @@ class SQLCompiler:\n                 if col.alias in self.query.annotation_select:\n                     # If the field is an annotation, we want to group by the\n                     # expression, not the alias.\n-                    group_by_cols = self.query.annotation_select[col.alias].get_group_by_cols()\n+                    expr = self.query.annotation_select[col.alias]\n+                    if hasattr(expr, 'get_group_by_cols'):\n+                        group_by_cols = expr.get_group_by_cols()\n+                    else:\n+                        group_by_cols = [col]\n                 else:\n                     group_by_cols = [col]\n                 for col in group_by_cols:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12589-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4219,
+        "matches_issue": 0.7591,
+        "safe_to_apply": 0.6186,
+        "composite": 0.6999,
+        "secrets_or_danger": 0.1489,
+        "logic_drift": 0.2575,
+        "flagged": false
+      },
+      "laya_combined": 0.6999,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 120.92,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 63ca817355..6514a264d4 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -95,7 +95,7 @@ class SQLCompiler:\n         if self.query.group_by is None:\n             return []\n         expressions = []\n-        if self.query.group_by is not True:\n+        if self.query.group_by is True or (self.query.group_by is None and self.query.annotations):\n             # If the group by is set to a list (by .values() call most likely),\n             # then we need to add everything in it to the GROUP BY clause.\n             # Backwards compatibility hack for setting query.group_by. Remove\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12589-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/sql/compiler.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/compiler.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3409,
+      "matches_issue": 0.6908,
+      "safe_to_apply": 0.5784,
+      "composite": 0.652525,
+      "secrets_or_danger": 0.1038,
+      "logic_drift": 0.2403,
+      "flagged": false
+    },
+    "laya_combined": 0.6525,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 115.72,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 63ca817..6514a26 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -95,7 +95,7 @@ class SQLCompiler:\n         if self.query.group_by is None:\n             return []\n         expressions = []\n-        if self.query.group_by is not True:\n+        if self.query.group_by is True or (self.query.group_by is None and self.query.annotations):\n             # If the group by is set to a list (by .values() call most likely),\n             # then we need to add everything in it to the GROUP BY clause.\n             # Backwards compatibility hack for setting query.group_by. Remove\n",
+  "offline_calls": 0
+}

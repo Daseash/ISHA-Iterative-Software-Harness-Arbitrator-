@@ -1,0 +1,26 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index dddf7c679c..e0ad795819 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -28,9 +28,6 @@ class ModelOperation(Operation):
+     def name_lower(self):
+         return self.name.lower()
+ 
+-    def references_model(self, name, app_label):
+-        return name.lower() == self.name_lower
+-
+     def reduce(self, operation, app_label):
+         return (
+             super().reduce(operation, app_label) or
+@@ -578,6 +575,11 @@ class AlterOrderWithRespectTo(ModelOptionOperation):
+         self.order_with_respect_to = order_with_respect_to
+         super().__init__(name)
+ 
++    def reduce(self, operation, app_label):
++        if isinstance(operation, AddIndex) and self.references_model(operation.model_name, app_label):
++            return [operation, self]
++        return super().reduce(operation, app_label)
++
+     def deconstruct(self):
+         kwargs = {
+             'name': self.name,

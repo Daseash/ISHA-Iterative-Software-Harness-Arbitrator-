@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12284",
+  "repo": "django/django",
+  "base_commit": "c5e373d48cbdd923575956fed477b63d66d9603f",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454130.0700965
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454139.3077016
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454158.0515625
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454161.8610926
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454210.2550912
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791454496.5031266
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791454014.9390404,
+  "elapsed_s": 489.51,
+  "plan": "### Step 1: Root Cause\nThe `get_FOO_display()` method in Django models dynamically generates its return value using `self._meta.get_field(field_name).flatchoices`. When a model inherits from an abstract base class, the field definition (including `choices`) is copied. In the provided example, `B` inherits from `A` and overrides `foo_choice`. However, because the field `field_foo` is defined in `A` with the original `foo_choice` value (as part of the field instance), the `choices` attribute on the field instance in `B` does not automatically update to the new `foo_choice` list unless the field is re-defined. Even when re-defined, if the `choices` attribute remains static on the field object created during the class initialization of `A`, `get_FOO_display` reads the stale choices.\n\nThe issue lies in `django/db/models/base.py` (specifically in how models handle field inheritance and access) or `django/db/models/fields/__init__.py` (how `flatchoices` are calculated). Django's `get_choices` logic typically retrieves the choices from the field instance. When a subclass overrides a field, it should ensure the field instance's `choices` are updated to reflect the subclass's configuration.\n\n### Step 2: Exact Changes\nThe fix is to ensure that `get_choices` or `flatchoices` on a field instance correctly respects the attribute values on the model class rather than relying solely on the cached `choices` list stored on the field instance if it was inherited.\n\n1.  **Modify `django/db/models/fields/__init__.py`**:\n    Update the `Field` class (or specifically `CharField`) to ensure that `choices` are resolved dynamically if they are passed as a property or if the model's choices have been overridden in a subclass.\n    *   Locate the `choices` property or the `get_choices` method.\n    *   Change the implementation to fetch `choices` from the model class if the field is bound to a model, allowing for overrides in subclasses.\n\n2.  **Modify `django/db/models/base.py`**:\n    Ensure that when a model is initialized, fields are updated to point to the current model's choices definition rather than the parent's, specifically in the `ModelBase` metaclass during `__new__`. When a subclass defines a field that was already present in a parent, the field needs to be effectively \"re-bound\" or initialized to look at the subclass's class attributes.\n\n(Self-correction: The most surgical fix is often in `django/db/models/fields/__init__.py`'s `get_choices` method to check `self.model` for the attribute before falling back to the field's static `choices` attribute.)",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::CommaSeparatedIntegerField",
+      "symbols": [
+        "CommaSeparatedIntegerField",
+        "EmailField",
+        "SlugField",
+        "URLField"
+      ],
+      "line_range": [
+        1036,
+        1051
+      ],
+      "score": 0.6586,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5706,
+        "vector": 0.5915,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: CharField; body matches report terms: class, charfield, description)"
+    },
+    {
+      "file": "django/db/models/enums.py",
+      "symbol": "django/db/models/enums.py::ChoicesMeta",
+      "symbols": [
+        "ChoicesMeta",
+        "__new__",
+        "Choices",
+        "__str__"
+      ],
+      "line_range": [
+        8,
+        61
+      ],
+      "score": 0.7215,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2474,
+        "vector": 0.4349,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: value, class, which, meta)"
+    },
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::_save_parents",
+      "symbols": [
+        "_save_parents",
+        "_save_table",
+        "_do_update",
+        "_get_next_or_previous_by_FIELD"
+      ],
+      "line_range": [
+        804,
+        831
+      ],
+      "score": 0.5942,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5939,
+        "vector": 0.7351,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; body matches report terms: value, meta, instance, base)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "RegexField",
+        "GenericIPAddressField",
+        "UUIDField"
+      ],
+      "line_range": [
+        209,
+        220
+      ],
+      "score": 0.7815,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.39,
+        "vector": 0.6372,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: max_length; body matches report terms: value, max_length)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::addslashes",
+      "symbols": [
+        "addslashes",
+        "linenumbers",
+        "stringformat",
+        "cut"
+      ],
+      "line_range": [
+        62,
+        70
+      ],
+      "score": 0.711,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1847,
+        "vector": 0.4776,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: value, example, adds)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::serialize",
+      "symbols": [
+        "serialize",
+        "unregister_serializer",
+        "sort_dependencies",
+        "BadSerializer"
+      ],
+      "line_range": [
+        122,
+        131
+      ],
+      "score": 0.5931,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2613,
+        "vector": 0.6897,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: value, returns, base)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7172000000000001,
+  "laya_scores": {
+    "fix_quality": 1.5506,
+    "matches_issue": 0.7308,
+    "safe_to_apply": 0.5874,
+    "composite": 0.7172000000000001,
+    "secrets_or_danger": 0.1548,
+    "logic_drift": 0.1546,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - The changes involve standard field introspection and do not introduce untrusted execution paths.\n- PERFORMANCE: PASS - The overhead of fetching choices from the field descriptor is negligible for display methods.\n- ROBUSTNESS: FAIL - The patch as written is unreachable code because it is placed after a `return` statement, and the indentation/logic integration into the existing `flatchoices` or `get_choices` flow is incomplete.\n- PONYTAIL / YAGNI: PASS - The requested functionality is necessary to resolve the inheritance bug in Django models.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\n\n# Definitions required for the test environment\nclass BaseAbstract(models.Model):\n    foo_choice = [(\"A\", \"output1\"), (\"B\", \"output2\")]\n    field_foo = models.CharField(max_length=254, choices=foo_choice)\n\n    class Meta:\n        abstract = True\n\nclass InheritedModel(BaseAbstract):\n    foo_choice = [(\"A\", \"output1\"), (\"B\", \"output2\"), (\"C\", \"output3\")]\n    field_foo = models.CharField(max_length=254, choices=foo_choice)\n\n@pytest.mark.django_db\ndef test_get_FOO_display_inherited_choices():\n    \"\"\"\n    Reproduction of bug: get_field_foo_display() should return 'output3' for 'C',\n    but currently returns 'C' due to stale inherited choices.\n    \"\"\"\n    instance = InheritedModel(field_foo=\"C\")\n    assert instance.get_field_foo_display() == \"output3\"\n\n@pytest.mark.django_db\ndef test_get_FOO_display_base_choices():\n    \"\"\"\n    Verify that standard choices in inherited models still work correctly.\n    \"\"\"\n    instance = InheritedModel(field_foo=\"A\")\n    assert instance.get_field_foo_display() == \"output1\"\n\n@pytest.mark.django_db\ndef test_get_FOO_display_invalid_choice():\n    \"\"\"\n    Verify that invalid choices return the raw value (standard Django behavior).\n    \"\"\"\n    instance = InheritedModel(field_foo=\"Z\")\n    assert instance.get_field_foo_display() == \"Z\"\n\n@pytest.mark.django_db\ndef test_get_FOO_display_none_or_empty():\n    \"\"\"\n    Verify behavior with empty/null field values.\n    \"\"\"\n    # CharField default is usually empty string if not nullable\n    instance = InheritedModel(field_foo=\"\")\n    assert instance.get_field_foo_display() == \"\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 1a55d3d417..c4eac375d8 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -799,6 +799,10 @@ class Field(RegisterLookupMixin):\n             value = value._proxy____cast()\n         return value\n \n+        if self.model and hasattr(self.model, self.name):\n+            choices = getattr(self.model, self.name).field.choices\n+            if choices is not None:\n+                return list(choices)\n     def get_db_prep_value(self, value, connection, prepared=False):\n         \"\"\"\n         Return field's value prepared for interacting with the database backend.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12284-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5506,
+        "matches_issue": 0.7308,
+        "safe_to_apply": 0.5874,
+        "composite": 0.7172000000000001,
+        "secrets_or_danger": 0.1548,
+        "logic_drift": 0.1546,
+        "flagged": false
+      },
+      "laya_combined": 0.7172,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 126.25,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 1a55d3d417..8fdaa27360 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -763,7 +763,10 @@ class Field(RegisterLookupMixin):\n             # such fields can't be deferred (we don't have a check for this).\n             if not getattr(cls, self.attname, None):\n                 setattr(cls, self.attname, self.descriptor_class(self))\n-        if self.choices is not None:\n+        choices = self.choices\n+        if hasattr(self, 'model') and self.model:\n+            choices = getattr(self.model, self.name + '_choice', choices)\n+        if choices is not None:\n             if not hasattr(cls, 'get_%s_display' % self.name):\n                 setattr(\n                     cls,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12284-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4926,
+        "matches_issue": 0.7605,
+        "safe_to_apply": 0.5594,
+        "composite": 0.703125,
+        "secrets_or_danger": 0.1884,
+        "logic_drift": 0.2565,
+        "flagged": false
+      },
+      "laya_combined": 0.7031,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 124.72,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -768,7 +768,8 @@\n         return self.choices\n \n     def get_choices(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH, limit_choices_to=None):\n-        return self._get_choices_doc(include_blank, blank_choice, limit_choices_to)\n+        choices = getattr(self.model, '%s_choice' % self.name, self.choices) if self.model else self.choices\n+        return self._get_choices_doc(include_blank, blank_choice, limit_choices_to, choices=choices)\n \n     def _get_choices_doc(self, include_blank=True, blank_choice=BLANK_CHOICE_DASH, limit_choices_to=None, choices=None):\n         if choices is None:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12284-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4688,
+        "matches_issue": 0.7844,
+        "safe_to_apply": 0.646,
+        "composite": 0.7248,
+        "secrets_or_danger": 0.1442,
+        "logic_drift": 0.318,
+        "flagged": false
+      },
+      "laya_combined": 0.7248,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 142.62,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 1a55d3d417..c4eac375d8 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -799,6 +799,10 @@ class Field(RegisterLookupMixin):\n             value = value._proxy____cast()\n         return value\n \n+        if self.model and hasattr(self.model, self.name):\n+            choices = getattr(self.model, self.name).field.choices\n+            if choices is not None:\n+                return list(choices)\n     def get_db_prep_value(self, value, connection, prepared=False):\n         \"\"\"\n         Return field's value prepared for interacting with the database backend.\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12284-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/__init__.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5506,
+      "matches_issue": 0.7308,
+      "safe_to_apply": 0.5874,
+      "composite": 0.7172000000000001,
+      "secrets_or_danger": 0.1548,
+      "logic_drift": 0.1546,
+      "flagged": false
+    },
+    "laya_combined": 0.7172,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 126.25,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 1a55d3d..c4eac37 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -799,6 +799,10 @@ class Field(RegisterLookupMixin):\n             value = value._proxy____cast()\n         return value\n \n+        if self.model and hasattr(self.model, self.name):\n+            choices = getattr(self.model, self.name).field.choices\n+            if choices is not None:\n+                return list(choices)\n     def get_db_prep_value(self, value, connection, prepared=False):\n         \"\"\"\n         Return field's value prepared for interacting with the database backend.\n",
+  "offline_calls": 0
+}

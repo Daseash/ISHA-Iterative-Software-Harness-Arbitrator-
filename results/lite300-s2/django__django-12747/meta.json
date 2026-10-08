@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12747",
+  "repo": "django/django",
+  "base_commit": "c86201b6ed4f8256b0a0520c08aa674f623d4127",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458233.4394572
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458239.7803357
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458251.9276984
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458255.1926405
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458269.6166296
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791458420.8381777
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/deletion.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791458151.8682804,
+  "elapsed_s": 276.64,
+  "plan": "# Instead of returning the raw dictionary, return:\nreturn deleted, {model: count for model, count in self.data.items() if count > 0}",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "__str__",
+        "_check_null_allowed_for_primary_keys",
+        "_check_backend_specific_checks"
+      ],
+      "line_range": [
+        55,
+        58
+      ],
+      "score": 0.5834,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4008,
+        "vector": 0.3184,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: label, meta, model)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "serialize",
+        "deserialize",
+        "_load_serializers"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.6488,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5921,
+        "vector": 0.465,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: there, class, will, this)"
+    },
+    {
+      "file": "django/utils/dateformat.py",
+      "symbol": "django/utils/dateformat.py::Formatter",
+      "symbols": [
+        "Formatter",
+        "__init__",
+        "f",
+        "g"
+      ],
+      "line_range": [
+        31,
+        46
+      ],
+      "score": 0.6163,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4123,
+        "vector": 0.5272,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: class, objects, format)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::create_permissions",
+      "symbols": [
+        "create_permissions",
+        "get_system_username",
+        "get_default_username",
+        "_get_builtin_permissions"
+      ],
+      "line_range": [
+        35,
+        88
+      ],
+      "score": 0.5817,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4248,
+        "vector": 0.2544,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value, models, objects, label)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "autocomplete",
+        "execute",
+        "fetch_command"
+      ],
+      "line_range": [
+        42,
+        75
+      ],
+      "score": 0.5335,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2202,
+        "vector": 0.2786,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: value, class, dictionary, with)"
+    },
+    {
+      "file": "django/core/mail/__init__.py",
+      "symbol": "django/core/mail/__init__.py::send_mail",
+      "symbols": [
+        "send_mail",
+        "send_mass_mail",
+        "mail_admins",
+        "mail_managers"
+      ],
+      "line_range": [
+        38,
+        62
+      ],
+      "score": 0.5289,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1436,
+        "vector": 0.4005,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: class, will, this, method)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6905,
+  "laya_scores": {
+    "fix_quality": 1.3849,
+    "matches_issue": 0.723,
+    "safe_to_apply": 0.6541,
+    "composite": 0.6905,
+    "secrets_or_danger": 0.1732,
+    "logic_drift": 0.2602,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security implications found.\n- PERFORMANCE: PASS - Filtering dictionary keys has negligible performance overhead.\n- ROBUSTNESS: PASS - Corrects the inconsistency by ensuring the dictionary only contains entries for models that were actually deleted.\n- PONYTAIL / YAGNI: PASS - The change simplifies the return format to a cleaner, consistent state.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.test import TransactionTestCase\n\n# Models for reproduction\nclass SimpleModel(models.Model):\n    name = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = 'test_app'\n\nclass RelatedModel(models.Model):\n    simple = models.ForeignKey(SimpleModel, on_delete=models.CASCADE)\n\n    class Meta:\n        app_label = 'test_app'\n\n@pytest.mark.django_db\nclass TestDeleteInconsistency(TransactionTestCase):\n    \n    def test_delete_zero_objects_inconsistency(self):\n        \"\"\"\n        Reproduction of the reported bug:\n        Simple models return {'app.Model': 0}, while foreign key models return {}.\n        After fix, both should return {} when nothing is deleted.\n        \"\"\"\n        # Delete from empty querysets\n        result_simple = SimpleModel.objects.filter(pk=999).delete()\n        result_related = RelatedModel.objects.filter(pk=999).delete()\n\n        # The BUG: result_simple currently returns ({'test_app.simplemodel': 0})\n        # The FIX expects: ({})\n        assert result_simple[1] == {}\n        assert result_related[1] == {}\n\n    def test_delete_with_actual_content(self):\n        \"\"\"Verify that positive deletion counts are preserved.\"\"\"\n        obj = SimpleModel.objects.create(name=\"test\")\n        result = SimpleModel.objects.filter(pk=obj.pk).delete()\n        \n        assert result[0] == 1\n        assert result[1] == {'test_app.simplemodel': 1}\n\n    def test_delete_mixed_counts(self):\n        \"\"\"Verify that only models with > 0 deletions are returned.\"\"\"\n        simple = SimpleModel.objects.create(name=\"test\")\n        # RelatedModel empty, SimpleModel has 1\n        result = RelatedModel.objects.filter(simple=simple).delete()\n        \n        # Only models that actually had rows deleted should be in the dictionary\n        assert result[0] == 0\n        assert result[1] == {}\n\n    def test_delete_none_input_handled(self):\n        \"\"\"Ensure that filtering on None or empty queries behaves gracefully.\"\"\"\n        # QuerySet.delete() on an empty query should not raise an error \n        # and should follow the standardized output format\n        result = SimpleModel.objects.none().delete()\n        assert result == (0, {})",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a1cd..86124e5b28 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12747-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/deletion.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3849,
+        "matches_issue": 0.723,
+        "safe_to_apply": 0.6541,
+        "composite": 0.6905,
+        "secrets_or_danger": 0.1732,
+        "logic_drift": 0.2602,
+        "flagged": false
+      },
+      "laya_combined": 0.6905,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 16.85,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a1cd..86124e5b28 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12747-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/deletion.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3849,
+        "matches_issue": 0.723,
+        "safe_to_apply": 0.6541,
+        "composite": 0.6905,
+        "secrets_or_danger": 0.1732,
+        "logic_drift": 0.2602,
+        "flagged": false
+      },
+      "laya_combined": 0.6905,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 62.44,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a1cd..41a9325457 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {model: count for model, count in deleted_counter.items() if count > 0}\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12747-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/deletion.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/deletion.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3674,
+        "matches_issue": 0.7641,
+        "safe_to_apply": 0.6589,
+        "composite": 0.6976,
+        "secrets_or_danger": 0.1729,
+        "logic_drift": 0.2562,
+        "flagged": false
+      },
+      "laya_combined": 0.6976,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 66.51,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a1cd..86124e5b28 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12747-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/deletion.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/deletion.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3849,
+      "matches_issue": 0.723,
+      "safe_to_apply": 0.6541,
+      "composite": 0.6905,
+      "secrets_or_danger": 0.1732,
+      "logic_drift": 0.2602,
+      "flagged": false
+    },
+    "laya_combined": 0.6905,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 16.85,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a..86124e5 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}\n",
+  "offline_calls": 0
+}

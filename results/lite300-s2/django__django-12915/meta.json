@@ -1,0 +1,398 @@
+{
+  "instance_id": "django__django-12915",
+  "repo": "django/django",
+  "base_commit": "4652f1f0aa459a7b980441d629648707c32e36bf",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459279.3519452
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459285.951136
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459307.5228922
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459322.713121
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459365.5426652
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459540.481022
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/staticfiles/handlers.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/staticfiles/handlers.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791459203.0735629,
+  "elapsed_s": 345.25,
+  "plan": "async def get_response_async(self, request):\n        return await sync_to_async(self.get_response, thread_sensitive=True)(request)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/staticfiles/handlers.py",
+      "symbol": "django/contrib/staticfiles/handlers.py::_should_handle",
+      "symbols": [
+        "_should_handle",
+        "__call__",
+        "__call__",
+        "StaticFilesHandlerMixin"
+      ],
+      "line_range": [
+        30,
+        37
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5769,
+        "vector": 0.6505,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: base, request)"
+    },
+    {
+      "file": "django/core/handlers/asgi.py",
+      "symbol": "django/core/handlers/asgi.py::send_response",
+      "symbols": [
+        "send_response",
+        "__call__",
+        "ASGIHandler",
+        "read_body"
+      ],
+      "line_range": [
+        217,
+        263
+      ],
+      "score": 0.886,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 1.0,
+        "vector": 0.7171,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: response; body matches report terms: await, last, response, asgi)"
+    },
+    {
+      "file": "django/core/handlers/base.py",
+      "symbol": "django/core/handlers/base.py::check_response",
+      "symbols": [
+        "check_response",
+        "get_response_async",
+        "load_middleware",
+        "get_response"
+      ],
+      "line_range": [
+        292,
+        317
+      ],
+      "score": 0.786,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7639,
+        "vector": 0.375,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: response; body matches report terms: await, call, call__, object)"
+    },
+    {
+      "file": "django/core/asgi.py",
+      "symbol": "django/core/asgi.py::get_asgi_application",
+      "symbols": [
+        "get_asgi_application"
+      ],
+      "line_range": [
+        5,
+        13
+      ],
+      "score": 0.6662,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2063,
+        "vector": 0.5383,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: django, core, handlers, call)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::CommandError",
+      "symbols": [
+        "CommandError",
+        "CommandParser",
+        "__init__",
+        "error"
+      ],
+      "line_range": [
+        21,
+        37
+      ],
+      "score": 0.6968,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3013,
+        "vector": 0.5953,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: description, super, exception, this)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "DebugLexer",
+        "tokenize",
+        "error"
+      ],
+      "line_range": [
+        288,
+        310
+      ],
+      "score": 0.6892,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3557,
+        "vector": 0.4194,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: line, traceback, this, when)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8244,
+  "laya_scores": {
+    "fix_quality": 1.7426,
+    "matches_issue": 0.8073,
+    "safe_to_apply": 0.7477,
+    "composite": 0.8244,
+    "secrets_or_danger": 0.1677,
+    "logic_drift": 0.3443,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The patch correctly uses existing ASGI utilities to bridge synchronous code.\n- PERFORMANCE: PASS - Uses `thread_sensitive=True` which is appropriate for maintaining Django's existing request/response lifecycle.\n- ROBUSTNESS: PASS - Correctly addresses the `TypeError` caused by the missing async handler in the mixin.\n- PONYTAIL / YAGNI: PASS - Minimal implementation required to support ASGI compliance for static files.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.staticfiles.handlers import ASGIStaticFilesHandler\nfrom django.core.handlers.asgi import ASGIHandler\nfrom unittest.mock import MagicMock\n\nclass MockApplication:\n    async def __call__(self, scope, receive, send):\n        pass\n\n@pytest.mark.asyncio\nasync def test_asgi_static_files_handler_get_response_async_exists():\n    \"\"\"\n    REPRODUCTION: Test that ASGIStaticFilesHandler has a get_response_async method.\n    The bug report indicates that accessing this method causes an exception\n    or failure because it is missing (inheriting None or failing to exist).\n    \"\"\"\n    handler = ASGIStaticFilesHandler(MockApplication())\n    \n    # This should not raise an AttributeError after the fix is applied.\n    # Prior to the fix, this might fail depending on how it's resolved in the MRO.\n    assert hasattr(handler, 'get_response_async'), \"ASGIStaticFilesHandler should implement get_response_async\"\n    \n    # Verify it is callable\n    assert callable(handler.get_response_async)\n\n@pytest.mark.asyncio\nasync def test_get_response_async_execution():\n    \"\"\"\n    Verify that calling get_response_async doesn't raise a TypeError.\n    The reported 'NoneType' object is not callable stems from it being missing\n    or improperly defined during the request cycle.\n    \"\"\"\n    handler = ASGIStaticFilesHandler(MockApplication())\n    request = MagicMock()\n    \n    # This call should succeed (or at least not raise 'NoneType' is not callable)\n    # Note: We mock the internals if necessary, but the fix ensures the method exists.\n    try:\n        await handler.get_response_async(request)\n    except TypeError as e:\n        if \"'NoneType' object is not callable\" in str(e):\n            pytest.fail(\"get_response_async raised 'NoneType' object is not callable\")\n        raise\n\ndef test_asgi_static_files_handler_initialization():\n    \"\"\"\n    Edge case: Ensure handler initializes correctly with valid ASGI application.\n    \"\"\"\n    app = MockApplication()\n    handler = ASGIStaticFilesHandler(app)\n    assert handler.application == app\n\n@pytest.mark.asyncio\nasync def test_get_response_async_invalid_request():\n    \"\"\"\n    Edge case: Ensure that passing None or invalid types to get_response_async\n    bubbles up standard Django errors rather than the 'NoneType' handler error.\n    \"\"\"\n    handler = ASGIStaticFilesHandler(MockApplication())\n    with pytest.raises(AttributeError):\n        # Passing None to a method expecting a request object should result \n        # in standard AttributeError (from inside the handler's logic)\n        await handler.get_response_async(None)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py\nindex 711d8864ad..9776592149 100644\n--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,5 +1,6 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n+from asgiref.sync import sync_to_async\n \n from django.conf import settings\n from django.contrib.staticfiles import utils\n@@ -52,6 +53,9 @@ class StaticFilesHandlerMixin:\n         except Http404 as e:\n             return response_for_exception(request, e)\n \n+    async def get_response_async(self, request):\n+        return await sync_to_async(self.get_response, thread_sensitive=True)(request)\n+\n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n     \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12915-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/staticfiles/handlers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/staticfiles/handlers.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7426,
+        "matches_issue": 0.8073,
+        "safe_to_apply": 0.7477,
+        "composite": 0.8244,
+        "secrets_or_danger": 0.1677,
+        "logic_drift": 0.3443,
+        "flagged": false
+      },
+      "laya_combined": 0.8244,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.9,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py\nindex 711d8864ad..671bbf00bb 100644\n--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n \n+from asgiref.sync import sync_to_async\n from django.conf import settings\n from django.contrib.staticfiles import utils\n from django.contrib.staticfiles.views import serve\n@@ -52,6 +53,9 @@ class StaticFilesHandlerMixin:\n         except Http404 as e:\n             return response_for_exception(request, e)\n \n+    async def get_response_async(self, request):\n+        return await sync_to_async(self.get_response, thread_sensitive=True)(request)\n+\n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n     \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12915-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/staticfiles/handlers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/staticfiles/handlers.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7426,
+        "matches_issue": 0.8073,
+        "safe_to_apply": 0.7477,
+        "composite": 0.8244,
+        "secrets_or_danger": 0.181,
+        "logic_drift": 0.3642,
+        "flagged": false
+      },
+      "laya_combined": 0.8244,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.09,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py\nindex 711d8864ad..671bbf00bb 100644\n--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n \n+from asgiref.sync import sync_to_async\n from django.conf import settings\n from django.contrib.staticfiles import utils\n from django.contrib.staticfiles.views import serve\n@@ -52,6 +53,9 @@ class StaticFilesHandlerMixin:\n         except Http404 as e:\n             return response_for_exception(request, e)\n \n+    async def get_response_async(self, request):\n+        return await sync_to_async(self.get_response, thread_sensitive=True)(request)\n+\n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n     \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12915-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/staticfiles/handlers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/staticfiles/handlers.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7426,
+        "matches_issue": 0.8073,
+        "safe_to_apply": 0.7477,
+        "composite": 0.8244,
+        "secrets_or_danger": 0.181,
+        "logic_drift": 0.3642,
+        "flagged": false
+      },
+      "laya_combined": 0.8244,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 76.51,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py\nindex 711d8864ad..9776592149 100644\n--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,5 +1,6 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n+from asgiref.sync import sync_to_async\n \n from django.conf import settings\n from django.contrib.staticfiles import utils\n@@ -52,6 +53,9 @@ class StaticFilesHandlerMixin:\n         except Http404 as e:\n             return response_for_exception(request, e)\n \n+    async def get_response_async(self, request):\n+        return await sync_to_async(self.get_response, thread_sensitive=True)(request)\n+\n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n     \"\"\"\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12915-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/staticfiles/handlers.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/staticfiles/handlers.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.7426,
+      "matches_issue": 0.8073,
+      "safe_to_apply": 0.7477,
+      "composite": 0.8244,
+      "secrets_or_danger": 0.1677,
+      "logic_drift": 0.3443,
+      "flagged": false
+    },
+    "laya_combined": 0.8244,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 12.9,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/staticfiles/handlers.py b/django/contrib/staticfiles/handlers.py\nindex 711d886..9776592 100644\n--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,5 +1,6 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n+from asgiref.sync import sync_to_async\n \n from django.conf import settings\n from django.contrib.staticfiles import utils\n@@ -52,6 +53,9 @@ class StaticFilesHandlerMixin:\n         except Http404 as e:\n             return response_for_exception(request, e)\n \n+    async def get_response_async(self, request):\n+        return await sync_to_async(self.get_response, thread_sensitive=True)(request)\n+\n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n     \"\"\"\n",
+  "offline_calls": 0
+}

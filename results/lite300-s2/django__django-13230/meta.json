@@ -1,0 +1,396 @@
+{
+  "instance_id": "django__django-13230",
+  "repo": "django/django",
+  "base_commit": "184a6eebb0ef56d5f1b1315a8e666830e37f3f81",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461161.2307947
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461167.3010983
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461179.5762048
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461182.4172316
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461203.8834095
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461386.9915109
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/syndication/views.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/syndication/views.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791461099.9234107,
+  "elapsed_s": 295.08,
+  "plan": "feedgen.add_item(\n        # ... existing arguments ...\n        comments=self._get_dynamic_attr('item_comments', item),\n        # ... existing arguments ...\n    )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/syndication/views.py",
+      "symbol": "django/contrib/syndication/views.py::feed_extra_kwargs",
+      "symbols": [
+        "feed_extra_kwargs",
+        "item_extra_kwargs",
+        "__call__",
+        "get_feed"
+      ],
+      "line_range": [
+        96,
+        102
+      ],
+      "score": 0.6707,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5996,
+        "vector": 0.6314,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: argument, feed, that)"
+    },
+    {
+      "file": "django/contrib/gis/views.py",
+      "symbol": "django/contrib/gis/views.py::feed",
+      "symbols": [
+        "feed"
+      ],
+      "line_range": [
+        5,
+        20
+      ],
+      "score": 0.7683,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.6112,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: description)"
+    },
+    {
+      "file": "django/contrib/flatpages/views.py",
+      "symbol": "django/contrib/flatpages/views.py::render_flatpage",
+      "symbols": [
+        "render_flatpage",
+        "flatpage"
+      ],
+      "line_range": [
+        49,
+        69
+      ],
+      "score": 0.596,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.473,
+        "vector": 0.273,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: already, having, views, view)"
+    },
+    {
+      "file": "django/contrib/admindocs/views.py",
+      "symbol": "django/contrib/admindocs/views.py::BaseAdminDocsView",
+      "symbols": [
+        "BaseAdminDocsView",
+        "_get_view_func",
+        "ViewIndexView",
+        "get_context_data"
+      ],
+      "line_range": [
+        33,
+        51
+      ],
+      "score": 0.605,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3405,
+        "vector": 0.6238,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: views, without, view)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::_load_serializers",
+      "symbols": [
+        "_load_serializers",
+        "sort_dependencies",
+        "serialize",
+        "deserialize"
+      ],
+      "line_range": [
+        144,
+        159
+      ],
+      "score": 0.6349,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4949,
+        "vector": 0.5512,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: defined, without, that)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::contribute_to_class",
+      "symbols": [
+        "contribute_to_class",
+        "__lt__",
+        "__reduce__",
+        "get_filter_kwargs_for_object"
+      ],
+      "line_range": [
+        755,
+        782
+      ],
+      "score": 0.6026,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3161,
+        "vector": 0.6545,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: defined, explicitly, that)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.85315,
+  "laya_scores": {
+    "fix_quality": 1.8293,
+    "matches_issue": 0.8365,
+    "safe_to_apply": 0.7468,
+    "composite": 0.85315,
+    "secrets_or_danger": 0.3187,
+    "logic_drift": 0.1733,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. No user-controlled execution or injection introduced; this maps data to standard feed attributes.\n- PERFORMANCE: PASS. Using `_get_dynamic_attr` is consistent with existing item attribute retrieval methods.\n- ROBUSTNESS: PASS. The change follows the established pattern for optional item attributes in the syndication framework.\n- PONYTAIL / YAGNI: PASS. This is a direct implementation of a missing feature required to align with existing feedparser capabilities.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.syndication.views import Feed\nfrom django.http import HttpRequest\nfrom django.utils import feedgenerator\n\nclass MockFeed(Feed):\n    def items(self):\n        return [1]\n\n    def item_link(self, item):\n        return \"/item/1\"\n\n    def item_comments(self, item):\n        return \"/item/1/comments\"\n\ndef test_feed_item_comments_inclusion():\n    \"\"\"\n    Test that item_comments is correctly passed to the feed generator.\n    The bug is that 'comments' is not currently being passed in add_item().\n    \"\"\"\n    feed = MockFeed()\n    request = HttpRequest()\n    feedgen = feed.get_feed(obj=None, request=request)\n    \n    # Access the items directly from the generated feed\n    items = feedgen.items\n    assert len(items) > 0\n    # In the current (broken) state, 'comments' will be missing from the item dictionary\n    assert 'comments' in items[0], \"The 'comments' field is missing from feed items\"\n    assert items[0]['comments'] == \"/item/1/comments\"\n\ndef test_feed_item_comments_none():\n    \"\"\"\n    Edge case: item_comments returns None.\n    Should either not be present or be None depending on implementation.\n    \"\"\"\n    class NoneCommentsFeed(MockFeed):\n        def item_comments(self, item):\n            return None\n\n    feed = NoneCommentsFeed()\n    feedgen = feed.get_feed(obj=None, request=HttpRequest())\n    # If the fix uses the standard pattern, dynamic attr returning None \n    # might result in it being absent or None.\n    assert 'comments' not in feedgen.items[0] or feedgen.items[0]['comments'] is None\n\ndef test_feed_item_comments_empty_string():\n    \"\"\"\n    Edge case: item_comments returns an empty string.\n    \"\"\"\n    class EmptyStringCommentsFeed(MockFeed):\n        def item_comments(self, item):\n            return \"\"\n\n    feed = EmptyStringCommentsFeed()\n    feedgen = feed.get_feed(obj=None, request=HttpRequest())\n    assert feedgen.items[0]['comments'] == \"\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..53a69c9c0b 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -213,6 +213,7 @@ class Feed:\n                 author_email=author_email,\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n                 **self.item_extra_kwargs(item)\n             )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13230-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/syndication/views.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/syndication/views.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.8293,
+        "matches_issue": 0.8365,
+        "safe_to_apply": 0.7468,
+        "composite": 0.85315,
+        "secrets_or_danger": 0.3187,
+        "logic_drift": 0.1733,
+        "flagged": false
+      },
+      "laya_combined": 0.8531,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.44,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..53a69c9c0b 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -213,6 +213,7 @@ class Feed:\n                 author_email=author_email,\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n                 **self.item_extra_kwargs(item)\n             )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13230-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/syndication/views.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/syndication/views.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.8293,
+        "matches_issue": 0.8365,
+        "safe_to_apply": 0.7468,
+        "composite": 0.85315,
+        "secrets_or_danger": 0.3187,
+        "logic_drift": 0.1733,
+        "flagged": false
+      },
+      "laya_combined": 0.8531,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 98.75,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..53a69c9c0b 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -213,6 +213,7 @@ class Feed:\n                 author_email=author_email,\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n                 **self.item_extra_kwargs(item)\n             )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13230-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/syndication/views.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/syndication/views.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.8293,
+        "matches_issue": 0.8365,
+        "safe_to_apply": 0.7468,
+        "composite": 0.85315,
+        "secrets_or_danger": 0.3187,
+        "logic_drift": 0.1733,
+        "flagged": false
+      },
+      "laya_combined": 0.8531,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 93.44,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0bfe0..53a69c9c0b 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -213,6 +213,7 @@ class Feed:\n                 author_email=author_email,\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n                 **self.item_extra_kwargs(item)\n             )\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13230-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/syndication/views.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/syndication/views.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.8293,
+      "matches_issue": 0.8365,
+      "safe_to_apply": 0.7468,
+      "composite": 0.85315,
+      "secrets_or_danger": 0.3187,
+      "logic_drift": 0.1733,
+      "flagged": false
+    },
+    "laya_combined": 0.8531,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 99.44,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py\nindex 68ffb0b..53a69c9 100644\n--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -213,6 +213,7 @@ class Feed:\n                 author_email=author_email,\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n                 **self.item_extra_kwargs(item)\n             )\n",
+  "offline_calls": 0
+}

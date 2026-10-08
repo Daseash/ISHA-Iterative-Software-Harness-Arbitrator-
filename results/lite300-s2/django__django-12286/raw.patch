@@ -1,0 +1,13 @@
+diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py
+index 138ed07ff8..b4d315af24 100644
+--- a/django/core/checks/translation.py
++++ b/django/core/checks/translation.py
+@@ -32,6 +32,8 @@ def check_setting_language_code(app_configs, **kwargs):
+     if not isinstance(tag, str) or not language_code_re.match(tag):
+         return [Error(E001.msg.format(tag), id=E001.id)]
+     return []
++    if settings.LANGUAGE_CODE.split('-')[0] in dict(settings.LANGUAGES):
++        return []
+ 
+ 
+ @register(Tags.translation)

@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-13321",
+  "repo": "django/django",
+  "base_commit": "35b03788b0607c1f8d2b64e4fa9e1669b0907ea4",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462275.9555917
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462282.347055
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462295.2935097
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462298.3570054
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462325.5075324
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462475.0469558
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791462181.8330722,
+  "elapsed_s": 296.96,
+  "plan": "def _legacy_decode(self, session_data):\n        # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.\n        try:\n            encoded_data = base64.b64decode(session_data.encode('ascii'))\n        except (binascii.Error, UnicodeDecodeError, ValueError):\n            return {}\n        try:\n            return self.serializer().loads(encoded_data.split(b':', 1)[1].decode('ascii'))\n        except Exception:\n            return {}",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/sessions/backends/base.py",
+      "symbol": "django/contrib/sessions/backends/base.py::_legacy_decode",
+      "symbols": [
+        "_legacy_decode",
+        "decode",
+        "_hash",
+        "_legacy_encode"
+      ],
+      "line_range": [
+        133,
+        151
+      ],
+      "score": 0.7733,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6071,
+        "vector": 0.5961,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; signature parameter matches report: session_data; body matches report terms: loads, b64decode, session_data, error; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/signing.py",
+      "symbol": "django/core/signing.py::loads",
+      "symbols": [
+        "loads",
+        "unsign",
+        "SignatureExpired",
+        "base64_hmac"
+      ],
+      "line_range": [
+        127,
+        145
+      ],
+      "score": 0.9972,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5011,
+        "vector": 0.5994,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: max_age, salt, serializer; body matches report terms: salt, max_age, load, signature; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/middleware.py",
+      "symbol": "django/contrib/auth/middleware.py::get_user",
+      "symbols": [
+        "get_user",
+        "AuthenticationMiddleware",
+        "process_request",
+        "RemoteUserMiddleware"
+      ],
+      "line_range": [
+        9,
+        14
+      ],
+      "score": 0.9555,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4483,
+        "vector": 0.3616,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: user, cached_user, request, auth; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_user_session_key",
+      "symbols": [
+        "_get_user_session_key",
+        "login",
+        "update_session_auth_hash",
+        "get_user_model"
+      ],
+      "line_range": [
+        55,
+        60
+      ],
+      "score": 0.9909,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5443,
+        "vector": 0.4569,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; private helper called by a symbol the report names; body matches report terms: user, request, access, session_key; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/migrations/serializer.py",
+      "symbol": "django/db/migrations/serializer.py::register",
+      "symbols": [
+        "register",
+        "BaseSerializer",
+        "__init__",
+        "serialize"
+      ],
+      "line_range": [
+        321,
+        325
+      ],
+      "score": 0.7544,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1606,
+        "vector": 0.1605,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: serializer; body matches report terms: error, base, serializer, value)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_setup",
+      "symbols": [
+        "_setup",
+        "SettingsReference",
+        "__init__",
+        "LazySettings"
+      ],
+      "line_range": [
+        55,
+        71
+      ],
+      "score": 0.6966,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4773,
+        "vector": 0.2275,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: call, user, request, access; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nimport base64\nimport binascii\nfrom django.contrib.sessions.backends.base import SessionBase\n\nclass MockSessionStore(SessionBase):\n    def load(self):\n        return {}\n\ndef test_legacy_decode_invalid_padding_crashes():\n    \"\"\"\n    Reproduction of the reported bug:\n    _legacy_decode should not crash with binascii.Error when input is malformed.\n    \"\"\"\n    store = MockSessionStore()\n    # '!!!' is not valid base64 and has incorrect padding, triggering binascii.Error\n    invalid_session_data = \"!!!\"\n    \n    # This should return {} instead of raising binascii.Error\n    result = store._legacy_decode(invalid_session_data)\n    assert result == {}\n\ndef test_legacy_decode_empty_string():\n    \"\"\"\n    Ensure empty string input is handled gracefully.\n    \"\"\"\n    store = MockSessionStore()\n    assert store._legacy_decode(\"\") == {}\n\ndef test_legacy_decode_non_ascii_input():\n    \"\"\"\n    Ensure input that cannot be encoded as ascii doesn't crash the decoder.\n    \"\"\"\n    store = MockSessionStore()\n    # String containing non-ascii characters\n    invalid_session_data = \"áéíóú\"\n    assert store._legacy_decode(invalid_session_data) == {}\n\ndef test_legacy_decode_malformed_json():\n    \"\"\"\n    Ensure that even if base64 decodes, if the content isn't valid JSON, \n    it returns {} instead of bubbling up an exception.\n    \"\"\"\n    store = MockSessionStore()\n    # 'data' in base64 is 'ZGF0YQ=='. \n    # If the logic tries to split by ':', the second part won't be valid JSON/pickle.\n    encoded = base64.b64encode(b\"not-a-json-string\").decode('ascii')\n    assert store._legacy_decode(encoded) == {}",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,4 +1,5 @@\n import base64\n+import binascii\n import logging\n import string\n import warnings",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c1\\django\\contrib\\sessions\\backends\\base.py: 'binascii' imported but unused"
+      ],
+      "changed_files": [
+        "django/contrib/sessions/backends/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2783,
+        "matches_issue": 0.3533,
+        "safe_to_apply": 0.4667,
+        "composite": 0.524575,
+        "secrets_or_danger": 0.1953,
+        "logic_drift": 0.2112,
+        "flagged": false
+      },
+      "laya_combined": 0.5246,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0016,
+      "rank_reason": "logistic",
+      "elapsed_s": 94.13,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,3 +1,4 @@\n+import binascii\n import base64\n import logging\n import string",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c2\\django\\contrib\\sessions\\backends\\base.py: 'binascii' imported but unused"
+      ],
+      "changed_files": [
+        "django/contrib/sessions/backends/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2783,
+        "matches_issue": 0.3533,
+        "safe_to_apply": 0.4667,
+        "composite": 0.524575,
+        "secrets_or_danger": 0.1646,
+        "logic_drift": 0.2244,
+        "flagged": false
+      },
+      "laya_combined": 0.5246,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0016,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.32,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,3 +1,4 @@\n+import binascii\n import base64\n import logging\n import string",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c3\\django\\contrib\\sessions\\backends\\base.py: 'binascii' imported but unused"
+      ],
+      "changed_files": [
+        "django/contrib/sessions/backends/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2783,
+        "matches_issue": 0.3533,
+        "safe_to_apply": 0.4667,
+        "composite": 0.524575,
+        "secrets_or_danger": 0.1646,
+        "logic_drift": 0.2244,
+        "flagged": false
+      },
+      "laya_combined": 0.5246,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0016,
+      "rank_reason": "logistic",
+      "elapsed_s": 97.03,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,4 +1,5 @@\n import base64\n+import binascii\n import logging\n import string\n import warnings",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13321-c1\\django\\contrib\\sessions\\backends\\base.py: 'binascii' imported but unused"
+    ],
+    "changed_files": [
+      "django/contrib/sessions/backends/base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.2783,
+      "matches_issue": 0.3533,
+      "safe_to_apply": 0.4667,
+      "composite": 0.524575,
+      "secrets_or_danger": 0.1953,
+      "logic_drift": 0.2112,
+      "flagged": false
+    },
+    "laya_combined": 0.5246,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0016,
+    "rank_reason": "logistic",
+    "elapsed_s": 94.13,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

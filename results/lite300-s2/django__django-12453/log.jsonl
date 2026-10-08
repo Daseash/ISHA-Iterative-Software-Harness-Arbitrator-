@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "django__django-12453", "ts": 1791455637.3615196}
+{"event": "attempt", "n": 1, "ts": 1791455638.0538576}
+{"event": "model", "ts": 1791455787.0585682, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791455798.1473014, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455853.6316974, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (5 models): gemini-3.1-flash-lite: Timeout; qwen3.8-27b: RateLimitError; north-mini-code:free: RateLimitError"}
+{"event": "model", "ts": 1791455862.036718, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791455901.0218194, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791456113.5351615, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791456153.3499112}

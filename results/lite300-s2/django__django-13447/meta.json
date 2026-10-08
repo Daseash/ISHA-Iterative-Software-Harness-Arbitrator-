@@ -1,0 +1,403 @@
+{
+  "instance_id": "django__django-13447",
+  "repo": "django/django",
+  "base_commit": "0456d3e42795481a186db05719300691fe2a1029",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462863.3568907
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462869.74185
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462882.2731524
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462886.461333
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462921.117833
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463153.7353468
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/admin/sites.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/admin/sites.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791462794.0665307,
+  "elapsed_s": 367.61,
+  "plan": "Step 1: The root cause\nThe `AdminSite.app_index` and `AdminSite.index` views use a private helper method `_build_app_dict` to construct the dictionary of models displayed in the admin interface. This dictionary currently only contains serialized model information. To satisfy the requirement of accessing the actual model class, `_build_app_dict` must be updated to include the model class in the dictionary, and it should be renamed (or explicitly exposed) to make it public, as it is a utility method intended for use by custom admin view overrides.\n\nStep 2: Exact changes\n- Modify `django/contrib/admin/sites.py`:\n    - Rename `_build_app_dict` to `build_app_dict`.\n    - Inside `build_app_dict`, locate the loop where model dictionaries are constructed (usually iterating over `app_models`).\n    - Add the entry `'model': model` to the dictionary being built for each model.\n    - Update all internal callers of `_build_app_dict` (specifically within the `index` and `app_index` methods in `AdminSite`) to call the renamed `self.build_app_dict`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/contrib/admin/sites.py",
+      "symbol": "django/contrib/admin/sites.py::__init__",
+      "symbols": [
+        "__init__",
+        "check",
+        "is_registered",
+        "admin_view"
+      ],
+      "line_range": [
+        73,
+        79
+      ],
+      "score": 0.5104,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.5037,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: class, admin, model)"
+    },
+    {
+      "file": "django/contrib/admin/options.py",
+      "symbol": "django/contrib/admin/options.py::formfield_for_dbfield",
+      "symbols": [
+        "formfield_for_dbfield",
+        "formfield_for_choice_field",
+        "get_view_on_site_url",
+        "get_queryset"
+      ],
+      "line_range": [
+        132,
+        188
+      ],
+      "score": 0.3893,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5685,
+        "vector": 0.3933,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: class, need, admin, model)"
+    },
+    {
+      "file": "django/template/context.py",
+      "symbol": "django/template/context.py::make_context",
+      "symbols": [
+        "make_context",
+        "ContextPopException",
+        "ContextDict",
+        "update"
+      ],
+      "line_range": [
+        263,
+        278
+      ],
+      "score": 0.5393,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1509,
+        "vector": 0.4302,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: class, context, make)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::_property_resolver",
+      "symbols": [
+        "_property_resolver",
+        "stringfilter",
+        "make_list",
+        "safeseq"
+      ],
+      "line_range": [
+        481,
+        506
+      ],
+      "score": 0.5095,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.051,
+        "vector": 0.3897,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: class, have, last)"
+    },
+    {
+      "file": "tests/admin_inlines/models.py",
+      "symbol": "tests/admin_inlines/models.py::FootNote",
+      "symbols": [
+        "FootNote",
+        "ParentModelWithCustomPk",
+        "ChildModel1",
+        "ChildModel2"
+      ],
+      "line_range": [
+        211,
+        217
+      ],
+      "score": 0.4584,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1784,
+        "vector": 0.6214,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: class, added, model"
+    },
+    {
+      "file": "tests/select_related_regress/models.py",
+      "symbol": "tests/select_related_regress/models.py::Building",
+      "symbols": [
+        "Building",
+        "Device",
+        "Port",
+        "Connection"
+      ],
+      "line_range": [
+        4,
+        7
+      ],
+      "score": 0.4377,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0743,
+        "vector": 0.5917,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: class, model"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.78595,
+  "laya_scores": {
+    "fix_quality": 1.7252,
+    "matches_issue": 0.7378,
+    "safe_to_apply": 0.6808,
+    "composite": 0.78595,
+    "secrets_or_danger": 0.4059,
+    "logic_drift": 0.4878,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. No security implications identified in providing model object access.\n- PERFORMANCE: PASS. The change is a negligible O(1) dictionary assignment.\n- ROBUSTNESS: PASS. Making the method public provides a stable API for custom admin views.\n- PONYTAIL / YAGNI: PASS. This is a functional requirement to support custom admin overrides.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.admin.sites import AdminSite\nfrom django.contrib.auth.models import User\nfrom django.contrib.admin import ModelAdmin\n\nclass CustomAdminSite(AdminSite):\n    pass\n\n@pytest.fixture\ndef site():\n    site = CustomAdminSite()\n    site.register(User)\n    return site\n\ndef test_build_app_dict_exposes_model_class(site):\n    \"\"\"\n    Test that the dictionary returned by build_app_dict (formerly _build_app_dict)\n    contains the 'model' key with the actual model class.\n    \"\"\"\n    # This should fail if _build_app_dict is private or lacks 'model'\n    # After fix, site.build_app_dict is public and includes 'model'\n    app_list = site.build_app_dict(None)\n    \n    auth_app = None\n    for app in app_list.values():\n        if app['app_label'] == 'auth':\n            auth_app = app\n            break\n            \n    assert auth_app is not None, \"Auth app not found in app_list\"\n    \n    user_model_dict = next(m for m in auth_app['models'] if m['object_name'] == 'User')\n    \n    assert 'model' in user_model_dict, \"The 'model' key is missing from the model dictionary\"\n    assert user_model_dict['model'] == User, f\"Expected {User}, got {user_model_dict['model']}\"\n\ndef test_build_app_dict_public_access(site):\n    \"\"\"\n    Verify that build_app_dict is accessible as a public method.\n    \"\"\"\n    assert hasattr(site, 'build_app_dict'), \"build_app_dict should be a public method\"\n    assert callable(site.build_app_dict)\n\ndef test_build_app_dict_handles_empty_site():\n    \"\"\"\n    Verify behavior with an empty site (no registered models).\n    \"\"\"\n    empty_site = CustomAdminSite()\n    app_list = empty_site.build_app_dict(None)\n    assert app_list == {}\n\ndef test_build_app_dict_invalid_request_context(site):\n    \"\"\"\n    Verify that providing None as the request still functions if internal \n    implementation allows, as build_app_dict is often called during setup.\n    \"\"\"\n    # The internal _build_app_dict often requires a request to determine permissions.\n    # We verify it doesn't raise an error when passed None if that's the established \n    # usage contract for custom overrides.\n    try:\n        site.build_app_dict(None)\n    except Exception as e:\n        pytest.fail(f\"build_app_dict(None) raised an unexpected exception: {e}\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/sites.py b/django/contrib/admin/sites.py\nindex 837dabfea8..83eda799e0 100644\n--- a/django/contrib/admin/sites.py\n+++ b/django/contrib/admin/sites.py\n@@ -430,7 +430,7 @@ class AdminSite:\n                     return HttpResponsePermanentRedirect(path)\n         raise Http404\n \n-    def _build_app_dict(self, request, label=None):\n+    def build_app_dict(self, request, label=None):\n         \"\"\"\n         Build the app dictionary. The optional `label` parameter filters models\n         of a specific app.\n@@ -464,6 +464,7 @@ class AdminSite:\n                 'name': capfirst(model._meta.verbose_name_plural),\n                 'object_name': model._meta.object_name,\n                 'perms': perms,\n+                    'model': model,\n                 'admin_url': None,\n                 'add_url': None,\n             }\n@@ -519,7 +520,7 @@ class AdminSite:\n         Display the main admin index page, which lists all of the installed\n         apps that have been registered in this site.\n         \"\"\"\n-        app_list = self.get_app_list(request)\n+        app_list = self.build_app_dict(request)\n \n         context = {\n             **self.each_context(request),\n@@ -534,7 +535,7 @@ class AdminSite:\n         return TemplateResponse(request, self.index_template or 'admin/index.html', context)\n \n     def app_index(self, request, app_label, extra_context=None):\n-        app_dict = self._build_app_dict(request, app_label)\n+        app_dict = self.build_app_dict(request, app_label)\n         if not app_dict:\n             raise Http404('The requested admin page does not exist.')\n         # Sort the models alphabetically within each app.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13447-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/sites.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/sites.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7252,
+        "matches_issue": 0.7378,
+        "safe_to_apply": 0.6808,
+        "composite": 0.78595,
+        "secrets_or_danger": 0.4059,
+        "logic_drift": 0.4878,
+        "flagged": false
+      },
+      "laya_combined": 0.786,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 116.27,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/contrib/admin/sites.py\n+++ b/django/contrib/admin/sites.py\n@@ -438,7 +438,7 @@\n     def index(self, request, extra_context=None):\n         \"\"\"\n         Display the main admin index page, which lists all of the installed\n         apps that have been registered in this site.\n         \"\"\"\n-        app_list = self._build_app_dict(request)\n+        app_list = self.build_app_dict(request)\n \n         context = {\n             **self.each_context(request),\n@@ -457,7 +457,7 @@\n         \"\"\"\n         Display the sub-index page for a given app.\n         \"\"\"\n-        app_list = self._build_app_dict(request, app_label)\n+        app_list = self.build_app_dict(request, app_label)\n         if not app_list:\n             raise Http404('The requested admin page does not exist.')\n         # Sort the models alphabetically within each app.\n@@ -470,7 +470,7 @@\n         context = {\n             **self.each_context(request),\n             'title': _('%(app)s administration') % {'app': app_list[0]['name']},\n             'app_list': app_list,\n             **(extra_context or {}),\n         }\n@@ -478,7 +478,7 @@\n         return TemplateResponse(request, self.app_index_template or\n                                 'admin/app_index.html', context)\n \n-    def _build_app_dict(self, request, label=None):\n+    def build_app_dict(self, request, label=None):\n         \"\"\"\n         Build the app dictionary.\n         \"\"\"\n@@ -512,6 +512,7 @@\n                 'admin_url': admin_url,\n                 'perms': perms,\n+                'model': model,\n             }\n \n             if label:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13447-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/sites.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6741,
+        "matches_issue": 0.7114,
+        "safe_to_apply": 0.6988,
+        "composite": 0.771075,
+        "secrets_or_danger": 0.4669,
+        "logic_drift": 0.4426,
+        "flagged": false
+      },
+      "laya_combined": 0.7711,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 117.39,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/contrib/admin/sites.py\n+++ b/django/contrib/admin/sites.py\n@@ -431,7 +431,7 @@\n         return self.admin_view(self.index)(request)\n \n-    def _build_app_dict(self, request, label=None):\n+    def build_app_dict(self, request, label=None):\n         \"\"\"\n         Build the app dictionary.\n         \"\"\"\n@@ -467,6 +467,7 @@\n                     'admin_url': reverse('admin:%s_%s_changelist' % (app_label, model_name), current_app=self.name),\n                     'add_url': reverse('admin:%s_%s_add' % (app_label, model_name), current_app=self.name),\n+                    'model': model,\n                 }\n                 if model in model_admin.get_exclude(request):\n                     continue\n@@ -526,7 +527,7 @@\n         \"\"\"\n         Display the main admin index page, which lists all of the installed\n         apps that have been registered in this site.\n         \"\"\"\n-        app_list = self._build_app_dict(request)\n+        app_list = self.build_app_dict(request)\n         context = {\n             **self.each_context(request),\n@@ -543,7 +544,7 @@\n         \"\"\"\n         Display the sub-index page for a given app.\n         \"\"\"\n-        app_dict = self._build_app_dict(request, app_label)\n+        app_dict = self.build_app_dict(request, app_label)\n         if not app_dict:\n             raise Http404('The requested admin page does not exist.')\n         context = {",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13447-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13447-c2\\django\\contrib\\admin\\sites.py: undefined name 'app_dict'"
+      ],
+      "changed_files": [
+        "django/contrib/admin/sites.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.708,
+        "matches_issue": 0.748,
+        "safe_to_apply": 0.6844,
+        "composite": 0.7851,
+        "secrets_or_danger": 0.3401,
+        "logic_drift": 0.4383,
+        "flagged": false
+      },
+      "laya_combined": 0.7851,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 121.22,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/admin/sites.py b/django/contrib/admin/sites.py\nindex 837dabfea8..83eda799e0 100644\n--- a/django/contrib/admin/sites.py\n+++ b/django/contrib/admin/sites.py\n@@ -430,7 +430,7 @@ class AdminSite:\n                     return HttpResponsePermanentRedirect(path)\n         raise Http404\n \n-    def _build_app_dict(self, request, label=None):\n+    def build_app_dict(self, request, label=None):\n         \"\"\"\n         Build the app dictionary. The optional `label` parameter filters models\n         of a specific app.\n@@ -464,6 +464,7 @@ class AdminSite:\n                 'name': capfirst(model._meta.verbose_name_plural),\n                 'object_name': model._meta.object_name,\n                 'perms': perms,\n+                    'model': model,\n                 'admin_url': None,\n                 'add_url': None,\n             }\n@@ -519,7 +520,7 @@ class AdminSite:\n         Display the main admin index page, which lists all of the installed\n         apps that have been registered in this site.\n         \"\"\"\n-        app_list = self.get_app_list(request)\n+        app_list = self.build_app_dict(request)\n \n         context = {\n             **self.each_context(request),\n@@ -534,7 +535,7 @@ class AdminSite:\n         return TemplateResponse(request, self.index_template or 'admin/index.html', context)\n \n     def app_index(self, request, app_label, extra_context=None):\n-        app_dict = self._build_app_dict(request, app_label)\n+        app_dict = self.build_app_dict(request, app_label)\n         if not app_dict:\n             raise Http404('The requested admin page does not exist.')\n         # Sort the models alphabetically within each app.\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13447-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/admin/sites.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/admin/sites.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 3,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.7252,
+      "matches_issue": 0.7378,
+      "safe_to_apply": 0.6808,
+      "composite": 0.78595,
+      "secrets_or_danger": 0.4059,
+      "logic_drift": 0.4878,
+      "flagged": false
+    },
+    "laya_combined": 0.786,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0068,
+    "rank_reason": "logistic",
+    "elapsed_s": 116.27,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/admin/sites.py b/django/contrib/admin/sites.py\nindex 837dabf..83eda79 100644\n--- a/django/contrib/admin/sites.py\n+++ b/django/contrib/admin/sites.py\n@@ -430,7 +430,7 @@ class AdminSite:\n                     return HttpResponsePermanentRedirect(path)\n         raise Http404\n \n-    def _build_app_dict(self, request, label=None):\n+    def build_app_dict(self, request, label=None):\n         \"\"\"\n         Build the app dictionary. The optional `label` parameter filters models\n         of a specific app.\n@@ -464,6 +464,7 @@ class AdminSite:\n                 'name': capfirst(model._meta.verbose_name_plural),\n                 'object_name': model._meta.object_name,\n                 'perms': perms,\n+                    'model': model,\n                 'admin_url': None,\n                 'add_url': None,\n             }\n@@ -519,7 +520,7 @@ class AdminSite:\n         Display the main admin index page, which lists all of the installed\n         apps that have been registered in this site.\n         \"\"\"\n-        app_list = self.get_app_list(request)\n+        app_list = self.build_app_dict(request)\n \n         context = {\n             **self.each_context(request),\n@@ -534,7 +535,7 @@ class AdminSite:\n         return TemplateResponse(request, self.index_template or 'admin/index.html', context)\n \n     def app_index(self, request, app_label, extra_context=None):\n-        app_dict = self._build_app_dict(request, app_label)\n+        app_dict = self.build_app_dict(request, app_label)\n         if not app_dict:\n             raise Http404('The requested admin page does not exist.')\n         # Sort the models alphabetically within each app.\n",
+  "offline_calls": 0
+}

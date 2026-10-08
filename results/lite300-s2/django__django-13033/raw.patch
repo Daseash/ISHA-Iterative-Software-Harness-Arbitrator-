@@ -1,0 +1,20 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index d65141b834..ed21b5123a 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1946,6 +1946,15 @@ class Query(BaseExpression):
+         """
+         Expand the GROUP BY clause required by the query.
+ 
++                continue
++            if isinstance(field, str) and field.lstrip('-').endswith('_id'):
++                field_name = field.lstrip('-')[:-3]
++                if field_name in self.get_meta().get_all_field_names():
++                    field_object = self.get_meta().get_field(field_name)
++                    if field_object.is_relation:
++                        ordering.append(field)
++                        continue
++
+         This will usually be the set of all non-aggregate fields in the
+         return data. If the database backend supports grouping by the
+         primary key, and the query would be equivalent, the optimization
