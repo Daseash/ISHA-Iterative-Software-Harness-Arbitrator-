@@ -315,10 +315,12 @@ def _build_candidate(
         if not gate.ok:
             if round_idx == 0 and use_seed and seed_patch:
                 prompt = build_coder_prompt(state, strategy=name)
+            from src.bench.gates import format_gate_errors_with_context
+            err_details = format_gate_errors_with_context(cand.worktree, gate.errors) or "\n".join(f"- {e}" for e in gate.errors[:6])
             feedback = (
-                "\n\nTHE PREVIOUS DIFF FAILED THE STATIC GATES. Errors:\n"
-                + "\n".join(f"- {e}" for e in gate.errors[:6])
-                + "\nEmit a corrected diff that parses cleanly."
+                "\n\nTHE PREVIOUS DIFF FAILED THE STATIC GATES. Errors and source context:\n"
+                + err_details
+                + "\n\nNotice the indentation and surrounding structure in the excerpt above. Emit a corrected diff that parses cleanly."
             )
             if log:
                 log({
@@ -395,14 +397,17 @@ def generate_candidates(
                 break
     if parallel and len(jobs) > 1:
         with ThreadPoolExecutor(max_workers=len(jobs), thread_name_prefix="isha-cand") as pool:
-            futures = [
-                pool.submit(
-                    _build_candidate,
-                    index, name, temperature, notes, use_seed,
-                    seed_patch, state, instance_id, preferred_models, seed_model, log,
+            futures = []
+            for index, (name, temperature, notes, use_seed) in enumerate(jobs, start=1):
+                if index > 1:
+                    time.sleep(3.0)  # smooth out provider TPM burst to avoid 429 collisions
+                futures.append(
+                    pool.submit(
+                        _build_candidate,
+                        index, name, temperature, notes, use_seed,
+                        seed_patch, state, instance_id, preferred_models, seed_model, log,
+                    )
                 )
-                for index, (name, temperature, notes, use_seed) in enumerate(jobs, start=1)
-            ]
             candidates = [f.result() for f in futures]
     else:
         candidates = [

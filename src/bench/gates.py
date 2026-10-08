@@ -469,3 +469,52 @@ def apply_gate(repo_path: str, patch: str, baseline_repo: str | None = None) -> 
         return True, message
     finally:
         cleanup_sandbox(sandbox)
+
+
+def format_gate_errors_with_context(
+    repo_path: str, errors: list[str], max_errors: int = 4, context_lines: int = 4
+) -> str:
+    """Format static gate errors with verbatim source snippets around failing lines.
+
+    Gives the coder immediate visibility of indentation and scope mismatches so
+    repair rounds succeed on round 1.
+    """
+    if not errors:
+        return ""
+    root = Path(repo_path)
+    formatted = []
+    line_re = re.compile(r"(?:line\s+(\d+)|:(\d+):)", re.IGNORECASE)
+
+    for err in errors[:max_errors]:
+        parts = err.split(":", 1)
+        file_part = parts[0].strip() if len(parts) > 1 else ""
+
+        target_file = None
+        if file_part:
+            p = Path(file_part)
+            if p.is_file():
+                target_file = p
+            elif (root / file_part).is_file():
+                target_file = root / file_part
+
+        snippet = ""
+        m = line_re.search(err)
+        if m and target_file and target_file.is_file():
+            lineno = int(m.group(1) or m.group(2))
+            try:
+                lines = target_file.read_text(encoding="utf-8", errors="replace").splitlines()
+                start_l = max(1, lineno - context_lines)
+                end_l = min(len(lines), lineno + context_lines)
+                snippet_lines = []
+                for idx in range(start_l, end_l + 1):
+                    prefix = "--> " if idx == lineno else "    "
+                    content = lines[idx - 1]
+                    snippet_lines.append(f"{prefix}{idx:4d} | {content}")
+                snippet = "\n  Source excerpt around error:\n" + "\n".join(snippet_lines)
+            except Exception:
+                pass
+
+        formatted.append(f"- {err}{snippet}")
+
+    return "\n".join(formatted)
+

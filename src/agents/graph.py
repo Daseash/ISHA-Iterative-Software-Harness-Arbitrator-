@@ -182,7 +182,7 @@ def build_graph():
     workflow.add_conditional_edges(
         "sandbox",
         _route_after_sandbox,
-        {"coder": "coder", "critic": "critic"},
+        {"coder": "coder", "critic": "critic", "approval": "approval"},
     )
     workflow.add_edge("critic", "approval")
     workflow.add_conditional_edges(

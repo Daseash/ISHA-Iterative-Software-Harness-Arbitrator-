@@ -57,17 +57,15 @@ def _parse_chain(primary_env: str, primary_default: str,
 
 
 PLANNER_CHAIN = _parse_chain(
-    "ISHA_PLANNER_MODEL", "groq/qwen/qwen3.8-27b",
+    "ISHA_PLANNER_MODEL", "gemini/gemini-3.1-flash-lite",
     "ISHA_PLANNER_FALLBACKS",
-    "groq/openai/gpt-oss-120b,groq/openai/gpt-oss-20b,"
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash,gemini/gemini-3.1-flash-lite",
+    "gemini/gemini-3.8-flash,openrouter/nvidia/nemotron-3-super-120b-a12b:free,groq/qwen/qwen3.8-27b",
 )
 
 CODER_CHAIN = _parse_chain(
     "ISHA_CODER_MODEL", "groq/qwen/qwen3.8-27b",
     "ISHA_CODER_FALLBACKS",
-    "groq/openai/gpt-oss-120b,groq/openai/gpt-oss-20b,"
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash,gemini/gemini-3.1-flash-lite",
+    "openrouter/nvidia/nemotron-3-super-120b-a12b:free,gemini/gemini-3.1-flash-lite,gemini/gemini-3.8-flash",
 )
 
 # Backward-compatible aliases
@@ -78,14 +76,15 @@ CODER_FALLBACKS = CODER_CHAIN[1:]
 
 # Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
 CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen3.8-27b")
-CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "groq/openai/gpt-oss-120b")
-CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.8-flash")
+CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "openrouter/nvidia/nemotron-3-super-120b-a12b:free")
+CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.1-flash-lite")
 
 
 # ── Model availability ─────────────────────────────────────────────────────
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY)
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
 
 
@@ -344,6 +343,83 @@ def _advance_on_rate_limit() -> bool:
     return True
 
 
+# ── Per-call event stream (bench forensics, v2.1) ─────────────────────────
+# Under 429 storms an attempt can burn its whole wall budget inside backoff
+# sleeps with zero completed model calls, and the in-flight entries were
+# previously lost when the attempt died (FutureTimeout discards the worker's
+# model log).  Every meaningful chain step now emits an event; callers may
+# attach a sink (the bench runner streams them to the instance's log.jsonl
+# as they happen) and an attempt deadline that aborts a chain which has made
+# no model progress for a fraction of the attempt budget.
+_events_tls = threading.local()
+
+
+def _call_event(role: str, model: str, position: str, outcome: str, note: str = "") -> None:
+    ev = {
+        "ts": time.time(),
+        "role": role,
+        "model": model,
+        "position": position,
+        "outcome": outcome,
+        "note": (note or "")[:200],
+    }
+    store = getattr(_events_tls, "list", None)
+    if store is None:
+        store = _events_tls.list = []
+    store.append(ev)
+    sink = getattr(_events_tls, "sink", None)
+    if sink is not None:
+        try:
+            sink(ev)
+        except Exception:
+            pass
+
+
+def get_call_events() -> list:
+    """Copy of the current thread's per-call event list."""
+    store = getattr(_events_tls, "list", None)
+    return list(store) if store else []
+
+
+def reset_call_events() -> None:
+    """Clear events/sink/deadline for the current thread (start of an attempt)."""
+    _events_tls.list = []
+    _events_tls.sink = None
+    _events_tls.deadline = None
+    _events_tls.deadline_start = None
+    _events_tls.ok_seen = False
+
+
+def set_call_event_sink(fn) -> None:
+    """Attach a per-event sink (must be fast and never raise)."""
+    _events_tls.sink = fn
+
+
+def set_attempt_deadline(seconds: float | None) -> None:
+    """Per-thread attempt deadline (monotonic). None disables it."""
+    if seconds:
+        _events_tls.deadline = float(seconds)
+        _events_tls.deadline_start = time.monotonic()
+    else:
+        _events_tls.deadline = None
+        _events_tls.deadline_start = None
+
+
+def _attempt_deadline_hit() -> bool:
+    """True once the attempt spent frac*deadline with no successful model call."""
+    deadline = getattr(_events_tls, "deadline", None)
+    if not deadline:
+        return False
+    if getattr(_events_tls, "ok_seen", False):
+        return False
+    start = getattr(_events_tls, "deadline_start", None)
+    if start is None:
+        start = time.monotonic()
+        _events_tls.deadline_start = start
+    frac = float(os.getenv("ISHA_ATTEMPT_DEADLINE_FRAC", "0.6"))
+    return (time.monotonic() - start) > frac * deadline
+
+
 def _call_chain(chain: list, role: str, prompt: str, temperature: float | None = None) -> str:
     """Try each model in *chain*; first success wins.
 
@@ -360,6 +436,8 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
     if OFFLINE_MODE or litellm is None:
         _log_model(role, "offline-brain", "offline",
                    "no API keys or forced offline")
+        _call_event(role, "offline-brain", "offline", "offline",
+                    "no API keys or forced offline")
         try:
             return _offline(prompt)
         except Exception as e:
@@ -374,6 +452,20 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
             file=sys.stderr,
         )
     for i, model in enumerate(chain):
+        if _attempt_deadline_hit():
+            # The attempt has burned most of its wall budget without a single
+            # model answering (backoff-dominated storm).  Stop paying for more
+            # chain positions and hand back the offline answer early — the
+            # bench runner's retry logic then gets a fresh attempt sooner.
+            errors.append("attempt deadline reached with no model progress")
+            print(
+                f"[model] {role}: attempt deadline reached with no model "
+                f"progress — aborting chain early",
+                file=sys.stderr,
+            )
+            _call_event(role, chain[i] if i < len(chain) else "?", "chain",
+                        "deadline_aborted", "attempt_deadline_no_model_progress")
+            break
         provider = _provider(model)
         if provider in _dead_providers:
             errors.append(f"{_short_name(model)}: skipped ({provider} unavailable)")
@@ -382,6 +474,8 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 f"provider '{provider}' already marked unavailable",
                 file=sys.stderr,
             )
+            _call_event(role, _short_name(model), "skipped", "skipped",
+                        f"provider '{provider}' unavailable")
             continue
         if model in _dead_models:
             errors.append(f"{_short_name(model)}: skipped (model quota exhausted)")
@@ -390,12 +484,17 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 f"model quota exhausted for this session",
                 file=sys.stderr,
             )
+            _call_event(role, _short_name(model), "skipped", "skipped",
+                        "model quota exhausted")
             continue
 
         position = "primary" if i == 0 else f"fallback {i}"
         cached = _get_cached_llm(model, prompt, temperature)
         if cached:
             _log_model(role, model, f"{position} [cached]")
+            _events_tls.ok_seen = True
+            _call_event(role, _short_name(model), f"{position} [cached]", "ok",
+                        "cache hit")
             return cached
 
         attempts = 0

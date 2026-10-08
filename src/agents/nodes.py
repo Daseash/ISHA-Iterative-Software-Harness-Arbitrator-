@@ -406,6 +406,23 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
         notes = "\n".join(f"- {n}" for n in state.context_notes[-8:])
         retry_hint += f"\n\nVALIDATION NOTES:\n{notes}"
 
+    # M-2 Grounding: If previous attempt failed on git apply or hunk context mismatch,
+    # strictly mandate verbatim copying of context lines from the actual files.
+    apply_failed = (
+        any("patch apply failed" in str(n).lower() for n in (state.context_notes or []))
+        or "patch could not be applied" in (state.test_output or "").lower()
+    )
+    if apply_failed:
+        retry_hint += (
+            "\n\nCRITICAL CONTEXT MISMATCH — PATCH APPLY FAILED:\n"
+            "Your previous diff failed to apply because surrounding context lines did not match the file on disk.\n"
+            "MANDATORY INSTRUCTIONS FOR THIS RETRY:\n"
+            "1. Inspect the TARGET FILE CONTEXT / CODE CONTEXT sections below: these are verbatim lines from the real files.\n"
+            "2. In your unified diff, copy all context lines (' ') and removal lines ('-') character-for-character from the context below.\n"
+            "3. Do NOT invent, extrapolate, or modify surrounding lines.\n"
+            "4. Keep the hunk as minimal as possible (1-5 lines of change)."
+        )
+
     # Git history of the files the plan touches — don't undo past bugfixes.
     history_section = ""
     try:
@@ -447,6 +464,22 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
 
     # Phase 3 — full bodies of the suspect symbols, their callers, the tests.
     code_block = code_context_section(state, state.localization)
+    if not code_block and state.repo_path:
+        # Fallback: if localization yielded no symbols, extract mentioned files directly from plan/issue
+        try:
+            from src.tools.git_history import mentioned_files
+            from src.tools.codebody import full_bodies
+
+            m_files = mentioned_files(state.plan or state.issue_text or "", limit=3)
+            fb_chunks = []
+            for mf in m_files:
+                fb = full_bodies(state.repo_path, mf, budget=8000)
+                if fb:
+                    fb_chunks.append(fb)
+            if fb_chunks:
+                code_block = "CODE CONTEXT (verbatim files from repository):\n\n" + "\n\n".join(fb_chunks)
+        except Exception:
+            pass
 
     loc_line = ""
     if state.localization:
@@ -634,7 +667,9 @@ def candidate_node(state: AgentState) -> AgentState:
             if best.repro.get("after_output"):
                 err_hint = "TRIMMED TEST TRACEBACK:\n" + trim_traceback(best.repro["after_output"])
             elif best.gate_errors:
-                err_hint = "STATIC GATE ERRORS:\n" + "\n".join(best.gate_errors)
+                from src.bench.gates import format_gate_errors_with_context
+                gate_ctx = format_gate_errors_with_context(best.worktree, best.gate_errors) if best.worktree else ""
+                err_hint = "STATIC GATE ERRORS:\n" + (gate_ctx or "\n".join(best.gate_errors))
             elif best.apply_message:
                 err_hint = "APPLY ERROR:\n" + best.apply_message
             else:
@@ -925,6 +960,30 @@ def sandbox_node(state: AgentState) -> AgentState:
             ]
             state.test_output = "FAILED: STATIC GATE — " + "; ".join(gate.errors[:6])
             return state
+
+        # GAP 1 & GAP 6: Dynamic verification inside the agent loop.
+        # When dynamic feedback is enabled or docker sandbox is available, run the
+        # regression test so wrong patches fail and trigger the coder self-correction retry loop!
+        from src.tools import docker_sandbox
+        if os.getenv("ISHA_BENCH_TEST_FEEDBACK", "0") == "1" or docker_sandbox.enabled():
+            test_file = None
+            if state.regression_test and not state.regression_test.startswith("#"):
+                try:
+                    (target / "test_regression_isha.py").write_text(
+                        _strip_fences(state.regression_test), encoding="utf-8"
+                    )
+                    test_file = "test_regression_isha.py"
+                except OSError:
+                    pass
+            if test_file:
+                dyn_output = run_tests(str(target), test_file=test_file)
+                if dyn_output and ("FAILED" in dyn_output or "Traceback" in dyn_output or "Error" in dyn_output):
+                    state.context_notes = list(state.context_notes) + [
+                        "dynamic regression test failed"
+                    ]
+                    state.test_output = f"FAILED: DYNAMIC REGRESSION TEST — \n{dyn_output}"
+                    return state
+
         state.test_output = (
             "PASSED\n[bench mode] patch applies and passes ast/py_compile/"
             "pyflakes gates; dynamic tests are executed by the official "

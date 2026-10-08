@@ -65,6 +65,31 @@ def install_lf_writes() -> None:
         return original(self, data, *args, **kwargs)
 
     Path.write_text = write_text  # type: ignore[method-assign]
+
+    # swebench also uses bare ``open()`` (no encoding) in several text
+    # places: run_evaluation.py writes the test output / reports, and
+    # grading.py reads the test output back.  On Windows the cp1252 locale
+    # default crashes on any non-ASCII test output, marking a perfectly good
+    # grading run as an infra error.  Force UTF-8 for those modules' ``open``.
+    try:
+        import builtins
+        import swebench.harness.grading as _grading
+        import swebench.harness.run_evaluation as _run_eval
+
+        builtin_open = builtins.open
+
+        def utf8_open(file, mode="r", *args, **kwargs):  # type: ignore[no-untyped-def]
+            if "b" not in str(mode):
+                kwargs.setdefault("encoding", "utf-8")
+                kwargs.setdefault("errors", "replace")
+            return builtin_open(file, mode, *args, **kwargs)
+
+        for _mod in (_run_eval, _grading):
+            if not getattr(_mod, "_isha_utf8_open", False):
+                _mod.open = utf8_open  # type: ignore[attr-defined]
+                _mod._isha_utf8_open = True  # type: ignore[attr-defined]
+    except Exception:
+        pass
     _write_text_lf_installed = True
 
 

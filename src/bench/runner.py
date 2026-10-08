@@ -59,6 +59,10 @@ SYNTAX_RETRIES = int(os.getenv("ISHA_BENCH_SYNTAX_RETRIES", "1"))
 TIMEOUT_RETRIES = int(os.getenv("ISHA_BENCH_TIMEOUT_RETRIES", "1"))
 
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # ── Environment for a benchmark run ────────────────────────────────────────
 def apply_bench_env(
     candidates: int | None = None,
@@ -72,16 +76,17 @@ def apply_bench_env(
       benchmark run, so the pre-patch human-escalation gate is disabled and
       recorded instead of silently producing an empty patch.
     * ``ISHA_CANDIDATES`` / ``ISHA_VERIFY`` — Phase 4/5 switches; defaults
-      (1 candidate, verification on) keep the single-candidate baseline path
-      unchanged.
+      respect ``.env`` (or 1 candidate baseline).
     """
     os.environ["ISHA_BENCH_MODE"] = "1"
     os.environ.setdefault("ISHA_CONFIDENCE_THRESHOLD", "0")
     os.environ.setdefault("ISHA_SANDBOX_MODE", "local")
     os.environ.setdefault("ISHA_PROMPT_STATS", "1")
-    os.environ.setdefault("ISHA_CANDIDATES", "1")
+    env_cand = os.getenv("ISHA_CANDIDATES", "1")
     if candidates is not None:
         os.environ["ISHA_CANDIDATES"] = str(max(1, candidates))
+    else:
+        os.environ["ISHA_CANDIDATES"] = env_cand
     if verify is not None:
         os.environ["ISHA_VERIFY"] = "1" if verify else "0"
 
@@ -371,19 +376,16 @@ def run_instance(
     Returns the final ``meta`` dict.  Re-entrant: a checkpoint marked ``done``
     is returned untouched so the run resumes for free.
     """
-    existing = load_checkpoint(path)
-    if existing and existing.get("status") == "done":
-        existing["resumed"] = True
-        return existing
-
     path.mkdir(parents=True, exist_ok=True)
     log_path = path / "log.jsonl"
     if not log_path.exists():
         _append(log_path, {"event": "start", "instance_id": record["instance_id"],
                            "ts": time.time()})
 
-    from src.config import reset_provider_state
+    from src.config import set_call_event_sink
+    set_call_event_sink(lambda ev: _append(log_path, ev))
 
+    from src.config import reset_provider_state
     attempt = 0
     notes: list[str] = []
     meta: dict = {

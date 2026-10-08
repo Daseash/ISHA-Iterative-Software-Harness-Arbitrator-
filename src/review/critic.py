@@ -25,12 +25,47 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
 
         # Hard guardrails always win over model judgment.
         from src.guardrails.scanner import scan_patch_for_secrets
+        # Helper to detect if current attempt used fallback model
+        def _is_fallback_attempt(state):
+            """Check if the current patch attempt used a fallback model."""
+            if not state.model_log:
+                return False
+            # Look for the most recent coder entry
+            for entry in reversed(state.model_log):
+                if entry.get("role") == "coder":
+                    position = entry.get("position", "")
+                    return "fallback" in position.lower()
+            return False
+
+        # Helper to detect if current attempt used fallback model
+        def _is_fallback_attempt(state):
+            """Check if the current patch attempt used a fallback model."""
+            if not state.model_log:
+                return False
+            # Look for the most recent coder entry
+            for entry in reversed(state.model_log):
+                if entry.get("role") == "coder":
+                    position = entry.get("position", "")
+                    return "fallback" in position.lower()
+            return False
+
 
         clean, findings = scan_patch_for_secrets(state.patch)
 
         if dangers["flagged"] or not clean:
             state.critic_verdict = "flagged"
-        elif scores["composite"] < 0.4:
+        # Apply fallback safe_to_apply floor: stricter threshold for fallback models
+        effective_composite = scores["composite"]
+        if _is_fallback_attempt(state):
+            # For fallback models, apply stricter safe_to_apply threshold
+            # Reduce the influence of safe_to_apply score to make approval harder
+            safe_penalty = 0.15  # Conservative penalty for fallback models
+            quality_component = 0.50 * scores["fix_quality"] / 2.0
+            matches_component = 0.25 * scores["matches_issue"]
+            safe_component = 0.25 * max(0, scores["safe_to_apply"] - safe_penalty)
+            effective_composite = quality_component + matches_component + safe_component
+
+        if effective_composite < 0.4:
             state.critic_verdict = "low_quality"
         else:
             state.critic_verdict = "approved"
@@ -49,6 +84,7 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
                         state.critic_verdict = "flagged"
             except Exception:
                 pass
+
     except Exception as exc:
         state.critic_verdict = "error"
         state.critic_score = 0.0

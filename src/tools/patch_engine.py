@@ -460,21 +460,30 @@ def _apply_body(lines: list, body: list, start: int, newline: str = "\n") -> boo
     return changed > 0
 
 
-def _locate_near(lines: list, content: list, center: int, span: int = 40) -> int | None:
-    """Exact-then-whitespace match inside a window around *center*."""
+def _locate_near(lines: list, content: list, center: int, span: int = 120) -> int | None:
+    """Exact-then-whitespace match inside a window around *center*, fallback to full file."""
     if not content:
         return None
     n = len(content)
+    want = [c.rstrip("\r\n") for c in content]
+    soft = [c.strip() for c in want]
+
+    # 1) Search locally within expanded window around center
     lo = max(0, center - span)
     hi = min(len(lines) - n + 1, center + span + 1)
-    if lo >= hi:
-        return None
-    want = [c.rstrip("\r\n") for c in content]
-    for i in range(lo, hi):
+    if lo < hi:
+        for i in range(lo, hi):
+            if [lines[j].rstrip("\r\n") for j in range(i, i + n)] == want:
+                return i
+        for i in range(lo, hi):
+            if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft:
+                return i
+
+    # 2) Fallback: search across entire file if line numbers drifted heavily
+    for i in range(len(lines) - n + 1):
         if [lines[j].rstrip("\r\n") for j in range(i, i + n)] == want:
             return i
-    soft = [c.strip() for c in want]
-    for i in range(lo, hi):
+    for i in range(len(lines) - n + 1):
         if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft:
             return i
     return None
