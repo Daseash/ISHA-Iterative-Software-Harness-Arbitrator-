@@ -1,8 +1,0 @@
-{
-  "instance_id": "django__django-11620",
-  "candidate": 0,
-  "round": 0,
-  "error": "Hunk failed in django/urls/resolvers.py: @@ -1,7 +1,7 @@ \u2014 expected context not found in file: 'import functools' (git: error: corrupt patch at <stdin>:11\nerror: corrupt patch at <stdin>:11; sr: No SEARCH/REPLACE blocks found)",
-  "cause": "malformed_hunk",
-  "timestamp": 1791188256.1130667
-}

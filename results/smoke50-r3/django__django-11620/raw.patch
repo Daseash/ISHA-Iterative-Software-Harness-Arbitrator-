@@ -1,9 +1,0 @@
---- a/django/urls/resolvers.py
-+++ b/django/urls/resolvers.py
-@@
--from .exceptions import NoReverseMatch, Resolver404
-+from .exceptions import NoReverseMatch, Resolver404
-+from django.http import Http404
-@@
--                except ValueError:
-+                except (ValueError, Http404):

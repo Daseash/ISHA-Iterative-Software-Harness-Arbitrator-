@@ -1,8 +1,0 @@
-{
-  "instance_id": "matplotlib__matplotlib-22835",
-  "candidate": 0,
-  "round": 0,
-  "error": "Hunk failed in lib/matplotlib/artist.py: @@ \u2014 expected context not found in file: '        if np.ndim(data) == 0 and isinstance(self, ScalarMappable):' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
-  "cause": "context_mismatch",
-  "timestamp": 1791190689.935349
-}

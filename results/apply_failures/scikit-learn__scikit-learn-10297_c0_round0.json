@@ -1,8 +1,0 @@
-{
-  "instance_id": "scikit-learn__scikit-learn-10297",
-  "candidate": 0,
-  "round": 0,
-  "error": "Hunk failed in sklearn/linear_model/ridge.py: @@ -1341,12 +1341,14 @@ \u2014 expected context not found in file: 'class RidgeClassifierCV(LinearClassifierMixin, _BaseRidgeCV):' (git: error: corrupt patch at <stdin>:20\nerror: corrupt patch at <stdin>:20; sr: No SEARCH/REPLACE blocks found)",
-  "cause": "malformed_hunk",
-  "timestamp": 1791045721.7955317
-}

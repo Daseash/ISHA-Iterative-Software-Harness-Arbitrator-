@@ -62,6 +62,12 @@ data/cache/
 results/*/harness/logs/
 results/*/logs/
 results/harness_probe/logs/
+results/apply_failures/
+results/test-*
+results/smoke50-*
+results/*-rescue/
+results/*-c3/
+clean_critic.py
 
 # Master plan document (local only)
 plan.md
