@@ -393,6 +393,28 @@ def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, lis
 
     if _apply_body(lines, body, start, newline=newline):
         return True, lines
+
+    # Anchor fallback: if surrounding context had noisy/hallucinated lines,
+    # match uniquely on the actual lines being removed (-) and replace with (+)
+    rem_lines = [ln[1:] for ln in body if ln.startswith("-")]
+    add_lines = [ln[1:] for ln in body if ln.startswith("+")]
+    if rem_lines:
+        n_rem = len(rem_lines)
+        want = [ln.rstrip("\r\n") for ln in rem_lines]
+        soft = [ln.strip() for ln in want]
+        matches = []
+        for i in range(len(lines) - n_rem + 1):
+            cur = [lines[j].rstrip("\r\n") for j in range(i, i + n_rem)]
+            if cur == want:
+                matches.append(i)
+            elif [c.strip() for c in cur] == soft:
+                matches.append(i)
+        unique_matches = sorted(list(set(matches)))
+        if len(unique_matches) == 1:
+            m_idx = unique_matches[0]
+            lines[m_idx : m_idx + n_rem] = [f"{line}{newline}" for line in add_lines]
+            return True, lines
+
     return False, lines
 
 

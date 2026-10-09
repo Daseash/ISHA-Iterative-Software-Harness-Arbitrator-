@@ -79,9 +79,9 @@ class IssueSeeds:
 
     @property
     def strong_files(self) -> list[str]:
-        """Files named directly in a traceback, in priority order."""
+        """Files named directly in a traceback, in priority order (leaf frames first)."""
         out: list[str] = []
-        for path, _ in self.traceback_files:
+        for path, _ in reversed(self.traceback_files):
             if path not in out:
                 out.append(path)
         for path in self.paths:
@@ -176,6 +176,26 @@ def parse_issue(issue_text: str) -> IssueSeeds:
         name = match.group(1).split(".")[-1]
         if name not in seeds.symbols:
             seeds.symbols.append(name)
+
+    # System check codes like models.W042, admin.E108, E028, W042
+    for match in re.finditer(r"\b([a-zA-Z_]\w*\.[EWCIS]\d{3})\b", text):
+        code = match.group(1)
+        if code not in seeds.symbols:
+            seeds.symbols.append(code)
+        tail = code.split(".")[-1]
+        if tail not in seeds.symbols:
+            seeds.symbols.append(tail)
+
+    for match in re.finditer(r"\b([EWCIS]\d{3})\b", text):
+        code = match.group(1)
+        if code not in seeds.symbols:
+            seeds.symbols.append(code)
+
+    # Uppercase constants & settings like DEFAULT_AUTO_FIELD, SCRIPT_NAME
+    for match in re.finditer(r"\b([A-Z][A-Z0-9_]{3,})\b", text):
+        const_name = match.group(1)
+        if const_name not in seeds.symbols and const_name.lower() not in _STOPWORDS:
+            seeds.symbols.append(const_name)
 
     seen: list[str] = []
     for ident in _IDENT_RE.findall(text.lower()):
@@ -424,6 +444,22 @@ def localize(
     for chunk in chunks:
         path = _norm(chunk.get("file_path", ""))
         seed_scores[path] = max(seed_scores.get(path, 0.0), _seed_score(path, seeds))
+
+    # Fast literal grep for exact check codes (e.g. models.W042, W042, admin.E108)
+    check_codes = [s for s in seeds.symbols if re.match(r"^(?:[A-Za-z_]+\.)?[EWCIS]\d{3}$", s)]
+    if check_codes and repo_path:
+        root_path = Path(repo_path)
+        for cand_file in root_path.glob("**/*.py"):
+            parts = [p.lower() for p in cand_file.parts]
+            if any(ign in parts for ign in ("test", "tests", "docs", "doc", "venv", ".venv", "__pycache__")):
+                continue
+            try:
+                txt = cand_file.read_text(encoding="utf-8", errors="ignore")
+                if any(code in txt for code in check_codes):
+                    rel = _norm(str(cand_file.relative_to(root_path)))
+                    seed_scores[rel] = max(seed_scores.get(rel, 0.0), 0.95)
+            except Exception:
+                pass
     bm25 = _bm25_scores(query_tokens, chunks)
     vec = _vector_scores(seeds.query, chunks)
     defs = _def_scores(chunks, seeds)
