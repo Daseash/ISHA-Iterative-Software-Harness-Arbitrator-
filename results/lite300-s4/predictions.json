@@ -1,0 +1,147 @@
+[
+  {
+    "instance_id": "django__django-15347",
+    "model_patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 0142206..414acb8 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15388",
+    "model_patch": "diff --git a/django/conf/__init__.py b/django/conf/__init__.py\nindex 05345cb..243b4e9 100644\n--- a/django/conf/__init__.py\n+++ b/django/conf/__init__.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Settings and configuration for Django.\n-\n+        from pathlib import Path\n Read values from the module specified by the DJANGO_SETTINGS_MODULE environment\n variable, and then from django.conf.global_settings; see the global_settings.py\n for a list of all possible variables.\n@@ -74,6 +74,10 @@ class LazySettings(LazyObject):\n                 % (desc, ENVIRONMENT_VARIABLE))\n \n         self._wrapped = Settings(settings_module)\n+        for setting in dir(self._wrapped):\n+            val = getattr(self._wrapped, setting)\n+            if isinstance(val, Path):\n+                setattr(self._wrapped, setting, str(val))\n \n     def __repr__(self):\n         # Hardcode the class name as otherwise it yields 'Settings'.",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15400",
+    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..21ccf9b 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15498",
+    "model_patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a5..214415c 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15695",
+    "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e..15d0b13 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix=\"_idx\")\n+        else:\n+            old_name = self.old_name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15738",
+    "model_patch": "diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py\nindex 5f41053..f824d7c 100644\n--- a/django/db/migrations/autodetector.py\n+++ b/django/db/migrations/autodetector.py\n@@ -197,6 +197,8 @@ class MigrationAutodetector:\n         self.generate_altered_order_with_respect_to()\n         self.generate_altered_unique_together()\n         self.generate_altered_index_together()\n+        self.generate_added_constraints()\n+        self.generate_removed_constraints()\n         self.generate_added_indexes()\n         self.generate_added_constraints()\n         self.generate_altered_db_table()",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15781",
+    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..89136f8 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15789",
+    "model_patch": "diff --git a/django/utils/html.py b/django/utils/html.py\nindex d0bc97b..7d1a2d8 100644\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,7 +59,7 @@ _json_script_escapes = {\n }\n \n \n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be output anywhere except for inside a tag attribute. Wrap\n@@ -67,7 +67,8 @@ def json_script(value, element_id=None):\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n \n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    encoder = encoder or DjangoJSONEncoder\n+    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, mark_safe(json_str))\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15790",
+    "model_patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276..50b46f7 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15814",
+    "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb9..4a084a4 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15819",
+    "model_patch": "diff --git a/django/contrib/gis/management/commands/inspectdb.py b/django/contrib/gis/management/commands/inspectdb.py\nindex 1bcc1a0793..afbbfe2677 100644\n--- a/django/contrib/gis/management/commands/inspectdb.py\n+++ b/django/contrib/gis/management/commands/inspectdb.py\n@@ -15,4 +15,8 @@ class Command(InspectDBCommand):\n                 table_name, row\n             )\n             field_params.update(geo_params)\n+        # Add a related_name for foreign key-like fields to avoid reverse accessor clashes\n+        if field_type in (\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"):\n+            # Use the column name (first element of the description tuple) as the related_name\n+            field_params[\"related_name\"] = f\"'{row[0]}'\"\n         return field_type, field_params, field_notes\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15851",
+    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63..43b9cd7 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -35,6 +35,7 @@ class DatabaseClient(BaseDatabaseClient):\n         if dbname:\n             args += [dbname]\n         args.extend(parameters)\n+        args.extend([dbname] if dbname else [])\n \n         env = {}\n         if passwd:\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15902",
+    "model_patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc69..f8273ac 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,8 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n+\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15996",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..f29a22c 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,12 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        if self.value.name is None:\n+            value_bits = self.value._decompose()\n+            return (\n+                \" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits),\n+                {\"import %s\" % module},\n+            )\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16041",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16046",
+    "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..807b77a 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -31,6 +31,8 @@ def format(\n     use_grouping = use_grouping or force_grouping\n     use_grouping = use_grouping and grouping != 0\n     # Make the common case fast\n+    if number is None:\n+        return \"\"\n     if isinstance(number, int) and not use_grouping and not decimal_pos:\n         return mark_safe(number)\n     # sign\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16139",
+    "model_patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex b3cfc67..f6c4b7f 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -163,7 +163,7 @@ class UserChangeForm(forms.ModelForm):\n         super().__init__(*args, **kwargs)\n         password = self.fields.get(\"password\")\n         if password:\n-            password.help_text = password.help_text.format(\"../password/\")\n+            password.help_text = password.help_text.format(f\"../../{self.instance.pk}/password/\")\n         user_permissions = self.fields.get(\"user_permissions\")\n         if user_permissions:\n             user_permissions.queryset = user_permissions.queryset.select_related(",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16229",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16255",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16400",
+    "model_patch": "diff --git a/django/contrib/auth/management/__init__.py b/django/contrib/auth/management/__init__.py\nindex 0b5a982..e87d080 100644\n--- a/django/contrib/auth/management/__init__.py\n+++ b/django/contrib/auth/management/__init__.py\n@@ -90,7 +90,7 @@ def create_permissions(\n     all_perms = set(\n         Permission.objects.using(using)\n         .filter(\n-            content_type__in=ctypes,\n+            content_type__in=ctypes\n         )\n         .values_list(\"content_type\", \"codename\")\n     )\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16408",
+    "model_patch": "diff --git a/tests/known_related_objects/tests.py b/tests/known_related_objects/tests.py\nindex 6080da3..130ea83 100644\n--- a/tests/known_related_objects/tests.py\n+++ b/tests/known_related_objects/tests.py\n@@ -98,6 +98,13 @@ class ExistingRelatedInstancesTests(TestCase):\n             pool = style.pool\n             self.assertIs(style, pool.poolstyle)\n \n+    def test_wrong_select_related(self):\n+        with self.assertNumQueries(3):\n+            p = list(PoolStyle.objects.annotate(\n+                tournament_pool=FilteredRelation('pool__tournament__pool'),\n+            ).select_related('tournament_pool'))\n+            self.assertEqual(p[0].pool.tournament, p[0].tournament_pool.tournament)\n+\n     def test_one_to_one_select_related(self):\n         with self.assertNumQueries(1):\n             style = PoolStyle.objects.select_related(\"pool\").get(pk=self.ps1.pk)\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16527",
+    "model_patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7a..5b742af 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16595",
+    "model_patch": "diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py\nindex cd3aab4..0b73723 100644\n--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -247,6 +247,10 @@ class AlterField(FieldOperation):\n         return \"alter_%s_%s\" % (self.model_name_lower, self.name_lower)\n \n     def reduce(self, operation, app_label):\n+        if isinstance(operation, AlterField) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n         if isinstance(operation, RemoveField) and self.is_same_field_operation(\n             operation\n         ):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16816",
+    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..d82e5ac 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.name for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16820",
+    "model_patch": "diff --git a/django/db/models/options.py b/django/db/models/options.py\nindex be3d68f..fd15f02 100644\n--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -207,7 +207,8 @@ class Options:\n             self.unique_together = normalize_together(self.unique_together)\n             self.index_together = normalize_together(self.index_together)\n             if self.index_together:\n-                warnings.warn(\n+                if not self.indexes:\n+                    warnings.warn(\n                     f\"'index_together' is deprecated. Use 'Meta.indexes' in \"\n                     f\"{self.label!r} instead.\",\n                     RemovedInDjango51Warning,\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16873",
+    "model_patch": "diff --git a/django/template/defaultfilters.py b/django/template/defaultfilters.py\nindex 0367653..cfa558b 100644\n--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -587,8 +587,8 @@ def join(value, arg, autoescape=True):\n     try:\n         if autoescape:\n             value = [conditional_escape(v) for v in value]\n-        data = conditional_escape(arg).join(value)\n-    except TypeError:  # Fail silently if arg isn't iterable.\n+        data = (conditional_escape(arg) if autoescape else arg).join(value)\n+    except TypeError:  # Fail silently if arg isn't iter\n         return value\n     return mark_safe(data)\n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16910",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-17051",
+    "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 5ac2407..62385f4 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -677,7 +677,7 @@ class QuerySet(AltersData):\n                 \"ignore_conflicts and update_conflicts are mutually exclusive.\"\n             )\n         db_features = connections[self.db].features\n-        if ignore_conflicts:\n+        if ignore_conflicts or update_conflicts:\n             if not db_features.supports_ignore_conflicts:\n                 raise NotSupportedError(\n                     \"This database backend does not support ignoring conflicts.\"\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-17087",
+    "model_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\nindex 9a7a2bb..1dd305a 100644\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -76,7 +76,7 @@ class Choices(enum.Enum, metaclass=ChoicesMeta):\n \n     # A similar format was proposed for Python 3.10.\n     def __repr__(self):\n-        return f\"{self.__class__.__qualname__}.{self._name_}\"\n+        return f\"{self.__class__.__module__}.{self.__class__.__qualname__}.{self._name_}\"\n \n \n class IntegerChoices(int, Choices):\n",
+    "model_name_or_path": "isha"
+  }
+]

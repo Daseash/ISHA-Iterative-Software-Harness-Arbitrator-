@@ -1,0 +1,20 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index d17232e4ec..15d0b13685 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):
+                 )
+ 
+     def database_backwards(self, app_label, schema_editor, from_state, to_state):
+-        self.database_forwards(app_label, schema_editor, from_state, to_state)
++        model = to_state.apps.get_model(app_label, self.model_name)
++        if self.old_fields:
++            from_model = from_state.apps.get_model(app_label, self.model_name)
++            columns = [from_model._meta.get_field(field).column for field in self.old_fields]
++            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix="_idx")
++        else:
++            old_name = self.old_name
++        schema_editor.rename_index(model, self.new_name, old_name)
+ 
+     def references_field(self, model_name, name, app_label):
+         return self.references_model(model_name, app_label) and (

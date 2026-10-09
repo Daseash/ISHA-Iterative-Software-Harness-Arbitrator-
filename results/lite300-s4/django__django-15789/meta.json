@@ -1,0 +1,405 @@
+{
+  "instance_id": "django__django-15789",
+  "repo": "django/django",
+  "base_commit": "d4d5427571b4bf3a21c902276c2a00215c2a37cc",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547943.5154715
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547947.9703577
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547969.2534988
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547977.8802478
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547993.5646763
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548133.2823937
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/html.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/html.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791547860.95034,
+  "elapsed_s": 280.29,
+  "plan": "def json_script(value, element_id=None, encoder=None):\n            from django.core.serializers.json import DjangoJSONEncoder\n            if encoder is None:\n                encoder = DjangoJSONEncoder\n            json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n            # ... rest of function",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/html.py",
+      "symbol": "django/utils/html.py::json_script",
+      "symbols": [
+        "json_script",
+        "conditional_escape",
+        "format_html_join",
+        "strip_tags"
+      ],
+      "line_range": [
+        62,
+        79
+      ],
+      "score": 0.7055,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5421,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: where, output, djangojsonencoder, template; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::json_script",
+      "symbols": [
+        "json_script",
+        "stringfilter",
+        "stringformat",
+        "_property_resolver"
+      ],
+      "line_range": [
+        85,
+        92
+      ],
+      "score": 0.6365,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3461,
+        "vector": 0.8329,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: output, json; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::get_col",
+      "symbols": [
+        "get_col",
+        "select_format",
+        "__reduce__",
+        "get_pk_value_on_save"
+      ],
+      "line_range": [
+        471,
+        479
+      ],
+      "score": 0.6172,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3283,
+        "vector": 0.7512,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: output, able, django)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::configure",
+      "symbols": [
+        "configure",
+        "__getattr__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        122,
+        136
+      ],
+      "score": 0.5885,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2567,
+        "vector": 0.6608,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: where, case, values, parameter)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "_load_serializers",
+        "get_public_serializer_formats"
+      ],
+      "line_range": [
+        37,
+        54
+      ],
+      "score": 0.5884,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2446,
+        "vector": 0.6856,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: class, only, pass)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::main_help_text",
+      "symbols": [
+        "main_help_text",
+        "execute",
+        "find_commands",
+        "get_commands"
+      ],
+      "line_range": [
+        213,
+        249
+      ],
+      "score": 0.5817,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3581,
+        "vector": 0.3933,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: output, only, able, that)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7977500000000001,
+  "laya_scores": {
+    "fix_quality": 1.6915,
+    "matches_issue": 0.7486,
+    "safe_to_apply": 0.7509,
+    "composite": 0.7977500000000001,
+    "secrets_or_danger": 0.2679,
+    "logic_drift": 0.4372,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to sanitization logic or escaping mechanisms.\n- PERFORMANCE: PASS, Minimal overhead added by the assignment and conditional check.\n- ROBUSTNESS: PASS, Standard pattern for optional dependency injection in Django utilities.\n- PONYTAIL / YAGNI: PASS, This provides needed flexibility for custom data types without over-engineering.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import json\nimport pytest\nfrom django.utils.html import json_script\nfrom django.core.serializers.json import DjangoJSONEncoder\n\nclass CustomEncoder(DjangoJSONEncoder):\n    \"\"\"A custom encoder to test the injection.\"\"\"\n    def default(self, o):\n        if o == \"secret\":\n            return \"hidden\"\n        return super().default(o)\n\ndef test_json_script_custom_encoder():\n    \"\"\"\n    Test that json_script accepts an 'encoder' parameter.\n    This test will fail before the fix because json_script \n    does not accept keyword arguments other than element_id.\n    \"\"\"\n    data = {\"key\": \"secret\"}\n    # The fix ensures this call works.\n    result = json_script(data, element_id=\"test\", encoder=CustomEncoder)\n    assert '{\"key\": \"hidden\"}' in result\n\ndef test_json_script_default_encoder_behavior():\n    \"\"\"Ensure standard behavior is preserved when no encoder is passed.\"\"\"\n    data = {\"a\": 1}\n    result = json_script(data, element_id=\"test\")\n    assert '{\"a\": 1}' in result\n\ndef test_json_script_none_input():\n    \"\"\"Test with None value.\"\"\"\n    result = json_script(None, element_id=\"test\")\n    assert \"null\" in result\n\ndef test_json_script_invalid_encoder_raises_error():\n    \"\"\"\n    Test that an invalid encoder class (or one not matching \n    json.dumps requirements) propagates the expected error.\n    \"\"\"\n    with pytest.raises(TypeError):\n        # Passing an object instead of a class\n        json_script({\"a\": 1}, encoder=\"not a class\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/utils/html.py b/django/utils/html.py\nindex d0bc97be80..7d1a2d8083 100644\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,7 +59,7 @@ _json_script_escapes = {\n }\n \n \n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be output anywhere except for inside a tag attribute. Wrap\n@@ -67,7 +67,8 @@ def json_script(value, element_id=None):\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n \n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    encoder = encoder or DjangoJSONEncoder\n+    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, mark_safe(json_str))\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/html.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/html.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6915,
+        "matches_issue": 0.7486,
+        "safe_to_apply": 0.7509,
+        "composite": 0.7977500000000001,
+        "secrets_or_danger": 0.2679,
+        "logic_drift": 0.4372,
+        "flagged": false
+      },
+      "laya_combined": 0.7978,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.25,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/utils/html.py b/django/utils/html.py\nindex d0bc97be80..4db089d528 100644\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,7 +59,7 @@ _json_script_escapes = {\n }\n \n \n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be output anywhere except for inside a tag attribute. Wrap\n@@ -67,7 +67,7 @@ def json_script(value, element_id=None):\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n \n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    json_str = json.dumps(value, cls=encoder or DjangoJSONEncoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, mark_safe(json_str))\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/html.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/html.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6637,
+        "matches_issue": 0.7478,
+        "safe_to_apply": 0.7731,
+        "composite": 0.79615,
+        "secrets_or_danger": 0.2515,
+        "logic_drift": 0.4876,
+        "flagged": false
+      },
+      "laya_combined": 0.7962,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 51.69,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/template/defaultfilters.py\n+++ b/django/template/defaultfilters.py\n@@ -87,7 +87,7 @@\n @register.filter(is_safe=True)\n def json_script(value, element_id):\n     \"\"\"\n     Output value JSON-encoded, wrapped in a <script type=\"application/json\"> tag.\n     \"\"\"\n-    return html.json_script(value, element_id)\n+    return html.json_script(value, element_id)\n\n @register.filter(is_safe=True)\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,11 +59,12 @@\n _json_script_escapes = {\n     ord(\">\"): \"\\\\u003E\",\n     ord(\"<\"): \"\\\\u003C\",\n     ord(\"&\"): \"\\\\u0026\",\n }\n\n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be embedded in any HTML document.\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n-\n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    encoder = encoder or DjangoJSONEncoder\n+    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, json_str)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c2\\django\\template\\defaultfilters.py: 'django.utils.html.json_script as _json_script' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c2\\django\\template\\defaultfilters.py: undefined name 'html'"
+      ],
+      "changed_files": [
+        "django/template/defaultfilters.py",
+        "django/utils/html.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6011,
+        "matches_issue": 0.7252,
+        "safe_to_apply": 0.7338,
+        "composite": 0.765025,
+        "secrets_or_danger": 0.2387,
+        "logic_drift": 0.3423,
+        "flagged": false
+      },
+      "laya_combined": 0.765,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 61.44,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/utils/html.py b/django/utils/html.py\nindex d0bc97be80..7d1a2d8083 100644\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,7 +59,7 @@ _json_script_escapes = {\n }\n \n \n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be output anywhere except for inside a tag attribute. Wrap\n@@ -67,7 +67,8 @@ def json_script(value, element_id=None):\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n \n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    encoder = encoder or DjangoJSONEncoder\n+    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, mark_safe(json_str))\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15789-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/utils/html.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/utils/html.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6915,
+      "matches_issue": 0.7486,
+      "safe_to_apply": 0.7509,
+      "composite": 0.7977500000000001,
+      "secrets_or_danger": 0.2679,
+      "logic_drift": 0.4372,
+      "flagged": false
+    },
+    "laya_combined": 0.7978,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 39.25,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/utils/html.py b/django/utils/html.py\nindex d0bc97b..7d1a2d8 100644\n--- a/django/utils/html.py\n+++ b/django/utils/html.py\n@@ -59,7 +59,7 @@ _json_script_escapes = {\n }\n \n \n-def json_script(value, element_id=None):\n+def json_script(value, element_id=None, encoder=None):\n     \"\"\"\n     Escape all the HTML/XML special characters with their unicode escapes, so\n     value is safe to be output anywhere except for inside a tag attribute. Wrap\n@@ -67,7 +67,8 @@ def json_script(value, element_id=None):\n     \"\"\"\n     from django.core.serializers.json import DjangoJSONEncoder\n \n-    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)\n+    encoder = encoder or DjangoJSONEncoder\n+    json_str = json.dumps(value, cls=encoder).translate(_json_script_escapes)\n     if element_id:\n         template = '<script id=\"{}\" type=\"application/json\">{}</script>'\n         args = (element_id, mark_safe(json_str))\n",
+  "offline_calls": 0
+}

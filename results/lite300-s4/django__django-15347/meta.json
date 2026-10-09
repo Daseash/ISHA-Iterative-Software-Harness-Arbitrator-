@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-15347",
+  "repo": "django/django",
+  "base_commit": "7c4f3965098baad2396e24501e09237425a7bd6f",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544774.7294044
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544781.438413
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544794.4066036
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544800.5027757
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544845.446347
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545085.64379
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/messages/storage/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/messages/storage/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791544702.8734643,
+  "elapsed_s": 389.06,
+  "plan": "Step 1: The root cause\nThe root cause is in `django/contrib/messages/storage/base.py` within the `Message._prepare` method. This method incorrectly uses `if self.extra_tags:` to determine if `extra_tags` should be serialized. Because an empty string (`\"\"`) is falsy in Python, the check treats `extra_tags=\"\"` as if it were `None` or missing, leading it to be converted to `None` during the serialization process (specifically within `MessageEncoder` in `django/contrib/messages/storage/cookie.py`, which relies on `_prepare`).\n\nStep 2: Exact changes\nModify `django/contrib/messages/storage/base.py` to change the check in `Message._prepare` from a truthiness check to an explicit check against `None`.\n\nFile: `django/contrib/messages/storage/base.py`\nFunction: `_prepare`\nChange line 25:\nCurrent:\n`self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None`\nWait, looking at the code provided:\n`25 |         self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None`\n\nActually, looking closely at the provided snippet in the report:\n`25 |         self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None`\n\nIf the provided code already checks `is not None`, I should re-examine the `MessageEncoder` logic. The report states: \"MessageEncoder checks for the truthyness of extra_tags\". Since the `MessageEncoder` is in `django/contrib/messages/storage/cookie.py`, and that file is not fully provided but the report explicitly points to it, the fix must be in `MessageEncoder.default` (which is standard for custom encoders).\n\nCorrect Plan:\n1. In `django/contrib/messages/storage/cookie.py`, locate the `MessageEncoder.default` method. \n2. Change the logic that serializes the `extra_tags` attribute. Currently, it likely does `obj.extra_tags and str(obj.extra_tags)`. Change this to check `obj.extra_tags is not None`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/contrib/messages/storage/base.py",
+      "symbol": "django/contrib/messages/storage/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "add",
+        "_prepare",
+        "Message"
+      ],
+      "line_range": [
+        14,
+        18
+      ],
+      "score": 0.9804,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7834,
+        "vector": 0.7462,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: extra_tags; body matches report terms: extra_tags, message)"
+    },
+    {
+      "file": "django/contrib/messages/api.py",
+      "symbol": "django/contrib/messages/api.py::debug",
+      "symbols": [
+        "debug",
+        "info",
+        "add_message",
+        "success"
+      ],
+      "line_range": [
+        69,
+        74
+      ],
+      "score": 0.6562,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4465,
+        "vector": 0.7879,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: extra_tags; body matches report terms: extra_tags, with, message; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/sessions/backends/base.py",
+      "symbol": "django/contrib/sessions/backends/base.py::decode",
+      "symbols": [
+        "decode",
+        "CreateError",
+        "UpdateError",
+        "is_empty"
+      ],
+      "line_range": [
+        96,
+        107
+      ],
+      "score": 0.6555,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.486,
+        "vector": 0.7417,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: value, empty, just, django; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::CommandError",
+      "symbols": [
+        "CommandError",
+        "CommandParser",
+        "parse_args",
+        "handle_default_options"
+      ],
+      "line_range": [
+        20,
+        36
+      ],
+      "score": 0.6581,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6092,
+        "vector": 0.5065,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, this, that, description)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::configure",
+      "symbols": [
+        "configure",
+        "SettingsReference",
+        "LazySettings",
+        "_setup"
+      ],
+      "line_range": [
+        118,
+        132
+      ],
+      "score": 0.6523,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6238,
+        "vector": 0.4281,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: settings, value, here, empty; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_field_name",
+      "symbols": [
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys",
+        "_check_backend_specific_checks",
+        "deconstruct"
+      ],
+      "line_range": [
+        208,
+        239
+      ],
+      "score": 0.8959,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4215,
+        "vector": 0.7964,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, that, checks, error)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8149,
+  "laya_scores": {
+    "fix_quality": 1.756,
+    "matches_issue": 0.8496,
+    "safe_to_apply": 0.654,
+    "composite": 0.8149,
+    "secrets_or_danger": 0.1692,
+    "logic_drift": 0.2996,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, No change in algorithmic complexity.\n- ROBUSTNESS: PASS, Corrects incorrect state handling of empty strings versus None.\n- PONYTAIL / YAGNI: PASS, Necessary fix for framework consistency.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.messages.storage.base import Message\nfrom django.contrib.messages.storage.cookie import MessageEncoder, MessageDecoder\n\ndef test_extra_tags_empty_string_preservation():\n    \"\"\"\n    Reproduction of the bug where extra_tags=\"\" is converted to None\n    upon serialization/deserialization.\n    \"\"\"\n    original_message = Message(10, \"Here is a message\", extra_tags=\"\")\n    \n    encoded_message = MessageEncoder().encode(original_message)\n    decoded_message = MessageDecoder().decode(encoded_message)\n    \n    # This should be True after the fix\n    assert decoded_message.extra_tags == \"\", f\"Expected empty string, got {repr(decoded_message.extra_tags)}\"\n\ndef test_extra_tags_none_stays_none():\n    \"\"\"\n    Edge case: ensure that an explicit None value remains None (not converted to string \"None\").\n    \"\"\"\n    original_message = Message(10, \"Here is a message\", extra_tags=None)\n    \n    encoded_message = MessageEncoder().encode(original_message)\n    decoded_message = MessageDecoder().decode(encoded_message)\n    \n    assert decoded_message.extra_tags is None\n\ndef test_extra_tags_populated_string():\n    \"\"\"\n    Edge case: ensure normal string tags are preserved correctly.\n    \"\"\"\n    tag_value = \"alert success\"\n    original_message = Message(10, \"Here is a message\", extra_tags=tag_value)\n    \n    encoded_message = MessageEncoder().encode(original_message)\n    decoded_message = MessageDecoder().decode(encoded_message)\n    \n    assert decoded_message.extra_tags == tag_value\n\ndef test_message_message_is_none():\n    \"\"\"\n    Edge case: verify that the 'message' attribute handles standard string conversion \n    while preserving the object identity logic.\n    \"\"\"\n    # The message itself should be stringified\n    original_message = Message(10, 12345, extra_tags=\"\")\n    \n    encoded_message = MessageEncoder().encode(original_message)\n    decoded_message = MessageDecoder().decode(encoded_message)\n    \n    assert decoded_message.message == \"12345\"\n    assert decoded_message.extra_tags == \"\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 01422066a6..414acb86bc 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15347-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/messages/storage/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/messages/storage/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.756,
+        "matches_issue": 0.8496,
+        "safe_to_apply": 0.654,
+        "composite": 0.8149,
+        "secrets_or_danger": 0.1692,
+        "logic_drift": 0.2996,
+        "flagged": false
+      },
+      "laya_combined": 0.8149,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 15.75,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 01422066a6..414acb86bc 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15347-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/messages/storage/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/messages/storage/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.756,
+        "matches_issue": 0.8496,
+        "safe_to_apply": 0.654,
+        "composite": 0.8149,
+        "secrets_or_danger": 0.1692,
+        "logic_drift": 0.2996,
+        "flagged": false
+      },
+      "laya_combined": 0.8149,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 87.43,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 01422066a6..414acb86bc 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15347-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/messages/storage/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/messages/storage/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.756,
+        "matches_issue": 0.8496,
+        "safe_to_apply": 0.654,
+        "composite": 0.8149,
+        "secrets_or_danger": 0.1692,
+        "logic_drift": 0.2996,
+        "flagged": false
+      },
+      "laya_combined": 0.8149,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 85.84,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 01422066a6..414acb86bc 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15347-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/messages/storage/base.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/messages/storage/base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.756,
+      "matches_issue": 0.8496,
+      "safe_to_apply": 0.654,
+      "composite": 0.8149,
+      "secrets_or_danger": 0.1692,
+      "logic_drift": 0.2996,
+      "flagged": false
+    },
+    "laya_combined": 0.8149,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0063,
+    "rank_reason": "logistic",
+    "elapsed_s": 15.75,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 0142206..414acb8 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+  "offline_calls": 0
+}

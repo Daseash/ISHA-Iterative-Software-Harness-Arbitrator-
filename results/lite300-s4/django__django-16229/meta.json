@@ -1,0 +1,246 @@
+{
+  "instance_id": "django__django-16229",
+  "repo": "django/django",
+  "base_commit": "04b15022e8d1f49af69d8a1e6cd678f31f1280ff",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551841.5782223
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551846.6240482
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551859.1307032
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551866.8079104
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551884.861599
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551915.9079072
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551944.0034182
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551973.358895
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791551603.2069194,
+  "elapsed_s": 195.79,
+  "plan": "Step 1: Root cause — default_auto_field() does not validate operand types before computing.\nStep 2: Edit config.py — in default_auto_field(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::_check_values",
+      "symbols": [
+        "_check_values",
+        "clean",
+        "clean",
+        "construct_instance"
+      ],
+      "line_range": [
+        1596,
+        1632
+      ],
+      "score": 0.9899,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8252,
+        "vector": 0.7384,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: value; body matches report terms: object, validation, value, creating)"
+    },
+    {
+      "file": "tests/admin_views/admin.py",
+      "symbol": "tests/admin_views/admin.py::ThingAdmin",
+      "symbols": [
+        "ThingAdmin",
+        "ArticleInline",
+        "ChapterInline",
+        "ChapterXtra1Admin"
+      ],
+      "line_range": [
+        312,
+        315
+      ],
+      "score": 0.7509,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6882,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: ModelAdmin; body matches report terms: modeladmin, class, value, admin; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/admin/options.py",
+      "symbol": "django/contrib/admin/options.py::_get_action_description",
+      "symbols": [
+        "_get_action_description",
+        "lookup_allowed",
+        "__init__",
+        "construct_change_message"
+      ],
+      "line_range": [
+        973,
+        975
+      ],
+      "score": 0.7316,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8237,
+        "vector": 0.6305,
+        "defs": 1.0
+      },
+      "reason": "private helper called by a symbol the report names; signature parameter matches report: name; body matches report terms: description, name"
+    },
+    {
+      "file": "tests/admin_views/models.py",
+      "symbol": "tests/admin_views/models.py::Thing",
+      "symbols": [
+        "Thing",
+        "Section",
+        "Article",
+        "Book"
+      ],
+      "line_range": [
+        153,
+        161
+      ],
+      "score": 0.7256,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7102,
+        "vector": 0.6519,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: Model; body matches report terms: class, charfield, field, foreignkey; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "tests/forms_tests/models.py",
+      "symbol": "tests/forms_tests/models.py::BoundaryModel",
+      "symbols": [
+        "BoundaryModel",
+        "Defaults",
+        "ChoiceModel",
+        "ChoiceOptionModel"
+      ],
+      "line_range": [
+        18,
+        21
+      ],
+      "score": 0.6736,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3946,
+        "vector": 0.6908,
+        "defs": 1.0
+      },
+      "reason": "signature parameter matches report: Model; body matches report terms: class, field, model, models"
+    },
+    {
+      "file": "django/contrib/admin/decorators.py",
+      "symbol": "django/contrib/admin/decorators.py::AuthorAdmin",
+      "symbols": [
+        "AuthorAdmin",
+        "_model_admin_wrapper",
+        "register",
+        "action"
+      ],
+      "line_range": [
+        86,
+        88
+      ],
+      "score": 0.6658,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6641,
+        "vector": 0.4151,
+        "defs": 1.0
+      },
+      "reason": "signature parameter matches report: ModelAdmin; body matches report terms: modeladmin, class, admin, pass"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "low_quality",
+  "critic_score": 0.3654,
+  "laya_scores": {
+    "fix_quality": 1.0062,
+    "matches_issue": 0.1687,
+    "safe_to_apply": 0.2867,
+    "composite": 0.3654,
+    "secrets_or_danger": 0.0758,
+    "logic_drift": 0.0992,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "FAILED: no patch to apply",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator().default_auto_field(\"two\", 2)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 6
+}

@@ -1,0 +1,246 @@
+{
+  "instance_id": "django__django-15996",
+  "repo": "django/django",
+  "base_commit": "b30c0081d4d8a31ab7dc7f72a4c7099af606ef29",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550320.2358468
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550324.0466368
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550330.8672528
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550332.8370576
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550352.485025
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550377.7896953
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550402.0074375
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550427.249365
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791550042.7384205,
+  "elapsed_s": 144.14,
+  "plan": "Step 1: Root cause — _load_field() does not match the behaviour described in the report.\nStep 2: Edit __init__.py — in _load_field(), apply: make the return value match the documented behaviour.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::BigIntegerField",
+      "symbols": [
+        "BigIntegerField",
+        "SmallIntegerField",
+        "PositiveIntegerField",
+        "AutoField"
+      ],
+      "line_range": [
+        2048,
+        2064
+      ],
+      "score": 0.671,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5906,
+        "vector": 0.6526,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: IntegerField; body matches report terms: value, description, field, integerfield)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::deserialize",
+      "symbols": [
+        "deserialize",
+        "_load_serializers",
+        "sort_dependencies",
+        "BadSerializer"
+      ],
+      "line_range": [
+        138,
+        148
+      ],
+      "score": 0.6714,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6549,
+        "vector": 0.5222,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: that, name, field"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::default",
+      "symbols": [
+        "default",
+        "linenumbers",
+        "lower",
+        "make_list"
+      ],
+      "line_range": [
+        823,
+        827
+      ],
+      "score": 0.665,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4795,
+        "vector": 0.7929,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: value, given; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::FloatField",
+      "symbols": [
+        "FloatField",
+        "DecimalField",
+        "IntegerField",
+        "bound_data"
+      ],
+      "line_range": [
+        345,
+        383
+      ],
+      "score": 0.6155,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3987,
+        "vector": 0.5486,
+        "defs": 1.0
+      },
+      "reason": "signature parameter matches report: IntegerField; body matches report terms: value, that, field, default"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "main_help_text",
+        "execute"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.6076,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3609,
+        "vector": 0.6032,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: names, with, given, that"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "__setattr__",
+        "configure",
+        "_add_script_prefix"
+      ],
+      "line_range": [
+        89,
+        105
+      ],
+      "score": 0.603,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4181,
+        "vector": 0.4453,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: value, this, case, modified"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.6458999999999999,
+  "laya_scores": {
+    "fix_quality": 1.4584,
+    "matches_issue": 0.547,
+    "safe_to_apply": 0.5782,
+    "composite": 0.6458999999999999,
+    "secrets_or_danger": 0.0758,
+    "logic_drift": 0.0992,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "FAILED: no patch to apply",
+  "regression_test": "from calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    calc = Calculator()\n    assert calc.calculate(5, 3) == 2",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 6
+}

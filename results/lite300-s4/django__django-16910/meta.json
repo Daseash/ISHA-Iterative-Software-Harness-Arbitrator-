@@ -1,0 +1,365 @@
+{
+  "instance_id": "django__django-16910",
+  "repo": "django/django",
+  "base_commit": "4142739af1cda53581af4169dbe16d6cd5e26948",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791562890.4870296
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791562897.658167
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791562909.4355004
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791562912.6908367
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791562942.285611
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563078.3404157
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791562812.3936048,
+  "elapsed_s": 271.95,
+  "plan": "### Step 1: Root Cause\nWhen calling `QuerySet.only()` along with `select_related()` on a reverse `OneToOneField` relation, Django's query compiler determines which fields to defer/load by inspecting the selected fields and joins. \n\nSpecifically, in Django's query set handling (typically within query construction/deferred fields handling, such as in `django/db/models/sql/query.py`), reverse `OneToOneField` relations are treated similarly to `ForeignKey` or `OneToOneField` forward relations in terms of deferred field loading or joins, but a regression or oversight in how reverse `OneToOneField` targets are mapped or checked in deferred fields / `only()` causes all fields of the target model to be included rather than filtered to the requested fields (like `'secondary__secondary_field_1'`).\n\nWhen processing the deferred/only fields, the name resolution or model association for the reverse `OneToOneField` lookup (`secondary`) fails to properly match or defer the fields on the related model `Secondary`, causing the query to fallback to selecting all columns from `bugtest_secondary`.\n\n### Step 2: Exact Changes to Make\nSince the query compiler handles deferral/only fields and joins, we need to inspect and fix how reverse `OneToOneField` relations handle deferred fields in `django/db/models/sql/query.py` (or related query compilation modules).\n\n1. **File:** `django/db/models/sql/query.py`\n   - **Function/Method:** Look into `add_immediate_loading()` or equivalent methods where `only()` fields are parsed and registered against models and joins.\n   - **What to change:** Ensure that when resolving field paths for `only()` with `select_related()` across relations, reverse `OneToOneField` relations (which use `OneToOneRel` and `ReverseOneToOneDescriptor`) correctly register the requested fields for deferred loading on the target model's annotations/joins, rather than treating them as non-deferred or ignoring the restriction.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/models/fields/related.py",
+      "symbol": "django/db/models/fields/related.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        100,
+        105
+      ],
+      "score": 0.9421,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.9928,
+        "vector": 0.7197,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: related_name; body matches report terms: related_name, query, related)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "CommaSeparatedIntegerField",
+        "EmailField",
+        "SlugField"
+      ],
+      "line_range": [
+        180,
+        205
+      ],
+      "score": 0.6364,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4794,
+        "vector": 0.5965,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: blank, max_length, primary_key; body matches report terms: blank, max_length, primary_key)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::CASCADE",
+      "symbols": [
+        "CASCADE",
+        "PROTECT",
+        "RESTRICT",
+        "SET"
+      ],
+      "line_range": [
+        22,
+        33
+      ],
+      "score": 0.7065,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8229,
+        "vector": 0.4228,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: using, model; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::serialize",
+      "symbols": [
+        "serialize",
+        "deserialize",
+        "BadSerializer",
+        "unregister_serializer"
+      ],
+      "line_range": [
+        128,
+        137
+      ],
+      "score": 0.5609,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2968,
+        "vector": 0.3472,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: objects, query, using, queryset)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::json_script",
+      "symbols": [
+        "json_script",
+        "linenumbers",
+        "linebreaks_filter",
+        "length_is"
+      ],
+      "line_range": [
+        87,
+        94
+      ],
+      "score": 0.5476,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0847,
+        "vector": 0.6365,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, code)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::URLField",
+      "symbols": [
+        "URLField",
+        "SlugField",
+        "UUIDField",
+        "EmailField"
+      ],
+      "line_range": [
+        751,
+        803
+      ],
+      "score": 0.5468,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.149,
+        "vector": 0.496,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: CharField; body matches report terms: with, class, django, fields)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "from django.db import models\nfrom django.test import TestCase\n\n\nclass Main(models.Model):\n    main_field_1 = models.CharField(blank=True, max_length=45)\n    main_field_2 = models.CharField(blank=True, max_length=45)\n    main_field_3 = models.CharField(blank=True, max_length=45)\n\n\nclass Secondary(models.Model):\n    main = models.OneToOneField(\n        Main, primary_key=True, related_name=\"secondary\", on_delete=models.CASCADE\n    )\n    secondary_field_1 = models.CharField(blank=True, max_length=45)\n    secondary_field_2 = models.CharField(blank=True, max_length=45)\n    secondary_field_3 = models.CharField(blank=True, max_length=45)\n\n\nclass Tertiary(models.Model):\n    secondary = models.OneToOneField(\n        Secondary, primary_key=True, related_name=\"tertiary\", on_delete=models.CASCADE\n    )\n    tertiary_field_1 = models.CharField(blank=True, max_length=45)\n    tertiary_field_2 = models.CharField(blank=True, max_length=45)\n\n\nclass ReverseOneToOneOnlyTests(TestCase):\n    app_label = \"bugtest\"\n\n    @classmethod\n    def setUpTestData(cls):\n        main = Main.objects.create(\n            main_field_1=\"m1\", main_field_2=\"m2\", main_field_3=\"m3\"\n        )\n        Secondary.objects.create(\n            main=main,\n            secondary_field_1=\"s1\",\n            secondary_field_2=\"s2\",\n            secondary_field_3=\"s3\",\n        )\n        Tertiary.objects.create(\n            secondary=main.secondary,\n            tertiary_field_1=\"t1\",\n            tertiary_field_2=\"t2\",\n        )\n\n    def test_only_with_select_related_reverse_onetoone(self):\n        \"\"\"\n        Calling only() with select_related() on a query using the reverse\n        lookup for a OneToOne relation correctly filters the selected fields\n        on the related model.\n        \"\"\"\n        qs = Main.objects.select_related(\"secondary\").only(\n            \"main_field_1\", \"secondary__secondary_field_1\"\n        )\n        sql = str(qs.query)\n\n        # The generated SQL should NOT contain secondary_field_2 or secondary_field_3\n        self.assertNotIn(\"secondary_field_2\", sql)\n        self.assertNotIn(\"secondary_field_3\", sql)\n        # But it should contain secondary_field_1 and main_field_1\n        self.assertIn(\"secondary_field_1\", sql)\n        self.assertIn(\"main_field_1\", sql)\n\n    def test_only_with_select_related_chained_reverse_onetoone(self):\n        \"\"\"\n        Chaining select_related and only across multiple reverse OneToOne relations.\n        \"\"\"\n        qs = Main.objects.select_related(\"secondary__tertiary\").only(\n            \"main_field_1\",\n            \"secondary__secondary_field_1\",\n            \"secondary__tertiary__tertiary_field_1\",\n        )\n        sql = str(qs.query)\n\n        self.assertIn(\"main_field_1\", sql)\n        self.assertIn(\"secondary_field_1\", sql)\n        self.assertIn(\"tertiary_field_1\", sql)\n        self.assertNotIn(\"secondary_field_2\", sql)\n        self.assertNotIn(\"tertiary_field_2\", sql)\n\n    def test_only_with_mixed_forward_and_reverse_onetoone(self):\n        \"\"\"\n        Using only() mixing forward and reverse OneToOne relations.\n        \"\"\"\n        qs = Secondary.objects.select_related(\"main\", \"tertiary\").only(\n            \"secondary_field_1\",\n            \"main__main_field_1\",\n            \"tertiary__tertiary_field_1\",\n        )\n        sql = str(qs.query)\n\n        self.assertIn(\"secondary_field_1\", sql)\n        self.assertIn(\"main_field_1\", sql)\n        self.assertIn(\"tertiary_field_1\", sql)\n        self.assertNotIn(\"main_field_2\", sql)\n        self.assertNotIn(\"secondary_field_2\", sql)\n        self.assertNotIn(\"tertiary_field_2\", sql)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -755,3 +755,3 @@\n             join_field = to_field or opts.pk.name\n-        if not join_field:\n+        if join_field is None:\n             return",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16910-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3843,
+        "matches_issue": 0.6249,
+        "safe_to_apply": 0.4734,
+        "composite": 0.6206499999999999,
+        "secrets_or_danger": 0.0826,
+        "logic_drift": 0.0885,
+        "flagged": false
+      },
+      "laya_combined": 0.6206,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0082,
+      "rank_reason": "logistic",
+      "elapsed_s": 98.04,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -755,3 +755,3 @@\n             # direct relation\n-            if not sv.field.remote_field.multiple:\n+            if not sv.field.remote_field.multiple and not sv.field.one_to_one:\n                 fields = [",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16910-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2412,
+        "matches_issue": 0.6541,
+        "safe_to_apply": 0.5191,
+        "composite": 0.6036,
+        "secrets_or_danger": 0.1167,
+        "logic_drift": 0.3001,
+        "flagged": false
+      },
+      "laya_combined": 0.6036,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 100.86,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1134,3 +1134,3 @@\n         kwargs[\"rel\"] = rel\n-        super().__init__(field_name, **kwargs)\n+        super().__init__(to, **kwargs)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16910-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16910-c3\\django\\db\\models\\fields\\related.py: undefined name 'to'"
+      ],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2619,
+        "matches_issue": 0.5954,
+        "safe_to_apply": 0.4742,
+        "composite": 0.582875,
+        "secrets_or_danger": 0.0986,
+        "logic_drift": 0.1908,
+        "flagged": false
+      },
+      "laya_combined": 0.5829,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0013,
+      "rank_reason": "logistic",
+      "elapsed_s": 97.34,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": true,
+    "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -755,3 +755,3 @@\n             join_field = to_field or opts.pk.name\n-        if not join_field:\n+        if join_field is None:\n             return",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16910-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/query.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3843,
+      "matches_issue": 0.6249,
+      "safe_to_apply": 0.4734,
+      "composite": 0.6206499999999999,
+      "secrets_or_danger": 0.0826,
+      "logic_drift": 0.0885,
+      "flagged": false
+    },
+    "laya_combined": 0.6206,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0082,
+    "rank_reason": "logistic",
+    "elapsed_s": 98.04,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

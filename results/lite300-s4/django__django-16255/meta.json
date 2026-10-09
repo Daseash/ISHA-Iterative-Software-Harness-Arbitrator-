@@ -1,0 +1,363 @@
+{
+  "instance_id": "django__django-16255",
+  "repo": "django/django",
+  "base_commit": "444b6da7cc229a58a2c476a52e45233001dc7073",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552348.9247127
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552353.401741
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552360.1814837
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552364.6144557
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552379.3308535
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (5 models): offline-brain: BadRequestError; qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791552497.917398
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791551989.8200123,
+  "elapsed_s": 200.41,
+  "plan": "Step 1: Root cause — items() does not validate operand types before computing.\nStep 2: Edit sitemaps.py — in items(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::get_latest_lastmod",
+      "symbols": [
+        "get_latest_lastmod",
+        "get_latest_lastmod",
+        "lastmod",
+        "SitemapNotFound"
+      ],
+      "line_range": [
+        165,
+        175
+      ],
+      "score": 0.7999,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6863,
+        "vector": 0.6524,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: lastmod, hasattr, last, items; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/sitemaps/views.py",
+      "symbol": "django/contrib/sitemaps/views.py::x_robots_tag",
+      "symbols": [
+        "x_robots_tag",
+        "index",
+        "sitemap",
+        "SitemapIndexItem"
+      ],
+      "line_range": [
+        31,
+        40
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5556,
+        "vector": 0.545,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: func; body matches report terms: response, kwargs, inner, index)"
+    },
+    {
+      "file": "django/core/handlers/exception.py",
+      "symbol": "django/core/handlers/exception.py::convert_exception_to_response",
+      "symbols": [
+        "convert_exception_to_response",
+        "inner",
+        "inner",
+        "get_exception_response"
+      ],
+      "line_range": [
+        24,
+        62
+      ],
+      "score": 0.697,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.491,
+        "vector": 0.202,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: get_response; body matches report terms: response, get_response, this, exception)"
+    },
+    {
+      "file": "django/utils/decorators.py",
+      "symbol": "django/utils/decorators.py::_decorator",
+      "symbols": [
+        "_decorator",
+        "callback",
+        "sync_and_async_middleware",
+        "sync_only_middleware"
+      ],
+      "line_range": [
+        119,
+        159
+      ],
+      "score": 0.6903,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4323,
+        "vector": 0.2687,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: view_func; body matches report terms: response, kwargs, exception, hasattr)"
+    },
+    {
+      "file": "django/core/handlers/base.py",
+      "symbol": "django/core/handlers/base.py::check_response",
+      "symbols": [
+        "check_response",
+        "get_response",
+        "get_response_async",
+        "_get_response"
+      ],
+      "line_range": [
+        317,
+        342
+      ],
+      "score": 0.783,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7342,
+        "vector": 0.4124,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: response; body matches report terms: valueerror, response, value, func)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::args_check",
+      "symbols": [
+        "args_check",
+        "VariableDoesNotExist",
+        "__init__",
+        "Token"
+      ],
+      "line_range": [
+        749,
+        766
+      ],
+      "score": 0.7101,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3749,
+        "vector": 0.5532,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: func; body matches report terms: args, func)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator().ping_google(\"two\", 2)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "offline-brain",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/sites.py\n+++ b/sites.py\n@@ -227,6 +227,8 @@\n         \"\"\"\n \n         def inner(request, *args, **kwargs):\n+            if not isinstance(request, (int, float)):\n+                raise TypeError(\"operands must be numbers\")\n             if not self.has_permission(request):\n                 if request.path == reverse(\"admin:logout\", current_app=self.name):\n                     index_path = reverse(\"admin:index\", current_app=self.name)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16255-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sites.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.662,
+        "matches_issue": 0.7479,
+        "safe_to_apply": 0.6463,
+        "composite": 0.76405,
+        "secrets_or_danger": 0.1431,
+        "logic_drift": 0.1588,
+        "flagged": false
+      },
+      "laya_combined": 0.7641,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 73.52,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "--- a/sites.py\n+++ b/sites.py\n@@ -227,6 +227,8 @@\n         \"\"\"\n \n         def inner(request, *args, **kwargs):\n+            if not isinstance(request, (int, float)):\n+                raise TypeError(\"operands must be numbers\")\n             if not self.has_permission(request):\n                 if request.path == reverse(\"admin:logout\", current_app=self.name):\n                     index_path = reverse(\"admin:index\", current_app=self.name)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16255-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sites.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.662,
+        "matches_issue": 0.7479,
+        "safe_to_apply": 0.6463,
+        "composite": 0.76405,
+        "secrets_or_danger": 0.1431,
+        "logic_drift": 0.1588,
+        "flagged": false
+      },
+      "laya_combined": 0.7641,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 83.19,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "offline-brain",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/sites.py\n+++ b/sites.py\n@@ -227,6 +227,8 @@\n         \"\"\"\n \n         def inner(request, *args, **kwargs):\n+            if not isinstance(request, (int, float)):\n+                raise TypeError(\"operands must be numbers\")\n             if not self.has_permission(request):\n                 if request.path == reverse(\"admin:logout\", current_app=self.name):\n                     index_path = reverse(\"admin:index\", current_app=self.name)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16255-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sites.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.662,
+        "matches_issue": 0.7479,
+        "safe_to_apply": 0.6463,
+        "composite": 0.76405,
+        "secrets_or_danger": 0.1431,
+        "logic_drift": 0.1588,
+        "flagged": false
+      },
+      "laya_combined": 0.7641,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.79,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "offline-brain",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/sites.py\n+++ b/sites.py\n@@ -227,6 +227,8 @@\n         \"\"\"\n \n         def inner(request, *args, **kwargs):\n+            if not isinstance(request, (int, float)):\n+                raise TypeError(\"operands must be numbers\")\n             if not self.has_permission(request):\n                 if request.path == reverse(\"admin:logout\", current_app=self.name):\n                     index_path = reverse(\"admin:index\", current_app=self.name)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16255-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sites.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.662,
+      "matches_issue": 0.7479,
+      "safe_to_apply": 0.6463,
+      "composite": 0.76405,
+      "secrets_or_danger": 0.1431,
+      "logic_drift": 0.1588,
+      "flagged": false
+    },
+    "laya_combined": 0.7641,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0068,
+    "rank_reason": "logistic",
+    "elapsed_s": 73.52,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 4
+}

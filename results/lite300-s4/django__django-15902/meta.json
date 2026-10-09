@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-15902",
+  "repo": "django/django",
+  "base_commit": "44c24bf02835323d5418512ebe8e76166739ebf8",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549855.9792411
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549860.110555
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549875.669771
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549878.213914
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549901.6610355
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550014.8501809
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/formsets.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791549806.5476086,
+  "elapsed_s": 215.85,
+  "plan": "class ManagementForm(Form):\n    \"\"\"\n    Keep track of how many form instances are displayed on the page. If adding\n    new forms via JavaScript, you should increment the count field of this form\n    as well.\n    \"\"\"\n    # Add this line to avoid the deprecation warning for default templates\n    template_name = \"django/forms/default.html\" \n    \n    TOTAL_FORMS = IntegerField(widget=HiddenInput)\n    ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/formsets.py",
+      "symbol": "django/forms/formsets.py::ManagementForm",
+      "symbols": [
+        "ManagementForm",
+        "clean",
+        "__iter__",
+        "__getitem__"
+      ],
+      "line_range": [
+        28,
+        51
+      ],
+      "score": 0.7019,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8261,
+        "vector": 0.3781,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: only, with, this, hidden)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "__lt__",
+        "__reduce__",
+        "get_pk_value_on_save"
+      ],
+      "line_range": [
+        389,
+        411
+      ],
+      "score": 0.6202,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4169,
+        "vector": 0.5913,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: have, this, which)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "USE_L10N",
+        "_setup",
+        "configure"
+      ],
+      "line_range": [
+        89,
+        105
+      ],
+      "score": 0.6035,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3983,
+        "vector": 0.4912,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: special, this, form, which)"
+    },
+    {
+      "file": "django/utils/html.py",
+      "symbol": "django/utils/html.py::escape",
+      "symbols": [
+        "escape",
+        "json_script",
+        "conditional_escape",
+        "format_html"
+      ],
+      "line_range": [
+        18,
+        29
+      ],
+      "score": 0.5887,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4005,
+        "vector": 0.3633,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, this, html)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "execute",
+        "find_commands",
+        "load_command_class"
+      ],
+      "line_range": [
+        53,
+        82
+      ],
+      "score": 0.5782,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3182,
+        "vector": 0.4467,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: used, this, form, management)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringformat",
+      "symbols": [
+        "stringformat",
+        "length_is",
+        "stringfilter",
+        "linenumbers"
+      ],
+      "line_range": [
+        264,
+        281
+      ],
+      "score": 0.5618,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2361,
+        "vector": 0.4399,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, this, html, form)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.734525,
+  "laya_scores": {
+    "fix_quality": 1.5387,
+    "matches_issue": 0.7115,
+    "safe_to_apply": 0.6879,
+    "composite": 0.734525,
+    "secrets_or_danger": 0.08,
+    "logic_drift": 0.2481,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No change to input sanitization or execution context.\n- PERFORMANCE: PASS, Minimal impact; setting a class attribute is an O(1) operation.\n- ROBUSTNESS: PASS, Explicitly defines the template to resolve the ambiguity causing deprecation warnings.\n- PONYTAIL / YAGNI: PASS, Necessary configuration to align with Django's internal deprecation requirements.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport warnings\nfrom django.forms.formsets import ManagementForm\n\ndef test_management_form_no_deprecation_warning():\n    \"\"\"\n    Ensure that rendering a ManagementForm does not trigger a \n    'default.html' deprecation warning (TemplateResponseMixin/Form usage).\n    \"\"\"\n    # The warning is typically issued when Form.render() or form.__str__ \n    # uses a deprecated template path or relies on the default renderer \n    # without an explicit template_name.\n    with warnings.catch_warnings(record=True) as w:\n        warnings.simplefilter(\"always\")\n        \n        form = ManagementForm(initial={\n            'TOTAL_FORMS': 1,\n            'INITIAL_FORMS': 0,\n            'MIN_NUM_FORMS': 0,\n            'MAX_NUM_FORMS': 1000,\n        })\n        \n        # Trigger rendering\n        form.render()\n        \n        # Filter for deprecation warnings related to template defaults\n        deprecation_warnings = [\n            warn for warn in w \n            if issubclass(warn.category, (DeprecationWarning, PendingDeprecationWarning))\n            and \"default.html\" in str(warn.message)\n        ]\n        \n        assert len(deprecation_warnings) == 0, f\"Deprecation warning found: {deprecation_warnings[0].message}\"\n\ndef test_management_form_data_validity():\n    \"\"\"\n    Edge case: Verify ManagementForm still functions correctly with \n    zero/minimal integer values.\n    \"\"\"\n    form = ManagementForm(data={\n        'TOTAL_FORMS': 0,\n        'INITIAL_FORMS': 0,\n        'MIN_NUM_FORMS': 0,\n        'MAX_NUM_FORMS': 0,\n    })\n    assert form.is_valid()\n    assert form.cleaned_data['TOTAL_FORMS'] == 0\n\ndef test_management_form_invalid_input():\n    \"\"\"\n    Edge case: ManagementForm should raise errors for non-integer inputs.\n    \"\"\"\n    form = ManagementForm(data={\n        'TOTAL_FORMS': 'not-an-int',\n        'INITIAL_FORMS': 0,\n    })\n    assert not form.is_valid()\n    assert 'TOTAL_FORMS' in form.errors\n\ndef test_management_form_missing_required_fields():\n    \"\"\"\n    Edge case: ManagementForm requires TOTAL_FORMS and INITIAL_FORMS.\n    \"\"\"\n    # TOTAL_FORMS and INITIAL_FORMS are required by default\n    form = ManagementForm(data={})\n    assert not form.is_valid()\n    assert 'TOTAL_FORMS' in form.errors\n    assert 'INITIAL_FORMS' in form.errors",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc6979a..f8273ac517 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,8 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n+\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15902-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5387,
+        "matches_issue": 0.7115,
+        "safe_to_apply": 0.6879,
+        "composite": 0.734525,
+        "secrets_or_danger": 0.08,
+        "logic_drift": 0.2481,
+        "flagged": false
+      },
+      "laya_combined": 0.7345,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.18,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc6979a..f8273ac517 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,8 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n+\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15902-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5387,
+        "matches_issue": 0.7115,
+        "safe_to_apply": 0.6879,
+        "composite": 0.734525,
+        "secrets_or_danger": 0.08,
+        "logic_drift": 0.2481,
+        "flagged": false
+      },
+      "laya_combined": 0.7345,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 48.97,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc6979a..8abbd2b518 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,7 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15902-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6752,
+        "matches_issue": 0.7496,
+        "safe_to_apply": 0.7122,
+        "composite": 0.7842500000000001,
+        "secrets_or_danger": 0.0918,
+        "logic_drift": 0.2259,
+        "flagged": false
+      },
+      "laya_combined": 0.7843,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 50.0,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc6979a..f8273ac517 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,8 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n+\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15902-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/forms/formsets.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/forms/formsets.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5387,
+      "matches_issue": 0.7115,
+      "safe_to_apply": 0.6879,
+      "composite": 0.734525,
+      "secrets_or_danger": 0.08,
+      "logic_drift": 0.2481,
+      "flagged": false
+    },
+    "laya_combined": 0.7345,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0068,
+    "rank_reason": "logistic",
+    "elapsed_s": 10.18,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex 3adbc69..f8273ac 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -32,6 +32,8 @@ class ManagementForm(Form):\n     as well.\n     \"\"\"\n \n+    template_name = \"django/forms/default.html\"\n+\n     TOTAL_FORMS = IntegerField(widget=HiddenInput)\n     INITIAL_FORMS = IntegerField(widget=HiddenInput)\n     # MIN_NUM_FORM_COUNT and MAX_NUM_FORM_COUNT are output with the rest of the\n",
+  "offline_calls": 0
+}

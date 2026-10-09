@@ -41,11 +41,11 @@ MAX_REPAIR_ROUNDS = int(os.getenv("ISHA_APPLY_REPAIR_ROUNDS", "2"))
 #   ISHA_CANDIDATE_MODELS=minimal_diff=groq/openai/gpt-oss-20b,call_site_aware=gemini/gemini-3.1-flash-lite
 DEFAULT_STRATEGY_MODELS: dict[str, str] = {
     "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
-    "minimal_diff": CANDIDATE_1_MODEL,        # groq/qwen/qwen3.8-27b: surgical, low-temp, AST-focused
-    "call_site_aware": CANDIDATE_2_MODEL,    # groq/openai/gpt-oss-120b: largest reasoning budget
-    "root_cause_first": CANDIDATE_3_MODEL,   # gemini/gemini-3.8-flash: long-context boundary & invariants
+    "minimal_diff": CANDIDATE_1_MODEL,        # gemini-3.5-flash-lite: surgical, low-temp, AST-focused
+    "call_site_aware": CANDIDATE_2_MODEL,    # gemini-3.8-flash: deep reasoning & full context
+    "root_cause_first": CANDIDATE_3_MODEL,   # gemini-3.5-flash-lite: root-cause invariants
     "defensive_fix": CANDIDATE_1_MODEL,      # defensive guardrails
-    "cross_file_audit": CANDIDATE_3_MODEL,   # wide-reach audit work
+    "cross_file_audit": CANDIDATE_2_MODEL,   # wide-reach audit work
 }
 
 

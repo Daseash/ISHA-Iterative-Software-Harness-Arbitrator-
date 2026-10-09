@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-15400",
+  "repo": "django/django",
+  "base_commit": "4c76ffc2d6c77c850b4bef8d9acc197d11c47937",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545534.781917
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545544.0295715
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545561.6696665
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545563.5511956
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545610.5393782
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545917.6273394
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/functional.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/functional.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791545458.3631926,
+  "elapsed_s": 467.06,
+  "plan": "def __radd__(self, other):\n        if self._wrapped is empty:\n            self._setup()\n        return other + self._wrapped",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/functional.py",
+      "symbol": "django/utils/functional.py::_setup",
+      "symbols": [
+        "_setup",
+        "_setup",
+        "__radd__",
+        "new_method_proxy"
+      ],
+      "line_range": [
+        307,
+        314
+      ],
+      "score": 0.7231,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9166,
+        "vector": 0.3666,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; body matches report terms: wrapped, implement, setup; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_setup",
+      "symbols": [
+        "_setup",
+        "__repr__",
+        "__getattr__",
+        "configure"
+      ],
+      "line_range": [
+        63,
+        80
+      ],
+      "score": 0.5789,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3295,
+        "vector": 0.4294,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: wrapped, setup; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "__eq__",
+        "__lt__",
+        "__reduce__"
+      ],
+      "line_range": [
+        376,
+        398
+      ],
+      "score": 0.61,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4298,
+        "vector": 0.4798,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: have, empty, like, which)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::get_domain",
+      "symbols": [
+        "get_domain",
+        "SitemapNotFound",
+        "_get_sitemap_full_url",
+        "ping_google"
+      ],
+      "line_range": [
+        144,
+        159
+      ],
+      "score": 0.6089,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2337,
+        "vector": 0.8789,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: doesn, work, exist)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "symbols": [
+        "execute",
+        "fetch_command",
+        "get_commands",
+        "main_help_text"
+      ],
+      "line_range": [
+        357,
+        442
+      ],
+      "score": 0.5497,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3487,
+        "vector": 0.1463,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: have, empty, being, exception)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "BadSerializer",
+        "unregister_serializer",
+        "get_serializer"
+      ],
+      "line_range": [
+        48,
+        50
+      ],
+      "score": 0.5452,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2057,
+        "vector": 0.4068,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: exception; body matches report terms: exception)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.8825,
+  "laya_scores": {
+    "fix_quality": 1.7867,
+    "matches_issue": 0.9037,
+    "safe_to_apply": 0.8396,
+    "composite": 0.8825,
+    "secrets_or_danger": 0.177,
+    "logic_drift": 0.3963,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - The added method does not introduce any input handling or execution concerns.\n- PERFORMANCE: PASS - The lazy initialization pattern matches existing `SimpleLazyObject` behavior.\n- ROBUSTNESS: FAIL - The implementation is added to `classproperty` (a decorator class) rather than `SimpleLazyObject`, which is incorrect and functionally broken.\n- PONYTAIL / YAGNI: PASS - The requested feature addresses a specific missing proxy behavior.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.utils.functional import SimpleLazyObject\n\ndef test_simple_lazy_object_radd_reproduction():\n    \"\"\"\n    Reproduction for the missing __radd__ method in SimpleLazyObject.\n    This should fail with TypeError: unsupported operand type(s) for +: \n    'int' and 'SimpleLazyObject' before the fix.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: 10)\n    # The fix allows the following to succeed (5 + 10 = 15)\n    result = 5 + lazy_obj\n    assert result == 15\n\ndef test_simple_lazy_object_radd_string_concatenation():\n    \"\"\"\n    Edge case: Test radd with string concatenation.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: \"world\")\n    result = \"hello \" + lazy_obj\n    assert result == \"hello world\"\n\ndef test_simple_lazy_object_radd_list_concatenation():\n    \"\"\"\n    Edge case: Test radd with list concatenation.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: [3, 4])\n    result = [1, 2] + lazy_obj\n    assert result == [1, 2, 3, 4]\n\ndef test_simple_lazy_object_radd_zero_value():\n    \"\"\"\n    Edge case: Ensure radd handles numeric zero correctly.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: 5)\n    result = 0 + lazy_obj\n    assert result == 5",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..21ccf9b25a 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15400-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/functional.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/functional.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7867,
+        "matches_issue": 0.9037,
+        "safe_to_apply": 0.8396,
+        "composite": 0.8825,
+        "secrets_or_danger": 0.177,
+        "logic_drift": 0.3963,
+        "flagged": false
+      },
+      "laya_combined": 0.8825,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0053,
+      "rank_reason": "logistic",
+      "elapsed_s": 181.42,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..21ccf9b25a 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15400-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/functional.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/functional.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7867,
+        "matches_issue": 0.9037,
+        "safe_to_apply": 0.8396,
+        "composite": 0.8825,
+        "secrets_or_danger": 0.177,
+        "logic_drift": 0.3963,
+        "flagged": false
+      },
+      "laya_combined": 0.8825,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0053,
+      "rank_reason": "logistic",
+      "elapsed_s": 174.67,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..c437b2be78 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -178,6 +178,11 @@ def lazy(func, *resultclasses):\n                 other = other.__cast()\n             return self.__cast() == other\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n         def __lt__(self, other):\n             if isinstance(other, Promise):\n                 other = other.__cast()\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15400-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/functional.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/functional.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.7867,
+        "matches_issue": 0.9037,
+        "safe_to_apply": 0.8396,
+        "composite": 0.8825,
+        "secrets_or_danger": 0.1593,
+        "logic_drift": 0.2541,
+        "flagged": false
+      },
+      "laya_combined": 0.8825,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0053,
+      "rank_reason": "logistic",
+      "elapsed_s": 175.58,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..21ccf9b25a 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15400-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/utils/functional.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/utils/functional.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.7867,
+      "matches_issue": 0.9037,
+      "safe_to_apply": 0.8396,
+      "composite": 0.8825,
+      "secrets_or_danger": 0.177,
+      "logic_drift": 0.3963,
+      "flagged": false
+    },
+    "laya_combined": 0.8825,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0053,
+    "rank_reason": "logistic",
+    "elapsed_s": 181.42,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..21ccf9b 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+  "offline_calls": 0
+}

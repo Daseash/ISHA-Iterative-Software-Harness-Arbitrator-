@@ -1,0 +1,400 @@
+{
+  "instance_id": "django__django-15498",
+  "repo": "django/django",
+  "base_commit": "d90e34c61b27fba2527834806639eebbcfab9631",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546086.2309546
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546096.6734352
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546110.1899228
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546112.0636265
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546193.0221283
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546450.3715603
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/views/static.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/views/static.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791545994.6427255,
+  "elapsed_s": 463.78,
+  "plan": "def was_modified_since(header=None, mtime=0, size=0):\n    # ...\n    try:\n        if not header:  # Changed from \"if header is None:\"\n            raise ValueError\n        matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n        # ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/views/static.py",
+      "symbol": "django/views/static.py::was_modified_since",
+      "symbols": [
+        "was_modified_since",
+        "serve",
+        "directory_index"
+      ],
+      "line_range": [
+        114,
+        140
+      ],
+      "score": 0.4502,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7453,
+        "vector": 0.5324,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: header, since, modified)"
+    },
+    {
+      "file": "django/utils/http.py",
+      "symbol": "django/utils/http.py::http_date",
+      "symbols": [
+        "http_date",
+        "parse_etags",
+        "urlencode",
+        "parse_http_date"
+      ],
+      "line_range": [
+        90,
+        103
+      ],
+      "score": 0.4668,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7539,
+        "vector": 0.6525,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: string, since)"
+    },
+    {
+      "file": "django/http/request.py",
+      "symbol": "django/http/request.py::__init__",
+      "symbols": [
+        "__init__",
+        "get_host",
+        "RawPostDataException",
+        "headers"
+      ],
+      "line_range": [
+        468,
+        497
+      ],
+      "score": 0.4282,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6211,
+        "vector": 0.6081,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: string, used, exception)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::formfield",
+      "symbols": [
+        "formfield",
+        "run_validators",
+        "_get_default",
+        "value_to_string"
+      ],
+      "line_range": [
+        1179,
+        1189
+      ],
+      "score": 0.6845,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6207,
+        "vector": 0.6607,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: string, empty, since)"
+    },
+    {
+      "file": "django/db/models/sql/datastructures.py",
+      "symbol": "django/db/models/sql/datastructures.py::MultiJoin",
+      "symbols": [
+        "MultiJoin",
+        "BaseTable",
+        "Join",
+        "as_sql"
+      ],
+      "line_range": [
+        8,
+        20
+      ],
+      "score": 0.5955,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.265,
+        "vector": 0.6607,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: used, exception)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::error",
+      "symbols": [
+        "error",
+        "__init__",
+        "render_annotated",
+        "Node"
+      ],
+      "line_range": [
+        543,
+        555
+      ],
+      "score": 0.4252,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5695,
+        "vector": 0.6904,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: exception, since)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7334499999999999,
+  "laya_scores": {
+    "fix_quality": 1.5146,
+    "matches_issue": 0.7985,
+    "safe_to_apply": 0.6207,
+    "composite": 0.7334499999999999,
+    "secrets_or_danger": 0.1714,
+    "logic_drift": 0.3675,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS. No security implications found.\n- PERFORMANCE: PASS. String evaluation is inexpensive.\n- ROBUSTNESS: FAIL. Raising a `ValueError` when `header` is an empty string will trigger an unhandled exception in the calling view, leading to 500 errors instead of the previous safe fallback.\n- PONYTAIL / YAGNI: PASS. Simple and direct logic.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.views.static import was_modified_since\n\ndef test_was_modified_since_empty_string():\n    \"\"\"\n    Reproduces the bug where an empty string for the If-Modified-Since header\n    raises a ValueError instead of being ignored (returning True).\n    \"\"\"\n    # This should return True (not modified) when header is empty/None\n    assert was_modified_since(header=\"\", mtime=123456789, size=100) is True\n\ndef test_was_modified_since_none():\n    \"\"\"\n    Verifies that None input remains handled correctly as 'not modified'.\n    \"\"\"\n    assert was_modified_since(header=None, mtime=123456789, size=100) is True\n\ndef test_was_modified_since_valid_header():\n    \"\"\"\n    Verifies that a valid header string still functions correctly.\n    'Sat, 12 Oct 2024 10:00:00 GMT' is before 123456789 (approx 1973)\n    \"\"\"\n    # If the provided date is older than the mtime, it should return True\n    header = \"Sat, 12 Oct 1970 10:00:00 GMT\"\n    assert was_modified_since(header=header, mtime=123456789, size=100) is True\n\ndef test_was_modified_since_invalid_format():\n    \"\"\"\n    Verifies that malformed header strings are handled gracefully (returning True)\n    rather than crashing, maintaining existing behavior for non-empty but invalid strings.\n    \"\"\"\n    assert was_modified_since(header=\"not-a-date\", mtime=123456789, size=100) is True",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a53ff..214415cd81 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15498-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/static.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/static.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5146,
+        "matches_issue": 0.7985,
+        "safe_to_apply": 0.6207,
+        "composite": 0.7334499999999999,
+        "secrets_or_danger": 0.1714,
+        "logic_drift": 0.3675,
+        "flagged": false
+      },
+      "laya_combined": 0.7334,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 59.58,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a53ff..214415cd81 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15498-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/static.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/static.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5146,
+        "matches_issue": 0.7985,
+        "safe_to_apply": 0.6207,
+        "composite": 0.7334499999999999,
+        "secrets_or_danger": 0.1714,
+        "logic_drift": 0.3675,
+        "flagged": false
+      },
+      "laya_combined": 0.7334,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 146.87,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a53ff..214415cd81 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15498-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/static.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/static.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5146,
+        "matches_issue": 0.7985,
+        "safe_to_apply": 0.6207,
+        "composite": 0.7334499999999999,
+        "secrets_or_danger": 0.1714,
+        "logic_drift": 0.3675,
+        "flagged": false
+      },
+      "laya_combined": 0.7334,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 145.68,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a53ff..214415cd81 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15498-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/views/static.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/views/static.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5146,
+      "matches_issue": 0.7985,
+      "safe_to_apply": 0.6207,
+      "composite": 0.7334499999999999,
+      "secrets_or_danger": 0.1714,
+      "logic_drift": 0.3675,
+      "flagged": false
+    },
+    "laya_combined": 0.7334,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0065,
+    "rank_reason": "logistic",
+    "elapsed_s": 59.58,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/views/static.py b/django/views/static.py\nindex 1c558a5..214415c 100644\n--- a/django/views/static.py\n+++ b/django/views/static.py\n@@ -126,7 +126,7 @@ def was_modified_since(header=None, mtime=0, size=0):\n       This is the size of the item we're talking about.\n     \"\"\"\n     try:\n-        if header is None:\n+        if not header:\n             raise ValueError\n         matches = re.match(r\"^([^;]+)(; length=([0-9]+))?$\", header, re.IGNORECASE)\n         header_mtime = parse_http_date(matches[1])\n",
+  "offline_calls": 0
+}

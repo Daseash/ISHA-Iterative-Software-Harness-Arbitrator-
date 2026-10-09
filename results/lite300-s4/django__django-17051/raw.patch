@@ -1,0 +1,13 @@
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index 5ac2407ea3..62385f495a 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -677,7 +677,7 @@ class QuerySet(AltersData):
+                 "ignore_conflicts and update_conflicts are mutually exclusive."
+             )
+         db_features = connections[self.db].features
+-        if ignore_conflicts:
++        if ignore_conflicts or update_conflicts:
+             if not db_features.supports_ignore_conflicts:
+                 raise NotSupportedError(
+                     "This database backend does not support ignoring conflicts."

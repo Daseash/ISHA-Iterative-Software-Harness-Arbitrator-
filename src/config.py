@@ -89,9 +89,9 @@ PLANNER_FALLBACKS = PLANNER_CHAIN[1:]
 CODER_FALLBACKS = CODER_CHAIN[1:]
 
 # Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
-CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen3.8-27b")
-CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "openrouter/nvidia/nemotron-3-super-120b-a12b:free")
-CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.1-flash-lite")
+CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "gemini/gemini-3.5-flash-lite")
+CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "gemini/gemini-3.8-flash")
+CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.5-flash-lite")
 
 # Architecture defaults: 3 diverse tournament candidates by default
 DEFAULT_CANDIDATES = int(os.getenv("ISHA_CANDIDATES", "3"))
@@ -102,7 +102,9 @@ DEFAULT_CONVERGENCE_DELTA = float(os.getenv("ISHA_CONVERGENCE_DELTA", "0.0"))
 # ── Model availability ─────────────────────────────────────────────────────
 _gemini_keys_raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
 _gemini_key_pool = [k.strip() for k in _gemini_keys_raw.split(",") if k.strip()]
-_current_gemini_key_idx = 0
+_gemini_key_lock = threading.Lock()
+_gemini_key_counter = 0
+_dead_gemini_keys: set = set()
 
 GOOGLE_API_KEY = _gemini_key_pool[0] if _gemini_key_pool else None
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -111,19 +113,31 @@ LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
 
 
+def get_next_gemini_key() -> str | None:
+    """Return next active Gemini API key in round-robin order across threads."""
+    global _gemini_key_counter
+    with _gemini_key_lock:
+        active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+        if not active:
+            return None
+        _gemini_key_counter += 1
+        return active[_gemini_key_counter % len(active)]
+
+
+def mark_gemini_key_dead(key: str) -> bool:
+    """Mark a Gemini key as quota-exhausted. Returns True if any active keys remain."""
+    with _gemini_key_lock:
+        _dead_gemini_keys.add(key)
+        active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+        print(f"[config] Gemini key {key[:12]}... quota exhausted ({len(active)} active keys remaining)", file=sys.stderr)
+        return len(active) > 0
+
+
 def _rotate_gemini_key() -> bool:
-    """Rotate to next available Gemini API key on quota exhaustion. Returns True if rotated."""
-    global _current_gemini_key_idx
-    if len(_gemini_key_pool) <= 1:
-        return False
-    if _current_gemini_key_idx + 1 < len(_gemini_key_pool):
-        _current_gemini_key_idx += 1
-        new_key = _gemini_key_pool[_current_gemini_key_idx]
-        os.environ["GOOGLE_API_KEY"] = new_key
-        os.environ["GEMINI_API_KEY"] = new_key
-        print(f"[config] Rotated Gemini API key to key #{_current_gemini_key_idx + 1} of {len(_gemini_key_pool)}", file=sys.stderr)
-        return True
-    return False
+    """Return True if any active Gemini key remains."""
+    with _gemini_key_lock:
+        active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+        return len(active) > 0
 
 
 # ── LiteLLM Setup ──────────────────────────────────────────────────────────
@@ -576,6 +590,11 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 )
                 if temperature is not None:
                     kwargs["temperature"] = temperature
+                active_gemini_key = None
+                if provider == "gemini":
+                    active_gemini_key = get_next_gemini_key()
+                    if active_gemini_key:
+                        kwargs["api_key"] = active_gemini_key
                 resp = litellm.completion(**kwargs)
                 content = resp.choices[0].message.content
                 if not content or content.strip().startswith(
@@ -596,9 +615,10 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 )
                 if _provider_fatal(e):
                     if _quota_fatal(e):
-                        if provider == "gemini" and _rotate_gemini_key():
-                            # Successfully rotated to next key in pool — retry call immediately
-                            continue
+                        if provider == "gemini" and active_gemini_key:
+                            if mark_gemini_key_dead(active_gemini_key):
+                                # Successfully marked key dead, other keys remain — retry call immediately
+                                continue
                         # Per-model quota — kill the model, not the provider
                         _dead_models.add(model)
                         print(

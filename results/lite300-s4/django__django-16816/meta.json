@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-16816",
+  "repo": "django/django",
+  "base_commit": "191f6a9a4586b5e5f79f4f42f190e7ad4bbacc84",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560983.8645961
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560992.068183
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791561006.9814596
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791561009.8519995
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791561032.9227757
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791561159.1673427
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/admin/utils.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791560904.659402,
+  "elapsed_s": 262.49,
+  "plan": "### Step 1: Root Cause\nWhen a model has a reverse relation (such as `Choice` pointing to `Question` via a ForeignKey, or a ManyToMany/OneToOne relation) whose accessor name matches a string in `list_display` (e.g., `\"choice\"`), the admin views or system checks attempt to look it up as a model field. \n- In `label_for_field` (located in `django/contrib/admin/utils.py`), it calls `_get_non_gfk_field(model._meta, name)`, which raises `FieldDoesNotExist`.\n- Unlike regular fields or valid admin callables/attributes, a reverse relation field is not a standard non-GFK concrete field, and `label_for_field` catches `FieldDoesNotExist` and tries other lookups. However, because reverse related managers (like `question.choice` or `question.choice_set`) are descriptors/attributes on the model class rather than valid direct attributes or methods expected by the admin or checks, it ultimately fails at runtime with an `AttributeError: Unable to lookup 'choice' on Question or QuestionAdmin` (or during system checks if E108 check doesn't catch reverse relations/foreign key reverse accessors).\n- Specifically, admin check system checks or model/admin validations (like error E108, which checks if `list_display` items are valid fields, attributes, or methods on the model or model admin) do not recognize reverse relations or related managers as invalid or fail to validate them properly, leading to E108 not covering this case or resulting in a 500 server error at runtime.\n\n### Step 2: Exact Changes to Make\n\n1. **File:** `django/contrib/admin/utils.py`\n   - **Function:** `_get_non_gfk_field` or `label_for_field`\n   - **What to change:** Ensure that reverse relations (e.g. `opts.get_field` raising `FieldDoesNotExist`, but checking `opts._field_map` or `opts.related_objects` or catching reverse/many-to-many/foreign key reverse descriptors) are correctly handled or raise an appropriate exception so that `label_for_field` or admin checks know it's not a valid field for `list_display`. Specifically, check if the name corresponds to a reverse relation (`opts.get_field` might not return reverse relations directly via field name unless accessed through related objects, or `opts._related_objects_map`).\n\n2. **File:** `django/contrib/admin/checks.py`\n   - **Function:** `check_list_display_item` (or wherever error E108 is raised)\n   - **What to change:** Update the check for `list_display` item (Error E108) to explicitly check if the item is a reverse relation (e.g., in `model._meta.related_objects` or similar related descriptors) and report error E108 when a reverse relation name is included in `list_display`.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/contrib/admin/utils.py",
+      "symbol": "django/contrib/admin/utils.py::_get_non_gfk_field",
+      "symbols": [
+        "_get_non_gfk_field",
+        "display_for_field",
+        "get_model_from_relation",
+        "label_for_field"
+      ],
+      "line_range": [
+        311,
+        339
+      ],
+      "score": 0.9529,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3313,
+        "vector": 0.5842,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; body matches report terms: admin, model, get_non_gfk_field, this; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/admin/templatetags/admin_list.py",
+      "symbol": "django/contrib/admin/templatetags/admin_list.py::items_for_result",
+      "symbols": [
+        "items_for_result",
+        "_coerce_field_name",
+        "result_headers",
+        "pagination_tag"
+      ],
+      "line_range": [
+        199,
+        297
+      ],
+      "score": 0.9127,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1327,
+        "vector": 0.6628,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: result; body matches report terms: admin, model, list_display, join)"
+    },
+    {
+      "file": "django/core/serializers/base.py",
+      "symbol": "django/core/serializers/base.py::handle_field",
+      "symbols": [
+        "handle_field",
+        "handle_fk_field",
+        "handle_m2m_field",
+        "deserialize_m2m_values"
+      ],
+      "line_range": [
+        178,
+        185
+      ],
+      "score": 0.7388,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3857,
+        "vector": 0.7697,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: field; body matches report terms: error, call, field)"
+    },
+    {
+      "file": "django/core/files/storage/base.py",
+      "symbol": "django/core/files/storage/base.py::save",
+      "symbols": [
+        "save",
+        "get_valid_name",
+        "get_alternative_name",
+        "get_available_name"
+      ],
+      "line_range": [
+        24,
+        42
+      ],
+      "score": 0.7302,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5607,
+        "vector": 0.3334,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: content; body matches report terms: content, file, that, name)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::args_check",
+      "symbols": [
+        "args_check",
+        "_render",
+        "render",
+        "render"
+      ],
+      "line_range": [
+        745,
+        762
+      ],
+      "score": 0.7193,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4412,
+        "vector": 0.4916,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: func; body matches report terms: error, name, func, template)"
+    },
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::_get_FIELD_display",
+      "symbols": [
+        "_get_FIELD_display",
+        "_get_next_or_previous_by_FIELD",
+        "prepare_database_save",
+        "subclass_exception"
+      ],
+      "line_range": [
+        1144,
+        1151
+      ],
+      "score": 0.711,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2782,
+        "vector": 0.7624,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: field; body matches report terms: choice, name, attr, field)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.554025,
+  "laya_scores": {
+    "fix_quality": 1.2722,
+    "matches_issue": 0.4848,
+    "safe_to_apply": 0.4591,
+    "composite": 0.554025,
+    "secrets_or_danger": 0.1377,
+    "logic_drift": 0.2302,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns introduced.\n- PERFORMANCE: RISK - List comprehension over `opts.related_objects` on every field lookup could add minor overhead if called repeatedly, though typical for Django admin checks.\n- ROBUSTNESS: PASS - Correctly catches reverse relations (like foreign key accessors) to prevent internal server errors.\n- PONYTAIL / YAGNI: PASS - Direct fix targeting the specific bug report with minimal code.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.contrib.admin import ModelAdmin, site\nfrom django.core.exceptions import ValidationError\nfrom django.db import models\nfrom django.test import TestCase, override_settings\nfrom django.contrib.admin.checks import ModelAdminChecks\n\n\nclass Question(models.Model):\n    question_text = models.CharField(max_length=200)\n\n\nclass Choice(models.Model):\n    question = models.ForeignKey(Question, on_delete=models.CASCADE)\n    choice_text = models.CharField(max_length=200)\n\n\nclass QuestionAdmin(ModelAdmin):\n    list_display = [\"choice\"]\n\n\n@override_settings(ROOT_URLCONF=[])\nclass E108ReverseRelationTests(TestCase):\n    def test_list_display_reverse_relation_raises_e108(self):\n        \"\"\"\n        Including a reverse relation name (e.g. 'choice' pointing to Choice objects)\n        in list_display should raise system check error E108.\n        \"\"\"\n        checks = ModelAdminChecks()\n        errors = checks.check(QuestionAdmin(Question, site))\n        \n        # Look for E108 regarding 'choice'\n        e108_errors = [\n            error for error in errors\n            if error.id == \"admin.E108\" and \"'choice'\" in error.msg\n        ]\n        self.assertTrue(\n            e108_errors,\n            f\"Expected admin.E108 error for reverse relation 'choice' in list_display, got errors: {errors}\"\n        )\n\n    def test_list_display_valid_field_no_e108(self):\n        \"\"\"\n        A normal model field in list_display should not trigger E108.\n        \"\"\"\n        class ValidQuestionAdmin(ModelAdmin):\n            list_display = [\"question_text\"]\n\n        checks = ModelAdminChecks()\n        errors = checks.check(ValidQuestionAdmin(Question, site))\n        e108_errors = [\n            error for error in errors\n            if error.id == \"admin.E108\" and \"'question_text'\" in error.msg\n        ]\n        self.assertFalse(e108_errors)\n\n    def test_list_display_invalid_attribute_raises_e108(self):\n        \"\"\"\n        Completely nonexistent attributes/fields also trigger E108.\n        \"\"\"\n        class InvalidQuestionAdmin(ModelAdmin):\n            list_display = [\"nonexistent_field\"]\n\n        checks = ModelAdminChecks()\n        errors = checks.check(InvalidQuestionAdmin(Question, site))\n        e108_errors = [\n            error for error in errors\n            if error.id == \"admin.E108\" and \"'nonexistent_field'\" in error.msg\n        ]\n        self.assertTrue(e108_errors)\n\n    def test_list_display_callable_no_e108(self):\n        \"\"\"\n        A valid callable method on ModelAdmin or Model should not trigger E108.\n        \"\"\"\n        class CallableQuestionAdmin(ModelAdmin):\n            list_display = [\"get_custom_val\"]\n\n            def get_custom_val(self, obj):\n                return \"val\"\n\n        checks = ModelAdminChecks()\n        errors = checks.check(CallableQuestionAdmin(Question, site))\n        e108_errors = [\n            error for error in errors\n            if error.id == \"admin.E108\" and \"'get_custom_val'\" in error.msg\n        ]\n        self.assertFalse(e108_errors)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400b6c..d82e5ac478 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.name for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16816-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2722,
+        "matches_issue": 0.4848,
+        "safe_to_apply": 0.4591,
+        "composite": 0.554025,
+        "secrets_or_danger": 0.1377,
+        "logic_drift": 0.2302,
+        "flagged": false
+      },
+      "laya_combined": 0.554,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0093,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.85,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400b6c..748e1a8dcc 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -324,6 +324,8 @@ def _get_non_gfk_field(opts, name):\n         ((field.many_to_one and not field.related_model) or field.one_to_many)\n     ):\n         raise FieldDoesNotExist()\n+    if name in [f.get_accessor_name() for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n \n     # Avoid coercing <FK>_id fields to FK\n     if (\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16816-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5419,
+        "matches_issue": 0.6599,
+        "safe_to_apply": 0.5429,
+        "composite": 0.686175,
+        "secrets_or_danger": 0.1328,
+        "logic_drift": 0.3036,
+        "flagged": false
+      },
+      "laya_combined": 0.6862,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0078,
+      "rank_reason": "logistic",
+      "elapsed_s": 50.0,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "An error occurred while generating the diff.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16816-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 0.7,
+        "matches_issue": 0.0593,
+        "safe_to_apply": 0.3565,
+        "composite": 0.27895,
+        "secrets_or_danger": 0.0337,
+        "logic_drift": 0.1013,
+        "flagged": false
+      },
+      "laya_combined": 0.2789,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0021,
+      "rank_reason": "logistic",
+      "elapsed_s": 49.94,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400b6c..d82e5ac478 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.name for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16816-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/admin/utils.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/admin/utils.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.2722,
+      "matches_issue": 0.4848,
+      "safe_to_apply": 0.4591,
+      "composite": 0.554025,
+      "secrets_or_danger": 0.1377,
+      "logic_drift": 0.2302,
+      "flagged": false
+    },
+    "laya_combined": 0.554,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0093,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.85,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..d82e5ac 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.name for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
+  "offline_calls": 0
+}

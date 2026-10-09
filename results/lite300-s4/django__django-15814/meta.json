@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-15814",
+  "repo": "django/django",
+  "base_commit": "5eb6a2b33d70b9889e1cafa12594ad6f80773d3a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548614.6977675
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548619.0378203
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548647.9750552
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548673.710201
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548730.7916005
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548975.7001338
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791548518.106453,
+  "elapsed_s": 465.52,
+  "plan": "opts = cur_model._meta.concrete_model._meta",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::_prepare_for_bulk_create",
+      "symbols": [
+        "_prepare_for_bulk_create",
+        "bulk_update",
+        "_combinator_query",
+        "union"
+      ],
+      "line_range": [
+        677,
+        683
+      ],
+      "score": 0.9537,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6743,
+        "vector": 0.7513,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: objs; body matches report terms: meta, objs, name)"
+    },
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::subclass_exception",
+      "symbols": [
+        "subclass_exception",
+        "add_to_class",
+        "__new__",
+        "_base_manager"
+      ],
+      "line_range": [
+        67,
+        84
+      ],
+      "score": 0.6438,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4999,
+        "vector": 0.6149,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: name; body matches report terms: module, model, class, name)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "__getattr__",
+        "execute",
+        "handle"
+      ],
+      "line_range": [
+        385,
+        420
+      ],
+      "score": 0.6463,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5392,
+        "vector": 0.5541,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: argv; body matches report terms: options, argv, line, error; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "load_command_class",
+        "__init__",
+        "fetch_command"
+      ],
+      "line_range": [
+        443,
+        446
+      ],
+      "score": 0.93,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7109,
+        "vector": 0.4776,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: argv; body matches report terms: argv, line, management, utility; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/base.py",
+      "symbol": "django/core/serializers/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "build_instance",
+        "PickleSerializer",
+        "__init__"
+      ],
+      "line_range": [
+        74,
+        78
+      ],
+      "score": 0.6773,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6655,
+        "vector": 0.549,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: output; body matches report terms: init__, output)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::add",
+      "symbols": [
+        "add",
+        "add_field_update",
+        "add_restricted_objects",
+        "clear_restricted_objects_from_set"
+      ],
+      "line_range": [
+        111,
+        134
+      ],
+      "score": 0.6488,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4749,
+        "vector": 0.6673,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: objs; body matches report terms: model, null, objs, call)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.620875,
+  "laya_scores": {
+    "fix_quality": 1.3042,
+    "matches_issue": 0.6819,
+    "safe_to_apply": 0.4974,
+    "composite": 0.620875,
+    "secrets_or_danger": 0.2572,
+    "logic_drift": 0.3883,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The fix addresses internal ORM metadata lookup without altering security-sensitive boundaries.\n- PERFORMANCE: PASS - Accessing the concrete model meta-attribute is a negligible overhead during queryset initialization.\n- ROBUSTNESS: PASS - The fix correctly handles proxy model PK resolution by ensuring the lookup targets the base concrete table, preventing the `ValueError` when `init_list` doesn't contain the proxy's PK name.\n- PONYTAIL / YAGNI: PASS - This is a necessary fix for standard Django ORM functionality.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.test import TestCase\n\n# Models definition for reproduction\nclass CustomModel(models.Model):\n    name = models.CharField(max_length=16)\n\nclass ProxyCustomModel(CustomModel):\n    class Meta:\n        proxy = True\n\nclass AnotherModel(models.Model):\n    custom = models.ForeignKey(\n        ProxyCustomModel,\n        on_delete=models.SET_NULL,\n        null=True,\n        blank=True,\n    )\n\n@pytest.mark.django_db\ndef test_queryset_only_with_select_related_on_proxy_model():\n    \"\"\"\n    Reproduction of the reported bug:\n    Calling .only() on a relation that involves a proxy model crashes\n    with ValueError because it fails to find the primary key in the field list.\n    \"\"\"\n    custom = CustomModel.objects.create(name=\"test\")\n    AnotherModel.objects.create(custom=custom)\n    \n    # This should succeed without raising ValueError: 'id' is not in list\n    objs = list(AnotherModel.objects.select_related(\"custom\").only(\"custom__name\").all())\n    assert len(objs) == 1\n    assert objs[0].custom.name == \"test\"\n\n@pytest.mark.django_db\ndef test_queryset_only_proxy_model_none_fk():\n    \"\"\"\n    Edge case: Ensure that the fix handles nullable foreign keys \n    pointing to proxy models correctly.\n    \"\"\"\n    AnotherModel.objects.create(custom=None)\n    \n    objs = list(AnotherModel.objects.select_related(\"custom\").only(\"custom__name\").all())\n    assert len(objs) == 1\n    assert objs[0].custom is None\n\n@pytest.mark.django_db\ndef test_queryset_only_proxy_model_multiple_fields():\n    \"\"\"\n    Edge case: Ensure querying multiple fields via only() on a proxy model \n    relationship works when select_related is present.\n    \"\"\"\n    custom = CustomModel.objects.create(name=\"test\")\n    AnotherModel.objects.create(custom=custom)\n    \n    # Requesting multiple fields via select_related chain\n    objs = list(AnotherModel.objects.select_related(\"custom\").only(\"custom__name\", \"id\").all())\n    assert len(objs) == 1\n    assert objs[0].custom.name == \"test\"\n    assert objs[0].id is not None",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb90b0..4a084a4397 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15814-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3042,
+        "matches_issue": 0.6819,
+        "safe_to_apply": 0.4974,
+        "composite": 0.620875,
+        "secrets_or_danger": 0.2572,
+        "logic_drift": 0.3883,
+        "flagged": false
+      },
+      "laya_combined": 0.6209,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.34,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb90b0..4a084a4397 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15814-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3042,
+        "matches_issue": 0.6819,
+        "safe_to_apply": 0.4974,
+        "composite": 0.620875,
+        "secrets_or_danger": 0.2572,
+        "logic_drift": 0.3883,
+        "flagged": false
+      },
+      "laya_combined": 0.6209,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 143.27,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb90b0..4a084a4397 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15814-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3042,
+        "matches_issue": 0.6819,
+        "safe_to_apply": 0.4974,
+        "composite": 0.620875,
+        "secrets_or_danger": 0.2572,
+        "logic_drift": 0.3883,
+        "flagged": false
+      },
+      "laya_combined": 0.6209,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 92.79,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb90b0..4a084a4397 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15814-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/query.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/query.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3042,
+      "matches_issue": 0.6819,
+      "safe_to_apply": 0.4974,
+      "composite": 0.620875,
+      "secrets_or_danger": 0.2572,
+      "logic_drift": 0.3883,
+      "flagged": false
+    },
+    "laya_combined": 0.6209,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0075,
+    "rank_reason": "logistic",
+    "elapsed_s": 10.34,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex be0deb9..4a084a4 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -2596,7 +2596,7 @@ class RelatedPopulator:\n             )\n \n         self.model_cls = klass_info[\"model\"]\n-        self.pk_idx = self.init_list.index(self.model_cls._meta.pk.attname)\n+        self.pk_idx = self.init_list.index(self.model_cls._meta.concrete_model._meta.pk.attname)\n         self.related_populators = get_related_populators(klass_info, select, self.db)\n         self.local_setter = klass_info[\"local_setter\"]\n         self.remote_setter = klass_info[\"remote_setter\"]\n",
+  "offline_calls": 0
+}

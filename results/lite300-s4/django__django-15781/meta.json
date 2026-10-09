@@ -1,0 +1,393 @@
+{
+  "instance_id": "django__django-15781",
+  "repo": "django/django",
+  "base_commit": "8d160f154f0240a423e83ffe0690e472f837373c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547579.06571
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547587.635461
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547605.698481
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547608.6609523
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547633.8921034
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791547816.8463824
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/base.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791547482.077847,
+  "elapsed_s": 342.6,
+  "plan": "# In django/core/management/base.py\n\nclass BaseCommand:\n    # ... existing code ...\n    formatter_class = argparse.HelpFormatter\n\n    def create_parser(self, prog_name, subcommand, **kwargs):\n        # ...\n        parser = CommandParser(\n            prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n            description=self.help or None,\n            formatter_class=self.formatter_class,  # Use the class attribute\n            missing_args_message=getattr(self, 'missing_args_message', None),\n            called_from_command_line=getattr(self, 'called_from_command_line', True),\n            **kwargs,\n        )\n        # ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "load_command_class",
+        "get_commands",
+        "main_help_text"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.6859,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6259,
+        "vector": 0.7036,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: manage, with, that, name)"
+    },
+    {
+      "file": "django/contrib/staticfiles/management/commands/runserver.py",
+      "symbol": "django/contrib/staticfiles/management/commands/runserver.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments",
+        "get_handler"
+      ],
+      "line_range": [
+        6,
+        36
+      ],
+      "score": 0.5848,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2553,
+        "vector": 0.5913,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: class, settings, arguments, help; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/commands/sqlflush.py",
+      "symbol": "django/core/management/commands/sqlflush.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments"
+      ],
+      "line_range": [
+        6,
+        29
+      ],
+      "score": 0.5837,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2413,
+        "vector": 0.6113,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: class, output, arguments, help; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/commands/startapp.py",
+      "symbol": "django/core/management/commands/startapp.py::Command",
+      "symbols": [
+        "Command",
+        "handle"
+      ],
+      "line_range": [
+        4,
+        14
+      ],
+      "score": 0.575,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2568,
+        "vector": 0.5065,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: class, name, help, target; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/commands/sendtestemail.py",
+      "symbol": "django/core/management/commands/sendtestemail.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments",
+        "handle"
+      ],
+      "line_range": [
+        8,
+        46
+      ],
+      "score": 0.5682,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2292,
+        "vector": 0.5073,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: class, manage, settings, arguments; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/sitemaps/management/commands/ping_google.py",
+      "symbol": "django/contrib/sitemaps/management/commands/ping_google.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments"
+      ],
+      "line_range": [
+        5,
+        16
+      ],
+      "score": 0.5807,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2549,
+        "vector": 0.5583,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: class, with, arguments, help; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.61985,
+  "laya_scores": {
+    "fix_quality": 1.3103,
+    "matches_issue": 0.5647,
+    "safe_to_apply": 0.6044,
+    "composite": 0.61985,
+    "secrets_or_danger": 0.2746,
+    "logic_drift": 0.2623,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The changes involve UI formatting and do not introduce execution sinks or injection points.\n- PERFORMANCE: PASS - The change is a marginal modification to help text rendering, with no impact on runtime performance.\n- ROBUSTNESS: RISK - Using a lambda to instantiate the formatter class may cause issues if `self.formatter_class` is not initialized or compatible with the `CommandParser` expectations.\n- PONYTAIL / YAGNI: PASS - This addresses a specific documentation formatting issue requested by the user.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import io\nimport pytest\nfrom django.core.management.base import BaseCommand\nfrom argparse import RawTextHelpFormatter\n\nclass CustomCommand(BaseCommand):\n    help = '''\n    Import a contract from tzkt.\n    Example usage:\n        ./manage.py tzkt_import 'Tezos Mainnet' KT1HTDtMBRCKoNHjfWEEvXneGQpCfPAt6BRe\n    '''\n\ndef get_help_output(command):\n    parser = command.create_parser(\"manage.py\", \"tzkt_import\")\n    f = io.StringIO()\n    parser.print_help(f)\n    return f.getvalue()\n\ndef test_help_formatting_reproduction():\n    \"\"\"\n    Verify that help text preserves whitespace/newlines as defined in the class attribute.\n    The bug causes the help text to be stripped and collapsed.\n    \"\"\"\n    cmd = CustomCommand()\n    output = get_help_output(cmd)\n    \n    # The bug report indicates it currently collapses lines:\n    # \"Import a contract from tzkt Example usage: ./manage.py...\"\n    # We expect the formatting to respect the newline after 'tzkt.'\n    expected_fragment = \"Import a contract from tzkt\\n    Example usage:\"\n    assert expected_fragment in output\n\ndef test_custom_formatter_class_override():\n    \"\"\"\n    Ensure that overriding formatter_class correctly applies to the parser.\n    \"\"\"\n    class FormattedCommand(BaseCommand):\n        help = \"Line1\\nLine2\"\n        formatter_class = RawTextHelpFormatter\n\n    cmd = FormattedCommand()\n    output = get_help_output(cmd)\n    # RawTextHelpFormatter should preserve the newline exactly\n    assert \"Line1\\nLine2\" in output\n\ndef test_help_none_input():\n    \"\"\"\n    Verify that None help text does not crash the parser.\n    \"\"\"\n    class NoHelpCommand(BaseCommand):\n        help = None\n\n    cmd = NoHelpCommand()\n    output = get_help_output(cmd)\n    assert \"usage:\" in output\n\ndef test_help_empty_string():\n    \"\"\"\n    Verify that empty string help text is handled correctly.\n    \"\"\"\n    class EmptyHelpCommand(BaseCommand):\n        help = \"\"\n\n    cmd = EmptyHelpCommand()\n    output = get_help_output(cmd)\n    # Should not print an empty description block if not provided\n    assert \"description\" not in output.lower() or \"usage:\" in output",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d5c5..89136f8441 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15781-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/base.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3103,
+        "matches_issue": 0.5647,
+        "safe_to_apply": 0.6044,
+        "composite": 0.61985,
+        "secrets_or_danger": 0.2746,
+        "logic_drift": 0.2623,
+        "flagged": false
+      },
+      "laya_combined": 0.6199,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 84.08,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d5c5..8e1556aa14 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=100, width=130),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15781-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/base.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.311,
+        "matches_issue": 0.5602,
+        "safe_to_apply": 0.6023,
+        "composite": 0.618375,
+        "secrets_or_danger": 0.2603,
+        "logic_drift": 0.2507,
+        "flagged": false
+      },
+      "laya_combined": 0.6184,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 84.54,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d5c5..74188c7ef4 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -55,6 +55,7 @@ class CommandParser(ArgumentParser):\n     ):\n         self.missing_args_message = missing_args_message\n         self.called_from_command_line = called_from_command_line\n+        kwargs.setdefault(\"formatter_class\", argparse.HelpFormatter)\n         super().__init__(**kwargs)\n \n     def parse_args(self, args=None, namespace=None):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15781-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5326,
+        "matches_issue": 0.7422,
+        "safe_to_apply": 0.6161,
+        "composite": 0.722725,
+        "secrets_or_danger": 0.1244,
+        "logic_drift": 0.2455,
+        "flagged": false
+      },
+      "laya_combined": 0.7227,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 17.95,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d5c5..89136f8441 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15781-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/management/base.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/management/base.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 3,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3103,
+      "matches_issue": 0.5647,
+      "safe_to_apply": 0.6044,
+      "composite": 0.61985,
+      "secrets_or_danger": 0.2746,
+      "logic_drift": 0.2623,
+      "flagged": false
+    },
+    "laya_combined": 0.6199,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0079,
+    "rank_reason": "logistic",
+    "elapsed_s": 84.08,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..89136f8 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+  "offline_calls": 0
+}

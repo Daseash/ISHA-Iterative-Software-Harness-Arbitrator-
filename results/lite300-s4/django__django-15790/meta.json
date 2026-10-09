@@ -1,0 +1,400 @@
+{
+  "instance_id": "django__django-15790",
+  "repo": "django/django",
+  "base_commit": "c627226d05dd52aef59447dcfb29cec2c2b11b8a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548251.0228403
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548256.3612864
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548274.5703585
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548277.139529
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548317.8610911
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791548488.8083255
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/checks/templates.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/checks/templates.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791548177.726647,
+  "elapsed_s": 318.81,
+  "plan": "for library_name, items in libraries.items():\n        # Use set to filter out duplicate paths for the same library name\n        if len(set(items)) > 1:\n            errors.append(\n                Error(\n                    E003.msg.format(\n                        repr(library_name),\n                        \", \".join(repr(item) for item in sorted(set(items))),\n                    ),\n                    id=E003.id,\n                )\n            )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/checks/templates.py",
+      "symbol": "django/core/checks/templates.py::check_setting_app_dirs_loaders",
+      "symbols": [
+        "check_setting_app_dirs_loaders",
+        "check_string_if_invalid_is_string",
+        "check_for_template_tags_with_the_same_name"
+      ],
+      "line_range": [
+        25,
+        35
+      ],
+      "score": 0.8005,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8378,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: options, template, templates)"
+    },
+    {
+      "file": "django/template/backends/django.py",
+      "symbol": "django/template/backends/django.py::__init__",
+      "symbols": [
+        "__init__",
+        "get_template_tag_modules",
+        "get_installed_libraries",
+        "get_package_libraries"
+      ],
+      "line_range": [
+        18,
+        28
+      ],
+      "score": 0.7421,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8737,
+        "vector": 0.6144,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: options, template, libraries)"
+    },
+    {
+      "file": "django/template/backends/jinja2.py",
+      "symbol": "django/template/backends/jinja2.py::get_template",
+      "symbols": [
+        "get_template",
+        "render",
+        "__init__",
+        "Jinja2"
+      ],
+      "line_range": [
+        40,
+        49
+      ],
+      "score": 0.5566,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.221,
+        "vector": 0.4281,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: template, error, templates)"
+    },
+    {
+      "file": "django/template/backends/dummy.py",
+      "symbol": "django/template/backends/dummy.py::TemplateStrings",
+      "symbols": [
+        "TemplateStrings",
+        "get_template",
+        "__init__",
+        "from_string"
+      ],
+      "line_range": [
+        11,
+        42
+      ],
+      "score": 0.5511,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1283,
+        "vector": 0.5754,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, options, template, error)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "autocomplete",
+        "fetch_command"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.5547,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2584,
+        "vector": 0.3754,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, modules)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_field_name",
+      "symbols": [
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys",
+        "__reduce__",
+        "get_pk_value_on_save"
+      ],
+      "line_range": [
+        269,
+        300
+      ],
+      "score": 0.5607,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.319,
+        "vector": 0.2997,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, used, error, e003)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.5743,
+  "laya_scores": {
+    "fix_quality": 1.1588,
+    "matches_issue": 0.5961,
+    "safe_to_apply": 0.5423,
+    "composite": 0.5743,
+    "secrets_or_danger": 0.1335,
+    "logic_drift": 0.2954,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The changes only affect a system check and do not introduce any execution risks.\n- PERFORMANCE: PASS - The use of sets and sorting on a typically small collection of template tags is negligible.\n- ROBUSTNESS: PASS - Corrects the false-positive error where valid duplicate definitions are treated as collisions.\n- PONYTAIL / YAGNI: PASS - The changes are necessary to fix the reported bug and improve the diagnostic output.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.conf import settings\nfrom django.core.checks.templates import check_for_template_tags_with_the_same_name\nfrom django.test import override_settings\n\ndef setup_module():\n    if not settings.configured:\n        settings.configure(TEMPLATES=[])\n\n@override_settings(\n    TEMPLATES=[\n        {\n            \"BACKEND\": \"django.template.backends.django.DjangoTemplates\",\n            \"OPTIONS\": {\n                \"libraries\": {\n                    \"my_tags\": \"someapp.templatetags.my_tags\",\n                },\n            },\n        },\n        {\n            \"BACKEND\": \"django.template.backends.django.DjangoTemplates\",\n            \"OPTIONS\": {\n                \"libraries\": {\n                    \"my_tags\": \"someapp.templatetags.my_tags\",\n                },\n            },\n        },\n    ]\n)\ndef test_check_for_template_tags_with_the_same_name_duplicate_allowed():\n    \"\"\"\n    Reproduces the bug: The check currently flags identical paths for the \n    same library name across different template engines as an E003 error.\n    \"\"\"\n    errors = check_for_template_tags_with_the_same_name(None)\n    # This should pass (no errors) after applying the fix\n    assert len(errors) == 0, f\"Expected no errors, but found: {errors}\"\n\n@override_settings(\n    TEMPLATES=[\n        {\n            \"BACKEND\": \"django.template.backends.django.DjangoTemplates\",\n            \"OPTIONS\": {\n                \"libraries\": {\n                    \"my_tags\": \"path.a\",\n                    \"my_tags\": \"path.b\",\n                },\n            },\n        },\n    ]\n)\ndef test_check_for_template_tags_with_the_same_name_actual_conflict():\n    \"\"\"\n    Edge case: Different paths for the same library name in the same settings dict.\n    This should still raise an error (this is valid conflict behavior).\n    \"\"\"\n    errors = check_for_template_tags_with_the_same_name(None)\n    assert len(errors) == 1\n    assert errors[0].id == \"templates.E003\"\n\n@override_settings(\n    TEMPLATES=[\n        {\n            \"BACKEND\": \"django.template.backends.django.DjangoTemplates\",\n            \"OPTIONS\": {},\n        },\n    ]\n)\ndef test_check_for_template_tags_with_the_same_name_empty_input():\n    \"\"\"\n    Edge case: Ensure empty library configurations do not raise errors.\n    \"\"\"\n    errors = check_for_template_tags_with_the_same_name(None)\n    assert len(errors) == 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276987..50b46f7fcc 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15790-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/templates.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/templates.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1588,
+        "matches_issue": 0.5961,
+        "safe_to_apply": 0.5423,
+        "composite": 0.5743,
+        "secrets_or_danger": 0.1335,
+        "logic_drift": 0.2954,
+        "flagged": false
+      },
+      "laya_combined": 0.5743,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0078,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.5,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276987..50b46f7fcc 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15790-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/templates.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/templates.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1588,
+        "matches_issue": 0.5961,
+        "safe_to_apply": 0.5423,
+        "composite": 0.5743,
+        "secrets_or_danger": 0.1335,
+        "logic_drift": 0.2954,
+        "flagged": false
+      },
+      "laya_combined": 0.5743,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0078,
+      "rank_reason": "logistic",
+      "elapsed_s": 82.04,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276987..50b46f7fcc 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15790-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/checks/templates.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/templates.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1588,
+        "matches_issue": 0.5961,
+        "safe_to_apply": 0.5423,
+        "composite": 0.5743,
+        "secrets_or_danger": 0.1335,
+        "logic_drift": 0.2954,
+        "flagged": false
+      },
+      "laya_combined": 0.5743,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0078,
+      "rank_reason": "logistic",
+      "elapsed_s": 81.94,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276987..50b46f7fcc 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15790-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/checks/templates.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/checks/templates.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 4,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.1588,
+      "matches_issue": 0.5961,
+      "safe_to_apply": 0.5423,
+      "composite": 0.5743,
+      "secrets_or_danger": 0.1335,
+      "logic_drift": 0.2954,
+      "flagged": false
+    },
+    "laya_combined": 0.5743,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0078,
+    "rank_reason": "logistic",
+    "elapsed_s": 10.5,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/checks/templates.py b/django/core/checks/templates.py\nindex 5214276..50b46f7 100644\n--- a/django/core/checks/templates.py\n+++ b/django/core/checks/templates.py\n@@ -57,16 +57,16 @@ def check_for_template_tags_with_the_same_name(app_configs, **kwargs):\n         for module_name, module_path in custom_libraries.items():\n             libraries[module_name].append(module_path)\n \n-    for module_name, module_path in get_template_tag_modules():\n-        libraries[module_name].append(module_path)\n+        for module_name, module_path in get_template_tag_modules():\n+            libraries[module_name].append(module_path)\n \n     for library_name, items in libraries.items():\n-        if len(items) > 1:\n+        if len(set(items)) > 1:\n             errors.append(\n                 Error(\n                     E003.msg.format(\n                         repr(library_name),\n-                        \", \".join(repr(item) for item in items),\n+                        \", \".join(repr(item) for item in sorted(set(items))),\n                     ),\n                     id=E003.id,\n                 )\n",
+  "offline_calls": 0
+}

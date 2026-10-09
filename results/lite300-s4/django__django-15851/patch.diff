@@ -1,0 +1,12 @@
+diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py
+index 4c9bd63..43b9cd7 100644
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -35,6 +35,7 @@ class DatabaseClient(BaseDatabaseClient):
+         if dbname:
+             args += [dbname]
+         args.extend(parameters)
++        args.extend([dbname] if dbname else [])
+ 
+         env = {}
+         if passwd:

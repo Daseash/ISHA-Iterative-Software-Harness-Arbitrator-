@@ -1,0 +1,404 @@
+{
+  "instance_id": "django__django-15695",
+  "repo": "django/django",
+  "base_commit": "647480166bfe7532e8c471fef0146e3a17e6c0c9",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546607.7336795
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546627.4325893
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546652.0168397
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546655.4972024
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546681.192258
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791546915.5803862
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 8,
+      "removed_lines": 1,
+      "warnings": [
+        "rewrite risk: 'database_backwards' in 'django/db/migrations/operations/models.py' — the diff replaces 9/9 of its body (100%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791546520.3642662,
+  "elapsed_s": 403.3,
+  "plan": "Step 1: Root cause\nThe `RenameIndex` operation in Django's migration framework does not correctly handle the \"backward\" migration for unnamed indexes. When an index has an auto-generated name, moving backward requires restoring that auto-generated name rather than attempting to \"rename\" it back to a static value that might conflict with existing index names in the database schema. The current implementation fails to account for the dynamic nature of auto-generated index names during the backward operation, leading to a `ProgrammingError` when the index name already exists or is incorrectly resolved.\n\nStep 2: Changes\nModify `django/db/migrations/operations/models.py` (or the specific file where `RenameIndex` is defined within the migration operations) to ensure that the backward path of `RenameIndex` determines the correct index name by inspecting the `old_name` and the current state of the model.\n\nSpecifically:\n- Locate the `RenameIndex` class.\n- Update the `database_backwards` method (or the logic that invokes index renaming) to check if the index being renamed was originally unnamed.\n- Ensure that instead of hard-coding the rename logic, it queries the `model._meta` to resolve the auto-generated index name if `old_name` is `None` or corresponds to an auto-naming convention, allowing the `schema_editor` to correctly identify the index to be renamed during the rollback.\n\n(Note: Based on the Django codebase structure for migration operations, `RenameIndex` is defined in `django/db/migrations/operations/models.py`.)",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "django/contrib/contenttypes/management/__init__.py",
+      "symbol": "django/contrib/contenttypes/management/__init__.py::_rename",
+      "symbols": [
+        "_rename",
+        "rename_forward",
+        "rename_backward",
+        "RenameContentType"
+      ],
+      "line_range": [
+        12,
+        38
+      ],
+      "score": 0.602,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3463,
+        "vector": 0.5869,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: schema_editor; body matches report terms: with, should, connection, editor"
+    },
+    {
+      "file": "tests/migrations/test_operations.py",
+      "symbol": "tests/migrations/test_operations.py::inner_method",
+      "symbols": [
+        "inner_method",
+        "inner_method_reverse",
+        "create_ponies",
+        "create_shetlandponies"
+      ],
+      "line_range": [
+        4456,
+        4460
+      ],
+      "score": 0.5992,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.6277,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: schema_editor; body matches report terms: editor, schema_editor"
+    },
+    {
+      "file": "tests/postgres_tests/test_operations.py",
+      "symbol": "tests/postgres_tests/test_operations.py::AddIndexConcurrentlyTests",
+      "symbols": [
+        "AddIndexConcurrentlyTests",
+        "test_requires_atomic_false",
+        "test_add",
+        "test_add_other_index_type"
+      ],
+      "line_range": [
+        33,
+        128
+      ],
+      "score": 0.5791,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8937,
+        "vector": 0.6099,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: project_state, deconstruction, class, operation"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::deconstruct",
+      "symbols": [
+        "deconstruct",
+        "deconstruct",
+        "deconstruct",
+        "deconstruct"
+      ],
+      "line_range": [
+        1361,
+        1371
+      ],
+      "score": 0.5614,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2238,
+        "vector": 0.504,
+        "defs": 0.0
+      },
+      "reason": "named in the issue; body matches report terms: auto, name; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/utils/deconstruct.py",
+      "symbol": "django/utils/deconstruct.py::deconstruct",
+      "symbols": [
+        "deconstruct",
+        "decorator",
+        "deconstructible"
+      ],
+      "line_range": [
+        21,
+        51
+      ],
+      "score": 0.5537,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.245,
+        "vector": 0.3957,
+        "defs": 0.0
+      },
+      "reason": "named in the issue; body matches report terms: class, migrations, django, name; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_add_script_prefix",
+      "symbols": [
+        "_add_script_prefix",
+        "USE_L10N",
+        "SettingsReference",
+        "__repr__"
+      ],
+      "line_range": [
+        138,
+        151
+      ],
+      "score": 0.5347,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1179,
+        "vector": 0.5022,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: with, when, django, name"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7303999999999999,
+  "laya_scores": {
+    "fix_quality": 1.5532,
+    "matches_issue": 0.7316,
+    "safe_to_apply": 0.6368,
+    "composite": 0.7303999999999999,
+    "secrets_or_danger": 0.3281,
+    "logic_drift": 0.5418,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to access control or input handling.\n- PERFORMANCE: PASS, Minimal overhead introduced by schema lookups.\n- ROBUSTNESS: PASS, Corrects index naming logic to prevent collision errors during migration reversal.\n- PONYTAIL / YAGNI: PASS, Necessary logic to resolve the reported state-tracking bug.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import connection, migrations, models\nfrom django.db.migrations.loader import MigrationLoader\nfrom django.db.migrations.operations import RenameIndex\nfrom django.db.migrations.state import ProjectState\nfrom django.test import TransactionTestCase\n\nclass RenameIndexOperationTests(TransactionTestCase):\n    available_apps = [\"migrations\"]\n\n    def test_rename_index_unnamed_backward_forward_crash(self):\n        \"\"\"\n        Reproduce crash: RenameIndex fails when re-applying after a backward\n        migration on an index that originally had an auto-generated name.\n        \"\"\"\n        app_label = \"migrations\"\n        table_name = \"migrations_pony\"\n        \n        # 1. Setup: Create model with an index (auto-generated name)\n        project_state = ProjectState()\n        project_state.add_model(migrations.CreateModel(\n            name=\"Pony\",\n            fields=[\n                (\"id\", models.AutoField(primary_key=True)),\n                (\"name\", models.CharField(max_length=100)),\n            ],\n            options={\"indexes\": [models.Index(fields=[\"name\"])]},\n        ))\n\n        with connection.schema_editor() as editor:\n            project_state.render(apps=None).apps.get_model(app_label, \"Pony\")._meta.db_table = table_name\n            operation = RenameIndex(\n                model_name=\"Pony\",\n                old_name=None, # Unnamed index\n                new_name=\"new_pony_test_idx\"\n            )\n            # Create the table and index\n            editor.create_model(project_state.apps.get_model(app_label, \"Pony\"))\n            \n            # 2. Perform forward rename\n            new_state = project_state.clone()\n            operation.database_forwards(app_label, editor, project_state, new_state)\n            \n            # 3. Perform backward rename\n            operation.database_backwards(app_label, editor, new_state, project_state)\n            \n            # 4. Re-apply rename (This is where it crashes currently)\n            operation.database_forwards(app_label, editor, project_state, new_state)\n\n    def test_rename_index_invalid_old_name_raises(self):\n        \"\"\"Ensure attempting to rename a non-existent index raises the appropriate error.\"\"\"\n        operation = RenameIndex(\n            model_name=\"Pony\",\n            old_name=\"non_existent_index\",\n            new_name=\"new_idx\"\n        )\n        project_state = ProjectState()\n        project_state.add_model(migrations.CreateModel(\n            name=\"Pony\",\n            fields=[(\"id\", models.AutoField(primary_key=True))],\n        ))\n        \n        with connection.schema_editor() as editor:\n            with pytest.raises(Exception): # Usually ProgrammingError or similar\n                operation.database_forwards(\"migrations\", editor, project_state, project_state)\n\n    def test_rename_index_deconstruction(self):\n        \"\"\"Verify the operation deconstructs correctly.\"\"\"\n        operation = RenameIndex(\n            model_name=\"Pony\",\n            old_name=\"old_idx\",\n            new_name=\"new_idx\"\n        )\n        name, args, kwargs = operation.deconstruct()\n        assert name == \"RenameIndex\"\n        assert kwargs[\"old_name\"] == \"old_idx\"\n        assert kwargs[\"new_name\"] == \"new_idx\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e4ec..15d0b13685 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix=\"_idx\")\n+        else:\n+            old_name = self.old_name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15695-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 8,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5532,
+        "matches_issue": 0.7316,
+        "safe_to_apply": 0.6368,
+        "composite": 0.7303999999999999,
+        "secrets_or_danger": 0.3281,
+        "logic_drift": 0.5418,
+        "flagged": false
+      },
+      "laya_combined": 0.7304,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 93.72,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e4ec..dacf7d6c5a 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,15 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            matching_index = schema_editor._constraint_names(from_model, column_names=columns, index=True)\n+            old_name = matching_index[0] if matching_index else self.old_name\n+        else:\n+            old_name = self.old_name\n+        schema_editor.alter_index_name(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15695-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5377,
+        "matches_issue": 0.7382,
+        "safe_to_apply": 0.637,
+        "composite": 0.728225,
+        "secrets_or_danger": 0.3374,
+        "logic_drift": 0.6387,
+        "flagged": false
+      },
+      "laya_combined": 0.7282,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 91.73,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -910,4 +910,12 @@\n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, to_state, from_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_name:\n+            old_name = self.old_name\n+        else:\n+            from_model_state = from_state.models[app_label, self.model_name_lower]\n+            old_name = from_model_state.get_index_by_name(self.new_name).name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def deconstruct(self):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15695-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15695-c3\\django\\db\\migrations\\operations\\models.py: redefinition of unused 'deconstruct' from line 489"
+      ],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 7,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5478,
+        "matches_issue": 0.7829,
+        "safe_to_apply": 0.6243,
+        "composite": 0.73875,
+        "secrets_or_danger": 0.1428,
+        "logic_drift": 0.3237,
+        "flagged": false
+      },
+      "laya_combined": 0.7388,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 96.66,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e4ec..15d0b13685 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix=\"_idx\")\n+        else:\n+            old_name = self.old_name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15695-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/operations/models.py"
+    ],
+    "added_lines": 8,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5532,
+      "matches_issue": 0.7316,
+      "safe_to_apply": 0.6368,
+      "composite": 0.7303999999999999,
+      "secrets_or_danger": 0.3281,
+      "logic_drift": 0.5418,
+      "flagged": false
+    },
+    "laya_combined": 0.7304,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 93.72,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e..15d0b13 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix=\"_idx\")\n+        else:\n+            old_name = self.old_name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+  "offline_calls": 0
+}

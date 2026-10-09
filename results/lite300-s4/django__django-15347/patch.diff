@@ -1,0 +1,13 @@
+diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py
+index 0142206..414acb8 100644
+--- a/django/contrib/messages/storage/base.py
++++ b/django/contrib/messages/storage/base.py
+@@ -22,7 +22,7 @@ class Message:
+         and ``extra_tags`` to str in case they are lazy translations.
+         """
+         self.message = str(self.message)
+-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None
++        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''
+ 
+     def __eq__(self, other):
+         if not isinstance(other, Message):
