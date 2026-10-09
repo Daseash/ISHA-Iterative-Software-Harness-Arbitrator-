@@ -100,11 +100,30 @@ DEFAULT_CONVERGENCE_DELTA = float(os.getenv("ISHA_CONVERGENCE_DELTA", "0.0"))
 
 
 # ── Model availability ─────────────────────────────────────────────────────
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+_gemini_keys_raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
+_gemini_key_pool = [k.strip() for k in _gemini_keys_raw.split(",") if k.strip()]
+_current_gemini_key_idx = 0
+
+GOOGLE_API_KEY = _gemini_key_pool[0] if _gemini_key_pool else None
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
+
+
+def _rotate_gemini_key() -> bool:
+    """Rotate to next available Gemini API key on quota exhaustion. Returns True if rotated."""
+    global _current_gemini_key_idx
+    if len(_gemini_key_pool) <= 1:
+        return False
+    if _current_gemini_key_idx + 1 < len(_gemini_key_pool):
+        _current_gemini_key_idx += 1
+        new_key = _gemini_key_pool[_current_gemini_key_idx]
+        os.environ["GOOGLE_API_KEY"] = new_key
+        os.environ["GEMINI_API_KEY"] = new_key
+        print(f"[config] Rotated Gemini API key to key #{_current_gemini_key_idx + 1} of {len(_gemini_key_pool)}", file=sys.stderr)
+        return True
+    return False
 
 
 # ── LiteLLM Setup ──────────────────────────────────────────────────────────
@@ -577,9 +596,10 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 )
                 if _provider_fatal(e):
                     if _quota_fatal(e):
-                        # Per-model quota (Gemini 3.8/3.5 dead, flash-lite
-                        # has its own bucket) — kill the model, not the
-                        # provider, so the healthy fallback stays reachable.
+                        if provider == "gemini" and _rotate_gemini_key():
+                            # Successfully rotated to next key in pool — retry call immediately
+                            continue
+                        # Per-model quota — kill the model, not the provider
                         _dead_models.add(model)
                         print(
                             f"[model] {_short_name(model)} quota exhausted — "

@@ -408,7 +408,22 @@ def generate_candidates(
                         seed_patch, state, instance_id, preferred_models, seed_model, log,
                     )
                 )
-            candidates = [f.result() for f in futures]
+            
+            # Adaptive time budget: harvest completed candidates before global runner timeout
+            cand_budget = float(os.getenv("ISHA_CANDIDATE_TIMEOUT", "220"))
+            candidates = []
+            for f in futures:
+                try:
+                    candidates.append(f.result(timeout=cand_budget))
+                except Exception as exc:
+                    print(f"[tournament] candidate future timed out or failed ({exc}); harvesting survivors", file=sys.stderr)
+            if not candidates:
+                # If all timed out, wait for first completed or fallback
+                for f in futures:
+                    try:
+                        candidates.append(f.result(timeout=30))
+                    except Exception:
+                        pass
     else:
         candidates = [
             _build_candidate(
