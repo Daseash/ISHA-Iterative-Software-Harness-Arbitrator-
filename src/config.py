@@ -57,27 +57,27 @@ def _parse_chain(primary_env: str, primary_default: str,
 
 
 PLANNER_CHAIN = _parse_chain(
-    "ISHA_PLANNER_MODEL", "gemini/gemini-3.1-flash-lite",
+    "ISHA_PLANNER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_PLANNER_FALLBACKS",
-    "gemini/gemini-3.8-flash,openrouter/nvidia/nemotron-3-super-120b-a12b:free,groq/qwen/qwen3.8-27b",
+    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
 )
 
 CODER_CHAIN = _parse_chain(
-    "ISHA_CODER_MODEL", "groq/qwen/qwen3.8-27b",
+    "ISHA_CODER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_CODER_FALLBACKS",
-    "openrouter/nvidia/nemotron-3-super-120b-a12b:free,gemini/gemini-3.1-flash-lite,gemini/gemini-3.8-flash",
+    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
 )
 
 LOCALIZER_CHAIN = _parse_chain(
-    "ISHA_LOCALIZER_MODEL", "gemini/gemini-3.1-flash-lite",
+    "ISHA_LOCALIZER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_LOCALIZER_FALLBACKS",
-    "openrouter/nvidia/nemotron-3-super-120b-a12b:free,groq/qwen/qwen3.8-27b",
+    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
 )
 
 CRITIC_CHAIN = _parse_chain(
-    "ISHA_CRITIC_MODEL", "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "ISHA_CRITIC_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_CRITIC_FALLBACKS",
-    "gemini/gemini-3.1-flash-lite,groq/qwen/qwen3.8-27b",
+    "gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
 )
 
 # Backward-compatible aliases
