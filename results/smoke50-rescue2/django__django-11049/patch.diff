@@ -1,9 +1,0 @@
---- a/django/db/models/fields/__init__.py
-+++ b/django/db/models/fields/__init__.py
-@@ -1588,4 +1588,4 @@
-     default_error_messages = {
--        'invalid': _("'%(value)s' value has an invalid format. It must be in "
--                     "[DD] [HH:[MM:]]ss[.uuuuuu] format.")
-+        'invalid': _("'%(value)s' value has an invalid format. It must be in "
-+                     "[DD] [[HH:]MM:]ss[.uuuuuu] format.")
-     }

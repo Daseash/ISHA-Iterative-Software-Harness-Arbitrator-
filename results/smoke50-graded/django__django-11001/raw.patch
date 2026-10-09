@@ -1,7 +1,0 @@
---- a/django/db/models/sql/compiler.py
-+++ b/django/db/models/sql/compiler.py
-@@
--            without_ordering = self.ordering_parts.search(sql).group(1)
-+            # Normalize whitespace to correctly match multiline ORDER BY clauses.
-+            sql_normalized = ' '.join(sql.split())
-+            without_ordering = self.ordering_parts.search(sql_normalized).group(1)

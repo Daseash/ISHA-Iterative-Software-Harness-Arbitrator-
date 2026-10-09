@@ -1,8 +1,0 @@
---- a/django/db/models/fields/files.py
-+++ b/django/db/models/fields/files.py
-@@ -90,6 +90,8 @@ class PathFieldMixin():
-     def __init__(self, *args, **kwargs):
-         super().__init__(*args, **kwargs)
-         self.storage = kwargs.get("storage") or default_storage
-+        if callable(self.path):
-+            self.path = self.path()

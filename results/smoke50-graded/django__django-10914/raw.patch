@@ -1,5 +1,0 @@
---- a/django/conf/global_settings.py
-+++ b/django/conf/global_settings.py
-@@
--FILE_UPLOAD_PERMISSIONS = None
-+FILE_UPLOAD_PERMISSIONS = 0o644

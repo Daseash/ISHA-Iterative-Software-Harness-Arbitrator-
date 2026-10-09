@@ -1,5 +1,0 @@
---- a/requests/sessions.py
-+++ b/requests/sessions.py
-@@
--            prepared_request = req.copy()
-+            prepared_request = resp.request.copy()

@@ -1,5 +1,0 @@
---- a/django/forms/widgets.py
-+++ b/django/forms/widgets.py
-@@
--                if index > last_insert_index:
-+                if index < last_insert_index:
