@@ -120,3 +120,36 @@ def test_classify_and_record_apply_failure(tmp_path):
     cause = record_apply_failure("test__repo-1234", 1, 0, "dummy diff", "context mismatch at hunk 1")
     assert cause == "context_mismatch"
 
+
+def test_indentation_auto_alignment(tmp_path):
+    # Simulates an LLM producing a patch with 12 spaces indentation for a block
+    # that is nested under an 'if' / 'try' statement with 16 spaces in the target file.
+    py_file = tmp_path / "service.py"
+    py_file.write_text(
+        "class Service:\n"
+        "    def run(self):\n"
+        "        if True:\n"
+        "            if self.enabled:\n"
+        "                self.execute(target)\n"
+        "                return True\n",
+        encoding="utf-8",
+    )
+
+    # Diff has 12 spaces for execute(target), instead of 16
+    diff_drift = (
+        "--- a/service.py\n"
+        "+++ b/service.py\n"
+        "@@ -4,3 +4,3 @@\n"
+        "         if self.enabled:\n"
+        "-            self.execute(target)\n"
+        "+            self.execute(target.strip())\n"
+        "             return True\n"
+    )
+
+    ok, msg = apply_patch(str(tmp_path), diff_drift)
+    assert ok, msg
+    res = py_file.read_text(encoding="utf-8")
+    # Verify that the replacement was re-aligned to 16 spaces
+    assert "                self.execute(target.strip())" in res
+
+

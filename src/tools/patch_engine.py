@@ -361,6 +361,42 @@ def _apply_search_replace(root: Path, text: str) -> tuple[bool, str]:
     return False, "; ".join(errors) or "Failed to apply SEARCH/REPLACE blocks"
 
 
+def _align_indentation(matched_lines: list, old_block: list, new_block: list) -> list:
+    """Preserve file indentation when patch has whitespace/indentation drift.
+
+    If the LLM emitted a replacement hunk whose indentation differs from the actual
+    file (e.g. 12 spaces in diff vs 16 spaces in file under a nested statement or try/except),
+    re-align new_block lines by the indentation delta to prevent SyntaxError: expected an indented block.
+    """
+    if not matched_lines or not old_block or not new_block:
+        return new_block
+
+    m_indent: int | None = None
+    o_indent: int | None = None
+    for m, o in zip(matched_lines, old_block):
+        m_str = str(m).rstrip("\r\n")
+        o_str = str(o).rstrip("\r\n")
+        if m_str.strip() and o_str.strip():
+            m_indent = len(m_str) - len(m_str.lstrip())
+            o_indent = len(o_str) - len(o_str.lstrip())
+            break
+
+    if m_indent is None or o_indent is None or m_indent == o_indent:
+        return new_block
+
+    delta = m_indent - o_indent
+    aligned = []
+    for line in new_block:
+        if not line.strip():
+            aligned.append(line)
+        elif delta > 0:
+            aligned.append(" " * delta + line)
+        else:
+            trim = min(abs(delta), len(line) - len(line.lstrip()))
+            aligned.append(line[trim:])
+    return aligned
+
+
 def _context_preview(hunk: list) -> str:
     """First context/removal line of a hunk — the line that failed to match."""
     for line in hunk[1:]:
@@ -388,7 +424,8 @@ def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, lis
     if idx is None:
         idx = _locate_similar(lines, old_block, start)
     if idx is not None:
-        lines[idx : idx + len(old_block)] = [f"{line}{newline}" for line in new_block]
+        aligned_new = _align_indentation(lines[idx : idx + len(old_block)], old_block, new_block)
+        lines[idx : idx + len(old_block)] = [f"{line}{newline}" for line in aligned_new]
         return True, lines
 
     if _apply_body(lines, body, start, newline=newline):
@@ -412,7 +449,8 @@ def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, lis
         unique_matches = sorted(list(set(matches)))
         if len(unique_matches) == 1:
             m_idx = unique_matches[0]
-            lines[m_idx : m_idx + n_rem] = [f"{line}{newline}" for line in add_lines]
+            aligned_add = _align_indentation(lines[m_idx : m_idx + n_rem], rem_lines, add_lines)
+            lines[m_idx : m_idx + n_rem] = [f"{line}{newline}" for line in aligned_add]
             return True, lines
 
     return False, lines
@@ -470,8 +508,9 @@ def _apply_body(lines: list, body: list, start: int, newline: str = "\n") -> boo
                 idx = _locate_similar(lines, old, pos)
             if idx is None:
                 continue
-            lines[idx : idx + len(old)] = [f"{line}{newline}" for line in new]
-            pos = idx + len(new)
+            aligned_new = _align_indentation(lines[idx : idx + len(old)], old, new)
+            lines[idx : idx + len(old)] = [f"{line}{newline}" for line in aligned_new]
+            pos = idx + len(aligned_new)
             anchored = True
             changed += 1
             continue
