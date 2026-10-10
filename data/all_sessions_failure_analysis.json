@@ -1,0 +1,485 @@
+{
+  "lite300-s1": {
+    "session": "lite300-s1",
+    "resolved_count": 7,
+    "total_submitted": 22,
+    "unresolved_count": 15,
+    "records": [
+      {
+        "instance_id": "astropy__astropy-14182",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "ValueError (Invalid argument/format)",
+        "root_cause": "Column wave failed to convert: could not convert string to float: 'float64'\u001b[0m",
+        "f2p_sample": "astropy/io/ascii/tests/test_rst.py::test_rst_with_header_rows"
+      },
+      {
+        "instance_id": "astropy__astropy-14365",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "ValueError (Invalid argument/format)",
+        "root_cause": "invalid literal for int() with base 10: 'no'\u001b[0m",
+        "f2p_sample": "astropy/io/ascii/tests/test_qdp.py::test_roundtrip[True]"
+      },
+      {
+        "instance_id": "astropy__astropy-6938",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "Test Failure",
+        "root_cause": "Assertion check failed",
+        "f2p_sample": "astropy/io/fits/tests/test_checksum.py::TestChecksumFunctions::test_ascii_table_data"
+      },
+      {
+        "instance_id": "astropy__astropy-7746",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "Test Failure",
+        "root_cause": "Assertion check failed",
+        "f2p_sample": "astropy/wcs/tests/test_wcs.py::test_zero_size_input"
+      },
+      {
+        "instance_id": "django__django-10924",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "scandir: path should be string, bytes, os.PathLike or None, not function",
+        "f2p_sample": "test_callable_path (model_fields.test_filepathfield.FilePathFieldTests)"
+      },
+      {
+        "instance_id": "django__django-11019",
+        "applied": true,
+        "f2p_count": 16,
+        "p2p_count": 39,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "merge() takes 2 positional arguments but 7 were given",
+        "f2p_sample": "test_combine_media (forms_tests.tests.test_media.FormsMediaTestCase)"
+      },
+      {
+        "instance_id": "django__django-11049",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "\"'not[28 chars]valid format. It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format.\" != \"'not[28 chars]val",
+        "f2p_sample": "test_invalid_string (model_fields.test_durationfield.TestValidation)"
+      },
+      {
+        "instance_id": "django__django-11179",
+        "applied": true,
+        "f2p_count": 0,
+        "p2p_count": 6,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "True is not false",
+        "f2p_sample": "N/A"
+      },
+      {
+        "instance_id": "django__django-11283",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "'A problem arose migrating proxy model permissions' not found in ''",
+        "f2p_sample": "test_migrate_with_existing_target_permission (auth_tests.test_migrations.ProxyModelWithSameAppLabelTests)"
+      },
+      {
+        "instance_id": "django__django-11422",
+        "applied": false,
+        "f2p_count": 0,
+        "p2p_count": 0,
+        "error_type": "Git Apply / Syntax Error",
+        "root_cause": "Patch rejected by git apply or failed compile gate",
+        "f2p_sample": "N/A"
+      },
+      {
+        "instance_id": "django__django-11564",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "'path/' != '/somesubpath/path/'",
+        "f2p_sample": "test_add_script_name_prefix (settings_tests.tests.MediaURLStaticURLPrefixTest)"
+      },
+      {
+        "instance_id": "django__django-11630",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: [<Error: level=40, msg=\"db_table 'test_tabl[113 chars]28'>] != [<Warning: level=30, ms",
+        "f2p_sample": "test_collision_across_apps_database_routers_installed (check_framework.test_model_checks.DuplicateDBTableTests)"
+      },
+      {
+        "instance_id": "django__django-11905",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "RemovedInDjango40Warning not triggered",
+        "f2p_sample": "test_isnull_non_boolean_value (lookup.tests.LookupTests)"
+      },
+      {
+        "instance_id": "django__django-11910",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Operation type mismatch for app.auto_1 (expected ['RenameField']):",
+        "f2p_sample": "test_rename_referenced_primary_key (migrations.test_autodetector.AutodetectorTests)"
+      },
+      {
+        "instance_id": "django__django-12113",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Tuples differ: (None,) != (None, 'custom.sqlite.db')",
+        "f2p_sample": "test_custom_test_name (backends.sqlite.test_creation.TestDbSignatureTests)"
+      }
+    ]
+  },
+  "lite300-s2": {
+    "session": "lite300-s2",
+    "resolved_count": 2,
+    "total_submitted": 30,
+    "unresolved_count": 16,
+    "records": [
+      {
+        "instance_id": "django__django-12125",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Tuples differ: ('mig[15 chars]iter.NestedEnum', {'import migrations.test_writer'}) != ('mig[15 chars",
+        "f2p_sample": "test_serialize_nested_class (migrations.test_writer.WriterTests)"
+      },
+      {
+        "instance_id": "django__django-12184",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Tuples differ: (None,) != ()",
+        "f2p_sample": "test_re_path_with_missing_optional_parameter (urlpatterns.tests.SimplifiedURLTests)"
+      },
+      {
+        "instance_id": "django__django-12284",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "'Base A' != 'Child A'",
+        "f2p_sample": "test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)"
+      },
+      {
+        "instance_id": "django__django-12286",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: [<Error: level=40, msg='You have provided [117 chars]04'>] != []",
+        "f2p_sample": "test_valid_variant_consistent_language_settings (check_framework.test_translation.TranslationCheckTests)"
+      },
+      {
+        "instance_id": "django__django-12308",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 1,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "keys must be a string",
+        "f2p_sample": "test_json_display_for_field (admin_utils.tests.UtilsTests)"
+      },
+      {
+        "instance_id": "django__django-12470",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Sequences differ: <QuerySet [<Parent: Parent object (1)>, <Parent: Parent object (2)>]> != [<Parent:",
+        "f2p_sample": "test_inherited_ordering_pk_desc (model_inheritance.tests.ModelInheritanceTests)"
+      },
+      {
+        "instance_id": "django__django-12497",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: [<Err[320 chars] use ForeignKey(\"self\", symmetrical=False, thr[108 chars]35'>] != [<Er",
+        "f2p_sample": "test_ambiguous_relationship_model_to (invalid_models_tests.test_relative_fields.RelativeFieldTests)"
+      },
+      {
+        "instance_id": "django__django-12589",
+        "applied": true,
+        "f2p_count": 0,
+        "p2p_count": 24,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "'bool' object is not iterable",
+        "f2p_sample": "N/A"
+      },
+      {
+        "instance_id": "django__django-12700",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 65,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "Assertion check failed",
+        "f2p_sample": "test_cleanse_setting_recurses_in_list_tuples (view_tests.tests.test_debug.ExceptionReporterFilterTests)"
+      },
+      {
+        "instance_id": "django__django-12708",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "ValueError (Invalid argument/format)",
+        "root_cause": "Found wrong number (2) of constraints for test_alintoremove_wunto_pony(pink, weight)",
+        "f2p_sample": "test_alter_index_together_remove_with_unique_together (migrations.test_operations.OperationTests)"
+      },
+      {
+        "instance_id": "django__django-12856",
+        "applied": true,
+        "f2p_count": 3,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: [] != [<Error: level=40, msg=\"'constraints' refe[239 chars]13'>]",
+        "f2p_sample": "test_unique_constraint_pointing_to_m2m_field (invalid_models_tests.test_models.ConstraintsTests)"
+      },
+      {
+        "instance_id": "django__django-12908",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "NotSupportedError not raised",
+        "f2p_sample": "test_unsupported_operations_on_combined_qs (queries.test_qs_combinators.QuerySetSetOperationTests)"
+      },
+      {
+        "instance_id": "django__django-12983",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "'__strip__underscore-value___' != 'strip__underscore-value'",
+        "f2p_sample": "test_slugify (utils_tests.test_text.TestUtilsText)"
+      },
+      {
+        "instance_id": "django__django-13028",
+        "applied": false,
+        "f2p_count": 0,
+        "p2p_count": 0,
+        "error_type": "Git Apply / Syntax Error",
+        "root_cause": "Patch rejected by git apply or failed compile gate",
+        "f2p_sample": "N/A"
+      },
+      {
+        "instance_id": "django__django-13033",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: ['Article 2', 'Article 1'] != ['Article 1', 'Article 2']",
+        "f2p_sample": "test_order_by_self_referential_fk (ordering.tests.OrderingTests)"
+      },
+      {
+        "instance_id": "django__django-13158",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Sequences differ: <QuerySet [<Number: 0>, <Number: 1>, <Number: 8>, <Number: 9>]> != []",
+        "f2p_sample": "test_union_none (queries.test_qs_combinators.QuerySetSetOperationTests)"
+      }
+    ]
+  },
+  "lite300-s4": {
+    "session": "lite300-s4",
+    "resolved_count": 9,
+    "total_submitted": 30,
+    "unresolved_count": 20,
+    "records": [
+      {
+        "instance_id": "django__django-15347",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "None != ''",
+        "f2p_sample": "A message's extra_tags attribute is correctly preserved when retrieved"
+      },
+      {
+        "instance_id": "django__django-15388",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "True is not None",
+        "f2p_sample": "test_non_template_changed_in_template_directory (template_tests.test_autoreloader.TemplateReloadTests)"
+      },
+      {
+        "instance_id": "django__django-15400",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "TypeError (Signature/Type mismatch)",
+        "root_cause": "unsupported operand type(s) for +: 'SimpleLazyObject' and 'int'",
+        "f2p_sample": "test_add (utils_tests.test_lazyobject.SimpleLazyObjectTestCase)"
+      },
+      {
+        "instance_id": "django__django-15695",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 1,
+        "error_type": "AttributeError (Missing symbol/attribute)",
+        "root_cause": "'AlterOrderWithRespectTo' object has no attribute 'model_name'",
+        "f2p_sample": "test_rename_index_unnamed_index (migrations.test_operations.OperationTests)"
+      },
+      {
+        "instance_id": "django__django-15738",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 4,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Operation type mismatch for testapp.auto_1 (expected ['AddConstraint']):",
+        "f2p_sample": "test_alter_unique_together_fk_to_m2m (migrations.test_autodetector.AutodetectorTests)"
+      },
+      {
+        "instance_id": "django__django-15781",
+        "applied": false,
+        "f2p_count": 0,
+        "p2p_count": 0,
+        "error_type": "AttributeError (Missing symbol/attribute)",
+        "root_cause": "'Command' object has no attribute 'formatter_class'",
+        "f2p_sample": "N/A"
+      },
+      {
+        "instance_id": "django__django-15814",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "ValueError (Invalid argument/format)",
+        "root_cause": "'baseuser_ptr_id' is not in list",
+        "f2p_sample": "test_select_related_only (proxy_models.tests.ProxyModelTests)"
+      },
+      {
+        "instance_id": "django__django-15819",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "\"author = models.ForeignKey('InspectdbPeople', models.DO_NOTHING, related_name='inspectdbmessage_aut",
+        "f2p_sample": "test_same_relations (inspectdb.tests.InspectDBTestCase)"
+      },
+      {
+        "instance_id": "django__django-15851",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 6,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Tuples differ: (['ps[33 chars]t', '-p', '444', 'dbname', 'dbname'], {'PGPASSWORD': 'sésame'}) != (['",
+        "f2p_sample": "test_parameters (dbshell.test_postgresql.PostgreSqlDbshellCommandTestCase)"
+      },
+      {
+        "instance_id": "django__django-15902",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 13,
+        "error_type": "Test Failure",
+        "root_cause": "ERROR: test_no_management_form_warning (forms_tests.tests.test_formsets.DeprecationTests)",
+        "f2p_sample": "Management forms are already rendered with the new div template."
+      },
+      {
+        "instance_id": "django__django-15996",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AttributeError (Missing symbol/attribute)",
+        "root_cause": "'IntFlagEnum' object has no attribute '_decompose'",
+        "f2p_sample": "test_serialize_enum_flags (migrations.test_writer.WriterTests)"
+      },
+      {
+        "instance_id": "django__django-16046",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "Test Failure",
+        "root_cause": "ERROR: test_empty (utils_tests.test_numberformat.TestNumberFormat)",
+        "f2p_sample": "test_empty (utils_tests.test_numberformat.TestNumberFormat)"
+      },
+      {
+        "instance_id": "django__django-16229",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "<p>",
+        "f2p_sample": "test_callable_default_hidden_widget_value_not_overridden (forms_tests.tests.tests.ModelFormCallableModelDefault)"
+      },
+      {
+        "instance_id": "django__django-16400",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "ValueError (Invalid argument/format)",
+        "root_cause": "Cannot assign \"<ContentType: auth | permission>\": the current database router prevents this relation",
+        "f2p_sample": "test_set_permissions_fk_to_using_parameter (auth_tests.test_management.CreatePermissionsMultipleDatabasesTests)"
+      },
+      {
+        "instance_id": "django__django-16408",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "<PoolStyle: PoolStyle object (1)> != <Tournament: Tournament object (1)>",
+        "f2p_sample": "test_multilevel_reverse_fk_cyclic_select_related (known_related_objects.tests.ExistingRelatedInstancesTests.test_multilevel_reverse_fk_cyclic_select_related)"
+      },
+      {
+        "instance_id": "django__django-16816",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Lists differ: [] != [<Error: level=40, msg=\"The value of 'list[206 chars]09'>]",
+        "f2p_sample": "test_invalid_m2m_related_name (modeladmin.test_checks.ListDisplayTests.test_invalid_m2m_related_name)"
+      },
+      {
+        "instance_id": "django__django-16820",
+        "applied": true,
+        "f2p_count": 7,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Operation type mismatch for testapp.auto_1 (expected ['CreateModel']):",
+        "f2p_sample": "test_create_model_add_index (migrations.test_optimizer.OptimizerTests.test_create_model_add_index)"
+      },
+      {
+        "instance_id": "django__django-16910",
+        "applied": true,
+        "f2p_count": 2,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "0 != 1 : 0 queries executed, 1 expected",
+        "f2p_sample": "test_inheritance_deferred2 (select_related_onetoone.tests.ReverseSelectRelatedTestCase.test_inheritance_deferred2)"
+      },
+      {
+        "instance_id": "django__django-17051",
+        "applied": true,
+        "f2p_count": 5,
+        "p2p_count": 8,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "ValueError not raised",
+        "f2p_sample": "test_update_conflicts_two_fields_unique_fields_first (bulk_create.tests.BulkCreateTests.test_update_conflicts_two_fields_unique_fields_first)"
+      },
+      {
+        "instance_id": "django__django-17087",
+        "applied": true,
+        "f2p_count": 1,
+        "p2p_count": 0,
+        "error_type": "AssertionError (Edge case/return mismatch)",
+        "root_cause": "Tuples differ: ('mig[15 chars]iter.NestedChoices.method', {'import migrations.test_writer'}) != ('mi",
+        "f2p_sample": "test_serialize_nested_class_method (migrations.test_writer.WriterTests.test_serialize_nested_class_method)"
+      }
+    ]
+  }
+}
