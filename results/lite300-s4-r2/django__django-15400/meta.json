@@ -1,0 +1,260 @@
+{
+  "instance_id": "django__django-15400",
+  "repo": "django/django",
+  "base_commit": "4c76ffc2d6c77c850b4bef8d9acc197d11c47937",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651045.026894
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651048.7616127
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651056.4106894
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651058.2376068
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651079.3436131
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651128.3227239
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651176.7559054
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791651207.7229428
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/functional.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:15"
+  },
+  "started_at": 1791650999.2435894,
+  "elapsed_s": 216.29,
+  "plan": "def __radd__(self, other):\n        if self._wrapped is empty:\n            self._setup()\n        return other + self._wrapped",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/functional.py",
+      "symbol": "django/utils/functional.py::_setup",
+      "symbols": [
+        "_setup",
+        "_setup",
+        "__radd__",
+        "new_method_proxy"
+      ],
+      "line_range": [
+        307,
+        314
+      ],
+      "score": 0.7231,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9166,
+        "vector": 0.3666,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; body matches report terms: wrapped, setup, implement; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "__eq__",
+        "__lt__",
+        "__reduce__"
+      ],
+      "line_range": [
+        376,
+        398
+      ],
+      "score": 0.61,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4298,
+        "vector": 0.4798,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: empty, which, have, like)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::get_domain",
+      "symbols": [
+        "get_domain",
+        "SitemapNotFound",
+        "_get_sitemap_full_url",
+        "ping_google"
+      ],
+      "line_range": [
+        144,
+        159
+      ],
+      "score": 0.6089,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2337,
+        "vector": 0.8789,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: doesn, exist, work)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_setup",
+      "symbols": [
+        "_setup",
+        "__repr__",
+        "__getattr__",
+        "configure"
+      ],
+      "line_range": [
+        63,
+        80
+      ],
+      "score": 0.5789,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3295,
+        "vector": 0.4294,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: wrapped, setup; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "symbols": [
+        "execute",
+        "fetch_command",
+        "get_commands",
+        "main_help_text"
+      ],
+      "line_range": [
+        357,
+        442
+      ],
+      "score": 0.5497,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3487,
+        "vector": 0.1463,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: because, empty, complete, which)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "BadSerializer",
+        "unregister_serializer",
+        "get_serializer"
+      ],
+      "line_range": [
+        48,
+        50
+      ],
+      "score": 0.5452,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2057,
+        "vector": 0.4068,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: exception; body matches report terms: exception)"
+    }
+  ],
+  "retry_count": 2,
+  "critic_verdict": "approved",
+  "critic_score": 0.8825,
+  "laya_scores": {
+    "fix_quality": 1.7867,
+    "matches_issue": 0.9037,
+    "safe_to_apply": 0.8396,
+    "composite": 0.8825,
+    "secrets_or_danger": 0.2362,
+    "logic_drift": 0.4985,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No injection, credential handling, or unsafe execution introduced.\n- PERFORMANCE: PASS: Direct attribute check and operation avoids unnecessary overhead in the hot path.\n- ROBUSTNESS: PASS: Explicitly triggers `_setup()` if empty, mirroring the robust pattern of other magic methods in `SimpleLazyObject`.\n- PONYTAIL / YAGNI: PASS: Directly addresses a missing standard arithmetic dunder method requested by the bug report without over-engineering.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.utils.functional import SimpleLazyObject\n\n\ndef test_simple_lazy_object_radd():\n    \"\"\"\n    SimpleLazyObject should support right addition (__radd__) when a primitive\n    such as an int or a str is added to it on the left-hand side and the wrapped\n    object implements addition with that primitive.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: 5)\n    \n    # This invokes 2 + lazy_obj, which triggers __radd__ on the SimpleLazyObject\n    result = 2 + lazy_obj\n    \n    assert result == 7\n\n\ndef test_simple_lazy_object_radd_string():\n    \"\"\"\n    Edge case: SimpleLazyObject wrapping a string supports right addition with another string.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: \"world\")\n    \n    result = \"Hello, \" + lazy_obj\n    \n    assert result == \"Hello, world\"\n\n\ndef test_simple_lazy_object_radd_uninitialized_setup():\n    \"\"\"\n    Edge case: Using __radd__ correctly triggers _setup() on an uninitialized SimpleLazyObject.\n    \"\"\"\n    setup_called = False\n    \n    def evaluate():\n        nonlocal setup_called\n        setup_called = True\n        return 10\n\n    lazy_obj = SimpleLazyObject(evaluate)\n    assert not setup_called\n\n    result = 5 + lazy_obj\n    \n    assert setup_called\n    assert result == 15\n\n\ndef test_simple_lazy_object_radd_type_error():\n    \"\"\"\n    Edge case: Adding incompatible types via __radd__ raises a TypeError appropriately.\n    \"\"\"\n    lazy_obj = SimpleLazyObject(lambda: \"string\")\n    \n    with pytest.raises(TypeError):\n        _ = 123 + lazy_obj",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..85c9513 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -266,6 +266,11 @@ def new_method_proxy(func):\n             self._setup()\n         return func(self._wrapped, *args)\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n     return inner\n \n \n",
+  "offline_calls": 0
+}

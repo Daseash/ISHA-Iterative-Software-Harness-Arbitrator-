@@ -1,7 +1,7 @@
 [
   {
     "instance_id": "django__django-15347",
-    "model_patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 0142206..414acb8 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+    "model_patch": "diff --git a/django/contrib/messages/storage/cookie.py b/django/contrib/messages/storage/cookie.py\nindex a226e32..87a4197 100644\n--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@ class MessageEncoder(json.JSONEncoder):\n             # Using 0/1 here instead of False/True to produce more compact json\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)",
     "model_name_or_path": "isha"
   },
   {
@@ -11,7 +11,7 @@
   },
   {
     "instance_id": "django__django-15400",
-    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..21ccf9b 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -74,6 +74,11 @@ class classproperty:\n         self.fget = method\n         return self\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n class Promise:\n     \"\"\"\n",
+    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..b868f79936 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -432,6 +432,13 @@ class SimpleLazyObject(LazyObject):\n             return result\n         return copy.deepcopy(self._wrapped, memo)\n \n+    __add__ = new_method_proxy(operator.add)\n+\n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n def partition(predicate, values):\n     \"\"\"",
     "model_name_or_path": "isha"
   },
   {
@@ -56,7 +56,7 @@
   },
   {
     "instance_id": "django__django-15851",
-    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63..43b9cd7 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -35,6 +35,7 @@ class DatabaseClient(BaseDatabaseClient):\n         if dbname:\n             args += [dbname]\n         args.extend(parameters)\n+        args.extend([dbname] if dbname else [])\n \n         env = {}\n         if passwd:\n",
+    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63546..3b5ddafaca 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -32,9 +32,9 @@ class DatabaseClient(BaseDatabaseClient):\n             args += [\"-h\", host]\n         if port:\n             args += [\"-p\", str(port)]\n+        args.extend(parameters)\n         if dbname:\n             args += [dbname]\n-        args.extend(parameters)\n \n         env = {}\n         if passwd:",
     "model_name_or_path": "isha"
   },
   {

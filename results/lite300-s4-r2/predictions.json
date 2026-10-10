@@ -1,5 +1,20 @@
 [
   {
+    "instance_id": "django__django-15347",
+    "model_patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 0142206..414acb8 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15400",
+    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..85c9513 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -266,6 +266,11 @@ def new_method_proxy(func):\n             self._setup()\n         return func(self._wrapped, *args)\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n     return inner\n \n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15851",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
     "instance_id": "django__django-16046",
     "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..99501c6 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -68,6 +68,8 @@ def format(\n             str_number = \"{:f}\".format(number)\n     else:\n         str_number = str(number)\n+    if not str_number:\n+        return \"\"\n     if str_number[0] == \"-\":\n         sign = \"-\"\n         str_number = str_number[1:]\n",
     "model_name_or_path": "isha"
