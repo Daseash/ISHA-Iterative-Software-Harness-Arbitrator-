@@ -21,7 +21,7 @@
   },
   {
     "instance_id": "django__django-13925",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\nindex 4038859..cbdc929 100644\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -746,7 +746,7 @@ class Model(metaclass=ModelBase):\n         if cls._meta.proxy:\n             cls = cls._meta.concrete_model\n         meta = cls._meta\n-        if not meta.auto_created:\n+        if not cls._meta.pk.auto_created or cls._meta.parents:\n             pre_save.send(\n                 sender=origin, instance=self, raw=raw, using=using,\n                 update_fields=update_fields,",
     "model_name_or_path": "isha"
   },
   {
@@ -51,12 +51,12 @@
   },
   {
     "instance_id": "django__django-14238",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 0f53d9c..a0b6ae1 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2524,7 +2524,7 @@ class AutoFieldMeta(type):\n         return isinstance(instance, self._subclasses) or super().__instancecheck__(instance)\n \n     def __subclasscheck__(self, subclass):\n-        return subclass in self._subclasses or super().__subclasscheck__(subclass)\n+        return super().__subclasscheck__(subclass) or subclass in self._subclasses\n \n \n class AutoField(AutoFieldMixin, IntegerField, metaclass=AutoFieldMeta):",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-14382",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/core/management/templates.py b/django/core/management/templates.py\nindex 8dc6068..f248ab1 100644\n--- a/django/core/management/templates.py\n+++ b/django/core/management/templates.py\n@@ -74,7 +74,7 @@ class TemplateCommand(BaseCommand):\n                 raise CommandError(e)\n         else:\n             if app_or_project == 'app':\n-                self.validate_name(os.path.basename(target), 'directory')\n+                self.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')\n             top_dir = os.path.abspath(os.path.expanduser(target))\n             if not os.path.exists(top_dir):\n                 raise CommandError(\"Destination directory '%s' does not \"",
     "model_name_or_path": "isha"
   },
   {
@@ -106,7 +106,7 @@
   },
   {
     "instance_id": "django__django-14855",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/contrib/admin/helpers.py b/django/contrib/admin/helpers.py\nindex dd154f7..189fedc 100644\n--- a/django/contrib/admin/helpers.py\n+++ b/django/contrib/admin/helpers.py\n@@ -209,7 +209,9 @@ class AdminReadonlyField:\n             remote_field.model._meta.model_name,\n         )\n         try:\n-            url = reverse(url_name, args=[quote(remote_obj.pk)])\n+            url = reverse(\n+                url_name, args=[quote(remote_obj.pk)], current_app=self.model_admin.admin_site.name\n+            )\n             return format_html('<a href=\"{}\">{}</a>', url, remote_obj)\n         except NoReverseMatch:\n             return str(remote_obj)",
     "model_name_or_path": "isha"
   },
   {
@@ -131,7 +131,7 @@
   },
   {
     "instance_id": "django__django-15202",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/core/validators.py b/django/core/validators.py\nindex 72fbe15..bd0a363 100644\n--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -111,7 +111,10 @@ class URLValidator(RegexValidator):\n         try:\n             super().__call__(value)\n         except ValidationError as e:\n-            # Trivial case failed. Try for possible IDN domain\n+            try:\n+                scheme, netloc, path, query, fragment = urlsplit(value)\n+            except ValueError:\n+                raise ValidationError(self.message, code=self.code, params={'value': value})\n             if value:\n                 try:\n                     scheme, netloc, path, query, fragment = urlsplit(value)",
     "model_name_or_path": "isha"
   },
   {

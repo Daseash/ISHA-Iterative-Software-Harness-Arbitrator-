@@ -103,5 +103,10 @@
     "instance_id": "django__django-11910",
     "model_patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261..40dc732 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,",
     "model_name_or_path": "ISHA-v1"
+  },
+  {
+    "instance_id": "django__django-12113",
+    "model_name_or_path": "ISHA",
+    "model_patch": "diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py\nindex a3ae1f0..ec830b2 100644\n--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -201,6 +201,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):\n \n     @async_unsafe\n     def get_new_connection(self, conn_params):\n+        if 'timeout' not in conn_params:\n+            conn_params['timeout'] = 20\n         conn = Database.connect(**conn_params)\n         conn.create_function(\"django_date_extract\", 2, _sqlite_datetime_extract)\n         conn.create_function(\"django_date_trunc\", 2, _sqlite_date_trunc)"
   }
 ]

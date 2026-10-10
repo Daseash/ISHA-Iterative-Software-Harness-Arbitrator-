@@ -18,19 +18,19 @@ PYTHON = sys.executable
 RESCUE_STEPS = [
     {
         "session": "lite300-s1",
-        "run_id": "lite300-s1-rescue",
+        "run_id": "lite300-s1-r2",
         "slice_file": ROOT / "data" / "slices" / "lite300-s1-rescue.json",
         "target_pred": ROOT / "results" / "lite300-s1",
     },
     {
         "session": "lite300-s2",
-        "run_id": "lite300-s2-rescue",
+        "run_id": "lite300-s2-r2",
         "slice_file": ROOT / "data" / "slices" / "lite300-s2-rescue.json",
         "target_pred": ROOT / "results" / "lite300-s2",
     },
     {
         "session": "lite300-s3",
-        "run_id": "lite300-s3-rescue",
+        "run_id": "lite300-s3-r2",
         "slice_file": ROOT / "data" / "slices" / "lite300-s3-rescue.json",
         "target_pred": ROOT / "results" / "lite300-s3",
     },
