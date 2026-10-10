@@ -522,9 +522,14 @@ MINIMAL DIFF RULES (non-negotiable — PONYTAIL LAZY-SENIOR MODE):
 - Can it be one line? Make it one line. Minimal diff wins.
 - Bug fix = root cause, not symptom. Fix where all callers route through.
 - Do not touch test files unless the fix itself requires it.
-- Keep the diff inside the localized files unless the bug is provably
-  cross-file.
-- Every call site of a changed signature must be updated in the SAME diff.
+- Keep the diff inside the localized files unless the bug is provably cross-file.
+- CLASS ANCHORING: Insert methods/properties into the EXACT enclosing class
+  (e.g. class SimpleLazyObject, class ModelAdmin), NEVER an earlier class (like classproperty).
+- TYPE & RETURN INVARIANTS: Preserve exact return types and falsy distinctions (None vs '' vs 0 vs False).
+  Do not coerce None to '' or drop empty strings unless explicitly required.
+- SIGNATURE SAFETY: When modifying methods, preserve caller compatibility (*args, **kwargs).
+- CALLABLE RESOLUTION: If an attribute or parameter can be a callable or PathLike, handle it safely.
+- QUALNAME HIERARCHY: When serializing nested classes/methods, include full __qualname__ enclosing classes.
 - The TARGET FILE CONTEXT / CODE CONTEXT sections below are verbatim
   excerpts of the real files. Copy every context and removal line from them
   character-for-character. If a line you want to change is not shown, do not

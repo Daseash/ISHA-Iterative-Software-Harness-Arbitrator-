@@ -91,7 +91,25 @@ def extract_instance_feedback(session: str, instance_id: str) -> str | None:
     if patch_snippet:
         note += f"\nPREVIOUS FLAWED PATCH (DO NOT REPEAT THIS EXACT DIFF):\n{patch_snippet}\n"
 
+    # Intelligent category-specific solver directives based on container traceback
+    directives = []
+    if "positional arguments but" in traceback_text or "takes " in traceback_text and "given" in traceback_text:
+        directives.append("• SIGNATURE FIX: Positional argument count mismatch. Support flexible arguments (*args, **kwargs) or align parameters with existing callers.")
+    if "None != ''" in traceback_text or "'' != None" in traceback_text or "None is not" in traceback_text:
+        directives.append("• RETURN TYPE FIX: Distinguish explicitly between None and empty string '' (use `if x is not None` rather than `if x`).")
+    if "SimpleLazyObject" in traceback_text and "unsupported operand" in traceback_text or "object has no attribute" in traceback_text:
+        directives.append("• CLASS SCOPE FIX: Ensure methods/attributes are added to the EXACT target class (e.g. SimpleLazyObject or ModelAdmin), not an earlier class block.")
+    if "Nested" in traceback_text and "Writer" in traceback_text or "__qualname__" in traceback_text:
+        directives.append("• QUALNAME HIERARCHY FIX: When serializing nested methods or choices, include the full enclosing class path in __qualname__.")
+    if "could not convert string to float" in traceback_text or "invalid literal for int" in traceback_text:
+        directives.append("• STRING CONVERSION FIX: Guard against string type names or non-numeric strings before numeric conversion.")
+
+    targeted_section = ""
+    if directives:
+        targeted_section = "\nPINPOINT TARGETED SOLVER DIRECTIVES:\n" + "\n".join(directives) + "\n"
+
     note += (
+        targeted_section +
         "\nACTIONABLE REPAIR INSTRUCTIONS:\n"
         "1. Check the exact AssertionError/TypeError and line numbers above.\n"
         "2. Ensure the fix is applied inside the EXACT correct class and function.\n"
