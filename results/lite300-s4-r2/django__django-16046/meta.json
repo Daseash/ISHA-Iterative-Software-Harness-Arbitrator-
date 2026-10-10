@@ -1,0 +1,240 @@
+{
+  "instance_id": "django__django-16046",
+  "repo": "django/django",
+  "base_commit": "ec13e801b820614ff374cb0046092caab8d67249",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649224.935426
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649228.8090682
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649239.2976286
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649241.1347294
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649264.1653225
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791649354.5342336
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/numberformat.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/numberformat.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791649167.2885444,
+  "elapsed_s": 193.67,
+  "plan": "else:\n        str_number = str(number) if number is not None else \"\"\n    if not str_number:\n        return \"\"\n    if str_number[0] == \"-\":",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/numberformat.py",
+      "symbol": "django/utils/numberformat.py::format",
+      "symbols": [
+        "format"
+      ],
+      "line_range": [
+        7,
+        14
+      ],
+      "score": 0.6253,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.546,
+        "vector": 0.3654,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: number)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::check",
+      "symbols": [
+        "check",
+        "_check_null_allowed_for_primary_keys",
+        "clone",
+        "__reduce__"
+      ],
+      "line_range": [
+        257,
+        267
+      ],
+      "score": 0.584,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4038,
+        "vector": 0.3167,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: null, index, field)"
+    },
+    {
+      "file": "django/db/models/lookups.py",
+      "symbol": "django/db/models/lookups.py::as_sql",
+      "symbols": [
+        "as_sql",
+        "split_parameter_list_as_sql",
+        "as_sql",
+        "Exact"
+      ],
+      "line_range": [
+        343,
+        359
+      ],
+      "score": 0.5623,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2178,
+        "vector": 0.4821,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: that, when, field, here)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "symbols": [
+        "execute",
+        "get_commands",
+        "autocomplete",
+        "main_help_text"
+      ],
+      "line_range": [
+        353,
+        438
+      ],
+      "score": 0.5533,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2147,
+        "vector": 0.455,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: admin, that, index, indexerror)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_user_session_key",
+      "symbols": [
+        "_get_user_session_key",
+        "login",
+        "get_user_model",
+        "authenticate"
+      ],
+      "line_range": [
+        57,
+        62
+      ],
+      "score": 0.5423,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2836,
+        "vector": 0.2202,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: request, when, string, this)"
+    },
+    {
+      "file": "django/core/cache/__init__.py",
+      "symbol": "django/core/cache/__init__.py::CacheHandler",
+      "symbols": [
+        "CacheHandler",
+        "create_connection",
+        "close_caches"
+      ],
+      "line_range": [
+        38,
+        54
+      ],
+      "score": 0.5399,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2891,
+        "vector": 0.1883,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: string)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.84285,
+  "laya_scores": {
+    "fix_quality": 1.7719,
+    "matches_issue": 0.8485,
+    "safe_to_apply": 0.751,
+    "composite": 0.84285,
+    "secrets_or_danger": 0.0579,
+    "logic_drift": 0.2464,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No security implications introduced by checking an empty string.\n- PERFORMANCE: PASS: Simple string truthiness check has negligible overhead.\n- ROBUSTNESS: PASS: Gracefully handles empty or null number string inputs, preventing IndexError.\n- PONYTAIL / YAGNI: PASS: Minimal and direct fix to solve the specific bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.utils.numberformat import format\n\n\ndef test_numberformat_none_input():\n    \"\"\"\n    Passing None to numberformat.format() should return an empty string\n    instead of raising an IndexError when attempting to check the sign.\n    \"\"\"\n    result = format(\n        number=None,\n        decimal_sep=\".\",\n        decimal_pos=2,\n        grouping=3,\n        thousand_sep=\",\",\n    )\n    assert result == \"\"\n\n\ndef test_numberformat_empty_string_input():\n    \"\"\"\n    Passing an empty string to numberformat.format() should return an empty string.\n    \"\"\"\n    result = format(\n        number=\"\",\n        decimal_sep=\".\",\n        decimal_pos=2,\n    )\n    assert result == \"\"\n\n\ndef test_numberformat_zero_input():\n    \"\"\"\n    Passing numeric zero should format correctly without errors.\n    \"\"\"\n    result = format(\n        number=0,\n        decimal_sep=\".\",\n        decimal_pos=2,\n    )\n    assert result == \"0.00\"\n\n\ndef test_numberformat_negative_number():\n    \"\"\"\n    Passing a negative number should format correctly and preserve the sign.\n    \"\"\"\n    result = format(\n        number=-1234.56,\n        decimal_sep=\".\",\n        decimal_pos=2,\n        grouping=3,\n        thousand_sep=\",\",\n        force_grouping=True,\n    )\n    assert result == \"-1,234.56\"",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..99501c6 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -68,6 +68,8 @@ def format(\n             str_number = \"{:f}\".format(number)\n     else:\n         str_number = str(number)\n+    if not str_number:\n+        return \"\"\n     if str_number[0] == \"-\":\n         sign = \"-\"\n         str_number = str_number[1:]\n",
+  "offline_calls": 0
+}
