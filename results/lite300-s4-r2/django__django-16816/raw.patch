@@ -1,0 +1,11 @@
+--- a/django/contrib/admin/utils.py
++++ b/django/contrib/admin/utils.py
+@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):
+     Reverse relations should also be excluded as these aren't attributes of the
+     model (rather something like `foo_set`).
+     """
++    if name in [f.get_accessor_name() for f in opts.related_objects]:
++        raise FieldDoesNotExist()
+     field = opts.get_field(name)
+     if (
+         field.is_relation

@@ -1,22 +1,37 @@
 [
   {
     "instance_id": "django__django-15347",
-    "model_patch": "diff --git a/django/contrib/messages/storage/base.py b/django/contrib/messages/storage/base.py\nindex 0142206..414acb8 100644\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,7 +22,7 @@ class Message:\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else ''\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+    "model_patch": "diff --git a/django/contrib/messages/storage/cookie.py b/django/contrib/messages/storage/cookie.py\nindex a226e32..87a4197 100644\n--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@ class MessageEncoder(json.JSONEncoder):\n             # Using 0/1 here instead of False/True to produce more compact json\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15400",
-    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0f..85c9513 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -266,6 +266,11 @@ def new_method_proxy(func):\n             self._setup()\n         return func(self._wrapped, *args)\n \n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n     return inner\n \n \n",
+    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..b868f79936 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -432,6 +432,13 @@ class SimpleLazyObject(LazyObject):\n             return result\n         return copy.deepcopy(self._wrapped, memo)\n \n+    __add__ = new_method_proxy(operator.add)\n+\n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n def partition(predicate, values):\n     \"\"\"\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15781",
+    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..ef852a1 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -286,8 +286,8 @@ class BaseCommand:\n         Create and return the ``ArgumentParser`` which will be used to\n         parse the arguments to this command.\n         \"\"\"\n+        kwargs.setdefault(\"formatter_class\", DjangoHelpFormatter)\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15851",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63546..3b5ddafaca 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -32,9 +32,9 @@ class DatabaseClient(BaseDatabaseClient):\n             args += [\"-h\", host]\n         if port:\n             args += [\"-p\", str(port)]\n+        args.extend(parameters)\n         if dbname:\n             args += [dbname]\n-        args.extend(parameters)\n \n         env = {}\n         if passwd:\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-15996",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..e9cd698 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        try:\n+            name = self.value.name\n+        except AttributeError:\n+            name = None\n+        if name is None:\n+            value_bits = [v for v in enum_class if v in self.value]\n+            return (\" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits), {\"import %s\" % module})\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16046",
     "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..99501c6 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -68,6 +68,8 @@ def format(\n             str_number = \"{:f}\".format(number)\n     else:\n         str_number = str(number)\n+    if not str_number:\n+        return \"\"\n     if str_number[0] == \"-\":\n         sign = \"-\"\n         str_number = str_number[1:]\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16816",
+    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..af87cf4 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.get_accessor_name() for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
     "model_name_or_path": "isha"
   }
 ]

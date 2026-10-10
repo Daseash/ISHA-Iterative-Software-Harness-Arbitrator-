@@ -56,7 +56,7 @@
   },
   {
     "instance_id": "django__django-12747",
-    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a..86124e5 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}",
+    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 16dff6a..86124e5 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -442,4 +442,4 @@ class Collector:\n         for model, instances in self.data.items():\n             for instance in instances:\n                 setattr(instance, model._meta.pk.attname, None)\n-        return sum(deleted_counter.values()), dict(deleted_counter)\n+        return sum(deleted_counter.values()), {label: count for label, count in deleted_counter.items() if count > 0}\n",
     "model_name_or_path": "ISHA-v1"
   },
   {

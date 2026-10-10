@@ -31,7 +31,7 @@
   },
   {
     "instance_id": "django__django-15781",
-    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..89136f8 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -289,9 +289,9 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n-            missing_args_message=getattr(self, \"missing_args_message\", None),\n-            called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n+            missing_args_message=getattr(self, 'missing_args_message', None),\n+            called_from_command_line=getattr(self, 'called_from_command_line', True),\n             **kwargs,\n         )\n         self.add_base_argument(\n",
+    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..ef852a1 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -286,8 +286,8 @@ class BaseCommand:\n         Create and return the ``ArgumentParser`` which will be used to\n         parse the arguments to this command.\n         \"\"\"\n+        kwargs.setdefault(\"formatter_class\", DjangoHelpFormatter)\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,",
     "model_name_or_path": "isha"
   },
   {
@@ -66,7 +66,7 @@
   },
   {
     "instance_id": "django__django-15996",
-    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..f29a22c 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,12 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        if self.value.name is None:\n+            value_bits = self.value._decompose()\n+            return (\n+                \" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits),\n+                {\"import %s\" % module},\n+            )\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..e9cd698 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        try:\n+            name = self.value.name\n+        except AttributeError:\n+            name = None\n+        if name is None:\n+            value_bits = [v for v in enum_class if v in self.value]\n+            return (\" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits), {\"import %s\" % module})\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},",
     "model_name_or_path": "isha"
   },
   {
@@ -116,7 +116,7 @@
   },
   {
     "instance_id": "django__django-16816",
-    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..d82e5ac 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.name for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation\n",
+    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..af87cf4 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.get_accessor_name() for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation",
     "model_name_or_path": "isha"
   },
   {

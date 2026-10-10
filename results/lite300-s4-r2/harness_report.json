@@ -1,25 +1,44 @@
 {
-  "total_instances": 1,
-  "submitted_instances": 1,
-  "completed_instances": 1,
-  "resolved_instances": 1,
-  "unresolved_instances": 0,
+  "total_instances": 7,
+  "submitted_instances": 7,
+  "completed_instances": 7,
+  "resolved_instances": 6,
+  "unresolved_instances": 1,
   "infra_failure_instances": 0,
   "ambiguous_failure_instances": 0,
   "empty_patch_instances": 0,
   "error_instances": 0,
   "completed_ids": [
-    "django__django-16046"
+    "django__django-15347",
+    "django__django-15400",
+    "django__django-15781",
+    "django__django-15851",
+    "django__django-15996",
+    "django__django-16046",
+    "django__django-16816"
   ],
   "incomplete_ids": [],
   "empty_patch_ids": [],
   "submitted_ids": [
-    "django__django-16046"
+    "django__django-15347",
+    "django__django-15400",
+    "django__django-15781",
+    "django__django-15851",
+    "django__django-15996",
+    "django__django-16046",
+    "django__django-16816"
   ],
   "resolved_ids": [
+    "django__django-15347",
+    "django__django-15400",
+    "django__django-15781",
+    "django__django-15851",
+    "django__django-15996",
     "django__django-16046"
   ],
-  "unresolved_ids": [],
+  "unresolved_ids": [
+    "django__django-16816"
+  ],
   "infra_failure_ids": [],
   "ambiguous_failure_ids": [],
   "failure_reasons": {},
@@ -28,6 +47,11 @@
   "unstopped_instances": 0,
   "unstopped_containers": [],
   "unremoved_images": [
-    "swebench/sweb.eval.x86_64.django_1776_django-16046:latest"
+    "swebench/sweb.eval.x86_64.django_1776_django-15347:latest",
+    "swebench/sweb.eval.x86_64.django_1776_django-15400:latest",
+    "swebench/sweb.eval.x86_64.django_1776_django-15781:latest",
+    "swebench/sweb.eval.x86_64.django_1776_django-15851:latest",
+    "swebench/sweb.eval.x86_64.django_1776_django-15996:latest",
+    "swebench/sweb.eval.x86_64.django_1776_django-16816:latest"
   ]
 }
