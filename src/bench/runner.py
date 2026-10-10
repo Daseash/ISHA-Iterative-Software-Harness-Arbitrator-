@@ -387,7 +387,7 @@ def run_instance(
 
     from src.config import reset_provider_state
     attempt = 0
-    notes: list[str] = []
+    notes: list[str] = list(record.get("context_notes") or [])
     meta: dict = {
         "instance_id": record["instance_id"],
         "repo": record["repo"],
@@ -576,6 +576,7 @@ def run_bench(
     verify: bool | None = None,
     pre_filter: bool = True,
     workers: int | None = None,
+    notes_file: str | Path | None = None,
 ) -> Path:
     """Run (or resume) the benchmark slice. Returns the run directory.
 
@@ -595,6 +596,19 @@ def run_bench(
         records = [by_id[i] for i in limit_instances if i in by_id]
     else:
         records = ds.load_slice(limit, slice_mode)
+
+    if notes_file:
+        nf = Path(notes_file)
+        if nf.is_file():
+            try:
+                notes_map = json.loads(nf.read_text(encoding="utf-8"))
+                for r in records:
+                    if r["instance_id"] in notes_map:
+                        n_list = notes_map[r["instance_id"]]
+                        r["context_notes"] = n_list if isinstance(n_list, list) else [str(n_list)]
+                print(f"[bench] loaded test feedback notes for {len(notes_map)} instances from {nf.name}")
+            except Exception as exc:
+                print(f"[bench] warning: failed to load notes file {notes_file}: {exc}")
 
     if pre_filter:
         from src.bench.prefilter import filter_records
@@ -709,6 +723,8 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=None,
                         help="solve N instances in parallel (default 1: safe on "
                              "shared provider TPM windows)")
+    parser.add_argument("--notes-file", type=str, default=None,
+                        help="path to JSON file mapping instance_id to feedback notes list")
     args = parser.parse_args()
 
     run_dir = run_bench(
@@ -722,6 +738,7 @@ def main() -> int:
         verify=False if args.no_verify else None,
         pre_filter=not args.no_prefilter,
         workers=args.workers,
+        notes_file=args.notes_file,
     )
     print(f"[bench] wrote {run_dir / 'predictions.json'}")
     return 0
