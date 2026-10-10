@@ -282,6 +282,11 @@ def planner_node(state: AgentState) -> AgentState:
     except Exception:
         pass
 
+    feedback_section = ""
+    if state.context_notes:
+        notes_str = "\n".join(str(n) for n in state.context_notes[-4:])
+        feedback_section = f"\nCRITICAL DOCKER TEST EXECUTION FAILURE FEEDBACK:\n{notes_str}\n"
+
     prompt = f"""You are an expert software engineer. Given this bug report and
 repository context, produce a structured 2-step fix plan:
 Step 1: What is the root cause
@@ -298,7 +303,7 @@ its callers broken is not acceptable.
 
 BUG REPORT:
 {_clip(state.issue_text, _ISSUE_CHARS)}
-
+{feedback_section}
 REPOSITORY CONTEXT:
 {_clip(state.repo_context, _PLANNER_CONTEXT_CHARS)}
 {_clip(loc_section + history_section + test_section, _PLANNER_AUX_CHARS)}{blast_line}

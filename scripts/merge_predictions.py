@@ -44,13 +44,31 @@ def merge_predictions(source_dir: Path, target_dir: Path) -> None:
     print(f"[merge] Found {len(source_patches)} patches in source {source_dir.name}")
     rescued_count = 0
 
+    # Check for harness_report.json in target to strictly preserve golden passes
+    golden_resolved = set()
+    harness_report_file = target_dir / "harness_report.json"
+    if harness_report_file.is_file():
+        try:
+            h_data = json.loads(harness_report_file.read_text(encoding="utf-8"))
+            golden_resolved = set(h_data.get("resolved_ids", []))
+            print(f"[merge] Protecting {len(golden_resolved)} golden resolved instances from being overwritten.")
+        except Exception:
+            pass
+
     for inst_id, patch in source_patches.items():
         if inst_id in target_map:
+            if inst_id in golden_resolved:
+                print(f"  = Protected golden pass: {inst_id}")
+                continue
             old_patch = target_map[inst_id].get("model_patch", "").strip()
-            if not old_patch and patch:
+            if patch and patch != old_patch:
                 target_map[inst_id]["model_patch"] = patch
                 rescued_count += 1
-                print(f"  + Rescued: {inst_id} ({len(patch)} bytes)")
+                print(f"  * Repaired: {inst_id} ({len(patch)} bytes)")
+            elif not old_patch and patch:
+                target_map[inst_id]["model_patch"] = patch
+                rescued_count += 1
+                print(f"  + Added: {inst_id} ({len(patch)} bytes)")
         else:
             # New instance not in target
             target_map[inst_id] = {
