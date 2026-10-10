@@ -86,12 +86,12 @@
   },
   {
     "instance_id": "django__django-16229",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex 35ecdc1..d004793 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1155,6 +1155,8 @@ class BaseInlineFormSet(BaseModelFormSet):\n                     form.fields.get(name), \"label\", capfirst(self.fk.verbose_name)\n                 )\n             }\n+        if f.has_default() and callable(f.default):\n+            kwargs[\"show_hidden_initial\"] = False\n \n         # The InlineForeignKeyField assumes that the foreign key relation is\n         # based on the parent model's pk. If this isn't the case, set to_field",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16255",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py\nindex 27756d9..b40ad80 100644\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -168,7 +168,7 @@ class Sitemap:\n         if callable(self.lastmod):\n             try:\n                 return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n+            except (TypeError, ValueError):\n                 return None\n         else:\n             return self.lastmod",
     "model_name_or_path": "isha"
   },
   {
@@ -131,7 +131,7 @@
   },
   {
     "instance_id": "django__django-16910",
-    "model_patch": "",
+    "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex 781dfd5..d62a87c 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1658,7 +1658,7 @@ class Query(BaseExpression):\n             try:\n                 if opts is None:\n                     raise FieldDoesNotExist\n-                field = opts.get_field(name)\n+                field = opts.get_field(name) if name != \"id\" or not opts.pk.primary_key else opts.pk\n             except FieldDoesNotExist:\n                 if name in self.annotation_select:\n                     field = self.annotation_select[name].output_field",
     "model_name_or_path": "isha"
   },
   {
@@ -143,5 +143,10 @@
     "instance_id": "django__django-17087",
     "model_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\nindex 9a7a2bb..1dd305a 100644\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -76,7 +76,7 @@ class Choices(enum.Enum, metaclass=ChoicesMeta):\n \n     # A similar format was proposed for Python 3.10.\n     def __repr__(self):\n-        return f\"{self.__class__.__qualname__}.{self._name_}\"\n+        return f\"{self.__class__.__module__}.{self.__class__.__qualname__}.{self._name_}\"\n \n \n class IntegerChoices(int, Choices):\n",
     "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "django__django-16379",
+    "model_name_or_path": "ISHA",
+    "model_patch": "diff --git a/django/core/cache/backends/filebased.py b/django/core/cache/backends/filebased.py\nindex 631da49..215fefb 100644\n--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -90,10 +90,11 @@ class FileBasedCache(BaseCache):\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n-        return False\n+        except FileNotFoundError:\n+            return False\n \n     def _cull(self):\n         \"\"\""
   }
 ]

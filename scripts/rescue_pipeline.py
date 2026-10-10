@@ -48,6 +48,13 @@ def main() -> None:
     print("ISHA S1, S2, S3 Multi-Session Improvement & Rescue Pipeline")
     print("=" * 60)
 
+    # First merge any completed Session 4 rescue patches
+    s4_source = ROOT / "results" / "lite300-s4-rescue"
+    s4_target = ROOT / "results" / "lite300-s4"
+    if s4_source.is_dir() and (s4_target / "predictions.json").is_file():
+        print("[pipeline] Syncing latest Session 4 rescue patches...")
+        run_cmd([PYTHON, "scripts/merge_predictions.py", "--source", str(s4_source), "--target", str(s4_target)])
+
     for step in RESCUE_STEPS:
         run_id = step["run_id"]
         slice_file = step["slice_file"]
