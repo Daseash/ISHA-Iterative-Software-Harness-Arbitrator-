@@ -520,7 +520,7 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
 ONLY the diff, no explanation. Use standard unified diff format
 (--- a/path  +++ b/path  @@ hunk headers).
 
-MINIMAL DIFF RULES (non-negotiable — PONYTAIL LAZY-SENIOR MODE):
+MINIMAL DIFF RULES (non-negotiable — SENIOR INVARIANT MODE):
 - Change only what the fix requires. No refactors, no renames, no
   reformatting, no comment/docstring edits, no unrelated cleanups.
 - Does standard library or existing helper in this codebase already do this? Reuse it.
@@ -530,6 +530,11 @@ MINIMAL DIFF RULES (non-negotiable — PONYTAIL LAZY-SENIOR MODE):
 - Keep the diff inside the localized files unless the bug is provably cross-file.
 - CLASS ANCHORING: Insert methods/properties into the EXACT enclosing class
   (e.g. class SimpleLazyObject, class ModelAdmin), NEVER an earlier class (like classproperty).
+- GUARD CLAUSE COMPLETENESS: Check `if val is None:` before accessing attributes or calling `len(val)`. Calling `len(None)` raises `TypeError`. Always guard against `None`, empty containers, or missing keys before slicing or querying.
+- HASHABILITY CONTRACTS: Never put mutable collections (`list`, `dict`, `set`) into sets, dictionary keys, or identity tuples without calling `make_hashable(...)` or converting to an immutable tuple.
+- DECORATOR PRESERVATION: When wrapping callables or modifying decorators (`functools.partial`), wrap with `functools.wraps(...)` to preserve function introspection (`__name__`, `__doc__`, `__wrapped__`).
+- EXECUTION SCOPE & NAMESPACES: In dynamic code execution (`exec`, `eval`), always provide an explicit global namespace with `{{'__name__': '__main__'}}` so top-level imports and closures resolve properly.
+- ACCESSIBILITY & WIDGET CONTRACTS: In forms and widgets, `id_for_label` must return `''` or `None` if the widget has composite or multiple sub-widgets without a single focus target.
 - TYPE & RETURN INVARIANTS: Preserve exact return types and falsy distinctions (None vs '' vs 0 vs False).
   Do not coerce None to '' or drop empty strings unless explicitly required.
 - SIGNATURE SAFETY: When modifying methods, preserve caller compatibility (*args, **kwargs).

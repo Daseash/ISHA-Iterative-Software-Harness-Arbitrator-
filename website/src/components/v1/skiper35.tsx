@@ -10,9 +10,27 @@ export interface Skiper35Item {
 
 export const defaultItems: Skiper35Item[] = [
   {
-    id: "smoke50",
-    title: "Smoke 50 · SWE-Bench",
-    metric: "14.0% · 20.6%",
+    id: "lite300",
+    title: "SWE-bench Lite (S1-S4)",
+    metric: "55.0% (66 / 120)",
+    image: "/isha_vs_baselines.png",
+  },
+  {
+    id: "session4",
+    title: "Session 4 Leaderboard",
+    metric: "70.0% (21 / 30)",
+    image: "/demo-desktop.png",
+  },
+  {
+    id: "session3",
+    title: "Session 3 Leaderboard",
+    metric: "66.7% (20 / 30)",
+    image: "/demo-chat.png",
+  },
+  {
+    id: "combined-sessions",
+    title: "Sessions 1–4 Combined",
+    metric: "55.0% (66 / 120)",
     image: "/demo-desktop.png",
   },
   {

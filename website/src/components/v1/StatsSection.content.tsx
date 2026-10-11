@@ -31,10 +31,10 @@ export const StatsSection: React.FC = () => {
   // 6 Real audited metrics from isha-agent/results/REPORT.md & README.md
   const statsMetrics = [
     {
-      value: "66.7%",
-      delta: "+26.7% ABSOLUTE",
-      label: "SWE-BENCH GENERATION YIELD",
-      detail: "20/30 patches produced (up from 40.0% baseline)",
+      value: "70.0%",
+      delta: "21/30 DOCKER VERIFIED",
+      label: "SWE-BENCH LITE (SESSION 4)",
+      detail: "66/120 combined across S1-S4 (55.0% official resolution rate)",
       icon: TrendingUp,
     },
     {

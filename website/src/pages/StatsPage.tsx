@@ -18,7 +18,7 @@ export const StatsPage: React.FC<StatsPageProps> = () => {
           STATS
         </h1>
         <p className="font-mono text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-          AUDITED BENCHMARKS · SWE-BENCH LITE · SMOKE 50
+          AUDITED BENCHMARKS · SWE-BENCH LITE
         </p>
       </div>
 

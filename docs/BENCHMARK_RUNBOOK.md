@@ -56,10 +56,10 @@ a non-empty `model_log` (no `offline` entries), and either a patch or a
 classified failure. **If the only model in the log is `offline-brain`, stop —
 API keys are not being read.**
 
-## 4. Smoke — 50-instance stratified slice (≈10-16 h, parallel-safe)
+## 4. Benchmark Session Slice (30-instance evaluation)
 
 ```powershell
-isha bench --limit 50 --slice stratified --run-id smoke50 --workers 1 --report
+python scripts/run_all_sessions.py --start 1 --end 1 --eval
 ```
 
 Pass criteria before spending the full 300:
