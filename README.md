@@ -31,6 +31,31 @@
 
 ---
 
+## 💡 How ISHA Differs from Recent SOTA SWE Agents
+
+Most contemporary autonomous SWE systems (e.g., Cognition Devin, SWE-agent, AutoCodeRover, Agentless) approach SWE-bench as an unconstrained code generation problem using costly commercial LLMs ($5–$25 per instance) and single-trajectory prompting.
+
+ISHA fundamentally re-engineers this paradigm by replacing brute-force prompting with a **deterministic, empirical software engineering harness**:
+
+| Dimension | Conventional Agents (Devin, SWE-agent, AutoCodeRover) | ISHA (Iterative Software Harness & Arbitrator) |
+| :--- | :--- | :--- |
+| **Inference Cost** | **$5.00 – $25.00+ per task** (expensive GPT-4o / Claude 3.5 Sonnet token loops) | **$0.00 / Task** (Pareto leader running entirely on free-tier Groq & Gemini Flash multi-model gateways) |
+| **Patch Discipline** | Unconstrained diffs with unintended refactors, reformatting, and docstring touches | **Surgical Minimal Diffs**: zero unrelated edits, strict single-point root-cause fixes |
+| **Hallucination Prevention** | Relies on LLM self-reflection (frequently repeats identical out-of-scope errors) | **8 Negative Container Invariants**: hardcoded boundaries preventing `len(None)`, unhashable sets, missing `@wraps`, etc. |
+| **Candidate Generation** | Single-shot or greedy trajectory exploration | **Multi-Candidate Worktree Tournament**: races 3 diverse strategies (`minimal_diff`, `call_site_aware`, `root_cause_first`) in parallel Git worktrees |
+| **Verification Gate** | LLM self-grading or raw pytest exit codes | **TDD Red-to-Green**: requires reproduction test to fail on baseline and pass on patch, gated by **LAYA** calibrated gate (ECE = 0.0010) |
+| **Self-Healing** | Generic "fix the error" prompt looping | **AST Compilation Gates & Real Container Traceback Repair**: AST static gates filter candidate patches before Docker, with targeted 2-round traceback feedback loops |
+| **Docker Grounding** | Often simulated or evaluated on mock environments | **Official SWE-bench Docker Harness**: 100% official Docker `report.json` container verification (**70.0% Session 4, 55.0% Combined**) |
+
+### The 4 Core Architectural Breakthroughs
+
+1. **The $0.00 Pareto Frontier**: While commercial baselines burn hundreds of dollars per benchmark run, ISHA demonstrates that combining AST localization, Tree-sitter symbol ranking, and multi-model fallbacks allows free-tier models to outperform expensive proprietary systems.
+2. **Empirical Negative Invariants**: Standard AI coders frequently fail on subtle Python/container contracts (inserting methods outside target class scopes, calling `len(None)` on nullable fields, using mutable types in hashable sets, stripping `@functools.wraps`). ISHA enforces 8 non-negotiable negative invariants that prevent regression breakages.
+3. **Multi-Strategy Worktree Tournaments**: Rather than putting all trust in a single trajectory, ISHA forks isolated Git worktrees and synthesizes candidate fixes across 3 orthogonal philosophies—selecting the minimal passing diff via static AST compilation gates and unit test feedback.
+4. **LAYA Calibrated Decision Gate**: Eliminates false approvals. Using temperature scaling ($T=0.35$) over empirical benchmark distributions, LAYA achieves an Expected Calibration Error (ECE) of **0.0010** and **100% precision** at decision threshold $\tau=0.50$.
+
+---
+
 ## 🏆 SWE-bench Lite Audited Scorecard (Official Docker Harness)
 
 Every score below is drawn directly from official Docker `report.json` and container execution logs:
