@@ -45,9 +45,13 @@ def apply_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
     if not diff_text or not diff_text.strip():
         return False, "Empty patch"
 
-    root = Path(repo_path)
-    if not root.exists():
-        return False, f"Repo path does not exist: {repo_path}"
+    try:
+        root = Path(repo_path).resolve()
+    except (ValueError, RuntimeError, OSError) as e:
+        return False, f"Invalid repo path: {e}"
+
+    if not root.is_dir():
+        return False, f"Repo path is not a directory: {repo_path}"
 
     # 0) If SEARCH/REPLACE markers are detected, try search/replace first
     if "<<<<<<< SEARCH" in diff_text or "<<<< SEARCH" in diff_text:
@@ -94,8 +98,11 @@ def validate_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
     hunks (verified: corrupt context line -> non-zero)."""
     if not diff_text or not diff_text.strip():
         return False, "Empty patch"
-    root = Path(repo_path)
-    if not (root / ".git").exists():
+    try:
+        root = Path(repo_path).resolve()
+    except (ValueError, RuntimeError, OSError) as e:
+        return False, f"Invalid repo path: {e}"
+    if not root.is_dir() or not (root / ".git").exists():
         return True, "Not a git repo, skipping git apply --check"
     diff = _normalize(diff_text)
     ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn",
