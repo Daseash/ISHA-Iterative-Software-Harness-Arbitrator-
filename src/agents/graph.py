@@ -95,18 +95,27 @@ def approval_node(state, config=None) -> AgentState:
     if state.approved is False:
         return state
 
-    sub_issues = state.sub_issues or []
-    next_idx = state.current_sub_issue_index + 1
-    if next_idx < len(sub_issues):
+    sub_issues = state.sub_issues
+    if not isinstance(sub_issues, list):
+        return state
+
+    curr_idx = state.current_sub_issue_index if state.current_sub_issue_index is not None else 0
+    next_idx = curr_idx + 1
+    if 0 <= next_idx < len(sub_issues):
+        sub_item = sub_issues[next_idx]
+        if isinstance(sub_item, dict):
+            sub_item["status"] = "in_progress"
+            title = sub_item.get("title", f"Sub-issue {next_idx + 1}")
+            desc = sub_item.get("description", "")
+        else:
+            title = f"Sub-issue {next_idx + 1}"
+            desc = str(sub_item) if sub_item is not None else ""
+
         state.current_sub_issue_index = next_idx
-        state.sub_issues[next_idx]["status"] = "in_progress"
         state.retry_count = 0
         state.test_output = ""
         state.regression_test = ""
-        state.issue_text = (
-            f"[Sub-issue {next_idx + 1}/{len(sub_issues)}: {state.sub_issues[next_idx].get('title', '')}]\n"
-            f"{state.sub_issues[next_idx].get('description', '')}"
-        )
+        state.issue_text = f"[Sub-issue {next_idx + 1}/{len(sub_issues)}: {title}]\n{desc}".strip()
     return state
 
 
@@ -145,8 +154,12 @@ def _route_after_approval(state: AgentState) -> str:
     if state.approved is False:
         return "checkpoint"
 
-    sub_issues = state.sub_issues or []
-    if state.current_sub_issue_index + 1 < len(sub_issues):
+    sub_issues = state.sub_issues
+    if not isinstance(sub_issues, list):
+        return "checkpoint"
+
+    curr_idx = state.current_sub_issue_index if state.current_sub_issue_index is not None else 0
+    if curr_idx + 1 < len(sub_issues):
         return "planner"
     return "checkpoint"
 
