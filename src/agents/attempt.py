@@ -12,7 +12,9 @@ from src.agents.nodes import coder_node, sandbox_node
 from src.agents.state import AgentState, coerce_state
 from src.review.critic import critic_node
 
-MAX_RETRIES = 3
+import os
+
+MAX_RETRIES = int(os.getenv("ISHA_MAX_RETRIES", "3"))
 
 
 def attempt_node(state, config: RunnableConfig | None = None) -> dict:

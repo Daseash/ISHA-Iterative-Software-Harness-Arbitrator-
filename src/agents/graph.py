@@ -25,7 +25,7 @@ from src.agents.session_manager import save_session
 from src.agents.state import AgentState, coerce_state
 from src.review.critic import critic_node
 
-MAX_RETRIES = 3
+MAX_RETRIES = int(os.getenv("ISHA_MAX_RETRIES", "3"))
 
 
 def _blast_escalation(state: AgentState) -> str:

@@ -48,13 +48,10 @@ def _bench_mode() -> bool:
     return os.getenv("ISHA_BENCH_MODE", "0") == "1"
 
 
-def _clip(text: str, limit: int) -> str:
-    """Bound a context block.
-
-    Free-tier TPM windows are the binding constraint on a benchmark run, so
-    every context section is budgeted explicitly rather than truncated
-    mid-hunk by a character limit much further downstream.
-    """
+def _clip(text: str | None, limit: int) -> str:
+    """Bound a context block with graceful truncation and type safety."""
+    if limit <= 0:
+        return ""
     text = text or ""
     if len(text) <= limit:
         return text
