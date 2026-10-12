@@ -1,0 +1,398 @@
+{
+  "instance_id": "django__django-13933",
+  "repo": "django/django",
+  "base_commit": "42e8cf47c7ee2db238bf91197ea398126c546741",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544295.3690114
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544301.086224
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544313.3233356
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544316.2835615
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544353.3708334
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544534.687776
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544619.8961053
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791544216.4388103,
+  "elapsed_s": 410.69,
+  "plan": "def to_python(self, value):\n        if value in self.empty_values:\n            return None\n        try:\n            key = self.to_field_name or 'pk'\n            value = self.queryset.get(**{key: value})\n        except (ValueError, TypeError, self.queryset.model.DoesNotExist):\n            raise ValidationError(\n                self.error_messages['invalid_choice'],\n                code='invalid_choice',\n            )\n        return value",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::ModelMultipleChoiceField",
+      "symbols": [
+        "ModelMultipleChoiceField",
+        "__init__",
+        "_set_queryset",
+        "_get_choices"
+      ],
+      "line_range": [
+        1301,
+        1395
+      ],
+      "score": 0.5572,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8935,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: ModelChoiceField; body matches report terms: class, invalid_choice, this, value; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "widget_attrs",
+        "widget_attrs",
+        "widget_attrs"
+      ],
+      "line_range": [
+        58,
+        119
+      ],
+      "score": 0.5403,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9725,
+        "vector": 0.8099,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: widget; body matches report terms: class, this, value, default_error_messages)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringformat",
+      "symbols": [
+        "stringformat",
+        "truncatechars",
+        "truncatechars_html",
+        "truncatewords"
+      ],
+      "line_range": [
+        237,
+        254
+      ],
+      "score": 0.5864,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1948,
+        "vector": 0.7308,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: this, value, error, with)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::next_char",
+      "symbols": [
+        "next_char",
+        "Choice",
+        "normalize",
+        "flatten_result"
+      ],
+      "line_range": [
+        193,
+        213
+      ],
+      "score": 0.6337,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2547,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: class, with, that)"
+    },
+    {
+      "file": "tests/admin_views/models.py",
+      "symbol": "tests/admin_views/models.py::Section",
+      "symbols": [
+        "Section",
+        "Book",
+        "ModelWithStringPrimaryKey",
+        "Color"
+      ],
+      "line_range": [
+        17,
+        34
+      ],
+      "score": 0.4916,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3575,
+        "vector": 0.6428,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: class, model, that)"
+    },
+    {
+      "file": "tests/forms_tests/tests/test_formsets.py",
+      "symbol": "tests/forms_tests/tests/test_formsets.py::BaseFavoriteDrinksFormSet",
+      "symbols": [
+        "BaseFavoriteDrinksFormSet",
+        "clean",
+        "FormsFormsetTestCase",
+        "make_choiceformset"
+      ],
+      "line_range": [
+        28,
+        38
+      ],
+      "score": 0.4731,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2859,
+        "vector": 0.5717,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: class, validationerror, valid, validation)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7087000000000001,
+  "laya_scores": {
+    "fix_quality": 1.5354,
+    "matches_issue": 0.6724,
+    "safe_to_apply": 0.627,
+    "composite": 0.7087000000000001,
+    "secrets_or_danger": 0.0979,
+    "logic_drift": 0.1812,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. No user-controlled code execution or insecure data handling introduced.\n- PERFORMANCE: PASS. Minimal impact on query/execution time by passing one additional parameter.\n- ROBUSTNESS: PASS. Improved error messaging consistency and clarity for invalid inputs.\n- PONYTAIL / YAGNI: PASS. This directly addresses the described bug report without unnecessary abstractions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django import forms\nfrom django.core.exceptions import ValidationError\nfrom django.db import models\nfrom django.test import TestCase\n\n# Define a minimal model for the reproduction\nclass Category(models.Model):\n    name = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = 'test_app'\n\nclass TestModelChoiceFieldInvalidValue(TestCase):\n    def test_invalid_choice_error_message_contains_value(self):\n        \"\"\"\n        Test that ModelChoiceField includes the invalid value in the ValidationError.\n        This reproduces the bug: originally this only returns 'Select a valid choice...'\n        without the value placeholder interpolation.\n        \"\"\"\n        field = forms.ModelChoiceField(queryset=Category.objects.all())\n        invalid_value = \"999\"\n        \n        with pytest.raises(ValidationError) as cm:\n            field.clean(invalid_value)\n        \n        # Check if the error message contains the invalid value\n        self.assertIn(invalid_value, str(cm.value.messages[0]))\n        self.assertEqual(cm.value.code, 'invalid_choice')\n\n    def test_empty_input_returns_none(self):\n        \"\"\"\n        Test that empty values return None rather than raising an error,\n        as expected by form field behavior.\n        \"\"\"\n        field = forms.ModelChoiceField(queryset=Category.objects.all(), required=False)\n        self.assertIsNone(field.clean(\"\"))\n        self.assertIsNone(field.clean(None))\n\n    def test_invalid_type_raises_error(self):\n        \"\"\"\n        Ensure that passing a non-compatible type (like a list) still \n        raises the invalid_choice error.\n        \"\"\"\n        field = forms.ModelChoiceField(queryset=Category.objects.all())\n        with pytest.raises(ValidationError) as cm:\n            field.clean([\"not\", \"a\", \"pk\"])\n        \n        self.assertEqual(cm.value.code, 'invalid_choice')\n\n    def test_non_existent_pk_value(self):\n        \"\"\"\n        Edge case: ensure that even if the ID looks valid (e.g. integer),\n        but isn't in the database, it still reports the invalid value.\n        \"\"\"\n        field = forms.ModelChoiceField(queryset=Category.objects.all())\n        # Use an integer that definitely doesn't exist\n        invalid_pk = 555\n        with pytest.raises(ValidationError) as cm:\n            field.clean(invalid_pk)\n            \n        self.assertIn(str(invalid_pk), str(cm.value.messages[0]))",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1245,6 +1245,7 @@\n         except (ValueError, TypeError, self.queryset.model.DoesNotExist):\n             raise ValidationError(\n                 self.error_messages['invalid_choice'],\n                 code='invalid_choice',\n+                params={'value': value},\n             )\n         return value",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-2c2paxz_",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.5354,
+        "matches_issue": 0.6724,
+        "safe_to_apply": 0.627,
+        "composite": 0.7087000000000001,
+        "secrets_or_danger": 0.0997,
+        "logic_drift": 0.1719,
+        "flagged": false
+      },
+      "laya_combined": 0.7087,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 118.82,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1245,7 +1245,8 @@\n         except (ValueError, TypeError, self.queryset.model.DoesNotExist):\n             raise ValidationError(\n                 self.error_messages['invalid_choice'],\n                 code='invalid_choice',\n+                params={'value': value},\n             )\n         return value\n \n     def prepare_value(self, value):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8ctsgm_3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5354,
+        "matches_issue": 0.6724,
+        "safe_to_apply": 0.627,
+        "composite": 0.7087000000000001,
+        "secrets_or_danger": 0.0997,
+        "logic_drift": 0.1719,
+        "flagged": false
+      },
+      "laya_combined": 0.7087,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 127.28,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1245,6 +1245,7 @@\n         except (ValueError, TypeError, self.queryset.model.DoesNotExist):\n             raise ValidationError(\n                 self.error_messages['invalid_choice'],\n                 code='invalid_choice',\n+                params={'value': value},\n             )\n         return value",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-uzufaboz",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5354,
+        "matches_issue": 0.6724,
+        "safe_to_apply": 0.627,
+        "composite": 0.7087000000000001,
+        "secrets_or_danger": 0.0979,
+        "logic_drift": 0.1812,
+        "flagged": false
+      },
+      "laya_combined": 0.7087,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 124.56,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1245,6 +1245,7 @@\n         except (ValueError, TypeError, self.queryset.model.DoesNotExist):\n             raise ValidationError(\n                 self.error_messages['invalid_choice'],\n                 code='invalid_choice',\n+                params={'value': value},\n             )\n         return value",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-2c2paxz_",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/forms/models.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.5354,
+      "matches_issue": 0.6724,
+      "safe_to_apply": 0.627,
+      "composite": 0.7087000000000001,
+      "secrets_or_danger": 0.0997,
+      "logic_drift": 0.1719,
+      "flagged": false
+    },
+    "laya_combined": 0.7087,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0073,
+    "rank_reason": "logistic",
+    "elapsed_s": 118.82,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex 422bc5d..b6637ed 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1367,6 +1367,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n                 raise ValidationError(\n                     self.error_messages['invalid_choice'],\n                     code='invalid_choice',\n+                params={'value': value},\n                     params={'value': val},\n                 )\n         return qs\n",
+  "offline_calls": 0
+}

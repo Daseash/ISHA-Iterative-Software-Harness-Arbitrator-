@@ -1,0 +1,14 @@
+diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py
+index 872a4c9..b3303b8 100644
+--- a/django/db/models/fields/related_descriptors.py
++++ b/django/db/models/fields/related_descriptors.py
+@@ -204,6 +204,9 @@ class ForwardManyToOneDescriptor:
+         """
+         Set the related instance through the forward relation.
+ 
++            if value is not None:
++                # If we're setting the object, also update the PK field.
++                setattr(instance, self.field.attname, value.pk)
+         With the example above, when setting ``child.parent = parent``:
+ 
+         - ``self`` is the descriptor managing the ``parent`` attribute

@@ -1,0 +1,13 @@
+--- a/django/db/models/sql/datastructures.py
++++ b/django/db/models/sql/datastructures.py
+@@ -46,6 +46,11 @@
+         # Along which field (or ForeignObjectRel in the reverse join case)
+         self.join_field = join_field
+         # Is this join nullabled?
++        if not isinstance(nullable, bool):
++            raise TypeError(
++                "__isnull lookup requires a boolean value; got %r of type %s"
++                % (nullable, type(nullable).__name__)
++            )
+         self.nullable = nullable
+         self.filtered_relation = filtered_relation

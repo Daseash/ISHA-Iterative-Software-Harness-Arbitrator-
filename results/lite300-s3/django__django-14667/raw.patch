@@ -1,0 +1,11 @@
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1220,7 +1220,10 @@
+         clone = self._chain()
+         if fields == (None,):
+             clone.query.clear_deferred_loading()
++        elif clone.query.deferred_loading[1]:
++            clone.query.deferred_loading[0].update(fields)
+         else:
+             clone.query.add_deferred_loading(fields)
+         return clone

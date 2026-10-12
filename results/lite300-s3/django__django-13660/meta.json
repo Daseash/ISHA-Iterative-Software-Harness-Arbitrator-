@@ -1,0 +1,403 @@
+{
+  "instance_id": "django__django-13660",
+  "repo": "django/django",
+  "base_commit": "50c3ac6fa9b7c8a94a6d1dc87edf775e3bc4d575",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530754.4896688
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530758.4398346
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530767.700327
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530770.310326
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530791.0535266
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791530979.354922
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/commands/shell.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/commands/shell.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791530683.1398528,
+  "elapsed_s": 294.41,
+  "plan": "def handle(self, **options):\n        # Execute the command and exit.\n        if options['command']:\n            exec(options['command'], {})\n            return\n\n        # Execute stdin if it has anything to read and exit.\n        # Not supported on Windows due to select.select() limitations.\n        if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n            exec(sys.stdin.read(), {})\n            return",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/management/commands/shell.py",
+      "symbol": "django/core/management/commands/shell.py::handle",
+      "symbols": [
+        "handle",
+        "Command",
+        "add_arguments",
+        "ipython"
+      ],
+      "line_range": [
+        84,
+        103
+      ],
+      "score": 0.911,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 1.0,
+        "vector": 0.9253,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: stdin, execute, exec, supported; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "execute",
+        "handle",
+        "handle"
+      ],
+      "line_range": [
+        337,
+        372
+      ],
+      "score": 0.7655,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6521,
+        "vector": 0.4375,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: argv; body matches report terms: execute, exec, command, python; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "__init__",
+        "fetch_command",
+        "execute"
+      ],
+      "line_range": [
+        416,
+        419
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5134,
+        "vector": 0.6722,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: argv; body matches report terms: execute, exec, command, line; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/template/smartif.py",
+      "symbol": "django/template/smartif.py::prefix",
+      "symbols": [
+        "prefix",
+        "TokenBase",
+        "nud",
+        "infix"
+      ],
+      "line_range": [
+        68,
+        89
+      ],
+      "score": 0.7171,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.163,
+        "vector": 0.5738,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: that, second, base; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/backends/base/base.py",
+      "symbol": "django/db/backends/base/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "timezone",
+        "create_cursor",
+        "connect"
+      ],
+      "line_range": [
+        48,
+        109
+      ],
+      "score": 0.7148,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2666,
+        "vector": 0.8179,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: containing, execute, exec, here)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::Origin",
+      "symbols": [
+        "Origin",
+        "__init__",
+        "__init__",
+        "render"
+      ],
+      "line_range": [
+        116,
+        139
+      ],
+      "score": 0.7032,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4061,
+        "vector": 0.4307,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: init__, module, name)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.705725,
+  "laya_scores": {
+    "fix_quality": 1.4684,
+    "matches_issue": 0.7126,
+    "safe_to_apply": 0.6419,
+    "composite": 0.705725,
+    "secrets_or_danger": 0.5056,
+    "logic_drift": 0.2084,
+    "flagged": true,
+    "guardrail_findings": [
+      "exec()"
+    ],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: FAIL, passing an empty dictionary as globals to `exec()` ignores the current module context and restricts access to builtins, but more importantly, `exec` on user-supplied input is inherently unsafe.\n- PERFORMANCE: PASS, minimal impact on existing execution path.\n- ROBUSTNESS: FAIL, using `exec(cmd, {})` forces the code to run without access to the global scope (including `django` imports), which breaks existing behavior and does not resolve the `NameError` described in the report.\n- PONYTAIL / YAGNI: PASS, scope of change is contained.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import subprocess\nimport sys\nimport pytest\n\ndef run_django_shell_command(code):\n    \"\"\"Helper to run 'python -m django shell -c' with the provided code string.\"\"\"\n    cmd = [sys.executable, \"-m\", \"django\", \"shell\", \"-c\", code]\n    result = subprocess.run(\n        cmd,\n        capture_output=True,\n        text=True,\n        env={**os.environ, \"PYTHONPATH\": \".\"}\n    )\n    return result\n\n@pytest.mark.parametrize(\"code, expected_output\", [\n    (\n        \"import django; print(django.get_version())\",\n        \"2.2.16\"\n    ),\n    (\n        \"import django; def f(): print(django.get_version()); f()\",\n        \"2.2.16\"\n    ),\n])\ndef test_shell_command_imports_and_functions(code, expected_output):\n    \"\"\"\n    Reproduction test: Verify that executing code containing imports \n    and function definitions does not raise a NameError.\n    \"\"\"\n    result = run_django_shell_command(code)\n    assert result.returncode == 0, f\"Command failed: {result.stderr}\"\n    assert result.stdout.strip() == expected_output\n\ndef test_shell_command_empty_input():\n    \"\"\"Test that empty string input does not raise error.\"\"\"\n    result = run_django_shell_command(\"\")\n    assert result.returncode == 0\n\ndef test_shell_command_invalid_syntax_raises_error():\n    \"\"\"Test that invalid python code correctly propagates SyntaxError.\"\"\"\n    result = run_django_shell_command(\"def incomplete_function(\")\n    assert result.returncode != 0\n    assert \"SyntaxError\" in result.stderr\n\ndef test_shell_command_variable_persistence():\n    \"\"\"Verify that state persists correctly within the exec context.\"\"\"\n    code = \"x = 10; print(x + 5)\"\n    result = run_django_shell_command(code)\n    assert result.returncode == 0\n    assert result.stdout.strip() == \"15\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/commands/shell.py b/django/core/management/commands/shell.py\nindex 2b306a579e..571d120467 100644\n--- a/django/core/management/commands/shell.py\n+++ b/django/core/management/commands/shell.py\n@@ -84,13 +84,13 @@ class Command(BaseCommand):\n     def handle(self, **options):\n         # Execute the command and exit.\n         if options['command']:\n-            exec(options['command'])\n+            exec(options['command'], {})\n             return\n \n         # Execute stdin if it has anything to read and exit.\n         # Not supported on Windows due to select.select() limitations.\n         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n-            exec(sys.stdin.read())\n+            exec(sys.stdin.read(), {})\n             return\n \n         available_shells = [options['interface']] if options['interface'] else self.shells\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13660-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/commands/shell.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/commands/shell.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4684,
+        "matches_issue": 0.7126,
+        "safe_to_apply": 0.6419,
+        "composite": 0.705725,
+        "secrets_or_danger": 0.5056,
+        "logic_drift": 0.2084,
+        "flagged": true
+      },
+      "laya_combined": 0.7057,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 7.42,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/management/commands/shell.py b/django/core/management/commands/shell.py\nindex 2b306a579e..571d120467 100644\n--- a/django/core/management/commands/shell.py\n+++ b/django/core/management/commands/shell.py\n@@ -84,13 +84,13 @@ class Command(BaseCommand):\n     def handle(self, **options):\n         # Execute the command and exit.\n         if options['command']:\n-            exec(options['command'])\n+            exec(options['command'], {})\n             return\n \n         # Execute stdin if it has anything to read and exit.\n         # Not supported on Windows due to select.select() limitations.\n         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n-            exec(sys.stdin.read())\n+            exec(sys.stdin.read(), {})\n             return\n \n         available_shells = [options['interface']] if options['interface'] else self.shells\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13660-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/commands/shell.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/commands/shell.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4684,
+        "matches_issue": 0.7126,
+        "safe_to_apply": 0.6419,
+        "composite": 0.705725,
+        "secrets_or_danger": 0.5056,
+        "logic_drift": 0.2084,
+        "flagged": true
+      },
+      "laya_combined": 0.7057,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 51.57,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/commands/shell.py b/django/core/management/commands/shell.py\nindex 2b306a579e..571d120467 100644\n--- a/django/core/management/commands/shell.py\n+++ b/django/core/management/commands/shell.py\n@@ -84,13 +84,13 @@ class Command(BaseCommand):\n     def handle(self, **options):\n         # Execute the command and exit.\n         if options['command']:\n-            exec(options['command'])\n+            exec(options['command'], {})\n             return\n \n         # Execute stdin if it has anything to read and exit.\n         # Not supported on Windows due to select.select() limitations.\n         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n-            exec(sys.stdin.read())\n+            exec(sys.stdin.read(), {})\n             return\n \n         available_shells = [options['interface']] if options['interface'] else self.shells\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13660-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/commands/shell.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/commands/shell.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4684,
+        "matches_issue": 0.7126,
+        "safe_to_apply": 0.6419,
+        "composite": 0.705725,
+        "secrets_or_danger": 0.5056,
+        "logic_drift": 0.2084,
+        "flagged": true
+      },
+      "laya_combined": 0.7057,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 55.02,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/core/management/commands/shell.py b/django/core/management/commands/shell.py\nindex 2b306a579e..571d120467 100644\n--- a/django/core/management/commands/shell.py\n+++ b/django/core/management/commands/shell.py\n@@ -84,13 +84,13 @@ class Command(BaseCommand):\n     def handle(self, **options):\n         # Execute the command and exit.\n         if options['command']:\n-            exec(options['command'])\n+            exec(options['command'], {})\n             return\n \n         # Execute stdin if it has anything to read and exit.\n         # Not supported on Windows due to select.select() limitations.\n         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n-            exec(sys.stdin.read())\n+            exec(sys.stdin.read(), {})\n             return\n \n         available_shells = [options['interface']] if options['interface'] else self.shells\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13660-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/management/commands/shell.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/management/commands/shell.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4684,
+      "matches_issue": 0.7126,
+      "safe_to_apply": 0.6419,
+      "composite": 0.705725,
+      "secrets_or_danger": 0.5056,
+      "logic_drift": 0.2084,
+      "flagged": true
+    },
+    "laya_combined": 0.7057,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 7.42,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/management/commands/shell.py b/django/core/management/commands/shell.py\nindex 2b306a5..571d120 100644\n--- a/django/core/management/commands/shell.py\n+++ b/django/core/management/commands/shell.py\n@@ -84,13 +84,13 @@ class Command(BaseCommand):\n     def handle(self, **options):\n         # Execute the command and exit.\n         if options['command']:\n-            exec(options['command'])\n+            exec(options['command'], {})\n             return\n \n         # Execute stdin if it has anything to read and exit.\n         # Not supported on Windows due to select.select() limitations.\n         if sys.platform != 'win32' and not sys.stdin.isatty() and select.select([sys.stdin], [], [], 0)[0]:\n-            exec(sys.stdin.read())\n+            exec(sys.stdin.read(), {})\n             return\n \n         available_shells = [options['interface']] if options['interface'] else self.shells\n",
+  "offline_calls": 0
+}

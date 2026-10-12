@@ -1,0 +1,360 @@
+{
+  "instance_id": "django__django-14238",
+  "repo": "django/django",
+  "base_commit": "30e123ed351317b7527f632b3b7dc4e81e850449",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534727.239218
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534734.9822009
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534758.3835936
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534771.4790764
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534805.7690814
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791534983.2743766
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791534621.6950126,
+  "elapsed_s": 366.98,
+  "plan": "def __subclasscheck__(cls, subclass):\n        if subclass in (AutoField, BigAutoField, SmallAutoField):\n            return True\n        return issubclass(subclass, (AutoField, BigAutoField, SmallAutoField))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_subclasses",
+      "symbols": [
+        "_subclasses",
+        "__subclasscheck__",
+        "BigAutoField",
+        "_load_field"
+      ],
+      "line_range": [
+        2520,
+        2522
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4473,
+        "vector": 0.8349,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: classes, subclasses, subclass, autofield)"
+    },
+    {
+      "file": "django/apps/registry.py",
+      "symbol": "django/apps/registry.py::populate",
+      "symbols": [
+        "populate",
+        "__init__",
+        "check_apps_ready",
+        "check_models_ready"
+      ],
+      "line_range": [
+        61,
+        126
+      ],
+      "score": 0.8222,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6835,
+        "vector": 0.8446,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: import_models, config, check, most; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/apps/config.py",
+      "symbol": "django/apps/config.py::import_models",
+      "symbols": [
+        "import_models",
+        "AppConfig",
+        "__init__",
+        "_is_default_auto_field_overridden"
+      ],
+      "line_range": [
+        293,
+        301
+      ],
+      "score": 0.8341,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7818,
+        "vector": 0.7391,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: config, apps, module, this; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "__init__",
+        "execute",
+        "find_commands"
+      ],
+      "line_range": [
+        416,
+        419
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7025,
+        "vector": 0.5882,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: argv; body matches report terms: execute, manage, line, utility; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "execute",
+        "CommandError",
+        "SystemCheckError"
+      ],
+      "line_range": [
+        337,
+        372
+      ],
+      "score": 0.7723,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.61,
+        "vector": 0.5819,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: argv; body matches report terms: execute, config, check, pass)"
+    },
+    {
+      "file": "django/__init__.py",
+      "symbol": "django/__init__.py::setup",
+      "symbols": [
+        "setup"
+      ],
+      "line_range": [
+        8,
+        24
+      ],
+      "score": 0.8418,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1537,
+        "vector": 0.0284,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: config, settings, django, apps; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.db.models.fields import AutoField, BigAutoField, SmallAutoField\n\nclass MyBigAutoField(models.BigAutoField):\n    pass\n\nclass MySmallAutoField(models.SmallAutoField):\n    pass\n\nclass MyAutoField(models.AutoField):\n    pass\n\ndef test_subclass_check_reproduction():\n    \"\"\"\n    Verify that custom subclasses of BigAutoField are not recognized \n    as AutoField subclasses by the metaclass.\n    \"\"\"\n    # This assertion is currently expected to FAIL (return False)\n    # until the __subclasscheck__ is fixed.\n    assert issubclass(MyBigAutoField, AutoField), \\\n        \"MyBigAutoField should be recognized as a subclass of AutoField\"\n\n@pytest.mark.parametrize(\"custom_field_cls\", [\n    MyBigAutoField,\n    MySmallAutoField,\n    MyAutoField,\n])\ndef test_all_auto_field_subclasses(custom_field_cls):\n    \"\"\"\n    Ensure all standard AutoField types and their custom subclasses\n    are correctly validated.\n    \"\"\"\n    assert issubclass(custom_field_cls, AutoField)\n\ndef test_invalid_subclass_check():\n    \"\"\"\n    Ensure non-AutoField classes do not pass the check.\n    \"\"\"\n    class NotAnAutoField(models.Field):\n        pass\n    \n    assert not issubclass(NotAnAutoField, AutoField), \\\n        \"Non-AutoField subclasses must not be identified as AutoField subclasses\"\n\ndef test_base_class_check():\n    \"\"\"\n    Ensure the base classes themselves are identified as instances/subclasses.\n    \"\"\"\n    assert issubclass(AutoField, AutoField)\n    assert issubclass(BigAutoField, AutoField)\n    assert issubclass(SmallAutoField, AutoField)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2518,7 +2518,7 @@\n class AutoFieldMeta(type):\n     def __subclasscheck__(cls, subclass):\n-        if subclass in (AutoField, BigAutoField, SmallAutoField):\n+        if subclass in (AutoField, BigAutoField, SmallAutoField) or issubclass(subclass, (AutoField, BigAutoField, SmallAutoField)):\n             return True\n-        return issubclass(subclass, (AutoField, BigAutoField, SmallAutoField))\n+        return super().__subclasscheck__(subclass)\n \n \n class AutoField(AutoFieldMeta, models.Field):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14238-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2591,
+        "matches_issue": 0.5943,
+        "safe_to_apply": 0.5263,
+        "composite": 0.594925,
+        "secrets_or_danger": 0.1313,
+        "logic_drift": 0.2991,
+        "flagged": false
+      },
+      "laya_combined": 0.5949,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 122.75,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2521,6 +2521,6 @@\n     def __subclasscheck__(cls, subclass):\n-        if subclass in (AutoField, BigAutoField, SmallAutoField):\n+        if subclass in (AutoField, BigAutoField, SmallAutoField) or issubclass(subclass, (AutoField, BigAutoField, SmallAutoField)):\n             return True\n-        return issubclass(subclass, (AutoField, BigAutoField, SmallAutoField))\n+        return False",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14238-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2326,
+        "matches_issue": 0.594,
+        "safe_to_apply": 0.5274,
+        "composite": 0.5885,
+        "secrets_or_danger": 0.168,
+        "logic_drift": 0.2139,
+        "flagged": false
+      },
+      "laya_combined": 0.5885,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 120.07,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2518,7 +2518,7 @@\n     def __subclasscheck__(cls, subclass):\n-        if subclass is AutoField:\n+        if subclass in (AutoField, BigAutoField, SmallAutoField):\n             return True\n-        return issubclass(subclass, AutoField)\n+        return issubclass(subclass, (AutoField, BigAutoField, SmallAutoField))\n \n \n class AutoField(AutoFieldMeta, models.Field, metaclass=AutoFieldMeta):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14238-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1718,
+        "matches_issue": 0.6047,
+        "safe_to_apply": 0.5587,
+        "composite": 0.5838,
+        "secrets_or_danger": 0.1335,
+        "logic_drift": 0.264,
+        "flagged": false
+      },
+      "laya_combined": 0.5838,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.71,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2518,7 +2518,7 @@\n class AutoFieldMeta(type):\n     def __subclasscheck__(cls, subclass):\n-        if subclass in (AutoField, BigAutoField, SmallAutoField):\n+        if subclass in (AutoField, BigAutoField, SmallAutoField) or issubclass(subclass, (AutoField, BigAutoField, SmallAutoField)):\n             return True\n-        return issubclass(subclass, (AutoField, BigAutoField, SmallAutoField))\n+        return super().__subclasscheck__(subclass)\n \n \n class AutoField(AutoFieldMeta, models.Field):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14238-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.2591,
+      "matches_issue": 0.5943,
+      "safe_to_apply": 0.5263,
+      "composite": 0.594925,
+      "secrets_or_danger": 0.1313,
+      "logic_drift": 0.2991,
+      "flagged": false
+    },
+    "laya_combined": 0.5949,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.008,
+    "rank_reason": "logistic",
+    "elapsed_s": 122.75,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

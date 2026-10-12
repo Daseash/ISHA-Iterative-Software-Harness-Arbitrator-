@@ -60,7 +60,7 @@ def git_push_predictions(session_name: str) -> None:
         print(f"[pipeline] Git commit/push error: {exc}")
 
 
-def run_session(session_num: int) -> None:
+def run_session(session_num: int, do_eval: bool = False) -> None:
     session_name = f"lite300-s{session_num}"
     slice_file = ROOT / "data" / "slices" / f"{session_name}.json"
     pred_file = ROOT / "results" / session_name / "predictions.json"
@@ -107,6 +107,15 @@ def run_session(session_num: int) -> None:
         rescue_slice = ROOT / "data" / "slices" / f"{session_name}-rescue.json"
         rescue_slice.write_text(json.dumps(unpatched, indent=2), encoding="utf-8")
 
+        # 3b. Check if container failure feedback exists or can be generated
+        feedback_file = ROOT / "data" / "feedback" / f"{session_name}-feedback.json"
+        if not feedback_file.exists():
+            try:
+                from scripts.self_correct_docker import generate_session_feedback
+                generate_session_feedback(session_name)
+            except Exception:
+                pass
+
         rescue_cmd = [
             PYTHON, "-m", "src.bench.runner",
             "--run-id", rescue_run_id,
@@ -116,6 +125,10 @@ def run_session(session_num: int) -> None:
             "--timeout", "500",
             "--max-retries", "2",
         ]
+        if feedback_file.is_file():
+            rescue_cmd.extend(["--notes-file", str(feedback_file)])
+            print(f"[pipeline] Injected failure feedback notes from {feedback_file.name}", flush=True)
+
         run_cmd(rescue_cmd)
 
         # Merge rescued patches into base predictions
@@ -131,7 +144,20 @@ def run_session(session_num: int) -> None:
         yield_pct = (non_empty / total * 100) if total > 0 else 0.0
         print(f"\n[pipeline] {session_name} Final Post-Rescue Yield: {non_empty}/{total} ({yield_pct:.1f}%)", flush=True)
 
-    # 4. Commit and Push
+    # 4. Official Docker Harness Evaluation (Optional / On-Demand)
+    if do_eval:
+        print(f"\n[pipeline] Launching official Docker harness evaluation for {session_name}...", flush=True)
+        eval_cmd = [
+            PYTHON, "-m", "src.bench.harness_eval",
+            "--run-id", session_name,
+            "--max-workers", "1",
+        ]
+        run_cmd(eval_cmd)
+        # Output live scoreboard
+        score_cmd = [PYTHON, "scripts/score.py"]
+        run_cmd(score_cmd)
+
+    # 5. Commit and Push predictions
     git_push_predictions(session_name)
     print(f"[pipeline] Session {session_num} complete! Clean patches locked: {non_empty}/{total}.", flush=True)
 
@@ -141,6 +167,7 @@ def main() -> None:
     parser.add_argument("--start", type=int, default=5, help="Starting session number (e.g. 5)")
     parser.add_argument("--end", type=int, default=10, help="Ending session number (e.g. 10)")
     parser.add_argument("--cooldown", type=int, default=60, help="Cooldown in seconds between sessions")
+    parser.add_argument("--eval", action="store_true", help="Automatically trigger official Docker harness evaluation")
     args = parser.parse_args()
 
     print("=" * 70, flush=True)
@@ -148,7 +175,7 @@ def main() -> None:
     print("=" * 70, flush=True)
 
     for s in range(args.start, args.end + 1):
-        run_session(s)
+        run_session(s, do_eval=args.eval)
         if s < args.end:
             print(f"\n[pipeline] Cooldown: waiting {args.cooldown}s before starting Session {s + 1}...", flush=True)
             time.sleep(args.cooldown)

@@ -1,0 +1,42 @@
+diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py
+index febaadbb5b..9abe87e303 100644
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -136,8 +136,19 @@ class RelatedField(FieldCacheMixin, Field):
+             ]
+         return []
+ 
+-    def _check_related_query_name_is_valid(self):
+-        if self.remote_field.is_hidden():
++    def _check_symmetrical_and_related_name(self):
++        if self.remote_field.symmetrical and self.remote_field.related_name:
++            return [
++                checks.Error(
++                    "You cannot specify a related_name on a symmetrical ManyToManyField.",
++                    obj=self,
++                    id='fields.E340',
++                )
++            ]
++        return []
++
++    def _check_through_fields(self):
++        if not self.remote_field.through:
+             return []
+         rel_query_name = self.related_query_name()
+         errors = []
+@@ -1210,10 +1221,11 @@ class ManyToManyField(RelatedField):
+     def check(self, **kwargs):
+         return [
+             *super().check(**kwargs),
+-            *self._check_unique(**kwargs),
+-            *self._check_relationship_model(**kwargs),
+-            *self._check_ignored_options(**kwargs),
+-            *self._check_table_uniqueness(**kwargs),
++            *self._check_unique(),
++            *self._check_relationship_model(),
++            *self._check_ignored_options(),
++            *self._check_symmetrical_and_related_name(),
++            *self._check_through_fields(),
+         ]
+ 
+     def _check_unique(self, **kwargs):

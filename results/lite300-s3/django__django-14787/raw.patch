@@ -1,0 +1,11 @@
+--- a/django/utils/decorators.py
++++ b/django/utils/decorators.py
+@@ -107,8 +107,8 @@
+     if not hasattr(decorator, '__iter__'):
+         update_wrapper(_dec, decorator)
+     # Change the name to aid debugging.
+-    obj = decorator if hasattr(decorator, '__name__') else decorator.__class__
+-    _dec.__name__ = 'method_decorator(%s)' % obj.__name__
++    name = getattr(decorator, '__name__', decorator.__class__.__name__)
++    _dec.__name__ = 'method_decorator(%s)' % name
+     return _dec

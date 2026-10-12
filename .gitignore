@@ -71,5 +71,11 @@ clean_critic.py
 
 # Master plan document (local only)
 plan.md
+**/plan.md
+
+# Scratch scripts and backups
+scratch/
+*.backup
+*.bak
 
 

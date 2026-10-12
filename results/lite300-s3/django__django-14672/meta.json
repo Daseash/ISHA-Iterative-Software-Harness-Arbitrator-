@@ -1,0 +1,398 @@
+{
+  "instance_id": "django__django-14672",
+  "repo": "django/django",
+  "base_commit": "00ea883ef56fb5e092cbe4a6f7ff2e7470886ac4",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537371.4997997
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537378.957224
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537392.4882138
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537395.5569997
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537442.5987706
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537614.83609
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/reverse_related.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/reverse_related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791537256.429715,
+  "elapsed_s": 366.36,
+  "plan": "@property\n    def identity(self):\n        return (\n            self.field,\n            self.model,\n            self.related_name,\n            self.related_query_name,\n            make_hashable(self.limit_choices_to),\n            self.parent_link,\n            self.on_delete,\n            self.symmetrical,\n            self.multiple,\n            make_hashable(self.through_fields),\n        )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/reverse_related.py",
+      "symbol": "django/db/models/fields/reverse_related.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        39,
+        51
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.958,
+        "vector": 0.2363,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: on_delete, related_name, to; body matches report terms: related_name, init__, limit_choices_to, model)"
+    },
+    {
+      "file": "django/utils/hashable.py",
+      "symbol": "django/utils/hashable.py::make_hashable",
+      "symbols": [
+        "make_hashable"
+      ],
+      "line_range": [
+        4,
+        24
+      ],
+      "score": 0.8029,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6101,
+        "vector": 0.3571,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: make, typeerror, fails, hashable; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::_check_indexes",
+      "symbols": [
+        "_check_indexes",
+        "_check_long_column_names",
+        "_check_constraints",
+        "subclass_exception"
+      ],
+      "line_range": [
+        1635,
+        1722
+      ],
+      "score": 0.8065,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7762,
+        "vector": 0.5207,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; signature parameter matches report: databases; body matches report terms: check, core, meta, errors)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "load_command_class",
+        "__init__",
+        "fetch_command"
+      ],
+      "line_range": [
+        416,
+        419
+      ],
+      "score": 0.9522,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.377,
+        "vector": 0.4833,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: argv; body matches report terms: execute, manage, line, utility; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "check",
+        "__getattr__",
+        "execute"
+      ],
+      "line_range": [
+        337,
+        372
+      ],
+      "score": 0.7065,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5707,
+        "vector": 0.1149,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; signature parameter matches report: argv; body matches report terms: default, execute, check, call; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "RegexField",
+        "EmailField",
+        "__init__"
+      ],
+      "line_range": [
+        211,
+        222
+      ],
+      "score": 0.6962,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2305,
+        "vector": 0.2589,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: max_length; body matches report terms: init__, max_length, null, kwargs)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.79265,
+  "laya_scores": {
+    "fix_quality": 1.6276,
+    "matches_issue": 0.8309,
+    "safe_to_apply": 0.7121,
+    "composite": 0.79265,
+    "secrets_or_danger": 0.1749,
+    "logic_drift": 0.2546,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change ensures attribute types are compatible with hashing requirements.\n- PERFORMANCE: PASS - The impact of `make_hashable` on a small tuple during object initialization is negligible.\n- ROBUSTNESS: PASS - Correctly addresses a missing conversion that caused unhashable type errors in proxy model comparisons.\n- PONYTAIL / YAGNI: PASS - This is a necessary fix to maintain consistency with `ForeignObjectRel` identity requirements.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.core.checks import run_checks, Tags\nfrom django.apps import apps\n\n@pytest.mark.django_db\ndef test_manytomanyrel_through_fields_hash_bug():\n    \"\"\"\n    Test that ManyToManyRel handles 'through_fields' as a list without\n    raising a TypeError during model checks.\n    \"\"\"\n    class Parent(models.Model):\n        name = models.CharField(max_length=256)\n\n        class Meta:\n            app_label = 'test_app'\n\n    class ProxyParent(Parent):\n        class Meta:\n            proxy = True\n            app_label = 'test_app'\n\n    class Child(models.Model):\n        parent = models.ForeignKey(Parent, on_delete=models.CASCADE)\n        many_to_many_field = models.ManyToManyField(\n            to=Parent,\n            through=\"ManyToManyModel\",\n            through_fields=['child', 'parent'],\n            related_name=\"something\"\n        )\n        class Meta:\n            app_label = 'test_app'\n\n    class ManyToManyModel(models.Model):\n        parent = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name='+')\n        child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='+')\n        second_child = models.ForeignKey(Child, on_delete=models.CASCADE, null=True, default=None)\n        class Meta:\n            app_label = 'test_app'\n\n    # The bug manifests when running model checks on a proxy model.\n    # This should execute without raising TypeError: unhashable type: 'list'\n    errors = run_checks(app_configs=[apps.get_app_config('test_app')], tags=[Tags.models])\n    assert not any(e.is_critical() for e in errors)\n\n@pytest.mark.django_db\ndef test_through_fields_none():\n    \"\"\"\n    Verify that through_fields=None (default) remains hashable.\n    \"\"\"\n    class Source(models.Model):\n        class Meta:\n            app_label = 'test_app'\n    \n    class Target(models.Model):\n        m2m = models.ManyToManyField(Source)\n        class Meta:\n            app_label = 'test_app'\n\n    # Should not raise\n    run_checks(app_configs=[apps.get_app_config('test_app')])\n\n@pytest.mark.django_db\ndef test_through_fields_tuple():\n    \"\"\"\n    Verify that through_fields as a tuple remains hashable.\n    \"\"\"\n    class Source(models.Model):\n        class Meta:\n            app_label = 'test_app'\n\n    class Through(models.Model):\n        s = models.ForeignKey(Source, on_delete=models.CASCADE)\n        t = models.ForeignKey('Target', on_delete=models.CASCADE)\n        class Meta:\n            app_label = 'test_app'\n\n    class Target(models.Model):\n        m2m = models.ManyToManyField(\n            Source, \n            through=Through, \n            through_fields=('s', 't')\n        )\n        class Meta:\n            app_label = 'test_app'\n\n    # Should not raise\n    run_checks(app_configs=[apps.get_app_config('test_app')])",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\nindex ccc2223a5f..9088a76b1f 100644\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):\n             self.on_delete,\n             self.symmetrical,\n             self.multiple,\n+            make_hashable(getattr(self, 'through_fields', None)),\n         )\n \n     def __eq__(self, other):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14672-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/reverse_related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/reverse_related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6276,
+        "matches_issue": 0.8309,
+        "safe_to_apply": 0.7121,
+        "composite": 0.79265,
+        "secrets_or_danger": 0.1749,
+        "logic_drift": 0.2546,
+        "flagged": false
+      },
+      "laya_combined": 0.7926,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.21,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\nindex ccc2223a5f..0d0db383d0 100644\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):\n             self.on_delete,\n             self.symmetrical,\n             self.multiple,\n+            make_hashable(self.through_fields),\n         )\n \n     def __eq__(self, other):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14672-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/reverse_related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/reverse_related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.7405,
+        "matches_issue": 0.8609,
+        "safe_to_apply": 0.7326,
+        "composite": 0.8335,
+        "secrets_or_danger": 0.1522,
+        "logic_drift": 0.2684,
+        "flagged": false
+      },
+      "laya_combined": 0.8335,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 106.33,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\nindex ccc2223a5f..0d0db383d0 100644\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):\n             self.on_delete,\n             self.symmetrical,\n             self.multiple,\n+            make_hashable(self.through_fields),\n         )\n \n     def __eq__(self, other):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14672-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/reverse_related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/reverse_related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7405,
+        "matches_issue": 0.8609,
+        "safe_to_apply": 0.7326,
+        "composite": 0.8335,
+        "secrets_or_danger": 0.1522,
+        "logic_drift": 0.2684,
+        "flagged": false
+      },
+      "laya_combined": 0.8335,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.61,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\nindex ccc2223a5f..9088a76b1f 100644\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):\n             self.on_delete,\n             self.symmetrical,\n             self.multiple,\n+            make_hashable(getattr(self, 'through_fields', None)),\n         )\n \n     def __eq__(self, other):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14672-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/reverse_related.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/reverse_related.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6276,
+      "matches_issue": 0.8309,
+      "safe_to_apply": 0.7121,
+      "composite": 0.79265,
+      "secrets_or_danger": 0.1749,
+      "logic_drift": 0.2546,
+      "flagged": false
+    },
+    "laya_combined": 0.7926,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 39.21,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py\nindex ccc2223..9088a76 100644\n--- a/django/db/models/fields/reverse_related.py\n+++ b/django/db/models/fields/reverse_related.py\n@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):\n             self.on_delete,\n             self.symmetrical,\n             self.multiple,\n+            make_hashable(getattr(self, 'through_fields', None)),\n         )\n \n     def __eq__(self, other):\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14999",
+  "repo": "django/django",
+  "base_commit": "a754b82dac511475b6276039471ccd17cc64aeb8",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539977.0348241
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539983.9551659
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539997.7652478
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540014.9849405
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540037.1081896
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540184.4379342
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791539901.4036403,
+  "elapsed_s": 290.7,
+  "plan": "### Step 1: What is the root cause\nThe `RenameModel` migration operation does not check if the model has a `db_table` explicitly defined in its `Meta` class. If `db_table` is defined, the database table name is fixed and independent of the model name. Consequently, renaming the model name does not require a physical rename of the underlying database table. Currently, Django proceeds to execute the rename operation, which causes unnecessary overhead and can trigger side effects (such as dropping and recreating constraints in Postgres or table recreation in SQLite). The operation should simply perform a no-op when `db_table` is present.\n\n### Step 2: What exact changes to make\nThe fix involves modifying the `RenameModel.database_forwards` method in `django/db/migrations/operations/models.py`. We need to verify if the model's `db_table` is already explicitly set. If it is, the database-level operation should be bypassed.\n\n1.  **File**: `django/db/migrations/operations/models.py`\n2.  **Function**: `RenameModel.database_forwards`\n3.  **Changes**:\n    *   Before executing the database rename logic, retrieve the model from the `from_state` using `from_state.apps.get_model(app_label, old_name)`.\n    *   Check if `model._meta.db_table` is set.\n    *   If `db_table` is set, check if the current model's `db_table` matches the default naming convention. If it differs from the default, it indicates an explicit `db_table` was provided, and the operation should return immediately (no-op).\n\nNote: Since `RenameModel` is an operation, the logic to skip the database-level changes should be placed inside `database_forwards` to ensure that only the schema-altering part is skipped, while the state migration still proceeds (allowing the `from_state` to be updated to `to_state`).",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "django/core/checks/model_checks.py",
+      "symbol": "django/core/checks/model_checks.py::extract_operation",
+      "symbols": [
+        "extract_operation",
+        "signal_connect_error",
+        "check_all_models",
+        "field_error"
+      ],
+      "line_range": [
+        112,
+        128
+      ],
+      "score": 0.4198,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6233,
+        "vector": 0.5334,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: defined, operation, that, with)"
+    },
+    {
+      "file": "django/db/backends/sqlite3/schema.py",
+      "symbol": "django/db/backends/sqlite3/schema.py::__enter__",
+      "symbols": [
+        "__enter__",
+        "_is_referenced_by_fk_constraint",
+        "alter_db_table",
+        "alter_field"
+      ],
+      "line_range": [
+        21,
+        33
+      ],
+      "score": 0.4837,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9349,
+        "vector": 0.4166,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: foreign, sqlite, constraints)"
+    },
+    {
+      "file": "django/db/backends/sqlite3/introspection.py",
+      "symbol": "django/db/backends/sqlite3/introspection.py::get_table_description",
+      "symbols": [
+        "get_table_description",
+        "_get_foreign_key_constraints",
+        "get_key_columns",
+        "_parse_table_constraints"
+      ],
+      "line_range": [
+        80,
+        110
+      ],
+      "score": 0.4499,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8949,
+        "vector": 0.2182,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: table, description, sqlite, with)"
+    },
+    {
+      "file": "tests/schema/tests.py",
+      "symbol": "tests/schema/tests.py::get_indexes",
+      "symbols": [
+        "get_indexes",
+        "get_uniques",
+        "get_constraints",
+        "get_constraints_count"
+      ],
+      "line_range": [
+        131,
+        141
+      ],
+      "score": 0.4253,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9997,
+        "vector": 0.5995,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: table; body matches report terms: table, with, constraints)"
+    },
+    {
+      "file": "tests/introspection/tests.py",
+      "symbol": "tests/introspection/tests.py::test_table_names",
+      "symbols": [
+        "test_table_names",
+        "test_unmanaged_through_model",
+        "test_installed_models",
+        "test_sequence_list"
+      ],
+      "line_range": [
+        17,
+        22
+      ],
+      "score": 0.4169,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.4984,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: table, db_table)"
+    },
+    {
+      "file": "tests/template_tests/templatetags/custom.py",
+      "symbol": "tests/template_tests/templatetags/custom.py::noop",
+      "symbols": [
+        "noop",
+        "no_params_with_context",
+        "simple_tag_without_context_parameter",
+        "simple_tag_takes_context_without_params"
+      ],
+      "line_range": [
+        25,
+        31
+      ],
+      "score": 0.4695,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2675,
+        "vector": 0.5682,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: that, with)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7734,
+  "laya_scores": {
+    "fix_quality": 1.6273,
+    "matches_issue": 0.7746,
+    "safe_to_apply": 0.6917,
+    "composite": 0.7734,
+    "secrets_or_danger": 0.2574,
+    "logic_drift": 0.4,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS. No user-controlled input or execution vectors introduced.\n- PERFORMANCE: PASS. The conditional check on metadata is a negligible O(1) operation.\n- ROBUSTNESS: FAIL. The `state_forwards` method was accidentally overwritten with a string representation (deleting the logic that updates the migration state), and there is a duplicate variable assignment in `database_forwards`.\n- PONYTAIL / YAGNI: PASS. The change is directly relevant to the reported bug.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import migrations, models, connection\nfrom django.db.migrations.state import ProjectState\nfrom django.apps.registry import Apps\n\ndef test_rename_model_with_db_table_is_noop():\n    \"\"\"\n    Reproduction test: RenameModel should not perform database-level operations\n    (like table rename) if db_table is explicitly set.\n    \"\"\"\n    app_label = 'test_app'\n    \n    # Define a model with an explicit db_table\n    class CustomModel(models.Model):\n        class Meta:\n            app_label = app_label\n            db_table = 'custom_table_name'\n\n    # Create initial state\n    project_state = ProjectState()\n    project_state.add_model(CustomModel._meta.concrete_model)\n\n    # Operation: Rename model from CustomModel to NewName\n    operation = migrations.RenameModel('CustomModel', 'NewName')\n    \n    # Mock the schema editor to track calls\n    class MockSchemaEditor:\n        def __init__(self):\n            self.renamed_tables = []\n        def alter_db_table(self, model, old_db_table, new_db_table):\n            self.renamed_tables.append((old_db_table, new_db_table))\n\n    schema_editor = MockSchemaEditor()\n    \n    # Execute the operation\n    operation.database_forwards(app_label, schema_editor, project_state, project_state)\n\n    # Assertion: The table rename should NOT have been called because db_table was set\n    assert len(schema_editor.renamed_tables) == 0, \\\n        f\"RenameModel should be a noop for models with db_table, but called alter_db_table with {schema_editor.renamed_tables}\"\n\ndef test_rename_model_without_db_table_performs_rename():\n    \"\"\"\n    Ensure standard behavior: Models without db_table SHOULD be renamed.\n    \"\"\"\n    app_label = 'test_app'\n\n    class StandardModel(models.Model):\n        class Meta:\n            app_label = app_label\n\n    project_state = ProjectState()\n    project_state.add_model(StandardModel._meta.concrete_model)\n    \n    operation = migrations.RenameModel('StandardModel', 'NewName')\n\n    class MockSchemaEditor:\n        def __init__(self):\n            self.renamed_tables = []\n        def alter_db_table(self, model, old_db_table, new_db_table):\n            self.renamed_tables.append((old_db_table, new_db_table))\n\n    schema_editor = MockSchemaEditor()\n    operation.database_forwards(app_label, schema_editor, project_state, project_state)\n\n    # The table rename should have been called\n    assert len(schema_editor.renamed_tables) == 1\n    assert schema_editor.renamed_tables[0] == ('test_app_standardmodel', 'test_app_newname')\n\ndef test_rename_model_db_table_is_none():\n    \"\"\"\n    Edge case: db_table explicitly set to None (rare/invalid, but check stability).\n    Usually treated as default, so it should trigger a rename.\n    \"\"\"\n    app_label = 'test_app'\n    \n    class NoneTable(models.Model):\n        class Meta:\n            app_label = app_label\n            db_table = None\n\n    project_state = ProjectState()\n    project_state.add_model(NoneTable._meta.concrete_model)\n    \n    operation = migrations.RenameModel('NoneTable', 'NewName')\n    \n    class MockSchemaEditor:\n        def __init__(self):\n            self.renamed = False\n        def alter_db_table(self, *args, **kwargs):\n            self.renamed = True\n\n    schema_editor = MockSchemaEditor()\n    operation.database_forwards(app_label, schema_editor, project_state, project_state)\n    \n    # Should rename since db_table is effectively not \"explicitly set\" to a custom name\n    assert schema_editor.renamed is True",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816be3a..7dfaf0a86f 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -314,9 +314,13 @@ class RenameModel(ModelOperation):\n         )\n \n     def state_forwards(self, app_label, state):\n-        state.rename_model(app_label, self.old_name, self.new_name)\n+        return \"RenameModel(old_name=%r, new_name=%r)\" % (self.old_name, self.new_name)\n \n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n+        new_model = to_state.apps.get_model(app_label, self.new_name)\n+        if new_model._meta.db_table != new_model._meta.default_db_table:\n+            return\n+\n         new_model = to_state.apps.get_model(app_label, self.new_name)\n         if self.allow_migrate_model(schema_editor.connection.alias, new_model):\n             old_model = from_state.apps.get_model(app_label, self.old_name)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14999-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6273,
+        "matches_issue": 0.7746,
+        "safe_to_apply": 0.6917,
+        "composite": 0.7734,
+        "secrets_or_danger": 0.2574,
+        "logic_drift": 0.4,
+        "flagged": false
+      },
+      "laya_combined": 0.7734,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 66.36,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816be3a..6e7b7019eb 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -314,9 +314,13 @@ class RenameModel(ModelOperation):\n         )\n \n     def state_forwards(self, app_label, state):\n-        state.rename_model(app_label, self.old_name, self.new_name)\n+        return \"RenameModel %s to %s\" % (self.old_name, self.new_name)\n \n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n+        new_model = to_state.apps.get_model(app_label, self.new_name)\n+        if new_model._meta.db_table != new_model._meta.default_db_table:\n+            return\n+\n         new_model = to_state.apps.get_model(app_label, self.new_name)\n         if self.allow_migrate_model(schema_editor.connection.alias, new_model):\n             old_model = from_state.apps.get_model(app_label, self.old_name)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14999-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6308,
+        "matches_issue": 0.7767,
+        "safe_to_apply": 0.7061,
+        "composite": 0.7784,
+        "secrets_or_danger": 0.2061,
+        "logic_drift": 0.3741,
+        "flagged": false
+      },
+      "laya_combined": 0.7784,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 46.57,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816be3a..f93e1040e3 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -264,6 +264,10 @@ class DeleteModel(ModelOperation):\n         state.remove_model(app_label, self.name_lower)\n \n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n+        new_model = to_state.apps.get_model(app_label, self.new_name)\n+        if new_model._meta.db_table != new_model._meta.default_db_table:\n+            return\n+\n         model = from_state.apps.get_model(app_label, self.name)\n         if self.allow_migrate_model(schema_editor.connection.alias, model):\n             schema_editor.delete_model(model)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14999-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7055,
+        "matches_issue": 0.7988,
+        "safe_to_apply": 0.7386,
+        "composite": 0.8107249999999999,
+        "secrets_or_danger": 0.1969,
+        "logic_drift": 0.2527,
+        "flagged": false
+      },
+      "laya_combined": 0.8107,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 63.21,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816be3a..7dfaf0a86f 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -314,9 +314,13 @@ class RenameModel(ModelOperation):\n         )\n \n     def state_forwards(self, app_label, state):\n-        state.rename_model(app_label, self.old_name, self.new_name)\n+        return \"RenameModel(old_name=%r, new_name=%r)\" % (self.old_name, self.new_name)\n \n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n+        new_model = to_state.apps.get_model(app_label, self.new_name)\n+        if new_model._meta.db_table != new_model._meta.default_db_table:\n+            return\n+\n         new_model = to_state.apps.get_model(app_label, self.new_name)\n         if self.allow_migrate_model(schema_editor.connection.alias, new_model):\n             old_model = from_state.apps.get_model(app_label, self.old_name)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14999-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/operations/models.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6273,
+      "matches_issue": 0.7746,
+      "safe_to_apply": 0.6917,
+      "composite": 0.7734,
+      "secrets_or_danger": 0.2574,
+      "logic_drift": 0.4,
+      "flagged": false
+    },
+    "laya_combined": 0.7734,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 66.36,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816b..7dfaf0a 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -314,9 +314,13 @@ class RenameModel(ModelOperation):\n         )\n \n     def state_forwards(self, app_label, state):\n-        state.rename_model(app_label, self.old_name, self.new_name)\n+        return \"RenameModel(old_name=%r, new_name=%r)\" % (self.old_name, self.new_name)\n \n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n+        new_model = to_state.apps.get_model(app_label, self.new_name)\n+        if new_model._meta.db_table != new_model._meta.default_db_table:\n+            return\n+\n         new_model = to_state.apps.get_model(app_label, self.new_name)\n         if self.allow_migrate_model(schema_editor.connection.alias, new_model):\n             old_model = from_state.apps.get_model(app_label, self.old_name)\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14016",
+  "repo": "django/django",
+  "base_commit": "1710cdbe79c90665046034fe1700933d038d90ad",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533069.4227765
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533076.9158528
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533090.2571187
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533093.2429602
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533129.691771
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533298.0888515
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query_utils.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791532997.4696124,
+  "elapsed_s": 308.57,
+  "plan": "### Step 1: Root Cause\nThe `Q` object implementation in Django allows combining objects using operators like `|` (OR) and `&` (AND). When these operations are performed, Django attempts to deepcopy the `Q` object to create a new instance containing the combined conditions. \n\nThe `dict_keys` object (returned by `dict.keys()`) is a view object that is not pickleable. Because `copy.deepcopy()` (which is used internally by Django when cloning `Q` objects) relies on pickling logic to handle complex objects, it fails when it encounters a non-pickleable type stored inside the `Q` object's internal `children` list. To fix this, any iterables (like `dict_keys`) stored in a `Q` object should be converted to a list before storage, or handled such that they do not block deepcopy/pickling.\n\n### Step 2: Exact Changes\nThe fix involves ensuring that the values stored in the `Q` object are cast to `list` when they are initialized, if they are not already suitable for pickling. This should be done within the `django/db/models/query_utils.py` file (where the `Q` class is defined).\n\n1. **File:** `django/db/models/query_utils.py`\n2. **Function:** `Q.__init__` (or wherever the children are processed).\n3. **Change:** Modify the initialization of the `Q` object to ensure that any values provided in the keyword arguments that are not lists or tuples are converted to a `list`. Specifically, iterate through the `kwargs` and convert instances of `dict_keys` (or more generally, any non-pickleable iterables) to a `list`.\n\n*Note:* While the exact file path was not provided in the grep output, `django/db/models/query_utils.py` is the standard location for the `Q` object definition in Django.\n\n**Plan:**\n1. Locate `django/db/models/query_utils.py`.\n2. Within the `Q.__init__` method, modify the loop that processes `kwargs`. \n3. For each value, add a check: if the value is an instance of `dict_keys` (or similar non-pickleable types), cast it to a `list()`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "serialize",
+        "deserialize",
+        "_load_serializers"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.5634,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2796,
+        "vector": 0.404,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: call, there, when, this)"
+    },
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::__init__",
+      "symbols": [
+        "__init__",
+        "_get_validation_exclusions",
+        "save",
+        "get_queryset"
+      ],
+      "line_range": [
+        287,
+        315
+      ],
+      "score": 0.5933,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2959,
+        "vector": 0.6193,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: call, should, fail, object)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "__reduce__",
+        "get_pk_value_on_save",
+        "to_python"
+      ],
+      "line_range": [
+        319,
+        336
+      ],
+      "score": 0.6021,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4517,
+        "vector": 0.3684,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: like, cannot, keys, this)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "stringformat",
+        "_property_resolver",
+        "join"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.6255,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4259,
+        "vector": 0.5755,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: should, when, reference, object)"
+    },
+    {
+      "file": "tests/ordering/models.py",
+      "symbol": "tests/ordering/models.py::Author",
+      "symbols": [
+        "Author",
+        "Article",
+        "Reference",
+        "Meta"
+      ],
+      "line_range": [
+        19,
+        26
+      ],
+      "score": 0.6068,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1044,
+        "vector": 0.5006,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: models; body matches report terms: models)"
+    },
+    {
+      "file": "tests/backends/models.py",
+      "symbol": "tests/backends/models.py::SchoolClass",
+      "symbols": [
+        "SchoolClass",
+        "Item",
+        "ObjectReference",
+        "ObjectSelfReference"
+      ],
+      "line_range": [
+        29,
+        36
+      ],
+      "score": 0.6004,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0564,
+        "vector": 0.5241,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: models; body matches report terms: last, models, object)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.681775,
+  "laya_scores": {
+    "fix_quality": 1.3774,
+    "matches_issue": 0.7579,
+    "safe_to_apply": 0.5918,
+    "composite": 0.681775,
+    "secrets_or_danger": 0.1644,
+    "logic_drift": 0.282,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. No user-controlled execution or serialization vulnerabilities introduced.\n- PERFORMANCE: RISK. Casting `dict_keys` to a `list` inside the constructor adds overhead and memory allocation for every `Q` object initialization.\n- ROBUSTNESS: PASS. Effectively handles the `TypeError` by normalizing the input type to a pickleable list.\n- PONYTAIL / YAGNI: PASS. The change is specific to fixing the reported pickle error without adding unnecessary abstraction.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db.models import Q\n\ndef test_q_object_pickle_dict_keys_reproduction():\n    \"\"\"\n    Reproduction of the reported bug:\n    Q objects containing dict_keys view objects fail during bitwise OR operations\n    due to deepcopy/pickle limitations.\n    \"\"\"\n    keys = {}.keys()\n    q = Q(x__in=keys)\n    \n    # This operation should succeed without raising TypeError: cannot pickle 'dict_keys'\n    combined = Q() | q\n    assert combined is not None\n    assert 'x__in' in dict(combined.children[1])\n\ndef test_q_object_with_dict_values():\n    \"\"\"\n    Ensure Q objects handle dict_values views, which are also non-pickleable,\n    as they fall under the same category of iterable view objects.\n    \"\"\"\n    values = {'a': 1}.values()\n    q = Q(x__in=values)\n    \n    # Should not raise TypeError\n    combined = Q() | q\n    assert len(combined.children) == 2\n\ndef test_q_object_with_other_iterables():\n    \"\"\"\n    Ensure standard iterables (sets) that might not be pickleable in all contexts\n    (or are just non-standard) are handled correctly.\n    \"\"\"\n    s = {1, 2, 3}\n    q = Q(x__in=s)\n    \n    # Should not raise TypeError\n    combined = Q() | q\n    assert set(dict(combined.children[1])['x__in']) == {1, 2, 3}\n\ndef test_q_object_nested_logical_operators():\n    \"\"\"\n    Ensure the fix holds for more complex trees involving multiple logical operators.\n    \"\"\"\n    q1 = Q(x__in={1: 'a'}.keys())\n    q2 = Q(y__in={2: 'b'}.keys())\n    \n    # Should handle chain of operations\n    combined = (Q() | q1) & q2\n    assert len(combined.children) == 2 # The AND node and the second Q object",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c2623f099f..97bf81e932 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -38,7 +38,7 @@ class Q(tree.Node):\n     conditional = True\n \n     def __init__(self, *args, _connector=None, _negated=False, **kwargs):\n-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)\n+        super().__init__(children=[*args, *[(k, list(v) if isinstance(v, type({}.keys())) else v) for k, v in sorted(kwargs.items())]], connector=_connector, negated=_negated)\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14016-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3774,
+        "matches_issue": 0.7579,
+        "safe_to_apply": 0.5918,
+        "composite": 0.681775,
+        "secrets_or_danger": 0.1644,
+        "logic_drift": 0.282,
+        "flagged": false
+      },
+      "laya_combined": 0.6818,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 7.51,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c2623f099f..fda06c7804 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -38,7 +38,7 @@ class Q(tree.Node):\n     conditional = True\n \n     def __init__(self, *args, _connector=None, _negated=False, **kwargs):\n-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)\n+        super().__init__(children=[*args, *sorted((k, list(v) if isinstance(v, type({}.keys())) else v) for k, v in kwargs.items())], connector=_connector, negated=_negated)\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14016-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3569,
+        "matches_issue": 0.7468,
+        "safe_to_apply": 0.6025,
+        "composite": 0.67655,
+        "secrets_or_danger": 0.192,
+        "logic_drift": 0.2989,
+        "flagged": false
+      },
+      "laya_combined": 0.6765,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 72.66,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c2623f099f..97bf81e932 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -38,7 +38,7 @@ class Q(tree.Node):\n     conditional = True\n \n     def __init__(self, *args, _connector=None, _negated=False, **kwargs):\n-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)\n+        super().__init__(children=[*args, *[(k, list(v) if isinstance(v, type({}.keys())) else v) for k, v in sorted(kwargs.items())]], connector=_connector, negated=_negated)\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14016-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3774,
+        "matches_issue": 0.7579,
+        "safe_to_apply": 0.5918,
+        "composite": 0.681775,
+        "secrets_or_danger": 0.1644,
+        "logic_drift": 0.282,
+        "flagged": false
+      },
+      "laya_combined": 0.6818,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 76.48,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c2623f099f..97bf81e932 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -38,7 +38,7 @@ class Q(tree.Node):\n     conditional = True\n \n     def __init__(self, *args, _connector=None, _negated=False, **kwargs):\n-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)\n+        super().__init__(children=[*args, *[(k, list(v) if isinstance(v, type({}.keys())) else v) for k, v in sorted(kwargs.items())]], connector=_connector, negated=_negated)\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14016-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/query_utils.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/query_utils.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3774,
+      "matches_issue": 0.7579,
+      "safe_to_apply": 0.5918,
+      "composite": 0.681775,
+      "secrets_or_danger": 0.1644,
+      "logic_drift": 0.282,
+      "flagged": false
+    },
+    "laya_combined": 0.6818,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0067,
+    "rank_reason": "logistic",
+    "elapsed_s": 7.51,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c2623f0..97bf81e 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -38,7 +38,7 @@ class Q(tree.Node):\n     conditional = True\n \n     def __init__(self, *args, _connector=None, _negated=False, **kwargs):\n-        super().__init__(children=[*args, *sorted(kwargs.items())], connector=_connector, negated=_negated)\n+        super().__init__(children=[*args, *[(k, list(v) if isinstance(v, type({}.keys())) else v) for k, v in sorted(kwargs.items())]], connector=_connector, negated=_negated)\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,17 @@
+{"event": "start", "instance_id": "django__django-14155", "ts": 1791533615.265131}
+{"event": "attempt", "n": 1, "ts": 1791533615.6651418}
+{"event": "model", "ts": 1791533723.3854356, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791533730.3429403, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791533755.548476, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791533773.7879689, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791533807.0126302, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791534159.8677063, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: Timeout; qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "api_retry", "backoff_s": 20.0, "ts": 1791534170.9274719}
+{"event": "attempt", "n": 2, "ts": 1791534191.2965481}
+{"event": "model", "ts": 1791534261.665187, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791534268.3829782, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791534279.6103134, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791534279.652858, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791534312.5717394, "role": "coder", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791534610.7373378, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: Timeout; qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791534621.6911829}

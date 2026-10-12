@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14155",
+  "repo": "django/django",
+  "base_commit": "2f13c476abe4ba787b6cb71131818341911f43cc",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545197.4474797
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545203.690732
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545215.3343427
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545217.7097514
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545249.047805
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545456.3069236
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/urls/resolvers.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/urls/resolvers.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791545113.8338645,
+  "elapsed_s": 350.05,
+  "plan": "if isinstance(func, functools.partial):\n      self.func = func.func\n      self.args = func.args + args\n      self.kwargs = {**func.keywords, **kwargs}\n  else:\n      self.func = func\n      self.args = args\n      self.kwargs = kwargs",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/urls/resolvers.py",
+      "symbol": "django/urls/resolvers.py::__init__",
+      "symbols": [
+        "__init__",
+        "__repr__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        33,
+        57
+      ],
+      "score": 0.6082,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4618,
+        "vector": 0.3565,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: func, doesn, init__, view; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__repr__",
+      "symbols": [
+        "__repr__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        188,
+        195
+      ],
+      "score": 0.5502,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3066,
+        "vector": 0.2382,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: repr__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "autocomplete",
+        "execute",
+        "get_commands"
+      ],
+      "line_range": [
+        188,
+        194
+      ],
+      "score": 0.5885,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3827,
+        "vector": 0.3988,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "ping_google",
+        "_get_sitemap_full_url",
+        "get_domain"
+      ],
+      "line_range": [
+        203,
+        209
+      ],
+      "score": 0.5555,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0861,
+        "vector": 0.7414,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "Trans",
+        "override",
+        "NumberAwareString"
+      ],
+      "line_range": [
+        161,
+        164
+      ],
+      "score": 0.5368,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1381,
+        "vector": 0.4776,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "urlencode",
+        "dictsort",
+        "dictsortreversed"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5727,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2658,
+        "vector": 0.4687,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: which, arguments, func, argument)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.734675,
+  "laya_scores": {
+    "fix_quality": 1.3734,
+    "matches_issue": 0.8176,
+    "safe_to_apply": 0.7477,
+    "composite": 0.734675,
+    "secrets_or_danger": 0.1881,
+    "logic_drift": 0.4729,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input sanitization issues introduced by unwrapping partials.\n- PERFORMANCE: PASS, Minimal overhead added to object initialization.\n- ROBUSTNESS: PASS, Correctly merges partial args/kwargs with existing resolver data.\n- PONYTAIL / YAGNI: PASS, Improves debugging utility for a common use case.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import functools\nfrom django.urls.resolvers import ResolverMatch\nimport pytest\n\ndef sample_view(request, arg1, arg2):\n    return f\"{arg1}-{arg2}\"\n\ndef test_resolver_match_repr_with_partial():\n    \"\"\"\n    Reproduction: ResolverMatch repr should unwrap functools.partial \n    to reveal the underlying function name.\n    \"\"\"\n    partial_view = functools.partial(sample_view, arg1=\"foo\")\n    match = ResolverMatch(partial_view, (), {\"arg2\": \"bar\"})\n    \n    # Before fix: repr contains 'partial'\n    # After fix: repr contains 'sample_view'\n    repr_str = repr(match)\n    \n    assert \"functools.partial\" not in repr_str\n    assert \"sample_view\" in repr_str\n    assert \"arg1\" in repr_str\n    assert \"arg2\" in repr_str\n\ndef test_resolver_match_repr_without_partial():\n    \"\"\"\n    Edge Case: Ensure normal functions still display correctly.\n    \"\"\"\n    match = ResolverMatch(sample_view, (), {\"arg1\": \"a\", \"arg2\": \"b\"})\n    repr_str = repr(match)\n    \n    assert \"sample_view\" in repr_str\n    assert \"arg1\" in repr_str\n\ndef test_resolver_match_partial_with_preexisting_args():\n    \"\"\"\n    Edge Case: Verify that partial arguments and ResolverMatch \n    arguments are combined correctly in the resulting object.\n    \"\"\"\n    partial_view = functools.partial(sample_view, \"p_arg1\")\n    # ResolverMatch is initialized with additional args/kwargs\n    match = ResolverMatch(partial_view, (\"r_arg1\",), {\"arg2\": \"r_arg2\"})\n    \n    # The fix merges args: partial.args + ResolverMatch.args\n    assert match.args == (\"p_arg1\", \"r_arg1\")\n    assert match.kwargs == {\"arg2\": \"r_arg2\"}\n\ndef test_resolver_match_empty_partial():\n    \"\"\"\n    Edge Case: Partial function with no arguments or keywords.\n    \"\"\"\n    partial_view = functools.partial(sample_view)\n    match = ResolverMatch(partial_view, (\"a\",), {\"arg2\": \"b\"})\n    \n    assert match.func == sample_view\n    assert match.args == (\"a\",)\n    assert match.kwargs == {\"arg2\": \"b\"}",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..c52365504b 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,9 +31,15 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n-        self.func = func\n-        self.args = args\n-        self.kwargs = kwargs\n+        import functools\n+        if isinstance(func, functools.partial):\n+            self.func = func.func\n+            self.args = func.args + args\n+            self.kwargs = {**func.keywords, **kwargs}\n+        else:\n+            self.func = func\n+            self.args = args\n+            self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n         self.tried = tried\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14155-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/urls/resolvers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/urls/resolvers.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 3,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3734,
+        "matches_issue": 0.8176,
+        "safe_to_apply": 0.7477,
+        "composite": 0.734675,
+        "secrets_or_danger": 0.1881,
+        "logic_drift": 0.4729,
+        "flagged": false
+      },
+      "laya_combined": 0.7347,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 20.26,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..c52365504b 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,9 +31,15 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n-        self.func = func\n-        self.args = args\n-        self.kwargs = kwargs\n+        import functools\n+        if isinstance(func, functools.partial):\n+            self.func = func.func\n+            self.args = func.args + args\n+            self.kwargs = {**func.keywords, **kwargs}\n+        else:\n+            self.func = func\n+            self.args = args\n+            self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n         self.tried = tried\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14155-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/urls/resolvers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/urls/resolvers.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 3,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3734,
+        "matches_issue": 0.8176,
+        "safe_to_apply": 0.7477,
+        "composite": 0.734675,
+        "secrets_or_danger": 0.1881,
+        "logic_drift": 0.4729,
+        "flagged": false
+      },
+      "laya_combined": 0.7347,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 86.04,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..9e9a60c2c1 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,12 +31,20 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n-        self.func = func\n-        self.args = args\n-        self.kwargs = kwargs\n+        import functools\n+        if isinstance(func, functools.partial):\n+            self.func = func.func\n+            self.args = func.args + args\n+            self.kwargs = {**func.keywords, **kwargs}\n+        else:\n+            self.func = func\n+            self.args = args\n+            self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n         self.tried = tried\n+        self.route = route\n+        self.tried = tried\n \n         # If a URLRegexResolver doesn't have a namespace or app_name, it passes\n         # in an empty value.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14155-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/urls/resolvers.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/urls/resolvers.py"
+      ],
+      "added_lines": 11,
+      "removed_lines": 3,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4742,
+        "matches_issue": 0.8341,
+        "safe_to_apply": 0.7664,
+        "composite": 0.768675,
+        "secrets_or_danger": 0.148,
+        "logic_drift": 0.372,
+        "flagged": false
+      },
+      "laya_combined": 0.7687,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 85.38,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..c52365504b 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,9 +31,15 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n-        self.func = func\n-        self.args = args\n-        self.kwargs = kwargs\n+        import functools\n+        if isinstance(func, functools.partial):\n+            self.func = func.func\n+            self.args = func.args + args\n+            self.kwargs = {**func.keywords, **kwargs}\n+        else:\n+            self.func = func\n+            self.args = args\n+            self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n         self.tried = tried\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14155-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/urls/resolvers.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/urls/resolvers.py"
+    ],
+    "added_lines": 9,
+    "removed_lines": 3,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3734,
+      "matches_issue": 0.8176,
+      "safe_to_apply": 0.7477,
+      "composite": 0.734675,
+      "secrets_or_danger": 0.1881,
+      "logic_drift": 0.4729,
+      "flagged": false
+    },
+    "laya_combined": 0.7347,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0057,
+    "rank_reason": "logistic",
+    "elapsed_s": 20.26,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24..c523655 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,9 +31,15 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n-        self.func = func\n-        self.args = args\n-        self.kwargs = kwargs\n+        import functools\n+        if isinstance(func, functools.partial):\n+            self.func = func.func\n+            self.args = func.args + args\n+            self.kwargs = {**func.keywords, **kwargs}\n+        else:\n+            self.func = func\n+            self.args = args\n+            self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n         self.tried = tried\n",
+  "offline_calls": 0
+}

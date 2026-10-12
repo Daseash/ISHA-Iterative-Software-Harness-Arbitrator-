@@ -1,0 +1,244 @@
+{
+  "instance_id": "astropy__astropy-7746",
+  "repo": "astropy/astropy",
+  "base_commit": "d5bd3f68bb6d5ce3a61bdce9883ee750d1afade5",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274378.9882083
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274381.0112615
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274527.4946299
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274632.158165
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274738.2573757
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274856.1413162
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274874.4887075
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/wcs/wcs.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/wcs/wcs.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791274307.1093183,
+  "elapsed_s": 575.5,
+  "plan": "@@\n         if ra_dec_order and sky == 'input':\n             xy = self._denormalize_sky(xy)\n-        output = func(xy, origin)\n+        # -------------------------------------------------------------\n+        # New guard: if any of the coordinate arrays are empty, return an\n+        # empty result without calling the underlying wcslib routine.\n+        # This mirrors the behavior of other vectorised Astropy functions\n+        # (e.g. erfa wrappers) and satisfies the contract that empty\n+        # inputs should yield empty outputs.\n+        # -------------------------------------------------------------\n+        if any(arr.size == 0 for arr in xy):\n+            # Return a list of empty float64 arrays, one per input axis.\n+            # The dtype used by wcslib for world coordinates is float64,\n+            # so this is safe for all callers.\n+            return [np.empty(0, dtype=np.float64) for _ in xy]\n+\n+        output = func(xy, origin)\n         if ra_dec_order and sky == 'output':\n             output = self._normalize_sky(output)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/wcs/wcs.py",
+      "symbol": "astropy/wcs/wcs.py::_denormalize_sky",
+      "symbols": [
+        "_denormalize_sky",
+        "_normalize_sky",
+        "_array_converter",
+        "_return_single_array"
+      ],
+      "line_range": [
+        1149,
+        1178
+      ],
+      "score": 0.815,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; signature parameter matches report: sky; body matches report terms: input, valueerror, axis, error; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/visualization/wcsaxes/core.py",
+      "symbol": "astropy/visualization/wcsaxes/core.py::__init__",
+      "symbols": [
+        "__init__",
+        "reset_wcs",
+        "_WCSAxesArtist",
+        "draw"
+      ],
+      "line_range": [
+        98,
+        121
+      ],
+      "score": 0.6324,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7021,
+        "vector": 0.8282,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: wcs; body matches report terms: args, world, pixel, kwargs)"
+    },
+    {
+      "file": "astropy/coordinates/sky_coordinate.py",
+      "symbol": "astropy/coordinates/sky_coordinate.py::to_pixel",
+      "symbols": [
+        "to_pixel",
+        "from_pixel",
+        "__init__",
+        "_apply"
+      ],
+      "line_range": [
+        1388,
+        1413
+      ],
+      "score": 0.5886,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.572,
+        "vector": 0.7344,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: wcs; body matches report terms: astropy, array, origin, pixel)"
+    },
+    {
+      "file": "astropy/wcs/__init__.py",
+      "symbol": "astropy/wcs/__init__.py::get_include",
+      "symbols": [
+        "get_include"
+      ],
+      "line_range": [
+        36,
+        41
+      ],
+      "score": 0.6453,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4463,
+        "vector": 0.7394,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: file, astropy)"
+    },
+    {
+      "file": "astropy/constants/__init__.py",
+      "symbol": "astropy/constants/__init__.py::set_enabled_constants",
+      "symbols": [
+        "set_enabled_constants"
+      ],
+      "line_range": [
+        53,
+        96
+      ],
+      "score": 0.6013,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.261,
+        "vector": 0.7586,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: astropy, when, valueerror, were"
+    },
+    {
+      "file": "astropy/coordinates/builtin_frames/__init__.py",
+      "symbol": "astropy/coordinates/builtin_frames/__init__.py::make_transform_graph_docs",
+      "symbols": [
+        "make_transform_graph_docs"
+      ],
+      "line_range": [
+        65,
+        137
+      ],
+      "score": 0.597,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2853,
+        "vector": 0.6719,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: line, astropy, should, transformations"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7195,
+  "laya_scores": {
+    "fix_quality": 1.5525,
+    "matches_issue": 0.7116,
+    "safe_to_apply": 0.6139,
+    "composite": 0.7195,
+    "secrets_or_danger": 0.1141,
+    "logic_drift": 0.244,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns detected.\n- PERFORMANCE: PASS - The guard clause prevents unnecessary calls to the underlying C library, which is a performance improvement, though the nested list comprehension is minor; no unbounded loops or N+1 issues.\n- ROBUSTNESS: RISK - The check `any(arr.size == 0 for arr in xy)` assumes `xy` is always a list of arrays; if `xy` were a single scalar or non-iterable type (though unlikely given the `_return_list_of_arrays` context), it could raise a TypeError. More critically, it does not handle the case where `xy` is a single array (not a list) if `naxis` is 1, potentially causing `AttributeError` if the array doesn't have a `size` attribute (numpy arrays do, but raw lists don't). However, in this specific code path `xy` is constructed as a list of numpy arrays. A more robust check would be `len(xy) == 0` or checking the first element. It also ignores potential empty multidimensional arrays (size 0 is correct). The main risk is that it returns a list of empty arrays, but the caller might expect a specific dtype or shape matching the input axes count. If `xy` has different lengths, it returns empty arrays for each, which is safe. **Re-evaluating**: The snippet shows `xy` comes from `_denormalize_sky` or direct construction. In `wcslib` context, `xy` is typically a list of 1D arrays. If an empty list `[]`"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.wcs import WCS\nfrom astropy.utils.data import get_pkg_data_filename\n\n\n@pytest.fixture(scope=\"module\")\ndef wcs():\n    \"\"\"\n    Return a WCS object based on the reference FITS file used in the Astropy\n    test suite.  The exact content of the WCS is not important for this test;\n    we only need an instantiated object that forwards to the wcslib code.\n    \"\"\"\n    fits_path = get_pkg_data_filename(\n        \"data/2MASS_h.fits\", package=\"astropy.wcs.tests\"\n    )\n    return WCS(fits_path)\n\n\ndef test_wcs_pix2world_empty_lists(wcs):\n    \"\"\"\n    The original bug caused an InconsistentAxisTypesError when empty\n    coordinate lists were supplied.  After the fix the function should\n    return a list of empty ``float64`` arrays, one per WCS axis.\n    \"\"\"\n    result = wcs.wcs_pix2world([], [], 0)\n\n    # Result should be a list of NumPy arrays, one per axis.\n    assert isinstance(result, list)\n    assert len(result) == wcs.naxis\n    for arr in result:\n        assert isinstance(arr, np.ndarray)\n        assert arr.dtype == np.float64\n        assert arr.size == 0\n\n\ndef test_wcs_pix2world_empty_numpy_arrays(wcs):\n    \"\"\"\n    The guard should also trigger for empty ``np.ndarray`` inputs.\n    \"\"\"\n    result = wcs.wcs_pix2world(np.empty(0), np.empty(0), 0)\n\n    assert isinstance(result, list)\n    assert len(result) == wcs.naxis\n    for arr in result:\n        assert isinstance(arr, np.ndarray)\n        assert arr.size == 0\n\n\ndef test_wcs_pix2world_one_axis_empty(wcs):\n    \"\"\"\n    If any of the supplied coordinate arrays are empty, the implementation\n    returns empty outputs for *all* axes (the behaviour introduced in the fix).\n    \"\"\"\n    # Provide a non‑empty list for the first axis and an empty list for the second.\n    result = wcs.wcs_pix2world([1.0, 2.0, 3.0], [], 0)\n\n    assert isinstance(result, list)\n    assert len(result) == wcs.naxis\n    for arr in result:\n        assert isinstance(arr, np.ndarray)\n        assert arr.size == 0\n\n\ndef test_wcs_pix2world_invalid_input_type(wcs):\n    \"\"\"\n    Supplying inputs that are not array‑like should raise a ``TypeError``,\n    which is the documented behaviour of ``_array_converter`` for unsupported\n    types.\n    \"\"\"\n    with pytest.raises(TypeError):\n        wcs.wcs_pix2world(None, None, 0)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/wcs/wcs.py b/astropy/wcs/wcs.py\nindex d3a06f2..1d34950 100644\n--- a/astropy/wcs/wcs.py\n+++ b/astropy/wcs/wcs.py\n@@ -1222,6 +1222,9 @@ reduce these to 2 dimensions using the naxis kwarg.\n \n             if ra_dec_order and sky == 'input':\n                 xy = self._denormalize_sky(xy)\n+            # Guard against empty input arrays: return empty outputs without invoking wcslib.\n+            if any(arr.size == 0 for arr in xy):\n+                return [np.empty(0, dtype=np.float64) for _ in xy]\n             output = func(xy, origin)\n             if ra_dec_order and sky == 'output':\n                 output = self._normalize_sky(output)\n",
+  "offline_calls": 0
+}

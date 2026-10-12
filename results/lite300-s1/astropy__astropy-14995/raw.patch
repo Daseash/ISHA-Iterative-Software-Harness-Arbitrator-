@@ -1,0 +1,16 @@
+--- a/astropy/nddata/mixins/ndarithmetic.py
++++ b/astropy/nddata/mixins/ndarithmetic.py
+@@
+-        if handle_mask is not None:
+-            mask = handle_mask(self.mask, operand.mask)
+-        else:
+-            mask = None
++        if handle_mask is not None:
++            if self.mask is None:
++                mask = operand.mask
++            elif operand.mask is None:
++                mask = self.mask
++            else:
++                mask = handle_mask(self.mask, operand.mask)
++        else:
++            mask = None

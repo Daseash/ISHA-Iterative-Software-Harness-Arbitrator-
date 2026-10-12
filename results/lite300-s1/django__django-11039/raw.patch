@@ -1,0 +1,6 @@
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -55,3 +55,3 @@
+         # Show begin/end around output for atomic migrations
+-        self.output_transaction = migration.atomic
++        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl

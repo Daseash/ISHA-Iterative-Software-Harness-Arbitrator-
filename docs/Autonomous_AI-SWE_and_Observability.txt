@@ -1,0 +1,169 @@
+# Autonomous AI-SWE & Observability Platform (v2 — Production-Grade)
+
+An enterprise-grade, open-source autonomous software engineering platform. The agent ingests
+software issue tickets, parses repository context, plans a fix, writes code patches (single-
+or multi-file), runs unit + regression tests in an isolated sandbox, has its diff reviewed by
+a critic agent, iteratively self-corrects based on test failure traces, optionally waits for
+human approval, and creates a clean Git commit — all benchmarked against an industry-standard
+test set and fully traced end-to-end.
+
+---
+
+> **Free-tier note (2026):** Google pulled Gemini Pro models down to near-zero free quota in
+> late 2025/2026 — this project uses **Gemini 2.5 Flash only** for planning/ingestion, which
+> remains solidly free (no card required). Don't route the Planner through Pro on the free key.
+
+## 1. Project Overview & Architecture Philosophy
+
+* **The Inspiration:** A modular, transparent, open-source alternative to tools like
+  **Claude Code**, **Open-SWE**, **SWE-agent**, and **OpenHands**.
+* **Core Philosophy:** Rather than training base model weights from scratch, this project
+  engineers the **autonomous cognitive architecture, safety rails, execution sandboxes,
+  verification layers, and observability stack** around pre-trained model APIs
+  (Google Gemini Flash & Groq Llama 3.3).
+* **The Agentic Loop (v3 — Multi-Agent):**
+  `Ingest Context -> Synthesize Prompts -> Plan Fix -> Write Regression Test (red, shared) ->
+  Dispatch to N Isolated Agents (own git worktree + own strategy each) ->
+  [Apply Patch -> Execute Sandbox Tests -> Trim Error Trace -> Self-Correct Loop ->
+  Critic/Reviewer Check] per agent, in parallel ->
+  Arbitration Node (rank by critic score / retries / diff size, pick one winner) ->
+  Human Approval Gate (optional, on flagged winner only) ->
+  Git Commit (winning worktree only) -> Langfuse Telemetry (all attempts tagged) ->
+  SWE-bench Scoring`.
+
+---
+
+## 2. Technology Stack & Component Mapping
+
+| Architectural Layer | Technology / Library | Provider / Tier | Specific Role in Project |
+| :--- | :--- | :--- | :--- |
+| **Orchestration & State Machine** | `langgraph` | Open Source (Python) | Coordinates multi-agent graph cycles, conditional retry edges, and session checkpoints (`MemorySaver`). |
+| **Model Gateway** | `litellm` | Open Source (Python) | Standardizes API requests across providers with automatic failover and routing. |
+| **Deep Reasoning & Ingestion** | Gemini 2.5 Flash (Flash-only — see note) | Google AI Studio (Free Tier) | Ingests large repository contexts (1M+ tokens), reads issue specs, and generates architecture plans. |
+| **Fast Patch Generation** | Llama 3.3 70B / Qwen | GroqCloud (Free Tier) | Generates fast code diffs (300–500 tokens/sec) for responsive self-healing loops. |
+| **Standardized Tool Protocol** | **Model Context Protocol (MCP)** | Open Source Standard | Standardizes tool execution interfaces via structured JSON-RPC protocols. |
+| **Codebase Ingestion** | `docling` | Open Source (IBM) | Parses multi-format project documentation, markdown specs, and source files into clean structural chunks. |
+| **Hybrid Search (RAG)** | `qdrant-client` & Qdrant | Local Docker (`:6333`) | Indexes codebase chunks with hybrid vector similarity and BM25 keyword matching for symbol lookup. |
+| **Code Structural Analysis** | `tree-sitter` (AST) | Open Source (Python) | Creates an AST repository map; also used as **fallback structural patcher** when literal search/replace fails. |
+| **VCS Safety & Isolation** | **Git Subprocess Manager** | Open Source (Git) | Manages ephemeral scratch branches, rollback on failed attempts, and clean commit drafting. |
+| **Context Optimization** | **Traceback Trimmer** | Custom Python Engine | Truncates long pytest traces to isolate root-cause exceptions, preventing context overflow. |
+| **Patch Engine** ⭐NEW | **Unified-Diff + Fuzzy Matcher** | Custom Python Engine | Applies unified-diff patches with whitespace-tolerant fuzzy matching; falls back to AST-based structural edit if a literal patch fails to apply. Supports **multi-file patch sets** in one transaction. |
+| **Regression-Test Generator** ⭐NEW | Gemini 2.5 Flash | Google AI Studio | Before patching, writes a failing test that reproduces the reported bug (red), then re-runs it after the patch (green) — proves the fix, not just "tests still pass." |
+| **Critic / Reviewer Agent** ⭐NEW | Groq Llama 3.3 70B (separate role prompt) | GroqCloud | Adversarially reviews the diff against original issue intent and plan before commit; flags logic drift, unrelated changes, or scope creep that tests wouldn't catch. |
+| **Execution Sandbox** | `docker` / `subprocess` | Local Engine | Executes `pytest` against code patches in isolation. **Hardened v2:** hard CPU/memory/time ceilings (`--cpus`, `--memory`, `timeout`), read-only root FS, and no network egress by default. |
+| **Security & Guardrails** | `nemoguardrails` | Open Source (NVIDIA) | Audits inputs against prompt injections and scans diffs for leaked secrets (API keys) and dangerous calls. |
+| **Human Approval Gate** ⭐NEW | LangGraph `interrupt()` checkpoint | Open Source | Optional pause before `git commit` on flagged/high-risk diffs; requires explicit human sign-off; every approval/rejection is logged to an audit trail. |
+| **Multi-Agent Dispatch** ⭐NEW | LangGraph `Send()` fan-out | Open Source | Runs 2–3 independent agent attempts on the same issue in parallel, each with a different strategy (minimal-diff, call-site-aware, alternate test phrasing). |
+| **Git Worktree Manager** ⭐NEW | `git worktree` | Open Source (Git) | Gives each parallel agent its own isolated working directory and branch, so no two agents ever touch the same file at the same time. |
+| **Arbitration Node** ⭐NEW | Custom Python (LangGraph fan-in) | Custom | Collects only the passing attempts, ranks them by critic score → retry count → diff size, picks one winner, and discards the losing worktrees before anything reaches the shared branch. |
+| **Telemetry & Observability** | `langfuse` | Free Cloud Account | Records end-to-end request traces, token burn, latency bottlenecks, and evaluation scores (Ragas). |
+| **Live Ops Dashboard** ⭐NEW | Streamlit / Gradio | Open Source | Minimal local UI showing the live LangGraph node, retry count, current diff, and test status — so "observability" isn't just borrowed from Langfuse's own dashboard. |
+| **Standardized Benchmarking** ⭐NEW | **SWE-bench / SWE-bench Lite** | Open Source (Princeton/OpenAI) | Runs the agent against a recognized public benchmark so patch-resolution rate is comparable to SWE-agent, OpenHands, Devin, etc. — not just self-reported. |
+| **Automated Benchmarking** | **Custom Benchmark Harness** | Local Python Harness | Programmatically evaluates patch accuracy, latency, and iteration counts across test suites (complements SWE-bench with project-specific cases). |
+| **Data Validation** | `pydantic` v2 | Open Source (Python) | Strictly validates state schemas, patch structures, and tool schemas. |
+| **Ground-Truth Testing** | `pytest` | Open Source (Python) | Evaluates whether code modifications pass test cases. |
+
+---
+
+## 3. Directory Layout (v2)
+
+```text
+autonomous-swe-platform/
+├── README.md                   # ⭐NEW: resume-facing front door — demo link, results, design decisions
+├── LICENSE                     # ⭐NEW: MIT license
+├── .env                        # Free API keys and environment variables
+├── .env.example                # ⭐NEW: template for .env, safe to commit
+├── requirements.txt            # Project dependencies
+├── docker-compose.yml          # Local Qdrant container setup
+├── project.md                  # Complete architectural & technical specification
+├── docs/
+│   ├── demo.gif                # ⭐NEW: 20-30s screen recording for the README
+│   ├── flow-diagram.txt        # The updated multi-agent flow diagram
+│   └── components.md           # The full component breakdown with rationale
+├── src/
+│   ├── __init__.py
+│   ├── config.py               # LiteLLM routing, Gemini/Groq setup, Langfuse hooks
+│   ├── ingestion/
+│   │   ├── __init__.py
+│   │   └── parser.py           # Docling codebase & markdown ingestion
+│   ├── rag/
+│   │   ├── __init__.py
+│   │   ├── indexer.py          # Qdrant hybrid vector/keyword indexing
+│   │   └── retriever.py        # Code search engine
+│   ├── agents/
+│   │   ├── __init__.py
+│   │   ├── state.py            # Pydantic agent state schema
+│   │   ├── nodes.py            # Planner, Coder, Tester, Critic, Merger logic
+│   │   ├── dispatch.py         # ⭐NEW: multi-agent Send() fan-out, per-attempt strategy config
+│   │   └── graph.py            # LangGraph StateGraph compilation + human-in-loop interrupt
+│   ├── tools/
+│   │   ├── __init__.py
+│   │   ├── mcp_server.py       # Model Context Protocol standard tool endpoints
+│   │   ├── git_manager.py      # Branching, rollback, and commit management
+│   │   ├── worktree_manager.py # ⭐NEW: creates/tears down isolated git worktrees per agent
+│   │   ├── context_trimmer.py  # Error log & traceback truncation
+│   │   ├── sandbox.py          # Docker/subprocess pytest execution w/ resource caps
+│   │   ├── patch_engine.py     # ⭐NEW: unified-diff + fuzzy match + AST fallback, multi-file
+│   │   └── regression_gen.py   # ⭐NEW: writes red test before patch, verifies green after
+│   ├── review/
+│   │   ├── critic.py           # ⭐NEW: adversarial diff-vs-intent reviewer node
+│   │   └── arbitration.py      # ⭐NEW: ranks parallel attempts, picks the winner
+│   ├── approval/
+│   │   └── gate.py             # ⭐NEW: human approval interrupt + audit log
+│   ├── dashboard/
+│   │   └── app.py              # ⭐NEW: Streamlit live-state viewer
+│   ├── guardrails/
+│   │   └── rails.co            # NeMo Guardrails configuration
+│   └── main.py                 # Multi-turn CLI entry point
+└── tests/
+    ├── eval_suite.py           # Automated evaluation harness
+    ├── swebench_runner.py      # ⭐NEW: SWE-bench Lite harness + scoring export
+    └── dummy_repo/             # Target test codebase
+        ├── calculator.py       # Source code containing intentional bugs
+        └── test_calculator.py  # Pytest suite validating bug fixes
+```
+
+---
+
+## 4. What Changed vs v1 (Why Each Addition Matters)
+
+1. **SWE-bench integration** — turns "it works on my dummy repo" into a comparable, credible
+   number against the industry's actual leaderboard tools.
+2. **Multi-file patch sets** — real bugs rarely live in one file; a signature change plus its
+   call sites is the norm, not the exception.
+3. **Unified-diff + fuzzy match + AST fallback** — literal search/replace breaks on whitespace
+   drift; this raises the patch *apply* success rate independent of patch *correctness*.
+4. **Regression-test generation (red→green)** — proves the bug is actually fixed, not just that
+   pre-existing tests didn't break.
+5. **Critic/Reviewer agent** — a second model with an adversarial prompt catches logic drift and
+   scope creep that a passing test suite is blind to.
+6. **Hardened sandbox** — explicit CPU/mem/time ceilings and no egress by default turn "isolated"
+   into "actually safe to run autonomously."
+7. **Live dashboard** — makes the "observability platform" claim true beyond just embedding
+   Langfuse's own UI.
+8. **Human approval gate** — the standard enterprise expectation before an autonomous agent is
+   allowed to push a commit unsupervised, with a logged audit trail.
+9. **Multi-agent dispatch + git worktree isolation + arbitration** — running 2–3 independent
+   attempts in parallel (each in its own worktree, each with a different strategy) and picking
+   the best one raises resolution rate the same way SWE-agent-style "multiple rollout"
+   strategies do, without any risk of agents overwriting each other's work, because only the
+   winning worktree's branch ever touches the shared branch.
+
+## LAYA Decision Engine Integration
+
+Every judgment point in the v3 agentic loop is decided by the **local LAYA** System-1
+decision engine (`convaiinnovations/laya`) via typed `score`/`noul`/`choice` questions —
+Gemini (planning) and Groq (patching) propose, LAYA decides:
+
+- **Candidate scoring:** each Groq/Gemini attempt is scored with `fix_quality`
+  (score), `matches_issue` (noul), `safe_to_apply` (noul).
+- **Arbitration (fan-in):** best high score wins — `0.5*quality + 0.25*matches
+  + 0.25*safety` — refined in a loop until the score plateaus, then ONE winner is
+  merged. See `src/agents/arbitration.py` and `laya_pipeline.py`.
+- **Critic gate before commit:** `secrets_or_danger` + `logic_drift` noul checks on
+  the winner; flagged diffs pause at the human approval gate.
+- **Final output check:** every committed/rendered file is verified with a noul
+  question (P(correct) >= 60%) before a success claim.
+
+Design intent: the model-split stays free-tier (Gemini 2.5 Flash + Groq Llama 3.3 70B),
+but judgment moves from prompt-text heuristics to calibrated on-device probabilities.

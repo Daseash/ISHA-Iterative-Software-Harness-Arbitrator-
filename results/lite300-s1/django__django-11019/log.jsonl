@@ -1,0 +1,20 @@
+{"event": "start", "instance_id": "django__django-11019", "ts": 1791279096.045612}
+{"event": "attempt", "n": 1, "ts": 1791279096.3363185}
+{"event": "model", "ts": 1791279135.4253175, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791279141.1183548, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791279333.0227582, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (6 models): qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; gpt-oss-120b: ValueError; gpt-oss-20b: ValueError; gemini-3.8-flash: ServiceUnavailableError; gemini-3.5-flash: ServiceUnavailableError; gemini-3.1-flash-lite: ServiceUnavailableError"}
+{"event": "model", "ts": 1791279542.566944, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791279827.0850217, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791280096.2587378, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791280369.077507, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791280438.657974, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791280577.4371567, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/forms/widgets.py: @@ -114,7 +114,7 @@ class Media: — expected context not found in file: '            if isinstance(other, self.__class__):' (git: error: repository lacks the necessary blob to perform 3-way merge.\nFalling back to direct application...\nerror: patch failed: djang", "ts": 1791280614.5808525}
+{"event": "attempt", "n": 2, "ts": 1791280614.8266025}
+{"event": "model", "ts": 1791280657.653696, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791280663.2416518, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791280944.4631472, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791281101.4395566, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791281326.4791331, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791281374.2528903, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791281410.3282294}

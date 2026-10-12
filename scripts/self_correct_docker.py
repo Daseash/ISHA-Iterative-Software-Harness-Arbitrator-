@@ -26,8 +26,14 @@ PYTHON = sys.executable
 
 def extract_instance_feedback(session: str, instance_id: str) -> str | None:
     """Extract pinpoint traceback and failure notes for an instance."""
-    inst_dir = RESULTS_DIR / session / "logs" / "run_evaluation" / session / "isha" / instance_id
-    if not inst_dir.is_dir():
+    eval_dir = RESULTS_DIR / session / "logs" / "run_evaluation" / session
+    inst_dir = None
+    if eval_dir.is_dir():
+        for sub in eval_dir.iterdir():
+            if sub.is_dir() and (sub / instance_id).is_dir():
+                inst_dir = sub / instance_id
+                break
+    if not inst_dir or not inst_dir.is_dir():
         return None
 
     report_path = inst_dir / "report.json"
@@ -103,6 +109,18 @@ def extract_instance_feedback(session: str, instance_id: str) -> str | None:
         directives.append("• QUALNAME HIERARCHY FIX: When serializing nested methods or choices, include the full enclosing class path in __qualname__.")
     if "could not convert string to float" in traceback_text or "invalid literal for int" in traceback_text:
         directives.append("• STRING CONVERSION FIX: Guard against string type names or non-numeric strings before numeric conversion.")
+    if "scandir: path should be string" in traceback_text or "FilePathField" in traceback_text:
+        directives.append("• CALLABLE PATH FIX: For FilePathField, evaluate `self.path() if callable(self.path) else self.path` in formfield() and wherever path is accessed.")
+    if "DurationField" in traceback_text or "invalid format. It must be in [DD]" in traceback_text:
+        directives.append("• DURATION MESSAGE FIX: Check the exact error message format in DurationField default_error_messages['invalid']. Ensure the format string matches expected.")
+    if "RemovedInDjango" in traceback_text or "warning not triggered" in traceback_text.lower():
+        directives.append("• WARNING EMISSION FIX: Check whether a deprecation warning (e.g. RemovedInDjango40Warning) must be emitted with warnings.warn() and stacklevel=2.")
+    if "custom.sqlite.db" in traceback_text or "TestDbSignatureTests" in traceback_text:
+        directives.append("• TEST DB SIGNATURE FIX: Include the test database name in the SQLite test DB signature tuple when a custom name is specified.")
+    if "unhashable type" in traceback_text:
+        directives.append("• HASH METHOD FIX: Implement __hash__ method (e.g. hash(self.value) or hash(tuple(...))) so instances can be added to sets or used as dict keys.")
+    if "has no attribute 'items'" in traceback_text:
+        directives.append("• DICT/LIST CLEAN FIX: Recursively handle lists, tuples, and dicts. Do not assume values have an .items() method without checking isinstance(x, dict).")
 
     targeted_section = ""
     if directives:
@@ -127,7 +145,25 @@ def generate_session_feedback(session: str) -> dict[str, list[str]]:
         return {}
 
     report = json.loads(report_path.read_text(encoding="utf-8"))
-    unresolved = report.get("unresolved_ids", [])
+    unresolved = set(report.get("unresolved_ids", []))
+    
+    # Also discover any evaluated instances directly from logs if harness_report is partial
+    eval_dir = RESULTS_DIR / session / "logs" / "run_evaluation" / session
+    if eval_dir.is_dir():
+        for sub in eval_dir.iterdir():
+            if sub.is_dir():
+                for inst_dir in sub.iterdir():
+                    rep_path = inst_dir / "report.json"
+                    if rep_path.is_file():
+                        try:
+                            data = json.loads(rep_path.read_text(encoding="utf-8"))
+                            inst_data = data.get(inst_dir.name, {})
+                            if not inst_data.get("resolved", False):
+                                unresolved.add(inst_dir.name)
+                        except Exception:
+                            pass
+
+    unresolved = sorted(unresolved)
     print(f"[self-correct] Found {len(unresolved)} unresolved instances in {session}")
 
     feedback_map = {}

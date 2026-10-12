@@ -1,0 +1,25 @@
+diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py
+index 29c6ff0..ffb08a9 100644
+--- a/django/db/models/fields/json.py
++++ b/django/db/models/fields/json.py
+@@ -370,10 +370,16 @@ class KeyTransformIsNull(lookups.IsNull):
+             return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)
+         return super().as_sql(compiler, connection)
+ 
+-    def as_sqlite(self, compiler, connection):
+-        if not self.rhs:
+-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)
+-        return super().as_sql(compiler, connection)
++    def as_sql(self, compiler, connection):
++        if not connection.features.has_json_path_lookup:
++            return super().as_sql(compiler, connection)
++        if connection.vendor in {'sqlite', 'oracle'} and self.rhs:
++            sql, params = self.lhs.as_sql(compiler, connection)
++            return (
++                "(JSON_TYPE(%s, '$') IS NULL OR JSON_TYPE(%s, %s) IS NULL)" % (sql, sql, "%s"),
++                params + [self.lhs.key_name],
++            )
++        return self.lhs.as_sql(compiler, connection)
+ 
+ 
+ class KeyTransformIn(lookups.In):

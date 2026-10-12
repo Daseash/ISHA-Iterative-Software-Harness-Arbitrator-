@@ -1,17 +1,17 @@
 [
   {
     "instance_id": "django__django-15347",
-    "model_patch": "diff --git a/django/contrib/messages/storage/cookie.py b/django/contrib/messages/storage/cookie.py\nindex a226e32..87a4197 100644\n--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@ class MessageEncoder(json.JSONEncoder):\n             # Using 0/1 here instead of False/True to produce more compact json\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)",
+    "model_patch": "diff --git a/django/contrib/messages/storage/cookie.py b/django/contrib/messages/storage/cookie.py\n--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,3 +19,3 @@ class MessageEncoder(json.JSONEncoder):\n             is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15388",
-    "model_patch": "diff --git a/django/conf/__init__.py b/django/conf/__init__.py\nindex 05345cb..243b4e9 100644\n--- a/django/conf/__init__.py\n+++ b/django/conf/__init__.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Settings and configuration for Django.\n-\n+        from pathlib import Path\n Read values from the module specified by the DJANGO_SETTINGS_MODULE environment\n variable, and then from django.conf.global_settings; see the global_settings.py\n for a list of all possible variables.\n@@ -74,6 +74,10 @@ class LazySettings(LazyObject):\n                 % (desc, ENVIRONMENT_VARIABLE))\n \n         self._wrapped = Settings(settings_module)\n+        for setting in dir(self._wrapped):\n+            val = getattr(self._wrapped, setting)\n+            if isinstance(val, Path):\n+                setattr(self._wrapped, setting, str(val))\n \n     def __repr__(self):\n         # Hardcode the class name as otherwise it yields 'Settings'.",
+    "model_patch": "diff --git a/django/template/autoreload.py b/django/template/autoreload.py\nindex cf1b20ba95..5da02ffcce 100644\n--- a/django/template/autoreload.py\n+++ b/django/template/autoreload.py\n@@ -47,6 +47,8 @@ def watch_for_template_changes(sender, **kwargs):\n \n @receiver(file_changed, dispatch_uid='template_loaders_file_changed')\n def template_changed(sender, file_path, **kwargs):\n+    if file_path.suffix == '.py':\n+        return\n     for template_dir in get_template_directories():\n         if template_dir in file_path.parents:\n             reset_loaders()\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15400",
-    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..b868f79936 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -432,6 +432,13 @@ class SimpleLazyObject(LazyObject):\n             return result\n         return copy.deepcopy(self._wrapped, memo)\n \n+    __add__ = new_method_proxy(operator.add)\n+\n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n def partition(predicate, values):\n     \"\"\"",
+    "model_patch": "diff --git a/django/utils/functional.py b/django/utils/functional.py\nindex 9e1be0fe0f..b868f79936 100644\n--- a/django/utils/functional.py\n+++ b/django/utils/functional.py\n@@ -432,6 +432,13 @@ class SimpleLazyObject(LazyObject):\n             return result\n         return copy.deepcopy(self._wrapped, memo)\n \n+    __add__ = new_method_proxy(operator.add)\n+\n+    def __radd__(self, other):\n+        if self._wrapped is empty:\n+            self._setup()\n+        return other + self._wrapped\n+\n \n def partition(predicate, values):\n     \"\"\"\n",
     "model_name_or_path": "isha"
   },
   {
@@ -21,17 +21,17 @@
   },
   {
     "instance_id": "django__django-15695",
-    "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e..15d0b13 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -669,7 +669,14 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n                 )\n \n     def database_backwards(self, app_label, schema_editor, from_state, to_state):\n-        self.database_forwards(app_label, schema_editor, from_state, to_state)\n+        model = to_state.apps.get_model(app_label, self.model_name)\n+        if self.old_fields:\n+            from_model = from_state.apps.get_model(app_label, self.model_name)\n+            columns = [from_model._meta.get_field(field).column for field in self.old_fields]\n+            old_name = schema_editor._create_index_name(from_model._meta.db_table, columns, suffix=\"_idx\")\n+        else:\n+            old_name = self.old_name\n+        schema_editor.rename_index(model, self.new_name, old_name)\n \n     def references_field(self, model_name, name, app_label):\n         return self.references_model(model_name, app_label) and (\n",
+    "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex d17232e4ec..026176f733 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -961,6 +961,9 @@ class RenameIndex(IndexOperation):\n             from_model_state = from_state.models[app_label, self.model_name_lower]\n             old_index = from_model_state.get_index_by_name(self.old_name)\n \n+        if old_index.name == self.new_name:\n+            return\n+\n         to_model_state = to_state.models[app_label, self.model_name_lower]\n         new_index = to_model_state.get_index_by_name(self.new_name)\n         schema_editor.rename_index(model, old_index, new_index)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15738",
-    "model_patch": "diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py\nindex 5f41053..f824d7c 100644\n--- a/django/db/migrations/autodetector.py\n+++ b/django/db/migrations/autodetector.py\n@@ -197,6 +197,8 @@ class MigrationAutodetector:\n         self.generate_altered_order_with_respect_to()\n         self.generate_altered_unique_together()\n         self.generate_altered_index_together()\n+        self.generate_added_constraints()\n+        self.generate_removed_constraints()\n         self.generate_added_indexes()\n         self.generate_added_constraints()\n         self.generate_altered_db_table()",
+    "model_patch": "diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py\nindex 5f41053..f824d7c 100644\n--- a/django/db/migrations/autodetector.py\n+++ b/django/db/migrations/autodetector.py\n@@ -197,6 +197,8 @@ class MigrationAutodetector:\n         self.generate_altered_order_with_respect_to()\n         self.generate_altered_unique_together()\n         self.generate_altered_index_together()\n+        self.generate_added_constraints()\n+        self.generate_removed_constraints()\n         self.generate_added_indexes()\n         self.generate_added_constraints()\n         self.generate_altered_db_table()\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-15781",
-    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..ef852a1 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -286,8 +286,8 @@ class BaseCommand:\n         Create and return the ``ArgumentParser`` which will be used to\n         parse the arguments to this command.\n         \"\"\"\n+        kwargs.setdefault(\"formatter_class\", DjangoHelpFormatter)\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,",
+    "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..ef852a1 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -286,8 +286,8 @@ class BaseCommand:\n         Create and return the ``ArgumentParser`` which will be used to\n         parse the arguments to this command.\n         \"\"\"\n+        kwargs.setdefault(\"formatter_class\", DjangoHelpFormatter)\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,\n",
     "model_name_or_path": "isha"
   },
   {
@@ -56,7 +56,7 @@
   },
   {
     "instance_id": "django__django-15851",
-    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63546..3b5ddafaca 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -32,9 +32,9 @@ class DatabaseClient(BaseDatabaseClient):\n             args += [\"-h\", host]\n         if port:\n             args += [\"-p\", str(port)]\n+        args.extend(parameters)\n         if dbname:\n             args += [dbname]\n-        args.extend(parameters)\n \n         env = {}\n         if passwd:",
+    "model_patch": "diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py\nindex 4c9bd63546..3b5ddafaca 100644\n--- a/django/db/backends/postgresql/client.py\n+++ b/django/db/backends/postgresql/client.py\n@@ -32,9 +32,9 @@ class DatabaseClient(BaseDatabaseClient):\n             args += [\"-h\", host]\n         if port:\n             args += [\"-p\", str(port)]\n+        args.extend(parameters)\n         if dbname:\n             args += [dbname]\n-        args.extend(parameters)\n \n         env = {}\n         if passwd:\n",
     "model_name_or_path": "isha"
   },
   {
@@ -66,7 +66,7 @@
   },
   {
     "instance_id": "django__django-15996",
-    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..e9cd698 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        try:\n+            name = self.value.name\n+        except AttributeError:\n+            name = None\n+        if name is None:\n+            value_bits = [v for v in enum_class if v in self.value]\n+            return (\" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits), {\"import %s\" % module})\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..e9cd698 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        try:\n+            name = self.value.name\n+        except AttributeError:\n+            name = None\n+        if name is None:\n+            value_bits = [v for v in enum_class if v in self.value]\n+            return (\" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits), {\"import %s\" % module})\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},\n",
     "model_name_or_path": "isha"
   },
   {
@@ -76,27 +76,27 @@
   },
   {
     "instance_id": "django__django-16046",
-    "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..99501c6 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -68,6 +68,8 @@ def format(\n             str_number = \"{:f}\".format(number)\n     else:\n         str_number = str(number)\n+    if not str_number:\n+        return \"\"\n     if str_number[0] == \"-\":\n         sign = \"-\"\n         str_number = str_number[1:]",
+    "model_patch": "diff --git a/django/utils/numberformat.py b/django/utils/numberformat.py\nindex 488d6a7..99501c6 100644\n--- a/django/utils/numberformat.py\n+++ b/django/utils/numberformat.py\n@@ -68,6 +68,8 @@ def format(\n             str_number = \"{:f}\".format(number)\n     else:\n         str_number = str(number)\n+    if not str_number:\n+        return \"\"\n     if str_number[0] == \"-\":\n         sign = \"-\"\n         str_number = str_number[1:]\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16139",
-    "model_patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex b3cfc67..f6c4b7f 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -163,7 +163,7 @@ class UserChangeForm(forms.ModelForm):\n         super().__init__(*args, **kwargs)\n         password = self.fields.get(\"password\")\n         if password:\n-            password.help_text = password.help_text.format(\"../password/\")\n+            password.help_text = password.help_text.format(f\"../../{self.instance.pk}/password/\")\n         user_permissions = self.fields.get(\"user_permissions\")\n         if user_permissions:\n             user_permissions.queryset = user_permissions.queryset.select_related(",
+    "model_patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex b3cfc67..f6c4b7f 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -163,7 +163,7 @@ class UserChangeForm(forms.ModelForm):\n         super().__init__(*args, **kwargs)\n         password = self.fields.get(\"password\")\n         if password:\n-            password.help_text = password.help_text.format(\"../password/\")\n+            password.help_text = password.help_text.format(f\"../../{self.instance.pk}/password/\")\n         user_permissions = self.fields.get(\"user_permissions\")\n         if user_permissions:\n             user_permissions.queryset = user_permissions.queryset.select_related(\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16229",
-    "model_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex 35ecdc1..d004793 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1155,6 +1155,8 @@ class BaseInlineFormSet(BaseModelFormSet):\n                     form.fields.get(name), \"label\", capfirst(self.fk.verbose_name)\n                 )\n             }\n+        if f.has_default() and callable(f.default):\n+            kwargs[\"show_hidden_initial\"] = False\n \n         # The InlineForeignKeyField assumes that the foreign key relation is\n         # based on the parent model's pk. If this isn't the case, set to_field",
+    "model_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -93,3 +93,3 @@ class BoundField:\n             name=self.html_initial_name if only_initial else self.html_name,\n-            value=self.value(),\n+            value=self.field.prepare_value(self.initial) if only_initial else self.value(),\n             attrs=attrs,\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16255",
-    "model_patch": "diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py\nindex 27756d9..b40ad80 100644\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -168,7 +168,7 @@ class Sitemap:\n         if callable(self.lastmod):\n             try:\n                 return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n+            except (TypeError, ValueError):\n                 return None\n         else:\n             return self.lastmod",
+    "model_patch": "diff --git a/django/contrib/sitemaps/__init__.py b/django/contrib/sitemaps/__init__.py\nindex 27756d9..b40ad80 100644\n--- a/django/contrib/sitemaps/__init__.py\n+++ b/django/contrib/sitemaps/__init__.py\n@@ -168,7 +168,7 @@ class Sitemap:\n         if callable(self.lastmod):\n             try:\n                 return max([self.lastmod(item) for item in self.items()])\n-            except TypeError:\n+            except (TypeError, ValueError):\n                 return None\n         else:\n             return self.lastmod\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16400",
-    "model_patch": "diff --git a/django/contrib/auth/management/__init__.py b/django/contrib/auth/management/__init__.py\nindex 0b5a982..e87d080 100644\n--- a/django/contrib/auth/management/__init__.py\n+++ b/django/contrib/auth/management/__init__.py\n@@ -90,7 +90,7 @@ def create_permissions(\n     all_perms = set(\n         Permission.objects.using(using)\n         .filter(\n-            content_type__in=ctypes,\n+            content_type__in=ctypes\n         )\n         .values_list(\"content_type\", \"codename\")\n     )\n",
+    "model_patch": "diff --git a/django/contrib/auth/management/__init__.py b/django/contrib/auth/management/__init__.py\n--- a/django/contrib/auth/management/__init__.py\n+++ b/django/contrib/auth/management/__init__.py\n@@ -99,1 +99,1 @@\n-        Permission(codename=codename, name=name, content_type=ct)\n+        Permission(codename=codename, name=name, content_type_id=ct.pk)\n",
     "model_name_or_path": "isha"
   },
   {
@@ -116,7 +116,7 @@
   },
   {
     "instance_id": "django__django-16816",
-    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex 5e6a400..af87cf4 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -316,6 +316,8 @@ def _get_non_gfk_field(opts, name):\n     Reverse relations should also be excluded as these aren't attributes of the\n     model (rather something like `foo_set`).\n     \"\"\"\n+    if name in [f.get_accessor_name() for f in opts.related_objects]:\n+        raise FieldDoesNotExist()\n     field = opts.get_field(name)\n     if (\n         field.is_relation",
+    "model_patch": "diff --git a/django/contrib/admin/checks.py b/django/contrib/admin/checks.py\nindex 0fefe65e48..c395b0bde2 100644\n--- a/django/contrib/admin/checks.py\n+++ b/django/contrib/admin/checks.py\n@@ -916,9 +916,10 @@ class ModelAdminChecks(BaseModelAdminChecks):\n                         id=\"admin.E108\",\n                     )\n                 ]\n-        if isinstance(field, models.ManyToManyField) or (\n-            getattr(field, \"rel\", None) and field.rel.field.many_to_one\n-        ):\n+        if (\n+            getattr(field, \"is_relation\", False)\n+            and (field.many_to_many or field.one_to_many)\n+        ) or (getattr(field, \"rel\", None) and field.rel.field.many_to_one):\n             return [\n                 checks.Error(\n                     f\"The value of '{label}' must not be a many-to-many field or a \"\n",
     "model_name_or_path": "isha"
   },
   {
@@ -131,7 +131,7 @@
   },
   {
     "instance_id": "django__django-16910",
-    "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex 781dfd5..d62a87c 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1658,7 +1658,7 @@ class Query(BaseExpression):\n             try:\n                 if opts is None:\n                     raise FieldDoesNotExist\n-                field = opts.get_field(name)\n+                field = opts.get_field(name) if name != \"id\" or not opts.pk.primary_key else opts.pk\n             except FieldDoesNotExist:\n                 if name in self.annotation_select:\n                     field = self.annotation_select[name].output_field",
+    "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex 781dfd5..d62a87c 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1658,7 +1658,7 @@ class Query(BaseExpression):\n             try:\n                 if opts is None:\n                     raise FieldDoesNotExist\n-                field = opts.get_field(name)\n+                field = opts.get_field(name) if name != \"id\" or not opts.pk.primary_key else opts.pk\n             except FieldDoesNotExist:\n                 if name in self.annotation_select:\n                     field = self.annotation_select[name].output_field\n",
     "model_name_or_path": "isha"
   },
   {
@@ -141,12 +141,12 @@
   },
   {
     "instance_id": "django__django-17087",
-    "model_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\nindex 9a7a2bb..1dd305a 100644\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -76,7 +76,7 @@ class Choices(enum.Enum, metaclass=ChoicesMeta):\n \n     # A similar format was proposed for Python 3.10.\n     def __repr__(self):\n-        return f\"{self.__class__.__qualname__}.{self._name_}\"\n+        return f\"{self.__class__.__module__}.{self.__class__.__qualname__}.{self._name_}\"\n \n \n class IntegerChoices(int, Choices):\n",
+    "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex d88cda6e20..06657ebaab 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -168,7 +168,7 @@ class FunctionTypeSerializer(BaseSerializer):\n         ):\n             klass = self.value.__self__\n             module = klass.__module__\n-            return \"%s.%s.%s\" % (module, klass.__name__, self.value.__name__), {\n+            return \"%s.%s.%s\" % (module, klass.__qualname__, self.value.__name__), {\n                 \"import %s\" % module\n             }\n         # Further error checking\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "django__django-16379",
     "model_name_or_path": "ISHA",
-    "model_patch": "diff --git a/django/core/cache/backends/filebased.py b/django/core/cache/backends/filebased.py\nindex 631da49..215fefb 100644\n--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -90,10 +90,11 @@ class FileBasedCache(BaseCache):\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n-        return False\n+        except FileNotFoundError:\n+            return False\n \n     def _cull(self):\n         \"\"\""
+    "model_patch": "diff --git a/django/core/cache/backends/filebased.py b/django/core/cache/backends/filebased.py\nindex 631da49..215fefb 100644\n--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -90,10 +90,11 @@ class FileBasedCache(BaseCache):\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n-        return False\n+        except FileNotFoundError:\n+            return False\n \n     def _cull(self):\n         \"\"\"\n"
   }
 ]

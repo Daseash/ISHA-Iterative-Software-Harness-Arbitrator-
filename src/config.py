@@ -99,12 +99,17 @@ DEFAULT_IMPROVE_ROUNDS = int(os.getenv("ISHA_IMPROVE_ROUNDS", "3"))
 DEFAULT_CONVERGENCE_DELTA = float(os.getenv("ISHA_CONVERGENCE_DELTA", "0.0"))
 
 
+import collections
+
 # ── Model availability ─────────────────────────────────────────────────────
 _gemini_keys_raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
 _gemini_key_pool = [k.strip() for k in _gemini_keys_raw.split(",") if k.strip()]
 _gemini_key_lock = threading.Lock()
 _gemini_key_counter = 0
 _dead_gemini_keys: set = set()
+_dead_gemini_keys_by_model: dict = collections.defaultdict(set)
+_key_death_time: dict = {}
+_env_last_mtime: float = 0.0
 
 GOOGLE_API_KEY = _gemini_key_pool[0] if _gemini_key_pool else None
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -113,24 +118,68 @@ LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
 
 
-def get_next_gemini_key() -> str | None:
-    """Return next active Gemini API key in round-robin order across threads."""
+def _check_and_reload_keys_from_env() -> None:
+    """Dynamically re-read .env if changed on disk, adding any newly added keys."""
+    global _gemini_key_pool, _env_last_mtime
+    env_file = ROOT / ".env"
+    if not env_file.is_file():
+        return
+    try:
+        mtime = env_file.stat().st_mtime
+        if mtime > _env_last_mtime:
+            _env_last_mtime = mtime
+            load_dotenv(dotenv_path=env_file, override=True)
+            raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
+            fresh_keys = [k.strip() for k in raw.split(",") if k.strip()]
+            for k in fresh_keys:
+                if k not in _gemini_key_pool:
+                    _gemini_key_pool.append(k)
+                    print(f"[config] Dynamically adapted new Gemini key {k[:12]}... into active pool", file=sys.stderr)
+    except Exception:
+        pass
+
+
+def get_next_gemini_key(model: str = "") -> str | None:
+    """Return next active Gemini API key in round-robin order, isolating quota per-model."""
     global _gemini_key_counter
     with _gemini_key_lock:
-        active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+        _check_and_reload_keys_from_env()
+        now = time.time()
+        # Cooldown check: if a key died > 300s ago, revive it in case quota was rolling-window
+        dead_for_model = _dead_gemini_keys_by_model[model] if model else _dead_gemini_keys
+        revived = [
+            k for k in list(dead_for_model)
+            if (now - _key_death_time.get((k, model), 0.0)) > 300
+        ]
+        for k in revived:
+            dead_for_model.remove(k)
+            _key_death_time.pop((k, model), None)
+            print(f"[config] Revived Gemini key {k[:12]}... for {model or 'all'} after cooldown", file=sys.stderr)
+
+        active = [k for k in _gemini_key_pool if k not in dead_for_model]
         if not active:
-            return None
+            # Fall back to any pool key if all died for this model
+            active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+            if not active:
+                return None
         _gemini_key_counter += 1
         return active[_gemini_key_counter % len(active)]
 
 
-def mark_gemini_key_dead(key: str) -> bool:
-    """Mark a Gemini key as quota-exhausted. Returns True if any active keys remain."""
+def mark_gemini_key_dead(key: str, model: str = "") -> bool:
+    """Mark a Gemini key as quota-exhausted for this specific model."""
     with _gemini_key_lock:
-        _dead_gemini_keys.add(key)
-        active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
-        print(f"[config] Gemini key {key[:12]}... quota exhausted ({len(active)} active keys remaining)", file=sys.stderr)
-        return len(active) > 0
+        if model:
+            _dead_gemini_keys_by_model[model].add(key)
+            _key_death_time[(key, model)] = time.time()
+            active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys_by_model[model]]
+            print(f"[config] Gemini key {key[:12]}... quota exhausted for {model} ({len(active)} active keys remaining for {model})", file=sys.stderr)
+            return len(active) > 0
+        else:
+            _dead_gemini_keys.add(key)
+            active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
+            print(f"[config] Gemini key {key[:12]}... quota exhausted ({len(active)} active keys remaining)", file=sys.stderr)
+            return len(active) > 0
 
 
 def _rotate_gemini_key() -> bool:
@@ -592,7 +641,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     kwargs["temperature"] = temperature
                 active_gemini_key = None
                 if provider == "gemini":
-                    active_gemini_key = get_next_gemini_key()
+                    active_gemini_key = get_next_gemini_key(model)
                     if active_gemini_key:
                         kwargs["api_key"] = active_gemini_key
                 resp = litellm.completion(**kwargs)
@@ -616,8 +665,8 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 if _provider_fatal(e):
                     if _quota_fatal(e):
                         if provider == "gemini" and active_gemini_key:
-                            if mark_gemini_key_dead(active_gemini_key):
-                                # Successfully marked key dead, other keys remain — retry call immediately
+                            if mark_gemini_key_dead(active_gemini_key, model):
+                                # Successfully marked key dead for this model, other keys remain — retry call immediately
                                 continue
                         # Per-model quota — kill the model, not the provider
                         _dead_models.add(model)

@@ -1,0 +1,406 @@
+{
+  "instance_id": "django__django-14730",
+  "repo": "django/django",
+  "base_commit": "4fe3774c729f3fd5105b3001fe69a70bdca95ac3",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537731.2057035
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537738.4677641
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537760.086405
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537762.4320278
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537798.6581836
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537976.5944884
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/related.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 18,
+      "removed_lines": 6,
+      "warnings": [
+        "rewrite risk: '_check_symmetrical_and_related_name' in 'django/db/models/fields/related.py' — the diff replaces 10/10 of its body (100%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue.",
+        "rewrite risk: 'check' in 'django/db/models/fields/related.py' — the diff replaces 7/9 of its body (78%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791537653.083158,
+  "elapsed_s": 331.41,
+  "plan": "Step 1: Root cause\nThe `ManyToManyField` in Django allows a `symmetrical` argument (defaulting to `True` for self-referential relations). When a relationship is symmetrical, Django does not create a reverse accessor on the target model. If a developer explicitly provides a `related_name` for such a field, it is misleading because that name will never be functional, yet Django currently permits this configuration. To improve developer experience, we should add a system check to raise an error (or a warning, though the prompt implies an error) when `related_name` is defined on a symmetrical `ManyToManyField`.\n\nStep 2: Exact changes\nThe fix should be implemented in `django/db/models/fields/related.py` within the `ManyToManyField` class.\n\n1. Locate the `ManyToManyField` class (defined in `django/db/models/fields/related.py`).\n2. Add a new check method (e.g., `_check_symmetrical_and_related_name`) to `ManyToManyField`.\n3. Inside this method, check if `self.remote_field.symmetrical` is `True` and `self.remote_field.related_name` is not `None`.\n4. If both are true, return a list containing a `checks.Error` instance (e.g., id 'fields.E340') explaining that `related_name` cannot be used with a symmetrical `ManyToManyField`.\n5. Ensure this method is called within the `check()` method of `ManyToManyField`.\n\nFile: `django/db/models/fields/related.py`\n- Modify `ManyToManyField.check()` to include `*self._check_symmetrical_and_related_name()`.\n- Add the `_check_symmetrical_and_related_name` method to the `ManyToManyField` class.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/db/models/fields/related.py",
+      "symbol": "django/db/models/fields/related.py::resolve_relation",
+      "symbols": [
+        "resolve_relation",
+        "lazy_related_operation",
+        "__init__",
+        "related_model"
+      ],
+      "line_range": [
+        37,
+        61
+      ],
+      "score": 0.5123,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9587,
+        "vector": 0.6055,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: relationship, argument, model)"
+    },
+    {
+      "file": "django/db/models/fields/reverse_related.py",
+      "symbol": "django/db/models/fields/reverse_related.py::__init__",
+      "symbols": [
+        "__init__",
+        "target_field",
+        "related_model",
+        "identity"
+      ],
+      "line_range": [
+        39,
+        51
+      ],
+      "score": 0.4704,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.93,
+        "vector": 0.3162,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: symmetrical, related_name, related, field)"
+    },
+    {
+      "file": "django/db/models/fields/related_descriptors.py",
+      "symbol": "django/db/models/fields/related_descriptors.py::Child",
+      "symbols": [
+        "Child",
+        "Child",
+        "RelatedObjectDoesNotExist",
+        "get_prefetch_queryset"
+      ],
+      "line_range": [
+        17,
+        19
+      ],
+      "score": 0.4102,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5699,
+        "vector": 0.5646,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: related_name, related, model)"
+    },
+    {
+      "file": "tests/invalid_models_tests/test_relative_fields.py",
+      "symbol": "tests/invalid_models_tests/test_relative_fields.py::test_valid_foreign_key_without_accessor",
+      "symbols": [
+        "test_valid_foreign_key_without_accessor",
+        "Model",
+        "test_foreign_key_to_missing_model",
+        "test_many_to_many_to_missing_model"
+      ],
+      "line_range": [
+        12,
+        22
+      ],
+      "score": 0.3896,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6862,
+        "vector": 0.8274,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: target, related_name, related, field)"
+    },
+    {
+      "file": "tests/model_fields/models.py",
+      "symbol": "tests/model_fields/models.py::Bar",
+      "symbols": [
+        "Bar",
+        "Person",
+        "AbstractPersonWithHeight",
+        "PersonWithHeightAndWidth"
+      ],
+      "line_range": [
+        31,
+        35
+      ],
+      "score": 0.4463,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3013,
+        "vector": 0.2208,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: related_name, related, field, model)"
+    },
+    {
+      "file": "tests/m2m_regress/models.py",
+      "symbol": "tests/m2m_regress/models.py::SelfRefer",
+      "symbols": [
+        "SelfRefer",
+        "TagCollection",
+        "Entry",
+        "Worksheet"
+      ],
+      "line_range": [
+        7,
+        15
+      ],
+      "score": 0.4423,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8012,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: manytomanyfield, related, field, manytomany)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.66645,
+  "laya_scores": {
+    "fix_quality": 1.2775,
+    "matches_issue": 0.7516,
+    "safe_to_apply": 0.6367,
+    "composite": 0.66645,
+    "secrets_or_danger": 0.1791,
+    "logic_drift": 0.828,
+    "flagged": true,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security or code execution.\n- PERFORMANCE: PASS, Minimal overhead added to model system check phase.\n- ROBUSTNESS: PASS, Correctly adds a validation check to prevent developer misconfiguration.\n- PONYTAIL / YAGNI: PASS, This is a requested and necessary clarity improvement for the framework.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.apps import apps\nfrom django.core import checks\nfrom django.db import models\nfrom django.test import TestCase, override_settings\n\n# Reproduction Test\nclass SymmetricalM2MRelatedNameTest(TestCase):\n    def test_symmetrical_m2m_with_related_name_raises_error(self):\n        \"\"\"\n        Defining a related_name on a symmetrical ManyToManyField should trigger \n        a system check error (fields.E340).\n        \"\"\"\n        class SymmetricalModel(models.Model):\n            friends = models.ManyToManyField(\n                'self', \n                symmetrical=True, \n                related_name='friend_set'\n            )\n\n            class Meta:\n                app_label = 'test_app'\n\n        errors = SymmetricalModel.check()\n        # Filter for the expected error code\n        field_errors = [e for e in errors if e.id == 'fields.E340']\n        \n        assert len(field_errors) > 0, \"Expected system check error E340 for symmetrical M2M with related_name\"\n\n# Edge Case Tests\nclass SymmetricalM2MEdgeCasesTest(TestCase):\n    def test_symmetrical_m2m_without_related_name_is_valid(self):\n        \"\"\"Standard symmetrical M2M without related_name should pass.\"\"\"\n        class ValidModel(models.Model):\n            friends = models.ManyToManyField('self', symmetrical=True)\n\n            class Meta:\n                app_label = 'test_app'\n\n        errors = ValidModel.check()\n        assert not any(e.id == 'fields.E340' for e in errors)\n\n    def test_asymmetrical_m2m_with_related_name_is_valid(self):\n        \"\"\"Asymmetrical M2M (symmetrical=False) should allow related_name.\"\"\"\n        class AsymmetricalModel(models.Model):\n            following = models.ManyToManyField(\n                'self', \n                symmetrical=False, \n                related_name='followers'\n            )\n\n            class Meta:\n                app_label = 'test_app'\n\n        errors = AsymmetricalModel.check()\n        assert not any(e.id == 'fields.E340' for e in errors)\n\n    def test_non_self_referential_m2m_with_related_name_is_valid(self):\n        \"\"\"M2M to a different model should allow related_name regardless of symmetry.\"\"\"\n        class Target(models.Model):\n            class Meta:\n                app_label = 'test_app'\n\n        class Source(models.Model):\n            others = models.ManyToManyField(\n                Target, \n                symmetrical=False, \n                related_name='sources'\n            )\n\n            class Meta:\n                app_label = 'test_app'\n\n        errors = Source.check()\n        assert not any(e.id == 'fields.E340' for e in errors)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex febaadbb5b..9abe87e303 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -136,8 +136,19 @@ class RelatedField(FieldCacheMixin, Field):\n             ]\n         return []\n \n-    def _check_related_query_name_is_valid(self):\n-        if self.remote_field.is_hidden():\n+    def _check_symmetrical_and_related_name(self):\n+        if self.remote_field.symmetrical and self.remote_field.related_name:\n+            return [\n+                checks.Error(\n+                    \"You cannot specify a related_name on a symmetrical ManyToManyField.\",\n+                    obj=self,\n+                    id='fields.E340',\n+                )\n+            ]\n+        return []\n+\n+    def _check_through_fields(self):\n+        if not self.remote_field.through:\n             return []\n         rel_query_name = self.related_query_name()\n         errors = []\n@@ -1210,10 +1221,11 @@ class ManyToManyField(RelatedField):\n     def check(self, **kwargs):\n         return [\n             *super().check(**kwargs),\n-            *self._check_unique(**kwargs),\n-            *self._check_relationship_model(**kwargs),\n-            *self._check_ignored_options(**kwargs),\n-            *self._check_table_uniqueness(**kwargs),\n+            *self._check_unique(),\n+            *self._check_relationship_model(),\n+            *self._check_ignored_options(),\n+            *self._check_symmetrical_and_related_name(),\n+            *self._check_through_fields(),\n         ]\n \n     def _check_unique(self, **kwargs):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14730-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 18,
+      "removed_lines": 6,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2775,
+        "matches_issue": 0.7516,
+        "safe_to_apply": 0.6367,
+        "composite": 0.66645,
+        "secrets_or_danger": 0.1791,
+        "logic_drift": 0.828,
+        "flagged": true
+      },
+      "laya_combined": 0.6664,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 81.64,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex febaadbb5b..c51b7e6310 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -371,6 +371,22 @@ class RelatedField(FieldCacheMixin, Field):\n             return base_q & descriptor_filter\n         return base_q\n \n+    def _check_symmetrical_and_related_name(self):\n+        if (\n+            self.remote_field.symmetrical\n+            and self.remote_field.related_name is not None\n+            and self.remote_field.model is not None\n+            and self.remote_field.model._meta.concrete_model == self.model._meta.concrete_model\n+        ):\n+            return [\n+                checks.Error(\n+                    \"Symmetrical ManyToManyFields on model '%s' can't have a related_name defined.\"\n+                    % self.model._meta.label,\n+                    obj=self,\n+                    id='fields.E340',\n+                ),\n+            ]\n+\n     @property\n     def swappable_setting(self):\n         \"\"\"\n@@ -527,6 +543,7 @@ class ForeignObject(RelatedField):\n     def _check_unique_target(self):\n         rel_is_string = isinstance(self.remote_field.model, str)\n         if rel_is_string or not self.requires_unique_target:\n+            *self._check_symmetrical_and_related_name(),\n             return []\n \n         try:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14730-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 17,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1298,
+        "matches_issue": 0.7992,
+        "safe_to_apply": 0.6472,
+        "composite": 0.64405,
+        "secrets_or_danger": 0.2258,
+        "logic_drift": 0.6524,
+        "flagged": false
+      },
+      "laya_combined": 0.6441,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 13.83,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1135,6 +1135,13 @@ class ManyToManyField(RelatedField):\n         return [\n             *super().check(**kwargs),\n             *self._check_unique(),\n+            *self._check_symmetrical_and_related_name(),\n             *self._check_through_fields(),\n             *self._check_invalid_queues(),\n         ]\n@@ -1142,6 +1149,15 @@ class ManyToManyField(RelatedField):\n     def _check_unique(self):\n         if self.unique:\n             return [\n                 checks.Error(\n                     'ManyToManyFields cannot be unique.',\n                     obj=self,\n                     id='fields.E330',\n                 ),\n             ]\n         return []\n+\n+    def _check_symmetrical_and_related_name(self):\n+        if self.remote_field.symmetrical and self.remote_field.related_name:\n+            return [\n+                checks.Error(\n+                    \"related_name cannot be used with a symmetrical ManyToManyField.\",\n+                    obj=self,\n+                    id='fields.E340',\n+                ),\n+            ]\n+        return []\n \n     def _check_through_fields(self):\n         if not self.remote_field.through:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14730-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14730-c2\\django\\db\\models\\fields\\related.py: SyntaxError line 1245: expected an indented block after 'if' statement on line 1243"
+      ],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 12,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.538,
+        "matches_issue": 0.8264,
+        "safe_to_apply": 0.6605,
+        "composite": 0.7562249999999999,
+        "secrets_or_danger": 0.1282,
+        "logic_drift": 0.282,
+        "flagged": false
+      },
+      "laya_combined": 0.7562,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 86.78,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex febaadbb5b..9abe87e303 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -136,8 +136,19 @@ class RelatedField(FieldCacheMixin, Field):\n             ]\n         return []\n \n-    def _check_related_query_name_is_valid(self):\n-        if self.remote_field.is_hidden():\n+    def _check_symmetrical_and_related_name(self):\n+        if self.remote_field.symmetrical and self.remote_field.related_name:\n+            return [\n+                checks.Error(\n+                    \"You cannot specify a related_name on a symmetrical ManyToManyField.\",\n+                    obj=self,\n+                    id='fields.E340',\n+                )\n+            ]\n+        return []\n+\n+    def _check_through_fields(self):\n+        if not self.remote_field.through:\n             return []\n         rel_query_name = self.related_query_name()\n         errors = []\n@@ -1210,10 +1221,11 @@ class ManyToManyField(RelatedField):\n     def check(self, **kwargs):\n         return [\n             *super().check(**kwargs),\n-            *self._check_unique(**kwargs),\n-            *self._check_relationship_model(**kwargs),\n-            *self._check_ignored_options(**kwargs),\n-            *self._check_table_uniqueness(**kwargs),\n+            *self._check_unique(),\n+            *self._check_relationship_model(),\n+            *self._check_ignored_options(),\n+            *self._check_symmetrical_and_related_name(),\n+            *self._check_through_fields(),\n         ]\n \n     def _check_unique(self, **kwargs):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14730-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/related.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/related.py"
+    ],
+    "added_lines": 18,
+    "removed_lines": 6,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.2775,
+      "matches_issue": 0.7516,
+      "safe_to_apply": 0.6367,
+      "composite": 0.66645,
+      "secrets_or_danger": 0.1791,
+      "logic_drift": 0.828,
+      "flagged": true
+    },
+    "laya_combined": 0.6664,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 81.64,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex febaadb..9abe87e 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -136,8 +136,19 @@ class RelatedField(FieldCacheMixin, Field):\n             ]\n         return []\n \n-    def _check_related_query_name_is_valid(self):\n-        if self.remote_field.is_hidden():\n+    def _check_symmetrical_and_related_name(self):\n+        if self.remote_field.symmetrical and self.remote_field.related_name:\n+            return [\n+                checks.Error(\n+                    \"You cannot specify a related_name on a symmetrical ManyToManyField.\",\n+                    obj=self,\n+                    id='fields.E340',\n+                )\n+            ]\n+        return []\n+\n+    def _check_through_fields(self):\n+        if not self.remote_field.through:\n             return []\n         rel_query_name = self.related_query_name()\n         errors = []\n@@ -1210,10 +1221,11 @@ class ManyToManyField(RelatedField):\n     def check(self, **kwargs):\n         return [\n             *super().check(**kwargs),\n-            *self._check_unique(**kwargs),\n-            *self._check_relationship_model(**kwargs),\n-            *self._check_ignored_options(**kwargs),\n-            *self._check_table_uniqueness(**kwargs),\n+            *self._check_unique(),\n+            *self._check_relationship_model(),\n+            *self._check_ignored_options(),\n+            *self._check_symmetrical_and_related_name(),\n+            *self._check_through_fields(),\n         ]\n \n     def _check_unique(self, **kwargs):\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,31 @@
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@
+-    results = set()
+-    for filename in itertools.chain(sys_file_paths, extra_files):
+-        if not filename:
+-            continue
+-        path = Path(filename)
+-        try:
+-            resolved_path = path.resolve(strict=True).absolute()
+-        except FileNotFoundError:
+-            # The module could have been removed, don't fail loudly if this
+-            # is the case.
+-            continue
+-        results.add(resolved_path)
+-    return frozenset(results)
++    results = set()
++    for filename in itertools.chain(sys_file_paths, extra_files):
++        # Skip empty entries or entries that contain an embedded null byte,
++        # which pathlib cannot handle and would raise ValueError.
++        if not filename or '\0' in filename:
++            continue
++        try:
++            # Resolve the path strictly (must exist). Any problem – missing
++            # file, unreadable symlink, or malformed path – is ignored so that
++            # the autoreloader continues to function.
++            resolved_path = Path(filename).resolve(strict=True).absolute()
++        except (FileNotFoundError, OSError, ValueError):
++            continue
++        results.add(resolved_path)
++    return frozenset(results)

@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14752",
+  "repo": "django/django",
+  "base_commit": "b64db05b9cedd96905d637a2d824cbbf428e40e7",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538117.3340967
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538124.5319629
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538162.7998476
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538176.441819
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538235.1047623
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538412.4402633
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/admin/views/autocomplete.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/admin/views/autocomplete.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791538017.0254986,
+  "elapsed_s": 403.41,
+  "plan": "# Before\n    'results': [\n        {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n        for obj in context['object_list']\n    ],\n    \n    # After\n    'results': [\n        self.serialize_result(obj, to_field_name)\n        for obj in context['object_list']\n    ],",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/widgets.py",
+      "symbol": "django/contrib/admin/widgets.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "AutocompleteSelect"
+      ],
+      "line_range": [
+        127,
+        132
+      ],
+      "score": 0.5802,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7508,
+        "vector": 0.2915,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: admin_site; body matches report terms: site, super, admin_site, admin)"
+    },
+    {
+      "file": "django/forms/widgets.py",
+      "symbol": "django/forms/widgets.py::absolute_path",
+      "symbols": [
+        "absolute_path",
+        "NullBooleanSelect",
+        "SelectMultiple",
+        "_render"
+      ],
+      "line_range": [
+        98,
+        107
+      ],
+      "score": 0.7866,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3888,
+        "vector": 0.6826,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: path; body matches report terms: with, path, change)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "_description",
+        "__init__",
+        "__str__"
+      ],
+      "line_range": [
+        1655,
+        1661
+      ],
+      "score": 0.6314,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4033,
+        "vector": 0.713,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: match, path; body matches report terms: path, match, super, kwargs)"
+    },
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::trim_joins",
+      "symbols": [
+        "trim_joins",
+        "RawQuery",
+        "__init__",
+        "__iter__"
+      ],
+      "line_range": [
+        1657,
+        1684
+      ],
+      "score": 0.5882,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6438,
+        "vector": 0.5809,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: path; body matches report terms: foreign, here, there, related)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::_urls",
+      "symbols": [
+        "_urls",
+        "SitemapNotFound",
+        "ping_google",
+        "_get_sitemap_full_url"
+      ],
+      "line_range": [
+        160,
+        209
+      ],
+      "score": 0.6006,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4448,
+        "vector": 0.3699,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (private helper called by a symbol the report names; body matches report terms: object, item, items, code)"
+    },
+    {
+      "file": "tests/admin_views/test_autocomplete_view.py",
+      "symbol": "tests/admin_views/test_autocomplete_view.py::model_admin",
+      "symbols": [
+        "model_admin",
+        "AuthorAdmin",
+        "BookAdmin",
+        "AuthorshipInline"
+      ],
+      "line_range": [
+        52,
+        63
+      ],
+      "score": 0.5678,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7124,
+        "vector": 0.8113,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: admin_site; body matches report terms: site, admin_site, admin; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.61065,
+  "laya_scores": {
+    "fix_quality": 1.5253,
+    "matches_issue": 0.2653,
+    "safe_to_apply": 0.652,
+    "composite": 0.61065,
+    "secrets_or_danger": 0.3531,
+    "logic_drift": 0.5322,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to input handling or authorization logic.\n- PERFORMANCE: PASS, Minimal overhead introduced by method call indirection.\n- ROBUSTNESS: PASS, Refactoring into a hook method improves maintainability and decreases risk of regression.\n- PONYTAIL / YAGNI: PASS, This provides a clean extension point that follows standard Django design patterns.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.contrib.admin.views.autocomplete import AutocompleteJsonView\nfrom django.http import JsonResponse\nfrom django.test import RequestFactory\nfrom unittest.mock import Mock\n\nclass MockObject:\n    def __init__(self, id, text, notes=None):\n        self.id = id\n        self.text = text\n        self.notes = notes\n    def __str__(self):\n        return self.text\n\nclass CustomAutocompleteJsonView(AutocompleteJsonView):\n    \"\"\"View that overrides serialize_result to add extra data.\"\"\"\n    def serialize_result(self, obj, to_field_name):\n        res = super().serialize_result(obj, to_field_name)\n        if hasattr(obj, 'notes'):\n            res['notes'] = obj.notes\n        return res\n\n@pytest.fixture\ndef view():\n    return AutocompleteJsonView()\n\n@pytest.fixture\ndef custom_view():\n    return CustomAutocompleteJsonView()\n\ndef test_serialize_result_extension_reproduction(view, custom_view):\n    \"\"\"\n    REPRODUCTION: Verify that before the fix, the base AutocompleteJsonView \n    does not support customization via serialize_result, and after the fix,\n    subclasses can override it to inject extra fields.\n    \"\"\"\n    obj = MockObject(1, \"Test Object\", notes=\"Secret Note\")\n    to_field_name = \"id\"\n    \n    # This assertion verifies the new interface exists and works in subclasses\n    result = custom_view.serialize_result(obj, to_field_name)\n    \n    assert result['id'] == '1'\n    assert result['text'] == 'Test Object'\n    # This will fail (KeyError) if the view doesn't call serialize_result\n    assert result['notes'] == 'Secret Note'\n\ndef test_serialize_result_boundary_default(view):\n    \"\"\"Edge Case: Test standard serialization output.\"\"\"\n    obj = MockObject(42, \"Standard Item\")\n    result = view.serialize_result(obj, \"id\")\n    \n    assert result == {'id': '42', 'text': 'Standard Item'}\n\ndef test_serialize_result_none_attributes(view):\n    \"\"\"Edge Case: Handle object with None values if valid.\"\"\"\n    obj = MockObject(0, None)\n    # The view calls str() on values, so None becomes 'None'\n    result = view.serialize_result(obj, \"id\")\n    \n    assert result['id'] == '0'\n    assert result['text'] == 'None'\n\ndef test_serialize_result_invalid_field_raises(view):\n    \"\"\"Edge Case: Ensure missing field raises AttributeError (standard behavior).\"\"\"\n    obj = MockObject(1, \"Test\")\n    with pytest.raises(AttributeError):\n        view.serialize_result(obj, \"non_existent_field\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/views/autocomplete.py b/django/contrib/admin/views/autocomplete.py\nindex 3903e4c98c..08d3403807 100644\n--- a/django/contrib/admin/views/autocomplete.py\n+++ b/django/contrib/admin/views/autocomplete.py\n@@ -26,14 +26,17 @@ class AutocompleteJsonView(BaseListView):\n         context = self.get_context_data()\n         return JsonResponse({\n             'results': [\n-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+                self.serialize_result(obj, to_field_name)\n                 for obj in context['object_list']\n             ],\n             'pagination': {'more': context['page_obj'].has_next()},\n         })\n \n+    def serialize_result(self, obj, to_field_name):\n+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+\n     def get_paginator(self, *args, **kwargs):\n-        \"\"\"Use the ModelAdmin's paginator.\"\"\"\n+        return self.model_admin.get_paginator(self.request, *args, **kwargs)\n         return self.model_admin.get_paginator(self.request, *args, **kwargs)\n \n     def get_queryset(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14752-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/views/autocomplete.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/views/autocomplete.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5253,
+        "matches_issue": 0.2653,
+        "safe_to_apply": 0.652,
+        "composite": 0.61065,
+        "secrets_or_danger": 0.3531,
+        "logic_drift": 0.5322,
+        "flagged": false
+      },
+      "laya_combined": 0.6107,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0106,
+      "rank_reason": "logistic",
+      "elapsed_s": 92.07,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/views/autocomplete.py b/django/contrib/admin/views/autocomplete.py\nindex 3903e4c98c..593bb371dd 100644\n--- a/django/contrib/admin/views/autocomplete.py\n+++ b/django/contrib/admin/views/autocomplete.py\n@@ -26,12 +26,14 @@ class AutocompleteJsonView(BaseListView):\n         context = self.get_context_data()\n         return JsonResponse({\n             'results': [\n-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n-                for obj in context['object_list']\n+                self.serialize_result(obj, to_field_name) for obj in context['object_list']\n             ],\n             'pagination': {'more': context['page_obj'].has_next()},\n         })\n \n+    def serialize_result(self, obj, to_field_name):\n+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+\n     def get_paginator(self, *args, **kwargs):\n         \"\"\"Use the ModelAdmin's paginator.\"\"\"\n         return self.model_admin.get_paginator(self.request, *args, **kwargs)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14752-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/views/autocomplete.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/views/autocomplete.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5972,
+        "matches_issue": 0.7229,
+        "safe_to_apply": 0.7535,
+        "composite": 0.7684,
+        "secrets_or_danger": 0.1867,
+        "logic_drift": 0.4023,
+        "flagged": false
+      },
+      "laya_combined": 0.7684,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 9.03,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/admin/views/autocomplete.py b/django/contrib/admin/views/autocomplete.py\nindex 3903e4c98c..09a53ecdcf 100644\n--- a/django/contrib/admin/views/autocomplete.py\n+++ b/django/contrib/admin/views/autocomplete.py\n@@ -25,13 +25,16 @@ class AutocompleteJsonView(BaseListView):\n         self.object_list = self.get_queryset()\n         context = self.get_context_data()\n         return JsonResponse({\n-            'results': [\n-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n-                for obj in context['object_list']\n-            ],\n+            'results': [self.serialize_result(obj, to_field_name) for obj in context['object_list']],\n             'pagination': {'more': context['page_obj'].has_next()},\n         })\n \n+    def serialize_result(self, obj, to_field_name):\n+        \"\"\"\n+        Convert an object to a dictionary for the autocomplete response.\n+        \"\"\"\n+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+\n     def get_paginator(self, *args, **kwargs):\n         \"\"\"Use the ModelAdmin's paginator.\"\"\"\n         return self.model_admin.get_paginator(self.request, *args, **kwargs)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14752-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/views/autocomplete.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/views/autocomplete.py"
+      ],
+      "added_lines": 7,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6515,
+        "matches_issue": 0.8107,
+        "safe_to_apply": 0.7737,
+        "composite": 0.808975,
+        "secrets_or_danger": 0.2659,
+        "logic_drift": 0.5227,
+        "flagged": false
+      },
+      "laya_combined": 0.809,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 90.27,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/admin/views/autocomplete.py b/django/contrib/admin/views/autocomplete.py\nindex 3903e4c98c..08d3403807 100644\n--- a/django/contrib/admin/views/autocomplete.py\n+++ b/django/contrib/admin/views/autocomplete.py\n@@ -26,14 +26,17 @@ class AutocompleteJsonView(BaseListView):\n         context = self.get_context_data()\n         return JsonResponse({\n             'results': [\n-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+                self.serialize_result(obj, to_field_name)\n                 for obj in context['object_list']\n             ],\n             'pagination': {'more': context['page_obj'].has_next()},\n         })\n \n+    def serialize_result(self, obj, to_field_name):\n+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+\n     def get_paginator(self, *args, **kwargs):\n-        \"\"\"Use the ModelAdmin's paginator.\"\"\"\n+        return self.model_admin.get_paginator(self.request, *args, **kwargs)\n         return self.model_admin.get_paginator(self.request, *args, **kwargs)\n \n     def get_queryset(self):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14752-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/admin/views/autocomplete.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/admin/views/autocomplete.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5253,
+      "matches_issue": 0.2653,
+      "safe_to_apply": 0.652,
+      "composite": 0.61065,
+      "secrets_or_danger": 0.3531,
+      "logic_drift": 0.5322,
+      "flagged": false
+    },
+    "laya_combined": 0.6107,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0106,
+    "rank_reason": "logistic",
+    "elapsed_s": 92.07,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/admin/views/autocomplete.py b/django/contrib/admin/views/autocomplete.py\nindex 3903e4c..08d3403 100644\n--- a/django/contrib/admin/views/autocomplete.py\n+++ b/django/contrib/admin/views/autocomplete.py\n@@ -26,14 +26,17 @@ class AutocompleteJsonView(BaseListView):\n         context = self.get_context_data()\n         return JsonResponse({\n             'results': [\n-                {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+                self.serialize_result(obj, to_field_name)\n                 for obj in context['object_list']\n             ],\n             'pagination': {'more': context['page_obj'].has_next()},\n         })\n \n+    def serialize_result(self, obj, to_field_name):\n+        return {'id': str(getattr(obj, to_field_name)), 'text': str(obj)}\n+\n     def get_paginator(self, *args, **kwargs):\n-        \"\"\"Use the ModelAdmin's paginator.\"\"\"\n+        return self.model_admin.get_paginator(self.request, *args, **kwargs)\n         return self.model_admin.get_paginator(self.request, *args, **kwargs)\n \n     def get_queryset(self):\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "astropy__astropy-7746", "ts": 1791274307.108313}
+{"event": "attempt", "n": 1, "ts": 1791274307.2042856}
+{"event": "model", "ts": 1791274378.9882083, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791274381.0112615, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791274527.4946299, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791274632.158165, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791274738.2573757, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791274856.1413162, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791274874.4887075, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791274889.8958976}

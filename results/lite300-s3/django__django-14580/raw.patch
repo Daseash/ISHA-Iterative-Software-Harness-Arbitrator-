@@ -1,0 +1,13 @@
+diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py
+index 4918261fb0..2fdada6157 100644
+--- a/django/db/migrations/writer.py
++++ b/django/db/migrations/writer.py
+@@ -138,6 +138,8 @@ class MigrationWriter:
+         # Deconstruct operations
+         operations = []
+         for operation in self.migration.operations:
++            if hasattr(operation, 'bases'):
++                imports.add('from django.db import models')
+             operation_string, operation_imports = OperationWriter(operation).serialize()
+             imports.update(operation_imports)
+             operations.append(operation_string)

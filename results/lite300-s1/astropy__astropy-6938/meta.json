@@ -1,0 +1,238 @@
+{
+  "instance_id": "astropy__astropy-6938",
+  "repo": "astropy/astropy",
+  "base_commit": "c76af9ed6bb89bfba45b9f5bc1e635188278e2fa",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273893.935969
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273956.1038306
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274060.6117477
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274166.7038162
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274274.9896955
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274291.6563447
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/io/fits/fitsrec.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/io/fits/fitsrec.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791273759.2477605,
+  "elapsed_s": 540.66,
+  "plan": "# Replace exponent separator in floating point numbers\nif 'D' in format:\n    # `replace` returns a new chararray; assign it back so the conversion takes effect\n    output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/io/fits/fitsrec.py",
+      "symbol": "astropy/io/fits/fitsrec.py::_coldefs",
+      "symbols": [
+        "_coldefs",
+        "_raw_itemsize",
+        "_convert_ascii",
+        "_get_heap_data"
+      ],
+      "line_range": [
+        579,
+        597
+      ],
+      "score": 0.7737,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8349,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: fits, format, this)"
+    },
+    {
+      "file": "astropy/io/fits/fitstime.py",
+      "symbol": "astropy/io/fits/fitstime.py::_get_info_if_time_column",
+      "symbols": [
+        "_get_info_if_time_column",
+        "time_to_fits",
+        "_convert_time_column",
+        "fits_to_time"
+      ],
+      "line_range": [
+        278,
+        307
+      ],
+      "score": 0.5245,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.453,
+        "vector": 0.4482,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: fits, format, this)"
+    },
+    {
+      "file": "astropy/units/format/fits.py",
+      "symbol": "astropy/units/format/fits.py::_validate_unit",
+      "symbols": [
+        "_validate_unit",
+        "_get_unit_name",
+        "_to_decomposed_alternative",
+        "to_string"
+      ],
+      "line_range": [
+        83,
+        98
+      ],
+      "score": 0.5351,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2206,
+        "vector": 0.2911,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: fits, format)"
+    },
+    {
+      "file": "astropy/io/fits/__init__.py",
+      "symbol": "astropy/io/fits/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        22,
+        61
+      ],
+      "score": 0.5328,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2163,
+        "vector": 0.2811,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: fits, this)"
+    },
+    {
+      "file": "astropy/units/format/__init__.py",
+      "symbol": "astropy/units/format/__init__.py::get_format",
+      "symbols": [
+        "get_format"
+      ],
+      "line_range": [
+        30,
+        62
+      ],
+      "score": 0.5029,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1632,
+        "vector": 0.1423,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: returns, format)"
+    },
+    {
+      "file": "astropy/__init__.py",
+      "symbol": "astropy/__init__.py::_rebuild_extensions",
+      "symbols": [
+        "_rebuild_extensions",
+        "_is_astropy_source",
+        "_is_astropy_setup",
+        "_check_numpy"
+      ],
+      "line_range": [
+        218,
+        260
+      ],
+      "score": 0.5278,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2632,
+        "vector": 0.1419,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: place, fail, code, format)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.525775,
+  "laya_scores": {
+    "fix_quality": 1.0838,
+    "matches_issue": 0.5395,
+    "safe_to_apply": 0.4798,
+    "composite": 0.525775,
+    "secrets_or_danger": 0.0925,
+    "logic_drift": 0.2604,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution vectors are introduced.\n- PERFORMANCE: PASS - The fix ensures the string replacement result is actually used, which is negligible in performance terms and corrects a logic error.\n- ROBUSTNESS: PASS - Fixes a potential logic bug where the return value of `replace` was ignored, ensuring the exponent format is correctly applied.\n- PONYTAIL / YAGNI: PASS - Minimal fix addressing the reported bug without adding unnecessary complexity.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\nimport tempfile\n\nimport numpy as np\nimport pytest\nfrom astropy.io import fits\n\n\ndef _read_first_cell(file_path):\n    \"\"\"\n    Helper to read the first cell of the first row from an ASCII table\n    (TableHDU).  The returned value is a plain string as stored in the FITS\n    file, not a converted float.\n    \"\"\"\n    with fits.open(file_path, memmap=False) as hdul:\n        # TableHDU is the second HDU (primary + table)\n        table = hdul[1]\n        # ``table.data`` is a structured array; extract the first column of the\n        # first row.  The result is a ``bytes``/``str`` object that contains the\n        # raw characters written to the file.\n        return table.data[0][0]\n\n\ndef test_exponent_D_is_written_as_D():\n    \"\"\"\n    The original buggy code called ``replace`` on a ``chararray`` without\n    re‑assigning the result, so the exponent letter remained ``E`` even when\n    the format string contained ``D``.  After the fix the stored value should\n    contain ``D``.\n    \"\"\"\n    data = np.array([1.23e4], dtype=float)\n    col = fits.Column(name=\"col\", format=\"D10.5\", array=data)\n    hdu = fits.TableHDU.from_columns([col])\n\n    with tempfile.NamedTemporaryFile(suffix=\".fits\", delete=False) as tmp:\n        tmp_name = tmp.name\n    try:\n        hdu.writeto(tmp_name, overwrite=True)\n        cell = _read_first_cell(tmp_name)\n        # The string representation should include a ``D`` exponent.\n        assert \"D\" in cell, f\"Expected 'D' in cell '{cell}'\"\n    finally:\n        os.remove(tmp_name)\n\n\ndef test_exponent_E_is_written_as_E():\n    \"\"\"\n    When the format does **not** contain ``D`` the code path that performs the\n    replacement is not taken.  The stored value should therefore contain the\n    usual ``E`` exponent.\n    \"\"\"\n    data = np.array([1.23e4], dtype=float)\n    col = fits.Column(name=\"col\", format=\"E10.5\", array=data)\n    hdu = fits.TableHDU.from_columns([col])\n\n    with tempfile.NamedTemporaryFile(suffix=\".fits\", delete=False) as tmp:\n        tmp_name = tmp.name\n    try:\n        hdu.writeto(tmp_name, overwrite=True)\n        cell = _read_first_cell(tmp_name)\n        assert \"E\" in cell, f\"Expected 'E' in cell '{cell}'\"\n        # Ensure we did **not** inadvertently introduce a ``D``.\n        assert \"D\" not in cell, f\"Unexpected 'D' in cell '{cell}'\"\n    finally:\n        os.remove(tmp_name)\n\n\ndef test_empty_ascii_table_with_D_format():\n    \"\"\"\n    Edge case: an ASCII table with zero rows should still be writable and\n    readable without raising an exception, even when the column format\n    contains ``D``.  The data array is empty, so there is no cell to inspect.\n    \"\"\"\n    empty_data = np.array([], dtype=float)\n    col = fits.Column(name=\"col\", format=\"D10.5\", array=empty_data)\n    hdu = fits.TableHDU.from_columns([col])\n\n    with tempfile.NamedTemporaryFile(suffix=\".fits\", delete=False) as tmp:\n        tmp_name = tmp.name\n    try:\n        hdu.writeto(tmp_name, overwrite=True)\n        with fits.open(tmp_name, memmap=False) as hdul:\n            table = hdul[1]\n            # The table should have zero rows but the column still exists.\n            assert table.data.shape == (0,)\n            # Accessing the first row should raise an IndexError.\n            with pytest.raises(IndexError):\n                _ = table.data[0][0]\n    finally:\n        os.remove(tmp_name)\n\n\ndef test_invalid_format_none_raises():\n    \"\"\"\n    Passing ``None`` as the ``format`` argument should raise a ``TypeError``\n    because the implementation expects a string and checks ``'D' in format``.\n    The fix does not alter this behaviour.\n    \"\"\"\n    data = np.array([1.0], dtype=float)\n    with pytest.raises(TypeError):\n        fits.Column(name=\"col\", format=None, array=data)  # noqa: F841",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/io/fits/fitsrec.py b/astropy/io/fits/fitsrec.py\nindex 574b407..cb79142 100644\n--- a/astropy/io/fits/fitsrec.py\n+++ b/astropy/io/fits/fitsrec.py\n@@ -1261,7 +1261,7 @@ class FITS_rec(np.recarray):\n \n         # Replace exponent separator in floating point numbers\n         if 'D' in format:\n-            output_field.replace(encode_ascii('E'), encode_ascii('D'))\n+            output_field = output_field.replace(encode_ascii('E'), encode_ascii('D'))\n \n \n def _get_recarray_field(array, key):\n",
+  "offline_calls": 0
+}

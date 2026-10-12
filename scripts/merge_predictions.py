@@ -56,12 +56,14 @@ def merge_predictions(source_dir: Path, target_dir: Path) -> None:
             pass
 
     for inst_id, patch in source_patches.items():
+        if not patch.endswith("\n"):
+            patch += "\n"
         if inst_id in target_map:
             if inst_id in golden_resolved:
                 print(f"  = Protected golden pass: {inst_id}")
                 continue
             old_patch = target_map[inst_id].get("model_patch", "").strip()
-            if patch and patch != old_patch:
+            if patch and patch.strip() != old_patch:
                 target_map[inst_id]["model_patch"] = patch
                 rescued_count += 1
                 print(f"  * Repaired: {inst_id} ({len(patch)} bytes)")

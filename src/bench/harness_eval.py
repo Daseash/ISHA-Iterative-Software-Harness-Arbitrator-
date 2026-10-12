@@ -131,6 +131,7 @@ def evaluate(
     timeout: int = 1800,
     run_eval_id: str | None = None,
     keep_images: bool = False,
+    instances: list[str] | None = None,
 ) -> dict:
     """Run the official harness over a run's predictions and return its report."""
     ready, message = is_docker_ready()
@@ -144,6 +145,9 @@ def evaluate(
     predictions_path = _predictions(run_dir)
     preds = json.loads(predictions_path.read_text(encoding="utf-8"))
     instance_ids = [p["instance_id"] for p in preds if p.get("model_patch")]
+    if instances:
+        target_set = set(instances)
+        instance_ids = [i for i in instance_ids if i in target_set]
     if not instance_ids:
         report = _empty_report(len(preds))
         _write_report(run_dir, report)
@@ -248,6 +252,12 @@ def main() -> int:
         action="store_true",
         help="keep the ~4GB-per-instance eval images after grading",
     )
+    parser.add_argument(
+        "--instances",
+        nargs="*",
+        default=None,
+        help="Optional subset of instance IDs to evaluate",
+    )
     args = parser.parse_args()
 
     run_dir = RESULTS_DIR / args.run_id
@@ -265,6 +275,7 @@ def main() -> int:
         max_workers=args.max_workers,
         timeout=args.timeout,
         keep_images=args.keep_images,
+        instances=args.instances,
     )
     # The harness only submits instances with a non-empty patch; count the whole
     # slice as the denominator so empty patches are not silently excluded.

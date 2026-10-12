@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14534",
+  "repo": "django/django",
+  "base_commit": "910ecd1b8df7678f45c3d507dde6bcb1faafa243",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535894.61325
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535901.4234667
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535940.8954556
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535950.3713326
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535977.2789898
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536100.5565376
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/boundfield.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/boundfield.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791535807.128079,
+  "elapsed_s": 301.39,
+  "plan": "# In django/forms/boundfield.py\n\nclass BoundWidget:\n    # ... existing code ...\n    \n    def id_for_label(self):\n        return self.data['attrs'].get('id')",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/boundfield.py",
+      "symbol": "django/forms/boundfield.py::build_widget_attrs",
+      "symbols": [
+        "build_widget_attrs",
+        "as_widget",
+        "as_text",
+        "as_textarea"
+      ],
+      "line_range": [
+        232,
+        240
+      ],
+      "score": 0.82,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: attrs, widget; body matches report terms: form, field, widget, attrs; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/widgets.py",
+      "symbol": "django/forms/widgets.py::subwidgets",
+      "symbols": [
+        "subwidgets",
+        "id_for_label",
+        "subwidgets",
+        "options"
+      ],
+      "line_range": [
+        218,
+        221
+      ],
+      "score": 0.6008,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6294,
+        "vector": 0.716,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: attrs, value; body matches report terms: name, value, widget, attrs; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/admin/options.py",
+      "symbol": "django/contrib/admin/options.py::lookup_allowed",
+      "symbols": [
+        "lookup_allowed",
+        "__init__",
+        "formfield_for_dbfield",
+        "formfield_for_choice_field"
+      ],
+      "line_range": [
+        376,
+        429
+      ],
+      "score": 0.5807,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3879,
+        "vector": 0.3227,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: value; body matches report terms: name, note, look, value)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::to_python",
+      "symbols": [
+        "to_python",
+        "run_validators",
+        "validate",
+        "get_db_prep_value"
+      ],
+      "line_range": [
+        600,
+        607
+      ],
+      "score": 0.5783,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3684,
+        "vector": 0.343,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: value; body matches report terms: expected, value, error, this)"
+    },
+    {
+      "file": "django/db/models/options.py",
+      "symbol": "django/db/models/options.py::make_immutable_fields_list",
+      "symbols": [
+        "make_immutable_fields_list",
+        "normalize_together",
+        "__init__",
+        "contribute_to_class"
+      ],
+      "line_range": [
+        60,
+        63
+      ],
+      "score": 0.5455,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2723,
+        "vector": 0.2704,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: data; body matches report terms: name, field, data)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::call_command",
+      "symbols": [
+        "call_command",
+        "find_commands",
+        "load_command_class",
+        "get_commands"
+      ],
+      "line_range": [
+        78,
+        183
+      ],
+      "score": 0.5399,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.19,
+        "vector": 0.3952,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: options; body matches report terms: name, options, value, error)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7695500000000001,
+  "laya_scores": {
+    "fix_quality": 1.5528,
+    "matches_issue": 0.8031,
+    "safe_to_apply": 0.7223,
+    "composite": 0.7695500000000001,
+    "secrets_or_danger": 0.1767,
+    "logic_drift": 0.3542,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No user-controlled input used for dangerous operations.\n- PERFORMANCE: PASS, Simple dictionary lookup is efficient.\n- ROBUSTNESS: RISK, Uses .get() which returns None if 'id' is missing, potentially causing failures elsewhere if an ID is expected.\n- PONYTAIL / YAGNI: PASS, This is a direct fix for a logic inconsistency in widget ID generation.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django import forms\nfrom django.forms.widgets import CheckboxSelectMultiple\n\ndef test_bound_widget_id_for_label_uses_custom_id():\n    \"\"\"\n    Reproduction: CheckboxSelectMultiple subwidgets should use the ID\n    provided in the widget attributes instead of the default auto-generated format.\n    \"\"\"\n    class TestForm(forms.Form):\n        choices = forms.MultipleChoiceField(\n            choices=[('1', 'One'), ('2', 'Two')],\n            widget=CheckboxSelectMultiple(attrs={'id': 'custom_id'})\n        )\n\n    form = TestForm()\n    bound_field = form['choices']\n    subwidgets = bound_field.subwidgets\n    \n    # The first subwidget should have an ID following the custom id\n    # Currently, it incorrectly returns 'id_choices_0' due to the bug\n    first_widget = subwidgets[0]\n    assert first_widget.id_for_label() == 'custom_id_0'\n\ndef test_bound_widget_id_for_label_fallback():\n    \"\"\"\n    Ensure that if no custom ID is provided, it falls back to a sensible default \n    (though the bug report specifically focused on the ignore behavior).\n    \"\"\"\n    class TestForm(forms.Form):\n        choices = forms.MultipleChoiceField(\n            choices=[('1', 'One')],\n            widget=CheckboxSelectMultiple()\n        )\n\n    form = TestForm()\n    # Default auto_id behavior\n    assert form['choices'].subwidgets[0].id_for_label() == 'id_choices_0'\n\ndef test_bound_widget_with_empty_choices():\n    \"\"\"\n    Boundary case: ensure code doesn't crash when there are no choices/subwidgets.\n    \"\"\"\n    class TestForm(forms.Form):\n        choices = forms.MultipleChoiceField(\n            choices=[],\n            widget=CheckboxSelectMultiple(attrs={'id': 'empty_id'})\n        )\n\n    form = TestForm()\n    assert len(form['choices'].subwidgets) == 0\n\ndef test_bound_widget_with_none_id():\n    \"\"\"\n    Edge case: ensure that if id is explicitly set to None, it doesn't crash.\n    \"\"\"\n    class TestForm(forms.Form):\n        choices = forms.MultipleChoiceField(\n            choices=[('1', 'One')],\n            widget=CheckboxSelectMultiple(attrs={'id': None})\n        )\n\n    form = TestForm()\n    # If id is None, the current implementation (data['attrs'].get('id'))\n    # returns None. If the code expects a string for a label 'for' attribute,\n    # we verify it doesn't raise an AttributeError.\n    widget = form['choices'].subwidgets[0]\n    assert widget.id_for_label() is None",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\nindex 2ff8b0ee26..a061f15f87 100644\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14534-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/boundfield.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/boundfield.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5528,
+        "matches_issue": 0.8031,
+        "safe_to_apply": 0.7223,
+        "composite": 0.7695500000000001,
+        "secrets_or_danger": 0.1767,
+        "logic_drift": 0.3542,
+        "flagged": false
+      },
+      "laya_combined": 0.7696,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.04,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\nindex 2ff8b0ee26..a061f15f87 100644\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14534-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/boundfield.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/boundfield.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5528,
+        "matches_issue": 0.8031,
+        "safe_to_apply": 0.7223,
+        "composite": 0.7695500000000001,
+        "secrets_or_danger": 0.1767,
+        "logic_drift": 0.3542,
+        "flagged": false
+      },
+      "laya_combined": 0.7696,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 46.24,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\nindex 2ff8b0ee26..a061f15f87 100644\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14534-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/boundfield.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/boundfield.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5528,
+        "matches_issue": 0.8031,
+        "safe_to_apply": 0.7223,
+        "composite": 0.7695500000000001,
+        "secrets_or_danger": 0.1767,
+        "logic_drift": 0.3542,
+        "flagged": false
+      },
+      "laya_combined": 0.7696,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 46.78,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\nindex 2ff8b0ee26..a061f15f87 100644\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14534-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/forms/boundfield.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/forms/boundfield.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5528,
+      "matches_issue": 0.8031,
+      "safe_to_apply": 0.7223,
+      "composite": 0.7695500000000001,
+      "secrets_or_danger": 0.1767,
+      "logic_drift": 0.3542,
+      "flagged": false
+    },
+    "laya_combined": 0.7696,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.04,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/forms/boundfield.py b/django/forms/boundfield.py\nindex 2ff8b0e..a061f15 100644\n--- a/django/forms/boundfield.py\n+++ b/django/forms/boundfield.py\n@@ -277,7 +277,7 @@ class BoundWidget:\n \n     @property\n     def id_for_label(self):\n-        return 'id_%s_%s' % (self.data['name'], self.data['index'])\n+        return self.data['attrs'].get('id')\n \n     @property\n     def choice_label(self):\n",
+  "offline_calls": 0
+}

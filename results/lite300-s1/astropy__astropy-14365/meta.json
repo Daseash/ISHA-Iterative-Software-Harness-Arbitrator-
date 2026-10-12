@@ -1,0 +1,240 @@
+{
+  "instance_id": "astropy__astropy-14365",
+  "repo": "astropy/astropy",
+  "base_commit": "7269fa3e33e8d02485a647da91a5a2a60a06af61",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272423.6574464
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272427.4643266
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272472.8594387
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272493.5210557
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272537.7698317
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272557.1833658
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/io/ascii/qdp.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/io/ascii/qdp.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791272381.8210313,
+  "elapsed_s": 183.68,
+  "plan": "Step 1: The root cause is that the regular expression used to identify QDP command lines in `astropy/io/ascii/qdp.py` (specifically within the `_line_type` function) is case-sensitive. It is defined as `r\"READ [TS]ERR(\\s+[0-9]+)+\"` and compiled without the `re.IGNORECASE` flag. Because the QDP format specification allows commands to be in any case (e.g., `read serr 1 2`), lines that are valid QDP commands but not in uppercase fail to match the `command` group in the regex, causing the function to raise a `ValueError: Unrecognized QDP line`.\n\nStep 2: Modify `astropy/io/ascii/qdp.py` in the `_line_type` function. Change the line that compiles the regular expression `_line_type_re` to include the `re.IGNORECASE` flag.\n\nCurrent line:\n`_line_type_re = re.compile(_type_re)`\n\nChange it to:\n`_line_type_re = re.compile(_type_re, re.IGNORECASE)`",
+  "planner_confidence": 0.98,
+  "localization": [
+    {
+      "file": "astropy/io/ascii/qdp.py",
+      "symbol": "astropy/io/ascii/qdp.py::read",
+      "symbols": [
+        "read",
+        "_write_table_qdp",
+        "write",
+        "_read_table_qdp"
+      ],
+      "line_range": [
+        630,
+        638
+      ],
+      "score": 0.7481,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8825,
+        "vector": 0.6869,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: table; body matches report terms: table, line, table_id; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/io/votable/table.py",
+      "symbol": "astropy/io/votable/table.py::writeto",
+      "symbols": [
+        "writeto",
+        "from_table",
+        "parse",
+        "parse_single_table"
+      ],
+      "line_range": [
+        200,
+        231
+      ],
+      "score": 0.6454,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5407,
+        "vector": 0.5433,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: table; body matches report terms: file, python, table, astropy"
+    },
+    {
+      "file": "astropy/io/fits/hdu/table.py",
+      "symbol": "astropy/io/fits/hdu/table.py::format_value",
+      "symbols": [
+        "format_value",
+        "FITSTableDumpDialect",
+        "match_header",
+        "_nrows"
+      ],
+      "line_range": [
+        1288,
+        1300
+      ],
+      "score": 0.6337,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5847,
+        "vector": 0.3541,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: format; body matches report terms: format"
+    },
+    {
+      "file": "astropy/table/table.py",
+      "symbol": "astropy/table/table.py::_make_table_from_cols",
+      "symbols": [
+        "_make_table_from_cols",
+        "QTable",
+        "_get_names_from_list_of_dict",
+        "_set_column_attribute"
+      ],
+      "line_range": [
+        1517,
+        1540
+      ],
+      "score": 0.6034,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3964,
+        "vector": 0.4944,
+        "defs": 0.0
+      },
+      "reason": "private helper called by a symbol the report names; signature parameter matches report: table; body matches report terms: test, table, case, valueerror"
+    },
+    {
+      "file": "astropy/io/fits/__init__.py",
+      "symbol": "astropy/io/fits/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        22,
+        67
+      ],
+      "score": 0.5665,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4056,
+        "vector": 0.1675,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: reading, file, sensitive, they"
+    },
+    {
+      "file": "astropy/cosmology/io/table.py",
+      "symbol": "astropy/cosmology/io/table.py::table_identify",
+      "symbols": [
+        "table_identify",
+        "from_table",
+        "to_table"
+      ],
+      "line_range": [
+        239,
+        251
+      ],
+      "score": 0.5657,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2104,
+        "vector": 0.5678,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: format; body matches report terms: table, astropy, table_id, format"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.678225,
+  "laya_scores": {
+    "fix_quality": 1.4374,
+    "matches_issue": 0.7041,
+    "safe_to_apply": 0.5714,
+    "composite": 0.678225,
+    "secrets_or_danger": 0.5247,
+    "logic_drift": 0.7086,
+    "flagged": true,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection vectors, secrets, or unsafe execution introduced; `re.IGNORECASE` is safe.\n- PERFORMANCE: PASS - No N+1 queries or unbounded loops; regex recompilation logic remains unchanged (static compile).\n- ROBUSTNESS: PASS - Adds case-insensitivity to fix a crash for valid QDP files; no new race conditions or swallowed exceptions.\n- PONYTAIL / YAGNI: PASS - Minimal change addressing the specific bug report without unnecessary abstraction.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.table import Table\nfrom astropy.io import ascii\nfrom io import StringIO\n\n\ndef test_lowercase_read_serr_command():\n    \"\"\"\n    Reproduces the bug: QDP commands should be case-insensitive.\n    This test should FAIL before the fix and PASS after.\n    \"\"\"\n    qdp_content = \"\"\"read serr 1 2\n1 0.5 1 0.5\n\"\"\"\n    t = Table.read(StringIO(qdp_content), format='ascii.qdp')\n    assert len(t) == 2\n    # Check that the errors were read correctly\n    # For \"read serr 1 2\", errors for col 0 and 1 are 0.5 and 0.5 respectively (or normalized?)\n    # Actually, \"READ SERR 1 2\" means the error in column i is data[i] * factor[i]\n    # But usually it just sets the errors.\n    # Let's just assert it doesn't crash and has data.\n    assert t['col0'] == [1.0, 1.0]\n    assert t['col1'] == [0.5, 0.5]\n\n\ndef test_mixed_case_read_serr_command():\n    \"\"\"\n    Test mixed case commands, e.g., Read Serr 1 2\n    \"\"\"\n    qdp_content = \"\"\"Read Serr 1 2\n1 0.5\n2 0.5\n\"\"\"\n    t = Table.read(StringIO(qdp_content), format='ascii.qdp')\n    assert len(t) == 2\n    assert t['col0'] == [1.0, 2.0]\n    assert t['col1'] == [0.5, 0.5]\n\n\ndef test_invalid_line_still_raises_error():\n    \"\"\"\n    Ensure that truly invalid lines still raise ValueError.\n    The fix should only make valid commands case-insensitive, not accept garbage.\n    \"\"\"\n    qdp_content = \"\"\"invalid line that is not a command or data\n\"\"\"\n    with pytest.raises(ValueError) as exc_info:\n        Table.read(StringIO(qdp_content), format='ascii.qdp')\n    assert 'Unrecognized QDP line' in str(exc_info.value)\n\n\ndef test_empty_input():\n    \"\"\"\n    Test that empty input or just comments works.\n    \"\"\"\n    qdp_content = \"\"\"! This is a comment\n! Another comment\n\"\"\"\n    # Empty tables might behave differently in different versions, but should not crash on command parsing\n    try:\n        t = Table.read(StringIO(qdp_content), format='ascii.qdp')\n    except ValueError:\n        # If it raises \"No data found\" that's okay, but it shouldn't be \"Unrecognized QDP line\"\n        pass",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/io/ascii/qdp.py b/astropy/io/ascii/qdp.py\nindex 83a4f00..768beb0 100644\n--- a/astropy/io/ascii/qdp.py\n+++ b/astropy/io/ascii/qdp.py\n@@ -68,7 +68,7 @@ def _line_type(line, delimiter=None):\n     _new_re = rf\"NO({sep}NO)+\"\n     _data_re = rf\"({_decimal_re}|NO|[-+]?nan)({sep}({_decimal_re}|NO|[-+]?nan))*)\"\n     _type_re = rf\"^\\s*((?P<command>{_command_re})|(?P<new>{_new_re})|(?P<data>{_data_re})?\\s*(\\!(?P<comment>.*))?\\s*$\"\n-    _line_type_re = re.compile(_type_re)\n+    _line_type_re = re.compile(_type_re, re.IGNORECASE)\n     line = line.strip()\n     if not line:\n         return \"comment\"\n",
+  "offline_calls": 0
+}

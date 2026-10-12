@@ -1,0 +1,366 @@
+{
+  "instance_id": "django__django-11797",
+  "repo": "django/django",
+  "base_commit": "3346b78a8a872286a245d1e77ef4718fc5e6be1a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791398980.010179
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399000.1479313
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399033.7437224
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399116.1201756
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399145.368611
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399463.060242
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791398935.6890554,
+  "elapsed_s": 539.82,
+  "plan": "clone.group_by = tuple(\n                expr.resolve_expression(query, *args, **kwargs)\n                for expr in self.group_by\n            )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::resolve_expression",
+      "symbols": [
+        "resolve_expression",
+        "update_join_types",
+        "__init__",
+        "__deepcopy__"
+      ],
+      "line_range": [
+        1014,
+        1041
+      ],
+      "score": 0.698,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7833,
+        "vector": 0.4768,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: query; body matches report terms: where, query, select)"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::_validate_values_are_expressions",
+      "symbols": [
+        "_validate_values_are_expressions",
+        "__init__",
+        "_update",
+        "__init__"
+      ],
+      "line_range": [
+        1323,
+        1332
+      ],
+      "score": 0.6468,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5893,
+        "vector": 0.454,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (private helper called by a symbol the report names; signature parameter matches report: values; body matches report terms: values, query)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::Permission",
+      "symbols": [
+        "Permission",
+        "GroupManager",
+        "get_user_permissions",
+        "get_group_permissions"
+      ],
+      "line_range": [
+        33,
+        80
+      ],
+      "score": 0.7654,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8672,
+        "vector": 0.8215,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: limit, objects, models, django)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__reduce__",
+      "symbols": [
+        "__reduce__",
+        "validate",
+        "NullBooleanField",
+        "db_type"
+      ],
+      "line_range": [
+        548,
+        567
+      ],
+      "score": 0.5992,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3453,
+        "vector": 0.5658,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: should, models, values)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::get_quantifier",
+      "symbols": [
+        "get_quantifier",
+        "NonCapture",
+        "walk_to_end",
+        "flatten_result"
+      ],
+      "line_range": [
+        231,
+        267
+      ],
+      "score": 0.6323,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5075,
+        "vector": 0.4621,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: where, values)"
+    },
+    {
+      "file": "django/core/mail/__init__.py",
+      "symbol": "django/core/mail/__init__.py::send_mail",
+      "symbols": [
+        "send_mail",
+        "send_mass_mail",
+        "get_connection",
+        "mail_admins"
+      ],
+      "line_range": [
+        38,
+        62
+      ],
+      "score": 0.6046,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4984,
+        "vector": 0.2913,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: email, should, auth_user, user)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import re\nfrom django.contrib.auth.models import User\nfrom django.test import TestCase\n\ndef get_group_by_field(query_str):\n    normalized = ' '.join(query_str.split())\n    pattern = r'GROUP BY\\s+(.*?)(?=\\s+(?:ORDER BY|LIMIT|$|;))'\n    match = re.search(pattern, normalized, re.IGNORECASE)\n    if match:\n        return match.group(1).strip()\n    return None\n\ndef extract_field_from_group_by(clause):\n    parts = clause.split('.')\n    if len(parts) < 2:\n        raise ValueError(f\"Expected at least two parts in group by clause, got: {clause}\")\n    field_part = parts[-1]\n    if not (field_part.startswith('\"') and field_part.endswith('\"')):\n        raise ValueError(f\"Field part is not quoted: {field_part} in clause {clause}\")\n    return field_part[1:-1]\n\nclass TestGroupByFix(TestCase):\n    def test_bug_reproduction(self):\n        User.objects.create_user(username='user1', email=None, first_name='Test', last_name='User')\n        User.objects.create_user(username='user2', email='test@example.com', first_name='Test2', last_name='User')\n\n        a = User.objects.filter(email__isnull=True).values('email').annotate(m=Max('id')).values('m')\n        b = User.objects.filter(id=a[:1])\n\n        query_str = str(b.query)\n        clause = get_group_by_field(query_str)\n        self.assertIsNotNone(clause, f\"Group by clause not found in query: {query_str}\")\n        exprs = [expr.strip() for expr in clause.split(',')]\n        self.assertEqual(len(exprs), 1, f\"Expected exactly one group by expression, got: {exprs} in query: {query_str}\")\n        field_name = extract_field_from_group_by(exprs[0])\n        self.assertEqual(field_name, 'email', f\"Expected group by field to be 'email', got '{field_name}' in query: {query_str}\")\n\n    def test_empty_subquery(self):\n        User.objects.create_user(username='user1', email='test@example.com', first_name='Test', last_name='User')\n\n        a = User.objects.filter(email__isnull=True).values('email').annotate(m=Max('id')).values('m')\n        b = User.objects.filter(id=a[:1])\n\n        query_str = str(b.query)\n        clause = get_group_by_field(query_str)\n        self.assertIsNotNone(clause, f\"Group by clause not found in query: {query_str}\")\n        exprs = [expr.strip() for expr in clause.split(',')]\n        self.assertEqual(len(exprs), 1, f\"Expected exactly one group by expression, got: {exprs} in query: {query_str}\")\n        field_name = extract_field_from_group_by(exprs[0])\n        self.assertEqual(field_name, 'email', f\"Expected group by field to be 'email', got '{field_name}' in query: {query_str}\")\n\n    def test_different_field(self):\n        User.objects.create_user(username='user1', email='test1@example.com', first_name=None, last_name='User')\n        User.objects.create_user(username='user2', email='test2@example.com', first_name='Test', last_name='User')\n\n        a = User.objects.filter(first_name__isnull=True).values('first_name').annotate(m=Max('id')).values('m')\n        b = User.objects.filter(id=a[:1])\n\n        query_str = str(b.query)\n        clause = get_group_by_field(query_str)\n        self.assertIsNotNone(clause, f\"Group by clause not found in query: {query_str}\")\n        exprs = [expr.strip() for expr in clause.split(',')]\n        self.assertEqual(len(exprs), 1, f\"Expected exactly one group by expression, got: {exprs} in query: {query_str}\")\n        field_name = extract_field_from_group_by(exprs[0])\n        self.assertEqual(field_name, 'first_name', f\"Expected group by field to be 'first_name', got '{field_name}' in query: {query_str}\")",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -194,7 +194,7 @@\n         clone.where = self.where.clone()\n         clone.annotations = self.annotations.copy()\n         clone.extra = self.extra.copy()\n-        clone.group_by = self.group_by\n+        clone.group_by = list(self.group_by) if self.group_by is not None else None\n         clone.select = self.select[:]\n         clone.select_related = self.select_related\n         clone.used_aliases = self.used_aliases.copy()",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-_kwwqn9x",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4976,
+        "matches_issue": 0.7765,
+        "safe_to_apply": 0.6443,
+        "composite": 0.7295999999999999,
+        "secrets_or_danger": 0.3939,
+        "logic_drift": 0.6589,
+        "flagged": false
+      },
+      "laya_combined": 0.7296,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 115.48,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1023,7 +1023,7 @@\n         clone.where = self.where.clone()\n         clone.annotations = self.annotations.copy()\n         clone.extra = self.extra.copy()\n-        clone.group_by = self.group_by\n+        clone.group_by = self.group_by and tuple(self.group_by)\n         clone.select = self.select[:]\n         clone.default_cols = self.default_cols\n         clone.default_ordering = self.default_ordering",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-fkqu573k",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6573,
+        "matches_issue": 0.845,
+        "safe_to_apply": 0.7317,
+        "composite": 0.8085,
+        "secrets_or_danger": 0.2778,
+        "logic_drift": 0.4025,
+        "flagged": false
+      },
+      "laya_combined": 0.8085,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 109.68,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -194,7 +194,10 @@\n         clone.where = self.where.clone()\n         clone.annotations = self.annotations.copy()\n         clone.extra = self.extra.copy()\n-        clone.group_by = self.group_by\n+        clone.group_by = tuple(\n+            expr.resolve_expression(clone, reuse=None, summarize=True)\n+            for expr in self.group_by\n+        ) if self.group_by is not None else None\n         clone.select = self.select[:]\n         clone.default_cols = self.default_cols\n         clone.subq_aliases = self.subq_aliases.copy()",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6bc7xad8",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6bc7xad8\\django\\db\\models\\sql\\query.py: undefined name 'clone'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6bc7xad8\\django\\db\\models\\sql\\query.py: undefined name 'clone'"
+      ],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5929,
+        "matches_issue": 0.727,
+        "safe_to_apply": 0.6678,
+        "composite": 0.7469250000000001,
+        "secrets_or_danger": 0.2776,
+        "logic_drift": 0.582,
+        "flagged": false
+      },
+      "laya_combined": 0.7469,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 119.63,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -194,7 +194,7 @@\n         clone.where = self.where.clone()\n         clone.annotations = self.annotations.copy()\n         clone.extra = self.extra.copy()\n-        clone.group_by = self.group_by\n+        clone.group_by = list(self.group_by) if self.group_by is not None else None\n         clone.select = self.select[:]\n         clone.select_related = self.select_related\n         clone.used_aliases = self.used_aliases.copy()",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-_kwwqn9x",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/query.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.4976,
+      "matches_issue": 0.7765,
+      "safe_to_apply": 0.6443,
+      "composite": 0.7295999999999999,
+      "secrets_or_danger": 0.3939,
+      "logic_drift": 0.6589,
+      "flagged": false
+    },
+    "laya_combined": 0.7296,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0065,
+    "rank_reason": "logistic",
+    "elapsed_s": 115.48,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

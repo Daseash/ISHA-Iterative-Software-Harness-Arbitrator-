@@ -1,0 +1,242 @@
+{
+  "instance_id": "django__django-11099",
+  "repo": "django/django",
+  "base_commit": "d26b2424437dabeeca94d7900b37d2df4410da0c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284270.6377618
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284276.3495278
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284489.3527055
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284490.2564335
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284719.7998846
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791284756.1914022
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/auth/validators.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791284208.141511,
+  "elapsed_s": 556.17,
+  "plan": "@@\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Use \\A and \\Z to anchor the pattern to the start and end of the string\n+    # without allowing a trailing newline (unlike $ which also matches before\n+    # a final newline). This prevents usernames such as \"bob\\n\" from being\n+    # considered valid.\n+    regex = r'\\A[\\w.@+-]+\\Z'\n@@\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    # Same rationale as above – anchor with \\A and \\Z to reject trailing newlines.\n+    regex = r'\\A[\\w.@+-]+\\Z'",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/validators.py",
+      "symbol": "django/contrib/auth/validators.py::ASCIIUsernameValidator",
+      "symbols": [
+        "ASCIIUsernameValidator",
+        "UnicodeUsernameValidator"
+      ],
+      "line_range": [
+        9,
+        17
+      ],
+      "score": 0.8763,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3627,
+        "vector": 0.7555,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: validators; body matches report terms: user, regex, only, usernamevalidator)"
+    },
+    {
+      "file": "django/core/validators.py",
+      "symbol": "django/core/validators.py::__call__",
+      "symbols": [
+        "__call__",
+        "__eq__",
+        "URLValidator",
+        "__call__"
+      ],
+      "line_range": [
+        52,
+        61
+      ],
+      "score": 0.6394,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4716,
+        "vector": 0.6376,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: regex, match, that"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "validators",
+        "check",
+        "_check_null_allowed_for_primary_keys"
+      ],
+      "line_range": [
+        133,
+        179
+      ],
+      "score": 0.6254,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3848,
+        "vector": 0.702,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: validators; body matches report terms: validators, validator, name"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_user_session_key",
+      "symbols": [
+        "_get_user_session_key",
+        "authenticate",
+        "login",
+        "logout"
+      ],
+      "line_range": [
+        55,
+        60
+      ],
+      "score": 0.5749,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2669,
+        "vector": 0.5267,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: user, python, this"
+    },
+    {
+      "file": "django/db/models/lookups.py",
+      "symbol": "django/db/models/lookups.py::__init__",
+      "symbols": [
+        "__init__",
+        "batch_process_rhs",
+        "Exact",
+        "IntegerFieldFloatRounding"
+      ],
+      "line_range": [
+        18,
+        32
+      ],
+      "score": 0.572,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2744,
+        "vector": 0.4453,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: user, that, avoid"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::_get_builtin_permissions",
+      "symbols": [
+        "_get_builtin_permissions",
+        "create_permissions",
+        "get_system_username",
+        "get_default_username"
+      ],
+      "line_range": [
+        21,
+        34
+      ],
+      "score": 0.5533,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2253,
+        "vector": 0.4331,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: change, name, this"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.69165,
+  "laya_scores": {
+    "fix_quality": 1.4796,
+    "matches_issue": 0.6521,
+    "safe_to_apply": 0.6349,
+    "composite": 0.69165,
+    "secrets_or_danger": 0.1006,
+    "logic_drift": 0.3781,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Fixes a vulnerability where trailing newlines could bypass username validation logic.\n- PERFORMANCE: PASS - No impact on performance; regex complexity remains identical.\n- ROBUSTNESS: PASS - Correctly handles edge case of trailing newlines without introducing race conditions or logic errors.\n- PONYTAIL / YAGNI: PASS - Minimal, targeted fix that addresses the specific bug report without adding unnecessary abstractions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\n\nfrom django.contrib.auth.validators import ASCIIUsernameValidator, UnicodeUsernameValidator\n\n\ndef test_ascii_username_rejects_trailing_newline():\n    \"\"\"Reproduces the bug: $ matches before a final newline, so 'bob\\\\n' passes.\"\"\"\n    validator = ASCIIUsernameValidator()\n    with pytest.raises(Exception):\n        validator(\"bob\\n\")\n\n\ndef test_unicode_username_rejects_trailing_newline():\n    validator = UnicodeUsernameValidator()\n    with pytest.raises(Exception):\n        validator(\"bob\\n\")\n\n\ndef test_valid_usernames_still_accepted():\n    \"\"\"Ensure the fix doesn't break normal valid usernames (boundary/sanity).\"\"\"\n    ascii_validator = ASCIIUsernameValidator()\n    unicode_validator = UnicodeUsernameValidator()\n\n    valid = [\"alice\", \"bob@ex.com\", \"user_name\", \"+user-\", \"a.b.c+d-e_f123\"]\n    for username in valid:\n        ascii_validator(username)\n        unicode_validator(username)\n\n\ndef test_rejects_empty_string():\n    \"\"\"Empty string should be rejected (plus requires at least one char).\"\"\"\n    ascii_validator = ASCIIUsernameValidator()\n    unicode_validator = UnicodeUsernameValidator()\n    with pytest.raises(Exception):\n        ascii_validator(\"\")\n    with pytest.raises(Exception):\n        unicode_validator(\"\")",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cf..1304f20 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'\n",
+  "offline_calls": 0
+}

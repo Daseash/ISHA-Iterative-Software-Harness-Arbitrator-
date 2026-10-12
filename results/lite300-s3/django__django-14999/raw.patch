@@ -1,0 +1,19 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index 982816be3a..7dfaf0a86f 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -314,9 +314,13 @@ class RenameModel(ModelOperation):
+         )
+ 
+     def state_forwards(self, app_label, state):
+-        state.rename_model(app_label, self.old_name, self.new_name)
++        return "RenameModel(old_name=%r, new_name=%r)" % (self.old_name, self.new_name)
+ 
+     def database_forwards(self, app_label, schema_editor, from_state, to_state):
++        new_model = to_state.apps.get_model(app_label, self.new_name)
++        if new_model._meta.db_table != new_model._meta.default_db_table:
++            return
++
+         new_model = to_state.apps.get_model(app_label, self.new_name)
+         if self.allow_migrate_model(schema_editor.connection.alias, new_model):
+             old_model = from_state.apps.get_model(app_label, self.old_name)

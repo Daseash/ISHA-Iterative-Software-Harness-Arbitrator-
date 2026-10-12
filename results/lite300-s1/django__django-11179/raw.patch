@@ -1,0 +1,12 @@
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -277,6 +277,9 @@ class Collector:
+         if self.can_fast_delete(specified_objects):
+             self.fast_deletes = []
+             self.fast_delete(specified_objects)
++            for model, instances in self.data.items():
++                for obj in instances:
++                    setattr(obj, model._meta.pk.attname, None)
+             return
+ 
+         # send pre_delete signals

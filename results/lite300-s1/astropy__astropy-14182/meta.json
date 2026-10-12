@@ -1,0 +1,244 @@
+{
+  "instance_id": "astropy__astropy-14182",
+  "repo": "astropy/astropy",
+  "base_commit": "a5917978be39d13cd90b517e1de4e7a539ffaa48",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272265.452564
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272268.1566916
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272277.3537142
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272339.9805477
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272346.9687278
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791272366.0962496
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: astropy/io/ascii/rst.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "astropy/io/ascii/rst.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791272214.8742716,
+  "elapsed_s": 159.53,
+  "plan": "# Before\ndef __init__(self):\n    super().__init__(delimiter_pad=None, bookend=False)\n\n# After\ndef __init__(self, **kwargs):\n    super().__init__(delimiter_pad=None, bookend=False, **kwargs)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/io/ascii/rst.py",
+      "symbol": "astropy/io/ascii/rst.py::__init__",
+      "symbols": [
+        "__init__",
+        "RST",
+        "SimpleRSTHeader",
+        "SimpleRSTData"
+      ],
+      "line_range": [
+        60,
+        62
+      ],
+      "score": 0.8404,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1818,
+        "vector": 0.8324,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/io/ascii/ui.py",
+      "symbol": "astropy/io/ascii/ui.py::get_writer",
+      "symbols": [
+        "get_writer",
+        "write",
+        "_probably_html",
+        "_get_format_class"
+      ],
+      "line_range": [
+        864,
+        920
+      ],
+      "score": 0.8252,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7889,
+        "vector": 0.6501,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: Writer, fast_writer; body matches report terms: data, line, table, output; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/io/ascii/core.py",
+      "symbol": "astropy/io/ascii/core.py::_check_multidim_table",
+      "symbols": [
+        "_check_multidim_table",
+        "_apply_include_exclude_names",
+        "_check_multidim_table",
+        "write"
+      ],
+      "line_range": [
+        42,
+        61
+      ],
+      "score": 0.8266,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7654,
+        "vector": 0.7103,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; signature parameter matches report: table; body matches report terms: support, table, output, with)"
+    },
+    {
+      "file": "astropy/io/ascii/connect.py",
+      "symbol": "astropy/io/ascii/connect.py::io_read",
+      "symbols": [
+        "io_read",
+        "io_write",
+        "io_identify",
+        "_get_connectors_table"
+      ],
+      "line_range": [
+        13,
+        21
+      ],
+      "score": 0.9912,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4041,
+        "vector": 0.7513,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: format; body matches report terms: file, filename, ascii, args)"
+    },
+    {
+      "file": "astropy/io/fits/connect.py",
+      "symbol": "astropy/io/fits/connect.py::_decode_mixins",
+      "symbols": [
+        "_decode_mixins",
+        "_encode_mixins",
+        "is_fits",
+        "read_table_fits"
+      ],
+      "line_range": [
+        78,
+        124
+      ],
+      "score": 0.7689,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.481,
+        "vector": 0.822,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: tbl; body matches report terms: data, line, table, unit)"
+    },
+    {
+      "file": "astropy/units/core.py",
+      "symbol": "astropy/units/core.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "set_enabled_units",
+        "add_enabled_units"
+      ],
+      "line_range": [
+        1739,
+        1774
+      ],
+      "score": 0.7422,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4369,
+        "vector": 0.6914,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: format; body matches report terms: unit, instance, init__, fill; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.5622750000000001,
+  "laya_scores": {
+    "fix_quality": 1.116,
+    "matches_issue": 0.5664,
+    "safe_to_apply": 0.5667,
+    "composite": 0.5622750000000001,
+    "secrets_or_danger": 0.1446,
+    "logic_drift": 0.2016,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No introduction of injection vectors, secrets exposure, or unsafe execution contexts.\n- PERFORMANCE: PASS - No N+1 patterns, unbounded memory allocation, or blocking operations introduced.\n- ROBUSTNESS: PASS - No swallowed exceptions or race conditions; simply forwards arguments to the stable parent class.\n- PONYTAIL / YAGNI: PASS - Minimal change required to solve the specific bug without adding unnecessary abstraction or dependencies.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import io\nimport pytest\nfrom astropy.table import QTable\nimport astropy.units as u\n\n\ndef test_rst_header_rows_basic():\n    \"\"\"Reproduces the bug: RST writer should accept header_rows kwarg.\"\"\"\n    tbl = QTable(\n        {'wave': [350, 950] * u.nm,\n         'response': [0.7, 1.2] * u.count}\n    )\n    # This should not raise TypeError after the fix\n    out = io.StringIO()\n    tbl.write(out, format=\"ascii.rst\", header_rows=[\"name\", \"unit\"])\n    result = out.getvalue()\n    # Verify it produced output containing column names and units\n    assert \"wave\" in result\n    assert \"response\" in result\n    assert \"nm\" in result\n    assert \"ct\" in result\n    # Should have the standard RST separator lines\n    assert \"====\" in result\n\n\ndef test_rst_header_rows_units_only():\n    \"\"\"Edge case: header_rows with only 'unit'.\"\"\"\n    tbl = QTable(\n        {'a': [1, 2] * u.m,\n         'b': [3, 4] * u.s}\n    )\n    out = io.StringIO()\n    tbl.write(out, format=\"ascii.rst\", header_rows=[\"unit\"])\n    result = out.getvalue()\n    # Units should appear\n    assert \"m\" in result\n    assert \"s\" in result\n\n\ndef test_rst_no_header_rows_default():\n    \"\"\"Edge case: calling without header_rows should still work as before.\"\"\"\n    tbl = QTable(\n        {'x': [1.0, 2.0],\n         'y': [3.0, 4.0]}\n    )\n    out = io.StringIO()\n    tbl.write(out, format=\"ascii.rst\")\n    result = out.getvalue()\n    # Default output should contain column names\n    assert \"x\" in result\n    assert \"y\" in result\n    # Should have RST separators\n    assert \"====\" in result",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py\nindex abdeba8..e5a4a24 100644\n--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -57,8 +57,8 @@ class RST(FixedWidth):\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, **kwargs):\n+        super().__init__(delimiter_pad=None, bookend=False, **kwargs)\n \n     def write(self, lines):\n         lines = super().write(lines)\n",
+  "offline_calls": 0
+}

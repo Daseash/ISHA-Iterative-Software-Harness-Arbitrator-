@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-14855",
+  "repo": "django/django",
+  "base_commit": "475cffd1d64c690cdad16ede4d5e81985738ceb4",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538941.304201
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538948.3419652
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538961.17882
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791538964.8510299
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539010.029252
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539204.993686
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791538858.9808125,
+  "elapsed_s": 349.3,
+  "plan": "def get_admin_url(remote_field, remote_obj, model_admin):\n    url_name = 'admin:%s_%s_change' % (\n        remote_obj._meta.app_label,\n        remote_obj._meta.model_name,\n    )\n    # Change: Add current_app to the reverse call\n    return reverse(\n        url_name,\n        args=[quote(remote_obj.pk)],\n        current_app=model_admin.admin_site.name\n    )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/helpers.py",
+      "symbol": "django/contrib/admin/helpers.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "AdminForm",
+        "__init__"
+      ],
+      "line_range": [
+        80,
+        88
+      ],
+      "score": 0.7172,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8135,
+        "vector": 0.5733,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: name; body matches report terms: name, description, model_admin, readonly)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::contribute_to_class",
+      "symbols": [
+        "contribute_to_class",
+        "__init__",
+        "contribute_to_class",
+        "__init__"
+      ],
+      "line_range": [
+        774,
+        797
+      ],
+      "score": 0.6225,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4694,
+        "vector": 0.5016,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: name; body matches report terms: name, field, this, with)"
+    },
+    {
+      "file": "django/contrib/sites/models.py",
+      "symbol": "django/contrib/sites/models.py::SiteManager",
+      "symbols": [
+        "SiteManager",
+        "_get_site_by_request",
+        "get_current",
+        "Site"
+      ],
+      "line_range": [
+        25,
+        77
+      ],
+      "score": 0.5956,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2509,
+        "vector": 0.6902,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: looking, current, django, this)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::_get",
+      "symbols": [
+        "_get",
+        "ping_google",
+        "_get_sitemap_full_url",
+        "_items"
+      ],
+      "line_range": [
+        77,
+        89
+      ],
+      "score": 0.583,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3272,
+        "vector": 0.4687,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: name; body matches report terms: name, able)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::__call__",
+      "symbols": [
+        "__call__",
+        "BadSerializer",
+        "deserialize",
+        "_load_serializers"
+      ],
+      "line_range": [
+        50,
+        53
+      ],
+      "score": 0.574,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1892,
+        "vector": 0.6809,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: args; body matches report terms: args)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::call_command",
+      "symbols": [
+        "call_command",
+        "load_command_class",
+        "find_commands",
+        "get_commands"
+      ],
+      "line_range": [
+        78,
+        183
+      ],
+      "score": 0.6101,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4576,
+        "vector": 0.4224,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: args; body matches report terms: name, know, specific, example)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.contrib.admin import AdminSite, ModelAdmin\nfrom django.contrib.admin.helpers import InlineAdminForm\nfrom django.db import models\nfrom django.urls import reverse, path\nfrom django.test import RequestFactory\n\n# Models for testing\nclass RelatedModel(models.Model):\n    class Meta:\n        app_label = 'admin_tests'\n\nclass MainModel(models.Model):\n    related = models.ForeignKey(RelatedModel, on_delete=models.CASCADE)\n    class Meta:\n        app_label = 'admin_tests'\n\n# Custom Admin Site\nclass CustomAdminSite(AdminSite):\n    name = 'custom-admin'\n\ncustom_site = CustomAdminSite(name='custom-admin')\n\nclass MainModelAdmin(ModelAdmin):\n    readonly_fields = ('related',)\n\ndef test_get_admin_url_uses_custom_admin_namespace():\n    \"\"\"\n    Reproduction of the bug: get_admin_url should respect the custom admin site \n    namespace (current_app) instead of defaulting to the global 'admin' namespace.\n    \"\"\"\n    related_obj = RelatedModel(pk=1)\n    model_admin = MainModelAdmin(MainModel, custom_site)\n    \n    # We need to simulate the helper logic used in AdminForm.readonly_fields\n    # Specifically, we verify the URL generation for a readonly field\n    from django.contrib.admin.helpers import AdminReadonlyField\n    \n    # Create a dummy form field for the related object\n    field = MainModel._meta.get_field('related')\n    \n    # This calls get_admin_url internally\n    readonly_field = AdminReadonlyField(\n        form=None,\n        field='related',\n        is_first=True,\n        model_admin=model_admin\n    )\n    \n    # Trigger the rendering/URL generation\n    url = readonly_field.contents(MainModel(related=related_obj))\n    \n    # The URL should contain '/custom-admin/', not '/admin/'\n    assert '/custom-admin/' in url\n    assert '/admin/' not in url\n\ndef test_get_admin_url_with_none_pk_raises_no_reverse_match():\n    \"\"\"\n    Edge case: Ensure that if the related object is unsaved (None PK),\n    the system behaves as expected (typically NoReverseMatch).\n    \"\"\"\n    related_obj = RelatedModel(pk=None)\n    model_admin = MainModelAdmin(MainModel, custom_site)\n    \n    from django.contrib.admin.helpers import AdminReadonlyField\n    from django.urls import NoReverseMatch\n    \n    # Should fail because quote(None) is not a valid URL component\n    with pytest.raises(NoReverseMatch):\n        readonly_field = AdminReadonlyField(None, 'related', True, model_admin)\n        readonly_field.contents(MainModel(related=related_obj))\n\ndef test_get_admin_url_with_non_existent_model():\n    \"\"\"\n    Edge case: Ensure that if a field points to a model not registered\n    in the admin, it raises NoReverseMatch.\n    \"\"\"\n    class UnregisteredModel(models.Model):\n        class Meta:\n            app_label = 'admin_tests'\n            \n    # Attempt to reverse a non-existent admin URL\n    from django.contrib.admin.helpers import get_admin_url\n    \n    class MockAdmin:\n        admin_site = custom_site\n        \n    with pytest.raises(Exception): # Usually NoReverseMatch\n        get_admin_url(None, UnregisteredModel(), MockAdmin())",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/contrib/admin/helpers.py\n+++ b/django/contrib/admin/helpers.py\n@@ -210,7 +210,7 @@\n         url_name = 'admin:%s_%s_change' % (\n             remote_obj._meta.app_label,\n             remote_obj._meta.model_name,\n         )\n-        return reverse(url_name, args=[quote(remote_obj.pk)])\n+        return reverse(url_name, args=[quote(remote_obj.pk)], current_app=self.model_admin.admin_site.name)\n \n     def label_tag(self):\n         attrs = {}",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c1\\django\\contrib\\admin\\helpers.py: SyntaxError line 212: expected an indented block after 'try' statement on line 211"
+      ],
+      "changed_files": [
+        "django/contrib/admin/helpers.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6127,
+        "matches_issue": 0.8233,
+        "safe_to_apply": 0.6981,
+        "composite": 0.783525,
+        "secrets_or_danger": 0.2181,
+        "logic_drift": 0.3101,
+        "flagged": false
+      },
+      "laya_combined": 0.7835,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 127.64,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/contrib/admin/helpers.py\n+++ b/django/contrib/admin/helpers.py\n@@ -210,7 +210,7 @@\n         url_name = 'admin:%s_%s_change' % (\n             remote_obj._meta.app_label,\n             remote_obj._meta.model_name,\n         )\n-        url = reverse(url_name, args=[quote(remote_obj.pk)])\n+        url = reverse(url_name, args=[quote(remote_obj.pk)], current_app=self.model_admin.admin_site.name)\n         return format_html('<a href=\"{}\">{}</a>', url, remote_obj)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c2\\django\\contrib\\admin\\helpers.py: SyntaxError line 212: expected an indented block after 'try' statement on line 211"
+      ],
+      "changed_files": [
+        "django/contrib/admin/helpers.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5846,
+        "matches_issue": 0.831,
+        "safe_to_apply": 0.7108,
+        "composite": 0.7816,
+        "secrets_or_danger": 0.2056,
+        "logic_drift": 0.2279,
+        "flagged": false
+      },
+      "laya_combined": 0.7816,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 135.89,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/contrib/admin/helpers.py\n+++ b/django/contrib/admin/helpers.py\n@@ -210,7 +210,11 @@\n         url_name = 'admin:%s_%s_change' % (\n             remote_obj._meta.app_label,\n             remote_obj._meta.model_name,\n         )\n-        return reverse(url_name, args=[quote(remote_obj.pk)])\n+        return reverse(\n+            url_name,\n+            args=[quote(remote_obj.pk)],\n+            current_app=self.model_admin.admin_site.name,\n+        )\n \n \n class AdminReadonlyField:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c3\\django\\contrib\\admin\\helpers.py: SyntaxError line 212: expected an indented block after 'try' statement on line 211"
+      ],
+      "changed_files": [
+        "django/contrib/admin/helpers.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4569,
+        "matches_issue": 0.8066,
+        "safe_to_apply": 0.6744,
+        "composite": 0.734475,
+        "secrets_or_danger": 0.1501,
+        "logic_drift": 0.2945,
+        "flagged": false
+      },
+      "laya_combined": 0.7345,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 121.51,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/contrib/admin/helpers.py\n+++ b/django/contrib/admin/helpers.py\n@@ -210,7 +210,7 @@\n         url_name = 'admin:%s_%s_change' % (\n             remote_obj._meta.app_label,\n             remote_obj._meta.model_name,\n         )\n-        return reverse(url_name, args=[quote(remote_obj.pk)])\n+        return reverse(url_name, args=[quote(remote_obj.pk)], current_app=self.model_admin.admin_site.name)\n \n     def label_tag(self):\n         attrs = {}",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14855-c1\\django\\contrib\\admin\\helpers.py: SyntaxError line 212: expected an indented block after 'try' statement on line 211"
+    ],
+    "changed_files": [
+      "django/contrib/admin/helpers.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6127,
+      "matches_issue": 0.8233,
+      "safe_to_apply": 0.6981,
+      "composite": 0.783525,
+      "secrets_or_danger": 0.2181,
+      "logic_drift": 0.3101,
+      "flagged": false
+    },
+    "laya_combined": 0.7835,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0009,
+    "rank_reason": "logistic",
+    "elapsed_s": 127.64,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

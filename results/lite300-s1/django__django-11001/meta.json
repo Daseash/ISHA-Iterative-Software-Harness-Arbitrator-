@@ -1,0 +1,244 @@
+{
+  "instance_id": "django__django-11001",
+  "repo": "django/django",
+  "base_commit": "ef082ebb84f00e38af4e8880d04e8365c2766d34",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791278602.9946039
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791278605.975223
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791278811.6097183
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791278811.6229796
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash",
+      "model_full": "gemini/gemini-3.5-flash",
+      "position": "fallback 4",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791279048.4085567
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791279072.318193
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/compiler.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791277226.065294,
+  "elapsed_s": 502.87,
+  "plan": "# Normalise whitespace to correctly handle multiline RawSQL expressions.\n# This collapses all runs of whitespace (including newlines and tabs) into a\n# single space so that the ordering_parts regex sees a consistent string.\nsql_normalized = ' '.join(sql.split())\nwithout_ordering = self.ordering_parts.search(sql_normalized).group(1)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/expressions.py",
+      "symbol": "django/db/models/expressions.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "RawSQL"
+      ],
+      "line_range": [
+        852,
+        862
+      ],
+      "score": 0.838,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5734,
+        "vector": 0.7264,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: then; body matches report terms: then, expressions, when, expression)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "deconstruct",
+        "__eq__",
+        "__lt__"
+      ],
+      "line_range": [
+        304,
+        321
+      ],
+      "score": 0.5717,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2248,
+        "vector": 0.5878,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: char, which, null, like)"
+    },
+    {
+      "file": "django/contrib/postgres/search.py",
+      "symbol": "django/contrib/postgres/search.py::SearchVectorExact",
+      "symbols": [
+        "SearchVectorExact",
+        "process_rhs",
+        "SearchVectorCombinable",
+        "_combine"
+      ],
+      "line_range": [
+        7,
+        23
+      ],
+      "score": 0.5542,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1736,
+        "vector": 0.5481,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: search, expression, query)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "call_command",
+        "ManagementUtility"
+      ],
+      "line_range": [
+        20,
+        29
+      ],
+      "score": 0.5502,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2967,
+        "vector": 0.2581,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: join, with, that)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::normalize",
+      "symbols": [
+        "normalize",
+        "next_char",
+        "walk_to_end",
+        "get_quantifier"
+      ],
+      "line_range": [
+        37,
+        188
+      ],
+      "score": 0.5399,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5407,
+        "vector": 0.3938,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: then, already, line, special)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::LazySettings",
+      "symbols": [
+        "LazySettings",
+        "_setup",
+        "__setattr__",
+        "configure"
+      ],
+      "line_range": [
+        42,
+        131
+      ],
+      "score": 0.5334,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1684,
+        "vector": 0.3862,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: already, line, removed, char)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.71605,
+  "laya_scores": {
+    "fix_quality": 1.4569,
+    "matches_issue": 0.7356,
+    "safe_to_apply": 0.6717,
+    "composite": 0.71605,
+    "secrets_or_danger": 0.2079,
+    "logic_drift": 0.3043,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS No changes to input handling, query construction, or parameterization that would introduce injection risks.\n- PERFORMANCE: PASS The `re.DOTALL` flag allows `.` to match newlines, which technically makes the regex potentially more prone to catastrophic backtracking on massive non-matching strings, but for SQL ORDER BY clauses this is negligible and the risk is theoretical rather than a practical landmine.\n- ROBUSTNESS: PASS The fix correctly addresses the regular expression's inability to span multiple lines, ensuring that multiline RawSQL orderings are correctly identified as duplicates or unique as intended.\n- PONYTAIL / YAGNI: PASS Minimal, targeted fix for a specific bug without introducing new abstractions or dependencies.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\nimport re\n\nimport pytest\n\nos.environ.setdefault(\"DJANGO_SETTINGS_MODULE\", \"settings\")\n\nimport django\n\ndjango.setup()\n\nfrom django.db import connection\nfrom django.db.models.expressions import RawSQL\nfrom django.db.models.query import QuerySet\n\n# Grab a real model to order against\nfrom django.contrib.auth.models import User\n\n\ndef _qs_with(*rawsqls):\n    return QuerySet(model=User).order_by(*rawsqls)\n\n\ndef _order_by_sql(qs):\n    compiler = qs.query.get_compiler(connection=connection)\n    sql, params = compiler.as_sql()\n    # Normalise whitespace so tests are robust against exact spacing\n    return \" \".join(sql.split()), params\n\n\ndef test_multiline_rawsql_order_by_not_collapsed():\n    \"\"\"\n    Root-cause reproduction from the bug report.\n\n    Three RawSQL ORDER BY clauses whose last rendered line is identical\n    (",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/db/models/sql/compiler.py b/django/db/models/sql/compiler.py\nindex 7649c39..57150f9 100644\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -32,7 +32,7 @@ class SQLCompiler:\n         self.select = None\n         self.annotation_col_map = None\n         self.klass_info = None\n-        self.ordering_parts = re.compile(r'(.*)\\s(ASC|DESC)(.*)')\n+        self.ordering_parts = re.compile(r'(.*)\\s(ASC|DESC)(.*)', re.DOTALL)\n         self._meta_ordering = None\n \n     def setup_query(self):\n",
+  "offline_calls": 0
+}

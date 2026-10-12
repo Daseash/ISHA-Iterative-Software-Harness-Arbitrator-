@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "django__django-11620", "ts": 1791304271.655069}
+{"event": "attempt", "n": 1, "ts": 1791304276.7279644}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791306076.742212}
+{"event": "attempt", "n": 2, "ts": 1791306077.003934}
+{"event": "error", "attempt": 2, "error": "KeyError: 'approval'", "backoff_s": 40.0, "ts": 1791307430.5983157}
+{"event": "attempt", "n": 3, "ts": 1791307470.8686142}
+{"event": "attempt", "n": 1, "ts": 1791389870.7035291}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791391670.7178109}
+{"event": "attempt", "n": 2, "ts": 1791391671.0339396}
+{"event": "timeout", "attempt": 2, "ts": 1791393471.2961557}

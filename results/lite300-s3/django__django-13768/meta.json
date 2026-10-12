@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-13768",
+  "repo": "django/django",
+  "base_commit": "965d2d95c630939b53eb60d9c169f5dfc77ee0c6",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531779.3900225
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531786.768744
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531800.581486
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531803.0999825
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531835.4064758
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791532011.5097148
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/dispatch/dispatcher.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/dispatch/dispatcher.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791531707.0872767,
+  "elapsed_s": 312.27,
+  "plan": "import logging\n\n# ... inside Signal class ...\n\n    def send_robust(self, sender, **named):\n        # ... existing code ...\n        for receiver in receivers:\n            try:\n                response = receiver(signal=self, sender=sender, **named)\n            except Exception as err:\n                logger.exception('Error calling signal receiver for %s', self)\n                responses.append((receiver, err))\n            else:\n                responses.append((receiver, response))\n        return responses",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/handlers/exception.py",
+      "symbol": "django/core/handlers/exception.py::get_exception_response",
+      "symbols": [
+        "get_exception_response",
+        "convert_exception_to_response",
+        "response_for_exception",
+        "handle_uncaught_exception"
+      ],
+      "line_range": [
+        129,
+        139
+      ],
+      "score": 0.5695,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4224,
+        "vector": 0.1575,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: exception; body matches report terms: caught, call, signal, error)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_backends",
+      "symbols": [
+        "_get_backends",
+        "authenticate",
+        "login",
+        "logout"
+      ],
+      "line_range": [
+        24,
+        36
+      ],
+      "score": 0.614,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4213,
+        "vector": 0.5305,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: figure, have, then)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "main_help_text",
+        "fetch_command",
+        "execute"
+      ],
+      "line_range": [
+        44,
+        77
+      ],
+      "score": 0.5897,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4457,
+        "vector": 0.2778,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: figure, call, django, their)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_validators",
+      "symbols": [
+        "_check_validators",
+        "select_format",
+        "deconstruct",
+        "__lt__"
+      ],
+      "line_range": [
+        348,
+        366
+      ],
+      "score": 0.5856,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3933,
+        "vector": 0.3523,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: able, call, error, function)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "stringformat",
+        "urlencode",
+        "_property_resolver"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5689,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2038,
+        "vector": 0.5664,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: should, template, function)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "ugettext_noop",
+        "ugettext",
+        "ungettext"
+      ],
+      "line_range": [
+        42,
+        69
+      ],
+      "score": 0.5683,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.362,
+        "vector": 0.2732,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: able, call, have, django)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.523825,
+  "laya_scores": {
+    "fix_quality": 1.309,
+    "matches_issue": 0.3744,
+    "safe_to_apply": 0.4119,
+    "composite": 0.523825,
+    "secrets_or_danger": 0.1383,
+    "logic_drift": 0.2712,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input exposure or unsafe execution introduced.\n- PERFORMANCE: PASS, Logging a single exception per failure is standard and low overhead.\n- ROBUSTNESS: PASS, Improves observability by surfacing previously silent failures.\n- PONYTAIL / YAGNI: PASS, This provides necessary visibility for a critical framework component.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport logging\nfrom django.dispatch import Signal\n\ndef test_send_robust_logs_exception():\n    \"\"\"\n    Test that Signal.send_robust() logs exceptions raised by receivers.\n    This test verifies that the logger captures the exception, satisfying \n    the requirement that users see these exceptions in their error tools.\n    \"\"\"\n    signal = Signal()\n\n    def failing_receiver(sender, **kwargs):\n        raise ValueError(\"Oops, something went wrong!\")\n\n    signal.connect(failing_receiver)\n\n    with pytest.assertLogs('django.dispatch', level='ERROR') as cm:\n        responses = signal.send_robust(sender=None)\n        \n    # Verify the exception was caught and returned\n    assert len(responses) == 1\n    assert isinstance(responses[0][1], ValueError)\n    \n    # Verify the error was logged\n    assert len(cm.output) == 1\n    assert \"ValueError: Oops, something went wrong!\" in cm.output[0]\n    assert \"Error calling signal receiver\" in cm.output[0]\n\ndef test_send_robust_multiple_receivers_logging():\n    \"\"\"\n    Verify that if multiple receivers exist, the signal continues execution\n    and logs every exception individually.\n    \"\"\"\n    signal = Signal()\n\n    def receiver_ok(sender, **kwargs):\n        return \"ok\"\n\n    def receiver_fail(sender, **kwargs):\n        raise TypeError(\"Fail!\")\n\n    signal.connect(receiver_ok)\n    signal.connect(receiver_fail)\n\n    with pytest.assertLogs('django.dispatch', level='ERROR') as cm:\n        responses = signal.send_robust(sender=None)\n\n    assert len(responses) == 2\n    # Verify that only the failing receiver triggered a log\n    assert len(cm.output) == 1\n    assert \"TypeError: Fail!\" in cm.output[0]\n\ndef test_send_robust_no_receivers_no_log():\n    \"\"\"\n    Verify that an empty signal does not trigger any logging.\n    \"\"\"\n    signal = Signal()\n    \n    with pytest.assertLogs('django.dispatch', level='ERROR') as cm:\n        responses = signal.send_robust(sender=None)\n        \n    assert responses == []\n    # No logs should be generated for a signal with no receivers\n    assert len(cm.output) == 0\n\ndef test_send_robust_handles_none_sender():\n    \"\"\"\n    Verify that send_robust handles None as a sender without crashing \n    or failing to log.\n    \"\"\"\n    signal = Signal()\n    \n    def failing_receiver(sender, **kwargs):\n        raise RuntimeError(\"None sender error\")\n        \n    signal.connect(failing_receiver)\n    \n    with pytest.assertLogs('django.dispatch', level='ERROR') as cm:\n        signal.send_robust(sender=None)\n        \n    assert \"RuntimeError: None sender error\" in cm.output[0]",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/dispatch/dispatcher.py\n+++ b/django/dispatch/dispatcher.py\n@@ -1,3 +1,4 @@\n+import logging\n import threading\n import warnings\n import weakref\n@@ -10,6 +11,8 @@\n from django.utils.inspect import func_accepts_kwargs\n \n \n+logger = logging.getLogger('django.dispatch')\n+\n def _make_id(target):\n     if hasattr(target, '__func__'):\n         return (id(target.__self__), id(target.__func__))\n@@ -175,6 +178,7 @@\n             try:\n                 response = receiver(signal=self, sender=sender, **named)\n             except Exception as err:\n+                logger.exception('Error calling signal receiver for %s', self)\n                 responses.append((receiver, err))\n             else:\n                 responses.append((receiver, response))",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-f02jttmy",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/dispatch/dispatcher.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/dispatch/dispatcher.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.309,
+        "matches_issue": 0.3744,
+        "safe_to_apply": 0.4119,
+        "composite": 0.523825,
+        "secrets_or_danger": 0.1383,
+        "logic_drift": 0.2712,
+        "flagged": false
+      },
+      "laya_combined": 0.5238,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0106,
+      "rank_reason": "logistic",
+      "elapsed_s": 104.95,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/dispatch/dispatcher.py\n+++ b/django/dispatch/dispatcher.py\n@@ -1,3 +1,4 @@\n+import logging\n import threading\n import warnings\n import weakref\n@@ -10,6 +11,8 @@\n from django.utils.inspect import func_accepts_kwargs\n \n \n+logger = logging.getLogger('django.dispatch')\n+\n def _make_id(target):\n     if hasattr(target, '__func__'):\n         return (id(target.__self__), id(target.__func__))\n@@ -171,6 +174,7 @@\n             try:\n                 response = receiver(signal=self, sender=sender, **named)\n             except Exception as err:\n+                logger.exception('Error calling signal receiver for %s', self)\n                 responses.append((receiver, err))\n             else:\n                 responses.append((receiver, response))",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0mflg45f",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/dispatch/dispatcher.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/dispatch/dispatcher.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.309,
+        "matches_issue": 0.3744,
+        "safe_to_apply": 0.4119,
+        "composite": 0.523825,
+        "secrets_or_danger": 0.1346,
+        "logic_drift": 0.2638,
+        "flagged": false
+      },
+      "laya_combined": 0.5238,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0106,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.65,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/dispatch/dispatcher.py\n+++ b/django/dispatch/dispatcher.py\n@@ -1,4 +1,5 @@\n import asyncio\n+import logging\n import threading\n import weakref\n \n@@ -10,6 +11,8 @@\n \n logger = logging.getLogger('django.dispatch')\n \n+signal_logger = logging.getLogger('django.dispatch')\n+\n \n def _make_id(target):\n     if hasattr(target, '__func__'):\n@@ -183,6 +186,7 @@\n             try:\n                 response = receiver(signal=self, sender=sender, **named)\n             except Exception as err:\n+                logger.exception('Error calling signal receiver for %s', self)\n                 responses.append((receiver, err))\n             else:\n                 responses.append((receiver, response))",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-81anylqc",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/dispatch/dispatcher.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4066,
+        "matches_issue": 0.4323,
+        "safe_to_apply": 0.4509,
+        "composite": 0.57245,
+        "secrets_or_danger": 0.1325,
+        "logic_drift": 0.229,
+        "flagged": false
+      },
+      "laya_combined": 0.5725,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.01,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.07,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/dispatch/dispatcher.py\n+++ b/django/dispatch/dispatcher.py\n@@ -1,3 +1,4 @@\n+import logging\n import threading\n import warnings\n import weakref\n@@ -10,6 +11,8 @@\n from django.utils.inspect import func_accepts_kwargs\n \n \n+logger = logging.getLogger('django.dispatch')\n+\n def _make_id(target):\n     if hasattr(target, '__func__'):\n         return (id(target.__self__), id(target.__func__))\n@@ -175,6 +178,7 @@\n             try:\n                 response = receiver(signal=self, sender=sender, **named)\n             except Exception as err:\n+                logger.exception('Error calling signal receiver for %s', self)\n                 responses.append((receiver, err))\n             else:\n                 responses.append((receiver, response))",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-f02jttmy",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/dispatch/dispatcher.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/dispatch/dispatcher.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.309,
+      "matches_issue": 0.3744,
+      "safe_to_apply": 0.4119,
+      "composite": 0.523825,
+      "secrets_or_danger": 0.1383,
+      "logic_drift": 0.2712,
+      "flagged": false
+    },
+    "laya_combined": 0.5238,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0106,
+    "rank_reason": "logistic",
+    "elapsed_s": 104.95,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/dispatch/dispatcher.py b/django/dispatch/dispatcher.py\nindex b7d9d26..40572b4 100644\n--- a/django/dispatch/dispatcher.py\n+++ b/django/dispatch/dispatcher.py\n@@ -1,3 +1,4 @@\n+import logging\n import threading\n import warnings\n import weakref\n@@ -6,6 +7,8 @@ from django.utils.deprecation import RemovedInDjango40Warning\n from django.utils.inspect import func_accepts_kwargs\n \n \n+logger = logging.getLogger('django.dispatch')\n+\n def _make_id(target):\n     if hasattr(target, '__func__'):\n         return (id(target.__self__), id(target.__func__))\n@@ -208,6 +211,7 @@ class Signal:\n             try:\n                 response = receiver(signal=self, sender=sender, **named)\n             except Exception as err:\n+                logger.exception('Error calling signal receiver for %s', self)\n                 responses.append((receiver, err))\n             else:\n                 responses.append((receiver, response))\n",
+  "offline_calls": 0
+}

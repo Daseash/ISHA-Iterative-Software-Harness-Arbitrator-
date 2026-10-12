@@ -1,0 +1,375 @@
+{
+  "instance_id": "django__django-11742",
+  "repo": "django/django",
+  "base_commit": "fee75d2aed4e58ada6567c464cfd22e89dc65f4a",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791397913.0437565
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791397916.7087135
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791397924.9220827
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791397924.971406
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791397952.768886
+    },
+    {
+      "role": "coder",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791398375.0272577
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791395786.2509947,
+  "error": "attempt 1 exceeded 1800s",
+  "elapsed_s": 795.16,
+  "plan": "def _check_choices_length(self):\n       if self.choices is not None and self.max_length is not None:\n           for value, label in self.choices:\n               if value is not None and len(str(value)) > self.max_length:\n                   return [\n                       checks.Error(\n                           'The max_length must be at least %(max_length)s, got %(value)r.',\n                           hint='The max_length must be increased to accommodate the longest choice value.',\n                           obj=self,\n                           id='fields.E002',\n                           params={'max_length': self.max_length, 'value': value},\n                       )\n                   ]\n       return []",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "check",
+        "_check_field_name"
+      ],
+      "line_range": [
+        135,
+        181
+      ],
+      "score": 0.7446,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7186,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: choices, max_length; body matches report terms: field, choice, max_length, save)"
+    },
+    {
+      "file": "django/db/models/enums.py",
+      "symbol": "django/db/models/enums.py::choices",
+      "symbols": [
+        "choices",
+        "__new__",
+        "values",
+        "TextChoices"
+      ],
+      "line_range": [
+        48,
+        51
+      ],
+      "score": 0.5657,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0952,
+        "vector": 0.7657,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: choice, value; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "_load_serializers",
+        "serialize"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.641,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5344,
+        "vector": 0.5199,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: this, there, long)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::create_permissions",
+      "symbols": [
+        "create_permissions",
+        "get_system_username",
+        "get_default_username",
+        "_get_builtin_permissions"
+      ],
+      "line_range": [
+        35,
+        88
+      ],
+      "score": 0.6036,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.354,
+        "vector": 0.5837,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: check, value, values, this)"
+    },
+    {
+      "file": "django/utils/regex_helper.py",
+      "symbol": "django/utils/regex_helper.py::next_char",
+      "symbols": [
+        "next_char",
+        "walk_to_end",
+        "get_quantifier",
+        "normalize"
+      ],
+      "line_range": [
+        189,
+        209
+      ],
+      "score": 0.585,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2451,
+        "vector": 0.6139,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, long, that)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__setattr__",
+      "symbols": [
+        "__setattr__",
+        "configure",
+        "FILE_CHARSET",
+        "__init__"
+      ],
+      "line_range": [
+        81,
+        91
+      ],
+      "score": 0.5412,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1679,
+        "vector": 0.4522,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: value, values, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.db.models import CharField\nfrom django.core import checks\n\ndef test_string_value_too_long():\n    \"\"\"Test that a string choice value longer than max_length triggers E002.\"\"\"\n    field = CharField(max_length=5, choices=[('toolong', 'Toolong')])\n    errors = field.check()\n    e002_errors = [e for e in errors if e.id == 'fields.E002']\n    assert len(e002_errors) == 1\n    error = e002_errors[0]\n    assert error.params == {'max_length': 5, 'value': 'toolong'}\n\ndef test_integer_value_too_long():\n    \"\"\"Test that an integer choice value (when converted to string) longer than max_length triggers E002.\"\"\"\n    field = CharField(max_length=2, choices=[(123, 'Number')])  # str(123) = '123' (length 3)\n    errors = field.check()\n    e002_errors = [e for e in errors if e.id == 'fields.E002']\n    assert len(e002_errors) == 1\n    error = e002_errors[0]\n    assert error.params == {'max_length': 2, 'value': 123}\n\ndef test_exact_match_string():\n    \"\"\"Test that a string choice value exactly matching max_length does not trigger E002.\"\"\"\n    field = CharField(max_length=5, choices=[('hello', 'Hello')])\n    errors = field.check()\n    e002_errors = [e for e in errors if e.id == 'fields.E002']\n    assert len(e002_errors) == 0\n\ndef test_none_in_choices():\n    \"\"\"Test that a None choice value is skipped and does not trigger E002.\"\"\"\n    field = CharField(max_length=5, choices=[(None, 'None')])\n    errors = field.check()\n    e002_errors = [e for e in errors if e.id == 'fields.E002']\n    assert len(e002_errors) == 0",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": false,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -100,6 +100,15 @@\n         self.max_length = max_length\n         self.choices = choices\n         super().__init__(*args, **kwargs)\n@@ -200,6 +200,10 @@\n     def check(self, **kwargs):\n         errors = super().check(**kwargs)\n         errors.extend(self._check_choices_length())\n         return errors\n@@ -210,6 +210,22 @@\n     def _check_choices_length(self):\n         if self.choices is not None and self.max_length is not None:\n             for value, label in self.choices:\n                 if value is not None and len(str(value)) > self.max_length:\n                     return [\n                         checks.Error(\n                             'The max_length must be at least %(max_length)s, got %(value)r.',\n                             hint='The max_length must be increased to accommodate the longest choice value.',\n                             obj=self,\n                             id='fields.E002',\n                             params={'max_length': self.max_length, 'value': value},\n                         )\n                     ]\n         return []",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8kghl5tq",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6362,
+        "matches_issue": 0.8101,
+        "safe_to_apply": 0.6757,
+        "composite": 0.7805,
+        "secrets_or_danger": 0.1215,
+        "logic_drift": 0.292,
+        "flagged": false
+      },
+      "laya_combined": 0.7805,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 306.31,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -211,6 +211,20 @@\n         return []\n \n     def _check_choices(self):\n+        if self.choices is not None and self.max_length is not None:\n+            for value, label in self.choices:\n+                if value is not None and len(str(value)) > self.max_length:\n+                    return [\n+                        checks.Error(\n+                            'The max_length must be at least %(max_length)s, got %(value)r.',\n+                            hint='The max_length must be increased to accommodate the longest choice value.',\n+                            obj=self,\n+                            id='fields.E002',\n+                            params={'max_length': self.max_length, 'value': value},\n+                        )\n+                    ]\n+        return []\n+\n         if self.choices is None:\n             return []\n         if not isinstance(self.choices, (list, tuple)) and not hasattr(self.choices, '__iter__'):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8j1i9zu6",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8j1i9zu6\\django\\db\\models\\fields\\__init__.py: undefined name 'auto_created'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8j1i9zu6\\django\\db\\models\\fields\\__init__.py: undefined name 'error_messages'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8j1i9zu6\\django\\db\\models\\fields\\__init__.py: undefined name 'error_messages'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8j1i9zu6\\django\\db\\models\\fields\\__init__.py: redefinition of unused '_check_choices_length' from line 179"
+      ],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 14,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6729,
+        "matches_issue": 0.8074,
+        "safe_to_apply": 0.6582,
+        "composite": 0.784625,
+        "secrets_or_danger": 0.1413,
+        "logic_drift": 0.3649,
+        "flagged": false
+      },
+      "laya_combined": 0.7846,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 167.77,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -10,6 +10,7 @@\n from functools import partialmethod, total_ordering\n \n from django import forms\n+from django.core import checks\n from django.apps import apps\n from django.conf import settings\n \n@@ -46,3 +47,15 @@\n class Empty:\n     pass\n+\n+    def _check_choices_length(self):\n+        if self.choices is not None and self.max_length is not None:\n+            for value, label in self.choices:\n+                if value is not None and len(str(value)) > self.max_length:\n+                    return [\n+                        checks.Error(\n+                            'The max_length must be at least %(max_length)s, got %(value)r.',\n+                            hint='The max_length must be increased to accommodate the longest choice value.',\n+                            obj=self,\n+                            id='fields.E002',\n+                            params={'max_length': self.max_length, 'value': value},\n+                        )\n+                    ]\n+        return []\n\n\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -10,6 +10,7 @@\n from functools import partialmethod, total_ordering\n \n from django import forms\n+from django.core import checks\n from django.apps import apps\n from django.conf import settings\n \n@@ -46,3 +47,15 @@\n class Empty:\n     pass\n+\n+    def _check_choices_length(self):\n+        if self.choices is not None and self.max_length is not None:\n+            for value, label in self.choices:\n+                if value is not None and len(str(value)) > self.max_length:\n+                    return [\n+                        checks.Error(\n+                            'The max_length must be at least %(max_length)s, got %(value)r.',\n+                            hint='The max_length must be increased to accommodate the longest choice value.',\n+                            obj=self,\n+                            id='fields.E002',\n+                            params={'max_length': self.max_length, 'value': value},\n+                        )\n+                    ]\n+        return []",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-e9c0z1jc",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-e9c0z1jc\\django\\db\\models\\fields\\__init__.py: SyntaxError line 215: expected an indented block after 'if' statement on line 213"
+      ],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 32,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5732,
+        "matches_issue": 0.7794,
+        "safe_to_apply": 0.6937,
+        "composite": 0.7615749999999999,
+        "secrets_or_danger": 0.2248,
+        "logic_drift": 0.4309,
+        "flagged": false
+      },
+      "laya_combined": 0.7616,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 188.42,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": false,
+    "patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -100,6 +100,15 @@\n         self.max_length = max_length\n         self.choices = choices\n         super().__init__(*args, **kwargs)\n@@ -200,6 +200,10 @@\n     def check(self, **kwargs):\n         errors = super().check(**kwargs)\n         errors.extend(self._check_choices_length())\n         return errors\n@@ -210,6 +210,22 @@\n     def _check_choices_length(self):\n         if self.choices is not None and self.max_length is not None:\n             for value, label in self.choices:\n                 if value is not None and len(str(value)) > self.max_length:\n                     return [\n                         checks.Error(\n                             'The max_length must be at least %(max_length)s, got %(value)r.',\n                             hint='The max_length must be increased to accommodate the longest choice value.',\n                             obj=self,\n                             id='fields.E002',\n                             params={'max_length': self.max_length, 'value': value},\n                         )\n                     ]\n         return []",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-8kghl5tq",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+    ],
+    "changed_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "added_lines": 0,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6362,
+      "matches_issue": 0.8101,
+      "safe_to_apply": 0.6757,
+      "composite": 0.7805,
+      "secrets_or_danger": 0.1215,
+      "logic_drift": 0.292,
+      "flagged": false
+    },
+    "laya_combined": 0.7805,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 306.31,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

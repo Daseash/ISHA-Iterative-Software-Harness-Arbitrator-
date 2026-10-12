@@ -1,0 +1,18 @@
+{"event": "start", "instance_id": "django__django-10924", "ts": 1791454848.9727643}
+{"event": "attempt", "n": 1, "ts": 1791454849.4875102}
+{"event": "model", "ts": 1791454979.3193073, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791454985.089954, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455007.2354517, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791455019.5756662, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791455115.010533, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791455429.5990586, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (5 models): gemini-3.1-flash-lite: ServiceUnavailableError; qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "api_retry", "backoff_s": 20.0, "ts": 1791455448.7656226}
+{"event": "attempt", "n": 2, "ts": 1791455469.309038}
+{"event": "model", "ts": 1791455574.7796555, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455580.8726473, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455590.926973, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455590.9633682, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791455655.905556, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1791455879.8894503, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791455961.982308, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791456045.052092}

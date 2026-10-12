@@ -1,0 +1,12 @@
+diff --git a/django/db/models/fields/reverse_related.py b/django/db/models/fields/reverse_related.py
+index ccc2223a5f..9088a76b1f 100644
+--- a/django/db/models/fields/reverse_related.py
++++ b/django/db/models/fields/reverse_related.py
+@@ -128,6 +128,7 @@ class ForeignObjectRel(FieldCacheMixin):
+             self.on_delete,
+             self.symmetrical,
+             self.multiple,
++            make_hashable(getattr(self, 'through_fields', None)),
+         )
+ 
+     def __eq__(self, other):

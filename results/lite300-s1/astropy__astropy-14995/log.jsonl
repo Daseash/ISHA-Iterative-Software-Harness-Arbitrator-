@@ -1,0 +1,23 @@
+{"event": "start", "instance_id": "astropy__astropy-14995", "ts": 1791272572.9607608}
+{"event": "attempt", "n": 1, "ts": 1791272573.064443}
+{"event": "model", "ts": 1791272654.5714867, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272658.4795122, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791272664.087222, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272686.068991, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272725.999336, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272770.5867891, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272902.1141667, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273032.9602451, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273051.148128, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ — expected context not found in file: '        if handle_mask is not None:' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)", "ts": 1791273066.54493}
+{"event": "attempt", "n": 2, "ts": 1791273066.626891}
+{"event": "model", "ts": 1791273096.1071558, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791273099.6900299, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791273208.6694, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273210.1989167, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791273325.7370884, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273458.7612517, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273592.4847019, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273724.2871706, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791273743.549479, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791273759.244715}

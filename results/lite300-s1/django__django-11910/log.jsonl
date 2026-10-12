@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "django__django-11910", "ts": 1791442742.3424468}
+{"event": "attempt", "n": 1, "ts": 1791442742.7716272}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791443342.7926693}
+{"event": "attempt", "n": 2, "ts": 1791443343.226634}
+{"event": "model", "ts": 1791443450.663231, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791443466.7172678, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791443489.8872843, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791443489.9896472, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791443568.555742, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791443900.460173, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791443959.6539123}
