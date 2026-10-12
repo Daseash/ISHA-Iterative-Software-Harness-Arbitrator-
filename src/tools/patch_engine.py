@@ -36,8 +36,10 @@ def _run(args: list, cwd: str, text: str, timeout: int = 60) -> tuple[bool, str]
             errors="replace",
         )
         return proc.returncode == 0, (proc.stdout + proc.stderr).strip()
+    except subprocess.TimeoutExpired:
+        return False, f"Git operation timed out after {timeout}s"
     except Exception as exc:
-        return False, str(exc)
+        return False, f"Git operation failed: {exc}"
 
 
 def apply_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
