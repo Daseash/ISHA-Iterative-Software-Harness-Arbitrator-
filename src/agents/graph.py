@@ -5,6 +5,7 @@ Wires planner -> regression_test -> coder -> sandbox -> critic into a
 cyclic state graph with conditional retry logic.
 """
 
+import os
 from pathlib import Path
 
 from langgraph.checkpoint.memory import MemorySaver
