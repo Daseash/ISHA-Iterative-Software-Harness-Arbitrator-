@@ -184,14 +184,14 @@ def generate_session_feedback(session: str) -> dict[str, list[str]]:
     return feedback_map
 
 
-def run_self_correction(session: str, instances: list[str] | None = None, candidates: int = 3, workers: int = 1) -> int:
+def run_self_correction(session: str, instances: list[str] | None = None, candidates: int = 3, workers: int = 1, run_id: str | None = None) -> int:
     """Run runner with the generated feedback notes."""
     feedback_map = generate_session_feedback(session)
     if not feedback_map:
         return 1
 
     target_instances = instances or list(feedback_map.keys())
-    run_id = f"{session}-r2"
+    run_id = run_id or f"{session}-r5"
     feedback_file = FEEDBACK_DIR / f"{session}-feedback.json"
 
     print(f"\n[self-correct] Launching improvement run {run_id} on {len(target_instances)} instances...")
@@ -231,6 +231,7 @@ def main():
     parser.add_argument("--instances", nargs="*", default=None, help="Optional subset of instance IDs")
     parser.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default 3)")
     parser.add_argument("--workers", type=int, default=1, help="Parallel workers (default 1)")
+    parser.add_argument("--run-id", type=str, default=None, help="Custom run ID (e.g. lite300-s5-r5)")
     parser.add_argument("--dry-run", action="store_true", help="Generate feedback without running runner")
     args = parser.parse_args()
 
@@ -243,6 +244,7 @@ def main():
         instances=args.instances,
         candidates=args.candidates,
         workers=args.workers,
+        run_id=args.run_id,
     )
     sys.exit(rc)
 
