@@ -43,7 +43,7 @@ DEFAULT_STRATEGY_MODELS: dict[str, str] = {
     "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
     "minimal_diff": CANDIDATE_1_MODEL,        # gemini-3.5-flash-lite: surgical, low-temp, AST-focused
     "call_site_aware": CANDIDATE_2_MODEL,    # gemini-3.8-flash: deep reasoning & full context
-    "root_cause_first": CANDIDATE_3_MODEL,   # gemini-3.5-flash-lite: root-cause invariants
+    "root_cause_first": CANDIDATE_3_MODEL,   # gemini-3.5-flash: root-cause invariants
     "defensive_fix": CANDIDATE_1_MODEL,      # defensive guardrails
     "cross_file_audit": CANDIDATE_2_MODEL,   # wide-reach audit work
 }
