@@ -66,7 +66,7 @@
   },
   {
     "instance_id": "matplotlib__matplotlib-24334",
-    "model_patch": "",
+    "model_patch": "diff --git a/lib/matplotlib/axis.py b/lib/matplotlib/axis.py\nindex af0815d..79753fe 100644\n--- a/lib/matplotlib/axis.py\n+++ b/lib/matplotlib/axis.py\n@@ -2022,7 +2022,7 @@ class Axis(martist.Artist):\n         ticks.\n         \"\"\"\n         result = self._set_tick_locations(ticks, minor=minor)\n-        if labels is not None:\n+        if labels is not None or kwargs:\n             self.set_ticklabels(labels, minor=minor, **kwargs)\n         return result\n",
     "model_name_or_path": "isha"
   },
   {
