@@ -15,7 +15,7 @@ from src.agents.state import AgentState, coerce_state
 from src.config import call_coder, call_planner, get_model_log
 from src.tools.context_trimmer import trim_traceback
 from src.tools.patch_engine import apply_patch
-from src.tools.sandbox import make_sandbox, run_tests
+from src.tools.sandbox import make_sandbox, run_tests, cleanup_sandbox
 
 _FENCE_RE = re.compile(r"```(?:\w+)?\n(.*?)```", re.S)
 
@@ -384,37 +384,68 @@ REPO PATH: {state.repo_path}"""
     except Exception as exc:
         state.regression_test = f"# [REGRESSION TEST ERROR] {exc}"
 
-    # ── Baseline-Test Gate: Confirm repro test fails (RED) before changing code ──
-    if state.regression_test and not state.regression_test.startswith("#") and state.repo_path:
-        try:
-            from src.tools.sandbox import make_sandbox, cleanup_sandbox, _run_tests_local
-            from src.tools.docker_sandbox import run_tests_docker, docker_available
-
-            sbx_base = make_sandbox(state.repo_path)
-            t_file = Path(sbx_base) / "test_repro_baseline.py"
-            t_file.write_text(_strip_fences(state.regression_test), encoding="utf-8")
-
-            if docker_available() and os.getenv("ISHA_SANDBOX_MODE") == "docker":
-                base_out = run_tests_docker(sbx_base, test_file="test_repro_baseline.py")
-            else:
-                base_out = _run_tests_local(sbx_base)
-
-            cleanup_sandbox(sbx_base)
-            state.baseline_repro_output = base_out or ""
-            # A genuine reproduction MUST fail on the baseline unmodified code
-            if base_out and ("failed" in base_out.lower() or "error" in base_out.lower()):
-                state.baseline_repro_failed = True
-            elif base_out and "passed" in base_out.lower():
-                state.baseline_repro_failed = False
-                state.context_notes = list(state.context_notes) + [
-                    "baseline gate warning: generated repro test passed on clean repo without fix"
-                ]
-        except Exception as exc:
-            state.baseline_repro_output = f"baseline gate error: {exc}"
-            state.baseline_repro_failed = None
-
     state.model_log = get_model_log()
-    return state
+    return baseline_red_gate_node(state)
+
+
+def baseline_red_gate_node(state: AgentState) -> AgentState:
+    """Require the generated repro test to fail (RED) before patching."""
+    state = coerce_state(state)
+    if not state.regression_test or not state.repo_path:
+        state.repro_ok = None
+        state.baseline_repro_failed = None
+        return state
+
+    clean_test_code = _strip_fences(state.regression_test)
+    if clean_test_code.startswith("#"):
+        state.repro_ok = None
+        state.baseline_repro_failed = None
+        return state
+
+    sandbox = make_sandbox(state.repo_path)
+    try:
+        test_path = Path(sandbox) / "tests" / "test_isha_generated_repro.py"
+        test_path.parent.mkdir(parents=True, exist_ok=True)
+        test_path.write_text(clean_test_code, encoding="utf-8")
+
+        output = run_tests(
+            sandbox,
+            test_file="tests/test_isha_generated_repro.py",
+        )
+        state.repro_output = output or ""
+        state.baseline_repro_output = state.repro_output
+
+        # A real test failure is RED; collection/setup errors are not.
+        has_test_failure = re.search(r"\b[1-9]\d* failed\b", state.repro_output) is not None
+        has_collection_error = (
+            "error collecting" in state.repro_output.lower()
+            or re.search(r"\b[1-9]\d* errors?\b", state.repro_output) is not None
+        )
+
+        state.repro_ok = has_test_failure and not has_collection_error
+        state.baseline_repro_failed = state.repro_ok
+
+        if not state.repro_ok:
+            warning_msg = (
+                "Baseline repro gate notice: Generated repro did not produce a clean failing assertion. "
+                "Output might be passing, or failed with collection/import errors."
+            )
+            state.context_notes = list(state.context_notes) + [warning_msg]
+            if os.getenv("ISHA_STRICT_BASELINE", "0") == "1":
+                state.escalation = (
+                    "Generated repro did not produce a clean failing test. "
+                    "Review or regenerate it before creating a patch."
+                )
+                state.context_notes.append(f"Baseline repro output:\n{state.repro_output[-3000:]}")
+        return state
+    except Exception as exc:
+        state.repro_output = f"[baseline gate error] {exc}"
+        state.baseline_repro_output = state.repro_output
+        state.repro_ok = False
+        state.baseline_repro_failed = False
+        return state
+    finally:
+        cleanup_sandbox(sandbox)
 
 
 def classify_failure(test_output: str, gate_errors: list[str] | None = None) -> str:

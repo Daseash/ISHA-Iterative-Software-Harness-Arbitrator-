@@ -59,3 +59,45 @@ def test_completion_report_honest_distinction():
     assert "OFFICIAL DOCKER TEST : NOT_RUN (Isolated SWE-bench container execution)" in report
     assert "app.py" in report
     assert "+1, -1 lines" in report
+
+
+def test_baseline_red_gate_node_distinguishes_failures(monkeypatch, tmp_path):
+    """Verify baseline_red_gate_node correctly identifies failing tests vs collection errors."""
+    from src.agents.nodes import baseline_red_gate_node
+
+    dummy_repo = tmp_path / "repo"
+    dummy_repo.mkdir()
+
+    # Case 1: Real failing assertion (RED)
+    monkeypatch.setattr("src.agents.nodes.make_sandbox", lambda r: str(r))
+    monkeypatch.setattr("src.agents.nodes.cleanup_sandbox", lambda s: None)
+    monkeypatch.setattr("src.agents.nodes.run_tests", lambda s, test_file=None: "FAILED test_repro.py::test_repro - AssertionError\n1 failed, 0 passed in 0.12s")
+
+    state = AgentState(
+        issue_text="repro bug",
+        repo_path=str(dummy_repo),
+        regression_test="def test_repro(): assert False",
+    )
+    result = baseline_red_gate_node(state)
+    assert result.repro_ok is True
+    assert result.baseline_repro_failed is True
+    assert "1 failed" in result.repro_output
+
+    # Case 2: Collection / Import error (NOT a genuine RED test)
+    monkeypatch.setattr("src.agents.nodes.run_tests", lambda s, test_file=None: "ERROR collecting test_repro.py\nModuleNotFoundError: No module named 'invalid_pkg'\n1 error in 0.05s")
+    state2 = AgentState(
+        issue_text="repro bug",
+        repo_path=str(dummy_repo),
+        regression_test="import invalid_pkg\ndef test_repro(): pass",
+    )
+    result2 = baseline_red_gate_node(state2)
+    assert result2.repro_ok is False
+    assert result2.baseline_repro_failed is False
+    assert any("Baseline repro gate notice" in note for note in result2.context_notes)
+
+    # Case 3: Strict mode escalation
+    monkeypatch.setenv("ISHA_STRICT_BASELINE", "1")
+    result3 = baseline_red_gate_node(state2)
+    assert result3.repro_ok is False
+    assert "Generated repro did not produce a clean failing test" in result3.escalation
+

@@ -46,6 +46,8 @@ class AgentState(BaseModel):
 
     # ── Testing & Baseline Gate ─────────────────────────────────────────────
     regression_test: Annotated[str, _last] = Field(default="", description="Red/green regression test code")
+    repro_ok: Annotated[Optional[bool], _last] = Field(default=None, description="True if generated repro test produced a genuine failing assertion without collection errors")
+    repro_output: Annotated[str, _last] = Field(default="", description="Output of baseline repro test run")
     baseline_repro_failed: Annotated[Optional[bool], _last] = Field(default=None, description="True if generated repro test failed (RED) on unmodified baseline repo")
     baseline_repro_output: Annotated[str, _last] = Field(default="", description="Output of repro test execution on unmodified baseline repo")
     failure_classification: Annotated[str, _last] = Field(default="", description="Classified failure mode for evidence-based re-planning")
