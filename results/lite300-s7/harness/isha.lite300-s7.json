@@ -1,0 +1,80 @@
+{
+    "total_instances": 5,
+    "submitted_instances": 30,
+    "completed_instances": 5,
+    "resolved_instances": 0,
+    "unresolved_instances": 5,
+    "infra_failure_instances": 0,
+    "ambiguous_failure_instances": 2,
+    "empty_patch_instances": 0,
+    "error_instances": 0,
+    "completed_ids": [
+        "pytest-dev__pytest-7490",
+        "pytest-dev__pytest-8365",
+        "pytest-dev__pytest-8906",
+        "scikit-learn__scikit-learn-10508",
+        "scikit-learn__scikit-learn-11040"
+    ],
+    "incomplete_ids": [],
+    "empty_patch_ids": [],
+    "submitted_ids": [
+        "pytest-dev__pytest-7490",
+        "pytest-dev__pytest-8365",
+        "pytest-dev__pytest-8906",
+        "pytest-dev__pytest-9359",
+        "scikit-learn__scikit-learn-10297",
+        "scikit-learn__scikit-learn-10508",
+        "scikit-learn__scikit-learn-10949",
+        "scikit-learn__scikit-learn-11040",
+        "scikit-learn__scikit-learn-11281",
+        "scikit-learn__scikit-learn-12471",
+        "scikit-learn__scikit-learn-13142",
+        "scikit-learn__scikit-learn-13241",
+        "scikit-learn__scikit-learn-13439",
+        "scikit-learn__scikit-learn-13496",
+        "scikit-learn__scikit-learn-13497",
+        "scikit-learn__scikit-learn-13584",
+        "scikit-learn__scikit-learn-13779",
+        "scikit-learn__scikit-learn-14087",
+        "scikit-learn__scikit-learn-14092",
+        "scikit-learn__scikit-learn-14894",
+        "scikit-learn__scikit-learn-14983",
+        "scikit-learn__scikit-learn-15512",
+        "scikit-learn__scikit-learn-15535",
+        "scikit-learn__scikit-learn-25500",
+        "scikit-learn__scikit-learn-25570",
+        "scikit-learn__scikit-learn-25638",
+        "scikit-learn__scikit-learn-25747",
+        "sphinx-doc__sphinx-10325",
+        "sphinx-doc__sphinx-10451",
+        "sphinx-doc__sphinx-11445"
+    ],
+    "resolved_ids": [],
+    "unresolved_ids": [
+        "pytest-dev__pytest-7490",
+        "pytest-dev__pytest-8365",
+        "pytest-dev__pytest-8906",
+        "scikit-learn__scikit-learn-10508",
+        "scikit-learn__scikit-learn-11040"
+    ],
+    "infra_failure_ids": [],
+    "ambiguous_failure_ids": [
+        "pytest-dev__pytest-7490",
+        "pytest-dev__pytest-8906"
+    ],
+    "failure_reasons": {
+        "pytest-dev__pytest-7490": "no_tests_collected",
+        "pytest-dev__pytest-8906": "no_tests_collected"
+    },
+    "error_ids": [],
+    "schema_version": 2,
+    "unstopped_instances": 0,
+    "unstopped_containers": [],
+    "unremoved_images": [
+        "swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-7490:latest",
+        "swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8365:latest",
+        "swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8906:latest",
+        "swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-10508:latest",
+        "swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest"
+    ]
+}
