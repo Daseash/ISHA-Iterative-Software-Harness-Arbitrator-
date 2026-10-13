@@ -44,8 +44,13 @@ class AgentState(BaseModel):
     blast_radius: Annotated[dict, _last] = Field(default_factory=dict, description="Caller fan-out / blast radius of the symbols under change")
     escalation: Annotated[str, _last] = Field(default="", description="Reason this run was routed to human escalation instead of patching")
 
-    # ── Testing ─────────────────────────────────────────────────────────────
+    # ── Testing & Baseline Gate ─────────────────────────────────────────────
     regression_test: Annotated[str, _last] = Field(default="", description="Red/green regression test code")
+    baseline_repro_failed: Annotated[Optional[bool], _last] = Field(default=None, description="True if generated repro test failed (RED) on unmodified baseline repo")
+    baseline_repro_output: Annotated[str, _last] = Field(default="", description="Output of repro test execution on unmodified baseline repo")
+    failure_classification: Annotated[str, _last] = Field(default="", description="Classified failure mode for evidence-based re-planning")
+    local_sandbox_status: Annotated[str, _last] = Field(default="not_run", description="passed | failed | not_run (local sandbox execution)")
+    official_docker_status: Annotated[str, _last] = Field(default="not_run", description="passed | failed | not_run (official Docker container execution)")
 
     # ── Patching ────────────────────────────────────────────────────────────
     patch: Annotated[str, _last] = Field(default="", description="Unified diff patch from the coder")

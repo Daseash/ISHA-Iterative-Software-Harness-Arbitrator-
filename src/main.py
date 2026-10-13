@@ -262,6 +262,10 @@ def main() -> int:
     _print_section("SENIOR-DEV DRAFT PR", pr_doc, limit=3000)
     print(f"\n  💾 Run history saved to: {run_dir}")
 
+    # Explicit completion report: patch, changed files, tests run, results, unresolved
+    from src.review.completion_report import format_completion_report
+    print("\n" + format_completion_report(result))
+
     passed = "PASSED" in (result.test_output or "") and "FAILED" not in (
         result.test_output or ""
     )

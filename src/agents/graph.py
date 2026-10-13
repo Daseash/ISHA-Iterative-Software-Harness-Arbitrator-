@@ -134,13 +134,13 @@ def checkpoint_node(state: AgentState) -> AgentState:
 
 
 def _route_after_sandbox(state: AgentState) -> str:
-    """Retry the coder while tests fail and budget remains, else review."""
+    """Retry with new evidence while tests fail and budget remains, else review."""
     state = coerce_state(state)
     if state.escalation:
         return "approval"
     failed = "FAILED" in (state.test_output or "")
     if failed and state.retry_count < MAX_RETRIES:
-        return "coder"
+        return "replan"
     return "critic"
 
 
@@ -167,6 +167,8 @@ def _route_after_approval(state: AgentState) -> str:
 
 def build_graph():
     """Compile and return the single-agent ISHA state graph."""
+    from src.agents.nodes import replan_node
+
     workflow = StateGraph(AgentState)
 
     workflow.add_node("investigation", investigation_node)
@@ -177,6 +179,7 @@ def build_graph():
     workflow.add_node("coder", coder_node)
     workflow.add_node("candidates", candidate_node)
     workflow.add_node("sandbox", sandbox_node)
+    workflow.add_node("replan", replan_node)
     workflow.add_node("critic", critic_node)
     workflow.add_node("approval", approval_node)
     workflow.add_node("checkpoint", checkpoint_node)
@@ -196,8 +199,9 @@ def build_graph():
     workflow.add_conditional_edges(
         "sandbox",
         _route_after_sandbox,
-        {"coder": "coder", "critic": "critic", "approval": "approval"},
+        {"replan": "replan", "critic": "critic", "approval": "approval"},
     )
+    workflow.add_edge("replan", "coder")
     workflow.add_edge("critic", "approval")
     workflow.add_conditional_edges(
         "approval",

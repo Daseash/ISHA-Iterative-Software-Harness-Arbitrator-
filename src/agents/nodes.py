@@ -383,7 +383,91 @@ REPO PATH: {state.repo_path}"""
         state.regression_test = _strip_tool_markup(_strip_fences(test_code))
     except Exception as exc:
         state.regression_test = f"# [REGRESSION TEST ERROR] {exc}"
+
+    # ── Baseline-Test Gate: Confirm repro test fails (RED) before changing code ──
+    if state.regression_test and not state.regression_test.startswith("#") and state.repo_path:
+        try:
+            from src.tools.sandbox import make_sandbox, cleanup_sandbox, _run_tests_local
+            from src.tools.docker_sandbox import run_tests_docker, docker_available
+
+            sbx_base = make_sandbox(state.repo_path)
+            t_file = Path(sbx_base) / "test_repro_baseline.py"
+            t_file.write_text(_strip_fences(state.regression_test), encoding="utf-8")
+
+            if docker_available() and os.getenv("ISHA_SANDBOX_MODE") == "docker":
+                base_out = run_tests_docker(sbx_base, test_file="test_repro_baseline.py")
+            else:
+                base_out = _run_tests_local(sbx_base)
+
+            cleanup_sandbox(sbx_base)
+            state.baseline_repro_output = base_out or ""
+            # A genuine reproduction MUST fail on the baseline unmodified code
+            if base_out and ("failed" in base_out.lower() or "error" in base_out.lower()):
+                state.baseline_repro_failed = True
+            elif base_out and "passed" in base_out.lower():
+                state.baseline_repro_failed = False
+                state.context_notes = list(state.context_notes) + [
+                    "baseline gate warning: generated repro test passed on clean repo without fix"
+                ]
+        except Exception as exc:
+            state.baseline_repro_output = f"baseline gate error: {exc}"
+            state.baseline_repro_failed = None
+
     state.model_log = get_model_log()
+    return state
+
+
+def classify_failure(test_output: str, gate_errors: list[str] | None = None) -> str:
+    """Classify failure mode into actionable diagnostic categories."""
+    out = (test_output or "") + "\n" + "\n".join(gate_errors or [])
+    out_lower = out.lower()
+
+    if any(h in out_lower for h in ("syntaxerror", "indentationerror", "pyflakes", "ast.parse", "compile_gate")):
+        return "SYNTAX_INDENTATION"
+    if any(h in out_lower for h in ("signature", "takes ", "positional argument", "missing required argument")):
+        return "SIGNATURE_MISMATCH"
+    if any(h in out_lower for h in ("nonetype", "none is not", "none != ''", "object has no attribute '", "cannot be none")):
+        return "TYPE_ERROR_NONE"
+    if any(h in out_lower for h in ("unhashable type", "__hash__")):
+        return "HASHABILITY_CONTRACT"
+    if any(h in out_lower for h in ("assertionerror", "assert ", "failed requirement")):
+        return "ASSERTION_MISMATCH"
+    if any(h in out_lower for h in ("modulenotfounderror", "importerror", "no module named")):
+        return "IMPORT_ERROR"
+    if any(h in out_lower for h in ("timeout", "timed out")):
+        return "TIMEOUT_REGRESSION"
+    return "BEHAVIORAL_FAIL"
+
+
+def replan_node(state: AgentState) -> AgentState:
+    """Retry with new evidence: classify failure and update fix plan before calling coder."""
+    state = coerce_state(state)
+    failure_cat = classify_failure(state.test_output)
+    state.failure_classification = failure_cat
+    state.retry_count += 1
+
+    directive_map = {
+        "SYNTAX_INDENTATION": "FIX SYNTAX: Match exact 4-space indentation; ensure all code blocks and parenthesised expressions are closed.",
+        "SIGNATURE_MISMATCH": "ALIGN SIGNATURE: Parameter or argument count mismatch between definition and caller sites. Support *args, **kwargs or update all call sites.",
+        "TYPE_ERROR_NONE": "GUARD CLAUSE: Attribute or length called on None. Insert `if val is None:` guard before accessing attributes or slicing.",
+        "HASHABILITY_CONTRACT": "HASH CONTRACT: Mutable collection placed in set/dict. Implement __hash__ or convert to immutable tuple.",
+        "ASSERTION_MISMATCH": "ASSERTION REPAIR: The return value did not match test expectation. Check exact return types, empty string vs None, and boundary cases.",
+        "IMPORT_ERROR": "CHECK IMPORTS: Ensure imported module exists in repo site-packages or top-level project root.",
+        "TIMEOUT_REGRESSION": "MINIMAL SCOPE: Previous diff introduced infinite loop or heavy computation. Reduce diff to surgical one-block fix.",
+        "BEHAVIORAL_FAIL": "ROOT CAUSE RE-EVALUATION: The previous fix did not satisfy the requirement. Address the root cause directly.",
+    }
+    directive = directive_map.get(failure_cat, directive_map["BEHAVIORAL_FAIL"])
+
+    evidence = f"""
+
+[EVIDENCE-BASED RE-PLANNING — ATTEMPT {state.retry_count}]
+- Classified Failure Mode: {failure_cat}
+- Actionable Diagnostic Directive: {directive}
+- Test Traceback & Failure Excerpt:
+{trim_traceback(state.test_output)}
+"""
+    state.plan = (state.plan or "") + evidence
+    state.context_notes = list(state.context_notes) + [f"replan: classified {failure_cat}; updated plan with evidence"]
     return state
 
 
