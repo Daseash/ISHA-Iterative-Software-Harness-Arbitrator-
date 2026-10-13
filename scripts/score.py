@@ -75,7 +75,9 @@ def main():
         # Check if report exists
         has_report = any(Path(p).exists() for p in [
             RESULTS_DIR / sid / "report.json",
+            RESULTS_DIR / sid / "harness_report.json",
             RESULTS_DIR / f"{sid}-r2" / "report.json",
+            RESULTS_DIR / f"{sid}-r2" / "harness_report.json",
         ]) or count > 0
         status_suffix = "" if has_report else " (eval pending)"
         print(f"  {name:<14} | {count:>2} / {quota} resolved{status_suffix:<17} | {rate:>5.1f}%")
