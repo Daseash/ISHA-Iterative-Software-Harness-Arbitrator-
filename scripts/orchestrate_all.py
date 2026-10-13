@@ -89,6 +89,7 @@ def run_remaining_sessions() -> None:
         "--start", "6",
         "--end", "10",
         "--cooldown", "30",
+        "--eval",
     ]
     subprocess.run(cmd, cwd=str(ROOT))
 

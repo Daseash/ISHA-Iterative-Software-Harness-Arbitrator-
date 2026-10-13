@@ -57,16 +57,12 @@ def main():
     print("  🏆 ISHA: ITERATIVE SOFTWARE HARNESS ARBITRATOR — AUDITED SCORECARD")
     print("=" * 76)
 
-    # 1. SWE-bench Lite 300 (Sessions 1-4)
     sessions = {
-        "lite300-s1": ("Session 1", 30),
-        "lite300-s2": ("Session 2", 30),
-        "lite300-s3": ("Session 3", 30),
-        "lite300-s4": ("Session 4", 30),
+        f"lite300-s{i}": (f"Session {i}", 30) for i in range(1, 11)
     }
 
     total_resolved_lite = 0
-    total_quota_lite = 120
+    total_quota_lite = 300
     print("\n[SWE-BENCH LITE (300 BENCHMARK) — OFFICIAL DOCKER TESTBED RESULTS]")
     print(f"  {'Session':<14} | {'Official Resolved':<18} | {'Session Rate (out of 30)':<25}")
     print("  " + "-" * 62)
@@ -76,11 +72,17 @@ def main():
         count = len(res_set)
         total_resolved_lite += count
         rate = (count / quota) * 100
-        print(f"  {name:<14} | {count:>2} / {quota} resolved    | {rate:>5.1f}%")
+        # Check if report exists
+        has_report = any(Path(p).exists() for p in [
+            RESULTS_DIR / sid / "report.json",
+            RESULTS_DIR / f"{sid}-r2" / "report.json",
+        ]) or count > 0
+        status_suffix = "" if has_report else " (eval pending)"
+        print(f"  {name:<14} | {count:>2} / {quota} resolved{status_suffix:<17} | {rate:>5.1f}%")
 
     lite_rate = (total_resolved_lite / total_quota_lite) * 100
     print("  " + "-" * 62)
-    print(f"  {'COMBINED (S1-S4)':<14} | {total_resolved_lite:>2} / {total_quota_lite} resolved    | {lite_rate:>5.1f}% 🌟")
+    print(f"  {'COMBINED (S1-S10)':<14} | {total_resolved_lite:>2} / {total_quota_lite} resolved    | {lite_rate:>5.1f}% 🌟")
 
     print("\n[OPERATIONAL METRICS]")
     print(f"  * LAYA Calibrated Gate (ECE) : ECE = 0.0010 (100.0% precision @ tau=0.50)")
