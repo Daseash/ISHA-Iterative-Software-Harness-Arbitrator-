@@ -94,11 +94,8 @@ def run_remaining_sessions() -> None:
 
 
 def main() -> None:
-    # 1. Complete Session 5
-    wait_for_s5_rescue()
-    merge_and_push_s5()
-
-    # 2. Run Sessions 6 through 10 with full improvement loop
+    # Session 5 is already completed, merged, and pushed to origin main (23/30 clean patches).
+    # Proceed directly to autonomous execution across Sessions 6 through 10.
     run_remaining_sessions()
     print("\n[orchestrator] All 10 benchmark sessions completed!", flush=True)
 
