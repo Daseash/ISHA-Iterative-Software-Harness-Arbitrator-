@@ -1,35 +1,16 @@
 {
-  "total_instances": 21,
+  "total_instances": 2,
   "submitted_instances": 30,
-  "completed_instances": 21,
-  "resolved_instances": 3,
-  "unresolved_instances": 18,
+  "completed_instances": 2,
+  "resolved_instances": 0,
+  "unresolved_instances": 2,
   "infra_failure_instances": 0,
   "ambiguous_failure_instances": 0,
   "empty_patch_instances": 0,
   "error_instances": 0,
   "completed_ids": [
-    "matplotlib__matplotlib-18869",
-    "matplotlib__matplotlib-22711",
-    "matplotlib__matplotlib-23299",
-    "matplotlib__matplotlib-23314",
-    "matplotlib__matplotlib-23476",
-    "matplotlib__matplotlib-23562",
-    "matplotlib__matplotlib-23563",
-    "matplotlib__matplotlib-23913",
-    "matplotlib__matplotlib-23964",
-    "matplotlib__matplotlib-24970",
-    "matplotlib__matplotlib-25079",
-    "matplotlib__matplotlib-25311",
-    "matplotlib__matplotlib-25332",
-    "matplotlib__matplotlib-25433",
-    "matplotlib__matplotlib-25498",
-    "matplotlib__matplotlib-26011",
-    "matplotlib__matplotlib-26020",
-    "mwaskom__seaborn-3010",
-    "mwaskom__seaborn-3190",
-    "mwaskom__seaborn-3407",
-    "pallets__flask-4992"
+    "matplotlib__matplotlib-24149",
+    "matplotlib__matplotlib-24334"
   ],
   "incomplete_ids": [],
   "empty_patch_ids": [],
@@ -65,30 +46,10 @@
     "pallets__flask-4992",
     "pallets__flask-5063"
   ],
-  "resolved_ids": [
-    "matplotlib__matplotlib-25311",
-    "matplotlib__matplotlib-26020",
-    "mwaskom__seaborn-3010"
-  ],
+  "resolved_ids": [],
   "unresolved_ids": [
-    "matplotlib__matplotlib-18869",
-    "matplotlib__matplotlib-22711",
-    "matplotlib__matplotlib-23299",
-    "matplotlib__matplotlib-23314",
-    "matplotlib__matplotlib-23476",
-    "matplotlib__matplotlib-23562",
-    "matplotlib__matplotlib-23563",
-    "matplotlib__matplotlib-23913",
-    "matplotlib__matplotlib-23964",
-    "matplotlib__matplotlib-24970",
-    "matplotlib__matplotlib-25079",
-    "matplotlib__matplotlib-25332",
-    "matplotlib__matplotlib-25433",
-    "matplotlib__matplotlib-25498",
-    "matplotlib__matplotlib-26011",
-    "mwaskom__seaborn-3190",
-    "mwaskom__seaborn-3407",
-    "pallets__flask-4992"
+    "matplotlib__matplotlib-24149",
+    "matplotlib__matplotlib-24334"
   ],
   "infra_failure_ids": [],
   "ambiguous_failure_ids": [],
@@ -98,10 +59,7 @@
   "unstopped_instances": 0,
   "unstopped_containers": [],
   "unremoved_images": [
-    "swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-26020:latest",
-    "swebench/sweb.eval.x86_64.mwaskom_1776_seaborn-3010:latest",
-    "swebench/sweb.eval.x86_64.mwaskom_1776_seaborn-3190:latest",
-    "swebench/sweb.eval.x86_64.mwaskom_1776_seaborn-3407:latest",
-    "swebench/sweb.eval.x86_64.pallets_1776_flask-4992:latest"
+    "swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-24149:latest",
+    "swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-24334:latest"
   ]
 }
