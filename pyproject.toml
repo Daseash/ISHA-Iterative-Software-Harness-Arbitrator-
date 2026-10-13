@@ -27,11 +27,13 @@ dependencies = [
     "laya",
     "python-dotenv",
     "swebench",
+    "mcp",
 ]
 
 [project.scripts]
 isha = "src.main:main"
 isha-fix = "src.main:main"
+isha-mcp = "src.mcp_server:main"
 
 # The import package is literally `src` (lives at the repo root). Without this,
 # setuptools' auto-discovery treats src/ as a PEP "src layout" container and
