@@ -27,9 +27,11 @@ logging.getLogger("litellm").setLevel(logging.CRITICAL)
 logging.getLogger("httpx").setLevel(logging.CRITICAL)
 os.environ["LITELLM_LOG"] = "CRITICAL"
 
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(ROOT / ".env")
 
 # ── Agent Identity ──────────────────────────────────────────────────────────
 AGENT_NAME = os.getenv("AGENT_NAME", "ISHA")
@@ -131,10 +133,16 @@ def _check_and_reload_keys_from_env() -> None:
             load_dotenv(dotenv_path=env_file, override=True)
             raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
             fresh_keys = [k.strip() for k in raw.split(",") if k.strip()]
+            added = False
             for k in fresh_keys:
                 if k not in _gemini_key_pool:
                     _gemini_key_pool.append(k)
+                    added = True
                     print(f"[config] Dynamically adapted new Gemini key {k[:12]}... into active pool", file=sys.stderr)
+            if added:
+                _dead_models.clear()
+                _dead_gemini_keys_by_model.clear()
+                _dead_providers.discard("gemini")
     except Exception:
         pass
 
