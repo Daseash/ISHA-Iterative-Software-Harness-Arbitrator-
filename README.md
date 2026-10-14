@@ -66,7 +66,10 @@ Every score below is drawn directly from official Docker `report.json` and conta
 | **Session 3 (`lite300-s3`)** | 30 | **20** | **66.7%** (20 / 30) | **66.7%** (20 / 30) 🏆 |
 | **Session 2 (`lite300-s2`)** | 30 | **14** | **46.7%** (14 / 30) | **46.7%** (14 / 30) 🚀 |
 | **Session 1 (`lite300-s1`)** | 30 | **11** | **36.7%** (11 / 30) | **36.7%** (11 / 30) 🚀 |
-| **COMBINED (Sessions 1–4)** | **120** | **66** | **55.0%** (66 / 120) | **55.0%** (66 / 120) 🌟 |
+| **Session 5 (`lite300-s5`)** | 30 | **3** | **10.0%** (3 / 30) | **10.0%** (3 / 30) 🚀 |
+| **Session 6 (`lite300-s6`)** | 30 | **3** | **10.0%** (3 / 30) | **10.0%** (3 / 30) 🚀 |
+| **Session 7 (`lite300-s7`)** | 30 | **0** | **0.0%** (0 / 30) | **0.0%** (0 / 30) |
+| **COMBINED (Sessions 1–7)** | **210** | **72** | **34.3%** (72 / 210) | **24.0% of Total Lite 300** 🌟 |
 
 Inspect the live audited scorecard in your terminal at any time:
 ```bash
