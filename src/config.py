@@ -133,16 +133,12 @@ def _check_and_reload_keys_from_env() -> None:
             load_dotenv(dotenv_path=env_file, override=True)
             raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
             fresh_keys = [k.strip() for k in raw.split(",") if k.strip()]
-            added = False
-            for k in fresh_keys:
-                if k not in _gemini_key_pool:
-                    _gemini_key_pool.append(k)
-                    added = True
-                    print(f"[config] Dynamically adapted new Gemini key {k[:12]}... into active pool", file=sys.stderr)
-            if added:
+            if fresh_keys != _gemini_key_pool:
+                _gemini_key_pool = fresh_keys
                 _dead_models.clear()
                 _dead_gemini_keys_by_model.clear()
                 _dead_providers.discard("gemini")
+                print(f"[config] Reloaded {len(fresh_keys)} Gemini keys into active pool (primary: {fresh_keys[0][:12]}...)", file=sys.stderr)
     except Exception:
         pass
 
