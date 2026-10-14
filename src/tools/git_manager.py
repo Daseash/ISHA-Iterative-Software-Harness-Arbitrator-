@@ -71,3 +71,81 @@ def clone_repo(github_url: str, target_dir: str) -> str:
         timeout=120,
     )
     return target_dir
+
+
+def get_current_branch(repo_path: str) -> str:
+    """Get the current checked-out branch name."""
+    ok, out = _git(repo_path, "rev-parse", "--abbrev-ref", "HEAD")
+    return out.strip() if ok else "main"
+
+
+def get_remote_url(repo_path: str, remote: str = "origin") -> str:
+    """Get the URL of the specified remote."""
+    ok, out = _git(repo_path, "remote", "get-url", remote)
+    return out.strip() if ok else ""
+
+
+def push_branch(repo_path: str, branch_name: str, remote: str = "origin") -> tuple[bool, str]:
+    """Push branch to remote."""
+    return _git(repo_path, "push", "-u", remote, branch_name)
+
+
+def create_pull_request(repo_path: str, title: str, body: str, branch: str = "") -> tuple[bool, str]:
+    """Create a pull request using GitHub CLI (gh) if available, GITHUB_TOKEN, or return URL."""
+    import os
+    import re
+    import shutil
+
+    # 1. Try GitHub CLI `gh`
+    if shutil.which("gh"):
+        cmd = ["gh", "pr", "create", "--title", title, "--body", body]
+        if branch:
+            cmd += ["--head", branch]
+        try:
+            proc = subprocess.run(
+                cmd,
+                cwd=repo_path,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=60,
+            )
+            if proc.returncode == 0:
+                return True, proc.stdout.strip()
+        except Exception:
+            pass
+
+    # 2. Try GITHUB_TOKEN API
+    token = os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
+    remote_url = get_remote_url(repo_path)
+    m = re.search(r"github\.com[:/]([^/]+)/([^/.]+)", remote_url)
+    if token and m:
+        owner, repo = m.group(1), m.group(2)
+        try:
+            import json
+            import urllib.request
+            req = urllib.request.Request(
+                f"https://api.github.com/repos/{owner}/{repo}/pulls",
+                data=json.dumps({"title": title, "body": body, "head": branch, "base": "main"}).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {token}",
+                    "Accept": "application/vnd.github.v3+json",
+                    "User-Agent": "ISHA-Senior-Dev",
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                return True, data.get("html_url", "")
+        except Exception:
+            pass
+
+    # 3. Fallback: Direct 1-click GitHub PR URL
+    if m:
+        owner, repo = m.group(1), m.group(2)
+        url = f"https://github.com/{owner}/{repo}/pull/new/{branch}"
+        return True, f"Pushed! Open Pull Request in 1 click: {url}"
+
+    return False, "Could not determine GitHub remote URL to open PR."
+

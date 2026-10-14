@@ -127,6 +127,11 @@ def main() -> int:
         help="Write the validated patch into the real repo (default: sandbox only)",
     )
     parser.add_argument(
+        "--pr",
+        action="store_true",
+        help="Create a git branch, commit the patch, push to origin, and open a GitHub PR",
+    )
+    parser.add_argument(
         "--thread-id", type=str, default="1", help="LangGraph checkpoint thread id"
     )
     parser.add_argument(
@@ -271,11 +276,33 @@ def main() -> int:
     )
     flagged = result.critic_verdict == "flagged"
 
-    if args.apply and not args.multi and passed and result.patch and (not flagged or result.approved is True):
+    should_apply = args.apply or getattr(args, "pr", False)
+    if should_apply and not args.multi and passed and result.patch and (not flagged or result.approved is True):
         from src.tools.patch_engine import apply_patch
+        from src.tools.git_manager import create_branch, commit_fix, push_branch, create_pull_request
+        import time
+
+        branch_name = f"isha-fix/{int(time.time())}"
+        if getattr(args, "pr", False):
+            create_branch(args.repo, branch_name)
 
         ok, message = apply_patch(args.repo, result.patch)
         print(f"\n  --apply: {'OK' if ok else 'FAILED'} — {message}")
+
+        if ok and getattr(args, "pr", False):
+            commit_title = f"fix: {issue[:60]}"
+            commit_ok = commit_fix(args.repo, f"{commit_title}\n\nAutomated by ISHA")
+            if commit_ok:
+                print(f"  [git] committed fix to branch '{branch_name}'")
+                push_ok, push_out = push_branch(args.repo, branch_name)
+                if push_ok:
+                    print(f"  [git] pushed branch '{branch_name}' to origin")
+                    pr_ok, pr_msg = create_pull_request(args.repo, commit_title, pr_doc, branch_name)
+                    print(f"  [PR] {pr_msg}")
+                else:
+                    print(f"  [git] push notice: {push_out}")
+            else:
+                print("  [git] note: no diff needed to commit or branch already clean")
 
     # Tidy up scratch sandboxes created during the run.
     import tempfile

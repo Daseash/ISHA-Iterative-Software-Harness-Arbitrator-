@@ -407,6 +407,8 @@ def cmd_fix(args: argparse.Namespace) -> int:
         forwarded += ["--repo", repo]
     if args.apply:
         forwarded += ["--apply"]
+    if getattr(args, "pr", False):
+        forwarded += ["--pr"]
     if args.multi:
         forwarded += ["--multi"]
     if getattr(args, "candidates", None) is not None:
@@ -434,6 +436,7 @@ def _parser() -> argparse.ArgumentParser:
     fix.add_argument("--issue", default=None)
     fix.add_argument("--issue-url", default=None, help="GitHub issue URL to fetch issue text from")
     fix.add_argument("--apply", action="store_true")
+    fix.add_argument("--pr", action="store_true", help="Create a git branch, commit, push, and open a GitHub PR")
     fix.add_argument("--multi", action="store_true")
     fix.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default: 3)")
     fix.add_argument("--improve", "--loop", action="store_true", help="Run autonomous improvement loop until convergence")
