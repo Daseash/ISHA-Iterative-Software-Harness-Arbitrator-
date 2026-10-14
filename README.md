@@ -209,18 +209,38 @@ GOOGLE_API_KEY=AIza...
 ```
 *Note: If no keys are provided, ISHA automatically falls back to its deterministic offline brain.*
 
-### 3. Usage
+### 3. Usage & CLI Commands
 
-#### CLI Bug Fixing
+ISHA installs a single, unified command: `isha`.
+
+| Command | Purpose | Example |
+| :--- | :--- | :--- |
+| **`isha fix`** | Solves an issue in any local or remote repository | `isha fix . --issue "Fix bug..." --apply` |
+| **`isha fix --pr`** | Solves bug, creates branch, commits, pushes, and opens GitHub PR | `isha fix https://github.com/org/repo --issue "..." --pr` |
+| **`isha doctor`** | Diagnoses toolchain, API keys, disk space, and Docker health | `isha doctor` |
+| **`isha ui`** | Launches the interactive visual Web Dashboard in your browser | `isha ui` |
+| **`isha bench`** | Runs standardized SWE-bench benchmark tournament slices | `isha bench --slice stratified --limit 30` |
+| **`isha report`** | Displays benchmark scorecards and diffs evaluation runs | `isha report --run-id lite300-s4 --compare lite300-s3` |
+| **`isha-mcp`** | Runs the Model Context Protocol stdio server for IDEs | `isha-mcp` |
+
+#### Fixing a Bug (Automated Self-Repair by Default)
 ```bash
-# Solve an issue in any repository
-python -m src.cli fix --repo /path/to/project --issue "Issue description or bug report"
+# Solve an issue in the current repository and write the patch
+isha fix . --issue "Login endpoint returns 500 when email is None" --apply
 
-# Race 3 candidate strategies in parallel Git worktrees
-python -m src.cli fix --repo /path/to/project --issue "..." --multi
+# Automatically create a git branch, commit, push, and open a GitHub Pull Request
+isha fix https://github.com/my-org/web-app --issue "Fix auth timeout" --pr
 
-# Automatically apply the verified patch to the repository
-python -m src.cli fix --repo /path/to/project --issue "..." --apply
+# Preview a fix safely in sandbox mode without touching files
+isha fix /path/to/project --issue "Fix TypeError in router.py"
+```
+
+> **Automated Self-Repair**: If a candidate patch fails reproduction or has regressions, ISHA automatically captures the real pytest traceback and runs up to 3 targeted self-repair rounds to analyze why it failed and fix it.
+
+#### Launching the Web Dashboard
+```bash
+isha ui
+# Opens the dark-mode engineering control room at http://localhost:8501
 ```
 
 #### Running Benchmark Evaluations
@@ -229,15 +249,10 @@ python -m src.cli fix --repo /path/to/project --issue "..." --apply
 python scripts/score.py
 
 # Run a single instance evaluation
-python -m src.bench.runner --instance django__django-10914
+isha bench --instances django__django-10914
 
 # Run a benchmark session slice
-python -m src.bench.runner --slice lite300-s4
-```
-
-#### Running Unit Tests
-```bash
-pytest tests/
+isha bench --slice lite300-s4
 ```
 
 
