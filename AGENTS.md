@@ -37,16 +37,68 @@ Every task instance runs through an autonomous tournament:
 ---
 
 ## 4. Benchmark Session Map (SWE-bench Lite 300)
-The 300 benchmark instances are executed in 10 sequential 30-instance sessions:
+The 300 benchmark instances are partitioned into 10 sequential 30-instance sessions:
 * **Sessions 1–4**: Completed and officially audited in Docker (**66 / 120 resolved — 55.0%**).
-* **Sessions 5–7**: Completed and officially audited in Docker (**72 / 210 resolved — 34.3%**).
+* **Sessions 5–7**: Completed and officially audited in Docker (**72 / 210 resolved — 34.3%** cumulative).
 * **Sessions 8–10**: Slices pre-generated under `data/slices/` (90 instances across `sphinx-doc` and `sympy`).
+* **Session 8 (`lite300-s8`)**: Currently executing in the background in local tournament mode.
 * **Scoreboard Engine**: `python scripts/score.py` provides the single source of truth (SSOT) terminal scoreboard.
-* **Orchestration Driver**: `python scripts/orchestrate_all.py` drives autonomous execution with multi-candidate tournament and automatic rescue loops (`-r2`).
+* **Orchestration Driver**: `python scripts/orchestrate_all.py` drives autonomous execution with multi-candidate tournaments and automatic rescue loops (`-r2`).
 
 ---
 
-## 5. Container & Git Hygiene
+## 5. Architectural Map for External Agents & Models
+If you are an external AI model (Claude, GPT, DeepSeek, etc.) or developer making changes to ISHA, here is how the system is structured:
+
+```text
+src/
+├── agents/
+│   ├── graph.py              # Main LangGraph cyclic state machine
+│   ├── nodes.py              # Nodes: localizer, planner, tournament coder, red/green verifier, repair loops
+│   ├── candidates.py         # Multi-candidate tournament (minimal_diff, call_site_aware, root_cause_first)
+│   ├── state.py              # Pydantic v2 AgentState schema passed across all nodes
+│   ├── dispatch.py           # Multi-worker parallel session runner
+│   └── fix_history.py        # Vectorized memory of successful bug patterns
+├── approval/
+│   ├── gate.py               # LAYA Calibrated Decision Gate (ECE = 0.0010, temperature scaled)
+│   ├── calibrator.py         # Platt & temperature scaling calibration
+│   └── danger.py             # Safety & destructive pattern guards
+└── bench/
+    ├── harness_eval.py       # Official SWE-bench Docker testbed wrapper (report.json parser)
+    ├── classify.py           # Post-eval failure taxonomy & error categorization
+    ├── make_plots.py         # Matplotlib figure generator for benchmarks
+    └── run_slice.py          # Runner for arbitrary benchmark slices
+```
+
+---
+
+## 6. CLI Commands Reference for External Agents
+- **View Single Source of Truth Scorecard**:
+  ```bash
+  python scripts/score.py
+  ```
+- **Run Unit Tests (Purely offline, safe)**:
+  ```bash
+  pytest tests/
+  ```
+- **Run Benchmark Tournament on a Session Slice**:
+  ```bash
+  python scripts/run_lite300.py --session 8 --candidates 3
+  ```
+- **Run Post-Evaluation Failure Classification**:
+  ```bash
+  python -m src.bench.classify --predictions results/lite300-s8/predictions.json
+  ```
+- **Run Official Docker Evaluation** (⚠️ *Only when user explicitly asks for Docker evaluation*):
+  ```bash
+  python -m src.bench.harness_eval --predictions results/lite300-s8/predictions.json --dataset-slice data/slices/lite300-s8.json
+  ```
+
+---
+
+## 7. Container & Git Hygiene
 - **LF Line Endings**: All files shipped into Docker (`eval.sh`, `patch.diff`, `test_output.txt`) must strictly use POSIX LF (`\n`) and UTF-8 encoding.
 - **Offline Safety**: CI test suites run purely offline with `ISHA_FORCE_OFFLINE=1` (`pytest tests/`).
-- **Secret Isolation**: API keys in `.env` and local working plans (`plan.md`) must never be committed or staged to Git.
+- **Secret & Plan Isolation**: API keys in `.env` and local working plans (`plan.md`) must never be committed or staged to Git.
+- **Continuous GitHub Sync**: All code improvements, documentation, and predictions are committed and pushed to `origin main` on `https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-`.
+

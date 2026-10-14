@@ -1,0 +1,152 @@
+[
+  {
+    "instance_id": "pytest-dev__pytest-7490",
+    "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 335e109..d1a1ad8 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -238,7 +238,7 @@ def pytest_runtest_setup(item: Item) -> None:\n         item._store[skipped_by_mark_key] = True\n         skip(skipped.reason)\n \n-    if not item.config.option.runxfail:\n+    if not item.config.option.runxfail and item.get_closest_marker(\"xfail\"):\n         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)\n         if xfailed and not xfailed.run:\n             xfail(\"[NOTRUN] \" + xfailed.reason)\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8365",
+    "model_patch": "diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py\nindex 29c7e19..dadb6bd 100644\n--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -111,7 +111,9 @@ class TempPathFactory:\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8906",
+    "model_patch": "diff --git a/src/_pytest/outcomes.py b/src/_pytest/outcomes.py\nindex 2addf55..eb91f09 100644\n--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -8,6 +8,11 @@ from typing import Optional\n from typing import Type\n from typing import TypeVar\n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n TYPE_CHECKING = False  # Avoid circular import through compat.\n \n if TYPE_CHECKING:\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-9359",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10297",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10508",
+    "model_patch": "diff --git a/sklearn/preprocessing/label.py b/sklearn/preprocessing/label.py\nindex 61b8d4a..48eedda 100644\n--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -93,6 +93,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):\n         self : returns an instance of self.\n         \"\"\"\n         y = column_or_1d(y, warn=True)\n+        if len(y) == 0:\n+            return np.array([], dtype=int)\n+\n         self.classes_ = np.unique(y)\n         return self\n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10949",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-11040",
+    "model_patch": "diff --git a/sklearn/neighbors/base.py b/sklearn/neighbors/base.py\nindex 3e5e729..2d0636a 100644\n--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -327,6 +327,9 @@ class KNeighborsMixin(object):\n \n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n+        if not isinstance(n_neighbors, (int, np.integer)):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n \n         if X is not None:\n             query_is_train = False\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-11281",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-12471",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13142",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13241",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13439",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13496",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13497",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13584",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13779",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14087",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14092",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14894",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14983",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-15512",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-15535",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25500",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25570",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25638",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25747",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-10325",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-10451",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-11445",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  }
+]
