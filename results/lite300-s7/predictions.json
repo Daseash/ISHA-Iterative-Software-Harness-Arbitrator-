@@ -41,12 +41,12 @@
   },
   {
     "instance_id": "scikit-learn__scikit-learn-11281",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/mixture/base.py b/sklearn/mixture/base.py\nindex a9f6674..5ffecf4 100644\n--- a/sklearn/mixture/base.py\n+++ b/sklearn/mixture/base.py\n@@ -320,7 +320,11 @@ class BaseMixture(six.with_metaclass(ABCMeta, DensityMixin, BaseEstimator)):\n         log_likelihood : float\n             Log likelihood of the Gaussian mixture given X.\n         \"\"\"\n-        return self.score_samples(X).mean()\n+        return self.fit_predict(X)\n+\n+    def fit_predict(self, X, y=None):\n+        \"\"\"Fit the model to X and return cluster labels.\"\"\"\n+        return self.fit(X).predict(X)\n \n     def predict(self, X):\n         \"\"\"Predict the labels for the data samples in X using trained model.\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-12471",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/preprocessing/_encoders.py b/sklearn/preprocessing/_encoders.py\nindex 1e05aba..d35f6b3 100644\n--- a/sklearn/preprocessing/_encoders.py\n+++ b/sklearn/preprocessing/_encoders.py\n@@ -110,6 +110,8 @@ class _BaseEncoder(BaseEstimator, TransformerMixin):\n                     # continue `The rows are marked `X_mask` and will be\n                     # removed later.\n                     X_mask[:, i] = valid_mask\n+                    if Xi.dtype.kind in {'U', 'S'}:\n+                        Xi = Xi.astype(object)\n                     Xi = Xi.copy()\n                     Xi[~valid_mask] = self.categories_[i][0]\n             _, encoded = _encode(Xi, self.categories_[i], encode=True)\n",
     "model_name_or_path": "isha"
   },
   {
@@ -116,32 +116,32 @@
   },
   {
     "instance_id": "scikit-learn__scikit-learn-25500",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/calibration.py b/sklearn/calibration.py\nindex 2c4a336..ece62d4 100644\n--- a/sklearn/calibration.py\n+++ b/sklearn/calibration.py\n@@ -760,7 +760,7 @@ class _CalibratedClassifier:\n                 # When binary, `predictions` consists only of predictions for\n                 # clf.classes_[1] but `pos_class_indices` = 0\n                 class_idx += 1\n-            proba[:, class_idx] = calibrator.predict(this_pred)\n+            proba[:, class_idx] = np.asarray(calibrator.predict(this_pred))\n \n         # Normalize the probabilities\n         if n_classes == 2:\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-25570",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/compose/_column_transformer.py b/sklearn/compose/_column_transformer.py\nindex a261451..d047a92 100644\n--- a/sklearn/compose/_column_transformer.py\n+++ b/sklearn/compose/_column_transformer.py\n@@ -514,7 +514,7 @@ class ColumnTransformer(TransformerMixin, _BaseComposition):\n \n         # List of tuples (name, feature_names_out)\n         transformer_with_feature_names_out = []\n-        for name, trans, column, _ in self._iter(fitted=True):\n+        for name, trans, column in self._iter(fitted=True, replace_passthrough=False):\n             feature_names_out = self._get_feature_name_out_for_transformer(\n                 name, trans, column, input_features\n             )\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-25638",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/utils/multiclass.py b/sklearn/utils/multiclass.py\nindex 5eaef2f..7585a96 100644\n--- a/sklearn/utils/multiclass.py\n+++ b/sklearn/utils/multiclass.py\n@@ -22,7 +22,9 @@ from ..utils._array_api import get_namespace\n \n def _unique_multiclass(y):\n     xp, is_array_api = get_namespace(y)\n-    if hasattr(y, \"__array__\") or is_array_api:\n+    if hasattr(y, \"dtypes\") and hasattr(y, \"iloc\"):\n+        return set(y.dropna()) if y.isna().any() else set(y)\n+    elif hasattr(y, \"__array__\") or is_array_api:\n         return xp.unique_values(xp.asarray(y))\n     else:\n         return set(y)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-25747",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py\nindex 335773c..0e40cb9 100644\n--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -56,7 +56,8 @@ def _wrap_in_pandas_container(\n         if columns is not None:\n             data_to_wrap.columns = columns\n         if index is not None:\n-            data_to_wrap.index = index\n+            if len(index) == len(data_to_wrap):\n+                data_to_wrap.index = index\n         return data_to_wrap\n \n     return pd.DataFrame(data_to_wrap, index=index, columns=columns)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "sphinx-doc__sphinx-10325",
-    "model_patch": "",
+    "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 62631f7..5f7c69c 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -114,7 +114,7 @@ def inherited_members_option(arg: Any) -> Union[object, Set[str]]:\n     if arg in (None, True):\n         return 'object'\n     else:\n-        return arg\n+        return {x.strip() for x in arg.split(',') if x.strip()}\n \n \n def member_order_option(arg: Any) -> Optional[str]:\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "sphinx-doc__sphinx-10451",
-    "model_patch": "",
+    "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex e16ab8c..d9d158c 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -2022,7 +2022,7 @@ class DataDocumenter(GenericAliasMixin, NewTypeMixin, TypeVarMixin,\n                 annotations = get_type_hints(self.parent, None,\n                                              self.config.autodoc_type_aliases)\n                 if self.objpath[-1] in annotations:\n-                    if self.config.autodoc_typehints_format == \"short\":\n+                    if self.config.autodoc_typehints == 'description' and not self.objpath:\n                         objrepr = stringify_typehint(annotations.get(self.objpath[-1]),\n                                                      \"smart\")\n                     else:\n",
     "model_name_or_path": "isha"
   },
   {
