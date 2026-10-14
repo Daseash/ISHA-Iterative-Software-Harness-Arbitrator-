@@ -1,6 +1,6 @@
 # ISHA — Install & run (CLI)
 
-ISHA is a Python package (`isha-fix`) that installs a single command:
+ISHA is a Python package (`isha`) that installs a single command:
 `isha`. Three ways to get it, best first.
 
 ## 0. Prerequisites (all methods)

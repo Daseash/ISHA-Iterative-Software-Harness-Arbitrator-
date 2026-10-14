@@ -7,7 +7,7 @@ export const CliSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: `pip install isha-fix\nisha --help\nisha doctor`,
+    pip: `pip install isha\nisha --help\nisha doctor`,
     curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
     git: `pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\nisha --help`,
   };

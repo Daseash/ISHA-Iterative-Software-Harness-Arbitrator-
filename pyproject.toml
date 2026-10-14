@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "isha-fix"
-version = "0.2.0"
+name = "isha"
+version = "0.3.0"
 description = "Autonomous AI Software Engineering Agent with TDD Red-to-Green Verification"
 readme = "README.md"
 requires-python = ">=3.10"

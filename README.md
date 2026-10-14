@@ -191,7 +191,7 @@ Install ISHA directly via `pip` (Python 3.10+):
 
 ```bash
 # Install directly from PyPI
-pip install isha-fix
+pip install isha
 
 # Verify installation & system health
 isha --help
