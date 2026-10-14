@@ -187,16 +187,18 @@ Issue Report + Target Repository
 
 ### 1. Installation
 
-Requires Python 3.10+:
+Install ISHA directly via `pip` (Python 3.10+):
 
 ```bash
-# Clone the repository
-git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
-cd ISHA-Iterative-Software-Harness-Arbitrator-
+# Install directly from PyPI
+pip install isha-fix
 
-# One-command installer (creates .venv/, .env template, and self-checks)
-python install.py
+# Verify installation & system health
+isha --help
+isha doctor
 ```
+
+*(Alternatively, to install directly from source via GitHub: `pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git`)*
 
 ### 2. Configuration
 

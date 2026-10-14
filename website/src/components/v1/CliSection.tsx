@@ -3,13 +3,13 @@ import { Copy, Check, Terminal, ArrowUpRight } from "lucide-react";
 import { sounds } from "../../utils/sound";
 
 export const CliSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"git" | "curl" | "pip">("git");
+  const [activeTab, setActiveTab] = useState<"pip" | "curl" | "git">("pip");
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    git: `git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\ncd ISHA-Iterative-Software-Harness-Arbitrator-\npip install -r requirements.txt\npython -m isha.cli`,
+    pip: `pip install isha-fix\nisha --help\nisha doctor`,
     curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
-    pip: `pip install isha-agent\nisha --help`,
+    git: `pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\nisha --help`,
   };
 
   const handleCopy = () => {
@@ -36,14 +36,14 @@ export const CliSection: React.FC = () => {
               <Terminal className="w-6 h-6 text-black dark:text-[#F9F7EF] stroke-[3]" />
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setActiveTab("git")}
+                  onClick={() => setActiveTab("pip")}
                   className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
-                    activeTab === "git"
+                    activeTab === "pip"
                       ? "bg-black text-[#F9F7EF] dark:bg-[#F9F7EF] dark:text-black shadow-md"
                       : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
                   }`}
                 >
-                  GIT CLONE
+                  PIP (PYPI)
                 </button>
                 <button
                   onClick={() => setActiveTab("curl")}
@@ -56,14 +56,14 @@ export const CliSection: React.FC = () => {
                   CURL
                 </button>
                 <button
-                  onClick={() => setActiveTab("pip")}
+                  onClick={() => setActiveTab("git")}
                   className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
-                    activeTab === "pip"
+                    activeTab === "git"
                       ? "bg-black text-[#F9F7EF] dark:bg-[#F9F7EF] dark:text-black shadow-md"
                       : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
                   }`}
                 >
-                  PIP
+                  GITHUB
                 </button>
               </div>
             </div>

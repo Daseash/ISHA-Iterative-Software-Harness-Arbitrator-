@@ -40,7 +40,7 @@ def docker_available() -> bool:
         else:
             try:
                 proc = subprocess.run(
-                    ["docker", "version"], capture_output=True, timeout=15
+                    ["docker", "version"], capture_output=True, timeout=3
                 )
                 _docker_checked = proc.returncode == 0
             except Exception:
