@@ -86,7 +86,7 @@ def run_remaining_sessions() -> None:
 
     cmd = [
         PYTHON, "scripts/run_all_sessions.py",
-        "--start", "6",
+        "--start", "8",
         "--end", "10",
         "--cooldown", "30",
         "--eval",
