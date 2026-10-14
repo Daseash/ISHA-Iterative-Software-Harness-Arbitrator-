@@ -1,27 +1,52 @@
-# Ponytail, lazy senior dev mode
+# ISHA: Iterative Software Harness Arbitrator — Agent Architecture & Operational Directives
 
-You are a lazy senior developer. Lazy means efficient, not careless. The best code is the code never written.
+## 1. Core Mission & Philosophy
+ISHA is an autonomous software engineering and benchmark harness arbitrator designed to achieve peak resolution on SWE-bench Lite (300 benchmark), SWE-bench Verified (500 instances), and SWE-bench Full.
 
-Before writing any code, stop at the first rung that holds:
+**The Golden Rules**:
+- **Ponytail Principle**: Shortest working diff wins. Never refactor, reformat, rename, or add unrequested scaffolding. Bug fix = root cause, not symptom.
+- **Audited Ground Truth**: Generating a patch is not a score. Applying a patch is not a score. Only patches that pass official test suites inside Docker containers (`report.json`) count as **RESOLVED**.
+- **Continuous Alignment**: Benchmark predictions and audited test results are continuously synced to GitHub `origin main`. Environment configurations (`.env`) and local working plans (`plan.md`) remain strictly local.
 
-1. **Does this need to be built at all? (YAGNI)** Speculative need = skip it, say so in one line.
-2. **Does it already exist in this codebase?** Reuse the helper, util, type, or pattern that's already here, don't re-write it.
-3. **Does the standard library already do this?** Use it.
-4. **Does a native platform feature cover it?** `<input type="date">` over a picker lib, CSS over JS, DB constraint over app code.
-5. **Does an already-installed dependency solve it?** Use it. Never add a new one for what a few lines can do.
-6. **Can this be one line?** Make it one line.
-7. **Only then:** write the minimum code that works.
+---
 
-The ladder runs after you understand the problem, not instead of it: read the task and the code it touches, trace the real flow end to end, then climb.
+## 2. Non-Negotiable Operational Invariants: The 8 Container Invariants
+When generating code patches for SWE-bench benchmarks or repository bugs:
+1. **Class Anchoring**: Insert new methods/properties into the EXACT enclosing target class, NEVER an earlier class or helper.
+2. **Guard Clause Completeness**: Always check `if val is None:` before accessing attributes or calling `len(val)`. Calling `len(None)` raises `TypeError`. Always guard against `None`, empty containers, or missing keys before slicing or querying.
+3. **Hashability Contracts**: Never place mutable collections (`list`, `dict`, `set`) into sets, dictionary keys, or identity tuples without calling `make_hashable(...)` or converting to an immutable tuple.
+4. **Decorator Preservation**: When wrapping callables or modifying decorators (`functools.partial`), always wrap with `functools.wraps(...)` to preserve function introspection (`__name__`, `__doc__`, `__wrapped__`).
+5. **Execution Scope & Namespaces**: In dynamic code execution (`exec`, `eval`), always provide an explicit global namespace with `{'__name__': '__main__'}` so top-level imports and closures resolve properly.
+6. **Accessibility & Widget Contracts**: In forms and widgets, `id_for_label` must return `''` or `None` if the widget has composite or multiple sub-widgets without a single focus target.
+7. **Type & Return Invariants**: Strictly preserve exact return types and falsy distinctions (`None` vs `''` vs `0` vs `False`). Never coerce `None` to `''` or drop empty strings unless explicitly required.
+8. **Qualname Hierarchy**: When serializing nested classes or methods, always use `__qualname__` to preserve full enclosing scope hierarchy.
 
-**Bug fix = root cause, not symptom:** a report names a symptom. Grep every caller of the function you touch and fix the shared function once — one guard there is a smaller diff than one per caller, and patching only the path the ticket names leaves a sibling caller still broken.
+---
 
-## Rules:
+## 3. Multi-Candidate Tournament & Verification Pipeline
+Every task instance runs through an autonomous tournament:
+1. **3 Diverse Candidate Strategies (`--candidates 3`)**:
+   - `minimal_diff`: Surgical, low-temperature, AST-focused diffs.
+   - `call_site_aware`: Call-site inspection, caller graph validation.
+   - `root_cause_first`: Root-cause invariant enforcement.
+2. **AST Static Compilation Gate**: Every candidate is compiled and linted in isolated worktrees before submission.
+3. **Baseline Repro Gate (`baseline_red_gate_node`)**: Requires generated repro tests to fail before patching, discriminating actual test failures (`\b[1-9]\d* failed\b`) from collection errors.
+4. **Targeted Repair Rounds**: If a candidate fails in-loop verification, the real pytest error traceback is fed back to the coder for up to 2 targeted repair rounds.
+5. **Candidate Arbitrator**: The arbitrator scores surviving candidates and selects the cleanest winning patch.
 
-- No abstractions that weren't explicitly requested.
-- No new dependency if it can be avoided.
-- No boilerplate nobody asked for.
-- Deletion over addition. Boring over clever. Fewest files possible.
-- Shortest working diff wins, but only once you understand the problem. The smallest change in the wrong place isn't lazy, it's a second bug.
-- Mark deliberate simplifications that cut a real corner with a `ponytail:` comment naming the ceiling and upgrade path (`# ponytail: global lock, per-account locks if throughput matters`).
-- When a task is complete, leave behind at most three short lines: what was skipped, when to add it.
+---
+
+## 4. Benchmark Session Map (SWE-bench Lite 300)
+The 300 benchmark instances are executed in 10 sequential 30-instance sessions:
+* **Sessions 1–4**: Completed and officially audited in Docker (**66 / 120 resolved — 55.0%**).
+* **Sessions 5–7**: Completed and officially audited in Docker (**72 / 210 resolved — 34.3%**).
+* **Sessions 8–10**: Slices pre-generated under `data/slices/` (90 instances across `sphinx-doc` and `sympy`).
+* **Scoreboard Engine**: `python scripts/score.py` provides the single source of truth (SSOT) terminal scoreboard.
+* **Orchestration Driver**: `python scripts/orchestrate_all.py` drives autonomous execution with multi-candidate tournament and automatic rescue loops (`-r2`).
+
+---
+
+## 5. Container & Git Hygiene
+- **LF Line Endings**: All files shipped into Docker (`eval.sh`, `patch.diff`, `test_output.txt`) must strictly use POSIX LF (`\n`) and UTF-8 encoding.
+- **Offline Safety**: CI test suites run purely offline with `ISHA_FORCE_OFFLINE=1` (`pytest tests/`).
+- **Secret Isolation**: API keys in `.env` and local working plans (`plan.md`) must never be committed or staged to Git.
