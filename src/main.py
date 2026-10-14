@@ -55,38 +55,37 @@ _CLI_COMMANDS = ("fix", "bench", "doctor", "report", "ui")
 
 
 def _chain_line(label: str, chain: list) -> str:
-    """Render one model chain: 'planner: gemini-3.5-flash (+2 fallbacks)'."""
+    """Render one model chain for diagnostics."""
     if OFFLINE_MODE:
-        return f"|  {label:<10}: offline deterministic brain (no API keys)                |"
+        return f"|  {label:<8}: offline brain (no API keys)       |"
     primary = _short_name(chain[0])
     extra = len(chain) - 1
-    suffix = f" (+{extra} fallback{'s' if extra != 1 else ''})" if extra else ""
-    line = f"|  {label:<10}: {primary}{suffix}"
-    return line.ljust(73)[:73] + "|"
+    suffix = f" (+{extra})" if extra else ""
+    line = f"|  {label:<8}: {primary}{suffix}"
+    return line.ljust(47)[:47] + "|"
+
+
+def print_status_diagnostics() -> None:
+    """Display runtime status and diagnostics only when explicitly requested."""
+    border = "+-----------------------------------------------+"
+    print(border)
+    print(_chain_line("Planner", PLANNER_CHAIN))
+    print(_chain_line("Coder", CODER_CHAIN))
+    print("|  Judgment: LAYA calibrated gate (ECE 0.0010)  |")
+    print("|  Sandbox : Ephemeral Git worktree isolation   |")
+    print(border)
 
 
 def build_banner() -> str:
-    """Banner rendered from the live model configuration with sleek ASCII logo."""
-    border = "+=========================================================================+"
-    logo = r"""
-  ___   ____    _   _     _    
- |_ _| / ___|  | | | |   / \     Autonomous AI Software Engineering Agent
-  | |  \___ \  | |_| |  / _ \    Iterative Software Harness & Arbitrator (ISHA)
-  | |   ___) | |  _  | / ___ \   v0.3.0 | Production Release
- |___| |____/  |_| |_|/_/   \_\  https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-
-"""
+    """Clean ASCII logo — minimal width (<35 cols), zero data disclosure."""
     return (
-        logo
-        + border
-        + "\n"
-        + _chain_line("planner", PLANNER_CHAIN)
-        + "\n"
-        + _chain_line("coder", CODER_CHAIN)
-        + "\n"
-        + "|  Judgment  : LAYA calibrated probabilities (ECE = 0.0010)               |\n"
-        + "|  Isolation : Ephemeral Git worktrees (multi-agent safe)                 |\n"
-        + border
-        + "\n"
+        "\n"
+        r"   ___  ____  _   _    _    " + "\n"
+        r"  |_ _|/ ___|| | | |  / \   " + "\n"
+        r"   | | \___ \| |_| | / _ \  " + "\n"
+        r"   | |  ___) |  _  |/ ___ \ " + "\n"
+        r"  |___||____/|_| |_/_/   \_\ " + "\n"
+        r"  Autonomous SWE Agent (v0.3.0)" + "\n"
     )
 
 
@@ -122,20 +121,25 @@ def main() -> int:
 
     if len(sys.argv) == 1:
         print(build_banner())
-        print("  Quickstart Commands:")
-        print("    isha fix <repo> --issue \"...\" --apply   Solve a bug & apply patch")
-        print("    isha fix <url>  --issue \"...\" --pr      Solve bug & open GitHub PR")
-        print("    isha doctor                             Check environment & API keys")
-        print("    isha ui                                 Launch visual web dashboard")
-        print("    isha bench                              Run SWE-bench evaluation")
-        print("    isha report --run-id <id>               Display benchmark scorecard")
-        print()
-        print("  Type 'isha --help' or 'isha fix --help' for full options.")
-        print()
+        print("  Commands:")
+        print("    fix     Solve issue & apply patch")
+        print("    doctor  Check environment & keys")
+        print("    ui      Launch web dashboard")
+        print("    bench   Run SWE-bench evaluation")
+        print("    report  View benchmark scorecard\n")
+        print("  Quickstart:")
+        print("    isha fix <repo> --issue \"...\" --apply\n")
+        print("  For full command table & options, see README.md")
+        print("  Run 'isha <command> --help' for details.\n")
         return 0
 
     parser = argparse.ArgumentParser(
         description=f"{AGENT_NAME} — Autonomous AI Software Engineering Agent"
+    )
+    parser.add_argument(
+        "--status",
+        action="store_true",
+        help="Display agent system status, model configuration, and diagnostics",
     )
     parser.add_argument("--issue", type=str, default=None, help="Bug report to fix")
     parser.add_argument(
@@ -194,14 +198,18 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    if args.status:
+        print(build_banner())
+        print_status_diagnostics()
+        return 0
+
     # Configure candidate tournament count across the process
     os.environ["ISHA_CANDIDATES"] = str(max(1, args.candidates))
 
     if not Path(args.repo).is_dir():
         print(build_banner())
         print(f"  🛑 Target repo not found: {args.repo}")
-        print("     The bundled fixture was removed — pass --repo <path> to any")
-        print("     Python repo you want ISHA to work on.")
+        print("     Pass --repo <path> to any Python repo you want ISHA to work on.")
         return 4
 
     issue = args.issue or DEFAULT_ISSUE
@@ -216,19 +224,10 @@ def main() -> int:
         return 3
 
     print(build_banner())
-    print(f"  Agent:  {AGENT_NAME}")
-    if LLM_ENABLED and not OFFLINE_MODE:
-        print(f"  Planner chain: {' -> '.join(_short_name(m) for m in PLANNER_CHAIN)}")
-        print(f"  Coder chain:   {' -> '.join(_short_name(m) for m in CODER_CHAIN)}")
-    else:
-        print("  Models: offline deterministic brain (no API keys)")
-    print(f"  Repo:   {args.repo}")
+    print(f"  Target: {args.repo}")
     print(f"  Issue:  {issue}")
-    print(f"  Tournament: {args.candidates} candidates with multi-model arbitration")
-    if args.improve:
-        print(f"  Improvement Loop: active (up to {args.max_rounds} self-repair rounds with convergence)")
     if using_default:
-        print("  (no --issue given — running the built-in calculator demo bug)")
+        print("  (no --issue given — running demo mode)")
 
     from src.agents.context import build_repo_context
     from src.agents.graph import compiled_graph, compiled_multi_graph

@@ -211,48 +211,109 @@ GOOGLE_API_KEY=AIza...
 
 ### 3. Usage & CLI Commands
 
-ISHA installs a single, unified command: `isha`.
-
-| Command | Purpose | Example |
-| :--- | :--- | :--- |
-| **`isha fix`** | Solves an issue in any local or remote repository | `isha fix . --issue "Fix bug..." --apply` |
-| **`isha fix --pr`** | Solves bug, creates branch, commits, pushes, and opens GitHub PR | `isha fix https://github.com/org/repo --issue "..." --pr` |
-| **`isha doctor`** | Diagnoses toolchain, API keys, disk space, and Docker health | `isha doctor` |
-| **`isha ui`** | Launches the interactive visual Web Dashboard in your browser | `isha ui` |
-| **`isha bench`** | Runs standardized SWE-bench benchmark tournament slices | `isha bench --slice stratified --limit 30` |
-| **`isha report`** | Displays benchmark scorecards and diffs evaluation runs | `isha report --run-id lite300-s4 --compare lite300-s3` |
-| **`isha-mcp`** | Runs the Model Context Protocol stdio server for IDEs | `isha-mcp` |
-
-#### Fixing a Bug (Automated Self-Repair by Default)
-```bash
-# Solve an issue in the current repository and write the patch
-isha fix . --issue "Login endpoint returns 500 when email is None" --apply
-
-# Automatically create a git branch, commit, push, and open a GitHub Pull Request
-isha fix https://github.com/my-org/web-app --issue "Fix auth timeout" --pr
-
-# Preview a fix safely in sandbox mode without touching files
-isha fix /path/to/project --issue "Fix TypeError in router.py"
+```text
+   ___  ____  _   _    _    
+  |_ _|/ ___|| | | |  / \   
+   | | \___ \| |_| | / _ \  
+   | |  ___) |  _  |/ ___ \ 
+  |___||____/|_| |_/_/   \_\ 
+  Autonomous SWE Agent (v0.3.0)
 ```
 
-> **Automated Self-Repair**: If a candidate patch fails reproduction or has regressions, ISHA automatically captures the real pytest traceback and runs up to 3 targeted self-repair rounds to analyze why it failed and fix it.
+ISHA provides a unified, zero-leak CLI interface via the `isha` command. Diagnostic information and internal model telemetry are strictly isolated behind explicit diagnostic commands (`isha doctor`, `isha --status`), keeping everyday developer workflows clean and secure.
 
-#### Launching the Web Dashboard
+#### Primary CLI Commands Reference
+
+| Command | Action / What It Does | Default Behavior | Example |
+| :--- | :--- | :--- | :--- |
+| **`isha`** | Displays the clean ASCII logo and quick command index. Zero internal data or model disclosure. | Non-interactive help menu | `isha` |
+| **`isha fix`** | Localizes the bug, synthesizes reproduction test (RED), generates 3 candidate fixes, and runs AST gates. | Safe sandbox dry-run (does not modify target repo files) | `isha fix . --issue "Fix TypeError in router.py"` |
+| **`isha fix --apply`** | Runs the full agentic loop and writes the verified minimal patch directly to the target repo files. | In-place file modification upon passing LAYA gate | `isha fix . --issue "Fix 500 on None" --apply` |
+| **`isha fix --pr`** | Clones/checks out repo, creates a branch (`isha/fix-...`), commits minimal diff, pushes, and opens GitHub PR. | Automated Git branch, commit, push, and Pull Request | `isha fix https://github.com/org/repo --issue "..." --pr` |
+| **`isha doctor`** | Complete toolchain self-test: checks Python, Git, Docker, WSL2, API keys, disk space, and models. | Runs comprehensive diagnostics and reports health | `isha doctor` |
+| **`isha ui`** | Launches the dark-mode interactive web control room at `http://localhost:8501`. | Opens local Streamlit operational dashboard | `isha ui --port 8501` |
+| **`isha bench`** | Executes SWE-bench evaluation benchmark runs across isolated repository worktrees. | Evaluates slice and generates AST verified patches | `isha bench --slice stratified --limit 30` |
+| **`isha report`** | Renders formatted markdown scorecards, solve rates, and diffs two benchmark evaluation runs. | Displays table summary & optionally appends progress | `isha report --run-id lite300-s4 --compare lite300-s3` |
+| **`isha --status`** | Displays runtime status, active model chains, fallback count, and LAYA gate calibration metrics. | Internal diagnostics (never shown on bare `isha`) | `isha --status` |
+| **`isha-mcp`** | Runs the FastMCP Model Context Protocol stdio server for IDE integrations. | Connects to Cursor, Claude Desktop, Antigravity | `isha-mcp` |
+
+---
+
+#### `isha fix` Options & Flags
+
+| Flag | Type | Description | Default |
+| :--- | :---: | :--- | :---: |
+| `repo_pos` | `string` | Local folder path (e.g. `.`) or remote GitHub repository URL | Target repo path |
+| `--issue` | `string` | Plain-English description or issue text of the bug to resolve | Built-in demo |
+| `--issue-url` | `string` | URL of a public GitHub issue (automatically downloads title & body) | `None` |
+| `--apply` | `flag` | Write the verified fix directly into the target repository codebase | Sandbox only |
+| `--pr` | `flag` | Automatically commit to a new branch, push to remote, and open a GitHub PR | `False` |
+| `--candidates` | `int` | Number of diverse candidate strategies to race in parallel worktrees | `3` |
+| `--no-improve` | `flag` | Disable the automatic 2-round traceback self-repair feedback loop | Active (`True`) |
+| `--multi` | `flag` | Enable multi-agent fan-out graph across parallel Git worktrees | Single-flow |
+| `--thread-id` | `string` | LangGraph checkpoint thread identifier for session persistence | `"1"` |
+
+---
+
+#### `isha bench` Options & Flags
+
+| Flag | Type | Description | Default |
+| :--- | :---: | :--- | :---: |
+| `--slice` | `choice` | Benchmark slice partition: `head`, `stratified`, `ids`, `dev`, `final`, `train` | `head` |
+| `--limit` | `int` | Maximum number of benchmark instances to evaluate | `30` |
+| `--instances` | `list` | Specific instance IDs to evaluate (e.g. `django__django-10914`) | All in slice |
+| `--candidates` | `int` | Strategy candidates generated per benchmark instance | `3` |
+| `--eval` | `flag` | Run official SWE-bench Docker container testbed evaluation afterwards | AST gates only |
+| `--eval-workers` | `int` | Number of parallel Docker evaluation containers | `3` |
+| `--keep-images` | `flag` | Keep intermediate Docker evaluation images on disk after grading | Auto-pruned |
+| `--report` | `flag` | Automatically render formatted results markdown scorecard | `False` |
+| `--doctor-first` | `flag` | Abort benchmark run immediately if `isha doctor` detects any failure | `False` |
+
+---
+
+#### `isha report` Options & Flags
+
+| Flag | Type | Description | Default |
+| :--- | :---: | :--- | :---: |
+| `--run-id` | `string` | **Required.** Identifier of the benchmark session (e.g. `lite300-s4`) | `None` |
+| `--compare` | `string` | Second run identifier to diff against (shows regressions & new passes) | `None` |
+| `--append` | `flag` | Append formatted evaluation results into `results/progress.md` | `False` |
+
+---
+
+#### Practical Command Workflows
+
+##### 1. Preview Fix in Safe Sandbox (Dry-Run)
 ```bash
-isha ui
-# Opens the dark-mode engineering control room at http://localhost:8501
+# Analyze repository, synthesize test, and preview diff without altering files
+isha fix /path/to/project --issue "Fix 500 error when booking dates are missing"
 ```
 
-#### Running Benchmark Evaluations
+##### 2. Apply Validated Fix to Local Codebase
 ```bash
-# Inspect the real-time audited scorecard in terminal
-python scripts/score.py
+# Resolve bug and write minimal passing patch to the local repository
+isha fix . --issue "The subtract method in calculator.py returns a+b instead of a-b" --apply
+```
 
-# Run a single instance evaluation
-isha bench --instances django__django-10914
+##### 3. Solve Remote Bug & Open GitHub Pull Request
+```bash
+# Clones remote repo, solves issue, commits to branch, pushes, and opens PR
+isha fix https://github.com/my-org/web-service --issue "Fix auth token expiration race condition" --pr
+```
 
-# Run a benchmark session slice
-isha bench --slice lite300-s4
+##### 4. Diagnose Toolchain & System Health
+```bash
+# Check Python, Git, Docker, API keys, disk space, and models
+isha doctor
+```
+
+##### 5. Run SWE-bench Benchmark & Inspect Scorecard
+```bash
+# Run 30-instance evaluation on stratified slice with 3 tournament candidates
+isha bench --slice stratified --limit 30 --candidates 3
+
+# View terminal scorecard
+isha report --run-id lite300-s4
 ```
 
 
