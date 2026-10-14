@@ -634,6 +634,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                         file=sys.stderr,
                     )
                     break
+            active_gemini_key = None
             try:
                 kwargs = dict(
                     model=model,
@@ -643,7 +644,6 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 )
                 if temperature is not None:
                     kwargs["temperature"] = temperature
-                active_gemini_key = None
                 if provider == "gemini":
                     active_gemini_key = get_next_gemini_key(model)
                     if active_gemini_key:

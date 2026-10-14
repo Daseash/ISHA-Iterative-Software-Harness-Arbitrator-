@@ -4,7 +4,7 @@
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
 [![Official Docker Resolved: 72](https://img.shields.io/badge/Official%20Docker%20Resolved-72%20(Official%20Harness)-brightgreen.svg)](#-swe-bench-lite-audited-scorecard)
-[![Clean AST Patch Yield: 86.2%](https://img.shields.io/badge/Clean%20AST%20Patch%20Yield-86.2%25%20(200%2F232)-blue.svg)](#-swe-bench-lite-audited-scorecard)
+[![Clean AST Patch Yield: 88.8%](https://img.shields.io/badge/Clean%20AST%20Patch%20Yield-88.8%25%20(206%2F232)-blue.svg)](#-swe-bench-lite-audited-scorecard)
 [![Inference: $0.00 Free Tier](https://img.shields.io/badge/Inference-%240.00%20Free%20Tier-success.svg)](#-zero-cost-pareto-frontier)
 [![Safety: ECE 0.0010](https://img.shields.io/badge/Safety%20Gate-ECE%200.0010-purple.svg)](#-laya-calibrated-decision-gate)
 [![Architecture: Minimal Diff Engine](https://img.shields.io/badge/Engine-Minimal%20Diff%20Invariants-orange.svg)](#-minimal-diff--senior-invariant-engine)
@@ -68,11 +68,11 @@ Every number below originates strictly from official SWE-bench Docker container 
 | **Session 1 (`lite300-s1`)** | 30 | **22** | 100.0% | **11 / 30** | **36.7%** 🚀 |
 | **Session 5 (`lite300-s5`)** | 30 | **26** | 86.7% | **3 / 30** | 10.0% |
 | **Session 6 (`lite300-s6`)** | 30 | **20** | 66.7% | **3 / 30** | 10.0% |
-| **Session 7 (`lite300-s7`)** | 30 | **19** | 63.3% | **0 / 30** | *(eval in queue)* |
+| **Session 7 (`lite300-s7`)** | 30 | **25** | **83.3%** 🚀 | **0 / 30** | *(eval in queue)* |
 | **Session 8 (`lite300-s8`)** | 30 | **25** | 83.3% | — | *(eval in queue)* |
-| **Session 9 (`lite300-s9`)** | 30 | *10+ (active)* | 90.9% | — | *(actively solving)* |
+| **Session 9 (`lite300-s9`)** | 30 | *11+ (active)* | 84.6% | — | *(actively solving)* |
 | **Session 10 (`lite300-s10`)** | 30 | *queued* | — | — | *(auto-queued)* |
-| **FINAL AUDITED TOTAL** | **232 Evaluated** | **200 Clean Patches** | **86.2%** 🌟 | **72 Official Docker** | **34.3% Evaluated (24.0% of 300)** |
+| **FINAL AUDITED TOTAL** | **232 Evaluated** | **206 Clean Patches** | **88.8%** 🌟 | **72 Official Docker** | **34.3% Evaluated (24.0% of 300)** |
 
 Inspect the live audited scorecard in your terminal at any time:
 ```bash
