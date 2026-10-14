@@ -51,27 +51,27 @@
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13142",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/mixture/gaussian_mixture.py b/sklearn/mixture/gaussian_mixture.py\nindex 9e3bf3c..d5cffa9 100644\n--- a/sklearn/mixture/gaussian_mixture.py\n+++ b/sklearn/mixture/gaussian_mixture.py\n@@ -530,6 +530,7 @@ class GaussianMixture(BaseMixture):\n         The weights of each mixture components.\n \n     means_ : array-like, shape (n_components, n_features)\n+        self.random_state = check_random_state(self.random_state)\n         The mean of each mixture component.\n \n     covariances_ : array-like\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13241",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/decomposition/kernel_pca.py b/sklearn/decomposition/kernel_pca.py\nindex bb91d0c..3235e2b 100644\n--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -9,6 +9,7 @@ from scipy.sparse.linalg import eigsh\n \n from ..utils import check_random_state\n from ..utils.validation import check_is_fitted, check_array\n+from ..utils.extmath import svd_flip\n from ..exceptions import NotFittedError\n from ..base import BaseEstimator, TransformerMixin, _UnstableOn32BitMixin\n from ..preprocessing import KernelCenterer\n@@ -214,6 +215,10 @@ class KernelPCA(BaseEstimator, TransformerMixin, _UnstableOn32BitMixin):\n         indices = self.lambdas_.argsort()[::-1]\n         self.lambdas_ = self.lambdas_[indices]\n         self.alphas_ = self.alphas_[:, indices]\n+        if self.eigen_solver != 'arpack':\n+            self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n+        if self.eigen_solver != 'arpack':\n+            self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n \n         # remove eigenvectors with a zero eigenvalue\n         if self.remove_zero_eig or self.n_components is None:\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13439",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/pipeline.py b/sklearn/pipeline.py\nindex 7eaf9a4..54fe97f 100644\n--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -126,10 +126,13 @@ class Pipeline(_BaseComposition):\n     # BaseEstimator interface\n     _required_parameters = ['steps']\n \n-    def __init__(self, steps, memory=None):\n+    def __init__(self, steps, memory=None, verbose=False):\n         self.steps = steps\n-        self._validate_steps()\n         self.memory = memory\n+        self.verbose = verbose\n+\n+    def __len__(self):\n+        return len(self.steps)\n \n     def get_params(self, deep=True):\n         \"\"\"Get parameters for this estimator.\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13496",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/ensemble/iforest.py b/sklearn/ensemble/iforest.py\nindex 8a1bd36..1ec337e 100644\n--- a/sklearn/ensemble/iforest.py\n+++ b/sklearn/ensemble/iforest.py\n@@ -119,6 +119,11 @@ class IsolationForest(BaseBagging, OutlierMixin):\n \n     verbose : int, optional (default=0)\n         Controls the verbosity of the tree building process.\n+    warm_start : bool, optional (default=False)\n+        When set to ``True``, reuse the solution of the previous call to fit\n+        and add more estimators to the ensemble, otherwise, just fit a whole\n+        new forest. See :term:`the Glossary <warm_start>`.\n+\n \n \n     Attributes\n@@ -173,8 +178,9 @@ class IsolationForest(BaseBagging, OutlierMixin):\n                  n_jobs=None,\n                  behaviour='old',\n                  random_state=None,\n-                 verbose=0):\n-        super().__init__(\n+                 verbose=0,\n+                 warm_start=False):\n+        super(IsolationForest, self).__init__(\n             base_estimator=ExtraTreeRegressor(\n                 max_features=1,\n                 splitter='random',\n@@ -185,6 +191,7 @@ class IsolationForest(BaseBagging, OutlierMixin):\n             n_estimators=n_estimators,\n             max_samples=max_samples,\n             max_features=max_features,\n+            warm_start=warm_start,\n             n_jobs=n_jobs,\n             random_state=random_state,\n             verbose=verbose)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13497",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/feature_selection/mutual_info_.py b/sklearn/feature_selection/mutual_info_.py\nindex d5d1b7f..7a760d1 100644\n--- a/sklearn/feature_selection/mutual_info_.py\n+++ b/sklearn/feature_selection/mutual_info_.py\n@@ -247,7 +247,7 @@ def _estimate_mi(X, y, discrete_features='auto', discrete_target=False,\n     X, y = check_X_y(X, y, accept_sparse='csc', y_numeric=not discrete_target)\n     n_samples, n_features = X.shape\n \n-    if discrete_features == 'auto':\n+    if isinstance(discrete_features, str) and discrete_features == 'auto':\n         discrete_features = issparse(X)\n \n     if isinstance(discrete_features, bool):\n",
     "model_name_or_path": "isha"
   },
   {
@@ -81,37 +81,37 @@
   },
   {
     "instance_id": "scikit-learn__scikit-learn-13779",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\nindex 7afa718..f4c7012 100644\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,7 +30,8 @@ from ..utils import Bunch\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n     if sample_weight is not None:\n-        estimator.fit(X, y, sample_weight=sample_weight)\n+        if estimator is not None:\n+            estimator.fit(X, y, sample_weight=sample_weight)\n     else:\n         estimator.fit(X, y)\n     return estimator\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-14087",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1d..7d102d9 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-14092",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/neighbors/nca.py b/sklearn/neighbors/nca.py\nindex 1d278b6..9d98ad5 100644\n--- a/sklearn/neighbors/nca.py\n+++ b/sklearn/neighbors/nca.py\n@@ -161,6 +161,8 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):\n         self.n_components = n_components\n         self.init = init\n         self.warm_start = warm_start\n+        self.n_components = int(self.n_components) if self.n_components is not None else None\n+        self.tol = float(self.tol)\n         self.max_iter = max_iter\n         self.tol = tol\n         self.callback = callback\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-14894",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/svm/base.py b/sklearn/svm/base.py\nindex 64cebe8..0b13e02 100644\n--- a/sklearn/svm/base.py\n+++ b/sklearn/svm/base.py\n@@ -297,6 +297,9 @@ class BaseLibSVM(BaseEstimator, metaclass=ABCMeta):\n         \"\"\"Perform regression on samples in X.\n \n         For an one-class model, +1 (inlier) or -1 (outlier) is returned.\n+        if dual_coef_indices.size == 0:\n+            self.dual_coef_ = sp.csr_matrix((n_class - 1, 0))\n+            return\n \n         Parameters\n         ----------\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-14983",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce..98a4df8 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1164,7 +1164,7 @@ class _RepeatedSplits(metaclass=ABCMeta):\n         return cv.get_n_splits(X, y, groups) * self.n_repeats\n \n \n-class RepeatedKFold(_RepeatedSplits):\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1217,7 +1217,7 @@ class RepeatedKFold(_RepeatedSplits):\n             KFold, n_repeats, random_state, n_splits=n_splits)\n \n \n-class RepeatedStratifiedKFold(_RepeatedSplits):\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-15512",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/cluster/_affinity_propagation.py b/sklearn/cluster/_affinity_propagation.py\nindex 4806afe..c8c4226 100644\n--- a/sklearn/cluster/_affinity_propagation.py\n+++ b/sklearn/cluster/_affinity_propagation.py\n@@ -81,6 +81,13 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,\n     labels : array, shape (n_samples,)\n         cluster labels for each point\n \n+    if it == max_iter - 1:\n+        warnings.warn(\"Affinity propagation did not converge, this model \"\n+                      \"will not have any cluster centers.\", ConvergenceWarning)\n+        if return_n_iter:\n+            return np.array([], dtype=int), -1 * np.ones(n_samples, dtype=int), it + 1\n+        return np.array([], dtype=int), -1 * np.ones(n_samples, dtype=int)\n+\n     n_iter : int\n         number of iterations run. Returned only if `return_n_iter` is\n         set to True.\n",
     "model_name_or_path": "isha"
   },
   {
     "instance_id": "scikit-learn__scikit-learn-15535",
-    "model_patch": "",
+    "model_patch": "diff --git a/sklearn/metrics/cluster/_supervised.py b/sklearn/metrics/cluster/_supervised.py\nindex 4bddae3..5df956c 100644\n--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -42,8 +42,8 @@ def check_clusterings(labels_true, labels_pred):\n     labels_pred : array-like of shape (n_samples,)\n         The predicted labels.\n     \"\"\"\n-    labels_true = check_array(\n-        labels_true, ensure_2d=False, ensure_min_samples=0\n+    labels_pred = check_array(\n+        labels_pred, ensure_2d=False, accept_sparse=True, dtype=None\n     )\n     labels_pred = check_array(\n         labels_pred, ensure_2d=False, ensure_min_samples=0\n",
     "model_name_or_path": "isha"
   },
   {
