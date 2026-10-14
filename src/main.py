@@ -146,22 +146,28 @@ def main() -> int:
         help="Number of diverse strategy candidates to generate (default: 3)",
     )
     parser.add_argument(
+        "--no-improve",
+        action="store_true",
+        help="Disable automatic self-repair loop if first patch fails",
+    )
+    parser.add_argument(
         "--improve",
         "--loop",
         action="store_true",
-        help="Run autonomous improvement loop until delta convergence",
+        default=True,
+        help=argparse.SUPPRESS,  # Enabled by default; no need for candidate to type it
     )
     parser.add_argument(
         "--max-rounds",
         type=int,
         default=3,
-        help="Maximum improvement loop rounds (default: 3)",
+        help=argparse.SUPPRESS,  # Internal self-repair round cap (default: 3)
     )
     parser.add_argument(
         "--approve",
         choices=["auto", "cli"],
         default="auto",
-        help="Approval gate mode: auto records it silently, cli prompts for y/N",
+        help=argparse.SUPPRESS,  # Automatically approved unless explicitly in manual CLI mode
     )
     args = parser.parse_args()
 
@@ -229,8 +235,8 @@ def main() -> int:
     if isinstance(result, dict):
         result = AgentState(**result)
 
-    # If autonomous improvement loop is requested, run iterative self-repair until convergence
-    if args.improve and not args.multi:
+    # Autonomous self-repair improvement loop is active by default; runs if initial solution needs targeted repair
+    if not getattr(args, "no_improve", False) and not args.multi:
         from src.agents.improvement_loop import ImprovementLoopConfig, run_improvement_loop
         loop_cfg = ImprovementLoopConfig(
             max_iterations=args.max_rounds,
