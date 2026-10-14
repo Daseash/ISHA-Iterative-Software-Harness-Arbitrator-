@@ -57,27 +57,36 @@ _CLI_COMMANDS = ("fix", "bench", "doctor", "report", "ui")
 def _chain_line(label: str, chain: list) -> str:
     """Render one model chain: 'planner: gemini-3.5-flash (+2 fallbacks)'."""
     if OFFLINE_MODE:
-        return f"|   {label:<8}: offline deterministic brain (no API keys)     |"
+        return f"|  {label:<10}: offline deterministic brain (no API keys)                |"
     primary = _short_name(chain[0])
     extra = len(chain) - 1
     suffix = f" (+{extra} fallback{'s' if extra != 1 else ''})" if extra else ""
-    line = f"|   {label:<8}: {primary}{suffix}"
-    return line.ljust(66)[:66] + "|"
+    line = f"|  {label:<10}: {primary}{suffix}"
+    return line.ljust(73)[:73] + "|"
 
 
 def build_banner() -> str:
-    """Banner rendered from the live model configuration in config.py."""
+    """Banner rendered from the live model configuration with sleek ASCII logo."""
+    border = "+=========================================================================+"
+    logo = r"""
+  ___   ____    _   _     _    
+ |_ _| / ___|  | | | |   / \     Autonomous AI Software Engineering Agent
+  | |  \___ \  | |_| |  / _ \    Iterative Software Harness & Arbitrator (ISHA)
+  | |   ___) | |  _  | / ___ \   v0.3.0 | Production Release
+ |___| |____/  |_| |_|/_/   \_\  https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-
+"""
     return (
-        "\n+===============================================================+\n"
-        "|                                                                 |\n"
-        "|   ISHA -- Autonomous AI Software Engineering Agent              |\n"
-        "|                                                                 |\n"
-        + _chain_line("planner", PLANNER_CHAIN) + "\n"
-        + _chain_line("coder", CODER_CHAIN) + "\n"
-        "|   Judgment:   LAYA calibrated probabilities (not heuristics)    |\n"
-        "|   Isolation:  Git worktrees (multi-agent safe)                  |\n"
-        "|                                                                 |\n"
-        "+===============================================================+\n"
+        logo
+        + border
+        + "\n"
+        + _chain_line("planner", PLANNER_CHAIN)
+        + "\n"
+        + _chain_line("coder", CODER_CHAIN)
+        + "\n"
+        + "|  Judgment  : LAYA calibrated probabilities (ECE = 0.0010)               |\n"
+        + "|  Isolation : Ephemeral Git worktrees (multi-agent safe)                 |\n"
+        + border
+        + "\n"
     )
 
 
@@ -110,6 +119,20 @@ def main() -> int:
         from src.cli import main as cli_main
 
         return cli_main(sys.argv[1:])
+
+    if len(sys.argv) == 1:
+        print(build_banner())
+        print("  Quickstart Commands:")
+        print("    isha fix <repo> --issue \"...\" --apply   Solve a bug & apply patch")
+        print("    isha fix <url>  --issue \"...\" --pr      Solve bug & open GitHub PR")
+        print("    isha doctor                             Check environment & API keys")
+        print("    isha ui                                 Launch visual web dashboard")
+        print("    isha bench                              Run SWE-bench evaluation")
+        print("    isha report --run-id <id>               Display benchmark scorecard")
+        print()
+        print("  Type 'isha --help' or 'isha fix --help' for full options.")
+        print()
+        return 0
 
     parser = argparse.ArgumentParser(
         description=f"{AGENT_NAME} — Autonomous AI Software Engineering Agent"

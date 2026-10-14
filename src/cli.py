@@ -63,7 +63,12 @@ def _run(cmd: list[str], timeout: int = 45) -> tuple[int, str]:
 
 # ── doctor ─────────────────────────────────────────────────────────────────
 def cmd_doctor(args: argparse.Namespace) -> int:
-    print("\nISHA doctor\n" + "=" * 60)
+    try:
+        from src.main import build_banner
+        print(build_banner())
+    except Exception:
+        pass
+    print("ISHA doctor — Environment & Toolchain Diagnostics\n" + "=" * 60)
     failures = 0
 
     print("\nToolchain")
