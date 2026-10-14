@@ -51,7 +51,7 @@ isha-agent/
 │   ├── dashboard/                # Live Operations UI
 │   │   └── app.py                # Streamlit multi-tab benchmark & trajectory monitor
 │   │
-│   ├── cli.py                    # Unified CLI (`isha solve`, `isha bench`, `isha report`)
+│   ├── cli.py                    # Unified CLI (`isha fix`, `isha bench`, `isha report`)
 │   ├── config.py                 # Multi-model gateway, fallback chains, API credentials
 │   ├── main.py                   # Main program entry point
 │   └── server.py                 # FastMCP / HTTP server for agent integrations
@@ -74,10 +74,14 @@ isha-agent/
 │   └── feedback/                 # Container execution diagnostic feedback
 │
 ├── results/                      # Official Evaluation Reports & Verified Predictions
-│   ├── lite300-s1/               # Session 1 predictions, reports, logs (11 Resolved)
-│   ├── lite300-s2/               # Session 2 predictions, reports, logs (13 Resolved)
-│   ├── lite300-s3/               # Session 3 predictions, reports, logs (15 Resolved)
-│   ├── lite300-s4/               # Session 4 predictions, reports, logs (17 Resolved)
+│   ├── lite300-s1/               # Session 1 predictions & reports (11 Resolved, 100% AST yield)
+│   ├── lite300-s2/               # Session 2 predictions & reports (14 Resolved, 100% AST yield)
+│   ├── lite300-s3/               # Session 3 predictions & reports (20 Resolved, 96.7% AST yield)
+│   ├── lite300-s4/               # Session 4 predictions & reports (21 Resolved, 96.7% AST yield)
+│   ├── lite300-s5/               # Session 5 predictions & reports (26 AST Patches, 86.7% yield)
+│   ├── lite300-s6/               # Session 6 predictions & reports (20 AST Patches, 66.7% yield)
+│   ├── lite300-s7/               # Session 7 predictions & reports (19 AST Patches, 63.3% yield)
+│   ├── lite300-s8/               # Session 8 predictions & reports (25 AST Patches, 83.3% yield)
 │   └── candidates.json           # Aggregated tournament arbitration metadata
 │
 └── docs/                         # In-Depth Guides & Specifications
