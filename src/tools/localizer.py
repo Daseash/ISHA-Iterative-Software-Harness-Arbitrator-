@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import os
 import re
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -35,6 +36,9 @@ W_SEED = float(os.getenv("ISHA_LOC_W_SEED", "0.35"))
 W_BM25 = float(os.getenv("ISHA_LOC_W_BM25", "0.25"))
 W_VECTOR = float(os.getenv("ISHA_LOC_W_VECTOR", "0.12"))
 W_DEFS = float(os.getenv("ISHA_LOC_W_DEFS", "0.25"))
+# P2-01: caller-graph signal (files calling the suspect symbols). Additive bonus
+# so existing tuned weights are untouched; set 0 to disable.
+W_CALLERS = float(os.getenv("ISHA_LOC_W_CALLERS", "0.10"))
 # A file the model can actually edit is worth more than the prose about it.
 PRIOR_DOC = float(os.getenv("ISHA_LOC_PRIOR_DOC", "0.45"))
 PRIOR_TEST = float(os.getenv("ISHA_LOC_PRIOR_TEST", "0.7"))
@@ -262,7 +266,8 @@ def _find_symbol_span(repo_path: str, rel: str, names: list[str]) -> tuple[str, 
         score = 0
         if base.lower() in lowered:
             score = 3
-        elif any(base.lower().endswith(n) or n in base.lower() for n in lowered):
+        # P1-03: min stem len 3 (was 1-char match-everything via `n in base`).
+        elif any(len(n) >= 3 and (base.lower().endswith(n) or n in base.lower()) for n in lowered):
             score = 1
         if score <= 0:
             continue
@@ -332,6 +337,8 @@ def _vector_scores(query: str, chunks: list[dict]) -> dict[str, float]:
 
     qv = embed_text(query)
     best: dict[str, float] = {}
+    # P0-06: embed_text is now cached (indexer._EMBED_CACHE) so per-chunk
+    # vectors are computed once, not N times per query.
     for chunk in chunks:
         path = chunk.get("file_path", "")
         hay = f"{chunk.get('name', '')} {chunk.get('content', '')}"
@@ -355,8 +362,18 @@ def _seed_score(path: str, seeds: IssueSeeds) -> float:
         if norm.endswith(p) or p.endswith(norm) or p.split("/")[-1] == tail:
             return 0.7
     stem = tail[:-3] if tail.endswith(".py") else tail
+    # P0-06: word-boundary match only (was substring: 1-char stem matched everything).
     for sym in seeds.symbols + seeds.traceback_funcs:
-        if sym == stem or stem in sym or sym in stem:
+        if len(sym) < 3:
+            continue
+        if sym == stem:
+            return 0.45
+        # token-level match on snake_case parts, not raw substring
+        sym_parts = set(sym.lower().split("_"))
+        stem_parts = set(stem.lower().split("_"))
+        if sym_parts and sym_parts <= stem_parts or stem_parts and stem_parts <= sym_parts:
+            return 0.45
+        if re.search(rf"\b{re.escape(sym)}\b", stem) or re.search(rf"\b{re.escape(stem)}\b", sym):
             return 0.45
     for exc in seeds.exceptions:
         if exc.lower().replace("error", "") in stem.lower():
@@ -420,6 +437,44 @@ def _def_scores(chunks: list[dict], seeds: IssueSeeds) -> dict[str, float]:
     return out
 
 
+def _caller_scores(repo_path: str, seeds: IssueSeeds) -> dict[str, float]:
+    """P2-01: files that call the suspect symbols (caller-graph signal).
+
+    A file calling `subtract()` is often where the wrong-result symptom
+    surfaces; boosting callers pulls the fused ranking toward the fault's
+    neighborhood instead of pure text overlap. Best-effort: {} when the
+    graph cannot build (unknown repo layout).
+    """
+    wanted = {
+        s.lower() for s in seeds.symbols + seeds.traceback_funcs
+        if len(s) > 2
+    }
+    if not wanted or not repo_path:
+        return {}
+    try:
+        from src.tools.dependency_graph import DependencyGraph, resolve_repo_path
+
+        root = resolve_repo_path(repo_path)
+        if not root.exists():
+            return {}
+        dg = DependencyGraph(str(root))
+        file_hits: dict[str, float] = {}
+        for sym in wanted:
+            for caller in dg.reverse_call_graph.get(sym, set()):
+                f = str(caller).split("::", 1)[0].replace("\\", "/")
+                # caller qnames from other repos/graphs may be bare symbols
+                if "/" not in f and "." not in f:
+                    continue
+                f = _norm(f)
+                file_hits[f] = file_hits.get(f, 0.0) + 1.0
+        if not file_hits:
+            return {}
+        top = max(file_hits.values()) or 1.0
+        return {k: v / top for k, v in file_hits.items()}
+    except Exception:
+        return {}
+
+
 def localize(
     issue_text: str,
     repo_path: str,
@@ -463,8 +518,9 @@ def localize(
     bm25 = _bm25_scores(query_tokens, chunks)
     vec = _vector_scores(seeds.query, chunks)
     defs = _def_scores(chunks, seeds)
+    callers = _caller_scores(repo_path, seeds) if W_CALLERS > 0 else {}
 
-    files = set(seed_scores) | set(bm25) | set(vec) | set(defs)
+    files = set(seed_scores) | set(bm25) | set(vec) | set(defs) | set(callers)
     ranked: list[Candidate] = []
     for path in files:
         s = {
@@ -472,14 +528,18 @@ def localize(
             "bm25": bm25.get(path, 0.0),
             "vector": vec.get(path, 0.0),
             "defs": defs.get(path, 0.0),
+            "callers": callers.get(path, 0.0),
         }
         # Seed evidence dominates; retrieval breaks ties; the file that
-        # declares the symbol gets a bonus; prose and tests are discounted.
+        # declares the symbol gets a bonus; caller-graph adds neighborhood
+        # signal (P2-01, additive so tuned weights are untouched); prose
+        # and tests are discounted.
         score = (
             W_SEED * s["seed"]
             + W_BM25 * s["bm25"]
             + W_VECTOR * s["vector"]
             + W_DEFS * s["defs"]
+            + W_CALLERS * s["callers"]
         ) * _file_prior(path)
         if score <= 0.02:
             continue
@@ -546,13 +606,16 @@ def llm_rerank(
         sym_desc = f" (symbol: {c.symbol}, lines {c.line_start}-{c.line_end})" if c.symbol else ""
         cand_lines.append(f"{i}. {c.file}{sym_desc}")
 
+    # P1-03: head+tail (was [:1800] head-only, losing the failing traceback tail).
+    _issue_head, _issue_tail = issue_text[:1200], issue_text[-600:]
+    _issue_snip = _issue_head if len(issue_text) <= 1800 else _issue_head + "\n...[clipped]...\n" + _issue_tail
     prompt = (
         "You are an expert software engineer localizing a bug in a codebase.\n"
         "Given the bug report and candidate files retrieved from the codebase, "
         "re-rank the candidates so that the file most likely to contain the actual defect "
         "(root cause code that must be edited) appears first.\n"
         "Exclude tests, docs, and example files unless the bug specifically targets them.\n\n"
-        f"BUG REPORT:\n{issue_text[:1800]}\n\n"
+        f"BUG REPORT:\n{_issue_snip}\n\n"
         f"CANDIDATES:\n" + "\n".join(cand_lines) + "\n\n"
         "Return ONLY a JSON array of the candidate file paths in ranked order, from most likely to least likely:\n"
         '["path/to/file1.py", "path/to/file2.py", ...]'
@@ -565,6 +628,8 @@ def llm_rerank(
 
         reply = call_planner(prompt)
         if not reply:
+            # P1-03: log fallback (was silent).
+            print("[localizer] rerank empty reply — keeping retrieval order", file=sys.stderr)
             return candidates
 
         import json
@@ -594,9 +659,15 @@ def llm_rerank(
                 if c.file not in seen:
                     reranked.append(c)
             return reranked + rest
-    except Exception:
+    except Exception as exc:
+        # P1-03: log fallback (was silent).
+        print(f"[localizer] rerank failed ({exc.__class__.__name__}) — keeping retrieval order", file=sys.stderr)
         return candidates
+    print("[localizer] rerank unparseable — keeping retrieval order", file=sys.stderr)
     return candidates
+
+
+_TEST_FILES_CACHE: dict[str, list[str]] = {}
 
 
 def find_test_files(
@@ -609,18 +680,24 @@ def find_test_files(
     pinned down today.
     """
     root = Path(repo_path)
-    all_tests: list[str] = []
-    for path in root.rglob("*.py"):
-        if any(part in SKIP_DIRS for part in path.parts):
-            continue
-        try:
-            rel = str(path.relative_to(root)).replace("\\", "/")
-        except ValueError:
-            continue
-        name = path.name.lower()
-        parts = [p.lower() for p in rel.split("/")]
-        if name.startswith("test_") or name.endswith("_test.py") or "tests" in parts[:-1]:
-            all_tests.append(rel)
+    # P1-03: cache the repo file scan (was full rglob per call).
+    cache_key = str(root)
+    if cache_key in _TEST_FILES_CACHE:
+        all_tests = _TEST_FILES_CACHE[cache_key]
+    else:
+        all_tests = []
+        for path in root.rglob("*.py"):
+            if any(part in SKIP_DIRS for part in path.parts):
+                continue
+            try:
+                rel = str(path.relative_to(root)).replace("\\", "/")
+            except ValueError:
+                continue
+            name = path.name.lower()
+            parts = [p.lower() for p in rel.split("/")]
+            if name.startswith("test_") or name.endswith("_test.py") or "tests" in parts[:-1]:
+                all_tests.append(rel)
+        _TEST_FILES_CACHE[cache_key] = all_tests
 
     scored: list[tuple[int, str, str]] = []
     for target in target_files:

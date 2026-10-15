@@ -105,11 +105,19 @@ def vector(features: dict) -> list[float]:
 
 # ── Numeric helpers (numpy-free on purpose: no new runtime dependency) ─────
 def sigmoid(z: float) -> float:
+    """Logistic sigmoid 1/(1+exp(-z)); sigmoid(0) == 0.5 by definition."""
     if z >= 0:
         ez = math.exp(-min(z, 60.0))
-        return (1.0 - ez) / (1.0 + ez)
+        return 1.0 / (1.0 + ez)
     ez = math.exp(max(z, -60.0))
     return ez / (1.0 + ez)
+
+
+# Bounds for probability↔logit round-trips: keeps temperature scaling finite
+# when a raw score saturates at exactly 0.0 or 1.0.
+_PROB_LO = 1e-6
+_PROB_HI = 1.0 - 1e-6
+_TEMP_FLOOR = 0.05
 
 
 def _mean(xs: list[float]) -> float:
@@ -117,9 +125,12 @@ def _mean(xs: list[float]) -> float:
 
 
 def temperature_scale(probs: list[float], temperature: float) -> list[float]:
-    t = max(temperature, 1e-3)
-    return [sigmoid(math.log(max(p, EPS) / (1 - max(min(p, 1 - EPS), EPS))) / t)
-            for p in probs]
+    t = max(temperature, _TEMP_FLOOR)
+    out = []
+    for p in probs:
+        pc = min(max(p, _PROB_LO), _PROB_HI)
+        out.append(sigmoid(math.log(pc / (1 - pc)) / t))
+    return out
 
 
 def ece(probs: list[float], labels: list[int], bins: int = 10) -> float:
@@ -378,13 +389,16 @@ def combine(features: dict, model: dict | None = None) -> dict:
     bias: float = float(active.get("bias", 0.0))
     temperature: float = float(active.get("temperature", 1.0))
     raw = sigmoid(sum(w * v for w, v in zip(weights, row)) + bias)
-    score = sigmoid(math.log(max(raw, EPS) / (1 - max(raw, EPS))) / max(temperature, 1e-3))
+    raw_c = min(max(raw, _PROB_LO), _PROB_HI)
+    score = sigmoid(math.log(raw_c / (1 - raw_c)) / max(temperature, _TEMP_FLOOR))
     return {
         "score": round(score, 4),
         "raw": round(raw, 4),
         "mode": active.get("mode", "hand_weighted"),
         "threshold": active.get("threshold", 0.5),
+        "threshold_balanced": active.get("threshold_balanced", active.get("threshold", 0.5)),
+        "threshold_auto_approve": active.get("threshold_auto_approve", active.get("threshold", 0.5)),
         "temperature": temperature,
-        "fitted_n": active.get("n_labels", 0),
+        "fitted_n": active.get("n_total", active.get("n_train", active.get("n_labels", 0))),
         "features": dict(features),
     }

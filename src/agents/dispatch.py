@@ -5,9 +5,12 @@ Uses LangGraph Send() to spawn independent agents, each with its own
 git worktree and patching strategy.
 """
 
+from copy import deepcopy
+
 from src.agents.state import AgentState
 
-STRATEGIES = ["minimal_diff", "call_site_aware", "alt_test_phrasing"]
+# P0-10: must match candidates.STRATEGY_VARIANTS (was alt_test_phrasing = generic prompt).
+STRATEGIES = ["minimal_diff", "call_site_aware", "root_cause_first"]
 
 
 def dispatch_agents(state: AgentState):
@@ -16,16 +19,21 @@ def dispatch_agents(state: AgentState):
 
     from src.tools.worktree_manager import create_worktree
 
-    base = state.model_dump() if hasattr(state, "model_dump") else dict(state)
+    base = deepcopy(state.model_dump() if hasattr(state, "model_dump") else dict(state))
+    iid = (base.get("instance_id") or "local").replace("/", "_")[:40]
+    retry = base.get("retry_count", 0)
     sends = []
     for i, strategy in enumerate(STRATEGIES, start=1):
+        # P0-10: unique worktree per (instance, branch, retry) — was agent-{i} (collides).
+        tag = f"agent-{iid}-{i}-r{retry}"
         try:
-            worktree = create_worktree(state.repo_path, f"agent-{i}")
+            worktree = create_worktree(state.repo_path, tag)
         except Exception as exc:
             # Fall back to a sandbox copy so fan-out never dies.
+            # P0-08: unified prefix (cleanup matches isha-sandbox-*).
             from src.tools.sandbox import make_sandbox
 
-            worktree = make_sandbox(state.repo_path, prefix=f"isha-agent-{i}-")
+            worktree = make_sandbox(state.repo_path, prefix=f"isha-sandbox-{iid}-{i}-")
             _ = exc
 
         payload = {
@@ -38,6 +46,16 @@ def dispatch_agents(state: AgentState):
             "critic_verdict": None,
             "critic_score": 0.0,
             "laya_scores": {},
+            # P0-10: fresh branch state — stale plan/escalation forced approval.
+            # Deepcopied above so nested lists never cross-mutate between branches.
+            "plan": base.get("plan", ""),
+            "escalation": "",
+            "regression_test": base.get("regression_test", ""),
+            "blast_radius": dict(base.get("blast_radius") or {}),
+            "localization": list(base.get("localization") or []),
+            "context_notes": list(base.get("context_notes") or []),
+            "candidates": [],
+            "model_log": list(base.get("model_log") or []),
         }
         # Distinct node names per branch keep the fan-out parallel — LangGraph
         # dedupes pull tasks by node name, so shared names would serialise.

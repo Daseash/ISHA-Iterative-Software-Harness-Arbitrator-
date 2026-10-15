@@ -68,7 +68,9 @@ def grep_codebase(
     max_matches: int = 15,
 ) -> List[Dict[str, str]]:
     """Search for relevant terms, function names, or exceptions in the codebase."""
-    root = Path(repo_path)
+    from src.tools.dependency_graph import resolve_repo_path
+
+    root = resolve_repo_path(repo_path)
     if not root.exists():
         return []
 
@@ -102,7 +104,9 @@ def grep_codebase(
 
 def load_suspect_files(repo_path: str, file_rel_paths: List[str], max_lines: int = 300) -> Dict[str, str]:
     """Read full contents of high-priority suspect files for deep inspection."""
-    root = Path(repo_path)
+    from src.tools.dependency_graph import resolve_repo_path
+
+    root = resolve_repo_path(repo_path)
     results = {}
     for rel in file_rel_paths[:3]:  # Top 3 files
         full_path = root / rel

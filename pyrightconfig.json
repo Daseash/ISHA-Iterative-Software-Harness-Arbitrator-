@@ -1,11 +1,14 @@
 {
   "include": [
     "src",
-    "tests"
+    "tests",
+    "scripts"
   ],
   "extraPaths": [
     ".",
     "src",
+    "scripts",
     "tests/dummy_repo"
-  ]
+  ],
+  "typeCheckingMode": "basic"
 }

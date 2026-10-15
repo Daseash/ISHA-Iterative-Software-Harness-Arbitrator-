@@ -4,12 +4,15 @@ ISHA Agent State — Pydantic model for the agentic loop state.
 Every node in the LangGraph takes this state in and returns an updated copy.
 LAYA scores, worktree paths, and strategy info are carried through the graph.
 
-Every field carries a "last write wins" reducer so the multi-agent graph can
-update the same keys concurrently from parallel branches without LangGraph
-raising InvalidUpdateError.
+Scalar / dict fields carry a "last write wins" reducer. Append-only list
+fields (localization, context_notes, candidates, consistency_warnings,
+model_log) carry an additive reducer so parallel Send() branches concatenate
+instead of dropping all but the last writer (P0-04 / AR-1).
 """
 
 from typing import Annotated, Optional
+
+import operator
 
 from pydantic import BaseModel, Field
 
@@ -31,8 +34,8 @@ class AgentState(BaseModel):
     investigation_report: Annotated[str, _last] = Field(default="", description="Diagnostic report from pre-planning investigation")
 
     # ── Localization (Phase 2) ─────────────────────────────────────────────
-    localization: Annotated[list, _last] = Field(default_factory=list, description="Ranked file/symbol/line candidates for the bug")
-    context_notes: Annotated[list, _last] = Field(default_factory=list, description="Structured notes from gates/verification for the coder")
+    localization: Annotated[list, operator.add] = Field(default_factory=list, description="Ranked file/symbol/line candidates for the bug")
+    context_notes: Annotated[list, operator.add] = Field(default_factory=list, description="Structured notes from gates/verification for the coder")
 
     # ── Hierarchical Decomposition ──────────────────────────────────────────
     sub_issues: Annotated[list, _last] = Field(default_factory=list, description="Decomposed list of atomic sub-issues")
@@ -59,12 +62,12 @@ class AgentState(BaseModel):
     instance_id: Annotated[str, _last] = Field(default="", description="SWE-bench instance id (benchmark runs only)")
 
     # ── Candidates (Phase 4/5/6) ────────────────────────────────────────────
-    candidates: Annotated[list, _last] = Field(default_factory=list, description="All gated candidates for this issue, with gate/verify/LAYA evidence")
+    candidates: Annotated[list, operator.add] = Field(default_factory=list, description="All gated candidates for this issue, with gate/verify/LAYA evidence")
     selected_candidate: Annotated[dict, _last] = Field(default_factory=dict, description="Why this candidate won: tier, score, verification")
     test_output: Annotated[str, _last] = Field(default="", description="Pytest stdout+stderr from sandbox")
     full_test_output: Annotated[str, _last] = Field(default="", description="Full repo test suite output to catch collateral regressions")
     retry_count: Annotated[int, _last] = Field(default=0, description="Number of self-correction retries")
-    consistency_warnings: Annotated[list, _last] = Field(default_factory=list, description="Cross-file signature & call-site warnings")
+    consistency_warnings: Annotated[list, operator.add] = Field(default_factory=list, description="Cross-file signature & call-site warnings")
 
     # ── Review (LAYA-powered) ───────────────────────────────────────────────
     critic_verdict: Annotated[Optional[str], _last] = Field(default=None, description="approved | flagged | low_quality")
@@ -80,7 +83,8 @@ class AgentState(BaseModel):
     laya_scores: Annotated[dict, _last] = Field(default_factory=dict, description="Detailed LAYA scoring breakdown")
 
     # ── Model Usage Audit Log ───────────────────────────────────────────────
-    model_log: Annotated[list, _last] = Field(default_factory=list, description="Which model handled each pipeline step (role, model, position)")
+    model_log: Annotated[list, operator.add] = Field(default_factory=list, description="Which model handled each pipeline step (role, model, position)")
+    model_name: Annotated[str, _last] = Field(default="", description="Coder model id for the winning patch")
 
 
 def coerce_state(obj) -> AgentState:
@@ -89,4 +93,4 @@ def coerce_state(obj) -> AgentState:
         return obj
     if isinstance(obj, dict):
         return AgentState(**obj)
-    return obj
+    raise TypeError(f"coerce_state: expected AgentState or dict, got {type(obj).__name__}")

@@ -1,8 +1,18 @@
+import argparse
 import json, re, sys, time
+from pathlib import Path
+
+# P1-10: portable (was hardcoded C:\... + backslash paths, Windows-only).
+ap = argparse.ArgumentParser(description="Time localizer pipeline stages")
+ap.add_argument("--repo", default="swebench_checkouts/sphinx-doc__sphinx-10451")
+ap.add_argument("--instance", default="sphinx-doc__sphinx-10451")
+ap.add_argument("--data", default="data/swebench_lite.json")
+args = ap.parse_args()
+
 sys.path.insert(0, ".")
-repo = r"C:\Users\Eashwar\ISHA\isha-agent\swebench_checkouts\sphinx-doc__sphinx-10451"
-recs = json.load(open(r"data\swebench_lite.json", encoding="utf-8"))
-r = [x for x in recs if x["instance_id"] == "sphinx-doc__sphinx-10451"][0]
+repo = str(Path(args.repo))
+recs = json.load(open(Path(args.data), encoding="utf-8"))
+r = [x for x in recs if x["instance_id"] == args.instance][0]
 
 from src.tools.ast_mapper import ASTMapper
 from src.ingestion.parser import RepoParser

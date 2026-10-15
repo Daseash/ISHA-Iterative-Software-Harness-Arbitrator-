@@ -128,12 +128,27 @@ def _normalise_line(line: str) -> str:
 
 
 def _strip_comments(lines: list[str]) -> list[str]:
-    """Drop pure-comment / blank content, using the text after ``#``."""
+    """Drop pure-comment / blank content, using the text after ``#``.
+
+    P1-07: tokenize-aware (was ``split("#")`` which broke strings like "a#b").
+    """
+    import io
+    import tokenize
+
     out = []
     for line in lines:
-        stripped = line.split("#", 1)[0]
-        if stripped.strip():
-            out.append(stripped)
+        try:
+            toks = [t for t in tokenize.generate_tokens(io.StringIO(line).readline)
+                    if t.type != tokenize.COMMENT]
+            code = tokenize.untokenize(toks)
+            if isinstance(code, bytes):
+                code = code.decode("utf-8", "replace")
+            if code.strip():
+                out.append(code)
+        except Exception:
+            stripped = line.split("#", 1)[0]
+            if stripped.strip():
+                out.append(stripped)
     return out
 
 

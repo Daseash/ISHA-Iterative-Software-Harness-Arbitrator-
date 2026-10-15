@@ -7,5 +7,6 @@ font = "sans serif"
 
 [server]
 headless = true
-enableCORS = false
-enableXsrfProtection = false
+# P1-10: hardened defaults (was CORS/XSRF disabled).
+enableCORS = true
+enableXsrfProtection = true

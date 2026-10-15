@@ -72,13 +72,24 @@ def _compact_issue(text: str) -> str:
 
 
 def _compact_diff(patch: str) -> str:
-    """Keep only the changed lines — that is what the judge scores."""
-    changed = [
-        line
-        for line in (patch or "").splitlines()
-        if line[:1] in "+-" and not line.startswith(("+++", "---"))
-    ]
-    text = "\n".join(changed) if changed else (patch or "")
+    """Changed lines plus hunk headers and ±2 context lines (was +- only).
+
+    Pure +- strips the surrounding code the judge needs to tell a correct
+    one-line guard from a misplaced one. Headers (@@/diff/---/+++) locate the
+    change; context lines show what it touches.
+    """
+    lines = (patch or "").splitlines()
+    keep: list[str] = []
+    for i, line in enumerate(lines):
+        if line.startswith(("diff --git", "--- ", "+++ ", "@@")):
+            keep.append(line)
+        elif line[:1] in "+-" and not line.startswith(("+++", "---")):
+            lo = max(0, i - 2)
+            for ctx in lines[lo:i]:
+                if ctx not in keep and not ctx.startswith(("+", "-")):
+                    keep.append(ctx)
+            keep.append(line)
+    text = "\n".join(keep) if keep else (patch or "")
     return text[:_MAX_DIFF]
 
 
@@ -87,7 +98,17 @@ class LayaJudge:
 
     def __init__(self, device: str = "cpu"):
         self.device = device
-        self.agent = laya.load("convaiinnovations/laya", device=device)
+        # P1-04: try local laya-src/ checkout first (offline/reproducible),
+        # then the Hub id. Any failure raises -> callers record judge-unavailable.
+        last_exc: Exception | None = None
+        for model_id in ("laya-src/laya", "convaiinnovations/laya"):
+            try:
+                self.agent = laya.load(model_id, device=device)
+                self.model_id = model_id
+                return
+            except Exception as exc:
+                last_exc = exc
+        raise RuntimeError(f"LAYA judge unavailable (tried local + hub): {last_exc}")
 
     def _predict(self, state, questions) -> dict:
         """Serialized inference — parallel agent branches share one model."""
@@ -108,6 +129,11 @@ class LayaJudge:
         quality = answers["fix_quality"]["score"]
         matches = answers["matches_issue"]["noul"]
         safe = answers["safe_to_apply"]["noul"]
+        # composite = 0.5*quality01 + 0.25*matches + 0.25*safe, where quality01 =
+        # quality/2 (LAYA score type returns 0/1/2). Weights: fix quality dominates;
+        # relevance and safety are equal gates. Thresholds in check_dangers are
+        # asymmetric on purpose: secrets>0.5 (fail-closed on leaks) vs drift>0.7
+        # (tolerate small refactors inside a fix).
         return {
             "fix_quality": quality,
             "matches_issue": matches,

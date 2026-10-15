@@ -39,7 +39,7 @@ source .venv/bin/activate && isha doctor   # Linux/macOS
 ## 2. Plain pip (no scripts)
 
 ```bash
-pip install "dist/isha_fix-0.2.0-py3-none-any.whl"   # wheel
+pip install "dist/isha-0.3.0-py3-none-any.whl"   # wheel
 # or
 pip install .                                          # source tree
 ```

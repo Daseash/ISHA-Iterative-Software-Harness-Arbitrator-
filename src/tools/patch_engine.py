@@ -70,6 +70,9 @@ def apply_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
             ok, msg2 = _run(["git", "apply", "--whitespace=nowarn", "-"], str(root), diff)
             msg = f"{msg}\n{msg2}"
         if ok:
+            # P0-07: --3way can succeed with conflict markers left in files.
+            if _files_have_markers(root, diff):
+                return False, "git apply succeeded with conflict markers — rejecting"
             return True, "Applied via git apply --3way"
 
     # 2) Manual unified-diff hunk application with line-ending preservation
@@ -107,8 +110,7 @@ def validate_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
     if not root.is_dir() or not (root / ".git").exists():
         return True, "Not a git repo, skipping git apply --check"
     diff = _normalize(diff_text)
-    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn",
-                    "--ignore-whitespace", "-"], str(root), diff)
+    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn", "-"], str(root), diff)
     return ok, msg
 
 
@@ -248,6 +250,19 @@ def _apply_manual(root: Path, diff: str) -> tuple[bool, str]:
         if not target.exists():
             if record["old"] and (root / record["old"]).exists():
                 target = root / record["old"]
+            elif (record["old"] or "") in ("/dev/null", "dev/null", "a/dev/null") or record["old"] is None:
+                # P0-07: new-file diff — create it from added lines.
+                try:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    content = "".join(
+                        ln[1:] + "\n" for hunk in record["hunks"] for ln in hunk[1:] if ln.startswith("+") and not ln.startswith("+++")
+                    )
+                    target.write_text(content, encoding="utf-8")
+                    applied.append(rel)
+                    continue
+                except Exception as exc:
+                    errors.append(f"Cannot create {rel}: {exc}")
+                    continue
             else:
                 errors.append(f"Missing file: {rel}")
                 continue
@@ -273,8 +288,10 @@ def _apply_manual(root: Path, diff: str) -> tuple[bool, str]:
             applied.append(rel)
 
     if applied:
-        suffix = f"; warnings: {'; '.join(errors)}" if errors else ""
-        return True, f"Applied patch to: {', '.join(applied)}{suffix}"
+        # P0-07: partial apply (some files ok, some failed) is FAILURE, not success.
+        if errors:
+            return False, f"Partial apply: {', '.join(applied)} ok; failures: {'; '.join(errors)}"
+        return True, f"Applied patch to: {', '.join(applied)}"
     return False, "; ".join(errors) or "No hunks applied"
 
 
@@ -286,9 +303,10 @@ def _apply_search_replace(root: Path, text: str) -> tuple[bool, str]:
     i = 0
     while i < len(lines):
         line = lines[i].strip()
-        file_m = re.match(r"^(?:###?\s*)?(?:File:\s*|Path:\s*|--- a/|\+\+\+ b/)?([a-zA-Z0-9_\-./\\]+\.[a-zA-Z0-9_]+)", line)
+        # P0-07: allow spaces in file paths (was [a-zA-Z0-9_-./\\]+, missed "my file.py").
+        file_m = re.match(r"^(?:###?\s*)?(?:File:\s*|Path:\s*|--- a/|\+\+\+ b/)?([a-zA-Z0-9_\-./\\ ]+\.[a-zA-Z0-9_]+)", line)
         if file_m and not line.startswith("<<<<"):
-            cand_p = file_m.group(1).replace("\\", "/")
+            cand_p = file_m.group(1).strip().replace("\\", "/")
             if (root / cand_p).is_file():
                 current_file = cand_p
 
@@ -559,8 +577,31 @@ def _locate_near(lines: list, content: list, center: int, span: int = 120) -> in
     return None
 
 
+def _files_have_markers(root: Path, diff: str) -> bool:
+    """True if any file touched by the diff now contains conflict markers."""
+    try:
+        for record in _split_files(diff):
+            rel = record["new"] or record["old"]
+            if not rel or rel in ("/dev/null", "dev/null"):
+                continue
+            target = root / rel
+            if not target.is_file():
+                continue
+            try:
+                text = target.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            if "<<<<<<< " in text or ">>>>>>> " in text:
+                return True
+    except Exception:
+        return False
+    return False
+
+
 _SIMILAR_AVG = 0.85
 _SIMILAR_LINE = 0.75
+# P0-07: cap fuzzy scan to ±200 lines around the hunk start (was whole-file O(N*M)).
+_SIMILAR_WINDOW = 200
 
 
 def _locate_similar(lines: list, old_block: list, start: int) -> int | None:
@@ -584,11 +625,18 @@ def _locate_similar(lines: list, old_block: list, start: int) -> int | None:
     want = [ln.rstrip("\r\n") for ln in old_block]
     if not any(w.strip() for w in want):
         return None
+    # P0-07: require an anchor — first or last non-blank line must match closely.
+    anchors = [w for w in (want[0], want[-1]) if w.strip()]
     file_norm = [ln.rstrip("\r\n") for ln in lines]
+
+    lo = max(0, start - _SIMILAR_WINDOW)
+    hi = min(len(file_norm) - n, start + _SIMILAR_WINDOW)
+    if hi < lo:
+        lo, hi = 0, max(0, len(file_norm) - n)
 
     best_idx: int | None = None
     best_score = 0.0
-    for i in range(len(file_norm) - n + 1):
+    for i in range(lo, hi + 1):
         window = file_norm[i : i + n]
         non_blank = 0
         good = 0
@@ -605,6 +653,11 @@ def _locate_similar(lines: list, old_block: list, start: int) -> int | None:
             continue
         score = total / n
         if score > best_score and score >= _SIMILAR_AVG and good >= max(1, non_blank // 2):
+            # Anchor: first or last line must be a near-exact hit, else misplacement.
+            first_ok = not anchors or difflib.SequenceMatcher(None, want[0], window[0], autojunk=False).ratio() >= 0.9 or want[0].strip() == window[0].strip()
+            last_ok = len(want) < 2 or difflib.SequenceMatcher(None, want[-1], window[-1], autojunk=False).ratio() >= 0.9 or want[-1].strip() == window[-1].strip()
+            if not (first_ok or last_ok):
+                continue
             best_score = score
             best_idx = i
     return best_idx

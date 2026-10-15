@@ -4,8 +4,7 @@
       "command": "python",
       "args": ["-m", "src.mcp_server"],
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "ISHA_SANDBOX_MODE": "docker"
+        "PYTHONIOENCODING": "utf-8"
       }
     }
   }

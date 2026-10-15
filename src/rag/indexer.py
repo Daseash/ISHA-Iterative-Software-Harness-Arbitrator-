@@ -1,10 +1,10 @@
 """
 ISHA Qdrant Indexer — Vectorizes repo chunks for hybrid retrieval.
 
-Uses a deterministic, dependency-free 384-dim hashing embedder so the
-pipeline works offline with no GPU or model download. When a Qdrant
-server is reachable (Docker or Qdrant Cloud) the vectors are pushed
-there; otherwise chunks stay in a local store the retriever can read.
+Primary: `all-MiniLM-L6-v2` (384d, semantic) when `ISHA_EMBEDDER=minilm` and
+`sentence-transformers` is installed. Fallback: deterministic dependency-free
+384-dim hashing embedder (offline, no GPU/model download). Same VECTOR_SIZE so
+no migration is needed (P0-06).
 """
 
 import hashlib
@@ -18,22 +18,58 @@ DEFAULT_COLLECTION = "isha_codebase"
 
 _TOKEN_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*|\d+")
 
+# P0-06: cache chunk/query vectors (was recomputed per-chunk in localizer).
+_EMBED_CACHE: dict[tuple[str, int], list] = {}
+_MINILM_MODEL = None
+_MINILM_FAILED = False
+
+
+def _minilm_embed(text: str, dim: int) -> list | None:
+    """Return MiniLM vector or None (fallback to hashing). Lazy, cached model."""
+    global _MINILM_MODEL, _MINILM_FAILED
+    if _MINILM_FAILED or dim != VECTOR_SIZE:
+        return None
+    if os.getenv("ISHA_EMBEDDER", "hashing").lower() != "minilm":
+        return None
+    try:
+        if _MINILM_MODEL is None:
+            from sentence_transformers import SentenceTransformer
+
+            _MINILM_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+        vec = _MINILM_MODEL.encode(text or "", normalize_embeddings=True)
+        return [float(x) for x in vec[:dim]]
+    except Exception:
+        _MINILM_FAILED = True
+        return None
+
 
 def embed_text(text: str, dim: int = VECTOR_SIZE) -> list:
-    """Deterministic bag-of-tokens hashing embedder (unit-normalized)."""
+    """Semantic (MiniLM when enabled) else deterministic hashing embedder."""
+    key = (text or "", dim)
+    hit = _EMBED_CACHE.get(key)
+    if hit is not None:
+        return list(hit)
+    mini = _minilm_embed(text or "", dim)
+    if mini is not None:
+        _EMBED_CACHE[key] = mini
+        return list(mini)
     vec = [0.0] * dim
-    tokens = _TOKEN_RE.findall(text.lower())
-    if not tokens:
-        return vec
-    for token, count in Counter(tokens).items():
-        digest = hashlib.sha1(token.encode("utf-8")).digest()
-        idx = int.from_bytes(digest[:4], "little") % dim
-        sign = 1.0 if digest[4] % 2 == 0 else -1.0
-        vec[idx] += sign * (1.0 + math.log(count))
-    norm = math.sqrt(sum(v * v for v in vec))
-    if norm:
-        vec = [v / norm for v in vec]
-    return vec
+    tokens = _TOKEN_RE.findall((text or "").lower())
+    if tokens:
+        for token, count in Counter(tokens).items():
+            digest = hashlib.sha1(token.encode("utf-8")).digest()
+            idx = int.from_bytes(digest[:4], "little") % dim
+            sign = 1.0 if digest[4] % 2 == 0 else -1.0
+            vec[idx] += sign * (1.0 + math.log(count))
+        norm = math.sqrt(sum(v * v for v in vec))
+        if norm:
+            vec = [v / norm for v in vec]
+    _EMBED_CACHE[key] = vec
+    return list(vec)
+
+
+def clear_embed_cache() -> None:
+    _EMBED_CACHE.clear()
 
 
 def cosine(a: list, b: list) -> float:

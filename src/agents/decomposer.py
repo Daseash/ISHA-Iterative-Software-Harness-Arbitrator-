@@ -31,25 +31,39 @@ class SubIssue(BaseModel):
 
 def _parse_sub_issues_json(raw_text: str) -> List[SubIssue]:
     """Extract and validate JSON list of sub-issues from model output."""
-    match = re.search(r"\[.*\]", raw_text, re.DOTALL)
-    if match:
+    # P1-02: non-greedy (was greedy \[.*\] swallowing trailing text into invalid JSON).
+    match = re.search(r"\[.*?\]", raw_text, re.DOTALL)
+    candidates = [match.group(0)] if match else []
+    # Also try largest valid array as fallback
+    greedy = re.search(r"\[.*\]", raw_text, re.DOTALL)
+    if greedy and (not candidates or greedy.group(0) != candidates[0]):
+        candidates.append(greedy.group(0))
+    for raw in candidates:
         try:
-            data = json.loads(match.group(0))
-            sub_issues = []
-            for item in data:
+            data = json.loads(raw)
+        except Exception:
+            continue
+        if not isinstance(data, list):
+            continue
+        sub_issues = []
+        for item in data:
+            # P1-02: per-item validation (was one bad item discarding all).
+            try:
+                if not isinstance(item, dict):
+                    continue
                 sub_issues.append(
                     SubIssue(
                         id=int(item.get("id", len(sub_issues) + 1)),
                         title=str(item.get("title", f"Sub-issue {len(sub_issues) + 1}")),
                         description=str(item.get("description", "")),
-                        target_files=list(item.get("target_files", [])),
+                        target_files=list(item.get("target_files", []) or []),
                         status="pending",
                     )
                 )
-            if sub_issues:
-                return sub_issues
-        except Exception:
-            pass
+            except Exception:
+                continue
+        if sub_issues:
+            return sub_issues[:3]
     return []
 
 
@@ -59,10 +73,10 @@ def decompose_issue(
     investigation_report: str = "",
 ) -> List[SubIssue]:
     """Break down an issue into sequential sub-issues if needed."""
-    # SWE-bench instances are single, self-contained bugs; spending a call to
-    # be told "this is one issue" only burns a rate-limit window. The single
-    # sub-issue path below is byte-for-byte what a 1-item answer produces.
-    if not LLM_ENABLED or os.getenv("ISHA_BENCH_MODE", "0") == "1":
+    # SWE-bench instances are usually single bugs; skip the LLM call in bench
+    # unless explicitly enabled (P1-02: ISHA_BENCH_DECOMPOSE=1 allows up to 3).
+    if not LLM_ENABLED or (os.getenv("ISHA_BENCH_MODE", "0") == "1"
+                           and os.getenv("ISHA_BENCH_DECOMPOSE", "0") != "1"):
         # Offline / benchmark fallback: single atomic sub-issue
         return [
             SubIssue(

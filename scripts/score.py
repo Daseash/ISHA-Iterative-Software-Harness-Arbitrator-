@@ -35,21 +35,50 @@ def load_json_safe(path: Path) -> dict:
 
 def scan_session_resolutions(session_id: str) -> set:
     resolved = set()
-    patterns = [
-        str(RESULTS_DIR / session_id / "**" / "report.json"),
-        str(RESULTS_DIR / f"{session_id}-r2" / "**" / "report.json"),
-    ]
-    for pattern in patterns:
-        for r_file in glob.glob(pattern, recursive=True):
-            try:
-                with open(r_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                    for k, v in data.items():
-                        if isinstance(v, dict) and v.get("resolved") is True:
-                            resolved.add(k)
-            except Exception:
-                pass
+    # P0-02: scan base + ALL run-id suffixes (-r2..r5, -rescue, -v2, -rescue-v4, ...)
+    # via session* glob, dedup by instance id (set keeps max resolved).
+    if not RESULTS_DIR.is_dir():
+        return resolved
+    for run_dir in sorted(RESULTS_DIR.glob(f"{session_id}*")):
+        if not run_dir.is_dir():
+            continue
+        for name in ("report.json", "harness_report.json"):
+            for r_file in run_dir.rglob(name):
+                try:
+                    with open(r_file, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        if not isinstance(data, dict):
+                            continue
+                        for k, v in data.items():
+                            if isinstance(v, dict) and v.get("resolved") is True:
+                                resolved.add(k)
+                except Exception:
+                    pass
     return resolved
+
+
+def load_combiner_metrics() -> dict:
+    """Read live ECE/Brier/coverage from data/laya_combiner.json (no hardcodes)."""
+    combiner_path = AGENT_DIR / "data" / "laya_combiner.json"
+    info = load_json_safe(combiner_path)
+    if not info:
+        return {"label": "combiner missing", "ece_raw": "?", "ece_scaled": "?", "brier": "?", "coverage": "?"}
+    ece_raw = info.get("ece_raw", info.get("val_ece_raw", "?"))
+    ece_scaled = info.get("ece_scaled", info.get("val_ece_scaled", "?"))
+    brier = info.get("brier_raw", info.get("val_brier_raw", "?"))
+    cov = info.get("auto_approve_coverage", "?")
+    try:
+        cov_s = f"{float(cov)*100:.1f}%" if isinstance(cov, (int, float)) else str(cov)
+    except Exception:
+        cov_s = str(cov)
+    return {"label": "live", "ece_raw": ece_raw, "ece_scaled": ece_scaled, "brier": brier, "coverage": cov_s}
+
+
+def count_apply_failures() -> int:
+    d = RESULTS_DIR / "apply_failures"
+    if not d.is_dir():
+        return 0
+    return len(list(d.glob("*.json")))
 
 
 def main():
@@ -72,13 +101,16 @@ def main():
         count = len(res_set)
         total_resolved_lite += count
         rate = (count / quota) * 100
-        # Check if report exists
-        has_report = any(Path(p).exists() for p in [
-            RESULTS_DIR / sid / "report.json",
-            RESULTS_DIR / sid / "harness_report.json",
-            RESULTS_DIR / f"{sid}-r2" / "report.json",
-            RESULTS_DIR / f"{sid}-r2" / "harness_report.json",
-        ]) or count > 0
+        # Check if report exists — P0-02: any suffix dir + either report name.
+        has_report = count > 0
+        if not has_report and RESULTS_DIR.is_dir():
+            for run_dir in RESULTS_DIR.glob(f"{sid}*"):
+                if run_dir.is_dir() and (
+                    (run_dir / "report.json").exists()
+                    or (run_dir / "harness_report.json").exists()
+                ):
+                    has_report = True
+                    break
         status_suffix = "" if has_report else " (eval pending)"
         print(f"  {name:<14} | {count:>2} / {quota} resolved{status_suffix:<17} | {rate:>5.1f}%")
 
@@ -86,10 +118,12 @@ def main():
     print("  " + "-" * 62)
     print(f"  {'COMBINED (S1-S10)':<14} | {total_resolved_lite:>2} / {total_quota_lite} resolved    | {lite_rate:>5.1f}% 🌟")
 
+    m = load_combiner_metrics()
+    n_fail = count_apply_failures()
     print("\n[OPERATIONAL METRICS]")
-    print(f"  * LAYA Calibrated Gate (ECE) : ECE = 0.0010 (100.0% precision @ tau=0.50)")
-    print(f"  * Inference Cost             : $0.00 / Task (Groq / Gemini Free Tier)")
-    print(f"  * AST Compilation Hygiene    : 0.0% Abort Rate across candidate worktrees")
+    print(f"  * LAYA Calibrated Gate (ECE) : ECE raw {m['ece_raw']} / scaled {m['ece_scaled']} | Brier {m['brier']} | coverage {m['coverage']} [{m['label']}: data/laya_combiner.json]")
+    print(f"  * Inference Cost             : $0.00 / Task (Groq / Gemini Free Tier) [static estimate]")
+    print(f"  * AST Compilation Hygiene    : {n_fail} apply-failure records in results/apply_failures/")
 
     print("\n" + "=" * 76)
     print("  Official results persisted in results/ and live at isha-ai.vercel.app")

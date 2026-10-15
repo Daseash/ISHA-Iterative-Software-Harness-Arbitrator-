@@ -9,8 +9,8 @@ here.
 
 | Image | Tags | Purpose |
 |---|---|---|
-| `isha` | `latest`, `0.2.0` (pyproject version) | The agent itself: CLI (`isha fix`, `isha bench`, `isha doctor`). |
-| `isha-sandbox` | `latest`, `0.2.0` | Pytest runner for `ISHA_SANDBOX_MODE=docker` verification. |
+| `isha` | `latest`, `0.3.0` (pyproject version) | The agent itself: CLI (`isha fix`, `isha bench`, `isha doctor`). |
+| `isha-sandbox` | `latest`, `0.3.0` | Pytest runner for `ISHA_SANDBOX_MODE=docker` verification. |
 
 Labels on every build: `org.isha.image` (`agent` / `sandbox`) and
 `org.isha.version`. Never ship an untagged image — the maintain script

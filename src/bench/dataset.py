@@ -43,9 +43,10 @@ def load_records(refresh: bool = False) -> list[dict]:
     ds = load_dataset(DATASET_NAME, split=SPLIT)
     rows = [{k: ds[i][k] for k in ds[i].keys()} for i in range(len(ds))]
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    CACHE_PATH.write_text(
-        json.dumps(rows, ensure_ascii=False), encoding="utf-8"
-    )
+    # P1-09: atomic cache write (was direct write, corrupt on crash).
+    tmp = CACHE_PATH.with_suffix(".tmp")
+    tmp.write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(CACHE_PATH)
     return rows
 
 
@@ -63,17 +64,22 @@ def select_slice(records: list[dict], limit: int, mode: str = "head") -> list[di
                 inside each repo (more representative, still deterministic)
     ids         honour an explicit id list passed via ISHA_BENCH_IDS
     """
-    if limit <= 0 or limit >= len(records):
-        return list(records)
+    # P1-09: --limit 0 means zero instances (was "all 300" via `limit <= 0`).
+    if limit <= 0:
+        return []
 
     if mode in ("dev", "final", "train"):
         splits_file = DATA_DIR / "splits.json"
-        if splits_file.is_file():
-            splits = json.loads(splits_file.read_text(encoding="utf-8"))
-            wanted = splits.get(mode, [])
-            by_id = {r["instance_id"]: r for r in records}
-            res = [by_id[i] for i in wanted if i in by_id]
-            return res[:limit] if limit > 0 else res
+        # P1-09: loud error on missing splits file (was silent fall-through to head).
+        if not splits_file.is_file():
+            raise FileNotFoundError(
+                f"Slice mode {mode!r} needs {splits_file} — refusing to run the wrong slice"
+            )
+        splits = json.loads(splits_file.read_text(encoding="utf-8"))
+        wanted = splits.get(mode, [])
+        by_id = {r["instance_id"]: r for r in records}
+        res = [by_id[i] for i in wanted if i in by_id]
+        return res[:limit] if limit > 0 else res
 
     if mode == "ids":
         wanted = [i.strip() for i in os.getenv("ISHA_BENCH_IDS", "").split(",") if i.strip()]
@@ -110,8 +116,15 @@ def select_slice(records: list[dict], limit: int, mode: str = "head") -> list[di
         quota[repo] += 1
 
     out: list[dict] = []
-    for repo in per_repo:
-        out.extend(per_repo[repo][: quota.get(repo, 0)])
+    # P1-09: round-robin interleave (was per-repo blocks + out[:limit] dropping
+    # trailing repos entirely).
+    buckets = [per_repo[repo][: quota.get(repo, 0)] for repo in per_repo]
+    for i in range(max((len(b) for b in buckets), default=0)):
+        for b in buckets:
+            if i < len(b):
+                out.append(b[i])
+                if len(out) >= limit:
+                    return out
     return out[:limit]
 
 

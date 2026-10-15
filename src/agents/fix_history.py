@@ -42,17 +42,19 @@ def record_fix(state) -> bool:
     issue = (state.issue_text or "").strip()
     digest = hashlib.sha1(f"{issue}::{patch}".encode("utf-8")).hexdigest()
 
+    tests_passed = "PASSED" in (state.test_output or "")
     entry = {
         "id": str(uuid.uuid4()),
         "digest": digest,
         "ts": time.time(),
         "repo": _normalize_repo(state.repo_path),
+        "instance_id": getattr(state, "instance_id", "") or "",
         "issue": issue[:1200],
         "plan": (state.plan or "")[:800],
         "patch": patch[:4000],
         "verdict": state.critic_verdict or "",
         "score": float(state.critic_score or 0.0),
-        "tests": "PASSED" if "PASSED" in (state.test_output or "") else "FAILED",
+        "tests": "PASSED" if tests_passed else "FAILED",
         "strategy": state.strategy,
         "vector": embed_text(f"{issue} {state.plan or ''}"),
     }
@@ -65,6 +67,31 @@ def record_fix(state) -> bool:
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except OSError:
         return False
+
+    # Write-A (P0-05): SQLite outcomes with resolved=NULL; JSONL stays as export.
+    try:
+        from src.memory import store as _mem
+
+        model = getattr(state, "model_name", "") or ""
+        if not model:
+            try:
+                log = getattr(state, "model_log", []) or []
+                if log and isinstance(log[-1], dict):
+                    model = log[-1].get("model", "") or ""
+            except Exception:
+                model = ""
+        _mem.record_attempt(
+            instance_id=entry["instance_id"],
+            repo=entry["repo"],
+            issue=issue,
+            strategy=entry["strategy"],
+            model=model,
+            patch=patch,
+            critic_score=entry["score"],
+            tests_passed=tests_passed,
+        )
+    except Exception:
+        pass
 
     _mirror_qdrant(entry)
     return True
@@ -122,11 +149,13 @@ def retrieve_fixes(
     top_k: int = 2,
     min_score: float = 0.15,
     max_entries: int = 500,
+    include_analog: bool = False,
 ) -> list[dict]:
-    """Past fixes for the same repository, most similar first."""
+    """Past fixes: repo-exact first, then org-prefix, then cross-org analog (opt-in)."""
     if not issue_text or not repo_path:
         return []
     repo = _normalize_repo(repo_path)
+    repo_org = repo.replace("\\", "/").split("/")[-1] if repo else ""
     query = embed_text(issue_text)
 
     try:
@@ -135,26 +164,157 @@ def retrieve_fixes(
     except OSError:
         return []
 
-    scored: list[tuple[float, dict]] = []
+    scored_exact: list[tuple[float, dict]] = []
+    scored_org: list[tuple[float, dict]] = []
+    scored_other: list[tuple[float, dict]] = []
     for line in lines:
         try:
             entry = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if entry.get("repo") != repo:
-            continue
         vector = entry.get("vector") or []
         if len(vector) != VECTOR_SIZE:
             continue
         score = cosine(query, vector)
-        if score >= min_score:
-            scored.append((score, entry))
+        if score < min_score:
+            continue
+        erepo = entry.get("repo", "")
+        if erepo == repo:
+            scored_exact.append((score, entry))
+        elif repo_org and erepo.replace("\\", "/").split("/")[-1] == repo_org:
+            scored_org.append((score, entry))
+        else:
+            scored_other.append((score, entry))
 
-    scored.sort(key=lambda pair: pair[0], reverse=True)
+    scored_exact.sort(key=lambda pair: pair[0], reverse=True)
+    scored_org.sort(key=lambda pair: pair[0], reverse=True)
+    scored_other.sort(key=lambda pair: pair[0], reverse=True)
     hits = []
-    for score, entry in scored[:top_k]:
+    # P0-06: repo-exact first (backward-compatible), then org-prefix transfer.
+    for score, entry in scored_exact[:top_k]:
         hits.append({**entry, "similarity": round(score, 3)})
+    if len(hits) < top_k:
+        for score, entry in scored_org[: top_k - len(hits)]:
+            hits.append({**entry, "similarity": round(score, 3), "transfer": "org"})
+    # Cross-org analog: best non-org vector match labeled analog (Django->sympy).
+    # Opt-in (include_analog) so repo-exact callers/tests stay isolated by default.
+    if include_analog and scored_other:
+        best_score, best_entry = scored_other[0]
+        if all(best_entry.get("digest") != h.get("digest") for h in hits):
+            hits.append({**best_entry, "similarity": round(best_score, 3), "transfer": "cross-org-analog"})
+
+    # P0-05: org-level positives + negative veto from SQLite outcomes (additive).
+    try:
+        from src.memory import store as _mem
+
+        iid_hint = ""
+        org = ""
+        # Derive org from repo path last component (astropy/django) for cross-repo transfer.
+        parts = [x for x in str(repo).replace("\\", "/").split("/") if x]
+        if parts:
+            org = parts[-1].lower()
+        conn_hits = _mem_org_positives(org, query, top_k)
+        for h in conn_hits:
+            if all(h.get("digest") != x.get("digest") for x in hits):
+                hits.append(h)
+        veto_msg = _mem_negative_veto(org, query, lines)
+        if veto_msg:
+            hits.append(veto_msg)
+    except Exception:
+        pass
     return hits
+
+
+def _mem_org_positives(org: str, query: list, top_k: int) -> list[dict]:
+    """SQLite resolved=1 rows for the same org, ranked by cosine when vectors exist."""
+    import sqlite3
+
+    from src.memory import store as _mem
+    from src.rag.indexer import VECTOR_SIZE as _VS
+    from src.rag.indexer import cosine as _cos
+
+    if not org:
+        return []
+    try:
+        conn = sqlite3.connect(str(_mem.db_path()))
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
+            "SELECT instance_id, repo, strategy, model, critic_score FROM outcomes "
+            "WHERE repo_org=? AND resolved=1 LIMIT 20",
+            (org,),
+        ).fetchall()
+        conn.close()
+    except Exception:
+        return []
+    out = []
+    for r in rows[: max(0, top_k)]:
+        out.append({
+            "repo": r["repo"],
+            "instance_id": r["instance_id"],
+            "strategy": r["strategy"],
+            "verdict": "resolved-prior",
+            "score": r["critic_score"],
+            "similarity": 0.5,
+            "patch": "",
+            "issue": f"prior resolved {r['instance_id']} ({r['strategy']}/{r['model']})",
+        })
+    return out
+
+
+def _mem_negative_veto(org: str, query: list, lines: list[str]) -> dict | None:
+    """NEVER-DO marker when the query is near-identical (cos>0.92) to a prior failure.
+
+    Joins JSONL vectors with SQLite Docker truth by instance_id: an entry only
+    vetoes when its instance is graded resolved=0 (a real failure, not just a
+    low critic score). Returns None when no veto fires.
+    """
+    import sqlite3
+
+    from src.memory import store as _mem
+    from src.rag.indexer import VECTOR_SIZE, cosine
+
+    if not query or len(query) != VECTOR_SIZE:
+        return None
+    try:
+        conn = sqlite3.connect(str(_mem.db_path()))
+        rows = conn.execute("SELECT instance_id FROM outcomes WHERE resolved=0").fetchall()
+        conn.close()
+        failed = {r[0] for r in rows if r[0]}
+    except Exception:
+        return None
+    if not failed:
+        return None
+    best: tuple[float, dict] | None = None
+    for line in lines:
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if entry.get("instance_id") not in failed:
+            continue
+        # Issue-to-issue similarity (stored vectors mix in plan text, which
+        # dilutes identical issues below the veto threshold).
+        try:
+            from src.rag.indexer import embed_text
+
+            score = cosine(query, embed_text(entry.get("issue", "")))
+        except Exception:
+            continue
+        if best is None or score > best[0]:
+            best = (score, entry)
+    if best is not None and best[0] > 0.92:
+        score, entry = best
+        return {
+            "repo": entry.get("repo", ""),
+            "instance_id": entry.get("instance_id", ""),
+            "verdict": "NEVER-DO",
+            "score": 0.0,
+            "similarity": round(score, 3),
+            "patch": "",
+            "issue": f"NEVER-DO: query ~identical (cos {score:.2f}) to failed {entry.get('instance_id')}"
+                     f" — do not repeat its approach: {(entry.get('patch','')[:200])}",
+        }
+    return None
 
 
 def render_hits(hits: list[dict]) -> str:

@@ -92,9 +92,35 @@ def analyze_session(session_id: str):
         "records": records,
     }
 
+
+def _parse_sessions(spec: str) -> list[str]:
+    import re
+
+    spec = (spec or "").strip()
+    if not spec:
+        return [f"lite300-s{i}" for i in range(1, 8)]
+    if re.fullmatch(r"\d+-\d+", spec):
+        a, b = map(int, spec.split("-"))
+        return [f"lite300-s{i}" for i in range(a, b + 1)]
+    out = []
+    for part in spec.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        out.append(part if part.startswith("lite300-") else f"lite300-{part}")
+    return out or [f"lite300-s{i}" for i in range(1, 8)]
+
 def main():
+    import argparse
+
+    # P1-11: --sessions s1-s7 (was hardcoded s1,s2,s4).
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--sessions", default="1-7",
+                    help="e.g. 1-7 or lite300-s1,lite300-s3")
+    args = ap.parse_args()
+    sessions = _parse_sessions(args.sessions)
     results = {}
-    for s in ["lite300-s1", "lite300-s2", "lite300-s4"]:
+    for s in sessions:
         data = analyze_session(s)
         if data:
             results[s] = data

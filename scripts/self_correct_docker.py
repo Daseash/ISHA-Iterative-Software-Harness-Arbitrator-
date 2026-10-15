@@ -38,7 +38,11 @@ def extract_instance_feedback(session: str, instance_id: str) -> str | None:
 
     report_path = inst_dir / "report.json"
     test_out_path = inst_dir / "test_output.txt"
-    patch_path = inst_dir / "patch.diff"
+    # P0-12: real patch lives at results/<run>/<iid>/patch.diff (runner.py:666),
+    # not under logs/ (usually empty). Fall back to logs path.
+    patch_path = RESULTS_DIR / session / instance_id / "patch.diff"
+    if not patch_path.is_file():
+        patch_path = inst_dir / "patch.diff"
 
     f2p_failures = []
     p2p_failures = []
@@ -98,24 +102,27 @@ def extract_instance_feedback(session: str, instance_id: str) -> str | None:
         note += f"\nPREVIOUS FLAWED PATCH (DO NOT REPEAT THIS EXACT DIFF):\n{patch_snippet}\n"
 
     # Intelligent category-specific solver directives based on container traceback
+    # P0-12: Django-specific directives gated behind repo_org=="django" (were overfit).
+    repo_org = (instance_id.split("__", 1)[0] if "__" in instance_id else "").lower()
+    is_django = repo_org == "django"
     directives = []
-    if "positional arguments but" in traceback_text or "takes " in traceback_text and "given" in traceback_text:
+    if ("positional arguments but" in traceback_text or "takes " in traceback_text) and "given" in traceback_text:
         directives.append("• SIGNATURE FIX: Positional argument count mismatch. Support flexible arguments (*args, **kwargs) or align parameters with existing callers.")
     if "None != ''" in traceback_text or "'' != None" in traceback_text or "None is not" in traceback_text:
         directives.append("• RETURN TYPE FIX: Distinguish explicitly between None and empty string '' (use `if x is not None` rather than `if x`).")
-    if "SimpleLazyObject" in traceback_text and "unsupported operand" in traceback_text or "object has no attribute" in traceback_text:
+    if ("SimpleLazyObject" in traceback_text and "unsupported operand" in traceback_text) or "object has no attribute" in traceback_text:
         directives.append("• CLASS SCOPE FIX: Ensure methods/attributes are added to the EXACT target class (e.g. SimpleLazyObject or ModelAdmin), not an earlier class block.")
-    if "Nested" in traceback_text and "Writer" in traceback_text or "__qualname__" in traceback_text:
+    if ("Nested" in traceback_text and "Writer" in traceback_text) or "__qualname__" in traceback_text:
         directives.append("• QUALNAME HIERARCHY FIX: When serializing nested methods or choices, include the full enclosing class path in __qualname__.")
     if "could not convert string to float" in traceback_text or "invalid literal for int" in traceback_text:
         directives.append("• STRING CONVERSION FIX: Guard against string type names or non-numeric strings before numeric conversion.")
-    if "scandir: path should be string" in traceback_text or "FilePathField" in traceback_text:
+    if is_django and ("scandir: path should be string" in traceback_text or "FilePathField" in traceback_text):
         directives.append("• CALLABLE PATH FIX: For FilePathField, evaluate `self.path() if callable(self.path) else self.path` in formfield() and wherever path is accessed.")
-    if "DurationField" in traceback_text or "invalid format. It must be in [DD]" in traceback_text:
+    if is_django and ("DurationField" in traceback_text or "invalid format. It must be in [DD]" in traceback_text):
         directives.append("• DURATION MESSAGE FIX: Check the exact error message format in DurationField default_error_messages['invalid']. Ensure the format string matches expected.")
-    if "RemovedInDjango" in traceback_text or "warning not triggered" in traceback_text.lower():
+    if is_django and ("RemovedInDjango" in traceback_text or "warning not triggered" in traceback_text.lower()):
         directives.append("• WARNING EMISSION FIX: Check whether a deprecation warning (e.g. RemovedInDjango40Warning) must be emitted with warnings.warn() and stacklevel=2.")
-    if "custom.sqlite.db" in traceback_text or "TestDbSignatureTests" in traceback_text:
+    if is_django and ("custom.sqlite.db" in traceback_text or "TestDbSignatureTests" in traceback_text):
         directives.append("• TEST DB SIGNATURE FIX: Include the test database name in the SQLite test DB signature tuple when a custom name is specified.")
     if "unhashable type" in traceback_text:
         directives.append("• HASH METHOD FIX: Implement __hash__ method (e.g. hash(self.value) or hash(tuple(...))) so instances can be added to sets or used as dict keys.")

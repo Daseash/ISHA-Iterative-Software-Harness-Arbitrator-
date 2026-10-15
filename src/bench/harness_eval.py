@@ -144,7 +144,9 @@ def evaluate(
 
     predictions_path = _predictions(run_dir)
     preds = json.loads(predictions_path.read_text(encoding="utf-8"))
-    instance_ids = [p["instance_id"] for p in preds if p.get("model_patch")]
+    # P1-06: whitespace-only patches are not submittable (harness would grade noise).
+    instance_ids = [p["instance_id"] for p in preds
+                    if (p.get("model_patch") or "").strip() and not _is_whitespace_noop(p.get("model_patch") or "")]
     if instances:
         target_set = set(instances)
         instance_ids = [i for i in instance_ids if i in target_set]
@@ -186,7 +188,60 @@ def evaluate(
         if removed:
             print(f"Removed {len(removed)} eval image(s) to keep the disk free")
 
-    return load_official_report(run_dir, eval_id)
+    report = load_official_report(run_dir, eval_id)
+    # Write-B (P0-05): Docker truth -> SQLite outcomes (best-effort, never fails eval).
+    try:
+        _writeback_resolved(run_dir, report)
+    except Exception:
+        pass
+    return report
+
+
+def _writeback_resolved(run_dir: Path, report: dict) -> int:
+    """UPDATE outcomes SET resolved=? for every graded instance (Sec 6 Write-B)."""
+    from src.memory import store as _mem
+
+    n = 0
+    # 1. Per-instance reports: .../logs/.../<iid>/report.json = {iid: {resolved: bool}}
+    for rep_file in run_dir.rglob("report.json"):
+        try:
+            data = json.loads(rep_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        for iid, val in data.items():
+            if isinstance(val, dict) and "resolved" in val:
+                try:
+                    _mem.resolve(str(iid), bool(val.get("resolved") is True))
+                    n += 1
+                except Exception:
+                    pass
+    # 2. Summary report resolved_ids list (if present).
+    try:
+        ids = (report or {}).get("resolved_ids") or []
+        if isinstance(ids, list):
+            for iid in ids:
+                try:
+                    _mem.resolve(str(iid), True)
+                    n += 1
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    return n
+
+
+def _is_whitespace_noop(patch: str) -> bool:
+    """True when the patch has no +/- content lines (headers only)."""
+    try:
+        from src.bench.gates import is_semantic_noop
+
+        return bool(is_semantic_noop(patch))
+    except Exception:
+        lines = [ln for ln in (patch or "").splitlines()
+                 if ln.startswith(("+", "-")) and not ln.startswith(("+++", "---"))]
+        return not lines
 
 
 def _empty_report(total: int) -> dict:
@@ -204,8 +259,12 @@ def _write_report(run_dir: Path, report: dict) -> Path:
     return out
 
 
-def load_official_report(run_dir: Path, eval_id: str | None = None) -> dict:
-    """Read back the harness report for a run (newest if not specified)."""
+def load_official_report(run_dir: Path, eval_id: str | None = None, write: bool = True) -> dict:
+    """Read back the harness report for a run (newest if not specified).
+
+    P1-09: read-only when write=False (was always writing harness_report.json
+    on the read path).
+    """
     report_dir = run_dir / "harness"
     candidates = sorted(report_dir.glob("*.json")) if report_dir.is_dir() else []
     # Prefer a run report over run.json metadata.
@@ -221,9 +280,20 @@ def load_official_report(run_dir: Path, eval_id: str | None = None) -> dict:
             scored.append((0 if (eval_id and eval_id in path.name) else 1, path.name, payload))
     if not scored:
         return {}
-    scored.sort(key=lambda t: (t[0], t[1]))
-    report = scored[0][2]
-    _write_report(run_dir, report)
+    # P1-06: newest report wins (was oldest: scored[0] after ascending sort).
+    scored.sort(key=lambda t: (t[0], t[1]), reverse=True)
+    # Prefer the requested eval_id first, then newest by name.
+    if eval_id:
+        for pref, name, payload in scored:
+            if eval_id in name:
+                report = payload
+                break
+        else:
+            report = scored[0][2]
+    else:
+        report = scored[0][2]
+    if write:
+        _write_report(run_dir, report)
     return report
 
 

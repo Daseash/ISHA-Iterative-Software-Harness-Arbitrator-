@@ -58,6 +58,18 @@ def _clip(text: str | None, limit: int) -> str:
     return text[:limit] + f"\n...[context capped at {limit} chars]"
 
 
+def _clip_issue(text: str | None, limit: int) -> str:
+    """P1-01: head+tail clip for issues — traceback tail holds the failing line."""
+    text = text or ""
+    if limit <= 0:
+        return ""
+    if len(text) <= limit:
+        return text
+    head = int(limit * 0.6)
+    tail = limit - head
+    return text[:head] + f"\n...[clipped {len(text)-limit} chars; tail kept]...\n" + text[-tail:]
+
+
 # Prompt section budgets.  Larger context measurably improves patch accuracy
 # (the coder stops inventing context lines), but free-tier TPM windows are
 # the binding constraint on throughput — so every number stays env-tunable
@@ -299,7 +311,7 @@ be changed.  The patch must be atomic — fixing only one file and leaving
 its callers broken is not acceptable.
 
 BUG REPORT:
-{_clip(state.issue_text, _ISSUE_CHARS)}
+{_clip_issue(state.issue_text, _ISSUE_CHARS)}
 {feedback_section}
 REPOSITORY CONTEXT:
 {_clip(state.repo_context, _PLANNER_CONTEXT_CHARS)}
@@ -313,14 +325,16 @@ reproduction details or the relevant code is not visible in the context."""
     _prompt_stats("planner", prompt=prompt)
     try:
         plan_raw = call_planner(prompt)
-        plan = _strip_tool_markup(_strip_fences(plan_raw)) or "[PLANNER ERROR] empty response"
-        conf = re.search(r"CONFIDENCE:\s*([0-9]*\.?[0-9]+)", plan)
+        # P1-01: prose plan needs _unfence (keep all), not _strip_fences (largest block).
+        plan = _strip_tool_markup(_unfence(plan_raw)) or "[PLANNER ERROR] empty response"
+        # P1-01: case-insensitive CONFIDENCE (models emit Confidence:/confidence:).
+        conf = re.search(r"CONFIDENCE:\s*([0-9]*\.?[0-9]+)", plan, re.I)
         if conf:
             try:
                 state.planner_confidence = max(0.0, min(1.0, float(conf.group(1))))
             except ValueError:
                 state.planner_confidence = -1.0
-            plan = re.sub(r"^\s*CONFIDENCE:.*$", "", plan, flags=re.M).strip()
+            plan = re.sub(r"^\s*CONFIDENCE:.*$", "", plan, flags=re.M | re.I).strip()
         else:
             state.planner_confidence = -1.0
         state.plan = plan
@@ -368,7 +382,7 @@ plan guarantees will pass after the fix — no speculative behavior changes.
 Output ONLY the test code (multiple test functions allowed).
 
 BUG REPORT:
-{_clip(state.issue_text, _ISSUE_CHARS)}
+{_clip_issue(state.issue_text, _ISSUE_CHARS)}
 
 FIX PLAN:
 {_clip(state.plan, _PLAN_CHARS)}
@@ -616,13 +630,15 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
             + " — start there; do not wander into unrelated files.\n"
         )
 
-    issue = _clip(state.issue_text, _ISSUE_CHARS)
+    issue = _clip_issue(state.issue_text, _ISSUE_CHARS)
     plan = _clip(state.plan, _PLAN_CHARS)
     code_block = _clip(code_block, _CODE_BLOCK_CHARS)
     history_section = _clip(history_section, _HISTORY_CHARS)
     style_section = _clip(style_section, _STYLE_CHARS)
     retry_hint = _clip(retry_hint, _HINT_CHARS)
     extra_hint = _clip(extra_hint, _HINT_CHARS)
+    # P1-01: separator between concatenated hints (were glued).
+    extra_hint_sep = "\n" if retry_hint and extra_hint else ""
     _prompt_stats("coder", issue=issue, plan=plan,
                   repo=_clip(state.repo_context, _CODER_CONTEXT_CHARS),
                   code=code_block, history=history_section, style=style_section,
@@ -669,7 +685,7 @@ TARGET FILE CONTEXT:
 {history_section}{style_section}{blast_line}
 STRATEGY: {strategy or state.strategy}
 REPO PATH: {state.repo_path}
-RETRY INDEX: {state.retry_count}{retry_hint}{extra_hint}"""
+RETRY INDEX: {state.retry_count}{retry_hint}{extra_hint_sep}{extra_hint}"""
 
 
 def _prompt_stats(label: str, **sections) -> None:
@@ -859,7 +875,21 @@ def candidate_node(state: AgentState) -> AgentState:
     state.candidates = [c.as_dict() for c in ordered]
     winner = None
     if survivors:
-        winner = survivors[0]
+        # P2-05: red-team BLOCK — drop guardrail-blocked winners fail-closed.
+        try:
+            from src.guardrails.scanner import scan as _scan
+
+            clean = [c for c in survivors
+                     if not _scan(c.patch, state.issue_text).get("blocked")]
+            if len(clean) < len(survivors):
+                state.context_notes = list(state.context_notes) + [
+                    f"candidate_node: {len(survivors)-len(clean)} survivor(s) BLOCKED by guardrails"
+                ]
+            survivors = clean
+        except Exception:
+            pass
+        winner = survivors[0] if survivors else None
+    if winner:
         state.patch = winner.patch
         state.strategy = winner.strategy
         state.laya_scores = {**winner.laya, "combined": winner.combined_score,

@@ -164,7 +164,10 @@ def canonical_patch(repo_path: str, raw_patch: str, instance_id: str = "") -> tu
                 info["validate_check_ok"] = val_ok
                 info["validate_check_msg"] = val_msg
                 if not val_ok:
+                    # P0-09: corrupt regen must submit empty, not corrupt diff.
                     record_apply_failure(instance_id, 0, 0, regenerated, f"git apply --check failed: {val_msg}")
+                    info["regenerated"] = False
+                    return "", info
                 info["regenerated"] = True
                 return regenerated, info
         info["regenerated"] = False
@@ -228,7 +231,8 @@ def _ensure_git(root) -> bool:
 def reset_checkout(repo_path: str) -> None:
     import subprocess
 
-    for cmd in (["git", "checkout", "--", "."], ["git", "clean", "-xfd"]):
+    # P0-09: hard-reset (was checkout+clean only, left staged/committed drift).
+    for cmd in (["git", "reset", "--hard", "HEAD"], ["git", "checkout", "--", "."], ["git", "clean", "-xfd"]):
         try:
             subprocess.run(cmd, cwd=repo_path, capture_output=True, timeout=300)
         except Exception:
@@ -549,6 +553,10 @@ def _categorize_unsolved(meta: dict, info: dict) -> str:
     if meta.get("failure_category") == "timeout":
         return "timeout"
     message = str(info.get("message", ""))
+    # P0-09: never mask an explicit no-confident-fix behind api_failure.
+    hay = f"{message} {meta.get('escalation', '')} {info.get('escalation', '')}".lower()
+    if "no confident fix" in hay or "no candidate survived" in hay:
+        return "no_confident_fix"
     if "static gate failed" in message or "STATIC" in message:
         return "syntax_error"
     if not info.get("applied") and message not in ("", "no usable patch"):
@@ -691,18 +699,39 @@ def run_bench(
 
 def write_predictions(run_dir: Path, records: list[dict] | None = None) -> Path:
     """Build the official harness predictions file from the run's checkpoints."""
+    import os
+
+    # P0-14: quarantine toy offline patches (Calculator ladder) — exclude unless
+    # explicitly allowed. Offline output never fixes real django/sympy.
+    allow_offline = os.getenv("ISHA_ALLOW_OFFLINE", "0") == "1"
     preds = []
+    skipped_offline = 0
     for meta_path in sorted(run_dir.glob("*/meta.json")):
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         if meta.get("status") != "done":
             continue
+        if meta.get("offline_calls") and not allow_offline:
+            skipped_offline += 1
+            continue
+        # P0-09: real model id (was hardcoded "isha").
+        model_id = meta.get("model") or meta.get("model_name") or ""
+        if not model_id:
+            try:
+                for e in reversed(meta.get("model_log") or []):
+                    if e.get("role") == "coder" and e.get("model"):
+                        model_id = e["model"]
+                        break
+            except Exception:
+                pass
         preds.append({
             "instance_id": meta["instance_id"],
             "model_patch": meta.get("model_patch", ""),
-            "model_name_or_path": "isha",
+            "model_name_or_path": model_id or "isha",
         })
     out = run_dir / "predictions.json"
     out.write_text(json.dumps(preds, indent=2, ensure_ascii=False), encoding="utf-8")
+    if skipped_offline:
+        print(f"Quarantined {skipped_offline} offline-toy patch(es) (ISHA_ALLOW_OFFLINE=1 to include)")
     return out
 
 

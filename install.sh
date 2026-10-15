@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 
 REPO="$(pwd)"
 VENV="$REPO/.venv"
-WHEEL="$(ls -1t "$REPO"/dist/isha_fix-*.whl 2>/dev/null | head -n1 || true)"
+WHEEL="$(ls -1t "$REPO"/dist/isha-*.whl 2>/dev/null | head -n1 || true)"
 
 echo "ISHA installer (repo: $REPO)"
 

@@ -59,12 +59,13 @@ def load_run(run_id: str, records: list[dict] | None = None,
         ids = ds.read_slice(run_id)
         all_records = ds.load_records()
         by_id = {r["instance_id"]: r for r in all_records}
-        records = [by_id[i] for i in ids] if ids else []
+        # P1-09: skip-missing (was KeyError on slice refresh removing ids).
+        records = [by_id[i] for i in ids if i in by_id] if ids else []
 
     if report is None:
         from src.bench.harness_eval import load_official_report
 
-        report = load_official_report(run_dir) or {}
+        report = load_official_report(run_dir, write=False) or {}
 
     breakdown = build_breakdown(run_dir, records, report)
     total = len(records)

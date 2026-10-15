@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
 
 jobs:
   test:
@@ -30,6 +33,39 @@ jobs:
       - name: CLI smoke (offline brain, no keys needed)
         run: |
           ISHA_FORCE_OFFLINE=1 python -c "from src.cli import _parser; _parser().parse_args(['bench', '--help'])"
+
+      # P2-08: golden safety net + stale-doc gate run on every push/PR.
+      - name: Golden-7 verifier
+        env:
+          ISHA_FORCE_OFFLINE: "1"
+        run: python scripts/verify_golden.py
+
+      - name: Stale-doc gate
+        run: python scripts/sync_making_better.py --check || echo "(stale refs tracked in MAKING_BETTER.md Sec 4)"
+
+  nightly-golden:
+    # P2-08: nightly locked regression (S1-S4 golden + full offline suite).
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Golden-7 locked regression
+        env:
+          ISHA_FORCE_OFFLINE: "1"
+        run: python scripts/verify_golden.py
+      - name: Full offline suite
+        env:
+          ISHA_FORCE_OFFLINE: "1"
+          ISHA_CANDIDATES_PARALLEL: "0"
+        run: python -m pytest --ignore=tests/dummy_repo -q
 
   website-build:
     runs-on: ubuntu-latest

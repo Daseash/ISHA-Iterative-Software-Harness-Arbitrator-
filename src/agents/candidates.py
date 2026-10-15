@@ -339,11 +339,10 @@ def _build_candidate(
         cand.apply_ok = False
 
     if not cand.apply_ok and patch:
+        # P0-08: known-bad (did not apply) — skip re-gating, mark failed directly.
         cand.patch = patch
-        gate = compile_gate(cand.worktree, patch, baseline_repo=state.repo_path) if Path(cand.worktree).exists() else None
-        if gate is not None:
-            cand.gate_ok = gate.ok
-            cand.gate_errors = gate.errors
+        cand.gate_ok = False
+        cand.gate_errors = [cand.apply_message or "apply failed"]
 
     cand.changed = changed_files(cand.patch)
     cand.added, cand.removed = diff_stats(cand.patch)
@@ -396,11 +395,12 @@ def generate_candidates(
                 seed_model = entry.get("model_full", "")
                 break
     if parallel and len(jobs) > 1:
+        import sys
+
         with ThreadPoolExecutor(max_workers=len(jobs), thread_name_prefix="isha-cand") as pool:
             futures = []
+            # P0-08: no sleep-serialization (was sleep(3.0)); submit all at once.
             for index, (name, temperature, notes, use_seed) in enumerate(jobs, start=1):
-                if index > 1:
-                    time.sleep(3.0)  # smooth out provider TPM burst to avoid 429 collisions
                 futures.append(
                     pool.submit(
                         _build_candidate,
@@ -408,22 +408,17 @@ def generate_candidates(
                         seed_patch, state, instance_id, preferred_models, seed_model, log,
                     )
                 )
-            
-            # Adaptive time budget: harvest completed candidates before global runner timeout
+
+            # P0-08: single shared deadline (was N*220s sequential +30s fallback).
             cand_budget = float(os.getenv("ISHA_CANDIDATE_TIMEOUT", "220"))
+            deadline = time.time() + cand_budget
             candidates = []
             for f in futures:
+                remaining = max(1.0, deadline - time.time())
                 try:
-                    candidates.append(f.result(timeout=cand_budget))
+                    candidates.append(f.result(timeout=remaining))
                 except Exception as exc:
                     print(f"[tournament] candidate future timed out or failed ({exc}); harvesting survivors", file=sys.stderr)
-            if not candidates:
-                # If all timed out, wait for first completed or fallback
-                for f in futures:
-                    try:
-                        candidates.append(f.result(timeout=30))
-                    except Exception:
-                        pass
     else:
         candidates = [
             _build_candidate(
@@ -474,8 +469,10 @@ def rank_candidates(candidates: list[Candidate]) -> list[Candidate]:
             tier = 0  # repro confirmed
         elif repro.get("available"):
             tier = 1  # neutral
+        elif not repro:
+            tier = 4  # P0-08: unverified (repro=={}) demoted — must not beat evidence
         else:
-            tier = 2  # infra unavailable
+            tier = 2  # infra unavailable (explicit reason present)
         return (tier, -c.combined_score, c.diff_size)
 
     return sorted(candidates, key=key)
@@ -497,46 +494,65 @@ def cleanup_candidates(candidates: list[Candidate], repo_path: str) -> None:
 
             if Path(cand.worktree).parent.name == ".worktrees":
                 continue  # handled by cleanup_all_worktrees
-            if Path(cand.worktree).name.startswith("isha-sandbox-"):
+            # P0-08: unified prefixes (was only isha-sandbox-; missed isha-agent-/isha-).
+            name = Path(cand.worktree).name
+            if name.startswith(("isha-sandbox-", "isha-agent-", "isha-")):
                 cleanup_sandbox(cand.worktree)
         except Exception:
             pass
 
 
 def record_candidates_log(instance_id: str, candidates: list[Candidate], winner_index: int | None = None) -> None:
-    """Save candidate evaluation outcomes to results/candidates.json."""
+    """Save candidate evaluation outcomes to results/candidates.json (file-locked)."""
     import json
     path = Path(__file__).resolve().parents[2] / "results" / "candidates.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    existing = []
-    if path.is_file():
+    # P0-08: file lock so parallel workers append atomically (was read-modify-write race).
+    lock_path = path.with_suffix(".lock")
+    import time as _t
+
+    for _ in range(100):
         try:
-            existing = json.loads(path.read_text(encoding="utf-8"))
+            fd = open(lock_path, "x")
+            fd.close()
+            break
+        except FileExistsError:
+            _t.sleep(0.05)
+    try:
+        existing = []
+        if path.is_file():
+            try:
+                existing = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                existing = []
+
+        for c in candidates:
+            repro = c.repro or {}
+            entry = {
+                "instance_id": instance_id,
+                "candidate_index": c.index,
+                "strategy": c.strategy,
+                "temperature": c.temperature,
+                "requested_model": getattr(c, "requested_model", "") or c.model,
+                "model_used": c.model,
+                "substituted": getattr(c, "substituted", False),
+                "patch_applied": c.apply_ok,
+                "gate_passed": c.gate_ok,
+                "repro_passed": bool(repro.get("before_ok") and repro.get("after_ok")),
+                "regression_count": c.regression_count,
+                "diff_size": c.diff_size,
+                "laya_score": c.laya_combined,
+                "won_selection": winner_index is not None and c.index == winner_index,
+                "timestamp": time.time(),
+            }
+            existing.append(entry)
+
+        path.write_text(json.dumps(existing, indent=2), encoding="utf-8")
+    finally:
+        try:
+            lock_path.unlink(missing_ok=True)
         except Exception:
-            existing = []
-
-    for c in candidates:
-        repro = c.repro or {}
-        entry = {
-            "instance_id": instance_id,
-            "candidate_index": c.index,
-            "strategy": c.strategy,
-            "temperature": c.temperature,
-            "requested_model": getattr(c, "requested_model", "") or c.model,
-            "model_used": c.model,
-            "substituted": getattr(c, "substituted", False),
-            "patch_applied": c.apply_ok,
-            "gate_passed": c.gate_ok,
-            "repro_passed": bool(repro.get("before_ok") and repro.get("after_ok")),
-            "regression_count": c.regression_count,
-            "diff_size": c.diff_size,
-            "laya_score": c.laya_combined,
-            "won_selection": winner_index is not None and c.index == winner_index,
-            "timestamp": time.time(),
-        }
-        existing.append(entry)
-
-    path.write_text(json.dumps(existing, indent=2), encoding="utf-8")
+            pass
 
 
 def summarize_candidates(path: Path | str | None = None) -> dict:

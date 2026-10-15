@@ -9,7 +9,7 @@
 $ErrorActionPreference = 'Stop'
 $Repo = $PSScriptRoot
 $Venv = Join-Path $Repo '.venv'
-$Wheel = Get-ChildItem (Join-Path $Repo 'dist\isha_fix-*.whl') -ErrorAction SilentlyContinue |
+$Wheel = Get-ChildItem (Join-Path $Repo 'dist\isha-*.whl') -ErrorAction SilentlyContinue |
   Sort-Object LastWriteTime -Descending | Select-Object -First 1
 
 Write-Host "ISHA installer (repo: $Repo)"
@@ -22,17 +22,17 @@ if ($LASTEXITCODE -ne 0) { throw 'Python 3.10+ not found on PATH' }
 # 2. Virtual env
 if (-not (Test-Path $Venv)) {
   Write-Host 'Creating .venv ...'
-  python -m venv $Venv
+  python -m venv "$Venv"
 }
 $Py = Join-Path $Venv 'Scripts\python.exe'
 
 # 3. Install: wheel if present, else the source tree
 Write-Host 'Installing ISHA + dependencies (first run downloads a few hundred MB; torch/CUDA via docling are the bulk) ...'
-& $Py -m pip install --upgrade pip | Out-Null
+& "$Py" -m pip install --upgrade pip | Out-Null
 if ($Wheel) {
-  & $Py -m pip install $Wheel.FullName
+  & "$Py" -m pip install "$($Wheel.FullName)"
 } else {
-  & $Py -m pip install $Repo
+  & "$Py" -m pip install "$Repo"
 }
 if ($LASTEXITCODE -ne 0) { throw 'pip install failed' }
 

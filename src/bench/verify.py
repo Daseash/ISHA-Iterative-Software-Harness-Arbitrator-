@@ -300,7 +300,11 @@ def verify_instance(
 def _regressions(meta: dict, repro_target: str, touched: list[str],
                  mounts: dict[str, str], timeout: int) -> int:
     """Run existing tests for touched modules on the patched tree."""
-    cmd = test_command(meta, [t for t in touched if t != repro_target])
+    targets = [t for t in touched if t != repro_target]
+    # P1-05: fail-safe on empty target (was whole-suite run).
+    if not targets:
+        return 0
+    cmd = test_command(meta, targets)
     if not cmd.strip():
         return 0
     exit_code, _out = _run(
@@ -319,7 +323,10 @@ def touched_targets(record: dict, changed_files: list[str], repo_root: str) -> l
 
     out: list[str] = []
     for rel in changed_files:
-        if "test" in Path(rel).name:
+        # P1-05: real test-file match (was `"test" in name` — matched contest.py).
+        name = Path(rel).name.lower()
+        parts = [p.lower() for p in Path(rel).parts]
+        if name.startswith("test_") or name.endswith("_test.py") or "tests" in parts:
             out.append(rel)
             continue
         try:

@@ -12,6 +12,8 @@ Runtime modes:
     `src.tools.offline_brain` answers so the pipeline never hard-fails.
 """
 
+import hashlib
+import json
 import logging
 import os
 import re
@@ -114,10 +116,40 @@ _key_death_time: dict = {}
 _env_last_mtime: float = 0.0
 
 GOOGLE_API_KEY = _gemini_key_pool[0] if _gemini_key_pool else None
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+# P1-08: Groq/OpenRouter pools mirror Gemini (were single-key, no rotation).
+_groq_keys_raw = os.getenv("GROQ_API_KEYS") or os.getenv("GROQ_API_KEY") or ""
+_groq_key_pool = [k.strip() for k in _groq_keys_raw.split(",") if k.strip()]
+_groq_key_lock = threading.Lock()
+_groq_key_counter = 0
+_openrouter_keys_raw = os.getenv("OPENROUTER_API_KEYS") or os.getenv("OPENROUTER_API_KEY") or ""
+_openrouter_key_pool = [k.strip() for k in _openrouter_keys_raw.split(",") if k.strip()]
+_openrouter_key_lock = threading.Lock()
+_openrouter_key_counter = 0
+GROQ_API_KEY = _groq_key_pool[0] if _groq_key_pool else None
+OPENROUTER_API_KEY = _openrouter_key_pool[0] if _openrouter_key_pool else None
 LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
+
+
+def _next_from_pool(pool: list, lock: threading.Lock, counter_name: str) -> str | None:
+    """Round-robin pick from a key pool (no per-model kill; pools are small)."""
+    global _groq_key_counter, _openrouter_key_counter
+    if not pool:
+        return None
+    with lock:
+        if counter_name == "groq":
+            _groq_key_counter += 1
+            return pool[_groq_key_counter % len(pool)]
+        _openrouter_key_counter += 1
+        return pool[_openrouter_key_counter % len(pool)]
+
+
+def get_next_groq_key() -> str | None:
+    return _next_from_pool(_groq_key_pool, _groq_key_lock, "groq")
+
+
+def get_next_openrouter_key() -> str | None:
+    return _next_from_pool(_openrouter_key_pool, _openrouter_key_lock, "openrouter")
 
 
 def _check_and_reload_keys_from_env() -> None:
@@ -401,11 +433,7 @@ def _cooldown_remaining(provider: str) -> float:
     return max(0.0, _RATE_COOLDOWN.get(provider, 0.0) - time.monotonic())
 
 
-import hashlib
-import json
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
+# P0-15: single ROOT (defined at top :33); LLM cache reuses it.
 LLM_CACHE_DIR = ROOT / "data" / "cache" / "llm"
 
 
@@ -648,6 +676,15 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     active_gemini_key = get_next_gemini_key(model)
                     if active_gemini_key:
                         kwargs["api_key"] = active_gemini_key
+                elif provider == "groq":
+                    # P1-08: rotate Groq pool per call (was env single-key).
+                    _gkey = get_next_groq_key()
+                    if _gkey:
+                        kwargs["api_key"] = _gkey
+                elif provider == "openrouter":
+                    _okey = get_next_openrouter_key()
+                    if _okey:
+                        kwargs["api_key"] = _okey
                 resp = litellm.completion(**kwargs)
                 content = resp.choices[0].message.content
                 if not content or content.strip().startswith(

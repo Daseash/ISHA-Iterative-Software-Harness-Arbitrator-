@@ -67,7 +67,7 @@ src/
     ├── harness_eval.py       # Official SWE-bench Docker testbed wrapper (report.json parser)
     ├── classify.py           # Post-eval failure taxonomy & error categorization
     ├── make_plots.py         # Matplotlib figure generator for benchmarks
-    └── run_slice.py          # Runner for arbitrary benchmark slices
+    └── runner.py             # Resumable benchmark runner (slices, checkpoints)
 ```
 
 ---
@@ -83,7 +83,7 @@ src/
   ```
 - **Run Benchmark Tournament on a Session Slice**:
   ```bash
-  python scripts/run_lite300.py --session 8 --candidates 3
+  python -m src.bench.runner --slice data/slices/lite300-s8.json --candidates 3 --workers 1
   ```
 - **Run Post-Evaluation Failure Classification**:
   ```bash

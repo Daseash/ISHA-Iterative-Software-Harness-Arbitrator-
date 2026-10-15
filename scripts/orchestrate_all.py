@@ -80,8 +80,9 @@ def merge_and_push_s5() -> None:
 
 
 def run_remaining_sessions() -> None:
+    # P0-15: range matches code (was docstring 6-10 vs code 8-10).
     print("\n" + "=" * 70, flush=True)
-    print("STARTING AUTONOMOUS BENCHMARK: SESSIONS 6 -> 10 (150 INSTANCES)", flush=True)
+    print("STARTING AUTONOMOUS BENCHMARK: SESSIONS 8 -> 10 (90 INSTANCES)", flush=True)
     print("=" * 70, flush=True)
 
     cmd = [

@@ -41,7 +41,7 @@ def main():
     print("Upgrading pip ...")
     run(py, "-m", "pip", "install", "--quiet", "--upgrade", "pip")
 
-    wheel = sorted((REPO / "dist").glob("isha_fix-*.whl"))
+    wheel = sorted((REPO / "dist").glob("isha-*.whl"))
     target = wheel[-1] if wheel else REPO
     if wheel:
         print(f"Installing {wheel[-1].name} ...")

@@ -181,6 +181,43 @@ STAGE_NAMES = [
 ]
 
 
+def _traceback_sig(log_dir: Path | None, meta: dict) -> str:
+    """Normalized failure signature: `<ErrorType> @ <file>::<func>` (numbers stripped).
+
+    Powers the P0-05 negative veto (same sig + high similarity = don't retry blind).
+    Best-effort: "" when no failure text exists (resolved or not_run).
+    """
+    text = ""
+    if log_dir is not None:
+        for name in ("test_output.txt", "run_output.txt"):
+            p = log_dir / name
+            if p.is_file():
+                try:
+                    text = p.read_text(encoding="utf-8", errors="replace")
+                    if text.strip():
+                        break
+                except OSError:
+                    continue
+    if not text.strip():
+        text = str(meta.get("test_output", "") or "")
+    if not text.strip():
+        return ""
+    err = ""
+    m = re.search(r"^([A-Z][A-Za-z0-9_]*(?:Error|Exception|Warning|Fault|Interrupt))", text, re.M)
+    if m:
+        err = m.group(1)
+    else:
+        m2 = re.search(r"(AssertionError|FAILED|ERROR)", text)
+        err = m2.group(1) if m2 else "failed"
+    frame = ""
+    m3 = re.search(r'File "([^"]+)", line \d+(?:, in ([A-Za-z_][\w.]*))?', text)
+    if m3:
+        f = m3.group(1).replace("\\", "/").split("/")[-1]
+        fn = m3.group(2) or ""
+        frame = f"{f}::{fn}" if fn else f
+    return f"{err} @ {frame}" if frame else err
+
+
 def build_breakdown(
     run_dir: Path,
     records: list[dict],
@@ -216,7 +253,15 @@ def build_breakdown(
             except Exception:
                 meta = {}
         resolved = iid in resolved_ids
-        category = classify_instance(meta, _log_dir(iid), record, resolved)
+        log_dir = _log_dir(iid)
+        category = classify_instance(meta, log_dir, record, resolved)
+        # P0-12: learnable Write-B enrichment (fail_bucket + traceback_sig).
+        try:
+            from src.memory import store as _mem
+
+            _mem.resolve(iid, resolved, category or "", _traceback_sig(log_dir, meta))
+        except Exception:
+            pass
 
         gold_f = gold_files(record)
         gold_s = gold_symbols(record)

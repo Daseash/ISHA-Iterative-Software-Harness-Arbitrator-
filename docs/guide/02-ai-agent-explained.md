@@ -57,8 +57,8 @@ Two design points worth naming in an interview:
 
 ### 3. Planning (`src/agents/nodes.py` → `planner_node`)
 A 2-step root-cause plan: *"what is wrong"* + *"exactly which edit to make"*.
-Live model: `gemini/gemini-3.1-flash-lite` with a Groq fallback chain
-(`src/config.py:24-39`).
+Live model: `$ISHA_PLANNER_MODEL` (default Gemini 3.5-flash-lite) with a Groq fallback chain
+(`src/config.py`; see `.env.example`).
 
 ### 4. Prove-before-patch (`regression_test_node`)
 The agent must write a test that **fails on the current code**. This is the difference

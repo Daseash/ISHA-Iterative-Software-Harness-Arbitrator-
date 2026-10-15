@@ -18,6 +18,28 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from src.ingestion.parser import SKIP_DIRS
 
 
+def resolve_repo_path(repo_path: str) -> Path:
+    """Resolve a repo path robust to the caller's CWD.
+
+    Tests use short relative paths like ``tests/dummy_repo`` which only exist
+    relative to the agent dir; CI/dev shells often run from the workspace root
+    instead. Try CWD first, then the agent package root and its parents.
+    """
+    p = Path(repo_path)
+    if p.exists():
+        return p
+    if not p.is_absolute():
+        here = Path(__file__).resolve()
+        for parent in [here.parent, *here.parents]:
+            cand = parent / repo_path
+            if cand.exists():
+                return cand
+            cand2 = parent / "isha-agent" / repo_path
+            if cand2.exists():
+                return cand2
+    return p
+
+
 @dataclass
 class SymbolDefinition:
     """A function, method, or class defined in the repository."""
@@ -131,7 +153,7 @@ class DependencyGraph:
     """Main repository-level dependency graph manager."""
 
     def __init__(self, repo_path: str):
-        self.repo_path = Path(repo_path)
+        self.repo_path = resolve_repo_path(repo_path)
         self.definitions: List[SymbolDefinition] = []
         self.symbols_by_name: Dict[str, List[SymbolDefinition]] = defaultdict(list)
         self.symbols_by_qname: Dict[str, SymbolDefinition] = {}

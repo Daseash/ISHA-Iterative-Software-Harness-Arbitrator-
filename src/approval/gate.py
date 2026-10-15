@@ -19,7 +19,10 @@ from langgraph.types import RunnableConfig
 from src.agents.state import AgentState, coerce_state
 from src.guardrails.scanner import scan
 
-APPROVALS_FILE = os.getenv("ISHA_APPROVALS_FILE", "output/approvals.jsonl")
+# P0-13: anchor to repo ROOT (was CWD-relative, broke when invoked elsewhere).
+_ROOT = __import__("pathlib").Path(__file__).resolve().parents[2]
+_DEFAULT_APPROVALS = str(_ROOT / "output" / "approvals.jsonl")
+APPROVALS_FILE = os.getenv("ISHA_APPROVALS_FILE", _DEFAULT_APPROVALS)
 _LOCK = threading.Lock()
 
 
@@ -107,5 +110,7 @@ def approval_node(state, config: RunnableConfig | None = None) -> AgentState:
     else:
         state.approved = None
 
-    log_approval({**entry, "decision": "approved" if state.approved else "rejected"})
+    # P0-13: log None as pending (was logged as rejected).
+    decision = "approved" if state.approved is True else ("pending" if state.approved is None else "rejected")
+    log_approval({**entry, "decision": decision})
     return state

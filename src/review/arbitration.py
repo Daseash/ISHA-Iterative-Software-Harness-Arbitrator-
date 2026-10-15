@@ -17,6 +17,17 @@ def record_attempt(thread_id: str, attempt: dict) -> None:
     """Register one branch's result for the arbitration fan-in."""
     with _LOCK:
         _LEDGER.setdefault(thread_id, []).append(attempt)
+    # P0-13: persist ledger (was memory-only, lost on crash/double-drain).
+    try:
+        import json
+        from pathlib import Path
+
+        out = Path(__file__).resolve().parents[2] / "results" / "attempts.jsonl"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, "a", encoding="utf-8") as fh:
+            fh.write(json.dumps({"thread_id": thread_id, **_as_dict(attempt)}, ensure_ascii=False, default=str) + "\n")
+    except Exception:
+        pass
 
 
 def collect_attempts(thread_id: str) -> list:
@@ -56,8 +67,9 @@ def arbitration_node(results: list) -> dict:
     try:
         judge = get_judge()
     except Exception:
-        # LAYA unavailable: fall back to first passing attempt.
-        return passing[0]
+        # P0-13: LAYA unavailable — rank by critic_score deterministically (was passing[0]).
+        best = max(passing, key=lambda r: (float(r.get("critic_score") or 0.0), -int(r.get("retry_count") or 0)))
+        return dict(best)
 
     scored = []
     for r in passing:
@@ -70,12 +82,21 @@ def arbitration_node(results: list) -> dict:
     best_score, winner = scored[0]
 
     dangers = judge.check_dangers(winner.get("patch", ""))
-    winner["critic_verdict"] = "flagged" if dangers["flagged"] else "approved"
-    winner["critic_score"] = best_score
-    winner["laya_scores"] = {"composite": best_score, **dangers}
+    # P0-13: merge verdicts (was overwrite discarding critic.py verdict).
+    prior_verdict = winner.get("critic_verdict")
+    prior_score = winner.get("critic_score")
+    if dangers["flagged"]:
+        winner["critic_verdict"] = "flagged"
+        winner["critic_score"] = best_score
+    else:
+        winner.setdefault("critic_verdict", "approved")
+        winner.setdefault("critic_score", best_score)
+    winner["laya_scores"] = {**(winner.get("laya_scores") or {}), "composite": best_score, **dangers}
     winner["arbitration"] = {
         "candidates": len(passing),
         "winner_strategy": winner.get("strategy", "default"),
         "composite": best_score,
+        "prior_verdict": prior_verdict,
+        "prior_score": prior_score,
     }
     return winner

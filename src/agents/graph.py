@@ -285,13 +285,23 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
     if _already_merged(thread_id):
         return state
 
-    # Clean diffs bypass the gate entirely — record that as auto-approved.
-    if state.approved is None and state.critic_verdict in ("approved", "low_quality"):
+    # A-5 strictness: only "approved" auto-clears; low_quality needs human approval.
+    if state.approved is None and state.critic_verdict == "approved":
         state.approved = True
 
     apply = bool((config or {}).get("configurable", {}).get("apply", False))
     passed = "PASSED" in (state.test_output or "")
-    cleared = state.critic_verdict in ("approved", "low_quality")
+    cleared = state.critic_verdict == "approved" and state.approved is True
+    # P2-05: red-team BLOCK at the merger — never apply a blocked patch.
+    try:
+        from src.guardrails.scanner import scan as _scan
+
+        if state.patch and _scan(state.patch, state.issue_text).get("blocked"):
+            state.approved = False
+            state.escalation = "guardrail BLOCK: secrets/injection/destructive pattern"
+            cleared = False
+    except Exception:
+        pass
 
     if apply and passed and cleared and state.patch:
         ok, message = apply_patch(state.repo_path, state.patch)

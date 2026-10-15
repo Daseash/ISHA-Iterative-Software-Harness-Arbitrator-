@@ -17,8 +17,8 @@
 | Tech | What it is | Why | Where |
 |---|---|---|---|
 | **LiteLLM** | One API for 100+ providers | Swap Gemini↔Groq↔local with env vars, no code change; unified retry/fallbacks | `src/config.py` |
-| **Gemini (3.1 flash-lite)** | Long-context planning model | Big context for repo maps; free tier | `PLANNER_MODEL`, `call_planner()` |
-| **Groq (qwen3.8-27b)** | Ultra-fast inference API | Keeps the fail→retry loop sub-second | `CODER_MODEL`, `call_coder()` |
+| **Gemini (planner)** | Long-context planning model | Big context for repo maps; free tier | `$ISHA_PLANNER_MODEL`, `call_planner()` |
+| **Groq (coder)** | Ultra-fast inference API | Keeps the fail→retry loop sub-second | `$ISHA_CODER_MODEL`, `call_coder()` |
 | **Deterministic offline brain** | Rule-based planner/coder regressor | Zero-key demos/CI; pipeline never hard-fails | `src/tools/offline_brain.py` (266 lines) |
 | **`python-dotenv`** | Loads `.env` into env vars | Secrets never in code; `.env` gitignored, `.env.example` is the template | `config.py:18` |
 
