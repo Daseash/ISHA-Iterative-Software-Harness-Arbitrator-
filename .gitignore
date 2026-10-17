@@ -43,6 +43,9 @@ output/*.txt
 output/prompts/
 output/sessions/
 data/cache/
+data/*.db
+data/*.db-wal
+data/*.db-shm
 !output/.gitkeep
 
 # ── Legacy root-level output (if any remain) ──────────────────────────────

@@ -104,6 +104,16 @@ python -m src.bench.harness_eval --run-id lite300 --max-workers 2
 - **The headline number is `resolved_instances / 300`** (denominator = the
   whole slice, empty patches included — `harness_eval.py:main` enforces this).
 
+### 6.1 Memory & Negative Veto Synchronization
+After grading completed sessions in Docker:
+```powershell
+python scripts/sync_resolved_to_memory.py
+```
+- Enriches `data/memory.db` outcomes with real repo metadata and hashes.
+- Embeds all verified winning patches into `output/fix_history.jsonl` (384-dim normalized vectors).
+- Activates cosine > 0.92 `NEVER-DO` negative veto against repeat failures.
+- Verify test suite: `pytest tests/test_p0_05.py tests/test_veto.py`
+
 ## 7. Report, plot, relabel
 
 ```powershell

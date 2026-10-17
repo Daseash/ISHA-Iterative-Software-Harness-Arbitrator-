@@ -229,6 +229,13 @@ def _writeback_resolved(run_dir: Path, report: dict) -> int:
                     pass
     except Exception:
         pass
+
+    try:
+        from scripts.sync_resolved_to_memory import sync_all
+        sync_all()
+    except Exception:
+        pass
+
     return n
 
 

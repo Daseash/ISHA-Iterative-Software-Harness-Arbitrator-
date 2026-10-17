@@ -96,9 +96,18 @@ def instance_dir(run_dir: Path, instance_id: str) -> Path:
     return run_dir / instance_id.replace("/", "__")
 
 
+_APPEND_LOCK = threading.Lock()
+
+
 def _append(path: Path, payload: dict) -> None:
-    with path.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(payload, ensure_ascii=False, default=str) + "\n")
+    """Append one JSONL line. Lock-guarded: with workers>1 the parent thread
+    (attempt/timeout/model events) and the pool worker thread (LLM call-event
+    sink) append to the SAME log file concurrently — unlocked writes can
+    interleave mid-line and corrupt the JSONL."""
+    line = json.dumps(payload, ensure_ascii=False, default=str) + "\n"
+    with _APPEND_LOCK:
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(line)
 
 
 def load_checkpoint(path: Path) -> dict | None:
@@ -240,11 +249,20 @@ def reset_checkout(repo_path: str) -> None:
 
 
 # ── One instance ───────────────────────────────────────────────────────────
-def _invoke_graph(record: dict, thread_id: str, notes: list[str] | None = None) -> dict:
+def _invoke_graph(record: dict, thread_id: str, notes: list[str] | None = None,
+                 sink=None) -> dict:
     from src.agents.context import build_repo_context
     from src.agents.graph import compiled_graph
     from src.agents.state import AgentState
-    from src.config import clear_model_log, get_model_log
+    from src.config import clear_model_log, get_model_log, reset_call_events, set_call_event_sink
+
+    # AR-3: thread-local sinks do NOT propagate into pool worker threads, and
+    # pools reuse threads — so a stale sink from a previous attempt would
+    # cross-talk into this instance's log (or events would be silently lost).
+    # Reset the worker thread's TLS, then attach THIS attempt's sink here.
+    reset_call_events()
+    if sink is not None:
+        set_call_event_sink(sink)
 
     repo_path = str(instance_checkout(record))
     clear_model_log()
@@ -386,10 +404,13 @@ def run_instance(
         _append(log_path, {"event": "start", "instance_id": record["instance_id"],
                            "ts": time.time()})
 
-    from src.config import set_call_event_sink
-    set_call_event_sink(lambda ev: _append(log_path, ev))
-
     from src.config import reset_provider_state
+
+    # AR-3: the sink is attached inside the pool worker thread (see
+    # _invoke_graph) — setting it here would only arm the parent thread,
+    # which emits nothing. Pass it explicitly so events land in THIS log.
+    def _sink(ev: dict) -> None:
+        _append(log_path, ev)
     attempt = 0
     notes: list[str] = list(record.get("context_notes") or [])
     meta: dict = {
@@ -412,7 +433,7 @@ def run_instance(
 
         _append(log_path, {"event": "attempt", "n": attempt, "ts": time.time()})
         pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="isha-bench")
-        future = pool.submit(_invoke_graph, record, f"{thread_id}-{attempt}", notes)
+        future = pool.submit(_invoke_graph, record, f"{thread_id}-{attempt}", notes, _sink)
         try:
             outcome = future.result(timeout=timeout)
         except FutureTimeout:
@@ -542,6 +563,13 @@ def run_instance(
         save_checkpoint(path, meta)
         _append(log_path, {"event": "finish", "status": "done",
                            "has_patch": bool(patch), "ts": time.time()})
+        try:
+            from src.agents.fix_history import record_fix
+            state.patch = patch
+            state.instance_id = record["instance_id"]
+            record_fix(state)
+        except Exception:
+            pass
         return meta
 
     save_checkpoint(path, meta)

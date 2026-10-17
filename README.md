@@ -3,7 +3,7 @@
 > **Iterative Software Harness & Arbitrator**: an autonomous SWE agent that localizes bugs to the root-cause symbol, synthesizes failing reproduction tests first (RED), races candidate fixes in isolated Git worktrees, and ships only patches verified green under official SWE-bench Docker environments (GREEN). Engineered with strict minimal-diff discipline and empirical container invariants.
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
-[![Official Docker Resolved: 72](https://img.shields.io/badge/Official%20Docker%20Resolved-72%20(Official%20Harness)-brightgreen.svg)](#-swe-bench-lite-audited-scorecard)
+[![Official Docker Resolved: 76](https://img.shields.io/badge/Official%20Docker%20Resolved-76%20(Official%20Harness)-brightgreen.svg)](#-swe-bench-lite-audited-scorecard)
 [![Clean AST Patch Yield: 88.8%](https://img.shields.io/badge/Clean%20AST%20Patch%20Yield-88.8%25%20(206%2F232)-blue.svg)](#-swe-bench-lite-audited-scorecard)
 [![Inference: $0.00 Free Tier](https://img.shields.io/badge/Inference-%240.00%20Free%20Tier-success.svg)](#-zero-cost-pareto-frontier)
 [![Safety: ECE 0.0010](https://img.shields.io/badge/Safety%20Gate-ECE%200.0010-purple.svg)](#-laya-calibrated-decision-gate)
@@ -44,15 +44,17 @@ ISHA fundamentally re-engineers this paradigm by replacing brute-force prompting
 | **Hallucination Prevention** | Relies on LLM self-reflection (frequently repeats identical out-of-scope errors) | **8 Negative Container Invariants**: hardcoded boundaries preventing `len(None)`, unhashable sets, missing `@wraps`, etc. |
 | **Candidate Generation** | Single-shot or greedy trajectory exploration | **Multi-Candidate Worktree Tournament**: races 3 diverse strategies (`minimal_diff`, `call_site_aware`, `root_cause_first`) in parallel Git worktrees |
 | **Verification Gate** | LLM self-grading or raw pytest exit codes | **TDD Red-to-Green**: requires reproduction test to fail on baseline and pass on patch, gated by **LAYA** calibrated gate (ECE = 0.0010) |
+| **Institutional Memory** | Stateless across tasks; repeats identical failed edits | **Closed-Loop Memory & Negative Veto**: Dual SQLite + Vector ledger with 76 verified resolved exemplars & automatic `NEVER-DO` veto on failed patterns |
 | **Self-Healing** | Generic "fix the error" prompt looping | **AST Compilation Gates & Real Container Traceback Repair**: AST static gates filter candidate patches before Docker, with targeted 2-round traceback feedback loops |
-| **Docker Grounding** | Often simulated or evaluated on mock environments | **Official SWE-bench Docker Harness**: 100% official Docker `report.json` container verification (**70.0% Session 4, 72 Combined Resolved**) |
+| **Docker Grounding** | Often simulated or evaluated on mock environments | **Official SWE-bench Docker Harness**: 100% official Docker `report.json` container verification (**70.0% Session 4, 76 Combined Resolved**) |
 
-### The 4 Core Architectural Breakthroughs
+### The 5 Core Architectural Breakthroughs
 
 1. **The $0.00 Pareto Frontier**: While commercial baselines burn hundreds of dollars per benchmark run, ISHA demonstrates that combining AST localization, Tree-sitter symbol ranking, and multi-model fallbacks allows free-tier models to outperform expensive proprietary systems.
 2. **Empirical Negative Invariants**: Standard AI coders frequently fail on subtle Python/container contracts (inserting methods outside target class scopes, calling `len(None)` on nullable fields, using mutable types in hashable sets, stripping `@functools.wraps`). ISHA enforces 8 non-negotiable negative invariants that prevent regression breakages.
 3. **Multi-Strategy Worktree Tournaments**: Rather than putting all trust in a single trajectory, ISHA forks isolated Git worktrees and synthesizes candidate fixes across 3 orthogonal philosophies—selecting the minimal passing diff via static AST compilation gates and unit test feedback.
 4. **LAYA Calibrated Decision Gate**: Eliminates false approvals. Using temperature scaling ($T=0.35$) over empirical benchmark distributions, LAYA achieves an Expected Calibration Error (ECE) of **0.0010** and **100% precision** at decision threshold $\tau=0.50$.
+5. **Closed-Loop Institutional Memory & Negative Veto**: Dual-layer memory engine (`data/memory.db` + `output/fix_history.jsonl`) that injects Docker-proven winning patches into the prompt as positive few-shot exemplars, while enforcing a cosine > 0.92 `NEVER-DO` veto that actively blocks repeating proven historical failures.
 
 ---
 
@@ -68,11 +70,11 @@ Every number below originates strictly from official SWE-bench Docker container 
 | **Session 1 (`lite300-s1`)** | 30 | **22** | 100.0% | **11 / 30** | **36.7%** 🚀 |
 | **Session 5 (`lite300-s5`)** | 30 | **26** | 86.7% | **3 / 30** | 10.0% |
 | **Session 6 (`lite300-s6`)** | 30 | **20** | 66.7% | **3 / 30** | 10.0% |
-| **Session 7 (`lite300-s7`)** | 30 | **25** | **83.3%** 🚀 | **0 / 30** | *(eval in queue)* |
-| **Session 8 (`lite300-s8`)** | 30 | **25** | 83.3% | — | *(eval in queue)* |
+| **Session 7 (`lite300-s7`)** | 30 | **25** | **83.3%** 🚀 | **0 / 30** | 0.0% |
+| **Session 8 (`lite300-s8`)** | 30 | **25** | 83.3% | **4 / 30** | **13.3%** 🚀 |
 | **Session 9 (`lite300-s9`)** | 30 | *11+ (active)* | 84.6% | — | *(actively solving)* |
 | **Session 10 (`lite300-s10`)** | 30 | *queued* | — | — | *(auto-queued)* |
-| **FINAL AUDITED TOTAL** | **232 Evaluated** | **206 Clean Patches** | **88.8%** 🌟 | **72 Official Docker** | **34.3% Evaluated (24.0% of 300)** |
+| **COMBINED TOTAL (S1–S10)** | **240 Evaluated** | **213 Clean Patches** | **88.8%** 🌟 | **76 / 300 Resolved** | **25.33% (76 / 300)** |
 
 Inspect the live audited scorecard in your terminal at any time:
 ```bash

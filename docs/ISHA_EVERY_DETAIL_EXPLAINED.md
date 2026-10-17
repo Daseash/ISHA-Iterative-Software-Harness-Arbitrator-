@@ -19,6 +19,7 @@
 11. [Why "Ponytail", "Taskmaster", and "Smoke 50" Were Removed](#11-why-ponytail-taskmaster-and-smoke-50-were-removed)
 12. [Open-Source Reproducibility & Future Execution in One Go](#12-open-source-reproducibility--future-execution-in-one-go)
 13. [Live Web Portal & Production Observability](#13-live-web-portal--production-observability)
+14. [Closed-Loop Institutional Memory & Negative Veto](#14-closed-loop-institutional-memory--negative-veto)
 
 ---
 
@@ -60,20 +61,24 @@ Every single pass reported below is drawn directly from official Docker `report.
 | **Session 3 (`lite300-s3`)** | 30 | **20** | **66.7% (20 / 30)** 🏆 |
 | **Session 2 (`lite300-s2`)** | 30 | **14** | **46.7% (14 / 30)** 🚀 |
 | **Session 1 (`lite300-s1`)** | 30 | **11** | **36.7% (11 / 30)** 🚀 |
-| **COMBINED (Sessions 1–4)** | **120** | **66** | **55.0% (66 / 120)** 🌟 |
+| **Session 8 (`lite300-s8`)** | 30 | **4** | **13.3% (4 / 30)** 🚀 |
+| **Session 5 (`lite300-s5`)** | 30 | **3** | **10.0% (3 / 30)** |
+| **Session 6 (`lite300-s6`)** | 30 | **3** | **10.0% (3 / 30)** |
+| **COMBINED (Sessions 1–4)** | **120** | **66** | **55.0% (66 / 120)** 🌟 PEAK SLICE — do not quote alone |
+| **FULL Lite300 (Sessions 1–10)** | **300** | **76** | **25.33% (76 / 300)** TRUE SCORE (SSOT: `python scripts/score.py`, official Docker reports) |
 
 ---
 
 ## 4. Where Does ISHA Stand on the Global Leaderboard?
 
-### Global Standing: **Top 1% – 3% Worldwide**
+### Peak-slice standing (NOT an official leaderboard rank — no results PR submitted yet, per approvals A-2)
 
 On the official [SWE-bench Lite Leaderboard](https://www.swebench.com/lite.html):
 
 | Tier | System / Organization | Primary LLM | Resolved Rate | Typical Cost / Task |
 | :---: | :--- | :--- | :---: | :---: |
-| 🥇 **TOP 1–3** | **ISHA (Session 4 Peak)** | **Gemini Flash / Free Tier** | **70.0%** | **$0.00** |
-| 🥈 **TOP 3–5** | **ISHA (S1–S4 Combined)** | **Gemini Flash / Free Tier** | **55.0% (66/120)** | **$0.00** |
+| 🌟 **PEAK SLICE** | **ISHA (Session 4 Peak)** | **Gemini Flash / Free Tier** | **70.0%** | **$0.00** |
+| 🌟 **PEAK SLICE** | **ISHA (S1–S4 Combined)** | **Gemini Flash / Free Tier** | **55.0% (66/120)** | **$0.00** |
 | #4 – #8 | Factory Code Droid / Moatless | Claude 3.5 Sonnet | ~40.0% – 43.0% | $15.00 – $25.00 |
 | #10 – #15 | SWE-agent + Claude 3.5 (Princeton) | Claude 3.5 Sonnet | ~33.0% – 38.0% | $15.00 |
 | #20 – #25 | Agentless (Berkeley / UIUC) | GPT-4o / Claude | ~27.3% | $5.00 |
@@ -82,8 +87,8 @@ On the official [SWE-bench Lite Leaderboard](https://www.swebench.com/lite.html)
 | #60 – #75 | SWE-agent + GPT-4 (Princeton Launch) | GPT-4 Turbo | ~18.0% | $10.00 |
 | #80 – #90 | Devin Launch Baseline (Cognition) | Proprietary | ~13.86% | $500/mo subscription |
 
-### Cost Category: **Rank #1 Worldwide (Undisputed)**
-Every other system exceeding 35% on the leaderboard spends hundreds or thousands of dollars on Anthropic or OpenAI API credits. **ISHA is the only system in the world achieving >50% resolution at $0.00 inference cost.**
+### Cost fact (measured, unranked): **$0.00 inference cost on peak slices**
+Every other system exceeding 35% on the leaderboard spends hundreds or thousands of dollars on Anthropic or OpenAI API credits. **ISHA's peak slices ran at $0.00 inference cost (free-tier pools). No rank is claimed until a results PR is merged (A-2).**
 
 ---
 
@@ -223,6 +228,30 @@ When any user clones the repository and runs `python scripts/score.py` or solves
 - **Interactive Stats Gallery**: [https://isha-ai.vercel.app/stats](https://isha-ai.vercel.app/stats)
 - **Tech Stack**: React 19, TypeScript, Vite 8, Tailwind CSS v4, Framer Motion.
 - **Audited Metrics Live**: Displays Session 4 (70.0%), Session 3 (66.7%), and Combined S1–S4 (55.0%) with interactive architectural comparison cards.
+
+---
+
+## 14. Closed-Loop Institutional Memory & Negative Veto
+
+Unlike stateless conversational bots that restart from zero every task, ISHA implements continuous closed-loop learning across SWE-bench sessions:
+
+### 1. Dual-Tier Storage Architecture
+- **Relational Ground Truth (`data/memory.db`)**: SQLite `outcomes` table with write-ahead logging (WAL). Implements Write-A (`resolved=NULL` on candidate generation) and Write-B (official Docker grade updates after containerized pytest run).
+- **Semantic Vector Ledger (`output/fix_history.jsonl`)**: Persistent JSONL ledger indexing all 76 Docker-verified resolved solutions with 384-dimensional normalized vector embeddings (`src/rag/indexer.py`).
+
+### 2. Positive Few-Shot Analog Transfer
+Before the planner begins, ISHA retrieves the most similar verified past fixes for that repository or organization:
+- Prioritizes Docker-verified `RESOLVED` patches with `tests=PASSED`.
+- Injects verbatim unified diff excerpts into the prompt as concrete blueprints.
+- Demonstrates repo-specific imports, mocking idioms, and container conventions.
+
+### 3. Automated Negative Veto (`NEVER-DO`)
+- Analyzes candidate fixes against the bank of 106 container-graded failures (`resolved=0`).
+- If a proposed direction matches a historical failed attempt with cosine similarity $> 0.92$, the arbitrator fires a hard `NEVER-DO` veto:
+  ```text
+  NEVER-DO: query ~identical (cos 0.95) to failed sphinx-doc__sphinx-7686 — do not repeat its approach: diff ...
+  ```
+- Prevents wasting quota and timeout budgets on dead-end bugs that previously failed container tests.
 
 ---
 

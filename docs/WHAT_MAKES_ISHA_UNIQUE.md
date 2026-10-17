@@ -42,7 +42,7 @@ Instead of guessing, ISHA treats bug fixing as an empirical scientific process:
 
 ---
 
-## 🏛️ The 5 Pillars of ISHA's Uniqueness
+## 🏛️ The 6 Pillars of ISHA's Uniqueness
 
 ```
                 ┌──────────────────────────────────────────────┐
@@ -123,6 +123,14 @@ Human senior engineers do not push code hoping it works; they write a failing te
 - **Verbatim Retry Loop**: If a patch fails to apply due to a line offset or fuzzy context mismatch, ISHA doesn't emit a generic "please try again." It inspects the real file, extracts the exact lines around the failed hunk, and feeds them back:
   > *"Hunk failed at line 140. Here are lines 100–180 verbatim from the real file. Copy these exact characters."*
 - **Security Scanner**: Before any patch is output, an automated scanner audits the diff for hardcoded API keys, private certificates, `.env` file entries, or suspicious shell calls.
+
+### Pillar 6: Closed-Loop Institutional Memory & Negative Veto (The Senior Engineer Long-Tenure Effect)
+- Standard AI agents are completely stateless: every run starts from scratch, repeating the exact same dead-end approaches, wrong imports, or invalid container assumptions.
+- **ISHA incorporates dual-layer institutional memory**:
+  1. **SQLite Ground Truth (`data/memory.db`)**: Queryable relational engine tracking every attempt with issue hash, patch hash, strategy, critic score, and official Docker resolution (`resolved=1` vs `resolved=0`).
+  2. **Semantic Vector Ledger (`output/fix_history.jsonl`)**: High-performance ledger storing full unified diffs and 384-dimensional semantic embeddings for all **76 Docker-verified resolved solutions**.
+- **Positive Exemplar Injection**: When solving an issue in a repository (e.g., `sympy`, `django`, `astropy`, `sphinx`), ISHA retrieves the most similar past successful fixes from that repo/org and injects the proven winning patch excerpts directly into the Planner and Coder prompts.
+- **Negative Veto Engine (`NEVER-DO`)**: If an issue or strategy has cosine similarity > 0.92 to a prior container-graded failure, ISHA fires an assertive `NEVER-DO` guardrail warning the model never to repeat that specific failed pattern.
 
 ---
 

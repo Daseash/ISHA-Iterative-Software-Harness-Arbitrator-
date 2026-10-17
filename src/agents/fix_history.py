@@ -156,6 +156,8 @@ def retrieve_fixes(
         return []
     repo = _normalize_repo(repo_path)
     repo_org = repo.replace("\\", "/").split("/")[-1] if repo else ""
+    if "__" in repo_org:
+        repo_org = repo_org.split("__")[0]
     query = embed_text(issue_text)
 
     try:
@@ -179,15 +181,33 @@ def retrieve_fixes(
         if score < min_score:
             continue
         erepo = entry.get("repo", "")
+        erepo_base = erepo.replace("\\", "/").split("/")[-1] if erepo else ""
+        if "__" in erepo_base:
+            erepo_base = erepo_base.split("__")[0]
         if erepo == repo:
             scored_exact.append((score, entry))
-        elif repo_org and erepo.replace("\\", "/").split("/")[-1] == repo_org:
+        elif repo_org and (erepo_base == repo_org or (erepo and erepo.split("/")[0] == repo_org)):
             scored_org.append((score, entry))
         else:
             scored_other.append((score, entry))
 
-    scored_exact.sort(key=lambda pair: pair[0], reverse=True)
-    scored_org.sort(key=lambda pair: pair[0], reverse=True)
+    # Prioritize verified resolved (Docker-proven) patches, then local test passes, before raw cosine score
+    scored_exact.sort(
+        key=lambda pair: (
+            pair[1].get("verdict") == "RESOLVED",
+            pair[1].get("tests") == "PASSED",
+            pair[0],
+        ),
+        reverse=True,
+    )
+    scored_org.sort(
+        key=lambda pair: (
+            pair[1].get("verdict") == "RESOLVED",
+            pair[1].get("tests") == "PASSED",
+            pair[0],
+        ),
+        reverse=True,
+    )
     scored_other.sort(key=lambda pair: pair[0], reverse=True)
     hits = []
     # P0-06: repo-exact first (backward-compatible), then org-prefix transfer.
@@ -213,7 +233,9 @@ def retrieve_fixes(
         parts = [x for x in str(repo).replace("\\", "/").split("/") if x]
         if parts:
             org = parts[-1].lower()
-        conn_hits = _mem_org_positives(org, query, top_k)
+            if "__" in org:
+                org = org.split("__")[0]
+        conn_hits = _mem_org_positives(org, query, top_k, lines)
         for h in conn_hits:
             if all(h.get("digest") != x.get("digest") for x in hits):
                 hits.append(h)
@@ -225,7 +247,7 @@ def retrieve_fixes(
     return hits
 
 
-def _mem_org_positives(org: str, query: list, top_k: int) -> list[dict]:
+def _mem_org_positives(org: str, query: list, top_k: int, lines: list[str] | None = None) -> list[dict]:
     """SQLite resolved=1 rows for the same org, ranked by cosine when vectors exist."""
     import sqlite3
 
@@ -246,17 +268,29 @@ def _mem_org_positives(org: str, query: list, top_k: int) -> list[dict]:
         conn.close()
     except Exception:
         return []
+
+    patch_by_iid = {}
+    if lines:
+        for line in lines:
+            try:
+                e = json.loads(line)
+                if e.get("instance_id") and e.get("patch"):
+                    patch_by_iid[e["instance_id"]] = e["patch"]
+            except Exception:
+                continue
+
     out = []
     for r in rows[: max(0, top_k)]:
+        iid = r["instance_id"]
         out.append({
             "repo": r["repo"],
-            "instance_id": r["instance_id"],
+            "instance_id": iid,
             "strategy": r["strategy"],
             "verdict": "resolved-prior",
             "score": r["critic_score"],
             "similarity": 0.5,
-            "patch": "",
-            "issue": f"prior resolved {r['instance_id']} ({r['strategy']}/{r['model']})",
+            "patch": patch_by_iid.get(iid, ""),
+            "issue": f"prior resolved {iid} ({r['strategy']}/{r['model']})",
         })
     return out
 
