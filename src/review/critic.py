@@ -52,7 +52,21 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
             safe_component = 0.25 * max(0, scores["safe_to_apply"] - safe_penalty)
             effective_composite = quality_component + matches_component + safe_component
 
-        if effective_composite < 0.4:
+        # Phase-0: per-org critic threshold (opt-in ISHA_CRITIC_PER_ORG=1).
+        # Default stays the global 0.4 gate so running lanes keep semantics.
+        threshold = 0.4
+        try:
+            from src.memory.store import org_critic_threshold
+
+            org_thr = org_critic_threshold(
+                getattr(state, "instance_id", "") or "", state.repo_path or ""
+            )
+            if org_thr is not None:
+                threshold = org_thr
+        except Exception:
+            pass
+
+        if effective_composite < threshold:
             state.critic_verdict = "low_quality"
         else:
             state.critic_verdict = "approved"

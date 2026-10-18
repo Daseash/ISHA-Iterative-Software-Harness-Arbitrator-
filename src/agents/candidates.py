@@ -423,6 +423,21 @@ def generate_candidates(
     3 models takes roughly the same wall-clock time as 1.
     """
     preferred_models = strategy_models()
+    # Phase-0 model-axis bandit (opt-in): per (org, strategy) swap of the
+    # preferred model when graded outcomes prove a better one. Default OFF
+    # so configured ladders stay authoritative until rows justify it.
+    if str(os.getenv("ISHA_BANDIT_MODELS", "0")).lower() in {"1", "true", "on"}:
+        try:
+            from src.memory.store import model_pick
+
+            for _name in list(preferred_models):
+                _pick = model_pick(
+                    instance_id or "", state.repo_path or "", _name, preferred_models[_name]
+                )
+                if _pick:
+                    preferred_models[_name] = _pick
+        except Exception:
+            pass
     has_seed = bool(seed_patch and not seed_patch.startswith("["))
 
     jobs: list[tuple[str, float, str, bool]] = []

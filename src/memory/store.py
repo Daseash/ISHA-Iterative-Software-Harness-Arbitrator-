@@ -208,3 +208,112 @@ def strategy_order(
         return (wins + 1) / (graded + 2)
 
     return sorted(strs, key=_score, reverse=True)
+
+
+def _model_suffix(name: str) -> str:
+    # store rows carry the provider-prefixed id as used ('gemini/gemini-…');
+    # callers pass defaults in either form — compare by final path segment.
+    return (name or "").rsplit("/", 1)[-1].lower()
+
+
+def model_pick(
+    instance_id: str,
+    repo: str,
+    strategy: str,
+    default: str,
+    min_graded: int = 4,
+    epsilon: float | None = None,
+    path: Path | None = None,
+) -> str:
+    """Phase-0 model-axis bandit for one (org, strategy): returns '' to keep
+    `default`, else the model whose Laplace reward beats it on graded rows.
+
+    Needs >= min_graded graded rows for the (org, strategy) pair AND a
+    strictly better reward than `default`'s own (0 attempt counts as 1/2).
+    Never collapses candidate diversity: each strategy picks its own model.
+    """
+    import os
+    import random
+
+    if not (strategy and default):
+        return ""
+    scaled = epsilon if epsilon is not None else None
+    eps = scaled if scaled is not None else float(os.getenv("ISHA_BANDIT_EPSILON", "0.15"))
+    if eps > 0 and random.random() < eps:
+        return ""  # exploration keeps the configured ladder authoritative
+    org = org_of(instance_id, repo)
+    conn = _connect(path)
+    try:
+        rows = conn.execute(
+            "SELECT model, resolved FROM outcomes "
+            "WHERE repo_org=? AND strategy=? AND resolved IS NOT NULL AND model<>''",
+            (org, strategy),
+        ).fetchall()
+    finally:
+        conn.close()
+    by_model: dict[str, dict[str, int]] = {}
+    for name, resolved in rows:
+        slot = by_model.setdefault(
+            _model_suffix(name), {"wins": 0, "graded": 0, "raw": name}
+        )
+        slot["graded"] += 1
+        slot["wins"] += 1 if int(resolved or 0) == 1 else 0
+    if not by_model:
+        return ""
+    total_graded = sum(v["graded"] for v in by_model.values())
+    if total_graded < min_graded:
+        return ""
+
+    best = None
+    best_reward = -1.0
+    for suffix, slot in by_model.items():
+        reward = (slot["wins"] + 1) / (slot["graded"] + 2)
+        if reward > best_reward:
+            best, best_reward = suffix, reward
+    if not best or best == _model_suffix(default):
+        return ""
+    default_slot = by_model.get(_model_suffix(default), {"wins": 0, "graded": 0})
+    default_reward = (default_slot["wins"] + 1) / (default_slot["graded"] + 2)
+    if best_reward > default_reward:
+        return by_model[best]["raw"]
+    return ""
+
+
+def org_critic_threshold(
+    instance_id: str,
+    repo: str,
+    min_graded: int = 8,
+    path: Path | None = None,
+) -> float | None:
+    """Phase-0 per-org critic threshold from graded outcomes (memory.db).
+
+    Balanced-accuracy-optimal cut over archived (critic_score, resolved)
+    pairs for the org. Returns None when either class or enough rows are
+    missing — caller keeps the global 0.4 gate.
+    """
+    import os
+
+    switch = str(os.getenv("ISHA_CRITIC_PER_ORG", "0")).strip().lower()
+    if switch not in {"1", "true", "on"}:
+        return None
+    org = org_of(instance_id, repo)
+    if not org:
+        return None
+    conn = _connect(path)
+    try:
+        rows = conn.execute(
+            "SELECT critic_score, resolved FROM outcomes "
+            "WHERE repo_org=? AND critic_score IS NOT NULL AND resolved IS NOT NULL",
+            (org,),
+        ).fetchall()
+    finally:
+        conn.close()
+    if not rows or len(rows) < min_graded:
+        return None
+    probs = [float(r[0]) for r in rows]
+    labels = [1 if int(r[1] or 0) == 1 else 0 for r in rows]
+    if len(set(labels)) < 2:
+        return None
+    from src.review.calibration import find_threshold
+
+    return float(find_threshold(probs, labels)["threshold"])
