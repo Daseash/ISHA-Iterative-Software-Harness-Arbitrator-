@@ -49,7 +49,7 @@ def db_path() -> Path:
 
 def _connect(path: Path | None = None) -> sqlite3.Connection:
     p = path or db_path()
-    conn = sqlite3.connect(str(p))
+    conn = sqlite3.connect(str(p), timeout=60.0)
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.executescript(SCHEMA)
     return conn
@@ -161,3 +161,50 @@ def fetch(instance_id: str, path: Path | None = None) -> dict | None:
         return dict(row) if row else None
     finally:
         conn.close()
+
+
+def strategy_order(
+    instance_id: str,
+    repo: str = "",
+    strategies: list[str] | None = None,
+    epsilon: float | None = None,
+    path: Path | None = None,
+) -> list[str]:
+    """AR-5: rank fan-out strategies by smoothed reward from graded outcomes.
+
+    reward = (wins + 1) / (graded + 2), Laplace-smoothed so unseen strategies
+    stay in the race (1/2) instead of getting starved. Only graded rows count;
+    attempts without a verdict (resolved NULL) are deliberately ignored so a
+    wave of ungraded solves cannot re-rank anything.
+
+    Exploration epsilon (<1, ISHA_BANDIT_EPSILON, default 0.15) shuffles the
+    order with that probability — reorders, never drops a strategy.
+    """
+    import os
+    import random
+
+    strs = list(strategies or ["minimal_diff", "call_site_aware", "root_cause_first"])
+    eps = epsilon if epsilon is not None else float(os.getenv("ISHA_BANDIT_EPSILON", "0.15"))
+    if eps >= 1.0 or random.random() < eps:
+        random.shuffle(strs)
+        return strs
+
+    org = org_of(instance_id, repo)
+    conn = _connect(path)
+    try:
+        placeholders = ",".join("?" for _ in strs)
+        cur = conn.execute(
+            f"SELECT strategy, SUM(resolved), COUNT(resolved) FROM outcomes "
+            f"WHERE repo_org=? AND strategy IN ({placeholders}) "
+            f"AND resolved IS NOT NULL GROUP BY strategy",
+            [org, *strs],
+        )
+        stats = {row[0]: (int(row[1] or 0), int(row[2] or 0)) for row in cur.fetchall()}
+    finally:
+        conn.close()
+
+    def _score(name: str) -> float:
+        wins, graded = stats.get(name, (0, 0))
+        return (wins + 1) / (graded + 2)
+
+    return sorted(strs, key=_score, reverse=True)

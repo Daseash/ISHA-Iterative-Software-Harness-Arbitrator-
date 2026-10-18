@@ -260,6 +260,9 @@ def test_checklist_unparseable_returns_none(monkeypatch):
 def test_fix_history_roundtrip_and_repo_filter(monkeypatch, tmp_path):
     import src.agents.fix_history as fh
 
+    # Isolate BOTH stores: real Write-B rows would otherwise leak into
+    # retrieval and break the exact-count assertions below.
+    monkeypatch.setenv("ISHA_MEMORY_DB", str(tmp_path / "memory.db"))
     monkeypatch.setattr(fh, "_ledger_path", lambda: tmp_path / "fix_history.jsonl")
     state = AgentState(
         issue_text="separability matrix wrong for nested models",

@@ -25,11 +25,14 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LABELS_PATH = ROOT / "data" / "laya_labels.jsonl"
 MODEL_PATH = ROOT / "data" / "laya_combiner.json"
+REAL_PATH = ROOT / "results" / "calibration_real.json"
+REAL_ARTIFACT_PATH = ROOT / "results" / "calibration_real.json"
 
 EPS = 1e-9
 
@@ -303,6 +306,31 @@ def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH,
     model["temperature"] = temp
 
     val_scaled = temperature_scale(val_probs, temp)
+    # Per-org threshold diagnostics (P1-04 data gate): orgs with >= 50 rows
+    # get a fitted 90%-precision threshold recorded for future per-org gating.
+    # Audit-only — the live path still ranks by the global score.
+    from collections import defaultdict
+
+    _all_x = [vector(r["features"]) for r in usable]
+    _all_raw = [sigmoid(sum(w * v for w, v in zip(model["weights"], row)) + model["bias"])
+                for row in _all_x]
+    _all_scaled = temperature_scale(_all_raw, temp)
+    _org_probs: dict = defaultdict(list)
+    _org_labels: dict = defaultdict(list)
+    for r, p in zip(usable, _all_scaled):
+        org = str(r.get("instance_id", "?")).split("__")[0] or "?"
+        _org_probs[org].append(p)
+        _org_labels[org].append(1 if r["label"] else 0)
+    per_org = {}
+    for org in sorted(_org_probs):
+        n_o = len(_org_probs[org])
+        if n_o < 50:
+            continue
+        t = find_precision_threshold(_org_probs[org], _org_labels[org],
+                                     target_precision=0.90)
+        per_org[org] = {"n": n_o,
+                        "positives": sum(_org_labels[org]),
+                        **t}
     thr_bal = find_threshold(val_scaled, y_val)
     thr_prec = find_precision_threshold(val_scaled, y_val, target_precision=0.90)
 
@@ -355,11 +383,34 @@ def fit(path: Path | str = LABELS_PATH, out: Path | str = MODEL_PATH,
         "threshold_auto_approve_90_precision": thr_prec["threshold"],
         "validation_precision": thr_prec["precision"],
         "validation_coverage": thr_prec["coverage"],
+        "per_org_90_precision": per_org,
         "weights": {f: round(w, 4) for f, w in zip(FEATURES, model["weights"])},
         "bias": round(model["bias"], 4),
     }
     res_cal_path.write_text(json.dumps(cal_artifact, indent=2), encoding="utf-8")
     return model
+
+
+def per_org_threshold(org: str, artifact: dict | None = None) -> float | None:
+    """Live per-org 90%-precision auto-approve threshold (AR-4 #6).
+
+    Reads ``per_org_90_precision`` out of the fitted calibration artifact
+    (results/calibration_real.json). Returns None when the org has no fitted
+    threshold — callers fall back to the global threshold.
+    """
+    if not org:
+        return None
+    data = artifact
+    if data is None:
+        try:
+            data = json.loads(REAL_ARTIFACT_PATH.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+    entry = dict(data.get("per_org_90_precision") or {}).get(org.lower()) or {}
+    try:
+        return float(entry["threshold"])
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
 def load(path: Path | str = MODEL_PATH) -> dict | None:

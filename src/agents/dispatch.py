@@ -22,8 +22,16 @@ def dispatch_agents(state: AgentState):
     base = deepcopy(state.model_dump() if hasattr(state, "model_dump") else dict(state))
     iid = (base.get("instance_id") or "local").replace("/", "_")[:40]
     retry = base.get("retry_count", 0)
+    # AR-5: order strategies by graded-outcome reward (exploratory reorder).
+    order = STRATEGIES
+    try:
+        from src.memory.store import strategy_order
+
+        order = strategy_order(base.get("instance_id") or "", base.get("repo") or "")
+    except Exception:
+        order = STRATEGIES
     sends = []
-    for i, strategy in enumerate(STRATEGIES, start=1):
+    for i, strategy in enumerate(order, start=1):
         # P0-10: unique worktree per (instance, branch, retry) — was agent-{i} (collides).
         tag = f"agent-{iid}-{i}-r{retry}"
         try:

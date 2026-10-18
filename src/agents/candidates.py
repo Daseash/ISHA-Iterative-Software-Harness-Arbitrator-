@@ -199,6 +199,42 @@ def _reset(worktree: str) -> None:
         subprocess.run(["git", "clean", "-xfd"], cwd=worktree, capture_output=True)
 
 
+def _hunk_excerpts(worktree: str, patch: str, ctx: int = 5) -> str:
+    """Show verbatim on-disk content around each location the diff wants to edit.
+
+    Repair feedback previously carried only the *error text*; flash-quality
+    coders then hallucinate context lines nobody ever showed them. This helper
+    gives them the real lines so the next round can anchor on reality.
+    Never raises. Returns "" when nothing informative exists on disk.
+    """
+    import re
+
+    outcomes: list[str] = []
+    path: str | None = None
+    for line in (patch or "").splitlines():
+        if line.startswith("+++ b/"):
+            path = line[6:].strip()
+            continue
+        hunk = re.match(r"^@@ -\d+(?:,\d+)? \+(\d+)", line)
+        if not hunk or not path:
+            continue
+        target = Path(worktree) / path
+        if not target.is_file():
+            continue
+        try:
+            lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+            n = int(hunk.group(1))
+            lo = max(1, n - ctx)
+            hi = min(len(lines), n + ctx)
+            if hi < lo:
+                continue
+            body = "\n".join(f"{i:4d} | {lines[i - 1]}" for i in range(lo, hi + 1))
+            outcomes.append(f"{path} around real line {n}:\n{body}")
+        except OSError:
+            continue
+    return "\n\n".join(outcomes[:4])
+
+
 def _build_candidate(
     index: int,
     name: str,
@@ -258,14 +294,22 @@ def _build_candidate(
         _reset(cand.worktree)
         ok, message = _apply(cand.worktree, patch)
         if not ok:
-            from src.tools.patch_engine import record_apply_failure
+            from src.tools.patch_engine import diagnose_missing_removals, record_apply_failure
             record_apply_failure(instance_id, index, round_idx, patch, message)
             if round_idx == 0 and use_seed and seed_patch:
                 prompt = build_coder_prompt(state, strategy=name)
+            diag = diagnose_missing_removals(cand.worktree, patch or "")
+            diag_block = f"\nHALLUCINATED LINES (not in file):\n{diag}\n" if diag else ""
+            real_block = _hunk_excerpts(cand.worktree, patch or "")
+            real_section = (
+                f"\nREAL FILE CONTENT at the hunk locations (character-accurate):\n{real_block}\n"
+                if real_block
+                else ""
+            )
             feedback = (
                 "\n\nTHE PREVIOUS DIFF DID NOT APPLY. Exact error:\n"
-                f"{message}\n\nReproduce the surrounding lines exactly as "
-                "they appear in the file and emit a corrected diff."
+                f"{message}\n{diag_block}{real_section}\nReproduce the surrounding lines exactly as "
+                "they appear in the REAL FILE CONTENT section above and emit a corrected diff."
             )
             if log:
                 log({
@@ -297,9 +341,15 @@ def _build_candidate(
             record_apply_failure(instance_id, index, round_idx, canonical_patch, f"git apply --check failed: {val_msg}")
             if round_idx == 0 and use_seed and seed_patch:
                 prompt = build_coder_prompt(state, strategy=name)
+            _rs = _hunk_excerpts(cand.worktree, canonical_patch or patch)
+            real_section = (
+                f"\nREAL FILE CONTENT at the hunk locations (character-accurate):\n{_rs}\n"
+                if _rs
+                else ""
+            )
             feedback = (
                 "\n\nTHE GENERATED DIFF FAILED `git apply --check` ON THE BASE REPO. Exact error:\n"
-                f"{val_msg}\n\nEmit a corrected diff that applies cleanly."
+                f"{val_msg}\n{real_section}\n\nEmit a corrected diff that applies cleanly."
             )
             if log:
                 log({
@@ -337,6 +387,12 @@ def _build_candidate(
     else:
         cand.patch = patch
         cand.apply_ok = False
+        # Keep the last real failure text — without it, diagnostics show a
+        # blank apply_message and mislead root-cause analysis.
+        try:
+            cand.apply_message = message
+        except NameError:  # no round ever ran _apply
+            pass
 
     if not cand.apply_ok and patch:
         # P0-08: known-bad (did not apply) — skip re-gating, mark failed directly.

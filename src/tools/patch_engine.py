@@ -110,7 +110,7 @@ def validate_patch(repo_path: str, diff_text: str) -> tuple[bool, str]:
     if not root.is_dir() or not (root / ".git").exists():
         return True, "Not a git repo, skipping git apply --check"
     diff = _normalize(diff_text)
-    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn", "-"], str(root), diff)
+    ok, msg = _run(["git", "apply", "--check", "--whitespace=nowarn", "--ignore-whitespace", "-"], str(root), diff)
     return ok, msg
 
 
@@ -169,6 +169,56 @@ def record_apply_failure(
     except Exception:
         pass
     return cause
+
+
+def diagnose_missing_removals(worktree: str, diff_text: str, max_lines: int = 6) -> str:
+    """Name hallucinated `-` lines so the coder can repair them.
+
+    Returns "" when every removal line exists in its target file (exact or
+    whitespace-insensitive). Otherwise returns a short hint listing the
+    missing lines plus one real snippet from the target file, capped so it
+    fits in a repair prompt. Never raises.
+    """
+    try:
+        root = Path(worktree)
+        if not root.is_dir():
+            return ""
+        diff = _normalize(diff_text or "")
+        if not diff.strip():
+            return ""
+        hints: list[str] = []
+        for record in _split_files(diff):
+            rel = record["new"] or record["old"]
+            if not rel:
+                continue
+            target = root / rel
+            if not target.is_file():
+                continue
+            try:
+                file_lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+            except OSError:
+                continue
+            exact = set(file_lines)
+            soft = set(ln.strip() for ln in file_lines)
+            missing: list[str] = []
+            for hunk in record["hunks"]:
+                for ln in hunk[1:]:
+                    if not ln.startswith("-") or ln.startswith("---"):
+                        continue
+                    body = ln[1:]
+                    if body not in exact and body.strip() not in soft:
+                        missing.append(body.strip()[:120])
+            missing = [m for m in missing if m][:max_lines]
+            if missing:
+                snippet = "\n".join(file_lines[:8])[:600]
+                hints.append(
+                    f"In {rel} these `-` lines were NOT found (do not invent them): "
+                    + "; ".join(repr(m) for m in missing)
+                    + f". Real file head:\n{snippet}"
+                )
+        return "\n".join(hints)[:1500]
+    except Exception:
+        return ""
 
 
 def _normalize(diff_text: str) -> str:

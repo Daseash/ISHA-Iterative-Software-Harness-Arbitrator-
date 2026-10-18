@@ -21,6 +21,9 @@ def test_seed_word_boundary_no_single_char_match():
 def test_org_prefix_and_cross_org_analog(monkeypatch, tmp_path):
     import src.agents.fix_history as fh
 
+    # Isolate BOTH stores: real Write-B rows (e.g. graded sympy/django runs)
+    # otherwise outrank the fixture rows and break ordering assertions.
+    monkeypatch.setenv("ISHA_MEMORY_DB", str(tmp_path / "memory.db"))
     monkeypatch.setattr(fh, "_ledger_path", lambda: tmp_path / "fix_history.jsonl")
     from src.agents.state import AgentState
 

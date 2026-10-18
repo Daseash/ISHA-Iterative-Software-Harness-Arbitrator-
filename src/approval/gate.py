@@ -26,12 +26,16 @@ APPROVALS_FILE = os.getenv("ISHA_APPROVALS_FILE", _DEFAULT_APPROVALS)
 _LOCK = threading.Lock()
 
 
+def _approvals_file() -> str:
+    return os.getenv("ISHA_APPROVALS_FILE", _DEFAULT_APPROVALS)
+
+
 def log_approval(entry: dict) -> dict:
     """Append one audit record to approvals.jsonl."""
     record = {"ts": datetime.datetime.now().isoformat(timespec="seconds"), **entry}
     try:
         with _LOCK:
-            with open(APPROVALS_FILE, "a", encoding="utf-8") as fh:
+            with open(_approvals_file(), "a", encoding="utf-8") as fh:
                 fh.write(json.dumps(record, ensure_ascii=False) + "\n")
     except OSError as exc:
         record["log_error"] = str(exc)
@@ -40,10 +44,11 @@ def log_approval(entry: dict) -> dict:
 
 def recent_approvals(limit: int = 5) -> list:
     """Return the newest audit records (for the telemetry tab)."""
-    if not os.path.exists(APPROVALS_FILE):
+    path = _approvals_file()
+    if not os.path.exists(path):
         return []
     try:
-        with open(APPROVALS_FILE, "r", encoding="utf-8") as fh:
+        with open(path, "r", encoding="utf-8") as fh:
             rows = [json.loads(line) for line in fh if line.strip()]
         return rows[-limit:][::-1]
     except (OSError, json.JSONDecodeError):
@@ -69,6 +74,24 @@ def approval_node(state, config: RunnableConfig | None = None) -> AgentState:
         "guardrails": report,
         "patch_preview": (state.patch or "")[:1200],
     }
+
+    # AR-4 #6: optional per-org calibrated auto-approve gate. Default OFF so
+    # benchmark lanes and Docker evals keep their exact historical behavior;
+    # enable with ISHA_PER_ORG_GATE=1 on interactive/CI runs.
+    per_org_gate = os.getenv("ISHA_PER_ORG_GATE", "0").strip().lower()
+    if not needs_review and per_org_gate not in {"0", "", "false", "off"}:
+        from src.memory.store import org_of
+        from src.review.calibration import per_org_threshold
+
+        try:
+            prob = float((state.laya_scores or {}).get("combined"))  # None-safe
+        except (TypeError, ValueError):
+            prob = None
+        org = org_of(getattr(state, "instance_id", "") or "", state.repo_path or "")
+        thr = per_org_threshold(org)
+        if prob is not None and thr is not None and prob < thr:
+            needs_review = True
+            entry["per_org_gate"] = {"org": org, "prob": prob, "threshold": thr}
 
     if not needs_review:
         state.approved = True
