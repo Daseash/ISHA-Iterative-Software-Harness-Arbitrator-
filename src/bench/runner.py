@@ -459,6 +459,8 @@ def run_instance(
                 "status": "done",
                 "failure_category": "timeout",
                 "error": f"instance exceeded {timeout}s",
+                # was missing here -> live line printed 'NO PATCH in 0s'
+                "elapsed_s": round(time.time() - meta["started_at"], 2),
             })
             save_checkpoint(path, meta)
             _append(log_path, {"event": "timeout", "attempt": attempt, "ts": time.time()})
@@ -470,6 +472,7 @@ def run_instance(
                     "status": "done",
                     "failure_category": "api_failure",
                     "error": f"{type(exc).__name__}: {exc}",
+                    "elapsed_s": round(time.time() - meta["started_at"], 2),
                 })
                 save_checkpoint(path, meta)
                 return meta
@@ -570,8 +573,10 @@ def run_instance(
             record_fix(state)
         except Exception:
             pass
+        meta.setdefault("elapsed_s", round(time.time() - meta["started_at"], 2))
         return meta
 
+    meta.setdefault("elapsed_s", round(time.time() - meta["started_at"], 2))
     save_checkpoint(path, meta)
     return meta
 
