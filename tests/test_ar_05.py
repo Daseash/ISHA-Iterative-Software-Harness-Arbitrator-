@@ -110,7 +110,12 @@ def test_model_pick_resolver_matches_provider_prefixes(tmp_db):
     _grade_model("sympy__sympy-7401", "root_cause_first", "gemini/-a", True, path=path)
     _grade_model("sympy__sympy-7402", "root_cause_first", "gemini/-a", True, path=path)
     _grade_model("sympy__sympy-7403", "root_cause_first", "gemini/-a", True, path=path)
-    assert ms.model_pick("sympy__sympy-9999", "", "root_cause_first", "irrelevant", path=path) == "gemini/-a"
+    assert (
+        ms.model_pick(
+            "sympy__sympy-9999", "", "root_cause_first", "irrelevant", epsilon=0.0, path=path
+        )
+        == "gemini/-a"
+    )
 
 
 # ── Phase-0 per-org critic threshold ───────────────────────────────────────
