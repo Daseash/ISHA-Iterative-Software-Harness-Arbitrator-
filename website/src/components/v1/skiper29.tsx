@@ -241,6 +241,25 @@ export function Skiper29() {
                 </ScrollHighlight>
               </span>
             </div>
+
+            {/* Direct Hero Action Buttons */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 z-30">
+              <a
+                href="/fix"
+                className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-red-600 hover:bg-red-700 text-white font-black text-sm tracking-wide shadow-xl shadow-red-600/30 hover:shadow-red-600/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                <span>TRY ISHA FIX</span>
+                <ArrowUpRight className="w-4 h-4 stroke-[3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+
+              <a
+                href="/stats"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border-2 border-neutral-800 dark:border-neutral-200 hover:border-red-600 dark:hover:border-red-500 text-neutral-900 dark:text-white hover:text-red-600 dark:hover:text-red-500 font-black text-sm tracking-wide hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer backdrop-blur-md"
+              >
+                <span>LIVE BENCHMARKS</span>
+              </a>
+            </div>
           </motion.div>
         </section>
 
