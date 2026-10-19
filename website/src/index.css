@@ -1,19 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --font-switzer: 'Switzer', sans-serif;
+  --font-sans: 'Bricolage Grotesque', 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-hand: 'Gaegu', cursive;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-switzer: 'Bricolage Grotesque', sans-serif;
 }
 
 @variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
-    --font-sans: 'Switzer', 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: 'Bricolage Grotesque', 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-heading: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-hand: 'Gaegu', cursive;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
   * {
     font-family: var(--font-sans);
+    letter-spacing: -0.02em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -26,8 +33,8 @@
   body {
     font-family: var(--font-sans);
     background-color: #F9F7EF;
-    color: #000000;
-    font-weight: 900;
+    color: #13233A;
+    font-weight: 800;
     overflow-x: hidden;
     transition: background-color 0.3s ease;
   }

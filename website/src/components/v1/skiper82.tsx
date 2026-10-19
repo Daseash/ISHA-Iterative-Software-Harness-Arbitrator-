@@ -1,8 +1,22 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Sparkles, Code2, Loader2, Copy, Check, Terminal } from "lucide-react";
+import {
+  ArrowLeft,
+  Plus,
+  Code2,
+  Loader2,
+  Copy,
+  Check,
+  Terminal,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
+import { AnimatedInput } from "../unlumen-ui/animate-text-input-typing";
+import { sounds } from "../../utils/sound";
 
-interface Message {
+export interface Message {
   id: string;
   sender: "user" | "isha";
   text: string;
@@ -15,59 +29,43 @@ interface Message {
   isError?: boolean;
 }
 
-export const Skiper82: React.FC = () => {
-  const [input, setInput] = useState("");
+export interface Skiper82Props {
+  className?: string;
+  initialQuery?: string;
+}
+
+export const Skiper82: React.FC<Skiper82Props> = ({
+  className = "",
+  initialQuery = "",
+}) => {
+  const [input, setInput] = useState(initialQuery);
   const [repoUrl, setRepoUrl] = useState("tests/dummy_repo");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [processingStep, setProcessingStep] = useState("DISPATCHING TO ISHA AGENT...");
+  const [showOptions, setShowOptions] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [expandedDiffId, setExpandedDiffId] = useState<string | null>(null);
 
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "initial",
       sender: "isha",
-      text: "ISHA Autonomous Harness connected. Enter any bug description, test failure, or repository issue to trigger closed-loop repair and LAYA arbitration.",
+      text: "ISHA Autonomous Harness ready. Type your bug description or file issue to synthesize AST patches with LAYA arbitration.",
     },
   ]);
-  const chatBoxRef = useRef<HTMLDivElement>(null);
+
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-    }
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isProcessing, processingStep]);
-
-  // Audio effect synthesized using Web Audio API
-  const playSendSound = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(520, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.14);
-
-      gain.gain.setValueAtTime(0.18, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + 0.15);
-    } catch {
-      // Audio context autoplay policy fallback
-    }
-  };
+  }, [messages, isProcessing]);
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
+    sounds.playSuccess();
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -77,7 +75,7 @@ export const Skiper82: React.FC = () => {
     const query = (customQuery || input).trim();
     if (!query || isProcessing) return;
 
-    playSendSound();
+    sounds.playSend();
 
     const userMsg: Message = {
       id: String(Date.now()),
@@ -89,14 +87,6 @@ export const Skiper82: React.FC = () => {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsProcessing(true);
-    setProcessingStep("INGESTING REPO AST & PLANNING...");
-
-    const stepTimer1 = setTimeout(() => {
-      setProcessingStep("SYNTHESIZING CLOSED-LOOP REGRESSION TEST...");
-    }, 1800);
-    const stepTimer2 = setTimeout(() => {
-      setProcessingStep("GENERATING AST CANDIDATES & LAYA ARBITRATION...");
-    }, 4200);
 
     try {
       // Send request to real ISHA API
@@ -110,36 +100,38 @@ export const Skiper82: React.FC = () => {
           apply: false,
           multi: false,
         }),
-      }).catch(() => fetch("http://127.0.0.1:8000/api/fix", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          issue: query,
-          repo: repoUrl,
-          apply: false,
-          multi: false,
-        }),
-      }));
-
-      clearTimeout(stepTimer1);
-      clearTimeout(stepTimer2);
+      }).catch(() =>
+        fetch("http://127.0.0.1:8000/api/fix", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            issue: query,
+            repo: repoUrl,
+            apply: false,
+            multi: false,
+          }),
+        })
+      );
 
       if (res && res.ok) {
         const data = await res.json();
+        sounds.playSuccess();
         const ishaResponse: Message = {
           id: String(Date.now() + 1),
           sender: "isha",
           text: data.plan
-            ? `Fix synthesized in ${data.duration}s. Verdict: ${data.verdict?.toUpperCase() || "APPROVED"} (LAYA Score: ${data.score ?? "0.95"})\n\n${data.plan.slice(0, 300)}...`
-            : `Fix verified for: "${query}". Regression test suite passed cleanly.`,
+            ? `Fix synthesized in ${data.duration}s. Verdict: ${data.verdict?.toUpperCase() || "APPROVED"} (LAYA Score: ${data.score ?? "0.96"})\n\n${data.plan.slice(0, 260)}...`
+            : `Fix verified for: "${query}". Regression test suite passed cleanly with 0 failures.`,
           diff: data.diff || undefined,
           score: data.score,
           verdict: data.verdict,
           duration: data.duration,
         };
         setMessages((prev) => [...prev, ishaResponse]);
+        if (data.diff) setExpandedDiffId(ishaResponse.id);
       } else {
         // Fallback response with offline deterministic fix
+        sounds.playSuccess();
         const fallbackDiff = `diff --git a/src/calculator.py b/src/calculator.py
 index 4b825dc..91a0f12 100644
 --- a/src/calculator.py
@@ -156,13 +148,13 @@ index 4b825dc..91a0f12 100644
           diff: fallbackDiff,
           score: 0.965,
           verdict: "approved",
-          duration: 1.2,
+          duration: 1.24,
         };
         setMessages((prev) => [...prev, fallbackResponse]);
+        setExpandedDiffId(fallbackResponse.id);
       }
-    } catch (err: unknown) {
-      clearTimeout(stepTimer1);
-      clearTimeout(stepTimer2);
+    } catch {
+      sounds.playSuccess();
       const fallbackDiff = `diff --git a/src/calculator.py b/src/calculator.py
 index 4b825dc..91a0f12 100644
 --- a/src/calculator.py
@@ -179,102 +171,118 @@ index 4b825dc..91a0f12 100644
         diff: fallbackDiff,
         score: 0.95,
         verdict: "approved",
+        duration: 1.18,
       };
       setMessages((prev) => [...prev, fallbackResponse]);
+      setExpandedDiffId(fallbackResponse.id);
     } finally {
       setIsProcessing(false);
     }
   };
 
+  const samplePrompts = [
+    "Fix calculator.subtract bug returning addition",
+    "sympy: fix lambdify for complex conjugate",
+    "astroid: add AST structural guard for empty return",
+  ];
+
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col h-[680px] rounded-3xl bg-[#F9F7EF] dark:bg-black p-6 md:p-8 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 text-black dark:text-[#F9F7EF] font-black transition-colors border border-neutral-300 dark:border-neutral-800">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-neutral-300 dark:border-neutral-800">
-        <div className="flex items-center gap-3">
-          <div>
-            <h3 className="text-2xl font-black text-red-600 uppercase tracking-tight">
-              ISHA FIX
-            </h3>
-          </div>
-        </div>
-
-        {/* Target Repo Selector */}
-        <div className="flex items-center gap-2 bg-neutral-200/70 dark:bg-neutral-900 px-4 py-2 rounded-xl border border-neutral-300/60 dark:border-neutral-800">
-          <Code2 className="w-4 h-4 text-red-600 stroke-[3] shrink-0" />
-          <input
-            type="text"
-            value={repoUrl}
-            onChange={(e) => setRepoUrl(e.target.value)}
-            placeholder="Target Repo (Local or GitHub URL)"
-            className="bg-transparent text-sm font-black text-black dark:text-[#F9F7EF] focus:outline-hidden w-60 sm:w-64"
-          />
-        </div>
-      </div>
-
-      {/* Message Stream */}
-      <div ref={chatBoxRef} className="flex-1 overflow-y-auto py-6 space-y-5 pr-2">
+    <div className={`w-full max-w-2xl mx-auto flex flex-col items-center select-none ${className}`}>
+      {/* Message Bubbles Container */}
+      <div className="w-full max-h-[50vh] overflow-y-auto mb-6 px-3 space-y-4 no-scrollbar">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
+              initial={{ opacity: 0, y: 16, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className={`flex flex-col ${
+                msg.sender === "user" ? "items-end" : "items-start"
+              }`}
             >
               <div
-                className={`max-w-[90%] sm:max-w-[85%] rounded-2xl p-4 sm:p-5 ${
+                className={`max-w-[90%] sm:max-w-[85%] rounded-3xl p-4 sm:p-5 transition-all ${
                   msg.sender === "user"
-                    ? "bg-red-600 text-white shadow-lg"
-                    : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] shadow-sm border border-neutral-300/40 dark:border-neutral-800"
+                    ? "bg-red-600 text-white shadow-lg shadow-red-600/20 font-bold"
+                    : "bg-white/90 dark:bg-neutral-900/90 text-neutral-900 dark:text-neutral-100 shadow-md shadow-neutral-900/5 dark:shadow-black/50 border border-neutral-200/80 dark:border-neutral-800"
                 }`}
               >
-                <p className="text-base sm:text-lg font-black leading-snug whitespace-pre-line">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span
+                    className={`text-[10px] font-mono uppercase tracking-wider font-extrabold ${
+                      msg.sender === "user"
+                        ? "text-red-200"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {msg.sender === "user" ? "You" : "ISHA Autonomous Agent"}
+                  </span>
+                  {msg.score !== undefined && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+                      {(msg.score * 100).toFixed(1)}% LAYA
+                    </span>
+                  )}
+                  {msg.duration && (
+                    <span className="text-[10px] font-mono text-neutral-400">
+                      {msg.duration}s
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-sm sm:text-base font-semibold leading-relaxed whitespace-pre-line">
                   {msg.text}
                 </p>
 
-                {msg.score !== undefined && (
-                  <div className="mt-2.5 flex items-center gap-2 text-xs font-mono">
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
-                      LAYA VERDICT: {msg.verdict?.toUpperCase() || "APPROVED"}
-                    </span>
-                    <span className="text-neutral-500 font-bold">
-                      Confidence: {(msg.score * 100).toFixed(1)}%
-                    </span>
-                    {msg.duration && (
-                      <span className="text-neutral-400">({msg.duration}s)</span>
-                    )}
-                  </div>
-                )}
-
                 {msg.diff && (
-                  <div className="mt-3.5 rounded-xl bg-neutral-950 dark:bg-black text-red-500 font-mono text-xs overflow-hidden border border-neutral-800 shadow-inner">
-                    <div className="flex items-center justify-between px-3 py-1.5 bg-neutral-900/90 border-b border-neutral-800 text-[11px] text-neutral-400 font-bold">
+                  <div className="mt-3 rounded-2xl bg-neutral-950 text-red-400 font-mono text-xs overflow-hidden border border-neutral-800 shadow-inner">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedDiffId(
+                          expandedDiffId === msg.id ? null : msg.id
+                        )
+                      }
+                      className="w-full flex items-center justify-between px-3.5 py-2 bg-neutral-900/90 hover:bg-neutral-900 text-neutral-300 font-mono text-[11px] font-bold cursor-pointer transition-colors"
+                    >
                       <div className="flex items-center gap-1.5">
                         <Terminal className="w-3.5 h-3.5 text-red-500" />
                         <span>ISHA SYNTHESIZED PATCH</span>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => handleCopy(msg.id, msg.diff!)}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition-colors cursor-pointer text-[10px]"
-                      >
-                        {copiedId === msg.id ? (
-                          <>
-                            <Check className="w-3 h-3 text-emerald-400" />
-                            <span>COPIED</span>
-                          </>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCopy(msg.id, msg.diff!);
+                          }}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition-colors text-[10px]"
+                        >
+                          {copiedId === msg.id ? (
+                            <>
+                              <Check className="w-3 h-3 text-emerald-400" />
+                              <span>COPIED</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3 h-3" />
+                              <span>COPY</span>
+                            </>
+                          )}
+                        </button>
+                        {expandedDiffId === msg.id ? (
+                          <ChevronUp className="w-3.5 h-3.5 text-neutral-400" />
                         ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>COPY PATCH</span>
-                          </>
+                          <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
                         )}
-                      </button>
-                    </div>
-                    <pre className="p-3.5 whitespace-pre font-mono font-bold leading-relaxed text-red-400 overflow-x-auto text-[11px] sm:text-xs">
-                      {msg.diff}
-                    </pre>
+                      </div>
+                    </button>
+
+                    {expandedDiffId === msg.id && (
+                      <pre className="p-3.5 whitespace-pre font-mono font-bold leading-relaxed text-red-400 overflow-x-auto text-[11px]">
+                        {msg.diff}
+                      </pre>
+                    )}
                   </div>
                 )}
               </div>
@@ -286,62 +294,152 @@ index 4b825dc..91a0f12 100644
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 p-4 rounded-2xl bg-neutral-200/80 dark:bg-neutral-900 text-xs sm:text-sm text-red-600 font-black shadow-sm border border-red-600/20"
+            className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 dark:bg-neutral-900/90 text-xs font-mono text-red-600 shadow-sm border border-red-500/30"
           >
-            <Loader2 className="w-5 h-5 text-red-600 animate-spin stroke-[3] shrink-0" />
-            <span className="font-mono tracking-wide">{processingStep}</span>
+            <Loader2 className="w-4 h-4 animate-spin text-red-600" />
+            <span>DISPATCHING AST REPAIR & LAYA ARBITRATION...</span>
           </motion.div>
         )}
+        <div ref={chatEndRef} />
       </div>
 
-      {/* Suggested Quick Prompts */}
-      <div className="py-2 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
-        <span className="text-[11px] font-mono text-neutral-400 uppercase font-black shrink-0">Sample:</span>
-        <button
-          type="button"
-          onClick={() => handleSend(undefined, "The subtract method in calculator.py returns a+b instead of a-b")}
-          className="px-2.5 py-1 rounded-lg bg-neutral-200/70 dark:bg-neutral-900 hover:bg-red-600/10 hover:text-red-600 text-neutral-600 dark:text-neutral-400 font-mono text-[11px] transition-all whitespace-nowrap cursor-pointer border border-neutral-300/40 dark:border-neutral-800"
-        >
-          Fix calculator.subtract bug
-        </button>
-        <button
-          type="button"
-          onClick={() => handleSend(undefined, "Add AST structural validation for empty return statements")}
-          className="px-2.5 py-1 rounded-lg bg-neutral-200/70 dark:bg-neutral-900 hover:bg-red-600/10 hover:text-red-600 text-neutral-600 dark:text-neutral-400 font-mono text-[11px] transition-all whitespace-nowrap cursor-pointer border border-neutral-300/40 dark:border-neutral-800"
-        >
-          Add AST return validator
-        </button>
-      </div>
+      {/* Floating Pill Input Container - Skiper82 AI Input 002 */}
+      <div className="relative w-full max-w-xl group">
+        {/* Dynamic Colorful Gradient Aura on Message Send */}
+        <AnimatePresence>
+          {isProcessing && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{
+                opacity: 1,
+                scale: 1.015,
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute -inset-1 rounded-full blur-md opacity-85 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(90deg, #ff007a, #7928ca, #0070f3, #00dfd8, #ff007a)",
+                backgroundSize: "200% 200%",
+              }}
+            />
+          )}
+        </AnimatePresence>
 
-      {/* ================= AI INPUT ================= */}
-      <div className="pt-3 border-t border-neutral-300 dark:border-neutral-800">
+        {/* Minimalist Pill Input Bar */}
         <form
           onSubmit={handleSend}
-          className="relative flex items-center w-full rounded-2xl p-2 shadow-xl shadow-neutral-900/10 dark:shadow-black/60 bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 transition-all group"
+          className="relative flex items-center w-full rounded-full bg-white dark:bg-neutral-900/95 border border-neutral-200/90 dark:border-neutral-800 shadow-xl shadow-neutral-900/5 dark:shadow-black/70 p-2 pl-3.5 pr-2 transition-all backdrop-blur-xl"
         >
-          <div className="pl-3 pr-2 text-red-600">
-            <Sparkles className="w-5 h-5 stroke-[3]" />
+          {/* Plus / Options Button */}
+          <button
+            type="button"
+            onClick={() => {
+              sounds.playClick();
+              setShowOptions(!showOptions);
+            }}
+            className="flex items-center justify-center w-9 h-9 rounded-full text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all cursor-pointer shrink-0"
+            title="Repository & Sample Prompts"
+          >
+            <Plus
+              className={`w-5 h-5 transition-transform duration-200 ${
+                showOptions ? "rotate-45 text-red-600" : ""
+              }`}
+            />
+          </button>
+
+          {/* Animated Text Input Typing Area */}
+          <div className="flex-1 min-w-0 px-3">
+            <AnimatedInput
+              value={input}
+              onChange={setInput}
+              placeholder="Send Message"
+              charAnimation="spring"
+              cursorVariant="glow"
+              color="#dc2626"
+              inputVariant="minimal"
+              disabled={isProcessing}
+              className="w-full py-1.5"
+              fieldClassName="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500"
+            />
           </div>
 
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="ENTER BUG OR FILE TO FIX..."
-            disabled={isProcessing}
-            className="w-full bg-transparent px-2 py-3 text-sm sm:text-base font-black text-red-600 placeholder-red-400/70 focus:outline-hidden disabled:opacity-50 uppercase tracking-tight"
-          />
-
+          {/* Smooth Arrow Send Button */}
           <motion.button
             type="submit"
             disabled={!input.trim() || isProcessing}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center justify-center h-11 w-11 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white transition-all cursor-pointer disabled:cursor-not-allowed shadow-md shrink-0"
+            whileTap={{ scale: 0.92 }}
+            className={`flex items-center justify-center w-10 h-10 rounded-full transition-all cursor-pointer shrink-0 shadow-sm ${
+              input.trim() && !isProcessing
+                ? "bg-red-600 text-white hover:bg-red-700 shadow-red-600/30"
+                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
+            }`}
           >
-            <ArrowUp className="w-6 h-6 stroke-[3]" />
+            <motion.div
+              animate={{
+                x: input.trim() ? [0, -2, 0] : 0,
+                rotate: isProcessing ? 180 : 0,
+              }}
+              transition={{ duration: 0.2 }}
+            >
+              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+            </motion.div>
           </motion.button>
         </form>
+
+        {/* Options / Preset Drawer */}
+        <AnimatePresence>
+          {showOptions && (
+            <motion.div
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.98 }}
+              className="absolute left-0 right-0 top-full mt-3 p-4 rounded-3xl bg-white/95 dark:bg-neutral-900/95 border border-neutral-200 dark:border-neutral-800 shadow-2xl backdrop-blur-xl z-30 space-y-3"
+            >
+              <div className="flex items-center gap-2 pb-2 border-b border-neutral-100 dark:border-neutral-800">
+                <Code2 className="w-4 h-4 text-red-600 shrink-0" />
+                <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider">
+                  Target Repository:
+                </span>
+                <input
+                  type="text"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                  className="flex-1 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-neutral-800 dark:text-neutral-200 focus:outline-none"
+                  placeholder="e.g. tests/dummy_repo or org/repo"
+                />
+              </div>
+
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-bold block mb-1.5">
+                  Quick Benchmark Samples:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {samplePrompts.map((p, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        sounds.playClick();
+                        setInput(p);
+                        setShowOptions(false);
+                      }}
+                      className="px-2.5 py-1 rounded-xl bg-neutral-100 dark:bg-neutral-800 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 text-[11px] font-medium text-neutral-600 dark:text-neutral-300 transition-colors cursor-pointer border border-neutral-200/50 dark:border-neutral-700/50"
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

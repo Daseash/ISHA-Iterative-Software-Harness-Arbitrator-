@@ -284,7 +284,7 @@ export const DemoSkiper6: React.FC = () => {
       name: "FIX",
       image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
       role: "Self-Healing AST & Patch Verification Pipeline",
-      link: "#fix",
+      link: "/fix",
     },
     {
       name: "STATS",

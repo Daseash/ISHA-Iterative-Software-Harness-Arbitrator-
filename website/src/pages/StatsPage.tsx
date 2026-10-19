@@ -1,6 +1,7 @@
 import React from "react";
 import { Skiper35 } from "../components/v1/skiper35";
 import { Navbar_001 } from "../components/v1/skiper13";
+import { ScrollHighlight } from "../components/v1/ScrollHighlight";
 
 interface StatsPageProps {
   onBack?: () => void;
@@ -15,10 +16,12 @@ export const StatsPage: React.FC<StatsPageProps> = () => {
       {/* Left-Corner STATS Heading */}
       <div className="w-full px-5 sm:px-10 md:px-14 lg:px-16 pt-20 sm:pt-24 pb-2 text-left z-20 shrink-0">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-red-600">
-          STATS
+          <ScrollHighlight variant="round" color="coral">
+            STATS
+          </ScrollHighlight>
         </h1>
         <p className="font-mono text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-          AUDITED BENCHMARKS · SWE-BENCH LITE
+          AUDITED BENCHMARKS · <ScrollHighlight variant="brush" color="sun">SWE-BENCH LITE</ScrollHighlight>
         </p>
       </div>
 

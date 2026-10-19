@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Copy, Check, Terminal, ArrowUpRight } from "lucide-react";
 import { sounds } from "../../utils/sound";
+import { ScrollHighlight } from "./ScrollHighlight";
 
 export const CliSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"pip" | "curl" | "git">("pip");
@@ -24,8 +25,17 @@ export const CliSection: React.FC = () => {
       <div className="max-w-5xl mx-auto space-y-10">
         <div className="text-center">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-black dark:text-[#F9F7EF]">
-            CLI
+            COMMAND LINE{" "}
+            <ScrollHighlight variant="round" color="coral">
+              INTERFACE
+            </ScrollHighlight>
           </h2>
+          <p className="mt-3 text-sm sm:text-base font-bold text-neutral-600 dark:text-neutral-400">
+            Autonomous SWE-bench runner deployable via{" "}
+            <ScrollHighlight variant="underline" color="sky">
+              single command
+            </ScrollHighlight>
+          </p>
         </div>
 
         {/* Download & Installation Box - Same background colour as website with black font */}

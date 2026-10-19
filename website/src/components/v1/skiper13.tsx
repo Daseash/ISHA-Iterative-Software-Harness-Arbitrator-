@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEventListener } from "usehooks-ts";
-import { ThemeToggleButton1 } from "./skiper4";
+import { DarkModeSwitch } from "../unlumen-ui/DarkModeSwitch";
 
 interface NavItem {
   name: string;
@@ -14,7 +14,7 @@ const navItems: NavItem[] = [
   { name: "HOME", href: "/#hero", badge: "01" },
   { name: "ABOUT", href: "/#about", badge: "02" },
   { name: "CLI", href: "/#cli", badge: "03" },
-  { name: "FIX", href: "/#fix", badge: "04" },
+  { name: "FIX", href: "/fix", badge: "04" },
   { name: "STATS", href: "/stats", badge: "05" },
   {
     name: "GIT HUB",
@@ -188,9 +188,9 @@ export const Navbar_001: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Theme Toggle Button: High-Contrast Matching Floating in Top-Right Corner */}
+      {/* Unlumen Animated Switch for Dark Mode: Floating in Top-Right Corner */}
       <div className="fixed top-5 sm:top-6 right-4 sm:right-8 z-50">
-        <ThemeToggleButton1 className="h-10 px-4 rounded-full border border-neutral-800 dark:border-neutral-300 bg-neutral-900/95 dark:bg-[#F9F7EF]/95 backdrop-blur-md shadow-lg text-white dark:text-black" />
+        <DarkModeSwitch showIcons={true} showLabel={false} />
       </div>
     </>
   );

@@ -3,18 +3,25 @@ import { AnimatePresence } from "framer-motion";
 import { Preloader_002 } from "./components/Preloader_002";
 import { Skiper29 } from "./components/v1/skiper29";
 import { StatsPage } from "./pages/StatsPage";
+import { FixPage } from "./pages/FixPage";
 import { sounds } from "./utils/sound";
+
+export type RouteType = "home" | "stats" | "fix";
 
 export const DemoSkiper29 = () => {
   const [showPreloader, setShowPreloader] = useState(true);
-  const [currentRoute, setCurrentRoute] = useState<"home" | "stats">(() => {
+  const [currentRoute, setCurrentRoute] = useState<RouteType>(() => {
     if (typeof window === "undefined") return "home";
     const p = window.location.pathname.toLowerCase();
     const h = window.location.hash.toLowerCase();
     const s = window.location.search.toLowerCase();
-    return p === "/stats" || p.startsWith("/stats") || h === "#stats" || s.includes("page=stats")
-      ? "stats"
-      : "home";
+    if (p === "/stats" || p.startsWith("/stats") || h === "#stats" || s.includes("page=stats")) {
+      return "stats";
+    }
+    if (p === "/fix" || p.startsWith("/fix") || h === "#fix" || s.includes("page=fix")) {
+      return "fix";
+    }
+    return "home";
   });
 
   useEffect(() => {
@@ -28,6 +35,8 @@ export const DemoSkiper29 = () => {
       const s = window.location.search.toLowerCase();
       if (p === "/stats" || p.startsWith("/stats") || h === "#stats" || s.includes("page=stats")) {
         setCurrentRoute("stats");
+      } else if (p === "/fix" || p.startsWith("/fix") || h === "#fix" || s.includes("page=fix")) {
+        setCurrentRoute("fix");
       } else {
         setCurrentRoute("home");
       }
@@ -36,7 +45,7 @@ export const DemoSkiper29 = () => {
     window.addEventListener("popstate", handleLocationChange);
     window.addEventListener("hashchange", handleLocationChange);
 
-    // Global click listener to handle navigation between /stats and / sections flawlessly
+    // Global click listener to handle navigation between /fix, /stats and / sections flawlessly
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       const anchor = target?.closest("a") as HTMLAnchorElement | null;
@@ -44,6 +53,16 @@ export const DemoSkiper29 = () => {
       if (anchor) {
         const href = anchor.getAttribute("href");
         if (href && !anchor.target) {
+          // Navigating to FIX page
+          if (href === "/fix" || href === "#fix") {
+            e.preventDefault();
+            sounds.playClick();
+            window.history.pushState({}, "", "/fix");
+            setCurrentRoute("fix");
+            window.scrollTo({ top: 0, behavior: "instant" });
+            return;
+          }
+
           // Navigating to STATS page
           if (href === "/stats" || href === "#stats") {
             e.preventDefault();
@@ -109,7 +128,13 @@ export const DemoSkiper29 = () => {
         {showPreloader && currentRoute === "home" && <Preloader_002 />}
       </AnimatePresence>
 
-      {currentRoute === "stats" ? <StatsPage /> : <Skiper29 />}
+      {currentRoute === "stats" ? (
+        <StatsPage />
+      ) : currentRoute === "fix" ? (
+        <FixPage />
+      ) : (
+        <Skiper29 />
+      )}
     </main>
   );
 };

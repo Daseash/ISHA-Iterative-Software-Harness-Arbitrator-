@@ -4,12 +4,12 @@ import Lenis from "lenis";
 import { RollingText } from "./skiper27";
 import { TextRoll } from "./skiper58";
 import { Navbar_001 } from "./skiper13";
-import { DemoSkiper16 } from "./skiper16";
+import { PhotoPlanes } from "../ui/PhotoPlanes";
 import { AboutSection } from "./AboutSection";
-import { Skiper82 } from "./skiper82";
 import { CliSection } from "./CliSection";
 import { LinePath } from "./skiper19";
 import { HoverExpand_001 } from "./skiper52";
+import { ScrollHighlight } from "./ScrollHighlight";
 import { ArrowUpRight } from "lucide-react";
 
 export function Skiper29() {
@@ -123,7 +123,7 @@ export function Skiper29() {
     },
     {
       title: "FIX",
-      href: "#fix",
+      href: "/fix",
     },
     {
       title: "STATS",
@@ -224,6 +224,23 @@ export function Skiper29() {
                 </div>
               ))}
             </div>
+
+            {/* Scroll-triggered live highlights from jameschugh */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-black tracking-tight text-neutral-800 dark:text-neutral-200">
+              <span className="inline-flex items-center gap-1.5">
+                SWE-bench Lite:
+                <ScrollHighlight variant="round" color="coral">
+                  17 Clean Patches Locked
+                </ScrollHighlight>
+              </span>
+              <span className="text-neutral-400">·</span>
+              <span className="inline-flex items-center gap-1.5">
+                Tournament:
+                <ScrollHighlight variant="brush" color="sun">
+                  3-Worktree Elimination
+                </ScrollHighlight>
+              </span>
+            </div>
           </motion.div>
         </section>
 
@@ -257,27 +274,46 @@ export function Skiper29() {
         </div>
       </div>
 
-      {/* ================= CARD STACK SCROLL (SKIPER16: SIDE-BY-SIDE TEXT & IMAGE STACKS) ================= */}
-      <DemoSkiper16 />
+      {/* ================= PHOTO PLANES GALLERY (REPLACES DEMOSKIPER16) ================= */}
+      <section className="relative py-24 px-4 sm:px-6 bg-[#0a0a0b] text-white border-y border-neutral-800/80 overflow-hidden">
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-800/25 via-[#0a0a0b] to-[#0a0a0b] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center space-y-4 mb-8 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-800 bg-neutral-900/80 text-xs font-mono text-neutral-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute ml-[3px]" />
+            ISHA AUTONOMOUS FLIGHT GALLERY
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white">
+            Live Benchmarks & Visual Telemetry
+          </h2>
+          <p className="max-w-2xl text-neutral-400 text-sm sm:text-base">
+            Hover over any plane to inspect real-time AST graphs, container sandbox executions, and agent telemetry.
+          </p>
+        </div>
+
+        <PhotoPlanes
+          images={[
+            { src: "/eyes.jpg", alt: "Neural Vision & Semantic Search", caption: "AST Invariant Engine" },
+            { src: "/isha_vs_baselines.png", alt: "SWE-bench Tournament Scores", caption: "Benchmark Tournament" },
+            { src: "/demo-desktop.png", alt: "Desktop Runtime Environment", caption: "Local Daemon Pipeline" },
+            { src: "/demo-chat.png", alt: "Interactive Problem Solver", caption: "Candidate Generator" },
+            { src: "/images/team/mike.jpg", alt: "Agent Telemetry Node", caption: "Static Compilation Gate" },
+            { src: "/images/team/sarah.jpg", alt: "Closed Loop Verifier", caption: "Docker Sandbox Verifier" },
+          ]}
+          photoWidth={190}
+          photoHeight={260}
+          spread={130}
+          tilt={12}
+          depth={20}
+          stagger={0.12}
+          autoplay={7000}
+        />
+      </section>
 
       {/* ================= CLI SECTION: DOWNLOAD METHOD OF ISHA ================= */}
       <CliSection />
-
-      {/* ================= FIX SECTION WITH SKIPER82 ================= */}
-      <section id="fix" className="relative py-24 px-6 md:px-12 bg-[#F9F7EF] dark:bg-black transition-colors">
-        <div className="max-w-5xl mx-auto space-y-10">
-          <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-red-600">
-              FIX
-            </h2>
-          </div>
-
-          {/* Interactive Skiper82 AI Input 002 Chat */}
-          <div className="w-full flex flex-col">
-            <Skiper82 />
-          </div>
-        </div>
-      </section>
 
       {/* ================= SITEMAP SECTION ================= */}
       <section id="sitemap" className="relative py-20 px-6 md:px-12 bg-[#F9F7EF] dark:bg-black transition-colors">

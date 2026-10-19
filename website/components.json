@@ -24,6 +24,12 @@
       "headers": {
         "Authorization": "Bearer ${SKIPER_LICENSE_KEY}"
       }
+    },
+    "@unlumen-ui": {
+      "url": "https://ui.unlumen.com/r/{name}.json",
+      "headers": {
+        "Authorization": "Bearer ${UNLUMEN_LICENSE_KEY}"
+      }
     }
   }
 }
