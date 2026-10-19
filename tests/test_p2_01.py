@@ -1,8 +1,10 @@
 """P2-01: caller-graph signal in localizer fusion."""
 
+from pathlib import Path
+
 from src.tools.localizer import _caller_scores, parse_issue
 
-DUMMY = "isha-agent/tests/dummy_repo"
+DUMMY = str(Path(__file__).resolve().parent / "dummy_repo")
 
 
 def test_caller_boost_finds_calling_files():

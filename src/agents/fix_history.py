@@ -123,6 +123,7 @@ def _mirror_qdrant(entry: dict) -> None:
             url=os.getenv("QDRANT_URL", "http://localhost:6333"),
             api_key=os.getenv("QDRANT_API_KEY"),
             timeout=2,
+            check_compatibility=False,
         )
         try:
             client.get_collection(COLLECTION)
@@ -258,7 +259,7 @@ def _mem_org_positives(org: str, query: list, top_k: int, lines: list[str] | Non
     if not org:
         return []
     try:
-        conn = sqlite3.connect(str(_mem.db_path()))
+        conn = sqlite3.connect(str(_mem.db_path()), timeout=60.0)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT instance_id, repo, strategy, model, critic_score FROM outcomes "
@@ -310,7 +311,7 @@ def _mem_negative_veto(org: str, query: list, lines: list[str]) -> dict | None:
     if not query or len(query) != VECTOR_SIZE:
         return None
     try:
-        conn = sqlite3.connect(str(_mem.db_path()))
+        conn = sqlite3.connect(str(_mem.db_path()), timeout=60.0)
         rows = conn.execute("SELECT instance_id FROM outcomes WHERE resolved=0").fetchall()
         conn.close()
         failed = {r[0] for r in rows if r[0]}

@@ -96,7 +96,7 @@ class QdrantIndexer:
             from qdrant_client import QdrantClient
             from qdrant_client.models import Distance, PointStruct, VectorParams
 
-            client = QdrantClient(url=self.url, api_key=self.api_key, timeout=2)
+            client = QdrantClient(url=self.url, api_key=self.api_key, timeout=2, check_compatibility=False)
             client.recreate_collection(
                 collection_name=collection_name,
                 vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE),

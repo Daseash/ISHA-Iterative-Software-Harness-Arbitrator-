@@ -70,6 +70,8 @@ results/test-*
 results/smoke50-*
 results/*-rescue/
 results/*-c3/
+results/realworld/live/*/
+!results/realworld/live/live_candidates.json
 clean_critic.py
 
 # Master plan document (local only)

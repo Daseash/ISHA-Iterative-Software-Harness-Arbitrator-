@@ -39,7 +39,7 @@ class CodeRetriever:
         try:
             from qdrant_client import QdrantClient
 
-            client = QdrantClient(url=self.url, timeout=2)
+            client = QdrantClient(url=self.url, timeout=2, check_compatibility=False)
             hits = client.query_points(
                 collection_name=self.collection_name,
                 query=embed_text(query),

@@ -298,9 +298,10 @@ def _apply_manual(root: Path, diff: str) -> tuple[bool, str]:
             continue
         target = root / rel
         if not target.exists():
-            if record["old"] and (root / record["old"]).exists():
-                target = root / record["old"]
-            elif (record["old"] or "") in ("/dev/null", "dev/null", "a/dev/null") or record["old"] is None:
+            is_new_file = (record["old"] or "") in ("/dev/null", "dev/null", "a/dev/null") or record["old"] is None
+            if not is_new_file and record["old"] and (root / record["old"].lstrip("/\\")).exists():
+                target = root / record["old"].lstrip("/\\")
+            elif is_new_file:
                 # P0-07: new-file diff — create it from added lines.
                 try:
                     target.parent.mkdir(parents=True, exist_ok=True)

@@ -28,6 +28,11 @@ def resolve_repo_path(repo_path: str) -> Path:
     p = Path(repo_path)
     if p.exists():
         return p
+    norm_str = repo_path.replace("\\", "/")
+    if norm_str.startswith("isha-agent/"):
+        stripped = Path(norm_str[len("isha-agent/"):])
+        if stripped.exists():
+            return stripped
     if not p.is_absolute():
         here = Path(__file__).resolve()
         for parent in [here.parent, *here.parents]:
@@ -37,6 +42,10 @@ def resolve_repo_path(repo_path: str) -> Path:
             cand2 = parent / "isha-agent" / repo_path
             if cand2.exists():
                 return cand2
+            if norm_str.startswith("isha-agent/"):
+                cand3 = parent / norm_str[len("isha-agent/"):]
+                if cand3.exists():
+                    return cand3
     return p
 
 
