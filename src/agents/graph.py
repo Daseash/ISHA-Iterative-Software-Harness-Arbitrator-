@@ -6,6 +6,7 @@ cyclic state graph with conditional retry logic.
 """
 
 import os
+import threading
 from pathlib import Path
 
 from langgraph.checkpoint.memory import MemorySaver
@@ -23,7 +24,7 @@ from src.agents.nodes import (
     sandbox_node,
 )
 from src.agents.session_manager import save_session
-from src.agents.state import AgentState, coerce_state
+from src.agents.state import AgentState, coerce_state, test_failed, test_passed
 from src.review.critic import critic_node
 
 MAX_RETRIES = int(os.getenv("ISHA_MAX_RETRIES", "3"))
@@ -126,7 +127,7 @@ def checkpoint_node(state: AgentState) -> AgentState:
     status = "completed"
     if state.approved is False:
         status = "paused_human_review"
-    elif "FAILED" in (state.test_output or ""):
+    elif test_failed(state):
         status = "paused_budget"
 
     save_session(state, status=status)
@@ -138,7 +139,9 @@ def _route_after_sandbox(state: AgentState) -> str:
     state = coerce_state(state)
     if state.escalation:
         return "approval"
-    failed = "FAILED" in (state.test_output or "")
+    # AR-2: structured verdict wins; a PASSED output embedding traceback
+    # text (warnings, full-suite echoes) must NOT route back to replan.
+    failed = test_failed(state)
     if failed and state.retry_count < MAX_RETRIES:
         return "replan"
     return "critic"
@@ -218,8 +221,12 @@ compiled_graph = build_graph()
 
 # ── Multi-agent graph (Phase 6) ──────────────────────────────────────────── #
 
-def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
-    """Fan-in: score every branch's attempt and keep the LAYA winner."""
+def arbitration_fanin_node(state, config: RunnableConfig | None = None) -> dict:
+    """Fan-in: score every branch's attempt and keep the LAYA winner.
+
+    Named distinctly from src.review.arbitration.arbitration_node (the pure
+    scorer used here as `arbitrate`) — same name, different signature was
+    inviting cross-imports (AR-7)."""
     state = coerce_state(state)
     from src.review.arbitration import arbitration_node as arbitrate
     from src.review.arbitration import collect_attempts
@@ -250,24 +257,42 @@ def arbitration_node(state, config: RunnableConfig | None = None) -> dict:
     return updates
 
 
-_MERGED: dict[str, float] = {}
+_MERGED: dict[tuple, float] = {}
 _MERGED_TTL = 300  # seconds — entries expire after 5 minutes
+_MERGED_LOCK = threading.Lock()
 
 
-def _already_merged(thread_id: str) -> bool:
-    """Return True if this thread was recently merged; register it if not."""
+def _merge_key(state: AgentState, thread_id: str) -> tuple:
+    """Scope a merge to one logical winner: same thread + same instance +
+    same winning patch. Two fan-out paths delivering the same winner dedupe;
+    a different instance or patch on a reused thread_id is a NEW merge."""
+    import hashlib
+
+    patch = state.patch or ""
+    digest = hashlib.sha1(patch.encode("utf-8", "replace")).hexdigest()[:16]
+    return (thread_id, state.instance_id or "", state.strategy or "", digest)
+
+
+def _already_merged(thread_id: str, key: tuple | None = None) -> bool:
+    """Return True if this exact merge already ran; register it if not.
+
+    Lock-guarded: concurrent workers sharing a thread_id (e.g. the
+    "default" fallback) can no longer double-merge past each other.
+    """
     import time
 
     now = time.time()
-    # Expire stale entries so re-runs in long-lived processes work.
-    stale = [k for k, ts in _MERGED.items() if now - ts > _MERGED_TTL]
-    for k in stale:
-        del _MERGED[k]
+    with _MERGED_LOCK:
+        # Expire stale entries so re-runs in long-lived processes work.
+        stale = [k for k, ts in _MERGED.items() if now - ts > _MERGED_TTL]
+        for k in stale:
+            del _MERGED[k]
 
-    if thread_id in _MERGED:
-        return True
-    _MERGED[thread_id] = now
-    return False
+        key = key or (thread_id,)
+        if key in _MERGED:
+            return True
+        _MERGED[key] = now
+        return False
 
 
 def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
@@ -281,27 +306,38 @@ def merger_node(state, config: RunnableConfig | None = None) -> AgentState:
     collect_attempts(thread_id)  # drain any leftovers
 
     # The merger can be reached by several arbitration fan-out paths;
-    # only the first one per thread does the real work.
-    if _already_merged(thread_id):
+    # only the first delivery of each logical winner does the real work.
+    if _already_merged(thread_id, _merge_key(state, thread_id)):
         return state
 
-    # A-5 strictness: only "approved" auto-clears; low_quality needs human approval.
-    if state.approved is None and state.critic_verdict == "approved":
-        state.approved = True
-
-    apply = bool((config or {}).get("configurable", {}).get("apply", False))
-    passed = "PASSED" in (state.test_output or "")
-    cleared = state.critic_verdict == "approved" and state.approved is True
-    # P2-05: red-team BLOCK at the merger — never apply a blocked patch.
+    # P0.2 Execution-first hierarchy:
+    # 1. Hard gates: repro passes, 0 regressions, static gate passes, secret scan clean.
+    # 2. A critic "flagged" or "low_quality" verdict routes to human review, not to deletion/veto.
+    # 3. Only security scanner findings are automatic vetoes.
+    passed = test_passed(state)
+    
+    # Check guardrails (the ONLY automatic veto)
+    is_blocked = False
     try:
         from src.guardrails.scanner import scan as _scan
 
         if state.patch and _scan(state.patch, state.issue_text).get("blocked"):
             state.approved = False
             state.escalation = "guardrail BLOCK: secrets/injection/destructive pattern"
-            cleared = False
+            is_blocked = True
     except Exception:
         pass
+
+    # Execution-first clearance: test-passing patches that pass security are cleared.
+    # A critic non-approval sets approved=False to record review required, but doesn't discard.
+    if passed and not is_blocked:
+        cleared = True
+        if state.approved is None:
+            state.approved = True if state.critic_verdict == "approved" else False
+    else:
+        cleared = False
+
+    apply = bool((config or {}).get("configurable", {}).get("apply", False))
 
     if apply and passed and cleared and state.patch:
         ok, message = apply_patch(state.repo_path, state.patch)
@@ -339,7 +375,7 @@ def build_multi_agent_graph():
     workflow.add_node("planner", planner_node)
     workflow.add_node("confidence_gate", confidence_gate_node)
     workflow.add_node("regression_test", regression_test_node)
-    workflow.add_node("arbitration", arbitration_node)
+    workflow.add_node("arbitration", arbitration_fanin_node)
     workflow.add_node("approval", approval_node)
     workflow.add_node("merger", merger_node)
 
@@ -376,12 +412,19 @@ def build_multi_agent_graph():
 compiled_multi_graph = build_multi_agent_graph()
 
 
-def run_issue(issue_text: str, repo_path: str | None = None, thread_id: str = "1") -> AgentState:
+def run_issue(issue_text: str, repo_path: str | None = None, thread_id: str | None = None) -> AgentState:
     """Convenience wrapper: build state, invoke the graph, return the result."""
     from pathlib import Path
 
     from src.agents.context import build_repo_context
     from src.config import TARGET_REPO_PATH
+
+    if thread_id is None:
+        # Unique per invocation: reusing a thread_id across runs in one
+        # process risks merger/ledger cross-talk (AR-3).
+        import uuid
+
+        thread_id = uuid.uuid4().hex[:8]
 
     repo_path = repo_path or TARGET_REPO_PATH
     if not Path(repo_path).is_dir():

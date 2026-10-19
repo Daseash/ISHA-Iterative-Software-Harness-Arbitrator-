@@ -71,15 +71,20 @@ def arbitration_node(results: list) -> dict:
         best = max(passing, key=lambda r: (float(r.get("critic_score") or 0.0), -int(r.get("retry_count") or 0)))
         return dict(best)
 
+    def _diff_lines(patch_str: str) -> int:
+        lines = (patch_str or "").splitlines()
+        return sum(1 for ln in lines if (ln.startswith("+") or ln.startswith("-")) and not ln.startswith("+++") and not ln.startswith("---"))
+
     scored = []
     for r in passing:
         scores = judge.score_patch(
             r.get("issue_text", ""), r.get("plan", ""), r.get("patch", "")
         )
-        scored.append((scores["composite"], r))
+        scored.append((scores["composite"], _diff_lines(r.get("patch", "")), r))
 
-    scored.sort(key=lambda pair: pair[0], reverse=True)
-    best_score, winner = scored[0]
+    # P0.2: Rank passing survivors by fewest changed lines (minimal churn), then highest composite score
+    scored.sort(key=lambda item: (item[1], -item[0]))
+    best_score, _lines_count, winner = scored[0]
 
     dangers = judge.check_dangers(winner.get("patch", ""))
     # P0-13: merge verdicts (was overwrite discarding critic.py verdict).

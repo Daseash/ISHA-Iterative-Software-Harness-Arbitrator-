@@ -438,6 +438,7 @@ def baseline_red_gate_node(state: AgentState) -> AgentState:
 
         state.repro_ok = has_test_failure and not has_collection_error
         state.baseline_repro_failed = state.repro_ok
+        state.repro_valid = state.repro_ok
 
         if not state.repro_ok:
             warning_msg = (
@@ -445,10 +446,13 @@ def baseline_red_gate_node(state: AgentState) -> AgentState:
                 "Output might be passing, or failed with collection/import errors."
             )
             state.context_notes = list(state.context_notes) + [warning_msg]
-            if os.getenv("ISHA_STRICT_BASELINE", "0") == "1":
+            # P0.3: Default to STRICT baseline check (1) so we never write patches against unverified tests
+            if os.getenv("ISHA_STRICT_BASELINE", "1").strip().lower() not in {"0", "false", "no"}:
+                # Discard repro tests that do not fail (per specification)
+                state.regression_test = ""
                 state.escalation = (
-                    "Generated repro did not produce a clean failing test. "
-                    "Review or regenerate it before creating a patch."
+                    "Generated repro did not produce a clean failing test (RED). "
+                    "Cannot verify bug reproduction on unpatched baseline."
                 )
                 state.context_notes.append(f"Baseline repro output:\n{state.repro_output[-3000:]}")
         return state
@@ -457,6 +461,9 @@ def baseline_red_gate_node(state: AgentState) -> AgentState:
         state.baseline_repro_output = state.repro_output
         state.repro_ok = False
         state.baseline_repro_failed = False
+        state.repro_valid = False
+        if os.getenv("ISHA_STRICT_BASELINE", "1").strip().lower() not in {"0", "false", "no"}:
+            state.regression_test = ""
         return state
     finally:
         cleanup_sandbox(sandbox)
@@ -700,8 +707,9 @@ def _prompt_stats(label: str, **sections) -> None:
 def coder_node(state: AgentState) -> AgentState:
     """Generate a unified-diff patch to fix the bug."""
     state = coerce_state(state)
-    if "FAILED" in (state.test_output or ""):
-        state.retry_count += 1
+    # Retry budget is owned SOLELY by replan_node (+1 per failed cycle):
+    # coder only observes retry_count for prompts, never increments it.
+    # (Incrementing here double-counted — budget burned ~2x per cycle.)
 
     prompt = build_coder_prompt(state)
     try:
@@ -1062,17 +1070,21 @@ def sandbox_node(state: AgentState) -> AgentState:
     state = coerce_state(state)
     if state.escalation == "no confident fix":
         state.test_output = "NO CONFIDENT FIX: all candidates rejected by gates/verification"
+        state.local_sandbox_status = "no_fix"
         return state
     if not state.repo_path:
         state.test_output = "FAILED: no repo_path set"
+        state.local_sandbox_status = "infra"
         return state
     if not state.patch or state.patch.startswith("[CODER ERROR]"):
         state.test_output = "FAILED: no patch to apply"
+        state.local_sandbox_status = "infra"
         return state
 
     repo = Path(state.repo_path)
     if not repo.exists():
         state.test_output = f"FAILED: repo path missing: {state.repo_path}"
+        state.local_sandbox_status = "infra"
         return state
 
     # Each attempt works on its own isolated directory: a git worktree
@@ -1081,6 +1093,7 @@ def sandbox_node(state: AgentState) -> AgentState:
         target = Path(state.worktree)
         if not target.exists():
             state.test_output = f"FAILED: worktree missing: {state.worktree}"
+            state.local_sandbox_status = "infra"
             return state
         if (target / ".git").exists():
             import subprocess
@@ -1111,6 +1124,7 @@ def sandbox_node(state: AgentState) -> AgentState:
             f"patch apply failed: {message[:300]}"
         ]
         state.test_output = f"FAILED: patch could not be applied — {message}"
+        state.local_sandbox_status = "failed"
         return state
 
     # 2b. Static compile & syntax gate with verbatim surrounding context:
@@ -1127,6 +1141,7 @@ def sandbox_node(state: AgentState) -> AgentState:
             "FAILED: STATIC GATE (COMPILER/SYNTAX ERROR):\n"
             + (gate_ctx or "; ".join(gate.errors[:6]))
         )
+        state.local_sandbox_status = "failed"
         return state
 
     if _bench_mode():
@@ -1152,6 +1167,7 @@ def sandbox_node(state: AgentState) -> AgentState:
                         "dynamic regression test failed"
                     ]
                     state.test_output = f"FAILED: DYNAMIC REGRESSION TEST — \n{dyn_output}"
+                    state.local_sandbox_status = "failed"
                     return state
 
         state.test_output = (
@@ -1160,6 +1176,7 @@ def sandbox_node(state: AgentState) -> AgentState:
             "SWE-bench harness."
         )
         state.full_test_output = ""
+        state.local_sandbox_status = "passed"
         return state
 
     # 3. Write and run regression test
@@ -1198,15 +1215,19 @@ def sandbox_node(state: AgentState) -> AgentState:
                 f"FAILED: Collateral regression detected! New test passed, but previously working tests broke:\n"
                 f"{reg_list}\n\nFull pytest output:\n{full_output}"
             )
+            state.local_sandbox_status = "failed"
             return state
 
     state.test_output = f"{verdict}\n{output}"
+    state.local_sandbox_status = verdict.lower()
     return state
 
 
 def _verdict(output: str) -> str:
     """Turn raw pytest output into a PASSED/FAILED marker for the graph."""
-    if re.search(r"\b\d+\s+failed\b", output):
+    # NOTE: "0 failed" must NOT read as FAILED ([1-9] requires a real failure;
+    # mirrors baseline_red_gate_node's r"\b[1-9]\d* failed\b").
+    if re.search(r"\b[1-9]\d*\s+failed\b", output):
         return "FAILED"
     if re.search(r"\b\d+\s+passed\b", output):
         return "PASSED"

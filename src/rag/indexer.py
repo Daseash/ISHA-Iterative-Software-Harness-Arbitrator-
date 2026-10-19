@@ -1,10 +1,10 @@
 """
 ISHA Qdrant Indexer — Vectorizes repo chunks for hybrid retrieval.
 
-Primary: `all-MiniLM-L6-v2` (384d, semantic) when `ISHA_EMBEDDER=minilm` and
-`sentence-transformers` is installed. Fallback: deterministic dependency-free
-384-dim hashing embedder (offline, no GPU/model download). Same VECTOR_SIZE so
-no migration is needed (P0-06).
+Primary: `all-MiniLM-L6-v2` (384d, semantic) — enabled by default (P3).
+Fallback: deterministic dependency-free 384-dim hashing embedder when
+`sentence-transformers` is not installed (offline, no GPU/model download).
+Same VECTOR_SIZE so no migration is needed (P0-06).
 """
 
 import hashlib
@@ -29,7 +29,10 @@ def _minilm_embed(text: str, dim: int) -> list | None:
     global _MINILM_MODEL, _MINILM_FAILED
     if _MINILM_FAILED or dim != VECTOR_SIZE:
         return None
-    if os.getenv("ISHA_EMBEDDER", "hashing").lower() != "minilm":
+    # P3: default to MiniLM when sentence-transformers is installed.
+    # Graceful fallback: if the import fails, _MINILM_FAILED is set and
+    # all subsequent calls route to the hashing embedder automatically.
+    if os.getenv("ISHA_EMBEDDER", "minilm").lower() != "minilm":
         return None
     try:
         if _MINILM_MODEL is None:

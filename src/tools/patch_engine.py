@@ -497,11 +497,18 @@ def _apply_hunk(lines: list, hunk: list, newline: str = "\n") -> tuple[bool, lis
         return False, lines
 
     idx = _locate(lines, old_block, start)
+    fuzzy_mode = None
     if idx is None:
         idx = _locate_fuzzy(lines, old_block, start)
+        if idx is not None:
+            fuzzy_mode = "whitespace_fuzzy"
     if idx is None:
         idx = _locate_similar(lines, old_block, start)
+        if idx is not None:
+            fuzzy_mode = "similarity_ratio"
     if idx is not None:
+        if fuzzy_mode:
+            print(f"  [patch_engine] {fuzzy_mode} apply anchored at line {idx} (offset {idx - start:+d})")
         aligned_new = _align_indentation(lines[idx : idx + len(old_block)], old_block, new_block)
         lines[idx : idx + len(old_block)] = [f"{line}{newline}" for line in aligned_new]
         return True, lines
@@ -614,17 +621,20 @@ def _locate_near(lines: list, content: list, center: int, span: int = 120) -> in
         for i in range(lo, hi):
             if [lines[j].rstrip("\r\n") for j in range(i, i + n)] == want:
                 return i
-        for i in range(lo, hi):
-            if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft:
-                return i
+        local_soft = [i for i in range(lo, hi) if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft]
+        if len(local_soft) == 1:
+            return local_soft[0]
 
-    # 2) Fallback: search across entire file if line numbers drifted heavily
-    for i in range(len(lines) - n + 1):
-        if [lines[j].rstrip("\r\n") for j in range(i, i + n)] == want:
-            return i
-    for i in range(len(lines) - n + 1):
-        if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft:
-            return i
+    # 2) Fallback: search across entire file if line numbers drifted heavily.
+    # P0.4 Ambiguity Guard: require a unique match across the entire file.
+    exact_matches = [i for i in range(len(lines) - n + 1) if [lines[j].rstrip("\r\n") for j in range(i, i + n)] == want]
+    if len(exact_matches) == 1:
+        return exact_matches[0]
+
+    soft_matches = [i for i in range(len(lines) - n + 1) if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == soft]
+    if len(soft_matches) == 1:
+        return soft_matches[0]
+
     return None
 
 
@@ -715,18 +725,28 @@ def _locate_similar(lines: list, old_block: list, start: int) -> int | None:
 
 
 def _locate_fuzzy(lines: list, old_block: list, start: int) -> int | None:
-    """Whitespace-tolerant fallback used only after an exact match fails."""
+    """Whitespace-tolerant fallback used only after an exact match fails.
+
+    P0.4 Ambiguity Guard: verifies that the soft match is unique across the file,
+    or has a single local candidate near start, to prevent applying edits to the wrong method.
+    """
     if not old_block:
         return None
     want = [ln.strip() for ln in old_block]
     n = len(want)
-    order = list(range(start, len(lines) - n + 1)) + list(range(0, start))
-    for i in order:
-        if i < 0:
-            continue
-        current = [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)]
-        if current == want:
-            return i
+    if n > len(lines):
+        return None
+
+    matches = [i for i in range(len(lines) - n + 1) if [lines[j].rstrip("\r\n").strip() for j in range(i, i + n)] == want]
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        # If multiple matches exist across the file, check if exactly one is close to `start`
+        local = [m for m in matches if abs(m - start) <= 40]
+        if len(local) == 1:
+            return local[0]
+        # Ambiguous across methods/classes — reject to prevent wrong-symbol edits!
+        return None
     return None
 
 
@@ -737,8 +757,12 @@ def _locate(lines: list, old_block: list, start: int) -> int | None:
         current = [ln.rstrip("\r\n") for ln in lines[start : start + len(old_block)]]
         if current == old_block:
             return start
-    for i in range(0, len(lines) - len(old_block) + 1):
-        current = [ln.rstrip("\r\n") for ln in lines[i : i + len(old_block)]]
-        if current == old_block:
-            return i
+    matches = [i for i in range(0, len(lines) - len(old_block) + 1) if [ln.rstrip("\r\n") for ln in lines[i : i + len(old_block)]] == old_block]
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        local = [m for m in matches if abs(m - start) <= 40]
+        if len(local) == 1:
+            return local[0]
+        return None
     return None

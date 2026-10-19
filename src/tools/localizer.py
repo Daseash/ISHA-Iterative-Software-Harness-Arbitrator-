@@ -3,13 +3,16 @@ ISHA Localizer — turn an issue report into a ranked list of code locations.
 
 Hierarchy: repository -> file -> class/function -> line range.
 
-Four retrieval signals are fused so no single one has to be right:
+Six retrieval signals are fused so no single one has to be right:
 
   seed      explicit evidence in the issue text (traceback frames, file
             paths, exception names, quoted code, identifiers)
   defs      the file that *declares* a symbol named in the issue
   lexical   BM25-style token overlap over the parsed chunks
-  vector    the deterministic hashing embedder's cosine similarity
+  vector    dense vector cosine similarity (MiniLM when available,
+            deterministic hashing embedder fallback)
+  callers   reverse call-graph traversal (2-hop with decay)
+  llm_loc   LLM-guided hierarchical file selection (Agentless-style)
 
 The fused score is then multiplied by a file-kind prior so documentation and
 test files — which describe the bug as vividly as the source does — do not
@@ -33,12 +36,21 @@ from src.ingestion.parser import SKIP_DIRS
 # Fusion weights.  Each signal is normalised to 0..1, so these are the only
 # knobs; ``src.bench.loc_eval`` measures every combination it is given.
 W_SEED = float(os.getenv("ISHA_LOC_W_SEED", "0.35"))
-W_BM25 = float(os.getenv("ISHA_LOC_W_BM25", "0.25"))
-W_VECTOR = float(os.getenv("ISHA_LOC_W_VECTOR", "0.12"))
+# P3: BM25 reduced from 0.25 to 0.18 — now that vector is real semantic
+# embedding (MiniLM) instead of hashing, BM25 and vector are differentiated
+# signals rather than near-duplicates.
+W_BM25 = float(os.getenv("ISHA_LOC_W_BM25", "0.18"))
+# P3: vector raised from 0.12 to 0.20 — the channel is now worth its weight
+# when MiniLM is active (real semantic similarity, not hashing-BM25 twin).
+W_VECTOR = float(os.getenv("ISHA_LOC_W_VECTOR", "0.20"))
 W_DEFS = float(os.getenv("ISHA_LOC_W_DEFS", "0.25"))
-# P2-01: caller-graph signal (files calling the suspect symbols). Additive bonus
-# so existing tuned weights are untouched; set 0 to disable.
+# P2-01: caller-graph signal (files calling the suspect symbols, now 2-hop
+# with decay). Additive bonus so existing tuned weights are untouched.
 W_CALLERS = float(os.getenv("ISHA_LOC_W_CALLERS", "0.10"))
+# P3: LLM-guided hierarchical file selection (Agentless-style). The LLM reads
+# the repo structure and reasons about which file should be edited. This is
+# the single biggest differentiator of top-tier localization pipelines.
+W_LLM_LOC = float(os.getenv("ISHA_LOC_W_LLM", "0.15"))
 # A file the model can actually edit is worth more than the prose about it.
 PRIOR_DOC = float(os.getenv("ISHA_LOC_PRIOR_DOC", "0.45"))
 PRIOR_TEST = float(os.getenv("ISHA_LOC_PRIOR_TEST", "0.7"))
@@ -438,12 +450,19 @@ def _def_scores(chunks: list[dict], seeds: IssueSeeds) -> dict[str, float]:
 
 
 def _caller_scores(repo_path: str, seeds: IssueSeeds) -> dict[str, float]:
-    """P2-01: files that call the suspect symbols (caller-graph signal).
+    """P2-01/P3: files that call the suspect symbols (caller-graph signal).
 
     A file calling `subtract()` is often where the wrong-result symptom
     surfaces; boosting callers pulls the fused ranking toward the fault's
-    neighborhood instead of pure text overlap. Best-effort: {} when the
-    graph cannot build (unknown repo layout).
+    neighborhood instead of pure text overlap.
+
+    P3 upgrade: 2-hop traversal with decay.
+      hop 1 — direct callers of suspect symbols (weight 1.0)
+      hop 2 — callers-of-callers (weight 0.4, decayed)
+    This catches indirect bugs where the issue names `foo()` but the
+    real defect is in `_internal()` called by `bar()` called by `foo()`.
+
+    Best-effort: {} when the graph cannot build (unknown repo layout).
     """
     wanted = {
         s.lower() for s in seeds.symbols + seeds.traceback_funcs
@@ -459,18 +478,131 @@ def _caller_scores(repo_path: str, seeds: IssueSeeds) -> dict[str, float]:
             return {}
         dg = DependencyGraph(str(root))
         file_hits: dict[str, float] = {}
+
+        def _extract_file(qname: str) -> str | None:
+            f = str(qname).split("::", 1)[0].replace("\\", "/")
+            if "/" not in f and "." not in f:
+                return None
+            return _norm(f)
+
         for sym in wanted:
-            for caller in dg.reverse_call_graph.get(sym, set()):
-                f = str(caller).split("::", 1)[0].replace("\\", "/")
-                # caller qnames from other repos/graphs may be bare symbols
-                if "/" not in f and "." not in f:
+            # Hop 1: direct callers (full weight)
+            hop1_callers = dg.reverse_call_graph.get(sym, set())
+            for caller in hop1_callers:
+                f = _extract_file(caller)
+                if f:
+                    file_hits[f] = file_hits.get(f, 0.0) + 1.0
+
+            # Hop 2: callers-of-callers (decayed weight 0.4)
+            for caller in hop1_callers:
+                caller_sym = str(caller).split("::")[-1] if "::" in str(caller) else ""
+                if not caller_sym or len(caller_sym) <= 2:
                     continue
-                f = _norm(f)
-                file_hits[f] = file_hits.get(f, 0.0) + 1.0
+                for grandcaller in dg.reverse_call_graph.get(caller_sym, set()):
+                    gf = _extract_file(grandcaller)
+                    if gf:
+                        file_hits[gf] = file_hits.get(gf, 0.0) + 0.4
+
         if not file_hits:
             return {}
         top = max(file_hits.values()) or 1.0
         return {k: v / top for k, v in file_hits.items()}
+    except Exception:
+        return {}
+
+
+def _llm_localize(
+    issue_text: str, repo_path: str, chunks: list[dict]
+) -> dict[str, float]:
+    """P3: LLM-guided hierarchical file selection (Agentless-style).
+
+    Feed the issue description and a compact file listing of the repo to
+    a cheap planner call.  The LLM *reasons* about which file likely
+    contains the root cause — something pure retrieval cannot do when the
+    bug report describes behaviour without naming code identifiers.
+
+    Returns {normalised_path: score} where score ∈ [0, 1].
+    Best-effort: {} on offline mode, API failure, or parse error.
+    """
+    if not repo_path or not issue_text:
+        return {}
+    try:
+        from src.config import OFFLINE_MODE, call_planner
+        if OFFLINE_MODE:
+            return {}
+    except Exception:
+        return {}
+
+    # Build a compact file listing from the parsed chunks (cheaper than
+    # walking the filesystem again).  Deduplicate and sort.
+    all_files = sorted({_norm(c.get("file_path", "")) for c in chunks if c.get("file_path")})
+    if not all_files:
+        # Fallback: walk the repo for .py files
+        try:
+            root = Path(repo_path)
+            all_files = sorted({
+                _norm(str(p.relative_to(root)))
+                for p in root.rglob("*.py")
+                if not any(part in SKIP_DIRS for part in p.parts)
+            })
+        except Exception:
+            return {}
+    if not all_files:
+        return {}
+
+    # Cap the listing so we don't blow the context window.
+    # For large repos (>200 files), include only file paths, not content.
+    file_list_str = "\n".join(all_files[:500])
+
+    # Snip the issue to head+tail for large reports (same strategy as reranker)
+    _head, _tail = issue_text[:1500], issue_text[-600:]
+    _issue = _head if len(issue_text) <= 2100 else _head + "\n...[clipped]...\n" + _tail
+
+    prompt = (
+        "You are an expert software engineer. Given a bug report and a repository's "
+        "file listing, identify the top 5 source files most likely to contain the "
+        "root cause code that must be edited to fix the bug.\n\n"
+        "RULES:\n"
+        "- Prefer source implementation files over tests, docs, examples, and configs.\n"
+        "- Prefer files whose module path matches concepts in the bug report.\n"
+        "- Consider which file likely *defines* the broken behaviour, not just references it.\n\n"
+        f"BUG REPORT:\n{_issue}\n\n"
+        f"REPOSITORY FILES ({len(all_files)} total):\n{file_list_str}\n\n"
+        "Return ONLY a JSON array of the top 5 file paths, ranked from most to least likely:\n"
+        '[\"path/to/most_likely.py\", \"path/to/second.py\", ...]'
+    )
+
+    try:
+        reply = call_planner(prompt, temperature=0.0)
+        if not reply:
+            return {}
+
+        import json
+        cleaned = re.sub(r"^```(?:json)?\s*", "", reply.strip(), flags=re.MULTILINE)
+        cleaned = re.sub(r"```\s*$", "", cleaned.strip(), flags=re.MULTILINE).strip()
+        match = re.search(r"\[.*\]", cleaned, re.DOTALL)
+        if match:
+            cleaned = match.group(0)
+        order = json.loads(cleaned)
+        if not isinstance(order, list) or not order:
+            return {}
+
+        # Convert ranked list to scores: rank 1 → 1.0, rank 2 → 0.8, etc.
+        scores: dict[str, float] = {}
+        decay = 1.0
+        for path_str in order[:8]:
+            target = _norm(str(path_str).replace("\\", "/").strip())
+            # Fuzzy match against known files
+            matched = target if target in set(all_files) else None
+            if not matched:
+                for f in all_files:
+                    if f.endswith(target) or target.endswith(f):
+                        matched = f
+                        break
+            if matched and matched not in scores:
+                scores[matched] = decay
+                decay = max(decay - 0.2, 0.1)
+        return scores
     except Exception:
         return {}
 
@@ -519,8 +651,9 @@ def localize(
     vec = _vector_scores(seeds.query, chunks)
     defs = _def_scores(chunks, seeds)
     callers = _caller_scores(repo_path, seeds) if W_CALLERS > 0 else {}
+    llm_loc = _llm_localize(issue_text, repo_path, chunks) if W_LLM_LOC > 0 else {}
 
-    files = set(seed_scores) | set(bm25) | set(vec) | set(defs) | set(callers)
+    files = set(seed_scores) | set(bm25) | set(vec) | set(defs) | set(callers) | set(llm_loc)
     ranked: list[Candidate] = []
     for path in files:
         s = {
@@ -529,17 +662,19 @@ def localize(
             "vector": vec.get(path, 0.0),
             "defs": defs.get(path, 0.0),
             "callers": callers.get(path, 0.0),
+            "llm_loc": llm_loc.get(path, 0.0),
         }
-        # Seed evidence dominates; retrieval breaks ties; the file that
-        # declares the symbol gets a bonus; caller-graph adds neighborhood
-        # signal (P2-01, additive so tuned weights are untouched); prose
-        # and tests are discounted.
+        # P3: 6-signal fusion.  Seed evidence dominates; retrieval breaks
+        # ties; defs reward the file that *declares* the symbol; callers
+        # expand to the fault's 2-hop neighborhood; llm_loc brings LLM
+        # reasoning about repo structure; prose and tests are discounted.
         score = (
             W_SEED * s["seed"]
             + W_BM25 * s["bm25"]
             + W_VECTOR * s["vector"]
             + W_DEFS * s["defs"]
             + W_CALLERS * s["callers"]
+            + W_LLM_LOC * s["llm_loc"]
         ) * _file_prior(path)
         if score <= 0.02:
             continue

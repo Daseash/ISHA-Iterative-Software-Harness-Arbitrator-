@@ -59,6 +59,8 @@ def dispatch_agents(state: AgentState):
             "plan": base.get("plan", ""),
             "escalation": "",
             "regression_test": base.get("regression_test", ""),
+            "repro_valid": base.get("repro_valid"),
+            "repro_ok": base.get("repro_ok"),
             "blast_radius": dict(base.get("blast_radius") or {}),
             "localization": list(base.get("localization") or []),
             "context_notes": list(base.get("context_notes") or []),

@@ -50,11 +50,12 @@ class AgentState(BaseModel):
     # ── Testing & Baseline Gate ─────────────────────────────────────────────
     regression_test: Annotated[str, _last] = Field(default="", description="Red/green regression test code")
     repro_ok: Annotated[Optional[bool], _last] = Field(default=None, description="True if generated repro test produced a genuine failing assertion without collection errors")
+    repro_valid: Annotated[Optional[bool], _last] = Field(default=None, description="True if repro test is a verified failing RED on unpatched code")
     repro_output: Annotated[str, _last] = Field(default="", description="Output of baseline repro test run")
     baseline_repro_failed: Annotated[Optional[bool], _last] = Field(default=None, description="True if generated repro test failed (RED) on unmodified baseline repo")
     baseline_repro_output: Annotated[str, _last] = Field(default="", description="Output of repro test execution on unmodified baseline repo")
     failure_classification: Annotated[str, _last] = Field(default="", description="Classified failure mode for evidence-based re-planning")
-    local_sandbox_status: Annotated[str, _last] = Field(default="not_run", description="passed | failed | not_run (local sandbox execution)")
+    local_sandbox_status: Annotated[str, _last] = Field(default="not_run", description="passed | failed | no_fix | infra | not_run (local sandbox execution; set by sandbox_node)")
     official_docker_status: Annotated[str, _last] = Field(default="not_run", description="passed | failed | not_run (official Docker container execution)")
 
     # ── Patching ────────────────────────────────────────────────────────────
@@ -94,3 +95,31 @@ def coerce_state(obj) -> AgentState:
     if isinstance(obj, dict):
         return AgentState(**obj)
     raise TypeError(f"coerce_state: expected AgentState or dict, got {type(obj).__name__}")
+
+
+# ── Structured test verdict (AR-2) ──────────────────────────────────────────
+# Routers switch on local_sandbox_status, never on substrings of test_output:
+# a PASSED verdict can embed traceback text (warnings, xfail, full-suite
+# echoes) and pytest's "0 failed" line must not read as FAILED. The substring
+# fallback exists ONLY for states produced before the writer ran
+# (status == "not_run") or non-terminal outcomes — it never overrides a known
+# passed/failed status.
+
+def test_failed(state) -> bool:
+    """True when the sandbox verdict is failed. Status wins over substrings."""
+    status = getattr(state, "local_sandbox_status", "not_run") or "not_run"
+    if status == "failed":
+        return True
+    if status == "passed":
+        return False
+    return "FAILED" in (getattr(state, "test_output", "") or "")
+
+
+def test_passed(state) -> bool:
+    """True when the sandbox verdict is passed. Status wins over substrings."""
+    status = getattr(state, "local_sandbox_status", "not_run") or "not_run"
+    if status == "passed":
+        return True
+    if status == "failed":
+        return False
+    return "PASSED" in (getattr(state, "test_output", "") or "")
