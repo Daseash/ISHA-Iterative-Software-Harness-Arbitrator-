@@ -2,8 +2,9 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [main, website]
   pull_request:
+    branches: [main, website]
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
