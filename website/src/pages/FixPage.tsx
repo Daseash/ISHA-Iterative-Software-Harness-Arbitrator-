@@ -15,7 +15,7 @@ export const FixPage: React.FC<FixPageProps> = () => {
   const [cliFlavor, setCliFlavor] = useState<"pnpm" | "pip">("pnpm");
 
   const pnpmCommand = "pnpm dlx shadcn add @skiper-ui/skiper82";
-  const pipCommand = "pip install isha-agent";
+  const pipCommand = "pip install -e isha-agent/";
 
   const activeCommand = cliFlavor === "pnpm" ? pnpmCommand : pipCommand;
 

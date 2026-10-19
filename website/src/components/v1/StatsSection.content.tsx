@@ -264,7 +264,7 @@ export const StatsSection: React.FC = () => {
     },
     {
       title: "Run Autonomous Fix",
-      cmd: "isha solve --repo ./target-repo --issue ./problem_statement.md",
+      cmd: "isha fix --repo ./target-repo --issue ./problem_statement.md",
     },
     {
       title: "Run System Doctor",
