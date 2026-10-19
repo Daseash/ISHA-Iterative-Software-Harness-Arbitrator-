@@ -35,7 +35,25 @@ jobs:
         env:
           ISHA_FORCE_OFFLINE: "1"
           ISHA_CANDIDATES_PARALLEL: "0"
-        run: python -m pytest --ignore=tests/dummy_repo -q
+        run: |
+          set -o pipefail
+          python -m pytest --ignore=tests/dummy_repo -v --tb=short 2>&1 | tee test_log.txt
+
+      - name: Report pytest summary on failure
+        if: failure()
+        run: |
+          echo "### Pytest Failure Details" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -n 120 test_log.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload pytest log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-failure-log
+          path: test_log.txt
+
 
       - name: CLI smoke (offline brain, no keys needed)
         run: |
