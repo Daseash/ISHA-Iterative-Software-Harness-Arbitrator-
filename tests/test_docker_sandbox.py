@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import pytest
@@ -61,7 +62,10 @@ def test_build_command_includes_resource_limits(tmp_path, monkeypatch):
     assert cmd[cmd.index("--memory") + 1] == "1g"
     assert cmd[cmd.index("--cpus") + 1] == "2"
     assert "custom:tag" in cmd
-    assert "--user" not in cmd
+    if hasattr(os, "getuid"):
+        assert cmd[cmd.index("--user") + 1] == f"{os.getuid()}:{os.getgid()}"
+    else:
+        assert "--user" not in cmd
 
 
 def test_build_command_omits_empty_limits(tmp_path, monkeypatch):
