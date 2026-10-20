@@ -8,9 +8,9 @@ export const CliSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: `# Install ISHA globally\npip install isha\n\n# Solve a bug and create a GitHub PR\nisha fix https://github.com/org/repo --issue "Fix bug..." --pr\n\n# Open visual web dashboard\nisha ui`,
-    curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
-    git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\nisha doctor\n\n# Launch Web Dashboard\nisha ui`,
+    pip: "pip install isha",
+    curl: "curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash",
+    git: "pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git",
   };
 
   const handleCopy = () => {
