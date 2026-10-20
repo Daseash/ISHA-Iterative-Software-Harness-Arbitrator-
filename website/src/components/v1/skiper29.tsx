@@ -9,7 +9,6 @@ import { AboutSection } from "./AboutSection";
 import { CliSection } from "./CliSection";
 import { LinePath } from "./skiper19";
 import { HoverExpand_001 } from "./skiper52";
-import { ScrollHighlight } from "./ScrollHighlight";
 import { ArrowUpRight } from "lucide-react";
 
 export function Skiper29() {
@@ -225,22 +224,6 @@ export function Skiper29() {
               ))}
             </div>
 
-            {/* Scroll-triggered live highlights from jameschugh */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-black tracking-tight text-neutral-800 dark:text-neutral-200">
-              <span className="inline-flex items-center gap-1.5">
-                SWE-bench Lite:
-                <ScrollHighlight variant="round" color="coral">
-                  17 Clean Patches Locked
-                </ScrollHighlight>
-              </span>
-              <span className="text-neutral-400">·</span>
-              <span className="inline-flex items-center gap-1.5">
-                Tournament:
-                <ScrollHighlight variant="brush" color="sun">
-                  3-Worktree Elimination
-                </ScrollHighlight>
-              </span>
-            </div>
 
             {/* Direct Hero Action Buttons */}
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4 z-30">
@@ -294,21 +277,18 @@ export function Skiper29() {
       </div>
 
       {/* ================= PHOTO PLANES GALLERY (REPLACES DEMOSKIPER16) ================= */}
-      <section className="relative py-24 px-4 sm:px-6 bg-[#0a0a0b] text-white border-y border-neutral-800/80 overflow-hidden">
-        {/* Ambient background glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-800/25 via-[#0a0a0b] to-[#0a0a0b] pointer-events-none" />
-
+      <section className="relative py-24 px-4 sm:px-6 bg-[#F9F7EF] dark:bg-black transition-colors overflow-hidden">
         <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center space-y-4 mb-8 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-800 bg-neutral-900/80 text-xs font-mono text-neutral-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-300 bg-white/80 text-xs font-mono text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute ml-[3px]" />
             ISHA AUTONOMOUS FLIGHT GALLERY
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-black dark:text-[#F9F7EF]">
             Live Benchmarks & Visual Telemetry
           </h2>
-          <p className="max-w-2xl text-neutral-400 text-sm sm:text-base">
-            Hover over any plane to inspect real-time AST graphs, container sandbox executions, and agent telemetry.
+          <p className="max-w-2xl text-neutral-600 dark:text-neutral-400 text-sm sm:text-base">
+            Inspect real-time AST graphs, container sandbox executions, and agent telemetry.
           </p>
         </div>
 

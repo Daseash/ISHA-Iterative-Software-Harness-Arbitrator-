@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RotateCcw } from "lucide-react";
 
 export interface PhotoPlanesImage {
   src: string;
@@ -54,11 +53,6 @@ export const PhotoPlanes: React.FC<PhotoPlanesProps> = ({
     }, autoplay);
     return () => clearInterval(interval);
   }, [autoplay]);
-
-  const handleReplay = () => {
-    setHoveredIndex(null);
-    setDealKey((k) => k + 1);
-  };
 
   const centerIndex = (images.length - 1) / 2;
 
@@ -184,17 +178,6 @@ export const PhotoPlanes: React.FC<PhotoPlanesProps> = ({
             })}
           </div>
         </AnimatePresence>
-      </div>
-
-      {/* Centered Replay Button */}
-      <div className="mt-8 flex justify-center items-center z-20">
-        <button
-          onClick={handleReplay}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider uppercase text-neutral-500 hover:text-neutral-900 dark:hover:text-white bg-neutral-200/60 dark:bg-neutral-900 hover:bg-neutral-300 dark:hover:bg-neutral-800 transition-all duration-200 cursor-pointer shadow-sm active:scale-95"
-        >
-          <RotateCcw className="w-3 h-3 stroke-[2.5]" />
-          Replay
-        </button>
       </div>
     </div>
   );

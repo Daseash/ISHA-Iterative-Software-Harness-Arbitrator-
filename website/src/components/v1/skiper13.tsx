@@ -3,30 +3,39 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEventListener } from "usehooks-ts";
 import { DarkModeSwitch } from "../unlumen-ui/DarkModeSwitch";
 
-interface NavItem {
+export interface NavItem {
   name: string;
   href: string;
   badge?: string;
   isExternal?: boolean;
 }
 
-const navItems: NavItem[] = [
-  { name: "HOME", href: "/#hero", badge: "01" },
-  { name: "ABOUT", href: "/#about", badge: "02" },
-  { name: "CLI", href: "/#cli", badge: "03" },
-  { name: "FIX", href: "/fix", badge: "04" },
-  { name: "STATS", href: "/stats", badge: "05" },
-  {
-    name: "GIT HUB",
-    href: "https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-",
-    badge: "↗",
-    isExternal: true,
-  },
-];
+export interface NavbarProps {
+  hideStats?: boolean;
+  hideGithub?: boolean;
+}
 
-export const Navbar_001: React.FC = () => {
+export const Navbar_001: React.FC<NavbarProps> = ({ hideStats = false, hideGithub = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const navItems: NavItem[] = [
+    { name: "HOME", href: "/#hero", badge: "01" },
+    { name: "ABOUT", href: "/#about", badge: "02" },
+    { name: "CLI", href: "/#cli", badge: "03" },
+    { name: "FIX", href: "/fix", badge: "04" },
+    ...(!hideStats ? [{ name: "STATS", href: "/stats", badge: "05" }] : []),
+    ...(!hideGithub
+      ? [
+          {
+            name: "GIT HUB",
+            href: "https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-",
+            badge: "↗",
+            isExternal: true,
+          },
+        ]
+      : []),
+  ];
 
   // Scroll listener to move bar to top-left corner when scrolling
   useEffect(() => {
@@ -46,7 +55,7 @@ export const Navbar_001: React.FC = () => {
 
   return (
     <>
-      {/* Semi-transparent backdrop when menu is open */}
+      {/* Semi-transparent backdrop when menu is open: matches website background (#F9F7EF in light, black in dark) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -55,13 +64,13 @@ export const Navbar_001: React.FC = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-40 bg-black/40 dark:bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-[#F9F7EF]/80 dark:bg-black/80 backdrop-blur-sm"
           />
         )}
       </AnimatePresence>
 
       {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll */}
-      {/* Reverse contrast: Black in Light Mode, Light (#F9F7EF) in Dark Mode */}
+      {/* Background matches website theme: #F9F7EF in Light Mode, neutral-950/black in Dark Mode */}
       <motion.div
         initial={false}
         animate={{
@@ -81,7 +90,7 @@ export const Navbar_001: React.FC = () => {
             stiffness: 380,
             damping: 32,
           }}
-          className={`overflow-hidden border border-neutral-800 dark:border-neutral-300/80 bg-neutral-900/95 dark:bg-[#F9F7EF]/95 text-white dark:text-black backdrop-blur-2xl shadow-2xl shadow-black/40 dark:shadow-neutral-900/30 transition-colors duration-300 ${
+          className={`overflow-hidden border border-neutral-300/80 dark:border-neutral-800 bg-[#F9F7EF]/95 dark:bg-neutral-950/95 text-neutral-900 dark:text-white backdrop-blur-2xl shadow-2xl shadow-black/10 dark:shadow-black/70 transition-colors duration-300 ${
             isOpen
               ? "w-[310px] sm:w-[350px] rounded-3xl p-5"
               : "w-[270px] sm:w-[310px] rounded-2xl px-5 py-3"
@@ -95,7 +104,7 @@ export const Navbar_001: React.FC = () => {
               className="flex items-center gap-2.5 group cursor-pointer"
             >
               <div className="h-3 w-3 rounded-full bg-red-600 transition-transform group-hover:scale-125 duration-300 shadow-sm shrink-0" />
-              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white dark:text-black group-hover:text-red-500 dark:group-hover:text-red-600 transition-colors">
+              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-neutral-900 dark:text-white group-hover:text-red-500 transition-colors">
                 ISHA
               </span>
             </a>
@@ -103,7 +112,7 @@ export const Navbar_001: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-300 dark:text-neutral-700 hover:text-red-500 dark:hover:text-red-600 transition-colors cursor-pointer py-1 px-2 rounded-lg"
+              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-500 transition-colors cursor-pointer py-1 px-2 rounded-lg"
             >
               {isOpen ? "CLOSE" : "MENU"}
             </button>
@@ -135,11 +144,11 @@ export const Navbar_001: React.FC = () => {
                       transition={{ delay: idx * 0.04, duration: 0.2 }}
                       className="group relative flex items-baseline justify-center gap-1.5 transition-transform duration-200 hover:scale-105 active:scale-95"
                     >
-                      <span className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-red-600 group-hover:text-red-500 dark:group-hover:text-red-700 transition-colors leading-none">
+                      <span className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-red-600 group-hover:text-red-500 dark:group-hover:text-red-500 transition-colors leading-none">
                         {item.name}
                       </span>
                       {item.badge && (
-                        <span className="font-mono text-[9px] sm:text-[10px] text-red-400 dark:text-red-600 font-bold opacity-80 group-hover:opacity-100">
+                        <span className="font-mono text-[9px] sm:text-[10px] text-red-500 dark:text-red-400 font-bold opacity-80 group-hover:opacity-100">
                           {item.badge}
                         </span>
                       )}
@@ -148,12 +157,12 @@ export const Navbar_001: React.FC = () => {
                 </nav>
 
                 {/* Sub-links row */}
-                <div className="flex items-center justify-between pt-3 border-t border-neutral-800 dark:border-neutral-300 text-[11px] font-mono text-neutral-400 dark:text-neutral-600 font-bold px-2">
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-300 dark:border-neutral-800 text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-bold px-2">
                   <a
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-#-architecture"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-white dark:hover:text-black transition-colors"
+                    className="hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Architecture
                   </a>
@@ -161,24 +170,24 @@ export const Navbar_001: React.FC = () => {
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/blob/main/LICENSE"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-white dark:hover:text-black transition-colors"
+                    className="hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     MIT License
                   </a>
                 </div>
 
                 {/* Bottom Segmented Pill Row: PB | EN | ES | FR style */}
-                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-950/80 dark:bg-neutral-200/90 border border-neutral-800/80 dark:border-neutral-300/80 text-center font-mono text-[10px] font-black uppercase text-neutral-400 dark:text-neutral-600">
+                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-200/80 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800/80 text-center font-mono text-[10px] font-black uppercase text-neutral-600 dark:text-neutral-400">
                   <span className="py-1 rounded-lg bg-red-600 text-white shadow-sm">
                     SWE
                   </span>
-                  <span className="py-1 hover:text-white dark:hover:text-black transition-colors">
+                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
                     AST
                   </span>
-                  <span className="py-1 hover:text-white dark:hover:text-black transition-colors">
+                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
                     TDD
                   </span>
-                  <span className="py-1 hover:text-white dark:hover:text-black transition-colors">
+                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
                     V0.3
                   </span>
                 </div>
