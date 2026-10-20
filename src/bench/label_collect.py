@@ -71,8 +71,10 @@ def _candidates(meta: dict) -> list[dict]:
     }]
 
 
-def collect_run(run_id: str, results: Path = RESULTS) -> tuple[list[dict], dict]:
+def collect_run(run_id: str, results: Path | None = None) -> tuple[list[dict], dict]:
     """Build label rows for one finished run. Returns (rows, stats)."""
+    if results is None:
+        results = RESULTS
     run_dir = results / run_id
     if not run_dir.is_dir():
         return [], {"error": f"no such run: {run_dir}"}
@@ -80,12 +82,30 @@ def collect_run(run_id: str, results: Path = RESULTS) -> tuple[list[dict], dict]
     # harness_eval writes <run>/harness_report.json; older runs used
     # <run>/harness/harness_report.json.  Accept both or every label
     # comes back 0 and the combiner is fitted on pure noise.
-    report = (
-        _read(run_dir / "harness_report.json")
-        or _read(run_dir / "harness" / "harness_report.json")
-        or {}
-    )
-    resolved_ids = set(report.get("resolved_ids") or [])
+    # SSOT parity (score.py/sync hook): rescues and retries live in sibling
+    # dirs (<run>-r2..r5, <run>-rescue*, <run>-v2), so union resolved_ids
+    # across ALL of them — otherwise rescued resolves are mislabeled 0.
+    resolved_ids: set = set()
+    for sib in sorted(results.glob(f"{run_id}*")):
+        if not sib.is_dir():
+            continue
+        rep = (
+            _read(sib / "harness_report.json")
+            or _read(sib / "harness" / "harness_report.json")
+            or {}
+        )
+        resolved_ids |= set(rep.get("resolved_ids") or [])
+        # SSOT parity (score.py scan_session): per-instance official
+        # report.json files carry resolved:true even when the summary
+        # harness_report.json is stale (e.g. lite300-s5: summary says 0,
+        # per-instance reports prove 3). Union those too.
+        for rep_file in sib.rglob("report.json"):
+            data = _read(rep_file)
+            if not isinstance(data, dict):
+                continue
+            for key, val in data.items():
+                if isinstance(val, dict) and val.get("resolved") is True:
+                    resolved_ids.add(str(key))
 
     rows: list[dict] = []
     stats = {"run_id": run_id, "resolved": len(resolved_ids), "positives": 0,
@@ -144,7 +164,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     out = Path(args.out)
-    if not args.append and out.exists():
+    # NEVER delete the store on a dry run (a --dry-run must not mutate).
+    if not args.append and not args.dry_run and out.exists():
         out.unlink()
 
     all_rows: list[dict] = []

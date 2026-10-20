@@ -23,6 +23,7 @@ dependencies = [
     "pydantic>=2",
     "pytest",
     "docker",
+    "datasets",
     "streamlit",
     "laya",
     "python-dotenv",

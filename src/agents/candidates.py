@@ -63,41 +63,40 @@ def strategy_models() -> dict[str, str]:
     return merged
 
 
-# (name, temperature, strategy notes) — varied on purpose: identical prompts
-# at identical temperatures produce identical patches, which defeats the
-# point of generating N candidates.
+# (name, temperature, strategy notes) — capped safe temperatures (<= 0.50)
+# to prevent whitespace hallucinations and diff syntax failures (Subsystem 5 upgraded spec).
 STRATEGY_VARIANTS = [
     (
         "minimal_diff",
-        0.15,
+        0.10,
         "Smallest possible diff. Touch the fewest lines and fewest files "
         "that can fix the reported behaviour. Prefer an early return or a "
         "one-line condition over a restructure.",
     ),
     (
         "call_site_aware",
-        0.35,
+        0.25,
         "Fix the root cause and update every caller in the same diff. If the "
         "signature or semantics change, propagate the change to all call "
         "sites so no caller keeps the old contract.",
     ),
     (
         "root_cause_first",
-        0.6,
+        0.30,
         "Re-read the reported symptom and fix the underlying invariant rather "
         "than the observed line. Guard the boundary that actually violates the "
         "documented behaviour.",
     ),
     (
         "defensive_fix",
-        0.8,
+        0.40,
         "Fix the reported bug and close the adjacent edge cases the report "
         "implies (invalid input, empty/zero values, case sensitivity), while "
         "still keeping the diff minimal and backward compatible.",
     ),
     (
         "cross_file_audit",
-        1.0,
+        0.50,
         "Audit the localized files and their direct callers for any place the "
         "same wrong assumption is duplicated; fix all of them in one atomic "
         "diff.",

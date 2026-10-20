@@ -50,7 +50,7 @@ To publish alongside high-profile AI research systems (like Laya, OpenHands, Age
 The core engine must be completely impervious to model deprecations, provider downtime, or token quotas.
 
 - [x] **CRIT-ENG-01: Free-Tier Multi-Provider Fallback Chain**
-  - **Description**: Automatic cascade from primary model (`qwen/qwen3.8-27b`) to fast fallbacks (`gpt-oss-120b`, `gpt-oss-20b`, `gemini-3.8-flash`).
+  - **Description**: Automatic cascade from primary model (`gemini/gemini-3.5-flash-lite`) to fast fallbacks (`gemini/gemini-3.8-flash`, `gemini/gemini-3.5-flash`) — code SSOT `src/config.py:63-84`, overridable via `$ISHA_*_MODEL` / `$ISHA_*_FALLBACKS`.
   - **Verification**: Simulated 429/503 errors trigger immediate model advancement.
   - **Acceptance Bar**: No agent execution stalls; zero manual restarts required.
 - [x] **CRIT-ENG-02: Fast-Failover Timeout Bypass**

@@ -2,151 +2,151 @@
   {
     "instance_id": "sphinx-doc__sphinx-7686",
     "model_patch": "diff --git a/sphinx/ext/autosummary/__init__.py b/sphinx/ext/autosummary/__init__.py\nindex 0cdd88f..b1c4f05 100644\n--- a/sphinx/ext/autosummary/__init__.py\n+++ b/sphinx/ext/autosummary/__init__.py\n@@ -364,6 +364,8 @@ class Autosummary(SphinxDirective):\n     def get_table(self, items: List[Tuple[str, str, str, str]]) -> List[Node]:\n         \"\"\"Generate a proper list of table nodes for autosummary:: directive.\n \n+                        if not doc.env.config.autosummary_imported_members and getattr(obj, '__module__', None) != real_name:\n+                            continue\n         *items* is a list produced by :meth:`get_items`.\n         \"\"\"\n         table_spec = addnodes.tabular_col_spec()\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-7738",
     "model_patch": "",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-7975",
     "model_patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af2139..f2459dc 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    # get all other symbols under 'Symbols' section\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8273",
     "model_patch": "diff --git a/sphinx/builders/manpage.py b/sphinx/builders/manpage.py\nindex 4166dec..e67c1a3 100644\n--- a/sphinx/builders/manpage.py\n+++ b/sphinx/builders/manpage.py\n@@ -17,6 +17,7 @@ from docutils.io import FileOutput\n from sphinx import addnodes\n from sphinx.application import Sphinx\n from sphinx.builders import Builder\n+from sphinx.util import ensuredir\n from sphinx.config import Config\n from sphinx.errors import NoUri\n from sphinx.locale import __\n@@ -64,7 +65,9 @@ class ManualPageBuilder(Builder):\n             read_config_files=True).get_default_values()  # type: Any\n \n         for info in self.config.man_pages:\n-            docname, name, description, authors, section = info\n+            docname, name, description, authors, section = info[:5]\n+            targetdir = path.join(self.outdir, 'man%s' % section)\n+            ensuredir(targetdir)\n             if docname not in self.env.all_docs:\n                 logger.warning(__('\"man_pages\" config value references unknown '\n                                   'document %s'), docname)\n@@ -80,7 +83,7 @@ class ManualPageBuilder(Builder):\n             docsettings.authors = authors\n             docsettings.section = section\n \n-            targetname = '%s.%s' % (name, section)\n+            targetname = path.join('man%s' % section, '%s.%s' % (name, section))\n             logger.info(darkgreen(targetname) + ' { ', nonl=True)\n             destination = FileOutput(\n                 destination_path=path.join(self.outdir, targetname),\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8282",
     "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 978fd5d..d678e60 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1461,10 +1461,12 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:\n                            self.fullname, exc)\n             return None\n \n-        if sig is None:\n+        if self.options.noindex:\n             return None\n \n-        return stringify_signature(sig, show_return_annotation=False, **kwargs)\n+        if self.env.config.autodoc_typehints == 'none':\n+            kwargs.setdefault('show_annotation', False)\n+        return self.format_signature(**kwargs)\n \n     def format_signature(self, **kwargs: Any) -> str:\n         if self.doc_as_attr:\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8435",
     "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 171a3e7..64d0793 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1715,7 +1715,8 @@ class DataDocumenter(ModuleLevelDocumenter):\n                 # AttributeError is raised on 3.5.2 (fixed by 3.5.3)\n                 annotations = {}\n \n-            if self.objpath[-1] in annotations:\n+            name = self.objpath[-1]\n+            if name in annotations:\n                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))\n                 self.add_line('   :type: ' + objrepr, sourcename)\n             else:\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8474",
     "model_patch": "diff --git a/sphinx/builders/singlehtml.py b/sphinx/builders/singlehtml.py\nindex d8ab978..8ac8366 100644\n--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -115,10 +115,9 @@ class SingleFileHTMLBuilder(StandaloneHTMLBuilder):\n         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}\n \n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.1-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8506",
     "model_patch": "",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.1-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8595",
     "model_patch": "",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8627",
     "model_patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67b..e044ced 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -98,8 +98,8 @@ def restify(cls: Optional[\"Type\"]) -> str:\n         return ':class:`%s`' % cls.__name__\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n-    else:\n-        if sys.version_info >= (3, 7):  # py37+\n+    elif hasattr(cls, '__qualname__'):\n+        if sys.version_info >= (3, 7):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8713",
     "model_patch": "diff --git a/sphinx/ext/napoleon/docstring.py b/sphinx/ext/napoleon/docstring.py\nindex 755088c..cc7486d 100644\n--- a/sphinx/ext/napoleon/docstring.py\n+++ b/sphinx/ext/napoleon/docstring.py\n@@ -682,7 +682,11 @@ class GoogleDocstring:\n         return self._parse_generic_section(_('Notes'), use_admonition)\n \n     def _parse_other_parameters_section(self, section: str) -> List[str]:\n-        return self._format_fields(_('Other Parameters'), self._consume_fields())\n+        fields = self._consume_fields()\n+        if self._config.napoleon_use_param:\n+            return self._format_docutils_params(fields)\n+        else:\n+            return self._format_fields(_('Other Parameters'), fields)\n \n     def _parse_parameters_section(self, section: str) -> List[str]:\n         if self._config.napoleon_use_param:\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8721",
     "model_patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\nindex a7d52a9..3d90763 100644\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -179,6 +179,8 @@ def should_generate_module_page(app: Sphinx, modname: str) -> bool:\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sphinx-doc__sphinx-8801",
     "model_patch": "diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py\nindex 477aae2..7bff806 100644\n--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -194,7 +194,7 @@ def get_object_members(subject: Any, objpath: List[str], attrgetter: Callable,\n     # enum members\n     if isenumclass(subject):\n         for name, value in subject.__members__.items():\n-            if name not in members:\n+            if name in members and members[name].docstring:\n                 members[name] = Attribute(name, True, value)\n \n         superclass = subject.__mro__[1]\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-11400",
     "model_patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7..21d14d2 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -181,6 +181,11 @@ def _print_Infinity(self, expr):\n     def _print_NegativeInfinity(self, expr):\n         return '-HUGE_VAL'\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_Piecewise(self, expr):\n         if expr.args[-1].cond != True:\n             # We need the last conditional to be a True, otherwise the resulting\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-11870",
     "model_patch": "",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-11897",
     "model_patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex 1edc712..3c259fd 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -466,7 +466,7 @@ def _print_Pow(self, expr):\n             return self._print_Mul(expr)\n         else:\n             if expr.base.is_Function:\n-                return self._print(expr.base, self._print(expr.exp))\n+                return self._print(expr.base, exp=self._print(expr.exp))\n             else:\n                 if expr.is_commutative and expr.exp == -1:\n                     #solves issue 4129\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-12171",
     "model_patch": "diff --git a/sympy/printing/mathematica.py b/sympy/printing/mathematica.py\nindex 4c2ffd8..4a956c0 100644\n--- a/sympy/printing/mathematica.py\n+++ b/sympy/printing/mathematica.py\n@@ -2,6 +2,12 @@\n Mathematica code printer\n \"\"\"\n \n+    def _print_Derivative(self, expr):\n+        return \"D[%s]\" % (self.stringify(expr.args, \", \"))\n+\n+    def _print_Float(self, expr):\n+        res = str(expr)\n+        return res.replace('e', '*^')\n from __future__ import print_function, division\n from sympy.printing.codeprinter import CodePrinter\n from sympy.printing.str import StrPrinter\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-12236",
     "model_patch": "diff --git a/sympy/strategies/tools.py b/sympy/strategies/tools.py\nindex 5160e0e..a6b284f 100644\n--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -18,7 +18,8 @@ def subs(d, **kwargs):\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        rules = [rl.subs(k, v) for k, v in d.items()]\n+        return top_down(do_one(*rules), **kwargs)\n     else:\n         return lambda x: x\n \n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-12419",
     "model_patch": "diff --git a/sympy/matrices/expressions/matexpr.py b/sympy/matrices/expressions/matexpr.py\nindex b4d7598..2d3d7d1 100644\n--- a/sympy/matrices/expressions/matexpr.py\n+++ b/sympy/matrices/expressions/matexpr.py\n@@ -530,7 +530,8 @@ def conjugate(self):\n         return self\n \n     def _entry(self, i, j):\n-        return S.Zero\n+        from sympy.functions.special.tensor_functions import KroneckerDelta\n+        return KroneckerDelta(i, j)\n \n     def __nonzero__(self):\n         return False\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-12454",
     "model_patch": "diff --git a/sympy/matrices/matrices.py b/sympy/matrices/matrices.py\nindex 90ea232..c600fe8 100644\n--- a/sympy/matrices/matrices.py\n+++ b/sympy/matrices/matrices.py\n@@ -1112,7 +1112,7 @@ def is_upper(self):\n         \"\"\"\n         return all(self[i, j].is_zero\n                    for i in range(1, self.rows)\n-                   for j in range(i))\n+                   for j in range(min(i, self.cols)))\n \n     @property\n     def is_zero(self):\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-12481",
     "model_patch": "diff --git a/sympy/combinatorics/permutations.py b/sympy/combinatorics/permutations.py\nindex 136ed5a..0964972 100644\n--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -901,6 +901,11 @@ def __new__(cls, *args, **kwargs):\n                 'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))\n             else:\n                 raise ValueError('there were repeated elements.')\n+                if has_dups(flatten(temp)):\n+                    p = Permutation(temp[0])\n+                    for arg in temp[1:]:\n+                        p = p * Permutation(arg)\n+                    temp = p._array_form\n         temp = set(temp)\n \n         if not is_cycle and \\\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13031",
     "model_patch": "",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13043",
     "model_patch": "diff --git a/sympy/integrals/intpoly.py b/sympy/integrals/intpoly.py\nindex fc72bd2..cd4dd90 100644\n--- a/sympy/integrals/intpoly.py\n+++ b/sympy/integrals/intpoly.py\n@@ -593,7 +593,7 @@ def decompose(expr, separate=False):\n         poly_dict[0] = expr\n \n     if separate:\n-        return list(poly_dict.values())\n+        return [poly_dict[key] for key in sorted(poly_dict.keys(), key=str)]\n     return poly_dict\n \n \n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13146",
     "model_patch": "diff --git a/sympy/simplify/simplify.py b/sympy/simplify/simplify.py\nindex f1609aa..e2265f7 100644\n--- a/sympy/simplify/simplify.py\n+++ b/sympy/simplify/simplify.py\n@@ -446,6 +446,7 @@ def simplify(expr, ratio=1.7, measure=count_ops, fu=False):\n         >>> count_ops(simplify(root, ratio=oo)) > count_ops(root)\n         True\n \n+    expr = expr.rewrite(Pow)\n     Note that the shortest expression is not necessary the simplest, so\n     setting ``ratio`` to 1 may not be a good idea.\n     Heuristically, the default value ``ratio=1.7`` seems like a reasonable\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13177",
     "model_patch": "diff --git a/sympy/core/mod.py b/sympy/core/mod.py\nindex 11c8007..bd29635 100644\n--- a/sympy/core/mod.py\n+++ b/sympy/core/mod.py\n@@ -40,7 +40,7 @@ def doit(p, q):\n                 return nan\n             if (p == q or p == -q or\n                     p.is_Pow and p.exp.is_Integer and p.base == q or\n-                    p.is_integer and q == 1):\n+                    p.is_integer and q.is_integer and q == 1):\n                 return S.Zero\n \n             if q.is_Number:\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13437",
     "model_patch": "diff --git a/sympy/functions/combinatorial/numbers.py b/sympy/functions/combinatorial/numbers.py\nindex 896729a..9fb0698 100644\n--- a/sympy/functions/combinatorial/numbers.py\n+++ b/sympy/functions/combinatorial/numbers.py\n@@ -1029,10 +1029,13 @@ def eval(cls, n):\n                                  \"positive integers\")\n             return 2 * (1 - S(2) ** n) * bernoulli(n)\n \n-        if n.is_odd and (n - 1).is_positive:\n+        if n.is_Integer and n.is_negative:\n             return S.Zero\n \n-        if (n - 1).is_zero:\n+        if n is S.Infinity:\n+            return S.Infinity\n+\n+        if n.is_zero:\n             return S.One\n \n     def _eval_rewrite_as_bernoulli(self, n):\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13471",
     "model_patch": "diff --git a/sympy/core/numbers.py b/sympy/core/numbers.py\nindex 7bc96e6..d4d05f3 100644\n--- a/sympy/core/numbers.py\n+++ b/sympy/core/numbers.py\n@@ -1042,6 +1042,8 @@ def __new__(cls, num, dps=None, prec=None, precision=None):\n                 # it's a hexadecimal (coming from a pickled object)\n                 # assume that it is in standard form\n                 num = list(num)\n+                if isinstance(num[1], str) and num[1].lower().endswith('l'):\n+                    num[1] = num[1][:-1]\n                 num[1] = long(num[1], 16)\n                 _mpf_ = tuple(num)\n             else:\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13480",
     "model_patch": "diff --git a/sympy/functions/elementary/hyperbolic.py b/sympy/functions/elementary/hyperbolic.py\nindex 2a4555d..dd0c583 100644\n--- a/sympy/functions/elementary/hyperbolic.py\n+++ b/sympy/functions/elementary/hyperbolic.py\n@@ -587,7 +587,7 @@ def eval(cls, arg):\n                 x, m = _peeloff_ipi(arg)\n                 if m:\n                     cothm = coth(m)\n-                    if cotm is S.ComplexInfinity:\n+                    if tanh(arg) is S.ComplexInfinity:\n                         return coth(x)\n                     else: # cothm == 0\n                         return tanh(x)\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13647",
     "model_patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 056d9bc..5e811b3 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,8 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n+\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   },
   {
     "instance_id": "sympy__sympy-13773",
     "model_patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a291..9ac99f9 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
-    "model_name_or_path": "isha"
+    "model_name_or_path": "gemini-3.5-flash-lite"
   }
 ]

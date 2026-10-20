@@ -10,6 +10,7 @@ affected test files.
 from __future__ import annotations
 
 import ast
+import math
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -307,8 +308,13 @@ class DependencyGraph:
             if "test" in f.lower():
                 impacted_test_files.add(f)
 
-        total_files = max(1, len(self.files))
-        blast_score = min(1.0, len(affected_files) / total_files)
+        # Subsystem 7: Scale-invariant exponential saturation formula:
+        # blast_score = 1 - exp(-(directly_impacted + 1.5*upstream_callers + 3.0*dependent_modules) / 120.0)
+        directly_impacted = len(direct_symbols)
+        upstream = len(upstream_callers)
+        dep_mods = len(dependent_modules)
+        exponent = -(directly_impacted + 1.5 * upstream + 3.0 * dep_mods) / 120.0
+        blast_score = max(0.0, min(1.0, 1.0 - math.exp(exponent)))
 
         return ImpactAnalysis(
             entry_points=entry_points,

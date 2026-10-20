@@ -79,22 +79,35 @@ def build_command(
         "/workspace",
         "-e",
         "PYTHONIOENCODING=utf-8",
+        "-e",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "--pids-limit",
+        "256",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,size=256m",
     ]
     network = _env("ISHA_SANDBOX_NETWORK", "none")
     if network:
         cmd += ["--network", network]
     memory = _env("ISHA_SANDBOX_MEMORY", "1g")
     if memory:
-        cmd += ["--memory", memory]
+        cmd += ["--memory", memory, "--memory-swap", memory]
     cpus = _env("ISHA_SANDBOX_CPUS", "2")
     if cpus:
         cmd += ["--cpus", cpus]
     user = _env("ISHA_SANDBOX_USER", "")
+    if not user and hasattr(os, "getuid") and hasattr(os, "getgid"):
+        user = f"{os.getuid()}:{os.getgid()}"
     if user:
         cmd += ["--user", user]
 
     cmd += [
         image,
+        "timeout",
+        "--signal=SIGKILL",
+        "120s",
         "python",
         "-m",
         "pytest",

@@ -137,8 +137,17 @@ def write_slice(slice_id: str, records: list[dict]) -> Path:
     """Persist the exact instance list of a run so it can be reproduced."""
     SLICE_DIR.mkdir(parents=True, exist_ok=True)
     path = SLICE_DIR / f"{slice_id}.json"
+    new_ids = [r["instance_id"] for r in records]
+    if path.is_file():
+        try:
+            existing = json.loads(path.read_text(encoding="utf-8"))
+            if isinstance(existing, list) and len(existing) > len(new_ids):
+                # Do not shrink an established session slice on a subset/resume run
+                return path
+        except Exception:
+            pass
     path.write_text(
-        json.dumps([r["instance_id"] for r in records], indent=2), encoding="utf-8"
+        json.dumps(new_ids, indent=2), encoding="utf-8"
     )
     return path
 

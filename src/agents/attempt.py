@@ -9,7 +9,7 @@ and retry budget. Results fan in to arbitration through the attempt ledger.
 from langgraph.types import RunnableConfig
 
 from src.agents.nodes import coder_node, sandbox_node
-from src.agents.state import AgentState, coerce_state
+from src.agents.state import AgentState, coerce_state, test_failed
 from src.review.critic import critic_node
 
 import os
@@ -26,7 +26,9 @@ def attempt_node(state, config: RunnableConfig | None = None) -> dict:
     for _ in range(MAX_RETRIES + 1):
         branch = coder_node(branch)
         branch = sandbox_node(branch)
-        failed = "FAILED" in (branch.test_output or "")
+        # AR-2: structured verdict — PASSED output embedding FAILED text
+        # must break the loop, never replan.
+        failed = test_failed(branch)
         if failed:
             # P0-10: replan with fresh failure evidence (was never called).
             try:

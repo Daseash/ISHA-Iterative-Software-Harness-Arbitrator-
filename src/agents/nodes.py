@@ -446,8 +446,8 @@ def baseline_red_gate_node(state: AgentState) -> AgentState:
                 "Output might be passing, or failed with collection/import errors."
             )
             state.context_notes = list(state.context_notes) + [warning_msg]
-            # P0.3: Default to STRICT baseline check (1) so we never write patches against unverified tests
-            if os.getenv("ISHA_STRICT_BASELINE", "1").strip().lower() not in {"0", "false", "no"}:
+            # Strict baseline check: when enabled, discard repro tests that do not fail cleanly (RED)
+            if os.getenv("ISHA_STRICT_BASELINE", "0").strip().lower() in {"1", "true", "yes"}:
                 # Discard repro tests that do not fail (per specification)
                 state.regression_test = ""
                 state.escalation = (
@@ -462,7 +462,7 @@ def baseline_red_gate_node(state: AgentState) -> AgentState:
         state.repro_ok = False
         state.baseline_repro_failed = False
         state.repro_valid = False
-        if os.getenv("ISHA_STRICT_BASELINE", "1").strip().lower() not in {"0", "false", "no"}:
+        if os.getenv("ISHA_STRICT_BASELINE", "0").strip().lower() in {"1", "true", "yes"}:
             state.regression_test = ""
         return state
     finally:

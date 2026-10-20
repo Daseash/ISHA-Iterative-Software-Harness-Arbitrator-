@@ -33,27 +33,16 @@ from pathlib import Path
 
 from src.ingestion.parser import SKIP_DIRS
 
-# Fusion weights.  Each signal is normalised to 0..1, so these are the only
-# knobs; ``src.bench.loc_eval`` measures every combination it is given.
-W_SEED = float(os.getenv("ISHA_LOC_W_SEED", "0.35"))
-# P3: BM25 reduced from 0.25 to 0.18 — now that vector is real semantic
-# embedding (MiniLM) instead of hashing, BM25 and vector are differentiated
-# signals rather than near-duplicates.
-W_BM25 = float(os.getenv("ISHA_LOC_W_BM25", "0.18"))
-# P3: vector raised from 0.12 to 0.20 — the channel is now worth its weight
-# when MiniLM is active (real semantic similarity, not hashing-BM25 twin).
-W_VECTOR = float(os.getenv("ISHA_LOC_W_VECTOR", "0.20"))
-W_DEFS = float(os.getenv("ISHA_LOC_W_DEFS", "0.25"))
-# P2-01: caller-graph signal (files calling the suspect symbols, now 2-hop
-# with decay). Additive bonus so existing tuned weights are untouched.
-W_CALLERS = float(os.getenv("ISHA_LOC_W_CALLERS", "0.10"))
-# P3: LLM-guided hierarchical file selection (Agentless-style). The LLM reads
-# the repo structure and reasons about which file should be edited. This is
-# the single biggest differentiator of top-tier localization pipelines.
-W_LLM_LOC = float(os.getenv("ISHA_LOC_W_LLM", "0.15"))
+# Fusion weights.  Normalized so they sum to 1.00 (Subsystem 1 upgraded spec).
+W_SEED = float(os.getenv("ISHA_LOC_W_SEED", "0.30"))
+W_DEFS = float(os.getenv("ISHA_LOC_W_DEFS", "0.22"))
+W_VECTOR = float(os.getenv("ISHA_LOC_W_VECTOR", "0.16"))
+W_BM25 = float(os.getenv("ISHA_LOC_W_BM25", "0.14"))
+W_LLM_LOC = float(os.getenv("ISHA_LOC_W_LLM", "0.10"))
+W_CALLERS = float(os.getenv("ISHA_LOC_W_CALLERS", "0.08"))
 # A file the model can actually edit is worth more than the prose about it.
 PRIOR_DOC = float(os.getenv("ISHA_LOC_PRIOR_DOC", "0.45"))
-PRIOR_TEST = float(os.getenv("ISHA_LOC_PRIOR_TEST", "0.7"))
+PRIOR_TEST = float(os.getenv("ISHA_LOC_PRIOR_TEST", "0.70"))
 
 _TRACE_FILE_RE = re.compile(
     r'(?:File "(?P<path>[^"]+)", line (?P<line>\d+)(?:, in (?P<func>[A-Za-z_][\w.]*))?)'
@@ -399,24 +388,54 @@ _NON_CODE_EXT = (".txt", ".rst", ".md", ".po", ".pot", ".html", ".css",
                  ".json", ".yml", ".yaml", ".cfg", ".ini", ".in")
 
 
-def _file_prior(path: str) -> float:
-    """Multiplier for what kind of file this is.
-
-    Documentation and tests talk about the code as fluently as the code does,
-    so BM25 alone ranks them above the file that has to change.  The prior is a
-    soft penalty — a traceback that names a test file still wins through seed.
-    """
+def _detect_file_kind(path: str) -> str:
+    """Determine whether path is source, test, or documentation."""
     parts = _norm(path).lower().split("/")
     name = parts[-1]
-    prior = 1.0
-    if any(seg in _DOC_DIRS for seg in parts[:-1]):
-        prior *= PRIOR_DOC
-    elif name.endswith(_NON_CODE_EXT):
-        prior *= PRIOR_DOC
-    if "tests" in parts or "test" in parts or name.startswith("test_") \
-            or name.endswith("_test.py"):
-        prior *= PRIOR_TEST
-    return prior
+    if any(seg in _DOC_DIRS for seg in parts[:-1]) or name.endswith(_NON_CODE_EXT):
+        return "doc"
+    if "tests" in parts or "test" in parts or name.startswith("test_") or name.endswith("_test.py"):
+        return "test"
+    return "source"
+
+
+def _file_prior(path: str, phase: str = "localize") -> float:
+    """Multiplier for what kind of file this is, conditioned on execution phase."""
+    kind = _detect_file_kind(path)
+    if phase == "regression_test":
+        priors = {"source": 0.65, "test": 1.00, "doc": 0.20}
+    else:
+        priors = {"source": 1.00, "test": PRIOR_TEST, "doc": PRIOR_DOC}
+    return priors.get(kind, 1.0)
+
+
+def compute_hybrid_score(signals: dict, file_kind: str, phase: str = "localize") -> float:
+    """Compute normalized 6-signal hybrid score with BM25 saturation & phase priors."""
+    # 1. Saturate unbounded BM25 into [0, 1) using k1 = 1.5
+    s_bm25_raw = float(signals.get("bm25", 0.0) or 0.0)
+    s_bm25_norm = s_bm25_raw / (s_bm25_raw + 1.5) if s_bm25_raw > 0 else 0.0
+
+    # 2. Clamp cosine similarity to [0, 1]
+    s_vec_raw = float(signals.get("vector", 0.0) or 0.0)
+    s_vec_norm = max(0.0, min(1.0, s_vec_raw))
+
+    # 3. Normalized weights summing to 1.00
+    raw_score = (
+        W_SEED * float(signals.get("seed", 0.0) or 0.0)
+        + W_DEFS * float(signals.get("defs", 0.0) or 0.0)
+        + W_VECTOR * s_vec_norm
+        + W_BM25 * s_bm25_norm
+        + W_LLM_LOC * float(signals.get("llm_loc", 0.0) or 0.0)
+        + W_CALLERS * float(signals.get("callers", 0.0) or 0.0)
+    )
+
+    # 4. Phase-aware priors
+    if phase == "regression_test":
+        priors = {"source": 0.65, "test": 1.00, "doc": 0.20}
+    else:
+        priors = {"source": 1.00, "test": PRIOR_TEST, "doc": PRIOR_DOC}
+
+    return raw_score * priors.get(file_kind, 1.00)
 
 
 def _def_scores(chunks: list[dict], seeds: IssueSeeds) -> dict[str, float]:
@@ -612,6 +631,7 @@ def localize(
     repo_path: str,
     top_k: int = 8,
     chunks: list[dict] | None = None,
+    phase: str = "localize",
 ) -> list[Candidate]:
     """Return the top-k (file, symbol, line-range) candidates for an issue."""
     from src.ingestion.parser import RepoParser
@@ -664,18 +684,8 @@ def localize(
             "callers": callers.get(path, 0.0),
             "llm_loc": llm_loc.get(path, 0.0),
         }
-        # P3: 6-signal fusion.  Seed evidence dominates; retrieval breaks
-        # ties; defs reward the file that *declares* the symbol; callers
-        # expand to the fault's 2-hop neighborhood; llm_loc brings LLM
-        # reasoning about repo structure; prose and tests are discounted.
-        score = (
-            W_SEED * s["seed"]
-            + W_BM25 * s["bm25"]
-            + W_VECTOR * s["vector"]
-            + W_DEFS * s["defs"]
-            + W_CALLERS * s["callers"]
-            + W_LLM_LOC * s["llm_loc"]
-        ) * _file_prior(path)
+        kind = _detect_file_kind(path)
+        score = compute_hybrid_score(s, file_kind=kind, phase=phase)
         if score <= 0.02:
             continue
         ranked.append(Candidate(file=path, score=score, scores=s))

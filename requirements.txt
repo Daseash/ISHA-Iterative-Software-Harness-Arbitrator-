@@ -1,17 +1,21 @@
-langgraph
-litellm
-qdrant-client
-tree-sitter
-tree-sitter-python
-docling
-nemoguardrails
-langfuse
-pydantic>=2
-pytest
-docker
-datasets
-streamlit
-laya
-python-dotenv
-swebench
-mcp
+# ISHA version lock — proven set from a green fresh-venv install 2026-10-16
+# (`pip install -e .` + `isha doctor` all-ok except host docker daemon).
+# Role split: pyproject.toml = abstract deps; THIS file = reproducible lock
+# consumed by Dockerfile + CI. Bump only with a fresh green install proof.
+langgraph==1.2.15
+litellm==1.105.1
+qdrant-client==1.19.1
+tree-sitter==0.26.0
+tree-sitter-python==0.25.0
+docling==2.139.0
+nemoguardrails==0.24.1
+langfuse==5.0.1
+pydantic==2.14.1
+pytest==9.1.1
+docker==7.2.0
+datasets==5.1.0
+streamlit==1.66.0
+laya==0.4.8
+python-dotenv==1.2.4
+swebench==5.0.2
+mcp==2.3.0

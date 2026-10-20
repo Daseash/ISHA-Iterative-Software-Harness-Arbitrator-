@@ -30,6 +30,20 @@ from src.review.critic import critic_node
 MAX_RETRIES = int(os.getenv("ISHA_MAX_RETRIES", "3"))
 
 
+def get_checkpointer():
+    """Persistent on-disk checkpointer using SqliteSaver with fallback to MemorySaver."""
+    try:
+        import sqlite3
+        from langgraph.checkpoint.sqlite import SqliteSaver
+
+        conn = sqlite3.connect("checkpoints.db", check_same_thread=False)
+        saver = SqliteSaver(conn)
+        saver.setup()
+        return saver
+    except Exception:
+        return MemorySaver()
+
+
 def _blast_escalation(state: AgentState) -> str:
     """Non-empty reason when fan-out demands human review regardless of critic score."""
     import os
@@ -213,7 +227,7 @@ def build_graph():
     )
     workflow.add_edge("checkpoint", END)
 
-    return workflow.compile(checkpointer=MemorySaver())
+    return workflow.compile(checkpointer=get_checkpointer())
 
 
 compiled_graph = build_graph()
@@ -378,6 +392,7 @@ def build_multi_agent_graph():
     workflow.add_node("arbitration", arbitration_fanin_node)
     workflow.add_node("approval", approval_node)
     workflow.add_node("merger", merger_node)
+    workflow.add_node("checkpoint", checkpoint_node)
 
     # One isolated attempt chain per strategy (own worktree + retry budget).
     for i, _strategy in enumerate(STRATEGIES, start=1):
@@ -404,9 +419,10 @@ def build_multi_agent_graph():
         {"approval": "approval", "merger": "merger"},
     )
     workflow.add_edge("approval", "merger")
-    workflow.add_edge("merger", END)
+    workflow.add_edge("merger", "checkpoint")
+    workflow.add_edge("checkpoint", END)
 
-    return workflow.compile(checkpointer=MemorySaver())
+    return workflow.compile(checkpointer=get_checkpointer())
 
 
 compiled_multi_graph = build_multi_agent_graph()

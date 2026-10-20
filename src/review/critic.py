@@ -18,10 +18,9 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
     try:
         judge = get_judge()
 
-        scores = judge.score_patch(state.issue_text, state.plan, state.patch)
-        state.laya_scores = scores
-
         dangers = judge.check_dangers(state.patch)
+        secrets = float(dangers.get("secrets_or_danger", 0.0) or 0.0)
+        drift = float(dangers.get("logic_drift", 0.0) or 0.0)
 
         # Hard guardrails always win over model judgment.
         from src.guardrails.scanner import scan_patch_for_secrets
@@ -36,21 +35,19 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
                     return "fallback" in position.lower()
             return False
 
+        tier_penalty = 0.05 if _is_fallback_attempt(state) else 0.00
+        scores = judge.score_patch(
+            state.issue_text,
+            state.plan,
+            state.patch,
+            secrets_or_danger=secrets,
+            logic_drift=drift,
+            tier_penalty=tier_penalty,
+        )
+        state.laya_scores = scores
 
         clean, findings = scan_patch_for_secrets(state.patch)
-
-        if dangers["flagged"] or not clean:
-            state.critic_verdict = "flagged"
-        # Apply fallback safe_to_apply floor: stricter threshold for fallback models
         effective_composite = scores["composite"]
-        if _is_fallback_attempt(state):
-            # For fallback models, apply stricter safe_to_apply threshold
-            # Reduce the influence of safe_to_apply score to make approval harder
-            safe_penalty = 0.15  # Conservative penalty for fallback models
-            quality_component = 0.50 * scores["fix_quality"] / 2.0
-            matches_component = 0.25 * scores["matches_issue"]
-            safe_component = 0.25 * max(0, scores["safe_to_apply"] - safe_penalty)
-            effective_composite = quality_component + matches_component + safe_component
 
         # Phase-0: per-org critic threshold (opt-in ISHA_CRITIC_PER_ORG=1).
         # Default stays the global 0.4 gate so running lanes keep semantics.
@@ -66,11 +63,13 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
         except Exception:
             pass
 
-        if effective_composite < threshold:
+        if dangers["flagged"] or not clean or effective_composite <= 0.0:
+            state.critic_verdict = "flagged"
+        elif effective_composite < threshold:
             state.critic_verdict = "low_quality"
         else:
             state.critic_verdict = "approved"
-        state.critic_score = scores["composite"]
+        state.critic_score = effective_composite
         state.laya_scores = {**scores, **dangers, "guardrail_findings": findings}
 
         # Security & performance checklist — can veto an otherwise-clean diff.

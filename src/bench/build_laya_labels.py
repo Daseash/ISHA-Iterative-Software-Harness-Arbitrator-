@@ -66,7 +66,7 @@ def mutate_patch(patch: str) -> str:
     return "".join(mutated)
 
 
-def build_labels(limit_instances: int = 105) -> int:
+def build_labels(limit_instances: int = 105, force: bool = False) -> int:
     splits_path = ROOT / "data" / "splits.json"
     splits = json.loads(splits_path.read_text(encoding="utf-8"))
     train_ids = set(splits.get("train", []))
@@ -80,9 +80,22 @@ def build_labels(limit_instances: int = 105) -> int:
     all_records = ds.load_records()
     train_records = [r for r in all_records if r["instance_id"] in train_ids][:limit_instances]
 
-    judge = get_judge()
     if LABELS_PATH.exists():
+        # Fail closed: this writes SYNTHETIC bootstrap labels — never silently
+        # clobber a real-label store (2026-10-16: a sibling tool's --dry-run
+        # deleted the 315-row real store this way). Pass force=True / --force
+        # to confirm.
+        # Checked BEFORE loading the judge so a refusal costs nothing.
+        existing = len(load_labels(LABELS_PATH))
+        if existing and not force:
+            raise SystemExit(
+                f"REFUSING to overwrite non-empty label store "
+                f"({existing} rows at {LABELS_PATH}) with synthetic labels — "
+                f"pass force=True (--force) to confirm."
+            )
         LABELS_PATH.unlink()
+
+    judge = get_judge()
 
     count = 0
     print(f"[build_laya_labels] generating labels from {len(train_records)} train instances...")
@@ -201,4 +214,4 @@ def build_labels(limit_instances: int = 105) -> int:
 
 
 if __name__ == "__main__":
-    build_labels(limit_instances=105)
+    build_labels(limit_instances=105, force="--force" in sys.argv)

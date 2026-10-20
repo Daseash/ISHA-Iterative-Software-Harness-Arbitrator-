@@ -1,4 +1,4 @@
-﻿"""
+"""
 ISHA LAYA Judge — typed decision primitives for every judgment point.
 
 Wraps the LAYA decision engine (choice / score / noul) so patch quality,
@@ -93,6 +93,28 @@ def _compact_diff(patch: str) -> str:
     return text[:_MAX_DIFF]
 
 
+def compute_laya_composite(
+    fix_quality: int,          # 0, 1, or 2
+    matches_issue: float,      # Platt-calibrated prob [0.0, 1.0]
+    safe_to_apply: float,      # Platt-calibrated prob [0.0, 1.0]
+    secrets_or_danger: float = 0.0,  # Prob [0.0, 1.0] - fails closed if > 0.50
+    logic_drift: float = 0.0,        # Prob [0.0, 1.0] - rejects if > 0.70
+    tier_penalty: float = 0.0, # 0.00 (High), 0.05 (Lite), 0.15 (Offline AST)
+) -> float:
+    """Subsystem 4: Composite scoring with fail-closed multiplicative vetoes."""
+    # Hard multiplicative vetoes (fail-closed)
+    if secrets_or_danger > 0.50 or logic_drift > 0.70 or safe_to_apply < 0.20:
+        return 0.0
+
+    base = (
+        0.50 * (fix_quality / 2.0)
+        + 0.25 * matches_issue
+        + 0.25 * safe_to_apply
+        - tier_penalty
+    )
+    return max(0.0, min(1.0, base))
+
+
 class LayaJudge:
     """Wraps LAYA decision engine for all judgment points in the pipeline."""
 
@@ -117,7 +139,15 @@ class LayaJudge:
 
     # ── Patch scoring ────────────────────────────────────────────────── #
 
-    def score_patch(self, issue_text: str, plan: str, patch: str) -> dict:
+    def score_patch(
+        self,
+        issue_text: str,
+        plan: str,
+        patch: str,
+        secrets_or_danger: float = 0.0,
+        logic_drift: float = 0.0,
+        tier_penalty: float = 0.0,
+    ) -> dict:
         """Score a candidate patch on quality, relevance, and safety."""
         state = {
             "issue": _compact_issue(issue_text),
@@ -129,16 +159,21 @@ class LayaJudge:
         quality = answers["fix_quality"]["score"]
         matches = answers["matches_issue"]["noul"]
         safe = answers["safe_to_apply"]["noul"]
-        # composite = 0.5*quality01 + 0.25*matches + 0.25*safe, where quality01 =
-        # quality/2 (LAYA score type returns 0/1/2). Weights: fix quality dominates;
-        # relevance and safety are equal gates. Thresholds in check_dangers are
-        # asymmetric on purpose: secrets>0.5 (fail-closed on leaks) vs drift>0.7
-        # (tolerate small refactors inside a fix).
+
+        composite = compute_laya_composite(
+            fix_quality=quality,
+            matches_issue=matches,
+            safe_to_apply=safe,
+            secrets_or_danger=secrets_or_danger,
+            logic_drift=logic_drift,
+            tier_penalty=tier_penalty,
+        )
+
         return {
             "fix_quality": quality,
             "matches_issue": matches,
             "safe_to_apply": safe,
-            "composite": 0.50 * quality / 2.0 + 0.25 * matches + 0.25 * safe,
+            "composite": composite,
         }
 
     # ── Danger detection ─────────────────────────────────────────────── #

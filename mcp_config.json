@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["-y", "shadcn@latest", "mcp"]
+    },
     "isha": {
       "command": "python",
       "args": ["-m", "src.mcp_server"],

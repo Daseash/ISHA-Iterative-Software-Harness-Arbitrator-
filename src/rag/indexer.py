@@ -1,10 +1,12 @@
 """
 ISHA Qdrant Indexer — Vectorizes repo chunks for hybrid retrieval.
 
-Primary: `all-MiniLM-L6-v2` (384d, semantic) — enabled by default (P3).
-Fallback: deterministic dependency-free 384-dim hashing embedder when
+Primary: `BAAI/bge-small-en-v1.5` (384d, 512-token window, semantic code retrieval).
+Secondary: `all-MiniLM-L6-v2` (384d, semantic fallback).
+Fallback: deterministic dependency-free 384-dim SHA1 hashing embedder when
 `sentence-transformers` is not installed (offline, no GPU/model download).
-Same VECTOR_SIZE so no migration is needed (P0-06).
+Isolated collections: Neural embeddings and SHA1 hashes are stored in separate
+collections to prevent cross-vector space distortion (Subsystem 2 upgraded spec).
 """
 
 import hashlib
@@ -16,46 +18,67 @@ from collections import Counter
 VECTOR_SIZE = 384
 DEFAULT_COLLECTION = "isha_codebase"
 
+PRIMARY_MODEL_NAME = os.getenv("ISHA_EMBEDDER_MODEL", "BAAI/bge-small-en-v1.5")
+FALLBACK_MODEL_NAME = "all-MiniLM-L6-v2"
+
 _TOKEN_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*|\d+")
 
-# P0-06: cache chunk/query vectors (was recomputed per-chunk in localizer).
+# Cache chunk/query vectors
 _EMBED_CACHE: dict[tuple[str, int], list] = {}
-_MINILM_MODEL = None
-_MINILM_FAILED = False
+_NEURAL_MODEL = None
+_NEURAL_FAILED = False
 
 
-def _minilm_embed(text: str, dim: int) -> list | None:
-    """Return MiniLM vector or None (fallback to hashing). Lazy, cached model."""
-    global _MINILM_MODEL, _MINILM_FAILED
-    if _MINILM_FAILED or dim != VECTOR_SIZE:
+def _neural_embed(text: str, dim: int) -> list | None:
+    """Return BGE-small / MiniLM vector or None (fallback to hashing). Lazy, cached model."""
+    global _NEURAL_MODEL, _NEURAL_FAILED
+    if _NEURAL_FAILED or dim != VECTOR_SIZE:
         return None
-    # P3: default to MiniLM when sentence-transformers is installed.
-    # Graceful fallback: if the import fails, _MINILM_FAILED is set and
-    # all subsequent calls route to the hashing embedder automatically.
-    if os.getenv("ISHA_EMBEDDER", "minilm").lower() != "minilm":
+    mode = os.getenv("ISHA_EMBEDDER", "neural").lower()
+    if mode in ("sha1", "hash", "hashing", "offline"):
         return None
     try:
-        if _MINILM_MODEL is None:
+        if _NEURAL_MODEL is None:
             from sentence_transformers import SentenceTransformer
 
-            _MINILM_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
-        vec = _MINILM_MODEL.encode(text or "", normalize_embeddings=True)
+            try:
+                _NEURAL_MODEL = SentenceTransformer(PRIMARY_MODEL_NAME)
+            except Exception:
+                _NEURAL_MODEL = SentenceTransformer(FALLBACK_MODEL_NAME)
+        vec = _NEURAL_MODEL.encode(text or "", normalize_embeddings=True)
         return [float(x) for x in vec[:dim]]
     except Exception:
-        _MINILM_FAILED = True
+        _NEURAL_FAILED = True
         return None
+
+
+def is_neural_active() -> bool:
+    """Return True if neural embedding (BGE/MiniLM) is currently active."""
+    global _NEURAL_FAILED
+    if _NEURAL_FAILED:
+        return False
+    sample = _neural_embed("probe", VECTOR_SIZE)
+    return sample is not None
+
+
+def format_chunk_for_embedding(chunk: dict) -> str:
+    """Prepend AST function/class context header to chunk before embedding."""
+    file_path = chunk.get("file_path", "")
+    name = chunk.get("name", "")
+    content = str(chunk.get("content", "")).strip()
+    return f"# File: {file_path} | Name: {name}\n{content}".strip()
 
 
 def embed_text(text: str, dim: int = VECTOR_SIZE) -> list:
-    """Semantic (MiniLM when enabled) else deterministic hashing embedder."""
+    """Semantic (BGE-small / MiniLM when enabled) else deterministic hashing embedder."""
     key = (text or "", dim)
     hit = _EMBED_CACHE.get(key)
     if hit is not None:
         return list(hit)
-    mini = _minilm_embed(text or "", dim)
-    if mini is not None:
-        _EMBED_CACHE[key] = mini
-        return list(mini)
+    neural = _neural_embed(text or "", dim)
+    if neural is not None:
+        _EMBED_CACHE[key] = neural
+        return list(neural)
     vec = [0.0] * dim
     tokens = _TOKEN_RE.findall((text or "").lower())
     if tokens:
@@ -91,9 +114,12 @@ class QdrantIndexer:
         self.collection_name = DEFAULT_COLLECTION
 
     def index(self, chunks: list, collection_name: str = DEFAULT_COLLECTION) -> dict:
-        """Push chunks to Qdrant (or keep them locally if no server)."""
+        """Push chunks to Qdrant with isolated neural vs sha1 collections."""
         self.chunks = list(chunks or [])
-        self.collection_name = collection_name
+        # Subsystem 2: Separate collections by embedder type so vector spaces never collide
+        neural_ok = is_neural_active()
+        eff_collection = collection_name if neural_ok else f"{collection_name}_sha1"
+        self.collection_name = eff_collection
 
         try:
             from qdrant_client import QdrantClient
@@ -101,30 +127,29 @@ class QdrantIndexer:
 
             client = QdrantClient(url=self.url, api_key=self.api_key, timeout=2, check_compatibility=False)
             client.recreate_collection(
-                collection_name=collection_name,
+                collection_name=eff_collection,
                 vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE),
             )
             points = []
             for i, chunk in enumerate(self.chunks):
+                text_to_embed = format_chunk_for_embedding(chunk)
                 points.append(
                     PointStruct(
                         id=i,
-                        vector=embed_text(
-                            f"{chunk.get('file_path', '')} {chunk.get('name', '')} "
-                            f"{chunk.get('content', '')}"
-                        ),
+                        vector=embed_text(text_to_embed),
                         payload={**chunk, "chunk_id": i},
                     )
                 )
             if points:
-                client.upsert(collection_name=collection_name, points=points)
+                client.upsert(collection_name=eff_collection, points=points)
             self.online = True
-            return {"mode": "qdrant", "collection": collection_name, "count": len(points)}
+            return {"mode": "qdrant", "collection": eff_collection, "count": len(points), "neural": neural_ok}
         except Exception as exc:
             self.online = False
             return {
                 "mode": "local",
-                "collection": collection_name,
+                "collection": eff_collection,
                 "count": len(self.chunks),
                 "detail": f"Qdrant unavailable ({exc.__class__.__name__}); using local store",
+                "neural": neural_ok,
             }

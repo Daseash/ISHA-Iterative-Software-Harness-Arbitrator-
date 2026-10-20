@@ -61,9 +61,9 @@ def _parse_chain(primary_env: str, primary_default: str,
 
 
 PLANNER_CHAIN = _parse_chain(
-    "ISHA_PLANNER_MODEL", "gemini/gemini-3.5-flash-lite",
+    "ISHA_PLANNER_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_PLANNER_FALLBACKS",
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
 )
 
 CODER_CHAIN = _parse_chain(
@@ -81,7 +81,7 @@ LOCALIZER_CHAIN = _parse_chain(
 CRITIC_CHAIN = _parse_chain(
     "ISHA_CRITIC_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_CRITIC_FALLBACKS",
-    "gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
+    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
 )
 
 # Backward-compatible aliases
@@ -153,8 +153,8 @@ def get_next_openrouter_key() -> str | None:
 
 
 def _check_and_reload_keys_from_env() -> None:
-    """Dynamically re-read .env if changed on disk, adding any newly added keys."""
-    global _gemini_key_pool, _env_last_mtime
+    """Dynamically re-read .env if changed on disk, adding any newly added keys or model updates."""
+    global _gemini_key_pool, _env_last_mtime, CANDIDATE_1_MODEL, CANDIDATE_2_MODEL, CANDIDATE_3_MODEL
     env_file = ROOT / ".env"
     if not env_file.is_file():
         return
@@ -163,6 +163,9 @@ def _check_and_reload_keys_from_env() -> None:
         if mtime > _env_last_mtime:
             _env_last_mtime = mtime
             load_dotenv(dotenv_path=env_file, override=True)
+            CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", CANDIDATE_1_MODEL)
+            CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", CANDIDATE_2_MODEL)
+            CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", CANDIDATE_3_MODEL)
             raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or ""
             fresh_keys = [k.strip() for k in raw.split(",") if k.strip()]
             if fresh_keys != _gemini_key_pool:
@@ -181,11 +184,11 @@ def get_next_gemini_key(model: str = "") -> str | None:
     with _gemini_key_lock:
         _check_and_reload_keys_from_env()
         now = time.time()
-        # Cooldown check: if a key died > 300s ago, revive it in case quota was rolling-window
+        # Cooldown check: if a key died > 120s ago, revive it in case quota was rolling-window
         dead_for_model = _dead_gemini_keys_by_model[model] if model else _dead_gemini_keys
         revived = [
             k for k in list(dead_for_model)
-            if (now - _key_death_time.get((k, model), 0.0)) > 300
+            if (now - _key_death_time.get((k, model), 0.0)) > 120
         ]
         for k in revived:
             dead_for_model.remove(k)
@@ -685,6 +688,8 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     _okey = get_next_openrouter_key()
                     if _okey:
                         kwargs["api_key"] = _okey
+                if "max_tokens" not in kwargs:
+                    kwargs["max_tokens"] = int(os.getenv("ISHA_MAX_TOKENS", "4096"))
                 resp = litellm.completion(**kwargs)
                 content = resp.choices[0].message.content
                 if not content or content.strip().startswith(
@@ -739,6 +744,14 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     )
                     break
                 if _is_rate_limit(e):
+                    if provider == "gemini" and active_gemini_key:
+                        if mark_gemini_key_dead(active_gemini_key, model):
+                            print(
+                                f"[config] Gemini key {active_gemini_key[:12]}... hit rate limit "
+                                f"— immediately switching to next Gemini key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
                     # A TPM/RPM window clears itself, and every model on the
                     # provider shares it — advancing would just burn the whole
                     # chain in seconds.  Wait (exponential, capped) and retry
