@@ -14,6 +14,7 @@ export interface NavbarProps {
   hideStats?: boolean;
   hideGithub?: boolean;
   position?: "auto" | "left" | "center" | "right";
+  showThemeToggle?: boolean;
   className?: string;
 }
 
@@ -21,6 +22,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
   hideStats = false,
   hideGithub = false,
   position = "auto",
+  showThemeToggle = false,
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -223,10 +225,12 @@ export const Navbar_001: React.FC<NavbarProps> = ({
         </motion.div>
       </motion.div>
 
-      {/* Unlumen Animated Switch for Dark Mode: Floating in Top-Right Corner */}
-      <div className="fixed top-5 sm:top-6 right-4 sm:right-8 z-50">
-        <DarkModeSwitch showIcons={true} showLabel={false} />
-      </div>
+      {/* Unlumen Animated Switch for Dark Mode: Rendered ONLY on Home Page */}
+      {showThemeToggle && (
+        <div className="fixed top-5 sm:top-6 right-4 sm:right-8 z-50">
+          <DarkModeSwitch showIcons={true} showLabel={false} />
+        </div>
+      )}
     </>
   );
 };

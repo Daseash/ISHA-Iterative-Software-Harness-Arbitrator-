@@ -142,7 +142,7 @@ export function Skiper29() {
       className="relative w-full bg-[#F9F7EF] dark:bg-black text-black dark:text-[#F9F7EF] font-black selection:bg-red-600 selection:text-white transition-colors duration-300"
     >
       {/* ================= FIXED TOP NAVIGATION (ABOVE IMAGE LIKE TEXT ON IMAGE) ================= */}
-      <Navbar_001 />
+      <Navbar_001 showThemeToggle={true} />
 
       {/* SVG Mask Definition */}
       <svg className="absolute w-0 h-0 pointer-events-none">
