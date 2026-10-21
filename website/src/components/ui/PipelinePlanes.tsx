@@ -152,24 +152,48 @@ export interface PipelinePlanesProps {
   spread?: number;
   tilt?: number;
   depth?: number;
+  stagger?: number;
   className?: string;
 }
 
 export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
   cards = defaultPipelineCards,
-  photoWidth = 240,
-  photoHeight = 330,
-  spread = 120,
+  photoWidth = 230,
+  photoHeight = 320,
+  spread = 118,
   tilt = 10,
   depth = 14,
+  stagger = 0.08,
   className = "",
 }) => {
+  const [hasLanded, setHasLanded] = useState(false);
+  const [isFanned, setIsFanned] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.1 });
+  const isInView = useInView(containerRef, { amount: 0.1 });
 
-  // Escape key closes focused modal and removes blur
+  // When coming to this section, land into pile then spread wide automatically
+  useEffect(() => {
+    if (isInView && !isFanned) {
+      setHasLanded(true);
+      const fanTimer = setTimeout(() => {
+        setIsFanned(true);
+      }, 420);
+      return () => clearTimeout(fanTimer);
+    }
+  }, [isInView, isFanned]);
+
+  // Fallback safety: ensure cards always spread out on mount
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setHasLanded(true);
+      setIsFanned(true);
+    }, 700);
+    return () => clearTimeout(safetyTimer);
+  }, []);
+
+  // Escape key closes modal and removes blur
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && selectedIndex !== null) {
@@ -183,7 +207,7 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
 
   const centerIndex = (cards.length - 1) / 2;
 
-  // Selected card details for spotlight modal
+  // Selected card for spotlight modal
   const selectedCard = selectedIndex !== null ? cards[selectedIndex] : null;
   const selectedTone = selectedCard ? tones[selectedCard.tone] : null;
 
@@ -192,7 +216,7 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
       <div
         ref={containerRef}
         className={`relative w-full flex flex-col items-center justify-center py-12 select-none transition-all duration-300 ${
-          selectedIndex !== null ? "filter blur-[6px] opacity-40 pointer-events-none" : ""
+          selectedIndex !== null ? "filter blur-[8px] opacity-30 pointer-events-none" : ""
         } ${className}`}
         style={{ minHeight: `${photoHeight + 140}px` }}
       >
@@ -209,16 +233,16 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
             {cards.map((card, i) => {
               const tone = tones[card.tone];
 
-              // Base offset when spread out
+              // Calculate fanned out X offset
               const baseOffset = (i - centerIndex) * spread;
 
-              // Neighbours shift outwards smoothly when one card is hovered
+              // When a card is hovered, neighbours shift outwards smoothly
               let hoverShift = 0;
               if (hoveredIndex !== null) {
                 if (i < hoveredIndex) {
-                  hoverShift = -45;
+                  hoverShift = -42;
                 } else if (i > hoveredIndex) {
-                  hoverShift = 45;
+                  hoverShift = 42;
                 }
               }
 
@@ -240,51 +264,68 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
                     zIndex: isHovered ? 80 : i + 10,
                   }}
                   initial={{
-                    x: (i % 3 - 1) * 6,
-                    y: (i - centerIndex) * -4,
-                    scale: 0.95,
-                    rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
+                    x: 0,
+                    y: -380,
+                    scale: 1.2,
+                    rotateZ: (i % 2 === 0 ? -1 : 1) * (8 + (i * 3) % 7),
                     rotateY: 0,
                     rotateX: 0,
-                    opacity: 0.85,
+                    opacity: 0,
                   }}
                   animate={
-                    isInView
+                    !hasLanded
                       ? {
-                          // Spreads out when coming to this section
+                          x: 0,
+                          y: -380,
+                          scale: 1.2,
+                          rotateZ: (i % 2 === 0 ? -1 : 1) * (8 + (i * 3) % 7),
+                          rotateY: 0,
+                          rotateX: 0,
+                          opacity: 0,
+                        }
+                      : !isFanned
+                      ? {
+                          // Phase 1: Landing onto pile
+                          x: (i % 3 - 1) * 6,
+                          y: (i - centerIndex) * -3,
+                          scale: 1,
+                          rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
+                          rotateY: 0,
+                          rotateX: 0,
+                          opacity: 1,
+                          transition: {
+                            delay: i * stagger,
+                            duration: 0.42,
+                            ease: [0.22, 1, 0.36, 1],
+                          },
+                        }
+                      : {
+                          // Phase 2: Spread out horizontally in 3D fan
                           x: baseOffset + hoverShift,
-                          y: isHovered ? -35 : (i - centerIndex) * depth,
+                          y: isHovered ? -32 : (i - centerIndex) * depth,
                           scale: isHovered ? 1.15 : 1,
                           rotateZ: isHovered ? 0 : normalRotateZ,
                           rotateY: isHovered ? 0 : normalRotateY,
                           rotateX: isHovered ? 0 : normalRotateX,
                           opacity: 1,
-                        }
-                      : {
-                          // Stacked together initially
-                          x: (i % 3 - 1) * 6,
-                          y: (i - centerIndex) * -4,
-                          scale: 0.95,
-                          rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
-                          rotateY: 0,
-                          rotateX: 0,
-                          opacity: 0.85,
+                          transition: {
+                            duration: 0.65,
+                            ease: [0.25, 1, 0.5, 1],
+                          },
                         }
                   }
-                  transition={{
-                    type: "spring",
-                    stiffness: 190,
-                    damping: 24,
-                    delay: isInView ? i * 0.05 : 0,
-                  }}
-                  whileHover={{
-                    scale: 1.16,
-                    y: -35,
-                    rotateZ: 0,
-                    rotateY: 0,
-                    rotateX: 0,
-                    transition: { duration: 0.22, ease: "easeOut" },
-                  }}
+                  whileHover={
+                    isFanned
+                      ? {
+                          scale: 1.16,
+                          y: -32,
+                          rotateZ: 0,
+                          rotateY: 0,
+                          rotateX: 0,
+                          transition: { duration: 0.24, ease: "easeOut" },
+                        }
+                      : {}
+                  }
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
                   onClick={() => {
@@ -339,7 +380,7 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
         </div>
       </div>
 
-      {/* ================= MODAL SPOTLIGHT OVERLAY WITH BACKGROUND BLUR ================= */}
+      {/* ================= SPOTLIGHT MODAL OVERLAY WITH BACKGROUND BLUR ================= */}
       <AnimatePresence>
         {selectedIndex !== null && selectedCard && selectedTone && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -348,17 +389,17 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.24 }}
               onClick={() => {
                 sounds.playClick();
                 setSelectedIndex(null);
               }}
-              className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md cursor-pointer"
+              className="absolute inset-0 bg-black/60 dark:bg-black/85 backdrop-blur-md cursor-pointer"
             />
 
-            {/* Elevated Focused Card */}
+            {/* Elevated Focused Card in Spotlight */}
             <motion.div
-              initial={{ scale: 0.88, opacity: 0, y: 30 }}
+              initial={{ scale: 0.88, opacity: 0, y: 25 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 380, damping: 28 }}
