@@ -13,9 +13,16 @@ export interface NavItem {
 export interface NavbarProps {
   hideStats?: boolean;
   hideGithub?: boolean;
+  position?: "auto" | "left" | "center";
+  className?: string;
 }
 
-export const Navbar_001: React.FC<NavbarProps> = ({ hideStats = false, hideGithub = false }) => {
+export const Navbar_001: React.FC<NavbarProps> = ({
+  hideStats = false,
+  hideGithub = false,
+  position = "auto",
+  className = "",
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -69,19 +76,31 @@ export const Navbar_001: React.FC<NavbarProps> = ({ hideStats = false, hideGithu
         )}
       </AnimatePresence>
 
-      {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll */}
+      {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll (or pinned to left if position="left") */}
       {/* Background matches website theme: #F9F7EF in Light Mode, neutral-950/black in Dark Mode */}
       <motion.div
-        initial={false}
+        initial={
+          position === "left"
+            ? { left: "clamp(1rem, 3vw, 2.5rem)", x: "0%" }
+            : position === "center"
+            ? { left: "50%", x: "-50%" }
+            : false
+        }
         animate={{
-          left: isScrolled ? "clamp(1rem, 3vw, 2.5rem)" : "50%",
-          x: isScrolled ? "0%" : "-50%",
+          left:
+            position === "left" || (position === "auto" && isScrolled)
+              ? "clamp(1rem, 3vw, 2.5rem)"
+              : "50%",
+          x:
+            position === "left" || (position === "auto" && isScrolled)
+              ? "0%"
+              : "-50%",
         }}
         transition={{
           duration: 0.85,
           ease: [0.16, 1, 0.3, 1],
         }}
-        className="fixed top-5 sm:top-6 z-50 select-none"
+        className={`fixed top-5 sm:top-6 z-50 select-none ${className}`}
       >
         <motion.div
           layout

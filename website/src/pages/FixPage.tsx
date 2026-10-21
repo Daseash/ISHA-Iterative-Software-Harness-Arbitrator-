@@ -25,8 +25,8 @@ export const FixPage: React.FC<FixPageProps> = () => {
 
   return (
     <main className="relative w-full min-h-screen md:h-screen bg-[#F9F7EF] dark:bg-black overflow-y-auto md:overflow-hidden select-none transition-colors duration-300 flex flex-col justify-start md:justify-between">
-      {/* Floating Home Navbar with Red Dot & Menu */}
-      <Navbar_001 />
+      {/* Floating Home Navbar with Red Dot & Menu anchored to the left */}
+      <Navbar_001 position="left" />
 
       {/* Left-Corner FIX Heading in Exact STATS Style */}
       <div className="w-full px-5 sm:px-10 md:px-14 lg:px-16 pt-20 sm:pt-24 pb-2 text-left z-20 shrink-0">
