@@ -13,7 +13,7 @@ export interface NavItem {
 export interface NavbarProps {
   hideStats?: boolean;
   hideGithub?: boolean;
-  position?: "auto" | "left" | "center";
+  position?: "auto" | "left" | "center" | "right";
   className?: string;
 }
 
@@ -76,26 +76,33 @@ export const Navbar_001: React.FC<NavbarProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll (or pinned to left if position="left") */}
+      {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll (or pinned to left/right) */}
       {/* Background matches website theme: #F9F7EF in Light Mode, neutral-950/black in Dark Mode */}
       <motion.div
         initial={
           position === "left"
-            ? { left: "clamp(1rem, 3vw, 2.5rem)", x: "0%" }
+            ? { left: "clamp(1rem, 3vw, 2.5rem)", right: "auto", x: "0%" }
+            : position === "right"
+            ? { right: "clamp(1rem, 3vw, 2.5rem)", left: "auto", x: "0%" }
             : position === "center"
-            ? { left: "50%", x: "-50%" }
+            ? { left: "50%", right: "auto", x: "-50%" }
             : false
         }
-        animate={{
-          left:
-            position === "left" || (position === "auto" && isScrolled)
-              ? "clamp(1rem, 3vw, 2.5rem)"
-              : "50%",
-          x:
-            position === "left" || (position === "auto" && isScrolled)
-              ? "0%"
-              : "-50%",
-        }}
+        animate={
+          position === "right"
+            ? { right: "clamp(1rem, 3vw, 2.5rem)", left: "auto", x: "0%" }
+            : {
+                left:
+                  position === "left" || (position === "auto" && isScrolled)
+                    ? "clamp(1rem, 3vw, 2.5rem)"
+                    : "50%",
+                right: "auto",
+                x:
+                  position === "left" || (position === "auto" && isScrolled)
+                    ? "0%"
+                    : "-50%",
+              }
+        }
         transition={{
           duration: 0.85,
           ease: [0.16, 1, 0.3, 1],

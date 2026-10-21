@@ -46,6 +46,32 @@ class SoundManager {
     }
   }
 
+  // Rapid tactile "tik" sound for skiper24 scroll transitions
+  playTick() {
+    try {
+      const ctx = this.getContext();
+      if (!ctx) return;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      const now = ctx.currentTime;
+
+      osc.frequency.setValueAtTime(850, now);
+      osc.frequency.exponentialRampToValueAtTime(220, now + 0.03);
+
+      gain.gain.setValueAtTime(0.14, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.035);
+    } catch {}
+  }
+
   // Subtle metallic theme toggle switch
   playSwitch() {
     try {

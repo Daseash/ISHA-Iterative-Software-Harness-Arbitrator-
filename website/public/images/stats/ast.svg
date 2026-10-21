@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <defs>
+    <linearGradient id="astGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#115e59" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="700" rx="36" fill="url(#astGrad)" />
+  <rect x="20" y="20" width="560" height="660" rx="28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+
+  <g transform="translate(40, 50)">
+    <rect width="190" height="32" rx="16" fill="rgba(0,0,0,0.3)" />
+    <circle cx="20" cy="16" r="5" fill="#2dd4bf" />
+    <text x="35" y="21" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fff" letter-spacing="1">STATIC AST GATES</text>
+  </g>
+  <text x="560" y="72" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="rgba(255,255,255,0.6)">8 INVARIANTS</text>
+
+  <text x="40" y="145" font-family="'Bricolage Grotesque', sans-serif" font-size="76" font-weight="900" fill="#ffffff" letter-spacing="-2">86.2%</text>
+  <text x="265" y="125" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="900" fill="#2dd4bf">YIELD</text>
+  <text x="40" y="180" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" fill="#99f6e4" letter-spacing="0.5">200 / 232 PATCHES SURVIVING COMPILATION GATES</text>
+
+  <g transform="translate(40, 220)">
+    <rect width="520" height="260" rx="20" fill="rgba(0,0,0,0.35)" />
+    
+    <!-- Invariant checklist -->
+    <g transform="translate(25, 25)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">1. Class Anchoring</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">No method leak into helper</text>
+    </g>
+    <g transform="translate(25, 54)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">2. Guard Completeness</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">Check None before len()/slice</text>
+    </g>
+    <g transform="translate(25, 83)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">3. Hashability Contract</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">Immutable tuple conversion</text>
+    </g>
+    <g transform="translate(25, 112)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">4. Decorator Preservation</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">functools.wraps introspection</text>
+    </g>
+    <g transform="translate(25, 141)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">5. Execution Scope</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">Explicit global namespace</text>
+    </g>
+    <g transform="translate(25, 170)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">6. Accessibility Widgets</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">id_for_label composite contract</text>
+    </g>
+    <g transform="translate(25, 199)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">7. Type &amp; Return Invariants</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">Exact falsy distinctions</text>
+    </g>
+    <g transform="translate(25, 228)">
+      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="800" fill="#2dd4bf">8. Qualname Hierarchy</text>
+      <text x="260" y="16" font-family="'JetBrains Mono', monospace" font-size="11" fill="rgba(255,255,255,0.7)">Enclosing scope preservation</text>
+    </g>
+  </g>
+
+  <g transform="translate(40, 510)">
+    <rect width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
+    <text x="20" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">HOST SYNTAX ABORTS</text>
+    <text x="20" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">0.0% (down from 26%)</text>
+
+    <rect x="270" width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
+    <text x="290" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">ENCODING HYGIENE</text>
+    <text x="290" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">Strict LF Linefeeds</text>
+  </g>
+
+  <text x="40" y="630" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="rgba(255,255,255,0.75)">AUDIT: isha-agent/src/bench/gates.py &amp; AGENTS.md</text>
+  <text x="40" y="650" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="rgba(255,255,255,0.5)">AST static compilation gates before sandbox dispatch</text>
+</svg>
