@@ -3,7 +3,6 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { ScrollHighlight } from "./ScrollHighlight";
-import { VercelSnapText } from "../unlumen-ui/vercel-snap-text";
 import { sounds } from "../../utils/sound";
 
 export const AboutSection: React.FC = () => {
@@ -324,34 +323,6 @@ export const AboutSection: React.FC = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-
-        {/* ================= VERCEL SNAP TEXT (SCROLL-DRIVEN SNAPPING LIST) ================= */}
-        <div className="mt-20 pt-16 border-t border-neutral-300 dark:border-neutral-800">
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-red-600 dark:text-red-500 font-extrabold">
-              CORE TENETS · SCROLL TO SNAP
-            </span>
-            <span className="font-mono text-[11px] font-bold text-neutral-500 dark:text-neutral-400">
-              SPRING MOTION ENGINE
-            </span>
-          </div>
-
-          <VercelSnapText
-            items={[
-              "the autonomous harness",
-              "the reproduction proof first",
-              "the 3 isolated worktrees",
-              "the pre-sandbox AST gates",
-              "the calibrated LAYA score",
-              "the verified minimal pull request",
-              "zero false approvals",
-              "the future of software",
-            ]}
-            prefix="We Engineer"
-            itemHeight={104}
-            className="w-full h-[580px] sm:h-[640px] rounded-3xl bg-neutral-100/70 dark:bg-neutral-950/70 border border-neutral-300 dark:border-neutral-800 shadow-inner"
-          />
         </div>
       </div>
     </section>

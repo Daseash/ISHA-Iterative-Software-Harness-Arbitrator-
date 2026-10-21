@@ -7,6 +7,7 @@ import { Navbar_001 } from "./skiper13";
 import { PipelinePlanes } from "../ui/PipelinePlanes";
 import { ScrollHighlight } from "./ScrollHighlight";
 import { AboutSection } from "./AboutSection";
+import { Skiper44 } from "./skiper44";
 import { CliSection } from "./CliSection";
 import { HoverExpand_001 } from "./skiper52";
 import { ArrowUpRight } from "lucide-react";
@@ -255,6 +256,9 @@ export function Skiper29() {
           <AboutSection />
         </div>
       </div>
+
+      {/* ================= SKIPER 44: VERCEL SCROLL WITH BLUR & POPPING CARD ================= */}
+      <Skiper44 />
 
       {/* ================= THE COMPLETE AUTONOMOUS PIPELINE (3D INTERACTIVE DECK) ================= */}
       <section id="pipeline" className="relative py-24 px-4 sm:px-6 bg-[#F9F7EF] dark:bg-black transition-colors overflow-hidden">
