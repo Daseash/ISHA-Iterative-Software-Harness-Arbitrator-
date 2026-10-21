@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { X, ArrowUpRight } from "lucide-react";
+import { sounds } from "../../utils/sound";
 
 export interface PipelineCard {
   tag: string;
@@ -150,206 +152,279 @@ export interface PipelinePlanesProps {
   spread?: number;
   tilt?: number;
   depth?: number;
-  stagger?: number;
   className?: string;
 }
 
 export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
   cards = defaultPipelineCards,
-  photoWidth = 230,
-  photoHeight = 320,
-  spread = 115,
+  photoWidth = 240,
+  photoHeight = 330,
+  spread = 120,
   tilt = 10,
   depth = 14,
-  stagger = 0.1,
   className = "",
 }) => {
-  const [hasLanded, setHasLanded] = useState(false);
-  const [isFanned, setIsFanned] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, amount: 0.15 });
+  const isInView = useInView(containerRef, { once: false, amount: 0.1 });
 
-  // Trigger falling on view/refresh, followed by smooth fanning
+  // Escape key closes focused modal and removes blur
   useEffect(() => {
-    if (isInView && !hasLanded) {
-      setHasLanded(true);
-      const fanTimer = setTimeout(() => {
-        setIsFanned(true);
-      }, (cards.length * stagger + 0.35) * 1000);
-
-      return () => clearTimeout(fanTimer);
-    }
-  }, [isInView, hasLanded, cards.length, stagger]);
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && selectedIndex !== null) {
+        sounds.playClick();
+        setSelectedIndex(null);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedIndex]);
 
   const centerIndex = (cards.length - 1) / 2;
 
+  // Selected card details for spotlight modal
+  const selectedCard = selectedIndex !== null ? cards[selectedIndex] : null;
+  const selectedTone = selectedCard ? tones[selectedCard.tone] : null;
+
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full flex flex-col items-center justify-center py-12 overflow-x-auto sm:overflow-hidden select-none ${className}`}
-      style={{ minHeight: `${photoHeight + 140}px` }}
-    >
-      {/* 3D Perspective Stage */}
+    <>
       <div
-        className="relative flex items-center justify-center w-full"
-        style={{
-          perspective: 1400,
-          perspectiveOrigin: "center center",
-          height: `${photoHeight + 40}px`,
-        }}
+        ref={containerRef}
+        className={`relative w-full flex flex-col items-center justify-center py-12 select-none transition-all duration-300 ${
+          selectedIndex !== null ? "filter blur-[6px] opacity-40 pointer-events-none" : ""
+        } ${className}`}
+        style={{ minHeight: `${photoHeight + 140}px` }}
       >
-        <div className="relative flex items-center justify-center w-full h-full">
-          {cards.map((card, i) => {
-            const tone = tones[card.tone];
+        {/* 3D Perspective Stage */}
+        <div
+          className="relative flex items-center justify-center w-full"
+          style={{
+            perspective: 1400,
+            perspectiveOrigin: "center center",
+            height: `${photoHeight + 40}px`,
+          }}
+        >
+          <div className="relative flex items-center justify-center w-full h-full">
+            {cards.map((card, i) => {
+              const tone = tones[card.tone];
 
-            // Calculate fanned out X offset
-            const baseOffset = (i - centerIndex) * spread;
+              // Base offset when spread out
+              const baseOffset = (i - centerIndex) * spread;
 
-            // When a card is hovered, neighbours shift outwards smoothly to make room
-            let hoverShift = 0;
-            if (hoveredIndex !== null) {
-              if (i < hoveredIndex) {
-                hoverShift = -42;
-              } else if (i > hoveredIndex) {
-                hoverShift = 42;
+              // Neighbours shift outwards smoothly when one card is hovered
+              let hoverShift = 0;
+              if (hoveredIndex !== null) {
+                if (i < hoveredIndex) {
+                  hoverShift = -45;
+                } else if (i > hoveredIndex) {
+                  hoverShift = 45;
+                }
               }
-            }
 
-            const isHovered = hoveredIndex === i;
+              const isHovered = hoveredIndex === i;
 
-            // Slanted plane angles matching useplanes 3D effect
-            const normalRotateZ = -tilt * 0.72;
-            const normalRotateY = 15;
-            const normalRotateX = 4;
+              // Slanted 3D plane angles
+              const normalRotateZ = -tilt * 0.72;
+              const normalRotateY = 15;
+              const normalRotateX = 4;
 
-            return (
-              <motion.div
-                key={card.tag}
-                className={`absolute cursor-pointer rounded-[26px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between ${tone.bg} ${tone.text} ${tone.shadow} border ${tone.border} transition-colors duration-200`}
-                style={{
-                  width: `${photoWidth}px`,
-                  height: `${photoHeight}px`,
-                  transformStyle: "preserve-3d",
-                  zIndex: isHovered ? 80 : i + 10,
-                }}
-                initial={{
-                  x: 0,
-                  y: -380,
-                  scale: 1.25,
-                  rotateZ: (i % 2 === 0 ? -1 : 1) * (8 + (i * 3) % 7),
-                  rotateY: 0,
-                  rotateX: 0,
-                  opacity: 0,
-                }}
-                animate={
-                  !hasLanded
-                    ? {
-                        x: 0,
-                        y: -380,
-                        scale: 1.25,
-                        rotateZ: (i % 2 === 0 ? -1 : 1) * (8 + (i * 3) % 7),
-                        rotateY: 0,
-                        rotateX: 0,
-                        opacity: 0,
-                      }
-                    : !isFanned
-                    ? {
-                        // Phase 1: Landing onto pile (falling animation)
-                        x: (i % 3 - 1) * 5,
-                        y: (i - centerIndex) * -3,
-                        scale: 1,
-                        rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
-                        rotateY: 0,
-                        rotateX: 0,
-                        opacity: 1,
-                        transition: {
-                          delay: i * stagger,
-                          duration: 0.52,
-                          ease: [0.22, 1, 0.36, 1],
-                        },
-                      }
-                    : {
-                        // Phase 2: Fanned horizontal 3D row
-                        x: baseOffset + hoverShift,
-                        y: isHovered ? -28 : (i - centerIndex) * depth,
-                        scale: isHovered ? 1.15 : 1,
-                        rotateZ: isHovered ? 0 : normalRotateZ,
-                        rotateY: isHovered ? 0 : normalRotateY,
-                        rotateX: isHovered ? 0 : normalRotateX,
-                        opacity: 1,
-                        transition: {
-                          duration: 0.65,
-                          ease: [0.25, 1, 0.5, 1],
-                        },
-                      }
-                }
-                whileHover={
-                  isFanned
-                    ? {
-                        scale: 1.16,
-                        y: -28,
-                        rotateZ: 0,
-                        rotateY: 0,
-                        rotateX: 0,
-                        transition: { duration: 0.28, ease: "easeOut" },
-                      }
-                    : {}
-                }
-                onMouseEnter={() => isFanned && setHoveredIndex(i)}
-                onMouseLeave={() => isFanned && setHoveredIndex(null)}
-                onClick={() => {
-                  if (isFanned) {
-                    setHoveredIndex(hoveredIndex === i ? null : i);
+              return (
+                <motion.div
+                  key={card.tag}
+                  className={`absolute cursor-pointer rounded-[26px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between ${tone.bg} ${tone.text} ${tone.shadow} border ${tone.border} transition-colors duration-200`}
+                  style={{
+                    width: `${photoWidth}px`,
+                    height: `${photoHeight}px`,
+                    transformStyle: "preserve-3d",
+                    zIndex: isHovered ? 80 : i + 10,
+                  }}
+                  initial={{
+                    x: (i % 3 - 1) * 6,
+                    y: (i - centerIndex) * -4,
+                    scale: 0.95,
+                    rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
+                    rotateY: 0,
+                    rotateX: 0,
+                    opacity: 0.85,
+                  }}
+                  animate={
+                    isInView
+                      ? {
+                          // Spreads out when coming to this section
+                          x: baseOffset + hoverShift,
+                          y: isHovered ? -35 : (i - centerIndex) * depth,
+                          scale: isHovered ? 1.15 : 1,
+                          rotateZ: isHovered ? 0 : normalRotateZ,
+                          rotateY: isHovered ? 0 : normalRotateY,
+                          rotateX: isHovered ? 0 : normalRotateX,
+                          opacity: 1,
+                        }
+                      : {
+                          // Stacked together initially
+                          x: (i % 3 - 1) * 6,
+                          y: (i - centerIndex) * -4,
+                          scale: 0.95,
+                          rotateZ: (i % 2 === 0 ? -1 : 1) * (4 + i * 2),
+                          rotateY: 0,
+                          rotateX: 0,
+                          opacity: 0.85,
+                        }
                   }
-                }}
-              >
-                {/* Giant Stylized Watermark Number in background */}
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute -bottom-7 -right-2 font-black leading-none tracking-[-0.08em] select-none text-[115px] ${tone.num}`}
+                  transition={{
+                    type: "spring",
+                    stiffness: 190,
+                    damping: 24,
+                    delay: isInView ? i * 0.05 : 0,
+                  }}
+                  whileHover={{
+                    scale: 1.16,
+                    y: -35,
+                    rotateZ: 0,
+                    rotateY: 0,
+                    rotateX: 0,
+                    transition: { duration: 0.22, ease: "easeOut" },
+                  }}
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  onClick={() => {
+                    sounds.playClick();
+                    setSelectedIndex(i);
+                  }}
                 >
-                  {card.tag}
-                </span>
+                  {/* Giant Stylized Watermark Number in background */}
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute -bottom-7 -right-2 font-black leading-none tracking-[-0.08em] select-none text-[115px] ${tone.num}`}
+                  >
+                    {card.tag}
+                  </span>
 
-                {/* Top: Stage Pill Badge + Subsystem Category */}
-                <div className="relative z-10">
-                  <div className="flex items-start justify-between gap-2">
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-black uppercase tracking-wider ${tone.tag}`}
-                    >
-                      {card.tag}
-                    </span>
-                    <span className="font-mono text-[9px] font-black uppercase tracking-wider opacity-75 truncate text-right">
-                      {card.meta}
-                    </span>
+                  {/* Top: Stage Pill Badge + Subsystem Category */}
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between gap-2">
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-black uppercase tracking-wider ${tone.tag}`}
+                      >
+                        {card.tag}
+                      </span>
+                      <span className="font-mono text-[9px] font-black uppercase tracking-wider opacity-75 truncate text-right">
+                        {card.meta}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 text-xl sm:text-[22px] font-black leading-tight tracking-tight">
+                      {card.title}
+                    </h3>
                   </div>
-                  <h3 className="mt-4 text-xl sm:text-[22px] font-black leading-tight tracking-tight">
-                    {card.title}
-                  </h3>
-                </div>
 
-                {/* Bottom: Verbatim Body Text from Image 2 */}
-                <div className="relative z-10 pt-2">
-                  <p className={`text-[12px] font-semibold leading-relaxed ${tone.sub}`}>
-                    {card.body}
-                  </p>
-                </div>
+                  {/* Bottom: Verbatim Body Text */}
+                  <div className="relative z-10 pt-2">
+                    <p className={`text-[12px] font-semibold leading-relaxed ${tone.sub}`}>
+                      {card.body}
+                    </p>
+                  </div>
 
-                {/* Subtle glass reflection highlight */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/20 pointer-events-none" />
-              </motion.div>
-            );
-          })}
+                  {/* Subtle glass reflection highlight */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/20 pointer-events-none" />
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Interactive Micro-Hint */}
+        <div className="mt-8 flex items-center justify-center gap-2 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400">
+          <span>click any card to focus with blur &amp; sound</span>
+          <span>↗</span>
         </div>
       </div>
 
-      {/* Interactive Micro-Hint */}
-      <div className="mt-6 flex items-center justify-center gap-2 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400">
-        <span>hover or tap any plane to focus stage</span>
-        <span>↗</span>
-      </div>
-    </div>
+      {/* ================= MODAL SPOTLIGHT OVERLAY WITH BACKGROUND BLUR ================= */}
+      <AnimatePresence>
+        {selectedIndex !== null && selectedCard && selectedTone && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            {/* Background Blur Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => {
+                sounds.playClick();
+                setSelectedIndex(null);
+              }}
+              className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md cursor-pointer"
+            />
+
+            {/* Elevated Focused Card */}
+            <motion.div
+              initial={{ scale: 0.88, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 380, damping: 28 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`relative z-10 w-full max-w-md sm:max-w-lg rounded-[32px] p-7 sm:p-9 shadow-2xl overflow-hidden flex flex-col justify-between border ${selectedTone.bg} ${selectedTone.text} ${selectedTone.border} ${selectedTone.shadow}`}
+              style={{ minHeight: "440px" }}
+            >
+              {/* Giant Watermark Number */}
+              <span
+                aria-hidden="true"
+                className={`pointer-events-none absolute -bottom-10 -right-4 font-black leading-none tracking-[-0.08em] select-none text-[180px] ${selectedTone.num}`}
+              >
+                {selectedCard.tag}
+              </span>
+
+              {/* Header row */}
+              <div className="relative z-10 flex items-center justify-between w-full mb-6">
+                <span className={`rounded-full px-3.5 py-1 font-mono text-xs font-black uppercase tracking-wider ${selectedTone.tag}`}>
+                  STAGE {selectedCard.tag} OF 08
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    sounds.playClick();
+                    setSelectedIndex(null);
+                  }}
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-black/20 hover:bg-black/35 text-white transition-all cursor-pointer shadow-md"
+                  aria-label="Close card focus"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Main Content */}
+              <div className="relative z-10 flex-1 flex flex-col justify-center my-4">
+                <span className="font-mono text-xs font-black uppercase tracking-widest opacity-80 mb-2">
+                  {selectedCard.meta}
+                </span>
+                <h3 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-4">
+                  {selectedCard.title}
+                </h3>
+                <p className={`text-base sm:text-lg font-medium leading-relaxed ${selectedTone.sub}`}>
+                  {selectedCard.body}
+                </p>
+              </div>
+
+              {/* Footer row with Action CTA */}
+              <div className="relative z-10 mt-6 pt-5 border-t border-white/20 flex items-center justify-between">
+                <span className="font-mono text-xs font-black tracking-wider opacity-75">
+                  ISHA PIPELINE ENGINE
+                </span>
+                <a
+                  href="/fix"
+                  onClick={() => sounds.playClick()}
+                  className="inline-flex items-center gap-1.5 font-mono text-xs font-black uppercase px-5 py-2.5 rounded-full bg-white text-black hover:bg-neutral-100 transition-all shadow-lg hover:scale-105 active:scale-95"
+                >
+                  <span>TRY ISHA FIX</span>
+                  <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
