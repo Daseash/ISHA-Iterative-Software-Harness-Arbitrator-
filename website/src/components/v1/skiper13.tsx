@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEventListener } from "usehooks-ts";
-import { DarkModeSwitch } from "../unlumen-ui/DarkModeSwitch";
+import { ThemeToggleButton1 } from "./skiper4";
 
 export interface NavItem {
   name: string;
@@ -225,10 +225,10 @@ export const Navbar_001: React.FC<NavbarProps> = ({
         </motion.div>
       </motion.div>
 
-      {/* Unlumen Animated Switch for Dark Mode: Rendered ONLY on Home Page */}
+      {/* Skiper4 Theme Toggle Button 1: Rendered ONLY on Home Page */}
       {showThemeToggle && (
         <div className="fixed top-5 sm:top-6 right-4 sm:right-8 z-50">
-          <DarkModeSwitch showIcons={true} showLabel={false} />
+          <ThemeToggleButton1 className="size-11 sm:size-12" />
         </div>
       )}
     </>
