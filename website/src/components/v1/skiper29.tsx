@@ -307,7 +307,6 @@ export function Skiper29() {
           tilt={12}
           depth={20}
           stagger={0.12}
-          autoplay={7000}
         />
       </section>
 
