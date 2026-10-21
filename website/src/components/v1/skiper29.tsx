@@ -278,17 +278,17 @@ export function Skiper29() {
           prefix="WE ENGINEER"
           items={[
             "THE AUTONOMOUS HARNESS",
-            "THE REPRODUCTION PROOF FIRST",
+            "REPRODUCTION PROOFS FIRST",
             "THE 3 ISOLATED WORKTREES",
-            "THE PRE-SANDBOX AST GATES",
+            "PRE-SANDBOX AST GATES",
             "THE CALIBRATED LAYA SCORE",
-            "THE VERIFIED MINIMAL PULL REQUEST",
+            "VERIFIED MINIMAL PULL REQUESTS",
             "ZERO FALSE APPROVALS",
             "THE 8 CONTAINER INVARIANTS",
             "THE FUTURE OF SOFTWARE",
           ]}
-          itemHeight={96}
-          className="w-full h-[65vh] sm:h-[75vh] min-h-[580px]"
+          itemHeight={72}
+          className="w-full h-[65vh] sm:h-[75vh] min-h-[520px]"
         />
       </section>
 

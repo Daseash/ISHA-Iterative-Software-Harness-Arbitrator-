@@ -16,7 +16,7 @@ export interface VercelSnapTextProps {
 export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
   items,
   prefix = "WE ENGINEER",
-  itemHeight = 96,
+  itemHeight = 72,
   stiffness = 280,
   damping = 30,
   className = "",
@@ -122,12 +122,12 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
       </div>
 
       {/* ================= LAYER 2: SPRING-ANIMATED VISUAL TRACK ================= */}
-      <div className="relative w-full max-w-6xl h-full flex items-center px-4 sm:px-8 md:px-12 z-10 pointer-events-none">
-        <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 w-full">
+      <div className="relative w-full max-w-7xl h-full flex items-center px-4 sm:px-6 md:px-10 lg:px-12 z-10 pointer-events-none">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 sm:gap-4 md:gap-6 w-full">
           {/* Static Prefix: Fixed in the vertical center, never repeats on rows */}
           {prefix && (
             <div className="shrink-0 flex items-center">
-              <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-neutral-950 dark:text-neutral-100 uppercase whitespace-nowrap">
+              <span className="text-xl sm:text-2xl md:text-3xl lg:text-[40px] xl:text-[44px] font-black tracking-tight text-neutral-950 dark:text-neutral-100 uppercase whitespace-nowrap">
                 {prefix}
               </span>
             </div>
@@ -146,8 +146,8 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
 
                 // Authentic Unlumen math: distance-based opacity, horizontal indent, and scale
                 const opacity = Math.max(0.18, 1 - absDist * 0.44);
-                const xOffset = absDist * 22;
-                const scale = Math.max(0.9, 1 - absDist * 0.04);
+                const xOffset = absDist * 10;
+                const scale = Math.max(0.92, 1 - absDist * 0.03);
 
                 return (
                   <div
@@ -169,7 +169,7 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
                       className="flex items-baseline"
                     >
                       <span
-                        className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none whitespace-nowrap transition-colors duration-200 uppercase ${
+                        className={`text-xl sm:text-2xl md:text-3xl lg:text-[40px] xl:text-[44px] font-black tracking-tight leading-none whitespace-nowrap transition-colors duration-200 uppercase ${
                           isActive
                             ? "text-red-600 dark:text-red-500 drop-shadow-sm"
                             : "text-neutral-300 dark:text-neutral-700"
