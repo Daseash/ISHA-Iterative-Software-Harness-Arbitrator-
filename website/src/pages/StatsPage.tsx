@@ -21,7 +21,7 @@ export const StatsPage: React.FC<StatsPageProps> = () => {
           </ScrollHighlight>
         </h1>
         <p className="font-mono text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-          AUDITED BENCHMARKS · <ScrollHighlight variant="brush" color="sun">SWE-BENCH LITE</ScrollHighlight>
+          <ScrollHighlight variant="brush" color="sun">AUDITED BENCHMARKS</ScrollHighlight>
         </p>
       </div>
 

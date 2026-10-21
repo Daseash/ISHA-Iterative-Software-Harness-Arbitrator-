@@ -11,7 +11,7 @@ export interface Skiper35Item {
 export const defaultItems: Skiper35Item[] = [
   {
     id: "lite300",
-    title: "SWE-bench Lite (S1-S4)",
+    title: "Official Golden Suite (S1-S4)",
     metric: "55.0% (66 / 120)",
     image: "/isha_vs_baselines.png",
   },
