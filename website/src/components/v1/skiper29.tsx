@@ -175,26 +175,32 @@ export function Skiper29() {
         {/* ================= HERO: EXACT SKIPER27 ROLLING TEXT & SCROLL INDICATOR ================= */}
         <section
           id="hero"
-          className="relative z-10 min-h-[85vh] w-full flex flex-col justify-center items-center px-4 sm:px-8 py-20 bg-transparent"
+          className="relative z-10 min-h-[85vh] w-full flex flex-col justify-center items-center px-4 sm:px-8 pt-24 pb-16 sm:pt-28 sm:pb-20 bg-transparent"
         >
           {/* Top: Authentic Skiper27 Scroll Down Indicator with Gradient Line */}
-          <div className="relative mb-8 sm:mb-10 flex flex-col items-center justify-center text-center z-20 select-none">
-            <span className="relative max-w-[14ch] text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] opacity-40 text-neutral-900 dark:text-[#F9F7EF] leading-tight after:absolute after:left-1/2 after:top-full after:mt-2 after:h-12 sm:after:h-16 after:w-px after:bg-gradient-to-b after:from-neutral-900 dark:after:from-[#F9F7EF] after:to-transparent after:content-['']">
+          <div className="relative mb-6 sm:mb-8 flex flex-col items-center justify-center text-center z-20 select-none">
+            <span className="relative max-w-[14ch] text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] opacity-40 text-neutral-900 dark:text-[#F9F7EF] leading-tight after:absolute after:left-1/2 after:top-full after:mt-2 after:h-10 sm:after:h-14 after:w-px after:bg-gradient-to-b after:from-neutral-900 dark:after:from-[#F9F7EF] after:to-transparent after:content-['']">
               scroll down to see
             </span>
           </div>
 
           <motion.div
             style={{ scale: heroScale }}
-            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center mt-6 sm:mt-8"
+            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center mt-4 sm:mt-6"
           >
-            {/* Authentic Skiper27 2-Line Stacked Rolling Typography */}
+            {/* Authentic Skiper27 Stacked Rolling Typography */}
             <div className="flex flex-col items-center justify-center w-full select-none text-center">
               <RollingText
                 text="ISHA"
                 speed={0.05}
                 duration={4}
-                className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-black tracking-tight text-red-600 dark:text-red-500 uppercase leading-[0.9]"
+                className="text-6xl sm:text-8xl md:text-9xl lg:text-[130px] font-black tracking-tight text-red-600 dark:text-red-500 uppercase leading-[0.9]"
+              />
+              <RollingText
+                text="SOFTWARE HARNESS"
+                speed={0.05}
+                duration={4}
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-neutral-900 dark:text-[#F9F7EF] uppercase leading-[0.9] mt-2 sm:mt-3"
               />
               <RollingText
                 text="ARBITRATOR"
