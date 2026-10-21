@@ -372,12 +372,6 @@ export const PipelinePlanes: React.FC<PipelinePlanesProps> = ({
             })}
           </div>
         </div>
-
-        {/* Interactive Micro-Hint */}
-        <div className="mt-8 flex items-center justify-center gap-2 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400">
-          <span>click any card to focus with blur &amp; sound</span>
-          <span>↗</span>
-        </div>
       </div>
 
       {/* ================= SPOTLIGHT MODAL OVERLAY WITH BACKGROUND BLUR ================= */}
