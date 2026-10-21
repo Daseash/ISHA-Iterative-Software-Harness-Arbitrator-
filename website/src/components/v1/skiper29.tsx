@@ -8,7 +8,6 @@ import { PipelinePlanes } from "../ui/PipelinePlanes";
 import { ScrollHighlight } from "./ScrollHighlight";
 import { AboutSection } from "./AboutSection";
 import { CliSection } from "./CliSection";
-import { LinePath } from "./skiper19";
 import { HoverExpand_001 } from "./skiper52";
 import { ArrowUpRight } from "lucide-react";
 
@@ -44,12 +43,6 @@ export function Skiper29() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
-  });
-
-  const flowContainerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: flowScrollProgress } = useScroll({
-    target: flowContainerRef,
-    offset: ["start 0.85", "end 0.95"],
   });
 
   // Hero scale
@@ -173,22 +166,8 @@ export function Skiper29() {
         </motion.div>
       </section>
 
-      {/* ================= CONTINUOUS FLOW: BEHIND ISHA TEXT TILL END OF ABOUT SECTION ================= */}
-      <div
-        ref={flowContainerRef}
-        className="relative w-full bg-[#F9F7EF] dark:bg-black transition-colors"
-      >
-        {/* Red scrolling LinePath (Skiper 19) starting behind ISHA text till end of About section text */}
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-visible flex justify-center">
-          <LinePath
-            scrollYProgress={flowScrollProgress}
-            start={0}
-            end={1}
-            strokeColor="#dc2626"
-            strokeWidth={18}
-            className="w-full max-w-7xl h-full"
-          />
-        </div>
+      {/* ================= HERO & ABOUT CONTINUOUS FLOW ================= */}
+      <div className="relative w-full bg-[#F9F7EF] dark:bg-black transition-colors">
 
         {/* ================= HERO: ISHA IN BOLD RED, OTHERS IN BLACK/CREAM ================= */}
         <section
