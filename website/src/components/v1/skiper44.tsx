@@ -70,17 +70,21 @@ export const Skiper44: React.FC<Skiper44Props> = ({ className = "" }) => {
         style={{ scale: textScale }}
         className="sticky top-[14%] sm:top-[18%] flex gap-2 sm:gap-4 md:gap-6 pb-10 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter z-10 max-w-6xl px-4"
       >
-        {/* Fixed Prefix: "We Engineer" with Top and Bottom Viewport Masks */}
+        {/* Fixed Prefix: "We Engineer" with Top and Bottom Viewport Masks matching website background */}
         <div className="sticky top-[50%] h-fit shrink-0">
-          <h1 className="whitespace-nowrap text-neutral-950 dark:text-neutral-100 uppercase">
+          <h1 className="whitespace-nowrap text-red-600 dark:text-red-500 uppercase font-black tracking-tight">
             We Engineer
           </h1>
 
-          {/* Top Mask: Hides items scrolling above the focal window */}
-          <div className="pointer-events-none absolute left-full top-0 z-10 h-[45vh] w-[200vw] -translate-y-full bg-[#F9F7EF]/95 dark:bg-black/95 transition-colors" />
+          {/* Top Mask: Hides items scrolling above the focal window (100% solid matching page background) */}
+          <div className="pointer-events-none absolute left-full top-0 z-10 h-[45vh] w-[200vw] -translate-y-full bg-[#F9F7EF] dark:bg-black transition-colors">
+            <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-transparent to-[#F9F7EF] dark:to-black" />
+          </div>
 
-          {/* Bottom Mask: Hides items scrolling below the focal window */}
-          <div className="pointer-events-none absolute bottom-0 left-full z-10 h-[45vh] w-[200vw] translate-y-full bg-[#F9F7EF]/95 dark:bg-black/95 transition-colors" />
+          {/* Bottom Mask: Hides items scrolling below the focal window (100% solid matching page background) */}
+          <div className="pointer-events-none absolute bottom-0 left-full z-10 h-[45vh] w-[200vw] translate-y-full bg-[#F9F7EF] dark:bg-black transition-colors">
+            <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-transparent to-[#F9F7EF] dark:to-black" />
+          </div>
         </div>
 
         {/* Scrollable Items Column (Moves past "We Engineer" as user scrolls page) */}
@@ -88,20 +92,20 @@ export const Skiper44: React.FC<Skiper44Props> = ({ className = "" }) => {
           {engineeringPillars.map((item, idx) => (
             <h2
               key={idx}
-              className="text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 transition-colors uppercase whitespace-nowrap cursor-default"
+              className="text-neutral-900 dark:text-[#F9F7EF] hover:text-red-600 dark:hover:text-red-400 transition-colors uppercase whitespace-nowrap cursor-default"
             >
               {item}
             </h2>
           ))}
         </div>
 
-        {/* Scroll-Driven Progressive Backdrop Blur Overlay */}
+        {/* Scroll-Driven Progressive Backdrop Blur Overlay: Fully transparent background, pure optical blur */}
         <motion.div
           style={{
             backdropFilter,
             WebkitBackdropFilter: backdropFilter,
           }}
-          className="pointer-events-none absolute inset-0 bg-white/5 dark:bg-black/5"
+          className="pointer-events-none absolute inset-0 bg-transparent"
         />
       </motion.div>
 

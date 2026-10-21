@@ -122,11 +122,12 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
       ref={containerRef}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      className={`relative w-full overflow-hidden select-none flex items-center justify-center ${className}`}
+      className={`relative w-full overflow-hidden select-none flex items-center justify-center bg-[#F9F7EF] dark:bg-black transition-colors ${className}`}
       style={{ minHeight: "500px" }}
     >
-      {/* Background radial glow */}
-      <div className="absolute inset-0 bg-radial from-red-600/5 via-transparent to-transparent pointer-events-none" />
+      {/* Top and Bottom Viewport Fade Masks: Seamlessly fades items into page background */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#F9F7EF] dark:from-black to-transparent z-15" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#F9F7EF] dark:from-black to-transparent z-15" />
 
       {/* Main Container: Single static prefix on left + spring-animated scrolling list on right */}
       <div className="relative w-full max-w-6xl h-full flex items-center px-4 sm:px-8 md:px-12 z-10">
