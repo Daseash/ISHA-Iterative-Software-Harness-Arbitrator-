@@ -10,8 +10,7 @@ export const statsProjects: Project[] = [
   {
     id: "swebench-s4",
     name: "SWE-bench Lite S4 Peak",
-    description:
-      "70.0% official Docker container resolution rate (21 / 30) achieved in Session 4. S1–S4 combined delivers 55.0% across 120 tasks, leading global open-source agents while maintaining $0.00 inference spend.",
+    description: "21 / 30 official Docker resolutions leading global open-source.",
     badge: "Official Docker Ladder",
     bgColor: "#38bdf8", // Sky blue matching skiper24 screenshot
     image: "/images/stats/swebench.svg",
@@ -22,8 +21,7 @@ export const statsProjects: Project[] = [
   {
     id: "django-suite",
     name: "Django Web Framework",
-    description:
-      "66 verified Docker container resolutions across Django ORM SQL query compilers, schema migrations, composite keys, and form widgets. Represents 84.6% of resolved benchmarks with minimal diff hunks.",
+    description: "66 verified Docker resolutions across Django ORM & migrations.",
     badge: "ORM & Query Compilers",
     bgColor: "#059669", // Rich Emerald Green
     image: "/images/stats/django.svg",
@@ -34,8 +32,7 @@ export const statsProjects: Project[] = [
   {
     id: "sympy-algebra",
     name: "SymPy Symbolic Algebra",
-    description:
-      "3 verified Docker container resolutions resolving complex hyperbolic branch cuts, asymptotic branch evaluation, and polynomial factorizations without numerical precision degradation.",
+    description: "3 complex hyperbolic branch cuts and factorizations verified.",
     badge: "Calculus & Branches",
     bgColor: "#d97706", // Amber Orange
     image: "/images/stats/sympy.svg",
@@ -46,8 +43,7 @@ export const statsProjects: Project[] = [
   {
     id: "pytest-tools",
     name: "Pytest Test Framework",
-    description:
-      "3 verified Docker container resolutions in core pytest metaprogramming, AST assertion rewriting, parametrized fixture tear-downs, and test discovery introspection.",
+    description: "3 AST assertion rewriting and fixture introspection verified.",
     badge: "AST Assertion Rewriting",
     bgColor: "#2563eb", // Royal Developer Blue
     image: "/images/stats/pytest.svg",
@@ -58,8 +54,7 @@ export const statsProjects: Project[] = [
   {
     id: "golden7-suite",
     name: "Golden-7 Safety Net",
-    description:
-      "Mandatory locked regression net executed on every pull request and push to main. Verifies non-empty patch diffs, AST syntax validity, and official Docker resolution across 7 real repositories in ~18s.",
+    description: "Mandatory locked 7-repo regression net passing in ~18s.",
     badge: "100% CI Locked Net",
     bgColor: "#7c3aed", // Deep Security Violet
     image: "/images/stats/golden7.svg",
@@ -70,8 +65,7 @@ export const statsProjects: Project[] = [
   {
     id: "laya-engine",
     name: "LAYA Decision Arbitrator",
-    description:
-      "Temperature-scaled probabilistic decision arbitrator fitted on 546 container outcome labels. Enforces an exponential churn penalty and guarantees 0.0% false approvals (100% precision) at the τ=0.50 threshold.",
+    description: "Probabilistic calibrated arbitrator with 0% false approvals.",
     badge: "Calibrated Arbitrator",
     bgColor: "#db2777", // Rose Pink
     image: "/images/stats/laya.svg",
@@ -82,8 +76,7 @@ export const statsProjects: Project[] = [
   {
     id: "ast-hygiene",
     name: "AST Invariant Hygiene Engine",
-    description:
-      "8 Non-Negotiable Empirical Container Invariants anchored to target classes, guard clause completeness, and hashability contracts. Pre-sandbox ast.parse() eliminates 100% of host syntax aborts.",
+    description: "8 empirical container invariants eliminating host syntax aborts.",
     badge: "Static AST Gates",
     bgColor: "#0d9488", // Dark Teal
     image: "/images/stats/ast.svg",
@@ -94,8 +87,7 @@ export const statsProjects: Project[] = [
   {
     id: "pareto-cost",
     name: "Pareto Cost Frontier",
-    description:
-      "Engineered for zero-cost autonomous operations. Orchestrates a 14-key token pool across Gemini Flash-Lite and Groq LPUs, delivering SOTA benchmark resolution without burning $35/task like Devin.",
+    description: "Zero-cost 14-key token pool with infinite ROI vs Devin $35.",
     badge: "Economic Efficiency",
     bgColor: "#ca8a04", // Frontier Golden Ochre
     image: "/images/stats/cost.svg",
@@ -106,8 +98,7 @@ export const statsProjects: Project[] = [
   {
     id: "tournament-race",
     name: "Parallel Tournament & TDD",
-    description:
-      "Spawns 3 diverse strategy candidates (minimal_diff, call_site_aware, root_cause_first) in isolated git worktrees. Feeds live pytest tracebacks back into the coder for up to 2 targeted repair rounds.",
+    description: "3 strategy worktrees with closed-loop pytest repair rounds.",
     badge: "Multi-Candidate Racing",
     bgColor: "#4f46e5", // Tournament Indigo
     image: "/images/stats/tournament.svg",
@@ -118,8 +109,7 @@ export const statsProjects: Project[] = [
   {
     id: "memory-ledger",
     name: "Institutional Memory Ledger",
-    description:
-      "SQLite WAL-mode outcome store tracking 546 evaluated runs in data/memory.db, synchronized with a 384-D dense semantic embedding ledger. Hard veto fires at cosine similarity > 0.92 to prevent repeat regressions.",
+    description: "SQLite WAL store with dense semantic cosine similarity veto.",
     badge: "Persistent Experience Veto",
     bgColor: "#be123c", // Ruby Crimson
     image: "/images/stats/memory.svg",

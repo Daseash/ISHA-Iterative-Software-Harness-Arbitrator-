@@ -137,11 +137,11 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
     }
   };
 
-  // Preview card sizing: noticeably smaller and more compact
+  // Preview card sizing: noticeably smaller and compact
   const previewSizeClasses = {
-    sm: "w-[240px] h-[240px]",
-    md: "w-[280px] h-[280px]",
-    lg: "w-[270px] h-[270px] sm:w-[300px] sm:h-[300px] md:w-[330px] md:h-[330px]",
+    sm: "w-[210px]",
+    md: "w-[230px]",
+    lg: "w-[230px] sm:w-[250px] md:w-[260px]",
   }[previewSize];
 
   return (
@@ -208,72 +208,59 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
         </div>
       </div>
 
-      {/* ================= DRAGGABLE PREVIEW CARD ON RIGHT (WEBSITE COLOR BACKGROUND, MINIMAL DATA) ================= */}
+      {/* ================= DRAGGABLE PREVIEW CARD ON RIGHT (CLEAN WHITE BACKGROUND, COMPACT SIZE, MINIMAL MATTER) ================= */}
       {showPreview && (
-        <div className="fixed right-4 sm:right-6 md:right-8 lg:right-12 top-[56%] sm:top-[58%] -translate-y-1/2 z-30 pointer-events-none hidden sm:block">
+        <div className="fixed right-4 sm:right-6 md:right-10 lg:right-14 top-[62%] sm:top-[64%] -translate-y-1/2 z-30 pointer-events-none hidden sm:block">
           <motion.div
             drag
             dragConstraints={{ left: -360, right: 80, top: -200, bottom: 200 }}
             dragElastic={0.16}
             whileDrag={{ scale: 1.03, cursor: "grabbing" }}
             whileHover={{ scale: 1.01 }}
-            className={`pointer-events-auto rounded-3xl overflow-hidden shadow-2xl shadow-neutral-950/20 dark:shadow-black/70 cursor-grab select-none p-5 sm:p-6 bg-[#F9F7EF] dark:bg-[#121212] border border-black/10 dark:border-neutral-800 text-neutral-900 dark:text-[#F9F7EF] flex flex-col justify-between transition-colors duration-300 ${previewSizeClasses}`}
+            className={`pointer-events-auto rounded-2xl overflow-hidden shadow-2xl shadow-neutral-950/15 cursor-grab select-none p-4 sm:p-5 bg-white border border-neutral-200/90 text-neutral-950 flex flex-col justify-between transition-colors duration-300 ${previewSizeClasses}`}
           >
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeProject.id}
-                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                initial={{ opacity: 0, y: 6, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8, scale: 1.02 }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full h-full flex flex-col justify-between select-none pointer-events-none"
+                exit={{ opacity: 0, y: -6, scale: 1.02 }}
+                transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full flex flex-col gap-3 select-none pointer-events-none"
               >
-                {/* Top: Minimal Badge with Status Accent */}
+                {/* Top: Category Pill with Color Dot */}
                 <div className="flex items-center justify-between w-full">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 font-mono text-[10px] font-black uppercase tracking-wider text-black dark:text-[#F9F7EF] border border-black/5 dark:border-white/10">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-neutral-100 font-mono text-[9px] font-bold uppercase tracking-wider text-neutral-700 border border-neutral-200/80">
                     <span
-                      className="w-2 h-2 rounded-full"
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
                       style={{ backgroundColor: activeProject.bgColor }}
                     />
                     {activeProject.badge}
                   </span>
-                  <span className="font-mono text-[9px] font-black uppercase tracking-widest text-black/40 dark:text-white/40">
-                    ISHA VERIFIED
+                  <span className="font-mono text-[8px] font-black uppercase tracking-widest text-neutral-400">
+                    VERIFIED
                   </span>
                 </div>
 
-                {/* Center: Minimal Data Display - Clean Big Metric & Label (No Clumsy Graphs) */}
-                <div className="my-auto py-2 flex flex-col">
-                  <div className="text-3xl sm:text-4xl md:text-[42px] font-black tracking-tight leading-none text-black dark:text-[#F9F7EF]">
+                {/* Center: Reduced Minimal Data - Hero Metric & Clean Label (No Clumsy Paragraphs) */}
+                <div className="py-1 flex flex-col">
+                  <div className="text-2xl sm:text-3xl font-black tracking-tight leading-none text-neutral-950">
                     {activeProject.date || activeProject.metric}
                   </div>
-                  <div className="mt-2 text-xs sm:text-sm font-black tracking-tight text-red-600 dark:text-red-500 uppercase">
+                  <div className="mt-1.5 text-[11px] sm:text-xs font-black tracking-tight text-red-600 uppercase">
                     {activeProject.metric || activeProject.name}
                   </div>
-                  <p className="mt-3 text-[11px] sm:text-xs font-medium leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                    {activeProject.description}
-                  </p>
                 </div>
 
-                {/* Bottom: Light Accent Line & Minimal Audit */}
-                <div className="pt-3 border-t border-black/10 dark:border-neutral-800 flex flex-col gap-1.5">
-                  <div className="w-full h-1 rounded-full bg-black/5 dark:bg-neutral-800 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{
-                        width: "100%",
-                        backgroundColor: activeProject.bgColor,
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between font-mono text-[9px] text-black/50 dark:text-neutral-400">
-                    <span className="truncate max-w-[180px]">
-                      {activeProject.auditProof || "Docker Ground Truth"}
-                    </span>
-                    <span className="font-black text-black dark:text-white shrink-0">
-                      PASS
-                    </span>
-                  </div>
+                {/* Bottom: Minimal Status Pass */}
+                <div className="pt-2.5 border-t border-neutral-100 flex items-center justify-between font-mono text-[9px]">
+                  <span className="font-medium text-neutral-400 truncate max-w-[150px]">
+                    Docker Ground Truth
+                  </span>
+                  <span className="font-black text-emerald-600 flex items-center gap-1 shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    PASS
+                  </span>
                 </div>
               </motion.div>
             </AnimatePresence>
