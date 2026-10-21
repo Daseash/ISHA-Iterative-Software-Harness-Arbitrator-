@@ -4,7 +4,8 @@ import Lenis from "lenis";
 import { RollingText } from "./skiper27";
 import { TextRoll } from "./skiper58";
 import { Navbar_001 } from "./skiper13";
-import { PhotoPlanes } from "../ui/PhotoPlanes";
+import { PipelinePlanes } from "../ui/PipelinePlanes";
+import { ScrollHighlight } from "./ScrollHighlight";
 import { AboutSection } from "./AboutSection";
 import { CliSection } from "./CliSection";
 import { LinePath } from "./skiper19";
@@ -276,38 +277,27 @@ export function Skiper29() {
         </div>
       </div>
 
-      {/* ================= PHOTO PLANES GALLERY (REPLACES DEMOSKIPER16) ================= */}
-      <section className="relative py-24 px-4 sm:px-6 bg-[#F9F7EF] dark:bg-black transition-colors overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center space-y-4 mb-8 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-neutral-300 bg-white/80 text-xs font-mono text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900/80 dark:text-neutral-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 absolute ml-[3px]" />
-            ISHA AUTONOMOUS FLIGHT GALLERY
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-black dark:text-[#F9F7EF]">
-            Live Benchmarks & Visual Telemetry
+      {/* ================= THE COMPLETE AUTONOMOUS PIPELINE (3D INTERACTIVE DECK) ================= */}
+      <section id="pipeline" className="relative py-24 px-4 sm:px-6 bg-[#F9F7EF] dark:bg-black transition-colors overflow-hidden">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center space-y-4 mb-4 relative z-10">
+          <p className="inline-flex items-center gap-2 font-mono text-[10px] sm:text-xs font-black uppercase tracking-[0.28em] text-red-600 dark:text-red-500">
+            <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 1l2.2 7.1L21 5l-3.6 6.5L24 14l-7.1 1.3L19 22l-7-3.9L5 22l2.1-6.7L0 14l6.6-2.5L3 5l6.8 3.1z" />
+            </svg>
+            THE COMPLETE AUTONOMOUS PIPELINE
+          </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-neutral-950 dark:text-[#F9F7EF]">
+            The harness,{" "}
+            <ScrollHighlight variant="brush" color="sun" delay={0.1}>
+              end to end.
+            </ScrollHighlight>
           </h2>
-          <p className="max-w-2xl text-neutral-600 dark:text-neutral-400 text-sm sm:text-base">
-            Inspect real-time AST graphs, container sandbox executions, and agent telemetry.
+          <p className="max-w-2xl text-neutral-600 dark:text-neutral-400 text-sm sm:text-base font-bold">
+            The 8-stage empirical loop behind every verified, minimal-churn pull request.
           </p>
         </div>
 
-        <PhotoPlanes
-          images={[
-            { src: "/eyes.jpg", alt: "Neural Vision & Semantic Search", caption: "AST Invariant Engine" },
-            { src: "/isha_vs_baselines.png", alt: "SWE-bench Tournament Scores", caption: "Benchmark Tournament" },
-            { src: "/demo-desktop.png", alt: "Desktop Runtime Environment", caption: "Local Daemon Pipeline" },
-            { src: "/demo-chat.png", alt: "Interactive Problem Solver", caption: "Candidate Generator" },
-            { src: "/images/team/mike.jpg", alt: "Agent Telemetry Node", caption: "Static Compilation Gate" },
-            { src: "/images/team/sarah.jpg", alt: "Closed Loop Verifier", caption: "Docker Sandbox Verifier" },
-          ]}
-          photoWidth={190}
-          photoHeight={260}
-          spread={130}
-          tilt={12}
-          depth={20}
-          stagger={0.12}
-        />
+        <PipelinePlanes />
       </section>
 
       {/* ================= CLI SECTION: DOWNLOAD METHOD OF ISHA ================= */}
