@@ -79,7 +79,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
       </AnimatePresence>
 
       {/* Floating Pill Nav Bar: Centered at top, slowly moves to top-left corner on scroll (or pinned to left/right) */}
-      {/* Background matches website theme: #F9F7EF in Light Mode, neutral-950/black in Dark Mode */}
+      {/* Background: Black in Light Mode, #F9F7EF in Dark Mode */}
       <motion.div
         initial={
           position === "left"
@@ -118,7 +118,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
             stiffness: 380,
             damping: 32,
           }}
-          className={`overflow-hidden border border-neutral-300/80 dark:border-neutral-800 bg-[#F9F7EF]/95 dark:bg-neutral-950/95 text-neutral-900 dark:text-white backdrop-blur-2xl shadow-2xl shadow-black/10 dark:shadow-black/70 transition-colors duration-300 ${
+          className={`overflow-hidden border border-neutral-800 dark:border-neutral-300/80 bg-neutral-950/95 dark:bg-[#F9F7EF]/95 text-white dark:text-neutral-900 backdrop-blur-2xl shadow-2xl shadow-black/20 dark:shadow-black/60 transition-colors duration-300 ${
             isOpen
               ? "w-[310px] sm:w-[350px] rounded-3xl p-5"
               : "w-[270px] sm:w-[310px] rounded-2xl px-5 py-3"
@@ -132,7 +132,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
               className="flex items-center gap-2.5 group cursor-pointer"
             >
               <div className="h-3 w-3 rounded-full bg-red-600 transition-transform group-hover:scale-125 duration-300 shadow-sm shrink-0" />
-              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-neutral-900 dark:text-white group-hover:text-red-500 transition-colors">
+              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white dark:text-neutral-900 group-hover:text-red-500 transition-colors">
                 ISHA
               </span>
             </a>
@@ -140,7 +140,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-600 dark:text-neutral-400 hover:text-red-600 dark:hover:text-red-500 transition-colors cursor-pointer py-1 px-2 rounded-lg"
+              className="font-mono text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-600 hover:text-red-500 dark:hover:text-red-600 transition-colors cursor-pointer py-1 px-2 rounded-lg"
             >
               {isOpen ? "CLOSE" : "MENU"}
             </button>
@@ -176,7 +176,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
                         {item.name}
                       </span>
                       {item.badge && (
-                        <span className="font-mono text-[9px] sm:text-[10px] text-red-500 dark:text-red-400 font-bold opacity-80 group-hover:opacity-100">
+                        <span className="font-mono text-[9px] sm:text-[10px] text-red-400 dark:text-red-600 font-bold opacity-80 group-hover:opacity-100">
                           {item.badge}
                         </span>
                       )}
@@ -185,12 +185,12 @@ export const Navbar_001: React.FC<NavbarProps> = ({
                 </nav>
 
                 {/* Sub-links row */}
-                <div className="flex items-center justify-between pt-3 border-t border-neutral-300 dark:border-neutral-800 text-[11px] font-mono text-neutral-500 dark:text-neutral-400 font-bold px-2">
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-800 dark:border-neutral-300 text-[11px] font-mono text-neutral-400 dark:text-neutral-500 font-bold px-2">
                   <a
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-#-architecture"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="hover:text-white dark:hover:text-neutral-900 transition-colors"
                   >
                     Architecture
                   </a>
@@ -198,24 +198,24 @@ export const Navbar_001: React.FC<NavbarProps> = ({
                     href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/blob/main/LICENSE"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-neutral-900 dark:hover:text-white transition-colors"
+                    className="hover:text-white dark:hover:text-neutral-900 transition-colors"
                   >
                     MIT License
                   </a>
                 </div>
 
                 {/* Bottom Segmented Pill Row: PB | EN | ES | FR style */}
-                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-200/80 dark:bg-neutral-900/80 border border-neutral-300/80 dark:border-neutral-800/80 text-center font-mono text-[10px] font-black uppercase text-neutral-600 dark:text-neutral-400">
+                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-900/90 dark:bg-neutral-200/80 border border-neutral-800 dark:border-neutral-300/80 text-center font-mono text-[10px] font-black uppercase text-neutral-400 dark:text-neutral-600">
                   <span className="py-1 rounded-lg bg-red-600 text-white shadow-sm">
                     SWE
                   </span>
-                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
                     AST
                   </span>
-                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
                     TDD
                   </span>
-                  <span className="py-1 hover:text-neutral-900 dark:hover:text-white transition-colors">
+                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
                     V0.3
                   </span>
                 </div>
