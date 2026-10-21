@@ -1,95 +1,77 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+"use client";
 
-interface RollingTextProps {
+import React from "react";
+import { motion } from "framer-motion";
+
+export interface RollingTextProps {
   text: string;
   speed?: number;
   duration?: number;
   className?: string;
+  repeat?: boolean;
   repeatDelay?: number;
 }
 
+/**
+ * Authentic Skiper27 Rolling Text (Slot-machine character reel)
+ * Inspiring from skiper-ui.com/v1/skiper27
+ */
 export const RollingText: React.FC<RollingTextProps> = ({
-  text,
+  text = "ROLLING",
   speed = 0.05,
-  duration = 3.5,
-  className = "",
-  repeatDelay = 1.5,
+  duration = 4,
+  className = "text-5xl sm:text-7xl lg:text-8xl font-bold",
+  repeat = true,
+  repeatDelay = 2.2,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.2 });
-
-  const characters = Array.from(text);
-  const centerIndex = (characters.length - 1) / 2;
+  const l = Math.floor(text.length / 2);
 
   return (
-    <div
-      ref={containerRef}
-      className={`inline-flex flex-nowrap whitespace-nowrap items-center justify-center select-none leading-none ${className}`}
-    >
-      {characters.map((char, index) => {
-        // Calculate staggered timing and delay from center outward to edges
-        const distanceFromCenter = Math.abs(index - centerIndex);
-        const staggerDelay = distanceFromCenter * speed;
-
+    <div className={`flex flex-wrap items-center justify-center select-none ${className}`}>
+      {text.split("").map((char, index) => {
         if (char === " ") {
           return (
-            <span key={index} className="inline-block w-[0.3em]">
+            <span key={index} className="inline-block w-[0.28em]">
               &nbsp;
             </span>
           );
         }
 
-        return (
-          <span
-            key={index}
-            className="relative inline-flex h-[1.15em] items-center justify-center overflow-hidden leading-none align-middle font-black"
-          >
-            {/* Primary letter: sits at 0%, rolls up to -140%, then returns */}
-            <motion.span
-              animate={
-                isInView
-                  ? {
-                      y: ["0%", "-140%", "-140%", "0%"],
-                    }
-                  : { y: "0%" }
-              }
-              transition={{
-                duration,
-                times: [0, 0.35, 0.65, 1],
-                repeat: Infinity,
-                repeatDelay,
-                delay: staggerDelay,
-                ease: [0.76, 0, 0.24, 1] as const,
-              }}
-              className="inline-block font-black"
-            >
-              {char}
-            </motion.span>
+        // Authentic skiper27 math: distance from center drives delay & reel iterations
+        const i = Math.abs(index - l);
+        const o = Math.max(3, Math.floor(duration / (0.2 + 0.15 * i)));
 
-            {/* Secondary clone letter: rolls in from 140% to 0%, rests, then rolls back */}
-            <motion.span
-              aria-hidden="true"
-              animate={
-                isInView
-                  ? {
-                      y: ["140%", "0%", "0%", "140%"],
-                    }
-                  : { y: "140%" }
-              }
+        return (
+          <div
+            key={index}
+            className="relative inline-block overflow-hidden"
+            style={{ height: "1em" }}
+          >
+            <motion.h1
+              className="flex flex-col m-0 p-0 leading-none"
+              whileInView={{ y: `-${1.2 * o}em` }}
+              viewport={{ once: false, amount: 0.1 }}
               transition={{
                 duration,
-                times: [0, 0.35, 0.65, 1],
-                repeat: Infinity,
+                ease: [0.15, 1, 0.1, 1],
+                delay: i * speed,
+                repeat: repeat ? Infinity : 0,
                 repeatDelay,
-                delay: staggerDelay,
-                ease: [0.76, 0, 0.24, 1] as const,
               }}
-              className="absolute inline-block font-black"
             >
-              {char}
-            </motion.span>
-          </span>
+              {Array(o + 2)
+                .fill(null)
+                .map((_, r) => (
+                  <span
+                    key={r}
+                    className="flex shrink-0 items-center justify-center leading-none"
+                    style={{ height: "1.2em" }}
+                  >
+                    {char}
+                  </span>
+                ))}
+            </motion.h1>
+          </div>
         );
       })}
     </div>

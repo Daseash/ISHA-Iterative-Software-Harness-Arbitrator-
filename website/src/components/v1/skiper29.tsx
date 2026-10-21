@@ -66,13 +66,6 @@ export function Skiper29() {
   const photo2Radius = useTransform(photo2Scroll, [0, 1], ["24px", "40px"]);
   const photo2ImageY = useTransform(photo2Scroll, [0, 1], ["-6%", "6%"]);
 
-  const subLines = [
-    "ITERATIVE",
-    "SOFTWARE",
-    "HARNESS",
-    "ARBITRATOR",
-  ];
-
   const eyesGallery = [
     {
       src: "/eyes.jpg",
@@ -179,39 +172,47 @@ export function Skiper29() {
       {/* ================= HERO & ABOUT CONTINUOUS FLOW ================= */}
       <div className="relative w-full bg-[#F9F7EF] dark:bg-black transition-colors">
 
-        {/* ================= HERO: ISHA IN BOLD RED, OTHERS IN BLACK/CREAM ================= */}
+        {/* ================= HERO: EXACT SKIPER27 ROLLING TEXT & SCROLL INDICATOR ================= */}
         <section
           id="hero"
-          className="relative z-10 min-h-[80vh] w-full flex flex-col justify-center items-center px-4 sm:px-8 py-24 bg-transparent"
+          className="relative z-10 min-h-[85vh] w-full flex flex-col justify-center items-center px-4 sm:px-8 py-20 bg-transparent"
         >
+          {/* Top: Authentic Skiper27 Scroll Down Indicator with Gradient Line */}
+          <div className="relative mb-8 sm:mb-10 flex flex-col items-center justify-center text-center z-20 select-none">
+            <span className="relative max-w-[14ch] text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] opacity-40 text-neutral-900 dark:text-[#F9F7EF] leading-tight after:absolute after:left-1/2 after:top-full after:mt-2 after:h-12 sm:after:h-16 after:w-px after:bg-gradient-to-b after:from-neutral-900 dark:after:from-[#F9F7EF] after:to-transparent after:content-['']">
+              scroll down to see
+            </span>
+          </div>
+
           <motion.div
             style={{ scale: heroScale }}
-            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center"
+            className="relative z-10 w-full max-w-5xl flex flex-col items-center justify-center text-center mt-6 sm:mt-8"
           >
-            {/* ISHA hero title: Big & Spaced */}
-            <div className="flex justify-center items-center w-full py-0.5 relative z-20 mb-8 sm:mb-10 md:mb-12">
+            {/* Authentic Skiper27 2-Line Stacked Rolling Typography */}
+            <div className="flex flex-col items-center justify-center w-full select-none text-center">
               <RollingText
                 text="ISHA"
                 speed={0.05}
-                duration={3.5}
-                repeatDelay={1.5}
-                className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-red-600 dark:text-red-500 uppercase [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
+                duration={4}
+                className="text-6xl sm:text-8xl md:text-9xl lg:text-[140px] font-black tracking-tight text-red-600 dark:text-red-500 uppercase leading-[0.9]"
+              />
+              <RollingText
+                text="ARBITRATOR"
+                speed={0.05}
+                duration={4}
+                className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-neutral-900 dark:text-[#F9F7EF] uppercase leading-[0.9] mt-2 sm:mt-3"
               />
             </div>
 
-            {/* Down all texts: Kept attached with NO gap and decreased in size */}
-            <div className="flex flex-col items-center justify-center w-full gap-0 space-y-0 leading-none relative z-20">
-              {subLines.map((line, index) => (
-                <div key={index} className="flex justify-center items-center w-full py-0 leading-none">
-                  <RollingText
-                    text={line}
-                    speed={0.05}
-                    duration={3.5}
-                    repeatDelay={1.5}
-                    className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-widest text-neutral-900 dark:text-[#F9F7EF] uppercase leading-none [text-shadow:_0_0_16px_rgba(249,247,239,0.95),_0_0_6px_rgba(249,247,239,0.9)] dark:[text-shadow:_0_0_16px_rgba(0,0,0,0.95),_0_0_6px_rgba(0,0,0,0.9)]"
-                  />
-                </div>
-              ))}
+            {/* Acronym Expansion Tagline */}
+            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-mono text-[10px] sm:text-xs font-bold tracking-[0.28em] uppercase text-neutral-500 dark:text-neutral-400">
+              <span>ITERATIVE</span>
+              <span className="text-red-600">•</span>
+              <span>SOFTWARE</span>
+              <span className="text-red-600">•</span>
+              <span>HARNESS</span>
+              <span className="text-red-600">•</span>
+              <span>ARBITRATOR</span>
             </div>
 
 
