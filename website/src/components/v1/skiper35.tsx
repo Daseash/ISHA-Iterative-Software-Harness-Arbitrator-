@@ -38,6 +38,32 @@ export const defaultItems: Skiper35Item[] = [
     },
   },
   {
+    id: "repo-suites",
+    title: "Repo Suites: Django, SymPy, ...",
+    metric: "66 Django • 3 SymPy • 78 Total",
+    detail: {
+      id: "repo-suites",
+      category: "REPOSITORY ECOSYSTEMS & TYPES",
+      badgeText: "78 TOTAL RESOLVED",
+      title: "Repository Suites: Django, SymPy, Pytest, Matplotlib, Sphinx, Requests",
+      metric: "66 Django • 3 SymPy • 78 Total",
+      summary:
+        "Official Docker container resolutions categorized by software framework and mathematical domain. Features 66 resolved Django instances across ORM query compilers, migrations, and form widgets; 3 SymPy instances across symbolic calculus and branch cuts; 3 Pytest framework fixes; 2 Matplotlib 2D rendering patches; 2 Sphinx doc trees; and Requests HTTP connection pooling.",
+      chartType: "repos",
+      metricCards: [
+        { label: "Django Web Framework", value: "66 Resolved", detail: "ORM, compilers, form widgets" },
+        { label: "SymPy Computer Algebra", value: "3 Resolved", detail: "Symbolic calculus & branches" },
+        { label: "Pytest, Matplotlib & Others", value: "9 Resolved", detail: "Sphinx, Requests, Seaborn" },
+      ],
+      highlights: [
+        "Django: 66 official Docker resolved with minimal churn diffs",
+        "SymPy: complex hyperbolic branch cuts & polynomial simplification",
+        "Pytest AST rewriting & Matplotlib Gouraud triangulation verified green",
+      ],
+      auditProof: "python scripts/score.py (scans results/**/report.json by repo)",
+    },
+  },
+  {
     id: "baselines",
     title: "Baselines & SOTA Arena",
     metric: "ISHA 70.0% vs Devin 13.86%",

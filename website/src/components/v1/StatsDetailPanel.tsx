@@ -18,6 +18,7 @@ export interface StatsDetailData {
   summary: string;
   chartType:
     | "sessions"
+    | "repos"
     | "comparison"
     | "golden7"
     | "laya"
@@ -78,9 +79,94 @@ const astInvariants = [
   { name: "Qualname Hierarchy", desc: "__qualname__ for enclosing serialization." },
 ];
 
+// 5. REPOSITORY SUITES & ECOSYSTEM BREAKDOWN
+const reposData = [
+  {
+    repo: "django/django",
+    name: "Django Web Framework",
+    resolved: 66,
+    pct: 84.6,
+    domains: "ORM, query compilers, migrations, form widgets, HTTP request memoryviews, URL routing",
+    sampleIds: ["django-11099", "django-11133", "django-10914", "django-11039", "django-11283"],
+    badge: "66 RESOLVED",
+    color: "from-emerald-600 to-teal-500",
+  },
+  {
+    repo: "sympy/sympy",
+    name: "SymPy Computer Algebra",
+    resolved: 3,
+    pct: 3.8,
+    domains: "Symbolic calculus, hyperbolic branches, polynomial simplification, matrix equations",
+    sampleIds: ["sympy-13480", "sympy-13647", "sympy-12481"],
+    badge: "3 RESOLVED",
+    color: "from-amber-500 to-orange-500",
+  },
+  {
+    repo: "pytest-dev/pytest",
+    name: "Pytest Test Framework",
+    resolved: 3,
+    pct: 3.8,
+    domains: "AST assertion rewriting, byte-diff reprs, terminal test runner, plugin hooks",
+    sampleIds: ["pytest-5495", "pytest-7432", "pytest-11143"],
+    badge: "3 RESOLVED",
+    color: "from-sky-500 to-blue-600",
+  },
+  {
+    repo: "matplotlib/matplotlib",
+    name: "Matplotlib 2D Visualizer",
+    resolved: 2,
+    pct: 2.6,
+    domains: "Plot rendering, Gouraud triangulation, axis limits, figure canvas backends",
+    sampleIds: ["matplotlib-23964", "matplotlib-23476"],
+    badge: "2 RESOLVED",
+    color: "from-purple-500 to-indigo-600",
+  },
+  {
+    repo: "sphinx-doc/sphinx",
+    name: "Sphinx Documentation",
+    resolved: 2,
+    pct: 2.6,
+    domains: "Documentation parse trees, viewcode extension paths, epub/HTML output builders",
+    sampleIds: ["sphinx-8721", "sphinx-8435"],
+    badge: "2 RESOLVED",
+    color: "from-rose-500 to-red-600",
+  },
+  {
+    repo: "psf/requests",
+    name: "Requests HTTP Engine",
+    resolved: 1,
+    pct: 1.3,
+    domains: "Connection pooling, chunked transfer encoding, streaming adapters, redirect safety",
+    sampleIds: ["requests-2148"],
+    badge: "1 RESOLVED",
+    color: "from-cyan-500 to-teal-600",
+  },
+  {
+    repo: "mwaskom/seaborn",
+    name: "Seaborn Statistical Plots",
+    resolved: 1,
+    pct: 1.3,
+    domains: "Statistical distributions, categorical formatting, facet grid matrix regressions",
+    sampleIds: ["seaborn-3190"],
+    badge: "1 RESOLVED",
+    color: "from-pink-500 to-rose-600",
+  },
+  {
+    repo: "scikit-learn/scikit-learn",
+    name: "Scikit-Learn ML Suite",
+    resolved: 0,
+    pct: 0,
+    domains: "Logistic regression CV, matrix estimators, shape validation gates",
+    sampleIds: ["scikit-learn-14087 (Golden Gate PASS)"],
+    badge: "VERIFIED GATE",
+    color: "from-neutral-400 to-neutral-500",
+  },
+];
+
 export const StatsDetailPanel: React.FC<{ data: StatsDetailData }> = ({ data }) => {
   const [selectedSession, setSelectedSession] = useState<number>(3); // S4 default
   const [aggregateView, setAggregateView] = useState<"sessions" | "aggregates">("sessions");
+  const [selectedRepo, setSelectedRepo] = useState<number>(0); // Django default
 
   return (
     <div className="w-full h-full flex flex-col justify-between overflow-y-auto pr-1 select-text text-neutral-900 dark:text-neutral-100 font-sans [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-neutral-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-700">
@@ -262,6 +348,72 @@ export const StatsDetailPanel: React.FC<{ data: StatsDetailData }> = ({ data }) 
                     <span className="text-xl font-mono font-black text-red-600 dark:text-red-400">25.3%</span>
                     <p className="text-[10px] font-mono text-neutral-500">76 / 300 Resolved</p>
                   </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* VIEW: REPOSITORY ECOSYSTEMS (DJANGO, SYMPY, PYTEST, MATPLOTLIB, SPHINX, REQUESTS) */}
+        {data.chartType === "repos" && (
+          <div className="w-full h-full flex flex-col justify-between">
+            <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs font-mono font-bold text-neutral-500">
+              <span>REPOSITORY SUITES (78 TOTAL RESOLVED)</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-black">OFFICIAL DOCKER</span>
+            </div>
+
+            {/* Repos bar list */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 overflow-y-auto max-h-48 pr-1">
+              {reposData.map((r, idx) => {
+                const isSelected = selectedRepo === idx;
+                return (
+                  <button
+                    key={r.repo}
+                    onClick={() => setSelectedRepo(idx)}
+                    className={`p-2 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? "bg-white dark:bg-neutral-950 border-red-500/80 shadow-md ring-1 ring-red-500/30"
+                        : "bg-white/60 dark:bg-neutral-950/60 border-neutral-200 dark:border-neutral-800 hover:border-neutral-400 dark:hover:border-neutral-700"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-xs truncate pr-1">{r.name}</span>
+                      <span className="font-mono text-[9px] font-black px-1.5 py-0.5 rounded bg-red-600/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 shrink-0">
+                        {r.badge}
+                      </span>
+                    </div>
+                    <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-1.5 rounded-full overflow-hidden my-0.5">
+                      <div
+                        className={`h-full rounded-full bg-gradient-to-r ${r.color}`}
+                        style={{ width: `${Math.max(r.pct, 8)}%` }}
+                      />
+                    </div>
+                    <p className="text-[10px] text-neutral-500 line-clamp-1 mt-0.5">{r.domains}</p>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Selected Repo Detail Card */}
+            {reposData[selectedRepo] && (
+              <div className="p-2.5 rounded-xl bg-white/80 dark:bg-neutral-950/80 border border-neutral-200 dark:border-neutral-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span className="font-mono text-[10px] font-black uppercase text-red-600 dark:text-red-400">
+                    {reposData[selectedRepo].repo}
+                  </span>
+                  <p className="text-[11px] text-neutral-700 dark:text-neutral-300 font-bold leading-tight mt-0.5">
+                    {reposData[selectedRepo].domains}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 flex-wrap shrink-0">
+                  {reposData[selectedRepo].sampleIds.slice(0, 3).map((id) => (
+                    <span
+                      key={id}
+                      className="px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-[9px] font-mono font-bold text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700"
+                    >
+                      {id}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
