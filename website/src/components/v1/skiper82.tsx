@@ -51,7 +51,7 @@ export const Skiper82: React.FC<Skiper82Props> = ({
     {
       id: "initial",
       sender: "isha",
-      text: "ISHA Autonomous Harness ready. Connect a GitHub repository and describe your bug or issue to synthesize an AST-verified patch.",
+      text: "ISHA Autonomous Harness ready. Type your bug description or file issue to synthesize AST patches with LAYA arbitration.",
     },
   ]);
 
@@ -197,7 +197,7 @@ index 4b825dc..91a0f12 100644
   return (
     <div className={`w-full max-w-2xl mx-auto flex flex-col items-center select-none ${className}`}>
       {/* Message Bubbles Container */}
-      <div className="w-full max-h-[50vh] overflow-y-auto mb-6 px-3 space-y-4 no-scrollbar">
+      <div className="w-full flex-1 max-h-[46vh] sm:max-h-[50vh] overflow-y-auto mb-4 px-2 sm:px-3 space-y-4 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-neutral-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-700">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -210,35 +210,35 @@ index 4b825dc..91a0f12 100644
               }`}
             >
               <div
-                className={`max-w-[90%] sm:max-w-[85%] rounded-3xl p-4 sm:p-5 transition-all ${
+                className={`max-w-[92%] sm:max-w-[85%] rounded-3xl p-4 sm:p-5 transition-all ${
                   msg.sender === "user"
-                    ? "bg-red-600 text-white shadow-lg shadow-red-600/20 font-bold"
-                    : "bg-white/90 dark:bg-neutral-900/90 text-neutral-900 dark:text-neutral-100 shadow-md shadow-neutral-900/5 dark:shadow-black/50 border border-neutral-200/80 dark:border-neutral-800"
+                    ? "bg-red-600 text-white shadow-xl shadow-red-600/20 font-bold"
+                    : "bg-white/95 dark:bg-neutral-950/95 text-neutral-900 dark:text-neutral-100 shadow-xl border border-neutral-300 dark:border-neutral-800"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1.5">
                   <span
-                    className={`text-[10px] font-mono uppercase tracking-wider font-extrabold ${
+                    className={`text-[10px] font-mono uppercase tracking-widest font-black ${
                       msg.sender === "user"
                         ? "text-red-200"
                         : "text-red-600 dark:text-red-400"
                     }`}
                   >
-                    {msg.sender === "user" ? "You" : "ISHA Autonomous Agent"}
+                    {msg.sender === "user" ? "YOU" : "ISHA AUTONOMOUS AGENT"}
                   </span>
                   {msg.score !== undefined && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black border border-emerald-500/30">
                       {(msg.score * 100).toFixed(1)}% LAYA
                     </span>
                   )}
                   {msg.duration && (
-                    <span className="text-[10px] font-mono text-neutral-400">
+                    <span className="text-[10px] font-mono text-neutral-400 font-bold">
                       {msg.duration}s
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm sm:text-base font-semibold leading-relaxed whitespace-pre-line">
+                <p className="text-sm sm:text-base font-bold leading-relaxed whitespace-pre-line">
                   {msg.text}
                 </p>
 
@@ -365,7 +365,7 @@ index 4b825dc..91a0f12 100644
         {/* Minimalist Pill Input Bar */}
         <form
           onSubmit={handleSend}
-          className="relative flex items-center w-full rounded-full bg-white dark:bg-neutral-900/95 border border-neutral-200/90 dark:border-neutral-800 shadow-xl shadow-neutral-900/5 dark:shadow-black/70 p-2 pl-3.5 pr-2 transition-all backdrop-blur-xl"
+          className="relative flex items-center w-full rounded-full bg-white/95 dark:bg-neutral-950/95 border border-neutral-300 dark:border-neutral-800 shadow-xl shadow-neutral-900/5 dark:shadow-black/70 p-2 pl-3.5 pr-2 transition-all backdrop-blur-xl"
         >
           {/* Plus / Options Button */}
           <button
@@ -396,7 +396,7 @@ index 4b825dc..91a0f12 100644
               inputVariant="minimal"
               disabled={isProcessing}
               className="w-full py-1.5"
-              fieldClassName="text-sm sm:text-base font-semibold text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500"
+              fieldClassName="text-sm sm:text-base font-bold text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500"
             />
           </div>
 
