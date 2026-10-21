@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, Move, ShieldCheck, Check } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
 import { sounds } from "../../utils/sound";
 
 export interface Project {
@@ -45,7 +45,6 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(initialEnableSound);
-  const [isCopied, setIsCopied] = useState(false);
   const accumulatedDeltaRef = useRef(0);
   const isTransitioningRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,7 +66,6 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
   // Wheel listener with smooth threshold accumulation
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      // Don't hijack if user is scrolling inside a nested scrollable element
       const target = e.target as HTMLElement | null;
       if (target && target.closest(".no-wheel-hijack")) return;
 
@@ -148,18 +146,11 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
     }
   };
 
-  const copyAuditProof = (text: string) => {
-    navigator.clipboard.writeText(text);
-    sounds.playSuccess();
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
-  // Preview card sizing
+  // Preview card sizing matching skiper24 reference
   const previewSizeClasses = {
-    sm: "w-[280px] h-[360px]",
-    md: "w-[340px] sm:w-[380px] h-[440px] sm:h-[480px]",
-    lg: "w-[320px] sm:w-[380px] md:w-[420px] lg:w-[460px] h-[400px] sm:h-[480px] md:h-[540px] lg:h-[580px]",
+    sm: "w-[260px] h-[280px]",
+    md: "w-[300px] sm:w-[340px] h-[320px] sm:h-[360px]",
+    lg: "w-[310px] sm:w-[360px] md:w-[410px] h-[330px] sm:h-[380px] md:h-[430px]",
   }[previewSize];
 
   return (
@@ -173,38 +164,24 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
       }}
       className={`relative w-full h-screen overflow-hidden select-none flex items-center transition-colors duration-700 ${className}`}
     >
-      {/* ================= TOP-LEFT AUDIO & NAVIGATION CONTROLS ================= */}
-      <div className="fixed top-5 sm:top-6 left-4 sm:left-6 md:left-10 z-40 flex items-center gap-2">
-        {/* Audio Toggle Button */}
+      {/* ================= TOP-LEFT AUDIO CONTROLS (MATCHING SKIPER24) ================= */}
+      <div className="fixed top-5 sm:top-6 left-4 sm:left-6 md:left-10 z-40">
         <button
           type="button"
           onClick={() => {
             setSoundEnabled(!soundEnabled);
             sounds.playClick();
           }}
-          className="flex items-center justify-center w-10 h-10 rounded-2xl bg-black/20 dark:bg-black/40 hover:bg-black/30 dark:hover:bg-black/60 text-neutral-900 dark:text-white backdrop-blur-md transition-all cursor-pointer border border-black/10 dark:border-white/10 shadow-lg"
+          className="flex items-center justify-center w-11 h-11 rounded-2xl bg-black text-white hover:bg-neutral-900 transition-all cursor-pointer shadow-xl border border-white/10"
           title={soundEnabled ? "Mute tick sound" : "Enable tick sound"}
           aria-label={soundEnabled ? "Mute tick sound" : "Enable tick sound"}
         >
           {soundEnabled ? (
-            <Volume2 className="w-4 h-4 text-neutral-950 dark:text-white" />
+            <Volume2 className="w-5 h-5 text-white" />
           ) : (
-            <VolumeX className="w-4 h-4 text-neutral-700 dark:text-neutral-400" />
+            <VolumeX className="w-5 h-5 text-neutral-400" />
           )}
         </button>
-
-        {/* Counter Badge */}
-        <div className="px-3.5 py-2 rounded-2xl bg-black/20 dark:bg-black/40 text-neutral-950 dark:text-white backdrop-blur-md font-mono text-xs font-black tracking-wider border border-black/10 dark:border-white/10 shadow-lg flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>
-            {String(activeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
-          </span>
-        </div>
-
-        {/* Scroll Hint */}
-        <span className="hidden md:inline-block font-mono text-[11px] font-bold text-neutral-900/60 dark:text-white/60 uppercase tracking-widest pl-2">
-          Scroll or click to explore
-        </span>
       </div>
 
       {/* ================= MAIN VERTICAL TYPOGRAPHIC SCROLL LIST ================= */}
@@ -213,7 +190,7 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
           {/* Spring-animated list container kept centered */}
           <motion.div
             animate={{
-              y: -activeIndex * 88,
+              y: -activeIndex * 96,
             }}
             transition={{
               type: "spring",
@@ -239,10 +216,10 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
                 >
                   {/* Big Typographic Title */}
                   <span
-                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-none transition-colors duration-300 ${
+                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none transition-colors duration-300 ${
                       isActive
-                        ? "text-neutral-950 dark:text-white drop-shadow-sm font-black"
-                        : "text-neutral-900/40 dark:text-white/40 group-hover:text-neutral-900 dark:group-hover:text-white font-bold"
+                        ? "text-black dark:text-neutral-950 font-black drop-shadow-xs"
+                        : "text-black/35 dark:text-neutral-950/35 group-hover:text-black/70 font-bold"
                     }`}
                   >
                     {project.name}
@@ -250,10 +227,10 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
 
                   {/* Category Badge Pill */}
                   <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold tracking-wider transition-all duration-300 ${
+                    className={`inline-flex items-center px-3.5 py-1 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
                       isActive
-                        ? "bg-black/25 dark:bg-white/20 text-neutral-950 dark:text-white shadow-xs font-black ring-1 ring-black/10 dark:ring-white/20"
-                        : "bg-black/10 dark:bg-white/10 text-neutral-900/60 dark:text-white/60 group-hover:bg-black/20"
+                        ? "bg-black/15 text-black font-semibold"
+                        : "bg-black/8 text-black/40 group-hover:bg-black/12"
                     }`}
                   >
                     {project.badge}
@@ -262,10 +239,10 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
                   {/* Date or Key Metric Badge */}
                   {(project.date || project.metric) && (
                     <span
-                      className={`font-mono text-xs sm:text-sm font-bold tracking-tight transition-colors duration-300 ${
+                      className={`text-xs sm:text-sm font-medium tracking-tight transition-colors duration-300 ${
                         isActive
-                          ? "text-neutral-900 dark:text-white/90 font-black"
-                          : "text-neutral-900/50 dark:text-white/40"
+                          ? "text-black/80 font-bold"
+                          : "text-black/30"
                       }`}
                     >
                       [{project.date || project.metric}]
@@ -278,108 +255,33 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
         </div>
       </div>
 
-      {/* ================= DRAGGABLE PREVIEW IMAGE CARD ON RIGHT ================= */}
+      {/* ================= DRAGGABLE PREVIEW IMAGE CARD ON RIGHT (ONLY THE IMAGE) ================= */}
       {showPreview && (
-        <div className="fixed right-4 sm:right-8 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30 pointer-events-none">
+        <div className="fixed right-6 sm:right-10 md:right-16 lg:right-24 top-[54%] -translate-y-1/2 z-30 pointer-events-none">
           <motion.div
             drag
-            dragConstraints={{ left: -320, right: 80, top: -200, bottom: 200 }}
+            dragConstraints={{ left: -380, right: 80, top: -220, bottom: 220 }}
             dragElastic={0.16}
             whileDrag={{ scale: 1.03, cursor: "grabbing" }}
             whileHover={{ scale: 1.01 }}
-            className={`pointer-events-auto rounded-[32px] sm:rounded-[38px] overflow-hidden bg-white/95 dark:bg-neutral-950/95 border border-black/15 dark:border-white/20 shadow-2xl shadow-black/30 backdrop-blur-2xl cursor-grab flex flex-col p-4 sm:p-5 select-none ${previewSizeClasses}`}
+            className={`pointer-events-auto rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl shadow-black/25 cursor-grab select-none p-0 bg-white/90 dark:bg-neutral-950/90 border border-black/10 dark:border-white/10 ${previewSizeClasses}`}
           >
-            {/* Top Drag Pill + Status */}
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800 text-[11px] font-mono font-black text-neutral-500">
-              <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
-                <Move className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="uppercase tracking-wider">DRAGGABLE PREVIEW</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-mono text-emerald-600 dark:text-emerald-400">
-                  {activeProject.date || activeProject.metric}
-                </span>
-              </div>
-            </div>
-
-            {/* Middle Graphic / Image Display with AnimatePresence Crossfade */}
-            <div className="relative flex-1 w-full my-3 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center shadow-inner">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeProject.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full h-full flex items-center justify-center p-2"
-                >
-                  <img
-                    src={activeProject.image}
-                    alt={activeProject.name}
-                    className="w-full h-full object-contain rounded-xl drop-shadow-md select-none pointer-events-none"
-                    loading="eager"
-                  />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Bottom Card Summary & Audit Info */}
-            <div className="pt-2 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <h4 className="font-black text-sm sm:text-base tracking-tight text-neutral-900 dark:text-white truncate">
-                    {activeProject.name}
-                  </h4>
-                  <span className="shrink-0 text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 uppercase">
-                    {activeProject.badge}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400 line-clamp-2 leading-relaxed font-medium">
-                  {activeProject.description}
-                </p>
-              </div>
-
-              {/* Quick Copy Audit Proof Command */}
-              {activeProject.auditProof && (
-                <div className="mt-3 pt-2.5 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                    <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400 truncate font-semibold">
-                      {activeProject.auditProof}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      copyAuditProof(activeProject.auditProof!);
-                    }}
-                    className="shrink-0 px-2 py-1 rounded-md bg-neutral-900 hover:bg-neutral-800 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-white font-mono text-[10px] font-bold transition-colors cursor-pointer flex items-center gap-1"
-                  >
-                    {isCopied ? (
-                      <>
-                        <Check className="w-3 h-3 text-emerald-400" />
-                        <span>COPIED</span>
-                      </>
-                    ) : (
-                      <span>COPY AUDIT</span>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeProject.id}
+                src={activeProject.image}
+                alt={activeProject.name}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.04 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full h-full object-cover rounded-[32px] sm:rounded-[36px] select-none pointer-events-none"
+                loading="eager"
+              />
+            </AnimatePresence>
           </motion.div>
         </div>
       )}
-
-      {/* ================= BOTTOM HINT FOOTER ================= */}
-      <footer className="fixed bottom-4 sm:bottom-6 left-6 sm:left-12 md:left-16 lg:left-20 z-30 pointer-events-none">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/20 dark:bg-black/40 text-neutral-900 dark:text-white backdrop-blur-md text-[11px] font-mono font-bold border border-black/10 dark:border-white/10 shadow-sm">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-          <span>ISHA AUDITED ARCHIVE · TIK-TIK COLOR LIST</span>
-        </div>
-      </footer>
     </div>
   );
 };
