@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   Plus,
   Code2,
-  Loader2,
   Copy,
   Check,
   Terminal,
@@ -15,6 +14,8 @@ import {
 } from "lucide-react";
 import { AnimatedInput } from "../unlumen-ui/animate-text-input-typing";
 import { sounds } from "../../utils/sound";
+import { ThinkingOrb } from "thinking-orbs";
+import { Skiper46 } from "./skiper46";
 
 export interface Message {
   id: string;
@@ -39,8 +40,9 @@ export const Skiper82: React.FC<Skiper82Props> = ({
   initialQuery = "",
 }) => {
   const [input, setInput] = useState(initialQuery);
-  const [repoUrl, setRepoUrl] = useState("tests/dummy_repo");
+  const [repoUrl, setRepoUrl] = useState("django/django");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orbState, setOrbState] = useState<"searching" | "working" | "solving">("working");
   const [showOptions, setShowOptions] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedDiffId, setExpandedDiffId] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export const Skiper82: React.FC<Skiper82Props> = ({
     {
       id: "initial",
       sender: "isha",
-      text: "ISHA Autonomous Harness ready. Type your bug description or file issue to synthesize AST patches with LAYA arbitration.",
+      text: "ISHA Autonomous Harness ready. Connect a GitHub repository and describe your bug or issue to synthesize an AST-verified patch.",
     },
   ]);
 
@@ -87,6 +89,10 @@ export const Skiper82: React.FC<Skiper82Props> = ({
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsProcessing(true);
+    setOrbState("searching");
+
+    const t1 = setTimeout(() => setOrbState("working"), 1100);
+    const t2 = setTimeout(() => setOrbState("solving"), 2400);
 
     try {
       // Send request to real ISHA API
@@ -176,6 +182,8 @@ index 4b825dc..91a0f12 100644
       setMessages((prev) => [...prev, fallbackResponse]);
       setExpandedDiffId(fallbackResponse.id);
     } finally {
+      clearTimeout(t1);
+      clearTimeout(t2);
       setIsProcessing(false);
     }
   };
@@ -292,18 +300,41 @@ index 4b825dc..91a0f12 100644
 
         {isProcessing && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/90 dark:bg-neutral-900/90 text-xs font-mono text-red-600 shadow-sm border border-red-500/30"
+            initial={{ opacity: 0, y: 12, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            className="flex items-center gap-4 p-4 rounded-3xl bg-white/95 dark:bg-neutral-900/95 border border-red-500/30 shadow-xl shadow-red-600/10 backdrop-blur-xl"
           >
-            <Loader2 className="w-4 h-4 animate-spin text-red-600" />
-            <span>DISPATCHING AST REPAIR & LAYA ARBITRATION...</span>
+            <ThinkingOrb state={orbState} size={64} />
+            <div className="space-y-1">
+              <div className="text-xs font-mono font-black text-red-600 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+                <span>ISHA HARNESS {orbState.toUpperCase()}...</span>
+              </div>
+              <div className="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 font-bold">
+                {orbState === "searching"
+                  ? "Localizing bug across 5 AST dimensions (BM25 + Semantic Graph)..."
+                  : orbState === "working"
+                  ? "Proving bug with mandatory TDD test & racing 3 isolated worktrees..."
+                  : "Arbitrating minimal patch via LAYA calibrated gate..."}
+              </div>
+            </div>
           </motion.div>
         )}
         <div ref={chatEndRef} />
       </div>
 
-      {/* Floating Pill Input Container - Skiper82 AI Input 002 */}
+      {/* GitHub Repository Connector (Skiper46 Button Matching Website Theme) */}
+      <div className="mb-3 flex items-center justify-center z-30">
+        <Skiper46
+          currentRepo={repoUrl}
+          onSelectRepo={(newRepo) => {
+            setRepoUrl(newRepo);
+          }}
+        />
+      </div>
+
+      {/* Floating Pill Input Container */}
       <div className="relative w-full max-w-xl group">
         {/* Dynamic Colorful Gradient Aura on Message Send */}
         <AnimatePresence>
@@ -358,7 +389,7 @@ index 4b825dc..91a0f12 100644
             <AnimatedInput
               value={input}
               onChange={setInput}
-              placeholder="Send Message"
+              placeholder={repoUrl ? `Describe bug in ${repoUrl}...` : "Describe bug or issue to synthesize patch..."}
               charAnimation="spring"
               cursorVariant="glow"
               color="#dc2626"

@@ -24,10 +24,11 @@ export const FixPage: React.FC<FixPageProps> = () => {
 
   return (
     <main className="relative w-full h-screen min-h-screen bg-[#F9F7EF] dark:bg-black overflow-hidden select-none transition-colors duration-300 flex flex-col justify-between">
-      <Navbar_001 hideStats hideGithub />
+      {/* Home Screen Floating Navbar */}
+      <Navbar_001 />
 
       {/* ================= CENTER CHAT INPUT EXPERIENCE ================= */}
-      <section className="flex-1 w-full flex items-center justify-center px-4 pt-24 pb-6">
+      <section className="flex-1 w-full flex items-center justify-center px-4 pt-20 pb-4">
         <Skiper82 />
       </section>
 
