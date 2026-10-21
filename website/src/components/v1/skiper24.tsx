@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX } from "lucide-react";
 import { sounds } from "../../utils/sound";
 
 export interface Project {
@@ -15,13 +14,6 @@ export interface Project {
   date?: string;
   metric?: string;
   auditProof?: string;
-  details?: {
-    category?: string;
-    highlights?: string[];
-    stat1?: { label: string; value: string; detail?: string };
-    stat2?: { label: string; value: string; detail?: string };
-    stat3?: { label: string; value: string; detail?: string };
-  };
 }
 
 export interface TikTikColorListProps {
@@ -39,28 +31,27 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
   className = "",
   showPreview = true,
   previewSize = "lg",
-  enableSound: initialEnableSound = true,
+  enableSound = true,
   infiniteScroll = true,
   scrollThreshold = 45,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [soundEnabled, setSoundEnabled] = useState(initialEnableSound);
   const accumulatedDeltaRef = useRef(0);
   const isTransitioningRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const activeProject = projects[activeIndex] || projects[0];
 
-  // Play "tik" sound effect on index change
+  // Play official skiper24 tick.wav on project change
   const handleIndexChange = useCallback(
     (newIndex: number) => {
       if (newIndex === activeIndex) return;
       setActiveIndex(newIndex);
-      if (soundEnabled) {
+      if (enableSound) {
         sounds.playTick();
       }
     },
-    [activeIndex, soundEnabled]
+    [activeIndex, enableSound]
   );
 
   // Wheel listener with smooth threshold accumulation
@@ -146,11 +137,11 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
     }
   };
 
-  // Preview card sizing matching skiper24 reference
+  // Preview card sizing matching official skiper24 reference (h-[400px] w-[400px] rounded-3xl shadow-2xl)
   const previewSizeClasses = {
-    sm: "w-[260px] h-[280px]",
-    md: "w-[300px] sm:w-[340px] h-[320px] sm:h-[360px]",
-    lg: "w-[310px] sm:w-[360px] md:w-[410px] h-[330px] sm:h-[380px] md:h-[430px]",
+    sm: "w-[280px] h-[280px]",
+    md: "w-[340px] h-[340px]",
+    lg: "w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] aspect-square",
   }[previewSize];
 
   return (
@@ -164,26 +155,6 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
       }}
       className={`relative w-full h-screen overflow-hidden select-none flex items-center transition-colors duration-700 ${className}`}
     >
-      {/* ================= TOP-LEFT AUDIO CONTROLS (MATCHING SKIPER24) ================= */}
-      <div className="fixed top-5 sm:top-6 left-4 sm:left-6 md:left-10 z-40">
-        <button
-          type="button"
-          onClick={() => {
-            setSoundEnabled(!soundEnabled);
-            sounds.playClick();
-          }}
-          className="flex items-center justify-center w-11 h-11 rounded-2xl bg-black text-white hover:bg-neutral-900 transition-all cursor-pointer shadow-xl border border-white/10"
-          title={soundEnabled ? "Mute tick sound" : "Enable tick sound"}
-          aria-label={soundEnabled ? "Mute tick sound" : "Enable tick sound"}
-        >
-          {soundEnabled ? (
-            <Volume2 className="w-5 h-5 text-white" />
-          ) : (
-            <VolumeX className="w-5 h-5 text-neutral-400" />
-          )}
-        </button>
-      </div>
-
       {/* ================= MAIN VERTICAL TYPOGRAPHIC SCROLL LIST ================= */}
       <div className="relative w-full h-full flex items-center px-6 sm:px-12 md:px-16 lg:px-20 z-20">
         <div className="w-full max-w-xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl relative">
@@ -208,43 +179,25 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
                   key={project.id}
                   type="button"
                   onClick={() => handleIndexChange(idx)}
-                  className={`group text-left transition-all duration-300 focus:outline-none flex flex-wrap items-baseline gap-3 sm:gap-4 py-2 cursor-pointer ${
+                  className={`group text-left transition-all duration-300 focus:outline-none flex flex-wrap items-center gap-4 sm:gap-6 py-2 cursor-pointer ${
                     isActive
                       ? "opacity-100 scale-100"
-                      : "opacity-30 hover:opacity-75 scale-[0.97]"
+                      : "opacity-20 hover:opacity-80 scale-[0.98]"
                   }`}
                 >
                   {/* Big Typographic Title */}
-                  <span
-                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight leading-none transition-colors duration-300 ${
-                      isActive
-                        ? "text-black dark:text-neutral-950 font-black drop-shadow-xs"
-                        : "text-black/35 dark:text-neutral-950/35 group-hover:text-black/70 font-bold"
-                    }`}
-                  >
+                  <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none text-black transition-colors duration-300">
                     {project.name}
                   </span>
 
                   {/* Category Badge Pill */}
-                  <span
-                    className={`inline-flex items-center px-3.5 py-1 rounded-full text-xs font-medium tracking-wide transition-all duration-300 ${
-                      isActive
-                        ? "bg-black/15 text-black font-semibold"
-                        : "bg-black/8 text-black/40 group-hover:bg-black/12"
-                    }`}
-                  >
+                  <span className="inline-flex items-center rounded-full bg-white/20 px-4 py-1.5 text-xs sm:text-sm font-medium backdrop-blur-sm text-black border border-black/5 transition-all duration-300">
                     {project.badge}
                   </span>
 
                   {/* Date or Key Metric Badge */}
                   {(project.date || project.metric) && (
-                    <span
-                      className={`text-xs sm:text-sm font-medium tracking-tight transition-colors duration-300 ${
-                        isActive
-                          ? "text-black/80 font-bold"
-                          : "text-black/30"
-                      }`}
-                    >
+                    <span className="hidden md:inline-block text-xs sm:text-sm font-normal text-black/50 transition-colors duration-300">
                       [{project.date || project.metric}]
                     </span>
                   )}
@@ -255,16 +208,16 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
         </div>
       </div>
 
-      {/* ================= DRAGGABLE PREVIEW IMAGE CARD ON RIGHT (ONLY THE IMAGE) ================= */}
+      {/* ================= DRAGGABLE PREVIEW IMAGE CARD ON RIGHT (ONLY THE IMAGE - 400x400) ================= */}
       {showPreview && (
-        <div className="fixed right-6 sm:right-10 md:right-16 lg:right-24 top-[54%] -translate-y-1/2 z-30 pointer-events-none">
+        <div className="fixed right-6 sm:right-10 md:right-14 lg:right-20 top-1/2 -translate-y-1/2 z-30 pointer-events-none hidden sm:block">
           <motion.div
             drag
-            dragConstraints={{ left: -380, right: 80, top: -220, bottom: 220 }}
+            dragConstraints={{ left: -360, right: 80, top: -200, bottom: 200 }}
             dragElastic={0.16}
             whileDrag={{ scale: 1.03, cursor: "grabbing" }}
             whileHover={{ scale: 1.01 }}
-            className={`pointer-events-auto rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl shadow-black/25 cursor-grab select-none p-0 bg-white/90 dark:bg-neutral-950/90 border border-black/10 dark:border-white/10 ${previewSizeClasses}`}
+            className={`pointer-events-auto rounded-3xl overflow-hidden shadow-2xl shadow-black/25 cursor-grab select-none p-0 bg-transparent ${previewSizeClasses}`}
           >
             <AnimatePresence mode="wait">
               <motion.img
@@ -275,7 +228,7 @@ export const TikTikColorList: React.FC<TikTikColorListProps> = ({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.04 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full h-full object-cover rounded-[32px] sm:rounded-[36px] select-none pointer-events-none"
+                className="w-full h-full object-cover rounded-3xl select-none pointer-events-none"
                 loading="eager"
               />
             </AnimatePresence>
