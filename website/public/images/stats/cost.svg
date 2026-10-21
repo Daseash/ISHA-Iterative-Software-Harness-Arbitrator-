@@ -1,61 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
-  <defs>
-    <linearGradient id="costGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a16207" />
-      <stop offset="100%" stop-color="#713f12" />
-    </linearGradient>
-  </defs>
+  <!-- Website background: Clean Cream #F9F7EF -->
+  <rect width="600" height="600" fill="#F9F7EF" rx="36" />
+  <rect width="596" height="596" x="2" y="2" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="2" rx="34" />
 
-  <rect width="600" height="600" fill="url(#costGrad)" />
-
-  <g transform="translate(36, 36)">
-    <rect width="200" height="32" rx="16" fill="rgba(0,0,0,0.3)" />
-    <circle cx="20" cy="16" r="5" fill="#facc15" />
-    <text x="35" y="21" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fff" letter-spacing="1">ZERO INFERENCE COST</text>
+  <!-- Top Badge -->
+  <g transform="translate(48, 48)">
+    <rect width="210" height="36" rx="18" fill="rgba(0,0,0,0.06)" />
+    <circle cx="22" cy="18" r="6" fill="#ca8a04" />
+    <text x="38" y="23" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#1c1917" letter-spacing="1">ECONOMIC EFFICIENCY</text>
   </g>
-  <text x="560" y="72" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="rgba(255,255,255,0.6)">PARETO FRONTIER</text>
+  <text x="552" y="72" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="rgba(0,0,0,0.4)">ISHA · SOTA</text>
 
-  <text x="40" y="145" font-family="'Bricolage Grotesque', sans-serif" font-size="76" font-weight="900" fill="#ffffff" letter-spacing="-2">$0.00</text>
-  <text x="260" y="125" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="900" fill="#facc15">PER TASK</text>
-  <text x="40" y="180" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" fill="#fef08a" letter-spacing="0.5">INFINITE ECONOMIC YIELD VS COMMERCIAL CLOUD AGENTS</text>
+  <!-- Big Clean Metric (Minimal, No Clutter) -->
+  <text x="48" y="200" font-family="'Bricolage Grotesque', sans-serif" font-size="88" font-weight="900" fill="#000000" letter-spacing="-3">$0.00</text>
+  <text x="320" y="160" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="900" fill="#dc2626">/ TASK</text>
 
-  <!-- Comparison Bars -->
-  <g transform="translate(36, 180)">
-    <rect width="520" height="260" rx="20" fill="rgba(0,0,0,0.35)" />
-    
-    <!-- Devin row -->
-    <g transform="translate(25, 30)">
-      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="bold" fill="#fff">Devin (Cognition AI)</text>
-      <text x="470" y="16" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="#ef4444">~$35.00 / task</text>
-      <rect x="0" y="26" width="470" height="12" rx="6" fill="#ef4444" opacity="0.8" />
-    </g>
+  <text x="48" y="240" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" fill="#dc2626" letter-spacing="0.5">100% FREE INFERENCE · ZERO CLOUD SPEND</text>
 
-    <!-- Claude 3.5 Sonnet / SWE-agent row -->
-    <g transform="translate(25, 95)">
-      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="bold" fill="#fff">SWE-agent (Claude 3.5)</text>
-      <text x="470" y="16" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="#f59e0b">~$18.50 / task</text>
-      <rect x="0" y="26" width="248" height="12" rx="6" fill="#f59e0b" opacity="0.8" />
-    </g>
+  <text x="48" y="300" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#525252">
+    Orchestrates 14 rotating API quotas across Gemini &amp; Groq LPUs.
+  </text>
+  <text x="48" y="328" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#525252">
+    Full 300-benchmark run executed with $0.00 cloud expense.
+  </text>
 
-    <!-- ISHA row -->
-    <g transform="translate(25, 160)">
-      <text x="0" y="16" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="#facc15">ISHA Autonomous Agent</text>
-      <text x="470" y="16" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="#34d399">$0.00 (Zero Spend)</text>
-      <rect x="0" y="26" width="12" height="12" rx="6" fill="#34d399" />
-      <text x="25" y="37" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#34d399">14-Key Rotating Pool + Local AST Harness</text>
-    </g>
+  <!-- Single Light Minimal Accent Indicator -->
+  <g transform="translate(48, 440)">
+    <rect width="504" height="6" rx="3" fill="rgba(0,0,0,0.08)" />
+    <rect width="504" height="6" rx="3" fill="#ca8a04" />
   </g>
 
-  <g transform="translate(36, 412)">
-    <rect width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
-    <text x="20" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">KEY ROTATION</text>
-    <text x="20" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">14 Quotas Pooled</text>
-
-    <rect x="270" width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
-    <text x="290" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">PARETO ADVANTAGE</text>
-    <text x="290" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">Rank #1 Global</text>
+  <!-- Bottom Minimal Audit Info -->
+  <g transform="translate(48, 510)">
+    <text x="0" y="0" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" fill="rgba(0,0,0,0.5)">AUDIT PROOF</text>
+    <text x="0" y="24" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" fill="#000000">scripts/cost_report.py &amp; src/config.py</text>
+    <text x="504" y="24" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="900" fill="#16a34a">VERIFIED PASS</text>
   </g>
-
-  <text x="36" y="515" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="rgba(255,255,255,0.75)">AUDIT: scripts/cost_report.py &amp; src/config.py</text>
-  <text x="36" y="535" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="rgba(255,255,255,0.5)">Full 300-benchmark run executed with $0.00 cloud expenses</text>
 </svg>
