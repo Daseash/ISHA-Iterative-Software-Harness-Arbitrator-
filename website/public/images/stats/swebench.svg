@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0284c7" />
@@ -10,89 +10,87 @@
       <stop offset="100%" stop-color="#fef08a" />
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.35" />
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.35" />
     </filter>
   </defs>
 
-  <rect width="600" height="700" rx="36" fill="url(#bgGrad)" />
-  <rect x="20" y="20" width="560" height="660" rx="28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+  <rect width="600" height="600" fill="url(#bgGrad)" />
 
   <!-- Top Header Badge -->
-  <g transform="translate(40, 50)">
-    <rect width="180" height="32" rx="16" fill="rgba(0,0,0,0.25)" />
-    <circle cx="20" cy="16" r="5" fill="#f59e0b" />
-    <text x="35" y="21" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fff" letter-spacing="1">DOCKER VERIFIED</text>
+  <g transform="translate(36, 36)">
+    <rect width="180" height="30" rx="15" fill="rgba(0,0,0,0.25)" />
+    <circle cx="18" cy="15" r="5" fill="#f59e0b" />
+    <text x="33" y="19" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fff" letter-spacing="1">DOCKER VERIFIED</text>
   </g>
-  <text x="560" y="72" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="900" fill="rgba(255,255,255,0.6)">S1–S10 LADDER</text>
+  <text x="564" y="56" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="900" fill="rgba(255,255,255,0.65)">S1–S10 LADDER</text>
 
   <!-- Big Hero Metric -->
-  <text x="40" y="145" font-family="'Bricolage Grotesque', sans-serif" font-size="76" font-weight="900" fill="#ffffff" letter-spacing="-2">70.0%</text>
-  <text x="40" y="180" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="800" fill="#fef08a" letter-spacing="0.5">PEAK RESOLUTION RATE (SESSION 4)</text>
+  <text x="36" y="125" font-family="'Bricolage Grotesque', sans-serif" font-size="70" font-weight="900" fill="#ffffff" letter-spacing="-2">70.0%</text>
+  <text x="36" y="152" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="800" fill="#fef08a" letter-spacing="0.5">PEAK RESOLUTION RATE (SESSION 4)</text>
 
   <!-- Bar Chart Visualizer -->
-  <g transform="translate(40, 220)">
-    <rect width="520" height="260" rx="20" fill="rgba(0,0,0,0.2)" />
+  <g transform="translate(36, 180)">
+    <rect width="528" height="210" rx="18" fill="rgba(0,0,0,0.22)" />
     <!-- Grid lines -->
-    <line x1="30" y1="60" x2="490" y2="60" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
-    <line x1="30" y1="120" x2="490" y2="120" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
-    <line x1="30" y1="180" x2="490" y2="180" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
+    <line x1="24" y1="50" x2="504" y2="50" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
+    <line x1="24" y1="100" x2="504" y2="100" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
+    <line x1="24" y1="150" x2="504" y2="150" stroke="rgba(255,255,255,0.08)" stroke-dasharray="4" />
 
     <!-- S1 Bar (36.7%) -->
-    <rect x="50" y="130" width="30" height="85" rx="6" fill="rgba(255,255,255,0.4)" />
-    <text x="65" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S1</text>
+    <rect x="42" y="105" width="28" height="65" rx="5" fill="rgba(255,255,255,0.4)" />
+    <text x="56" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S1</text>
 
     <!-- S2 Bar (46.7%) -->
-    <rect x="95" y="105" width="30" height="110" rx="6" fill="rgba(255,255,255,0.5)" />
-    <text x="110" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S2</text>
+    <rect x="85" y="85" width="28" height="85" rx="5" fill="rgba(255,255,255,0.5)" />
+    <text x="99" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S2</text>
 
     <!-- S3 Bar (66.7%) -->
-    <rect x="140" y="60" width="30" height="155" rx="6" fill="rgba(255,255,255,0.7)" />
-    <text x="155" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S3</text>
+    <rect x="128" y="50" width="28" height="120" rx="5" fill="rgba(255,255,255,0.7)" />
+    <text x="142" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" fill="#fff">S3</text>
 
     <!-- S4 Bar (70.0% PEAK CROWN) -->
     <g filter="url(#shadow)">
-      <rect x="185" y="50" width="36" height="165" rx="8" fill="url(#goldBar)" />
-      <!-- Star Trophy Icon -->
-      <polygon points="203,28 206,37 215,37 208,43 211,52 203,46 195,52 198,43 191,37 200,37" fill="#fef08a" />
-      <text x="203" y="22" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="#fef08a">★ 70%</text>
+      <rect x="171" y="42" width="34" height="128" rx="7" fill="url(#goldBar)" />
+      <polygon points="188,24 191,31 198,31 192,36 195,43 188,38 181,43 184,36 178,31 185,31" fill="#fef08a" />
+      <text x="188" y="18" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fef08a">★ 70%</text>
     </g>
-    <text x="203" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="900" fill="#fef08a">S4</text>
+    <text x="188" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="900" fill="#fef08a">S4</text>
 
     <!-- S5 Bar (10.0%) -->
-    <rect x="235" y="190" width="28" height="25" rx="6" fill="rgba(255,255,255,0.3)" />
-    <text x="249" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S5</text>
+    <rect x="219" y="150" width="26" height="20" rx="4" fill="rgba(255,255,255,0.3)" />
+    <text x="232" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S5</text>
 
     <!-- S6 Bar (10.0%) -->
-    <rect x="275" y="190" width="28" height="25" rx="6" fill="rgba(255,255,255,0.3)" />
-    <text x="289" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S6</text>
+    <rect x="257" y="150" width="26" height="20" rx="4" fill="rgba(255,255,255,0.3)" />
+    <text x="270" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S6</text>
 
     <!-- S7 Bar -->
-    <rect x="315" y="210" width="28" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
-    <text x="329" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S7</text>
+    <rect x="295" y="165" width="26" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
+    <text x="308" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S7</text>
 
     <!-- S8 Bar (13.3%) -->
-    <rect x="355" y="180" width="28" height="35" rx="6" fill="rgba(255,255,255,0.35)" />
-    <text x="369" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S8</text>
+    <rect x="333" y="142" width="26" height="28" rx="4" fill="rgba(255,255,255,0.35)" />
+    <text x="346" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S8</text>
 
     <!-- S9 & S10 -->
-    <rect x="395" y="210" width="28" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
-    <text x="409" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S9</text>
-    <rect x="435" y="210" width="28" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
-    <text x="449" y="235" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S10</text>
+    <rect x="371" y="165" width="26" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
+    <text x="384" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S9</text>
+    <rect x="409" y="165" width="26" height="5" rx="2" fill="rgba(255,255,255,0.2)" />
+    <text x="422" y="190" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.6)">S10</text>
   </g>
 
   <!-- Metric Badges Bottom -->
-  <g transform="translate(40, 510)">
-    <rect width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
-    <text x="20" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">S1–S4 COMBINED</text>
-    <text x="20" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">55.0% (66 / 120)</text>
+  <g transform="translate(36, 412)">
+    <rect width="254" height="60" rx="14" fill="rgba(0,0,0,0.25)" />
+    <text x="18" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.7)">S1–S4 COMBINED</text>
+    <text x="18" y="47" font-family="'Bricolage Grotesque', sans-serif" font-size="20" font-weight="900" fill="#fff">55.0% (66 / 120)</text>
 
-    <rect x="270" width="250" height="70" rx="16" fill="rgba(0,0,0,0.25)" />
-    <text x="290" y="28" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="rgba(255,255,255,0.7)">FULL LITE-300</text>
-    <text x="290" y="54" font-family="'Bricolage Grotesque', sans-serif" font-size="24" font-weight="900" fill="#fff">25.3% (76 / 300)</text>
+    <rect x="274" width="254" height="60" rx="14" fill="rgba(0,0,0,0.25)" />
+    <text x="292" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="rgba(255,255,255,0.7)">FULL LITE-300</text>
+    <text x="292" y="47" font-family="'Bricolage Grotesque', sans-serif" font-size="20" font-weight="900" fill="#fff">25.3% (76 / 300)</text>
   </g>
 
   <!-- Audit footer -->
-  <text x="40" y="630" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="rgba(255,255,255,0.75)">AUDIT: results/lite300-s4/report.json</text>
-  <text x="40" y="650" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="rgba(255,255,255,0.5)">Official SWE-bench Docker benchmark evaluation</text>
+  <text x="36" y="515" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="rgba(255,255,255,0.8)">AUDIT: results/lite300-s4/report.json</text>
+  <text x="36" y="535" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="rgba(255,255,255,0.55)">Official SWE-bench Docker benchmark evaluation</text>
 </svg>
