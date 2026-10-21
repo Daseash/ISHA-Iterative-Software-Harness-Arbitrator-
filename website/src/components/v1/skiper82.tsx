@@ -40,7 +40,7 @@ export const Skiper82: React.FC<Skiper82Props> = ({
   initialQuery = "",
 }) => {
   const [input, setInput] = useState(initialQuery);
-  const [repoUrl, setRepoUrl] = useState("django/django");
+  const [repoUrl, setRepoUrl] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [orbState, setOrbState] = useState<"searching" | "working" | "solving">("working");
   const [showOptions, setShowOptions] = useState(false);
@@ -443,7 +443,7 @@ index 4b825dc..91a0f12 100644
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
                   className="flex-1 bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-neutral-800 dark:text-neutral-200 focus:outline-none"
-                  placeholder="e.g. tests/dummy_repo or org/repo"
+                  placeholder="Paste GitHub repo link (e.g. https://github.com/owner/repo)"
                 />
               </div>
 
