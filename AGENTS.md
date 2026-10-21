@@ -10,16 +10,21 @@ ISHA is an autonomous software engineering and benchmark harness arbitrator desi
 
 ---
 
-## 2. Non-Negotiable Operational Invariants: The 8 Container Invariants
+## 2. Non-Negotiable Operational Invariants: Core Universal Invariants vs. Episodic Domain Memory
 When generating code patches for SWE-bench benchmarks or repository bugs:
+
+### A. 5 Core Universal Python Invariants (Static Engine)
 1. **Class Anchoring**: Insert new methods/properties into the EXACT enclosing target class, NEVER an earlier class or helper.
 2. **Guard Clause Completeness**: Always check `if val is None:` before accessing attributes or calling `len(val)`. Calling `len(None)` raises `TypeError`. Always guard against `None`, empty containers, or missing keys before slicing or querying.
-3. **Hashability Contracts**: Never place mutable collections (`list`, `dict`, `set`) into sets, dictionary keys, or identity tuples without calling `make_hashable(...)` or converting to an immutable tuple.
-4. **Decorator Preservation**: When wrapping callables or modifying decorators (`functools.partial`), always wrap with `functools.wraps(...)` to preserve function introspection (`__name__`, `__doc__`, `__wrapped__`).
-5. **Execution Scope & Namespaces**: In dynamic code execution (`exec`, `eval`), always provide an explicit global namespace with `{'__name__': '__main__'}` so top-level imports and closures resolve properly.
-6. **Accessibility & Widget Contracts**: In forms and widgets, `id_for_label` must return `''` or `None` if the widget has composite or multiple sub-widgets without a single focus target.
-7. **Type & Return Invariants**: Strictly preserve exact return types and falsy distinctions (`None` vs `''` vs `0` vs `False`). Never coerce `None` to `''` or drop empty strings unless explicitly required.
-8. **Qualname Hierarchy**: When serializing nested classes or methods, always use `__qualname__` to preserve full enclosing scope hierarchy.
+3. **Decorator Preservation**: When wrapping callables or modifying decorators (`functools.partial`), always wrap with `functools.wraps(...)` to preserve function introspection (`__name__`, `__doc__`, `__wrapped__`).
+4. **Execution Scope & Namespaces**: In dynamic code execution (`exec`, `eval`), always provide an explicit global namespace with `{'__name__': '__main__'}` so top-level imports and closures resolve properly.
+5. **Type & Return Invariants**: Strictly preserve exact return types and falsy distinctions (`None` vs `''` vs `0` vs `False`). Never coerce `None` to `''` or drop empty strings unless explicitly required.
+
+### B. Episodic Domain Playbooks (Dynamically Retrieved from `memory.db`)
+Framework-specific rules are stored in `episodic_invariants(repo_org, rule_text)` inside SQLite WAL `memory.db` and injected dynamically per target repo org to prevent benchmark contamination:
+- **Django Hashability Contracts**: Never place mutable collections (`list`, `dict`, `set`) into sets, dictionary keys, or identity tuples without calling `make_hashable(...)` or converting to an immutable tuple.
+- **Django Accessibility & Widget Contracts**: In forms and widgets, `id_for_label` must return `''` or `None` if the widget has composite or multiple sub-widgets without a single focus target.
+- **Django Qualname Hierarchy**: When serializing nested classes or methods, always use `__qualname__` to preserve full enclosing scope hierarchy.
 
 ---
 

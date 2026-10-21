@@ -137,6 +137,21 @@ class LayaJudge:
         with _INFER_LOCK:
             return self.agent.predict(state, questions)
 
+def diff_deletes_test_assertions(diff: str) -> bool:
+    """Subsystem 4 & 6: Return True if diff deletes test assertions or test functions."""
+    if not diff:
+        return False
+    for line in diff.splitlines():
+        if line.startswith("-") and not line.startswith("---"):
+            stripped = line[1:].strip()
+            # Check for assert statements, self.assert*, or test defs deletion
+            if stripped.startswith("assert ") or stripped.startswith("assert(") or "self.assert" in stripped:
+                return True
+            if stripped.startswith("def test_"):
+                return True
+    return False
+
+
     # ── Patch scoring ────────────────────────────────────────────────── #
 
     def score_patch(
@@ -160,6 +175,10 @@ class LayaJudge:
         matches = answers["matches_issue"]["noul"]
         safe = answers["safe_to_apply"]["noul"]
 
+        # Subsystems 4 & 6: Zero safe_to_apply automatically if diff deletes test assertions
+        if diff_deletes_test_assertions(patch):
+            safe = 0.0
+
         composite = compute_laya_composite(
             fix_quality=quality,
             matches_issue=matches,
@@ -174,6 +193,7 @@ class LayaJudge:
             "matches_issue": matches,
             "safe_to_apply": safe,
             "composite": composite,
+            "deleted_assertions": diff_deletes_test_assertions(patch),
         }
 
     # ── Danger detection ─────────────────────────────────────────────── #

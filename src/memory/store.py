@@ -30,7 +30,89 @@ CREATE TABLE IF NOT EXISTS outcomes(
 );
 CREATE INDEX IF NOT EXISTS idx_org ON outcomes(repo_org);
 CREATE INDEX IF NOT EXISTS idx_resolved ON outcomes(resolved);
+
+CREATE TABLE IF NOT EXISTS episodic_invariants(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  repo_org TEXT NOT NULL,
+  rule_text TEXT NOT NULL,
+  created_at REAL NOT NULL,
+  UNIQUE(repo_org, rule_text)
+);
+CREATE INDEX IF NOT EXISTS idx_episodic_org ON episodic_invariants(repo_org);
 """
+
+# Subsystem 10: Episodic Domain Playbooks (dynamically retrieved per framework/org)
+_DEFAULT_EPISODIC_RULES: dict[str, list[str]] = {
+    "django": [
+        "HASHABILITY CONTRACTS: Never put mutable collections (list, dict, set) into sets, dictionary keys, or identity tuples without calling make_hashable(...) or converting to an immutable tuple.",
+        "ACCESSIBILITY & WIDGET CONTRACTS: In forms and widgets, id_for_label must return '' or None if the widget has composite or multiple sub-widgets without a single focus target.",
+        "QUALNAME HIERARCHY: When serializing nested classes or methods, include full __qualname__ enclosing classes.",
+    ]
+}
+
+
+def reap_orphans(conn: sqlite3.Connection) -> int:
+    """Subsystem 9: Close interrupted Write-A attempts older than 15 minutes."""
+    cutoff = time.time() - 900.0  # 15 minutes
+    try:
+        cur = conn.execute(
+            "UPDATE outcomes SET resolved=0, fail_bucket='orphan_timeout' "
+            "WHERE resolved IS NULL AND ts < ?",
+            (cutoff,),
+        )
+        conn.commit()
+        return cur.rowcount
+    except Exception:
+        return 0
+
+
+def _ensure_seed_invariants(conn: sqlite3.Connection) -> None:
+    """Pre-seed framework-specific episodic domain invariants."""
+    now = time.time()
+    try:
+        for org, rules in _DEFAULT_EPISODIC_RULES.items():
+            for rule in rules:
+                conn.execute(
+                    "INSERT OR IGNORE INTO episodic_invariants(repo_org, rule_text, created_at) VALUES (?, ?, ?)",
+                    (org, rule, now),
+                )
+        conn.commit()
+    except Exception:
+        pass
+
+
+def get_episodic_invariants(repo_org: str, path: Path | None = None) -> list[str]:
+    """Subsystem 10: Fetch repo-specific episodic domain rules from memory.db."""
+    org = (repo_org or "").strip().lower()
+    if not org:
+        return []
+    conn = _connect(path)
+    try:
+        cur = conn.execute(
+            "SELECT rule_text FROM episodic_invariants WHERE repo_org=? ORDER BY id ASC",
+            (org,),
+        )
+        return [row[0] for row in cur.fetchall()]
+    finally:
+        conn.close()
+
+
+def record_episodic_invariant(repo_org: str, rule_text: str, path: Path | None = None) -> bool:
+    """Subsystem 10: Dynamically learn/store a framework/org specific invariant rule."""
+    org = (repo_org or "").strip().lower()
+    rule = (rule_text or "").strip()
+    if not (org and rule):
+        return False
+    conn = _connect(path)
+    try:
+        cur = conn.execute(
+            "INSERT OR IGNORE INTO episodic_invariants(repo_org, rule_text, created_at) VALUES (?, ?, ?)",
+            (org, rule, time.time()),
+        )
+        conn.commit()
+        return cur.rowcount > 0
+    finally:
+        conn.close()
 
 
 def db_path() -> Path:
@@ -52,6 +134,8 @@ def _connect(path: Path | None = None) -> sqlite3.Connection:
     conn = sqlite3.connect(str(p), timeout=60.0)
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.executescript(SCHEMA)
+    reap_orphans(conn)
+    _ensure_seed_invariants(conn)
     return conn
 
 
@@ -316,4 +400,9 @@ def org_critic_threshold(
         return None
     from src.review.calibration import find_threshold
 
-    return float(find_threshold(probs, labels)["threshold"])
+    raw_t = float(find_threshold(probs, labels)["threshold"])
+    # Subsystem 9: Bayesian smoothing against global prior (T0 = 0.65, weight m = 10)
+    # T_org = (n * T_observed + 10 * 0.65) / (n + 10)
+    n = len(rows)
+    smoothed_t = (n * raw_t + 10.0 * 0.65) / (n + 10.0)
+    return float(smoothed_t)

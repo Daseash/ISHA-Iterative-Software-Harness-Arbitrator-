@@ -646,6 +646,17 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
     extra_hint = _clip(extra_hint, _HINT_CHARS)
     # P1-01: separator between concatenated hints (were glued).
     extra_hint_sep = "\n" if retry_hint and extra_hint else ""
+
+    # Subsystem 10: Dynamically load episodic domain playbooks from memory.db
+    from src.memory.store import get_episodic_invariants, org_of
+
+    org = org_of(getattr(state, "instance_id", "") or "", getattr(state, "repo_path", "") or "")
+    episodic_rules = get_episodic_invariants(org)
+    episodic_section = ""
+    if episodic_rules:
+        episodic_lines = "\n".join(f"- {r}" for r in episodic_rules)
+        episodic_section = f"\nEPISODIC DOMAIN PLAYBOOKS (dynamically loaded from memory.db for '{org}'):\n{episodic_lines}\n"
+
     _prompt_stats("coder", issue=issue, plan=plan,
                   repo=_clip(state.repo_context, _CODER_CONTEXT_CHARS),
                   code=code_block, history=history_section, style=style_section,
@@ -663,18 +674,13 @@ MINIMAL DIFF RULES (non-negotiable — SENIOR INVARIANT MODE):
 - Bug fix = root cause, not symptom. Fix where all callers route through.
 - Do not touch test files unless the fix itself requires it.
 - Keep the diff inside the localized files unless the bug is provably cross-file.
-- CLASS ANCHORING: Insert methods/properties into the EXACT enclosing class
-  (e.g. class SimpleLazyObject, class ModelAdmin), NEVER an earlier class (like classproperty).
+- CLASS ANCHORING: Insert methods/properties into the EXACT enclosing class (e.g. class SimpleLazyObject, class ModelAdmin), NEVER an earlier class or helper.
 - GUARD CLAUSE COMPLETENESS: Check `if val is None:` before accessing attributes or calling `len(val)`. Calling `len(None)` raises `TypeError`. Always guard against `None`, empty containers, or missing keys before slicing or querying.
-- HASHABILITY CONTRACTS: Never put mutable collections (`list`, `dict`, `set`) into sets, dictionary keys, or identity tuples without calling `make_hashable(...)` or converting to an immutable tuple.
 - DECORATOR PRESERVATION: When wrapping callables or modifying decorators (`functools.partial`), wrap with `functools.wraps(...)` to preserve function introspection (`__name__`, `__doc__`, `__wrapped__`).
 - EXECUTION SCOPE & NAMESPACES: In dynamic code execution (`exec`, `eval`), always provide an explicit global namespace with `{{'__name__': '__main__'}}` so top-level imports and closures resolve properly.
-- ACCESSIBILITY & WIDGET CONTRACTS: In forms and widgets, `id_for_label` must return `''` or `None` if the widget has composite or multiple sub-widgets without a single focus target.
-- TYPE & RETURN INVARIANTS: Preserve exact return types and falsy distinctions (None vs '' vs 0 vs False).
-  Do not coerce None to '' or drop empty strings unless explicitly required.
+- TYPE & RETURN INVARIANTS: Strictly preserve exact return types and falsy distinctions (None vs '' vs 0 vs False). Do not coerce None to '' or drop empty strings unless explicitly required.
 - SIGNATURE SAFETY: When modifying methods, preserve caller compatibility (*args, **kwargs).
-- CALLABLE RESOLUTION: If an attribute or parameter can be a callable or PathLike, handle it safely.
-- QUALNAME HIERARCHY: When serializing nested classes/methods, include full __qualname__ enclosing classes.
+- CALLABLE RESOLUTION: If an attribute or parameter can be a callable or PathLike, handle it safely.{episodic_section}
 - The TARGET FILE CONTEXT / CODE CONTEXT sections below are verbatim
   excerpts of the real files. Copy every context and removal line from them
   character-for-character. If a line you want to change is not shown, do not
