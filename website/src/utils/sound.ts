@@ -2,6 +2,8 @@
 
 class SoundManager {
   private ctx: AudioContext | null = null;
+  private tickBuffer: AudioBuffer | null = null;
+  private isTickLoading = false;
 
   private getContext(): AudioContext | null {
     if (typeof window === "undefined") return null;
@@ -17,58 +19,70 @@ class SoundManager {
     return this.ctx;
   }
 
-  // Crisp mechanical tactile click (buttons, links, navigation)
-  playClick() {
-    try {
-      const ctx = this.getContext();
-      if (!ctx) return;
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      const now = ctx.currentTime;
-
-      // Quick pitch drop creates a physical tactile "pop/click"
-      osc.frequency.setValueAtTime(600, now);
-      osc.frequency.exponentialRampToValueAtTime(140, now + 0.04);
-
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.045);
-    } catch {
-      // Audio playback failsafe
+  constructor() {
+    if (typeof window !== "undefined") {
+      const unlockAudio = () => {
+        this.getContext();
+        this.preloadTick();
+      };
+      window.addEventListener("pointerdown", unlockAudio, { once: true });
+      window.addEventListener("wheel", unlockAudio, { once: true });
+      window.addEventListener("keydown", unlockAudio, { once: true });
+      window.addEventListener("touchstart", unlockAudio, { once: true });
+      this.preloadTick();
     }
   }
 
-  // Rapid tactile "tik" sound for skiper24 scroll transitions
+  // Crisp mechanical tactile click
+  playClick() {
+    this.playTick();
+  }
+
+  // Preload and decode official skiper-ui tick.wav
+  private preloadTick() {
+    if (this.isTickLoading || this.tickBuffer || typeof window === "undefined") return;
+    this.isTickLoading = true;
+    fetch("/sfx/tick.wav")
+      .then((res) => {
+        if (!res.ok) throw new Error("Local sfx fetch failed");
+        return res.arrayBuffer();
+      })
+      .catch(() => {
+        return fetch("https://skiper-ui.com/sfx/tick.wav").then((res) => res.arrayBuffer());
+      })
+      .then(async (arrayBuffer) => {
+        const ctx = this.getContext();
+        if (ctx) {
+          this.tickBuffer = await ctx.decodeAudioData(arrayBuffer);
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        this.isTickLoading = false;
+      });
+  }
+
+  // Authentic tactile "tik" sound matching skiper-ui.com/v1/skiper24
   playTick() {
     try {
       const ctx = this.getContext();
       if (!ctx) return;
 
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+      if (this.tickBuffer) {
+        const source = ctx.createBufferSource();
+        source.buffer = this.tickBuffer;
+        const gain = ctx.createGain();
+        gain.gain.value = 0.75;
+        source.connect(gain);
+        gain.connect(ctx.destination);
+        source.start(0);
+        return;
+      }
 
-      osc.type = "sine";
-      const now = ctx.currentTime;
-
-      osc.frequency.setValueAtTime(850, now);
-      osc.frequency.exponentialRampToValueAtTime(220, now + 0.03);
-
-      gain.gain.setValueAtTime(0.14, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.035);
+      // If AudioBuffer hasn't decoded yet, play HTML5 Audio
+      const audio = new Audio("/sfx/tick.wav");
+      audio.volume = 0.75;
+      audio.play().catch(() => {});
     } catch {}
   }
 
