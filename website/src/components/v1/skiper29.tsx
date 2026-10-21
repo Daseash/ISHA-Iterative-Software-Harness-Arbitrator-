@@ -49,13 +49,22 @@ export function Skiper29() {
   // Hero scale
   const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.96]);
 
-  // Photo 2 scaling
-  const photo2Scale = useTransform(scrollYProgress, [0.35, 0.55], [0.9, 1]);
-  const photo2Radius = useTransform(scrollYProgress, [0.35, 0.55], ["28px", "0px"]);
-
-  // Image parallax layers
+  // Photo 1 parallax layer
   const yBg1 = useTransform(scrollYProgress, [0, 0.4], ["0%", "-20%"]);
-  const yBg2 = useTransform(scrollYProgress, [0.3, 0.7], ["0%", "-25%"]);
+
+  // Photo 2 (Eyes banner) - Authentic Skiper29 Dolly Zoom (Vertigo effect)
+  // Dedicated useScroll directly tracking this section's viewport progress
+  const photo2SectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: photo2Scroll } = useScroll({
+    target: photo2SectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Authentic Skiper29: Container zooms out from 1 to 0.72 while inner image zooms in from 1 to 1.35
+  const photo2Scale = useTransform(photo2Scroll, [0, 1], [1, 0.72]);
+  const photo2InnerScale = useTransform(photo2Scroll, [0, 1], [1, 1.35]);
+  const photo2Radius = useTransform(photo2Scroll, [0, 1], ["24px", "40px"]);
+  const photo2ImageY = useTransform(photo2Scroll, [0, 1], ["-6%", "6%"]);
 
   const subLines = [
     "ITERATIVE",
@@ -227,21 +236,27 @@ export function Skiper29() {
           </motion.div>
         </section>
 
-        {/* ================= PHOTO 2: DOWN OF ISHA (NO TEXT ON IMAGE, 3D SHADOW, NO RED BORDER) ================= */}
-        <section className="relative z-10 min-h-[65vh] sm:min-h-[80vh] w-full flex flex-col items-center justify-center py-12 px-4 sm:px-8 overflow-hidden bg-transparent">
+        {/* ================= PHOTO 2: DOWN OF ISHA (AUTHENTIC SKIPER29 SCROLL ZOOM OUT & ZOOM IN) ================= */}
+        <section
+          ref={photo2SectionRef}
+          className="relative z-10 min-h-[70vh] sm:min-h-[85vh] w-full flex flex-col items-center justify-center py-16 sm:py-24 px-4 sm:px-8 overflow-hidden bg-transparent"
+        >
           <motion.div
             style={{
               scale: photo2Scale,
               borderRadius: photo2Radius,
             }}
-            className="relative w-full max-w-7xl h-[55vh] sm:h-[72vh] mx-auto overflow-hidden rounded-3xl shadow-2xl shadow-neutral-900/20 dark:shadow-black/80 bg-neutral-900"
+            className="relative w-full max-w-7xl h-[50vh] sm:h-[65vh] md:h-[72vh] mx-auto overflow-hidden rounded-3xl shadow-2xl shadow-neutral-900/25 dark:shadow-black/85 bg-neutral-950 transform-gpu will-change-transform"
           >
-            {/* Background Parallax Layer */}
+            {/* Background Parallax Layer with Inner Zoom In */}
             <motion.div
-              style={{ y: yBg2 }}
-              className="absolute inset-0 w-full h-[130%] -top-[15%]"
+              style={{
+                scale: photo2InnerScale,
+                y: photo2ImageY,
+              }}
+              className="absolute inset-0 w-full h-full transform-gpu will-change-transform"
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
               <img
                 src="/eyes.jpg"
                 alt="Neural AST Processing Unit"
