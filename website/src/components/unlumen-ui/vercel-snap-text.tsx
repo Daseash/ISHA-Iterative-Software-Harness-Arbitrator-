@@ -15,35 +15,39 @@ export interface VercelSnapTextProps {
 
 export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
   items,
-  prefix = "",
-  itemHeight = 88,
+  prefix = "WE ENGINEER",
+  itemHeight = 96,
   stiffness = 280,
   damping = 30,
   className = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [containerHeight, setContainerHeight] = useState<number>(560);
-  const accumulatedDelta = useRef<number>(0);
-  const isTransitioning = useRef<boolean>(false);
+  const [sectionHeight, setSectionHeight] = useState<number>(640);
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
+  const activeIndexRef = useRef<number>(0);
 
   // Motion value for vertical spring translation centering the active item
-  const targetY = useMotionValue((560 / 2 - itemHeight / 2) - 0 * itemHeight);
+  const targetY = useMotionValue((640 / 2 - itemHeight / 2) - 0 * itemHeight);
   const springY = useSpring(targetY, {
     stiffness,
     damping,
     mass: 0.8,
   });
 
-  // Track container height via ResizeObserver for optical centering
+  // Track container height via ResizeObserver for responsive snap boundaries
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const updateHeight = () => {
-      const h = el.clientHeight || 560;
-      setContainerHeight(h);
-      targetY.set((h / 2 - itemHeight / 2) - activeIndex * itemHeight);
+      const h = el.clientHeight || window.innerHeight || 640;
+      setSectionHeight(h);
+      const currentProg = scrollRef.current
+        ? (scrollRef.current.scrollTop / (h || 640))
+        : activeIndexRef.current;
+      targetY.set((h / 2 - itemHeight / 2) - currentProg * itemHeight);
     };
 
     updateHeight();
@@ -51,91 +55,79 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [activeIndex, itemHeight, targetY]);
+  }, [itemHeight, targetY]);
 
-  // Step to a specific index with sound effect and motion spring
+  // Handle scroll events from the invisible scroll-snap driver
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const top = target.scrollTop;
+    const progress = sectionHeight > 0 ? top / sectionHeight : 0;
+    setScrollProgress(progress);
+
+    const newIndex = Math.max(0, Math.min(items.length - 1, Math.round(progress)));
+    if (newIndex !== activeIndexRef.current) {
+      activeIndexRef.current = newIndex;
+      setActiveIndex(newIndex);
+      sounds.playTick();
+    }
+
+    targetY.set((sectionHeight / 2 - itemHeight / 2) - progress * itemHeight);
+  };
+
+  // Programmatically jump to a specific index with smooth glide
   const goToIndex = useCallback(
     (index: number) => {
       const bounded = Math.max(0, Math.min(items.length - 1, index));
-      if (bounded === activeIndex) return;
-
-      setActiveIndex(bounded);
-      sounds.playTick();
-      const centerY = (containerHeight / 2 - itemHeight / 2) - bounded * itemHeight;
-      targetY.set(centerY);
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+          top: bounded * sectionHeight,
+          behavior: "smooth",
+        });
+      } else {
+        setActiveIndex(bounded);
+        activeIndexRef.current = bounded;
+        setScrollProgress(bounded);
+        sounds.playTick();
+        targetY.set((sectionHeight / 2 - itemHeight / 2) - bounded * itemHeight);
+      }
     },
-    [activeIndex, containerHeight, itemHeight, items.length, targetY]
+    [itemHeight, items.length, sectionHeight, targetY]
   );
-
-  // Smooth wheel navigation: accumulates delta and snaps responsively
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      const isScrollingDown = e.deltaY > 0;
-      const isAtBottom = activeIndex === items.length - 1 && isScrollingDown;
-      const isAtTop = activeIndex === 0 && !isScrollingDown;
-
-      // Trap wheel only while cycling through internal items; release at extremes so page can scroll
-      if (!isAtBottom && !isAtTop) {
-        e.preventDefault();
-      }
-
-      if (isTransitioning.current) return;
-
-      accumulatedDelta.current += e.deltaY;
-
-      if (Math.abs(accumulatedDelta.current) >= 38) {
-        const dir = accumulatedDelta.current > 0 ? 1 : -1;
-        accumulatedDelta.current = 0;
-        isTransitioning.current = true;
-
-        goToIndex(activeIndex + dir);
-
-        setTimeout(() => {
-          isTransitioning.current = false;
-        }, 160);
-      }
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [activeIndex, goToIndex, items.length]);
-
-  // Touch swipe support for mobile
-  const touchStartY = useRef<number>(0);
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndY = e.changedTouches[0].clientY;
-    const diff = touchStartY.current - touchEndY;
-    if (Math.abs(diff) > 35) {
-      const dir = diff > 0 ? 1 : -1;
-      goToIndex(activeIndex + dir);
-    }
-  };
 
   return (
     <div
       ref={containerRef}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
       className={`relative w-full overflow-hidden select-none flex items-center justify-center bg-[#F9F7EF] dark:bg-black transition-colors ${className}`}
-      style={{ minHeight: "500px" }}
+      style={{ minHeight: "560px" }}
     >
-      {/* Top and Bottom Viewport Fade Masks: Seamlessly fades items into page background */}
-      <div className="pointer-events-none absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#F9F7EF] dark:from-black to-transparent z-15" />
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#F9F7EF] dark:from-black to-transparent z-15" />
+      {/* Top and Bottom Viewport Fade Masks: Seamlessly blend into page background */}
+      <div className="pointer-events-none absolute top-0 inset-x-0 h-36 bg-gradient-to-b from-[#F9F7EF] dark:from-black via-[#F9F7EF]/80 dark:via-black/80 to-transparent z-30" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-[#F9F7EF] dark:from-black via-[#F9F7EF]/80 dark:via-black/80 to-transparent z-30" />
 
-      {/* Main Container: Single static prefix on left + spring-animated scrolling list on right */}
-      <div className="relative w-full max-w-6xl h-full flex items-center px-4 sm:px-8 md:px-12 z-10">
-        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-5 w-full">
+      {/* ================= LAYER 1: INVISIBLE SCROLL DRIVER OVERLAY ================= */}
+      {/* Captures scroll/wheel/touch cleanly, overscrolls naturally to page when at ends */}
+      <div
+        ref={scrollRef}
+        onScroll={handleScroll}
+        data-lenis-prevent="true"
+        className="absolute inset-0 overflow-y-scroll z-20 pointer-events-auto [scroll-snap-type:y_mandatory] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {items.map((_, idx) => (
+          <div
+            key={idx}
+            className="w-full shrink-0 snap-start"
+            style={{ height: `${sectionHeight}px` }}
+          />
+        ))}
+      </div>
+
+      {/* ================= LAYER 2: SPRING-ANIMATED VISUAL TRACK ================= */}
+      <div className="relative w-full max-w-6xl h-full flex items-center px-4 sm:px-8 md:px-12 z-10 pointer-events-none">
+        <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-8 w-full">
           {/* Static Prefix: Fixed in the vertical center, never repeats on rows */}
           {prefix && (
             <div className="shrink-0 flex items-center">
-              <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-red-600 dark:text-red-500 whitespace-nowrap">
+              <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-neutral-950 dark:text-neutral-100 uppercase whitespace-nowrap">
                 {prefix}
               </span>
             </div>
@@ -148,21 +140,20 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
               className="flex flex-col items-start w-full"
             >
               {items.map((item, idx) => {
-                const dist = idx - activeIndex;
+                const dist = idx - scrollProgress;
                 const absDist = Math.abs(dist);
-                const isActive = idx === activeIndex;
+                const isActive = Math.abs(idx - activeIndex) < 0.5;
 
+                // Authentic Unlumen math: distance-based opacity, horizontal indent, and scale
                 const opacity = Math.max(0.18, 1 - absDist * 0.44);
-                const xOffset = absDist * 20;
+                const xOffset = absDist * 22;
                 const scale = Math.max(0.9, 1 - absDist * 0.04);
 
                 return (
-                  <button
+                  <div
                     key={idx}
-                    type="button"
-                    onClick={() => goToIndex(idx)}
                     style={{ height: `${itemHeight}px` }}
-                    className="flex items-center text-left focus:outline-none cursor-pointer w-full group py-0"
+                    className="flex items-center text-left w-full py-0 select-none"
                   >
                     <motion.div
                       animate={{
@@ -175,19 +166,19 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
                         stiffness: stiffness * 1.1,
                         damping: damping * 1.1,
                       }}
-                      className="flex items-baseline gap-3"
+                      className="flex items-baseline"
                     >
                       <span
-                        className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none whitespace-nowrap transition-colors duration-200 ${
+                        className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none whitespace-nowrap transition-colors duration-200 uppercase ${
                           isActive
-                            ? "text-neutral-950 dark:text-[#F9F7EF] drop-shadow-sm"
-                            : "text-neutral-400 dark:text-neutral-600 group-hover:text-neutral-700 dark:group-hover:text-neutral-300"
+                            ? "text-red-600 dark:text-red-500 drop-shadow-sm"
+                            : "text-neutral-300 dark:text-neutral-700"
                         }`}
                       >
                         {item}
                       </span>
                     </motion.div>
-                  </button>
+                  </div>
                 );
               })}
             </motion.div>
@@ -196,7 +187,7 @@ export const VercelSnapText: React.FC<VercelSnapTextProps> = ({
       </div>
 
       {/* Navigation step dots at bottom */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
         {items.map((_, i) => (
           <button
             key={i}

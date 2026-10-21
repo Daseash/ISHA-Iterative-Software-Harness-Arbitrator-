@@ -7,7 +7,7 @@ import { Navbar_001 } from "./skiper13";
 import { PipelinePlanes } from "../ui/PipelinePlanes";
 import { ScrollHighlight } from "./ScrollHighlight";
 import { AboutSection } from "./AboutSection";
-import { Skiper44 } from "./skiper44";
+import { VercelSnapText } from "../unlumen-ui/vercel-snap-text";
 import { CliSection } from "./CliSection";
 import { HoverExpand_001 } from "./skiper52";
 import { ArrowUpRight } from "lucide-react";
@@ -257,8 +257,25 @@ export function Skiper29() {
         </div>
       </div>
 
-      {/* ================= SKIPER 44: VERCEL SCROLL WITH BLUR & POPPING CARD ================= */}
-      <Skiper44 />
+      {/* ================= VERCEL SNAP TEXT (UNLUMEN UI: SCROLL-DRIVEN SNAPPING LIST) ================= */}
+      <section id="engineering-tenets" className="relative w-full bg-[#F9F7EF] dark:bg-black transition-colors py-12 sm:py-16">
+        <VercelSnapText
+          prefix="WE ENGINEER"
+          items={[
+            "THE AUTONOMOUS HARNESS",
+            "THE REPRODUCTION PROOF FIRST",
+            "THE 3 ISOLATED WORKTREES",
+            "THE PRE-SANDBOX AST GATES",
+            "THE CALIBRATED LAYA SCORE",
+            "THE VERIFIED MINIMAL PULL REQUEST",
+            "ZERO FALSE APPROVALS",
+            "THE 8 CONTAINER INVARIANTS",
+            "THE FUTURE OF SOFTWARE",
+          ]}
+          itemHeight={96}
+          className="w-full h-[65vh] sm:h-[75vh] min-h-[580px]"
+        />
+      </section>
 
       {/* ================= THE COMPLETE AUTONOMOUS PIPELINE (3D INTERACTIVE DECK) ================= */}
       <section id="pipeline" className="relative py-24 px-4 sm:px-6 bg-[#F9F7EF] dark:bg-black transition-colors overflow-hidden">
