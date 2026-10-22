@@ -115,6 +115,21 @@ def compute_laya_composite(
     return max(0.0, min(1.0, base))
 
 
+def diff_deletes_test_assertions(diff: str) -> bool:
+    """Subsystem 4 & 6: Return True if diff deletes test assertions or test functions."""
+    if not diff:
+        return False
+    for line in diff.splitlines():
+        if line.startswith("-") and not line.startswith("---"):
+            stripped = line[1:].strip()
+            # Check for assert statements, self.assert*, or test defs deletion
+            if stripped.startswith("assert ") or stripped.startswith("assert(") or "self.assert" in stripped:
+                return True
+            if stripped.startswith("def test_"):
+                return True
+    return False
+
+
 class LayaJudge:
     """Wraps LAYA decision engine for all judgment points in the pipeline."""
 
@@ -136,20 +151,6 @@ class LayaJudge:
         """Serialized inference — parallel agent branches share one model."""
         with _INFER_LOCK:
             return self.agent.predict(state, questions)
-
-def diff_deletes_test_assertions(diff: str) -> bool:
-    """Subsystem 4 & 6: Return True if diff deletes test assertions or test functions."""
-    if not diff:
-        return False
-    for line in diff.splitlines():
-        if line.startswith("-") and not line.startswith("---"):
-            stripped = line[1:].strip()
-            # Check for assert statements, self.assert*, or test defs deletion
-            if stripped.startswith("assert ") or stripped.startswith("assert(") or "self.assert" in stripped:
-                return True
-            if stripped.startswith("def test_"):
-                return True
-    return False
 
 
     # ── Patch scoring ────────────────────────────────────────────────── #
