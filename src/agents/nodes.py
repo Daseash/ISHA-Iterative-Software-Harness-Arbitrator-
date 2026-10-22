@@ -324,7 +324,7 @@ given. Use the full range: report below 0.40 only when the report lacks
 reproduction details or the relevant code is not visible in the context."""
     _prompt_stats("planner", prompt=prompt)
     try:
-        plan_raw = call_planner(prompt)
+        plan_raw = call_planner(prompt, temperature=0.20)
         # P1-01: prose plan needs _unfence (keep all), not _strip_fences (largest block).
         plan = _strip_tool_markup(_unfence(plan_raw)) or "[PLANNER ERROR] empty response"
         # P1-01: case-insensitive CONFIDENCE (models emit Confidence:/confidence:).
@@ -393,7 +393,7 @@ REPOSITORY CONTEXT:
 REPO PATH: {state.repo_path}"""
     _prompt_stats("regression", prompt=prompt)
     try:
-        test_code = call_repro(prompt)
+        test_code = call_repro(prompt, temperature=0.20)
         state.regression_test = _strip_tool_markup(_strip_fences(test_code))
     except Exception as exc:
         state.regression_test = f"# [REGRESSION TEST ERROR] {exc}"
@@ -717,11 +717,17 @@ def coder_node(state: AgentState) -> AgentState:
     # coder only observes retry_count for prompts, never increments it.
     # (Incrementing here double-counted — budget burned ~2x per cycle.)
 
+    from src.agents.candidates import strategy_models
+
+    assigned = getattr(state, "assigned_model", "") or strategy_models().get(state.strategy, None)
     prompt = build_coder_prompt(state)
     try:
-        raw = call_coder(prompt)
+        raw = call_coder(prompt, temperature=0.20, model=assigned)
         patch = _extract_diff(raw)
         state.patch = patch or f"[CODER ERROR] no diff produced: {raw[:300]}"
+        if assigned:
+            state.assigned_model = assigned
+            state.model_name = assigned
     except Exception as exc:
         state.patch = f"[CODER ERROR] {exc}"
     state.model_log = get_model_log()

@@ -41,11 +41,11 @@ MAX_REPAIR_ROUNDS = int(os.getenv("ISHA_APPLY_REPAIR_ROUNDS", "2"))
 #   ISHA_CANDIDATE_MODELS=minimal_diff=groq/openai/gpt-oss-20b,call_site_aware=gemini/gemini-3.1-flash-lite
 DEFAULT_STRATEGY_MODELS: dict[str, str] = {
     "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
-    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "mistral/codestral-latest"),        # Mistral Platform: surgical, low-temp diffs
-    "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", "gemini/gemini-3.8-flash"),    # Google AI Studio: deep reasoning & full context
-    "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", "groq/openai/gpt-oss-120b"), # Groq Cloud: root-cause invariants
-    "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", "mistral/codestral-latest"),      # Mistral Platform: defensive guardrails & edge-cases
-    "cross_file_audit": os.getenv("ISHA_MODEL_CROSS_FILE_AUDIT", "gemini/gemini-3.8-flash"), # Google AI Studio: 1M context wide-reach audit work
+    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "groq/qwen/qwen3.8-27b"),            # Groq Qwen: surgical, low-temp diffs
+    "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", "groq/openai/gpt-oss-120b"), # Groq GPT-OSS-120B: root-cause invariants
+    "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", "gemini/gemini-3.8-flash"),    # Google Gemini: deep reasoning & full context
+    "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", "mistral/codestral-latest"),      # Mistral Codestral: defensive guardrails & edge-cases
+    "cross_file_audit": os.getenv("ISHA_MODEL_CROSS_FILE_AUDIT", "gemini/gemini-3.8-flash"), # Google Gemini: 1M context wide-reach audit work
 }
 
 
@@ -63,40 +63,39 @@ def strategy_models() -> dict[str, str]:
     return merged
 
 
-# (name, temperature, strategy notes) — capped safe temperatures (<= 0.50)
-# to prevent whitespace hallucinations and diff syntax failures (Subsystem 5 upgraded spec).
+# (name, temperature, strategy notes) — harmonized to 0.20 for anti-hallucination + repair flexibility.
 STRATEGY_VARIANTS = [
     (
         "minimal_diff",
-        0.10,
+        0.20,
         "Smallest possible diff. Touch the fewest lines and fewest files "
         "that can fix the reported behaviour. Prefer an early return or a "
         "one-line condition over a restructure.",
     ),
     (
         "call_site_aware",
-        0.25,
+        0.20,
         "Fix the root cause and update every caller in the same diff. If the "
         "signature or semantics change, propagate the change to all call "
         "sites so no caller keeps the old contract.",
     ),
     (
         "root_cause_first",
-        0.30,
+        0.20,
         "Re-read the reported symptom and fix the underlying invariant rather "
         "than the observed line. Guard the boundary that actually violates the "
         "documented behaviour.",
     ),
     (
         "defensive_fix",
-        0.40,
+        0.20,
         "Fix the reported bug and close the adjacent edge cases the report "
         "implies (invalid input, empty/zero values, case sensitivity), while "
         "still keeping the diff minimal and backward compatible.",
     ),
     (
         "cross_file_audit",
-        0.50,
+        0.20,
         "Audit the localized files and their direct callers for any place the "
         "same wrong assumption is duplicated; fix all of them in one atomic "
         "diff.",

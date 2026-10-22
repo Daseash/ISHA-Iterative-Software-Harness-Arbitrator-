@@ -78,6 +78,7 @@ class AgentState(BaseModel):
     # ── Multi-Agent & Session ───────────────────────────────────────────────
     worktree: Annotated[str, _last] = Field(default="", description="Isolated git worktree path for this attempt")
     strategy: Annotated[str, _last] = Field(default="default", description="Patching strategy for this attempt")
+    assigned_model: Annotated[str, _last] = Field(default="", description="Assigned model id for this candidate branch (sticky on replan)")
     session_id: Annotated[str, _last] = Field(default="", description="Persistent session ID for checkpointing and resumption")
 
     # ── LAYA Decision Scores ────────────────────────────────────────────────

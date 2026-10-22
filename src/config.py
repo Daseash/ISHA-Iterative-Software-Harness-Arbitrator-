@@ -63,7 +63,7 @@ def _parse_chain(primary_env: str, primary_default: str,
 PLANNER_CHAIN = _parse_chain(
     "ISHA_PLANNER_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_PLANNER_FALLBACKS",
-    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
+    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash",
 )
 
 CODER_CHAIN = _parse_chain(
@@ -85,9 +85,9 @@ CRITIC_CHAIN = _parse_chain(
 )
 
 REPRO_CHAIN = _parse_chain(
-    "ISHA_REPRO_MODEL", "groq/deepseek-r1-distill-llama-70b",
+    "ISHA_REPRO_MODEL", "groq/openai/gpt-oss-120b",
     "ISHA_REPRO_FALLBACKS",
-    "groq/openai/gpt-oss-120b,gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
 )
 
 # Backward-compatible aliases
@@ -862,6 +862,14 @@ def call_repro(prompt: str, temperature: float | None = None) -> str:
     return _call_chain(REPRO_CHAIN, "repro", prompt, temperature)
 
 
+STRATEGY_FALLBACK_MODELS: dict[str, list[str]] = {
+    "groq/qwen/qwen3.8-27b": ["gemini/gemini-3.5-flash", "gemini/gemini-3.8-flash"],
+    "groq/openai/gpt-oss-120b": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.5-flash"],
+    "gemini/gemini-3.8-flash": ["gemini/gemini-3.5-flash", "groq/openai/gpt-oss-120b"],
+    "mistral/codestral-latest": ["gemini/gemini-3.5-flash", "groq/qwen/qwen3.8-27b"],
+}
+
+
 def call_coder(
     prompt: str,
     temperature: float | None = None,
@@ -869,11 +877,12 @@ def call_coder(
 ) -> str:
     """Call the coder model chain for patch generation.
 
-    If ``model`` is specified, that model is tried first, followed by the rest
-    of the fallback chain if it fails or rate-limits.
+    If ``model`` is specified, that model is tried first, followed by its
+    dedicated fallback chain.
     """
     if model:
-        chain = [model] + [m for m in CODER_CHAIN if m != model]
+        fallbacks = STRATEGY_FALLBACK_MODELS.get(model, [m for m in CODER_CHAIN if m != model])
+        chain = [model] + [m for m in fallbacks if m != model]
     else:
         chain = CODER_CHAIN
     return _call_chain(chain, "coder", prompt, temperature)

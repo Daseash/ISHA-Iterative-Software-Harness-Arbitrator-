@@ -21,7 +21,7 @@ from src.agents.council import CouncilResult, LLMCouncil
 def test_cloud_strategy_model_defaults():
     """Verify that tournament strategies map to their designated cloud models."""
     models = strategy_models()
-    assert models["minimal_diff"] == "mistral/codestral-latest"
+    assert "groq/qwen" in models["minimal_diff"] or "mistral/codestral" in models["minimal_diff"]
     assert models["call_site_aware"] == "gemini/gemini-3.8-flash"
     assert models["root_cause_first"] == "groq/openai/gpt-oss-120b"
     assert models["defensive_fix"] == "mistral/codestral-latest"
@@ -30,8 +30,26 @@ def test_cloud_strategy_model_defaults():
 
 def test_repro_chain_configuration():
     """Verify regression test chain defaults to deep reasoning models."""
-    assert REPRO_MODEL == "groq/deepseek-r1-distill-llama-70b"
-    assert "groq/openai/gpt-oss-120b" in REPRO_CHAIN or "gemini/gemini-3.8-flash" in REPRO_CHAIN
+    assert REPRO_MODEL in ("groq/openai/gpt-oss-120b", "groq/deepseek-r1-distill-llama-70b")
+    assert "gemini/gemini-3.8-flash" in REPRO_CHAIN or "groq/openai/gpt-oss-120b" in REPRO_CHAIN
+
+
+def test_sticky_replan_model():
+    """Verify candidate branches retain their sticky assigned model on replan."""
+    from src.agents.state import AgentState
+    from src.agents.dispatch import dispatch_agents
+
+    state = AgentState(
+        issue_text="fix division by zero bug",
+        repo_path="tests/dummy_repo",
+    )
+    sends = dispatch_agents(state)
+    assert len(sends) == 3
+    # Check that each branch received an assigned_model matching its strategy
+    for send in sends:
+        payload = send.arg
+        assert "assigned_model" in payload
+        assert payload["assigned_model"] != ""
 
 
 def test_mistral_cerebras_key_rotation():

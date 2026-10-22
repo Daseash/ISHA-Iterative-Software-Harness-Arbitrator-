@@ -25,20 +25,43 @@ Traditional autonomous software engineering agents either:
 |---|---|---|---|---|---|---|---|
 | **Node 1** | **Investigation & Localization** | `BAAI/bge-reranker-base` (ONNX) + `gemini/gemini-3.8-flash` | `gemini/gemini-3.5-flash-lite` | Local CPU + Google AI Studio | `0.00` | ~0.1s | **$0.00** |
 | **Node 2** | **Decomposer** (Sub-issue splitting) | `groq/qwen/qwen-2.5-coder-32b` | `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.10` | ~0.1s | **$0.00** |
-| **Node 3** | **Planner / Root-Cause Reasoner** | `groq/openai/gpt-oss-120b` | `gemini/gemini-3.8-flash` / `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.2s | **$0.00** |
+| **Node 3** | **Planner / Root-Cause Reasoner** | `gemini/gemini-3.8-flash` | `groq/openai/gpt-oss-120b` $\rightarrow$ `gemini/gemini-3.5-flash` | Google AI Studio / Groq | `0.20` | ~0.2s | **$0.00** |
 | **Node 4** | **Confidence Gate** (LocReranker) | Deterministic AST Math + Rule Gate | Rule-based gate | In-memory CPU | — | <2ms | **$0.00** |
-| **Node 5** | **Regression Test (RED Phase)** | `groq/deepseek-r1-distill-llama-70b` | `groq/openai/gpt-oss-120b` / `gemini/gemini-3.8-flash` | Groq Cloud / OpenRouter | `0.20` | ~0.2s | **$0.00** |
-| **Node 6a** | **Candidate: minimal_diff** | `mistral/codestral-latest` | `gemini/gemini-3.5-flash-lite` | Mistral AI API / Google | `0.10` | ~0.15s | **$0.00** |
-| **Node 6b** | **Candidate: call_site_aware** | `gemini/gemini-3.8-flash` | `cerebras/qwen-2.5-coder-32b` | Google AI Studio / Cerebras | `0.25` | ~0.30s | **$0.00** |
-| **Node 6c** | **Candidate: root_cause_first** | `groq/openai/gpt-oss-120b` | `cerebras/llama-3.3-70b` | Groq Cloud / Cerebras | `0.30` | ~0.45s | **$0.00** |
-| **Node 6d** | **Candidate: defensive_fix** | `mistral/codestral-latest` | `groq/qwen/qwen-2.5-coder-32b` | Mistral AI API / Groq Cloud | `0.40` | ~0.50s | **$0.00** |
-| **Node 6e** | **Candidate: cross_file_audit** | `gemini/gemini-3.8-flash` (1M context) | `groq/llama-3.3-70b-versatile` | Google AI Studio / Groq Cloud | `0.50` | ~0.50s | **$0.00** |
+| **Node 5** | **Regression Test (RED Phase)** | `groq/openai/gpt-oss-120b` | `gemini/gemini-3.8-flash` $\rightarrow$ `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.2s | **$0.00** |
+| **Node 6a** | **Candidate 1: minimal_diff** | `groq/qwen/qwen3.8-27b` | `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.15s | **$0.00** |
+| **Node 6b** | **Candidate 2: root_cause_first** | `groq/openai/gpt-oss-120b` | `groq/qwen/qwen3.8-27b` | Groq Cloud LPUs | `0.20` | ~0.45s | **$0.00** |
+| **Node 6c** | **Candidate 3: call_site_aware** | `gemini/gemini-3.8-flash` | `gemini/gemini-3.5-flash` | Google AI Studio | `0.20` | ~0.30s | **$0.00** |
+| **Node 6d** | **Candidate 4: defensive_fix** | `mistral/codestral-latest` | `gemini/gemini-3.5-flash` | Mistral AI API / Google | `0.20` | ~0.50s | **$0.00** |
+| **Node 6e** | **Candidate 5: cross_file_audit** | `gemini/gemini-3.8-flash` (1M context) | `groq/llama-3.3-70b-versatile` | Google AI Studio / Groq Cloud | `0.20` | ~0.50s | **$0.00** |
 | **Node 7** | **Static AST Pre-Check Gate** | `ast.parse` + `py_compile` + `pyflakes` | None (deterministic AST) | In-memory CPU | — | <2ms | **$0.00** |
-| **Node 8** | **Isolated Docker Sandbox** | `pytest` inside container (`--user`, `--pids-limit`) | Local sandbox fallback | Host CPU Docker | — | ~5s | **$0.00** |
+| **Node 8** | **Replan / Self-Correction** | **Sticky to each candidate's assigned model** | Candidate's fallback model | Preserves branch identity | `0.20` | Isolated | **$0.00** |
 | **Node 9** | **Critic / LAYA Gate** | Logistic Platt Scaler + `gemini/gemini-3.8-flash` | `groq/openai/gpt-oss-120b` | In-memory CPU + Google / Groq | `0.10` | ~5ms | **$0.00** |
 | **Node 10** | **Karpathy LLM Council** | 3-Stage Deliberation (First Opinions → Blind Review → Chairman) | Single best model fallback | Groq + Google + Mistral | `0.20` | Async | **$0.00** |
 | **Node 11** | **Memory & Dynamic Playbooks** | SQLite WAL (`memory.db`) | In-memory dict | Local Disk (CPU) | — | <1ms | **$0.00** |
 | **Node 12** | **Checkpoint & Crash Resume** | `SqliteSaver` State Persistence | In-memory state | Local Disk (CPU) | — | <1ms | **$0.00** |
+
+---
+
+## 3. The 3 Small Tweaks to Make This Setup Bulletproof
+
+1. **Sticky Model on Replan (Candidate Affinity)**:
+   - When Candidate 1 (`qwen3.8-27b`), Candidate 2 (`gpt-oss-120b`), or Candidate 3 (`gemini-3.8-flash`) fails the sandbox test, the retry loop in `replan_node` $\rightarrow$ `coder_node` **remains locked to the candidate's assigned model family** (`state.assigned_model`).
+   - *Why this is bulletproof*: Switching models mid-retry destroys context and causes style churn. Keeping each candidate branch "sticky" ensures that surgical fixes stay surgical, invariant fixes stay invariant, and callers stay updated consistently.
+
+2. **Harmonized Temperature Clamping (`0.20` across all generative nodes)**:
+   - Clamped all generation stages (Node 3 Planner, Node 5 Repro, Node 6 Candidates, Node 8 Replan) to `temperature = 0.20`.
+   - *Why this is bulletproof*: Prevents indentation hallucinations and invalid markdown fences (which spike at temp $\ge 0.40$), while avoiding greedy stagnation on replan retries (which occurs at temp $< 0.10$).
+
+3. **Cross-Provider Fallback Pairing (Zero Cascading Outages)**:
+   - Primary and Fallback models are intentionally routed to **opposing free cloud providers**:
+     - **Node 3 (Planner)**: Google (`gemini-3.8-flash`) $\rightarrow$ Groq (`gpt-oss-120b`) $\rightarrow$ Google (`gemini-3.5-flash`)
+     - **Node 5 (Repro Test)**: Groq (`gpt-oss-120b`) $\rightarrow$ Google (`gemini-3.8-flash`)
+     - **Node 6 (Candidate 1 - minimal_diff)**: Groq (`qwen3.8-27b`) $\rightarrow$ Google (`gemini-3.5-flash`)
+     - **Node 6 (Candidate 2 - root_cause_first)**: Groq (`gpt-oss-120b`) $\rightarrow$ Groq (`qwen3.8-27b`)
+     - **Node 6 (Candidate 3 - call_site_aware)**: Google (`gemini-3.8-flash`) $\rightarrow$ Google (`gemini-3.5-flash`)
+   - *Why this is bulletproof*: If Google AI Studio encounters a temporary 429 rate limit window, the pipeline immediately falls back to Groq LPUs without stopping, and vice versa.
+
+---
 
 ---
 

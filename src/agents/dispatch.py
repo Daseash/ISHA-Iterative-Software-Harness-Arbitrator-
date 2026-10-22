@@ -75,6 +75,9 @@ def dispatch_agents(state: AgentState):
     except Exception:
         order = selected
     sends = []
+    from src.agents.candidates import strategy_models
+    assigned_models = strategy_models()
+
     for i, strategy in enumerate(order, start=1):
         # P0-10: unique worktree per (instance, branch, retry) — was agent-{i} (collides).
         tag = f"agent-{iid}-{i}-r{retry}"
@@ -88,10 +91,12 @@ def dispatch_agents(state: AgentState):
             worktree = make_sandbox(state.repo_path, prefix=f"isha-sandbox-{iid}-{i}-")
             _ = exc
 
+        candidate_model = assigned_models.get(strategy, "")
         payload = {
             **base,
             "worktree": worktree,
             "strategy": strategy,
+            "assigned_model": candidate_model,
             "retry_count": 0,
             "test_output": "",
             "patch": "",
