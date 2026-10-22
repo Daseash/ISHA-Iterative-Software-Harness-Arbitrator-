@@ -71,7 +71,7 @@ def get_session_stats(session_name: str) -> tuple[int, int]:
     return completed, clean
 
 
-def run_patch_generation(session_name: str, timeout: int = 360, candidates: int = 3) -> bool:
+def run_patch_generation(session_name: str, timeout: int = 360, candidates: int = 3, workers: int = 1) -> bool:
     """Run 3-candidate tournament patch generation with improvement loop."""
     slice_file = ROOT / "data" / "slices" / f"{session_name}.json"
     if not slice_file.is_file():
@@ -97,12 +97,12 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
         log(f"All {len(instances)} instances in {session_name} already have non-empty patches! Skipping patch generation.")
         return True
 
-    log(f"Targeting {len(unpatched)} unpatched instances in {session_name} with 3-candidate tournament...")
+    log(f"Targeting {len(unpatched)} unpatched instances in {session_name} with 3-candidate tournament (workers={workers})...")
     cmd = [
         PYTHON, "-u", "-m", "src.bench.runner",
         "--run-id", session_name,
         "--candidates", str(candidates),
-        "--workers", "1",
+        "--workers", str(workers),
         "--no-verify",
         "--timeout", str(timeout),
         "--max-retries", "2",
@@ -151,6 +151,7 @@ def main() -> None:
     parser.add_argument("--timeout", type=int, default=360, help="Per-instance timeout in seconds")
     parser.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default: 3)")
     parser.add_argument("--eval-workers", type=int, default=2, help="Parallel Docker eval containers (default: 2)")
+    parser.add_argument("--gen-workers", type=int, default=1, help="Parallel patch generation workers (default: 1)")
     parser.add_argument("--eval-only", action="store_true", help="Skip patch generation and run Docker eval only")
     parser.add_argument("--skip-eval", action="store_true", help="Skip Docker eval and generate patches only")
     args = parser.parse_args()
@@ -160,6 +161,7 @@ def main() -> None:
     log("=" * 65)
     log(f"Target sessions: {args.sessions}")
     log(f"Candidates per instance: {args.candidates}")
+    log(f"Generation workers: {args.gen_workers}")
 
     docker_ok = check_docker()
     if docker_ok:
@@ -174,7 +176,7 @@ def main() -> None:
         log("=" * 65)
 
         if not args.eval_only:
-            run_patch_generation(session, timeout=args.timeout, candidates=args.candidates)
+            run_patch_generation(session, timeout=args.timeout, candidates=args.candidates, workers=args.gen_workers)
 
         if not args.skip_eval and docker_ok:
             run_docker_evaluation(session, workers=args.eval_workers)
