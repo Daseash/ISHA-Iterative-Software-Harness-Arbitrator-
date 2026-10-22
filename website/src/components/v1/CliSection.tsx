@@ -4,13 +4,14 @@ import { sounds } from "../../utils/sound";
 import { ScrollHighlight } from "./ScrollHighlight";
 
 export const CliSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"pip" | "curl" | "git">("pip");
+  const [activeTab, setActiveTab] = useState<"pip" | "curl" | "git" | "mcp">("pip");
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: "pip install isha",
-    curl: "curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash",
-    git: "pip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git",
+    pip: `# Install ISHA globally\npip install isha\n\n# Solve a bug and create a GitHub PR\nisha fix https://github.com/org/repo --issue "Fix bug..." --pr\n\n# Open visual web dashboard\nisha ui`,
+    curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
+    git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\nisha doctor\n\n# Launch Web Dashboard\nisha ui`,
+    mcp: `# 1. Start FastMCP stdio server\nisha-mcp\n\n# 2. Add to Claude Desktop / Cursor / Antigravity (mcp_config.json):\n{\n  "mcpServers": {\n    "isha": {\n      "command": "isha-mcp"\n    }\n  }\n}\n\n# Exposes: isha_solve, isha_localize, isha_tournament, isha_verify_patch`,
   };
 
   const handleCopy = () => {
@@ -74,6 +75,16 @@ export const CliSection: React.FC = () => {
                   }`}
                 >
                   GITHUB
+                </button>
+                <button
+                  onClick={() => setActiveTab("mcp")}
+                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
+                    activeTab === "mcp"
+                      ? "bg-black text-[#F9F7EF] dark:bg-[#F9F7EF] dark:text-black shadow-md"
+                      : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
+                  }`}
+                >
+                  MCP (IDE)
                 </button>
               </div>
             </div>

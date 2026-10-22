@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { ArrowLeft, Check, Copy, Sparkles, ExternalLink } from "lucide-react";
 import { Skiper82 } from "../components/v1/skiper82";
-import { Navbar_001 } from "../components/v1/skiper13";
-import { ScrollHighlight } from "../components/v1/ScrollHighlight";
+import { DarkModeSwitch } from "../components/unlumen-ui/DarkModeSwitch";
 import { sounds } from "../utils/sound";
 
 interface FixPageProps {
@@ -13,46 +12,124 @@ interface FixPageProps {
 
 export const FixPage: React.FC<FixPageProps> = () => {
   const [copied, setCopied] = useState(false);
+  const [cliFlavor, setCliFlavor] = useState<"pip" | "mcp" | "pnpm">("pip");
 
-  const command = "pip install isha";
+  const pipCommand = "pip install isha && isha fix .";
+  const mcpCommand = "isha-mcp";
+  const pnpmCommand = "pnpm dlx shadcn add @skiper-ui/skiper82";
+
+  const activeCommand =
+    cliFlavor === "pip"
+      ? pipCommand
+      : cliFlavor === "mcp"
+      ? mcpCommand
+      : pnpmCommand;
 
   const handleCopyCommand = () => {
-    navigator.clipboard.writeText(command);
+    navigator.clipboard.writeText(activeCommand);
     sounds.playSuccess();
     setCopied(true);
     setTimeout(() => setCopied(false), 2200);
   };
 
-  return (
-    <main className="relative w-full min-h-screen md:h-screen bg-[#F9F7EF] dark:bg-black overflow-y-auto md:overflow-hidden select-none transition-colors duration-300 flex flex-col justify-start md:justify-between">
-      {/* Floating Home Navbar with Red Dot & Menu anchored to the left */}
-      <Navbar_001 position="left" />
+  const handleNavigateHome = (e: React.MouseEvent) => {
+    e.preventDefault();
+    sounds.playClick();
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
 
-      {/* Left-Corner FIX Heading in Exact STATS Style */}
-      <div className="w-full px-5 sm:px-10 md:px-14 lg:px-16 pt-20 sm:pt-24 pb-2 text-left z-20 shrink-0">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-red-600">
-          <ScrollHighlight variant="round" color="coral">
-            FIX
-          </ScrollHighlight>
-        </h1>
-        <p className="font-mono text-xs uppercase tracking-widest text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-          <ScrollHighlight variant="brush" color="sun">
-            AUTONOMOUS HARNESS • AST SYNTHESIZER
-          </ScrollHighlight>
-        </p>
-      </div>
+  const handleNavigateStats = (e: React.MouseEvent) => {
+    e.preventDefault();
+    sounds.playClick();
+    window.history.pushState({}, "", "/stats");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+
+  return (
+    <main className="relative w-full h-screen min-h-screen bg-[#F9F7EF] dark:bg-black overflow-hidden select-none transition-colors duration-300 flex flex-col justify-between">
+      {/* ================= TOP NAVIGATION BAR ================= */}
+      <header className="w-full flex items-center justify-between px-6 sm:px-10 py-5 z-20 shrink-0 border-b border-neutral-200/60 dark:border-neutral-900">
+        {/* Back to Home Button */}
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            onClick={handleNavigateHome}
+            className="group flex items-center gap-2.5 text-neutral-600 hover:text-black dark:text-neutral-400 dark:hover:text-white transition-colors cursor-pointer"
+          >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xs group-hover:scale-105 transition-transform">
+              <ArrowLeft className="w-4 h-4 text-red-600 stroke-[2.5]" />
+            </div>
+            <div className="flex items-center gap-1.5 font-black text-sm tracking-tight">
+              <span>ISHA</span>
+              <span className="text-neutral-400 dark:text-neutral-600">/</span>
+              <span className="text-red-600 uppercase font-black">FIX</span>
+            </div>
+          </a>
+
+          <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-600/10 text-red-600 border border-red-600/20 text-[10px] font-mono font-bold tracking-wider uppercase ml-2">
+            <Sparkles className="w-3 h-3" />
+            AI Input 002
+          </span>
+        </div>
+
+        {/* Right Actions: STATS link + Theme Toggle */}
+        <div className="flex items-center gap-4">
+          <a
+            href="/stats"
+            onClick={handleNavigateStats}
+            className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-red-600 dark:text-neutral-400 dark:hover:text-red-400 transition-colors"
+          >
+            STATS ↗
+          </a>
+
+          <a
+            href="https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex items-center gap-1 font-mono text-xs font-bold uppercase tracking-wider text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
+          >
+            <span>GITHUB</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+
+          <DarkModeSwitch />
+        </div>
+      </header>
 
       {/* ================= CENTER CHAT INPUT EXPERIENCE ================= */}
-      <section className="flex-1 w-full flex items-center justify-center px-4 py-2 min-h-0">
-        <Skiper82 className="h-full" />
+      <section className="flex-1 w-full flex items-center justify-center px-4 py-6">
+        <Skiper82 />
       </section>
 
-      {/* ================= BOTTOM CLI BADGE ================= */}
-      <footer className="w-full flex items-center justify-center pb-4 sm:pb-6 px-4 z-20 shrink-0">
+      {/* ================= BOTTOM CLI BADGE (MATCHING SCREENSHOT) ================= */}
+      <footer className="w-full flex items-center justify-center pb-6 px-4 z-20 shrink-0">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-neutral-900/90 text-neutral-300 dark:bg-neutral-900 dark:text-neutral-300 border border-neutral-800 shadow-xl text-xs font-mono backdrop-blur-md">
+          {/* Flavor toggle: pip / mcp / pnpm */}
+          <button
+            type="button"
+            onClick={() => {
+              sounds.playClick();
+              setCliFlavor(
+                cliFlavor === "pip"
+                  ? "mcp"
+                  : cliFlavor === "mcp"
+                  ? "pnpm"
+                  : "pip"
+              );
+            }}
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer text-[11px] font-bold"
+            title="Toggle between pip, mcp, and pnpm CLI"
+          >
+            <span>{cliFlavor}</span>
+            <span className="text-[10px] text-neutral-500">↕</span>
+          </button>
+
+          <span className="text-neutral-600">|</span>
+
           {/* Command text */}
           <span className="text-neutral-200 select-all font-mono text-[11px] sm:text-xs tracking-tight">
-            {command}
+            {activeCommand}
           </span>
 
           {/* Copy button */}

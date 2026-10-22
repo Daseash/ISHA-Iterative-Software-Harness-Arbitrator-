@@ -267,6 +267,10 @@ export const StatsSection: React.FC = () => {
       cmd: "isha fix --repo ./target-repo --issue ./problem_statement.md",
     },
     {
+      title: "FastMCP IDE Server",
+      cmd: "isha-mcp  # Exposes isha_solve, isha_tournament to Cursor/Claude",
+    },
+    {
       title: "Run System Doctor",
       cmd: "isha doctor --check-all",
     },
