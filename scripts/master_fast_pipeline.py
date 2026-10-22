@@ -22,9 +22,11 @@ import sys
 import time
 from pathlib import Path
 
+import tempfile
+
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
-LOG_DIR = Path(r"C:\Users\Eashwar\AppData\Local\Temp\opencode")
+LOG_DIR = Path(tempfile.gettempdir()) / "isha_logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 
