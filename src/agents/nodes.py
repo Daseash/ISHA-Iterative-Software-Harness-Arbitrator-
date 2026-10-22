@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 from src.agents.state import AgentState, coerce_state
-from src.config import call_coder, call_planner, get_model_log
+from src.config import call_coder, call_planner, call_repro, get_model_log
 from src.tools.context_trimmer import trim_traceback
 from src.tools.patch_engine import apply_patch
 from src.tools.sandbox import make_sandbox, run_tests, cleanup_sandbox
@@ -393,7 +393,7 @@ REPOSITORY CONTEXT:
 REPO PATH: {state.repo_path}"""
     _prompt_stats("regression", prompt=prompt)
     try:
-        test_code = call_planner(prompt)
+        test_code = call_repro(prompt)
         state.regression_test = _strip_tool_markup(_strip_fences(test_code))
     except Exception as exc:
         state.regression_test = f"# [REGRESSION TEST ERROR] {exc}"

@@ -84,13 +84,21 @@ CRITIC_CHAIN = _parse_chain(
     "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
 )
 
+REPRO_CHAIN = _parse_chain(
+    "ISHA_REPRO_MODEL", "groq/deepseek-r1-distill-llama-70b",
+    "ISHA_REPRO_FALLBACKS",
+    "groq/openai/gpt-oss-120b,gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+)
+
 # Backward-compatible aliases
 PLANNER_MODEL = PLANNER_CHAIN[0]
 CODER_MODEL = CODER_CHAIN[0]
 LOCALIZER_MODEL = LOCALIZER_CHAIN[0]
 CRITIC_MODEL = CRITIC_CHAIN[0]
+REPRO_MODEL = REPRO_CHAIN[0]
 PLANNER_FALLBACKS = PLANNER_CHAIN[1:]
 CODER_FALLBACKS = CODER_CHAIN[1:]
+REPRO_FALLBACKS = REPRO_CHAIN[1:]
 
 # Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
 CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "gemini/gemini-3.5-flash-lite")
@@ -125,23 +133,41 @@ _openrouter_keys_raw = os.getenv("OPENROUTER_API_KEYS") or os.getenv("OPENROUTER
 _openrouter_key_pool = [k.strip() for k in _openrouter_keys_raw.split(",") if k.strip()]
 _openrouter_key_lock = threading.Lock()
 _openrouter_key_counter = 0
+_mistral_keys_raw = os.getenv("MISTRAL_API_KEYS") or os.getenv("MISTRAL_API_KEY") or ""
+_mistral_key_pool = [k.strip() for k in _mistral_keys_raw.split(",") if k.strip()]
+_mistral_key_lock = threading.Lock()
+_mistral_key_counter = 0
+_cerebras_keys_raw = os.getenv("CEREBRAS_API_KEYS") or os.getenv("CEREBRAS_API_KEY") or ""
+_cerebras_key_pool = [k.strip() for k in _cerebras_keys_raw.split(",") if k.strip()]
+_cerebras_key_lock = threading.Lock()
+_cerebras_key_counter = 0
 GROQ_API_KEY = _groq_key_pool[0] if _groq_key_pool else None
 OPENROUTER_API_KEY = _openrouter_key_pool[0] if _openrouter_key_pool else None
-LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY)
+MISTRAL_API_KEY = _mistral_key_pool[0] if _mistral_key_pool else None
+CEREBRAS_API_KEY = _cerebras_key_pool[0] if _cerebras_key_pool else None
+LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY or MISTRAL_API_KEY or CEREBRAS_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
 
 
 def _next_from_pool(pool: list, lock: threading.Lock, counter_name: str) -> str | None:
     """Round-robin pick from a key pool (no per-model kill; pools are small)."""
-    global _groq_key_counter, _openrouter_key_counter
+    global _groq_key_counter, _openrouter_key_counter, _mistral_key_counter, _cerebras_key_counter
     if not pool:
         return None
     with lock:
         if counter_name == "groq":
             _groq_key_counter += 1
             return pool[_groq_key_counter % len(pool)]
-        _openrouter_key_counter += 1
-        return pool[_openrouter_key_counter % len(pool)]
+        elif counter_name == "openrouter":
+            _openrouter_key_counter += 1
+            return pool[_openrouter_key_counter % len(pool)]
+        elif counter_name == "mistral":
+            _mistral_key_counter += 1
+            return pool[_mistral_key_counter % len(pool)]
+        elif counter_name == "cerebras":
+            _cerebras_key_counter += 1
+            return pool[_cerebras_key_counter % len(pool)]
+        return pool[0]
 
 
 def get_next_groq_key() -> str | None:
@@ -150,6 +176,14 @@ def get_next_groq_key() -> str | None:
 
 def get_next_openrouter_key() -> str | None:
     return _next_from_pool(_openrouter_key_pool, _openrouter_key_lock, "openrouter")
+
+
+def get_next_mistral_key() -> str | None:
+    return _next_from_pool(_mistral_key_pool, _mistral_key_lock, "mistral")
+
+
+def get_next_cerebras_key() -> str | None:
+    return _next_from_pool(_cerebras_key_pool, _cerebras_key_lock, "cerebras")
 
 
 def _check_and_reload_keys_from_env() -> None:
@@ -174,6 +208,10 @@ def _check_and_reload_keys_from_env() -> None:
                 _dead_gemini_keys_by_model.clear()
                 _dead_providers.discard("gemini")
                 print(f"[config] Reloaded {len(fresh_keys)} Gemini keys into active pool (primary: {fresh_keys[0][:12]}...)", file=sys.stderr)
+            mraw = os.getenv("MISTRAL_API_KEYS") or os.getenv("MISTRAL_API_KEY") or ""
+            _mistral_key_pool = [k.strip() for k in mraw.split(",") if k.strip()]
+            craw = os.getenv("CEREBRAS_API_KEYS") or os.getenv("CEREBRAS_API_KEY") or ""
+            _cerebras_key_pool = [k.strip() for k in craw.split(",") if k.strip()]
     except Exception:
         pass
 
@@ -688,6 +726,20 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     _okey = get_next_openrouter_key()
                     if _okey:
                         kwargs["api_key"] = _okey
+                elif provider in ("mistral", "codestral"):
+                    _mkey = get_next_mistral_key()
+                    if _mkey:
+                        kwargs["api_key"] = _mkey
+                    elif not os.getenv("MISTRAL_API_KEY"):
+                        errors.append(f"{_short_name(model)}: skipped (no MISTRAL_API_KEY)")
+                        break
+                elif provider == "cerebras":
+                    _ckey = get_next_cerebras_key()
+                    if _ckey:
+                        kwargs["api_key"] = _ckey
+                    elif not os.getenv("CEREBRAS_API_KEY"):
+                        errors.append(f"{_short_name(model)}: skipped (no CEREBRAS_API_KEY)")
+                        break
                 if "max_tokens" not in kwargs:
                     kwargs["max_tokens"] = int(os.getenv("ISHA_MAX_TOKENS", "4096"))
                 resp = litellm.completion(**kwargs)
@@ -803,6 +855,11 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
 def call_planner(prompt: str, temperature: float | None = None) -> str:
     """Call the planner model chain for planning and reasoning."""
     return _call_chain(PLANNER_CHAIN, "planner", prompt, temperature)
+
+
+def call_repro(prompt: str, temperature: float | None = None) -> str:
+    """Call the regression test model chain (e.g. DeepSeek-R1 Distill Llama 70B on Groq)."""
+    return _call_chain(REPRO_CHAIN, "repro", prompt, temperature)
 
 
 def call_coder(

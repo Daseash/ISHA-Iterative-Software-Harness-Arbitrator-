@@ -107,3 +107,26 @@ src/
 - **Secret & Plan Isolation**: API keys in `.env` and local working plans (`plan.md`) must never be committed or staged to Git.
 - **Continuous GitHub Sync**: All code improvements, documentation, and predictions are committed and pushed to `origin main` on `https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-`.
 
+---
+
+## 8. 100% Cloud-Hosted Architecture & Zero-Cost Routing Matrix
+- **Zero VRAM / Zero Local GPU**: Operates with 0 GB VRAM requirement, routed across free cloud inference endpoints.
+- **Node-to-Model Specialization**:
+  - `Node 1 (Localization)`: `BAAI/bge-reranker-base` (ONNX) + `gemini-3.8-flash` (Google AI Studio)
+  - `Node 2 (Decomposer)`: `groq/qwen/qwen-2.5-coder-32b` (Groq Cloud)
+  - `Node 3 (Planner)`: `groq/openai/gpt-oss-120b` (Groq Cloud / Google AI Studio)
+  - `Node 4 (Confidence Gate)`: Deterministic AST Math + Rule Gate (<2ms)
+  - `Node 5 (Repro Test Gen)`: `groq/deepseek-r1-distill-llama-70b` (Groq Cloud)
+  - `Node 6 (Tournament Candidates)`:
+    - `minimal_diff`: `mistral/codestral-latest` (Mistral Platform)
+    - `call_site_aware`: `gemini/gemini-3.8-flash` (Google AI Studio)
+    - `root_cause_first`: `groq/openai/gpt-oss-120b` (Groq Cloud)
+    - `defensive_fix`: `mistral/codestral-latest` (Mistral Platform)
+    - `cross_file_audit`: `gemini/gemini-3.8-flash` (Google AI Studio 1M context)
+  - `Node 7 (AST Pre-check Gate)`: In-memory `ast.parse` syntax verification (<2ms)
+  - `Node 8 (Sandbox)`: Containerized `pytest` (`--user`, `--pids-limit`, 120s timeout)
+  - `Node 9 (Critic / LAYA)`: Platt scaled probability calibration ($P_{\text{solve}} \ge 0.65$)
+  - `Node 10 (Council)`: Karpathy 3-stage LLM Council (`src/agents/council.py`)
+- Full specification documented in [`docs/CLOUD_ARCHITECTURE.md`](file:///c:/Users/Eashwar/ISHA/isha-agent/docs/CLOUD_ARCHITECTURE.md).
+
+

@@ -57,8 +57,8 @@ regression_test → coder → candidates → sandbox →(fail, budget left)→ c
 
 ### 2.5 Regression test (RED) — `nodes.py:regression_test_node`
 - **In:** issue + context (clip `ISHA_REGRESSION_CONTEXT_CHARS`)
-- **Out:** `regression_test` — a pytest test that must **fail** on current code.
-- This is the TDD anchor: no patch ships without a repro that went RED.
+- **Out:** `regression_test` — a pytest test that must **fail** on current code. Generated via `call_repro` (`groq/deepseek-r1-distill-llama-70b`).
+- This is the TDD anchor: no patch ships without a repro that went RED. (See [`CLOUD_ARCHITECTURE.md`](CLOUD_ARCHITECTURE.md)).
 
 ### 2.6 Coder — `nodes.py:coder_node`
 - **In:** plan, regression test, target-file code (clip `ISHA_CODE_BLOCK_CHARS`),

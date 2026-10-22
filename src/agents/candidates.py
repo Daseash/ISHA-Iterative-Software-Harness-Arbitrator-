@@ -41,11 +41,11 @@ MAX_REPAIR_ROUNDS = int(os.getenv("ISHA_APPLY_REPAIR_ROUNDS", "2"))
 #   ISHA_CANDIDATE_MODELS=minimal_diff=groq/openai/gpt-oss-20b,call_site_aware=gemini/gemini-3.1-flash-lite
 DEFAULT_STRATEGY_MODELS: dict[str, str] = {
     "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
-    "minimal_diff": CANDIDATE_1_MODEL,        # gemini-3.5-flash-lite: surgical, low-temp, AST-focused
-    "call_site_aware": CANDIDATE_2_MODEL,    # gemini-3.8-flash: deep reasoning & full context
-    "root_cause_first": CANDIDATE_3_MODEL,   # gemini-3.5-flash: root-cause invariants
-    "defensive_fix": CANDIDATE_1_MODEL,      # defensive guardrails
-    "cross_file_audit": CANDIDATE_2_MODEL,   # wide-reach audit work
+    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "mistral/codestral-latest"),        # Mistral Platform: surgical, low-temp diffs
+    "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", "gemini/gemini-3.8-flash"),    # Google AI Studio: deep reasoning & full context
+    "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", "groq/openai/gpt-oss-120b"), # Groq Cloud: root-cause invariants
+    "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", "mistral/codestral-latest"),      # Mistral Platform: defensive guardrails & edge-cases
+    "cross_file_audit": os.getenv("ISHA_MODEL_CROSS_FILE_AUDIT", "gemini/gemini-3.8-flash"), # Google AI Studio: 1M context wide-reach audit work
 }
 
 

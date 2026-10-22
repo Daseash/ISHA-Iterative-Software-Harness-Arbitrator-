@@ -160,9 +160,37 @@ async def api_fix(request: Request) -> JSONResponse:
         }, status_code=500)
 
 
+async def api_council(request: Request) -> JSONResponse:
+    """Run an LLM Council deliberation across multiple models (Karpathy's llm-council)."""
+    try:
+        data = await request.json()
+        query = data.get("query", "").strip() or data.get("question", "").strip()
+        if not query:
+            return JSONResponse({"error": "Empty query"}, status_code=400)
+
+        from src.agents.council import LLMCouncil
+
+        council = LLMCouncil()
+        result = council.deliberate(query)
+
+        return JSONResponse({
+            "success": True,
+            "query": result.query,
+            "synthesis": result.stage3_synthesis,
+            "chairman": result.chairman,
+            "opinions": result.stage1_opinions,
+            "peer_reviews": result.stage2_reviews,
+            "duration": round(result.duration_sec, 2),
+        })
+    except Exception as exc:
+        traceback.print_exc()
+        return JSONResponse({"success": False, "error": str(exc)}, status_code=500)
+
+
 routes = [
     Route("/api/status", api_status, methods=["GET"]),
     Route("/api/fix", api_fix, methods=["POST"]),
+    Route("/api/council", api_council, methods=["POST"]),
 ]
 
 middleware = [
