@@ -27,12 +27,9 @@ Traditional autonomous software engineering agents either:
 | **Node 2** | **Decomposer** (Sub-issue splitting) | `groq/qwen/qwen-2.5-coder-32b` | `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.10` | ~0.1s | **$0.00** |
 | **Node 3** | **Planner / Root-Cause Reasoner** | `gemini/gemini-3.8-flash` | `groq/openai/gpt-oss-120b` $\rightarrow$ `gemini/gemini-3.5-flash` | Google AI Studio / Groq | `0.20` | ~0.2s | **$0.00** |
 | **Node 4** | **Confidence Gate** (LocReranker) | Deterministic AST Math + Rule Gate | Rule-based gate | In-memory CPU | — | <2ms | **$0.00** |
-| **Node 5** | **Regression Test (RED Phase)** | `groq/openai/gpt-oss-120b` | `gemini/gemini-3.8-flash` $\rightarrow$ `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.2s | **$0.00** |
-| **Node 6a** | **Candidate 1: minimal_diff** | `groq/qwen/qwen3.8-27b` | `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.15s | **$0.00** |
-| **Node 6b** | **Candidate 2: root_cause_first** | `groq/openai/gpt-oss-120b` | `groq/qwen/qwen3.8-27b` | Groq Cloud LPUs | `0.20` | ~0.45s | **$0.00** |
-| **Node 6c** | **Candidate 3: call_site_aware** | `gemini/gemini-3.8-flash` | `gemini/gemini-3.5-flash` | Google AI Studio | `0.20` | ~0.30s | **$0.00** |
-| **Node 6d** | **Candidate 4: defensive_fix** | `mistral/codestral-latest` | `gemini/gemini-3.5-flash` | Mistral AI API / Google | `0.20` | ~0.50s | **$0.00** |
-| **Node 6e** | **Candidate 5: cross_file_audit** | `gemini/gemini-3.8-flash` (1M context) | `groq/llama-3.3-70b-versatile` | Google AI Studio / Groq Cloud | `0.20` | ~0.50s | **$0.00** |
+| **Node 6 (Candidate 1)** | **minimal_diff** | `groq/qwen/qwen3.8-27b` | `gemini/gemini-3.5-flash` | Groq Cloud / Google AI Studio | `0.20` | ~0.15s | **$0.00** |
+| **Node 6 (Candidate 2)** | **root_cause_first** | `groq/openai/gpt-oss-120b` | `groq/qwen/qwen3.8-27b` | Groq Cloud LPUs | `0.20` | ~0.45s | **$0.00** |
+| **Node 6 (Candidate 3)** | **call_site_aware** | `gemini/gemini-3.8-flash` | `gemini/gemini-3.5-flash` | Google AI Studio | `0.20` | ~0.30s | **$0.00** |
 | **Node 7** | **Static AST Pre-Check Gate** | `ast.parse` + `py_compile` + `pyflakes` | None (deterministic AST) | In-memory CPU | — | <2ms | **$0.00** |
 | **Node 8** | **Replan / Self-Correction** | **Sticky to each candidate's assigned model** | Candidate's fallback model | Preserves branch identity | `0.20` | Isolated | **$0.00** |
 | **Node 9** | **Critic / LAYA Gate** | Logistic Platt Scaler + `gemini/gemini-3.8-flash` | `groq/openai/gpt-oss-120b` | In-memory CPU + Google / Groq | `0.10` | ~5ms | **$0.00** |
