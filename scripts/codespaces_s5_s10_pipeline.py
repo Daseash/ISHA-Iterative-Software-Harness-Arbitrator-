@@ -82,6 +82,22 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
     completed, clean = get_session_stats(session_name)
     log(f"=== {session_name}: {completed}/{len(instances)} completed, {clean} patches generated ===")
 
+    # Smart targeting: identify instances missing or with empty patches
+    run_dir = ROOT / "results" / session_name
+    unpatched = []
+    for inst in instances:
+        p_dir = run_dir / inst.replace("/", "__")
+        diff = p_dir / "patch.diff"
+        if not diff.is_file() or not diff.read_text(encoding="utf-8", errors="ignore").strip():
+            unpatched.append(inst)
+            if p_dir.is_dir():
+                shutil.rmtree(p_dir, ignore_errors=True)
+
+    if not unpatched:
+        log(f"All {len(instances)} instances in {session_name} already have non-empty patches! Skipping patch generation.")
+        return True
+
+    log(f"Targeting {len(unpatched)} unpatched instances in {session_name} with 3-candidate tournament...")
     cmd = [
         PYTHON, "-u", "-m", "src.bench.runner",
         "--run-id", session_name,
@@ -90,7 +106,7 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
         "--no-verify",
         "--timeout", str(timeout),
         "--max-retries", "2",
-        "--instances", *instances,
+        "--instances", *unpatched,
     ]
     log(f"Launching patch generator for {session_name} (candidates={candidates}, timeout={timeout}s)...")
     res = subprocess.run(cmd, cwd=str(ROOT))
