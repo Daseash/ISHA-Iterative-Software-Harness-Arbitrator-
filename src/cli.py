@@ -396,6 +396,12 @@ def cmd_fix(args: argparse.Namespace) -> int:
         issue = fetch_github_issue(args.issue_url)
         if not issue:
             print(f"[fix] warning: could not fetch issue text from {args.issue_url}")
+        if not repo:
+            import re
+            m = re.match(r"(https?://github\.com/[^/]+/[^/]+)/issues/\d+", args.issue_url)
+            if m:
+                repo = m.group(1)
+                print(f"[fix] auto-detected repo: {repo}")
 
     if repo and (repo.startswith("https://") or repo.startswith("http://")):
         print(f"[fix] cloning remote repository from {repo} ...")
