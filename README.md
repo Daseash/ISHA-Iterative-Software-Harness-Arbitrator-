@@ -21,7 +21,6 @@
    - [Zero-Cost Cloud Routing Matrix](#1-zero-cost-cloud-model-routing-matrix)
    - [Automated Failover & Key Pooling](#2-cross-provider-failover--quota-resilience)
    - [Full-Lifecycle Telemetry with Langfuse](#3-full-lifecycle-observability--telemetry-langfuse-cloud)
-   - [Karpathy 3-Stage LLM Council](#4-karpathy-3-stage-llm-council-stage-deliberation)
 3. [MLOps Architecture: Continuous Evaluation & Safety Gates](#-mlops-architecture-continuous-evaluation--safety-gates)
    - [Closed-Loop TDD Pipeline (RED $\rightarrow$ GREEN)](#1-closed-loop-tdd-pipeline-phase-red--green)
    - [LAYA Calibrated Decision Gate ($ECE = 0.0010$)](#2-laya-calibrated-decision-gate-ece--00010)
@@ -54,9 +53,9 @@ Most first-generation autonomous SWE agents (e.g., standard Devin loops, SWE-age
  │ • 100% Cloud-Hosted Model Mesh    │ │ • Official SWE-bench Docker Harness │
  │ • 0 GB VRAM / $0.00 Inference Cost │ │ • Phase RED Reproduction Pytest Gen│
  │ • Cross-Provider Dynamic Failover  │ │ • LAYA Probability Gate (ECE 0.001)│
- │ • Langfuse Observability & Traces  │ │ • AST Static Syntax & Quality Gates│
- │ • Karpathy 3-Stage LLM Council     │ │ • Episodic Memory & Negative Veto  │
- │ • Parallel Worktree Tournaments    │ │ • Tree-Sitter & Hybrid Qdrant RAG  │
+ │ • Parallel Worktree Tournaments    │ │ • AST Static Syntax & Quality Gates│
+ │ • Langfuse Observability & Traces  │ │ • Episodic Memory & Negative Veto  │
+ │ • Closed-Loop Multi-Candidate Mesh │ │ • Tree-Sitter & Hybrid Qdrant RAG  │
  └────────────────────────────────────┘ └────────────────────────────────────┘
 ```
 
@@ -93,7 +92,6 @@ ISHA routes each specialized agent stage to optimal free-tier cloud models, elim
 | **Node 7** | **Static AST Gate**| `ast.parse` + `py_compile` | Local CPU | `—` | Zero-cost pre-sandbox syntax validator (<2ms)|
 | **Node 8** | **Replan / Repair**| **Sticky to assigned model** | Same as candidate branch | `0.20` | Self-healing from real pytest tracebacks |
 | **Node 9** | **LAYA Safety Gate**| Platt Scaler + `gemini-3.8-flash` | In-Memory CPU + Google | `—` | Probability gate ($P_{\text{solve}} \ge 0.65$) |
-| **Node 10**| **Council** | Karpathy 3-Stage Pipeline | Groq + Google + Mistral | `0.20` | Blind peer review & Chairman synthesis |
 
 ### 2. Cross-Provider Failover & Quota Resilience
 Production LLMOps demands 99.9% availability despite provider rate limits (HTTP 429). ISHA implements:
@@ -107,12 +105,6 @@ ISHA integrates enterprise observability through **Langfuse Cloud**, capturing e
 * **Step-Level Execution DAG**: Traces every node transition (Investigation $\rightarrow$ Planning $\rightarrow$ Test Synthesis $\rightarrow$ Tournament $\rightarrow$ Arbitration $\rightarrow$ LAYA Gate).
 * **Token Burn & Latency Tracking**: Records prompt/completion token usage and per-node latency across providers ($0.00 actual cloud spend).
 * **Error Taxonomy**: Categorizes failures across syntax errors, test assertion mismatches, timeout boundaries, and regression triggers.
-
-### 4. Karpathy 3-Stage LLM Council (`src/agents/council.py`)
-For complex or high-ambiguity bugs, ISHA activates Karpathy's 3-stage deliberation pipeline:
-1. **Stage 1 (Independent Generation)**: Three heterogeneous models (`gemini-3.5-flash-lite`, `gemini-3.8-flash`, `gpt-oss-120b`) produce independent proposals in parallel.
-2. **Stage 2 (Blind Peer Review)**: Proposals are anonymized and cross-reviewed by peer models to detect edge-case oversights.
-3. **Stage 3 (Chairman Synthesis)**: The Chairman model (`gemini-3.8-flash`) synthesizes the peer critiques into a single, bulletproof patch plan.
 
 ---
 
@@ -263,7 +255,6 @@ isha-agent/
 │   │   ├── graph.py              # LangGraph cyclic execution machine
 │   │   ├── nodes.py              # Specialized agent nodes (Localizer, Planner, Coder, Verifier)
 │   │   ├── candidates.py         # Multi-candidate strategy tournament
-│   │   ├── council.py            # Karpathy 3-stage LLM Council deliberation
 │   │   ├── state.py              # Strongly-typed AgentState schemas (Pydantic v2)
 │   │   └── fix_history.py        # Vectorized memory of Docker-proven bug patterns
 │   │

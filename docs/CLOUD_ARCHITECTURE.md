@@ -14,7 +14,6 @@ Traditional autonomous software engineering agents either:
 **ISHA solves this by decoupling compute from local hardware**:
 - **Execution & Sandboxing**: In-memory Python AST analysis + lightweight Docker container on host CPU.
 - **Intelligence & Reasoning**: Asymmetrically routed across free cloud inference endpoints (Google AI Studio, Groq Cloud LPUs, Mistral AI Platform, Cerebras, and OpenRouter).
-- **Deliberation**: Karpathy's 3-Stage LLM Council (`src/agents/council.py`) synthesizes high-confidence consensus across diverse model architectures.
 - **Fail-Safe Operation**: Automatic key rotation, rate-limit backoff, and a deterministic fallback engine (`src/tools/offline_brain.py`) guarantee the pipeline never crashes mid-instance.
 
 ---
@@ -33,7 +32,6 @@ Traditional autonomous software engineering agents either:
 | **Node 7** | **Static AST Pre-Check Gate** | `ast.parse` + `py_compile` + `pyflakes` | None (deterministic AST) | In-memory CPU | — | <2ms | **$0.00** |
 | **Node 8** | **Replan / Self-Correction** | **Sticky to each candidate's assigned model** | Candidate's fallback model | Preserves branch identity | `0.20` | Isolated | **$0.00** |
 | **Node 9** | **Critic / LAYA Gate** | Logistic Platt Scaler + `gemini/gemini-3.8-flash` | `groq/openai/gpt-oss-120b` | In-memory CPU + Google / Groq | `0.10` | ~5ms | **$0.00** |
-| **Node 10** | **Karpathy LLM Council** | 3-Stage Deliberation (First Opinions → Blind Review → Chairman) | Single best model fallback | Groq + Google + Mistral | `0.20` | Async | **$0.00** |
 | **Node 11** | **Memory & Dynamic Playbooks** | SQLite WAL (`memory.db`) | In-memory dict | Local Disk (CPU) | — | <1ms | **$0.00** |
 | **Node 12** | **Checkpoint & Crash Resume** | `SqliteSaver` State Persistence | In-memory state | Local Disk (CPU) | — | <1ms | **$0.00** |
 
@@ -73,7 +71,6 @@ Traditional autonomous software engineering agents either:
 
 ### Node 3: Planner / Root-Cause Analysis
 - **Why this model?**: `groq/openai/gpt-oss-120b` (or `gemini-3.8-flash`) acts as the lead architect. It identifies why the bug manifests, examines call hierarchies, and drafts the Phase RED reproduction strategy.
-- **Deliberation Option**: Can trigger Karpathy's LLM Council (`src/agents/council.py`) to run multi-model peer review when planner confidence is under the threshold.
 
 ### Node 4: Confidence Gate
 - **Why this model?**: Rule-based deterministic gate. Calculates Bayesian localization probability without calling any LLM, saving precious API rate limits.
@@ -105,30 +102,6 @@ Each candidate runs in an isolated Git worktree with a distinct model and strate
 
 ---
 
-## 4. Karpathy's LLM Council (`/api/council`)
-
-When solving complex, ambiguous, or high-blast-radius issues, ISHA activates Karpathy's 3-Stage LLM Council:
-
-```mermaid
-graph TD
-    UserQuery[Bug Report / Architecture Dilemma] --> S1[Stage 1: Independent Opinions]
-    S1 --> M1[Gemini 3.5 Flash Lite]
-    S1 --> M2[Gemini 3.8 Flash]
-    S1 --> M3[Groq GPT-OSS-120B]
-    
-    M1 --> S2[Stage 2: Blind Peer Review]
-    M2 --> S2
-    M3 --> S2
-    
-    S2 --> S3[Stage 3: Chairman Synthesis]
-    S3 --> FinalConsensus[High-Confidence Consensus Plan]
-```
-
-1. **Stage 1 (First Opinions)**: 3 diverse models independently analyze the issue and produce proposed solutions.
-2. **Stage 2 (Blind Peer Review)**: Responses are anonymized (e.g., "Response A", "Response B", "Response C") and cross-evaluated by all members for flaws, edge cases, and missing guards.
-3. **Stage 3 (Chairman Synthesis)**: A designated Chairman (`gemini-3.8-flash`) synthesizes all reviews, discards flawed proposals, and produces an authoritative consensus.
-
----
 
 ## 5. Free Cloud Provider Setup & Credentials
 

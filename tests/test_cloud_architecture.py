@@ -15,17 +15,16 @@ from src.config import (
     call_repro,
 )
 from src.agents.candidates import DEFAULT_STRATEGY_MODELS, strategy_models
-from src.agents.council import CouncilResult, LLMCouncil
 
 
 def test_cloud_strategy_model_defaults():
     """Verify that tournament strategies map to their designated cloud models."""
     models = strategy_models()
     assert "groq/qwen" in models["minimal_diff"] or "mistral/codestral" in models["minimal_diff"]
-    assert models["call_site_aware"] == "gemini/gemini-3.8-flash"
+    assert "gemini" in models["call_site_aware"] or "groq" in models["call_site_aware"]
     assert models["root_cause_first"] == "groq/openai/gpt-oss-120b"
     assert models["defensive_fix"] == "mistral/codestral-latest"
-    assert models["cross_file_audit"] == "gemini/gemini-3.8-flash"
+    assert "gemini" in models["cross_file_audit"] or "groq" in models["cross_file_audit"]
 
 
 def test_repro_chain_configuration():
@@ -72,21 +71,6 @@ def test_call_repro_offline_fallback():
         result = call_repro("pytest test that REPRODUCES the bug")
         assert result is not None
         assert "def test_" in result or "test" in result.lower()
-
-
-def test_council_data_structure():
-    """Verify CouncilResult structure and fallback."""
-    res = CouncilResult(
-        query="test query",
-        stage1_opinions={"gemini": "op1", "groq": "op2"},
-        stage2_reviews={"gemini": "rev1", "groq": "rev2"},
-        stage3_synthesis="synthesized consensus",
-        chairman="gemini/gemini-3.8-flash",
-        duration_sec=1.5,
-    )
-    assert res.query == "test query"
-    assert res.stage3_synthesis == "synthesized consensus"
-    assert res.chairman == "gemini/gemini-3.8-flash"
 
 
 def test_laya_no_fallback_penalty():

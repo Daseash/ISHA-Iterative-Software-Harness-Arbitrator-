@@ -126,7 +126,6 @@ src/
   - `Node 7 (AST Pre-check Gate)`: In-memory `ast.parse` syntax verification (<2ms)
   - `Node 8 (Sandbox)`: Containerized `pytest` (`--user`, `--pids-limit`, 120s timeout)
   - `Node 9 (Critic / LAYA)`: Platt scaled probability calibration ($P_{\text{solve}} \ge 0.65$)
-  - `Node 10 (Council)`: Karpathy 3-stage LLM Council (`src/agents/council.py`)
 - Full specification documented in [`docs/CLOUD_ARCHITECTURE.md`](file:///c:/Users/Eashwar/ISHA/isha-agent/docs/CLOUD_ARCHITECTURE.md).
 
 
