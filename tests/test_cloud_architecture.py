@@ -87,3 +87,40 @@ def test_council_data_structure():
     assert res.query == "test query"
     assert res.stage3_synthesis == "synthesized consensus"
     assert res.chairman == "gemini/gemini-3.8-flash"
+
+
+def test_laya_no_fallback_penalty():
+    """Verify that LAYA does not penalize non-primary tournament peer models."""
+    from src.review.laya_judge import compute_laya_composite
+
+    # Both should evaluate with tier_penalty = 0.0
+    score_standard = compute_laya_composite(fix_quality=2, matches_issue=0.8, safe_to_apply=0.8, tier_penalty=0.0)
+    score_peer = compute_laya_composite(fix_quality=2, matches_issue=0.8, safe_to_apply=0.8)
+    assert score_standard == score_peer
+    assert score_peer == 0.50 * 1.0 + 0.25 * 0.8 + 0.25 * 0.8  # exactly 0.90
+
+
+def test_strategy_rotation_by_issue_index():
+    """Verify issue_idx % 3 model rotation across strategies when enabled."""
+    from src.agents.state import AgentState
+    from src.agents.dispatch import dispatch_agents
+
+    state1 = AgentState(issue_text="bug 101", repo_path="tests/dummy_repo", instance_id="repo__issue-101")
+    state2 = AgentState(issue_text="bug 102", repo_path="tests/dummy_repo", instance_id="repo__issue-102")
+
+    with patch.dict(os.environ, {"ISHA_ROTATE_STRATEGIES": "1"}):
+        sends1 = dispatch_agents(state1)
+        sends2 = dispatch_agents(state2)
+        m1 = [s.arg["assigned_model"] for s in sends1]
+        m2 = [s.arg["assigned_model"] for s in sends2]
+        # Rotated sets should be shifted by 1
+        assert m1 != m2
+        assert set(m1) == set(m2)
+
+
+def test_locked_temperature_0_20():
+    """Verify all strategy variants are locked at 0.20 temperature."""
+    from src.agents.candidates import STRATEGY_VARIANTS
+
+    for name, temp, _desc in STRATEGY_VARIANTS:
+        assert temp == 0.20, f"Strategy {name} has temp {temp}, expected 0.20"

@@ -25,17 +25,9 @@ def critic_node(state, config: RunnableConfig | None = None) -> AgentState:
         # Hard guardrails always win over model judgment.
         from src.guardrails.scanner import scan_patch_for_secrets
 
-        def _is_fallback_attempt(st):
-            """Check if the current patch attempt used a fallback model."""
-            if not st.model_log:
-                return False
-            for entry in reversed(st.model_log):
-                if entry.get("role") == "coder":
-                    position = entry.get("position", "")
-                    return "fallback" in position.lower()
-            return False
-
-        tier_penalty = 0.05 if _is_fallback_attempt(state) else 0.00
+        # Co-equal tournament peers: Qwen3.8-27B, gpt-oss-120b, and gemini-3.8-flash
+        # compete fairly on patch merit without fallback penalty bias.
+        tier_penalty = 0.00
         scores = judge.score_patch(
             state.issue_text,
             state.plan,

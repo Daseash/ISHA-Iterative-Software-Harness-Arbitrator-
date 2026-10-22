@@ -5,6 +5,8 @@ Uses LangGraph Send() to spawn independent agents, each with its own
 git worktree and patching strategy.
 """
 
+import os
+import re
 from copy import deepcopy
 
 from src.agents.state import AgentState
@@ -75,8 +77,18 @@ def dispatch_agents(state: AgentState):
     except Exception:
         order = selected
     sends = []
+    import re
     from src.agents.candidates import strategy_models
     assigned_models = strategy_models()
+
+    rotate = os.getenv("ISHA_ROTATE_STRATEGIES", "0").strip().lower() in ("1", "true", "yes")
+    rotate_models = [
+        "groq/qwen/qwen3.8-27b",
+        "groq/openai/gpt-oss-120b",
+        "gemini/gemini-3.8-flash",
+    ]
+    num_match = re.search(r"\d+", iid)
+    issue_num = int(num_match.group()) if num_match else sum(ord(c) for c in iid)
 
     for i, strategy in enumerate(order, start=1):
         # P0-10: unique worktree per (instance, branch, retry) — was agent-{i} (collides).
@@ -91,7 +103,11 @@ def dispatch_agents(state: AgentState):
             worktree = make_sandbox(state.repo_path, prefix=f"isha-sandbox-{iid}-{i}-")
             _ = exc
 
-        candidate_model = assigned_models.get(strategy, "")
+        if rotate:
+            candidate_model = rotate_models[(issue_num + i - 1) % len(rotate_models)]
+        else:
+            candidate_model = assigned_models.get(strategy, "")
+
         payload = {
             **base,
             "worktree": worktree,

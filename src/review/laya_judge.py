@@ -99,7 +99,7 @@ def compute_laya_composite(
     safe_to_apply: float,      # Platt-calibrated prob [0.0, 1.0]
     secrets_or_danger: float = 0.0,  # Prob [0.0, 1.0] - fails closed if > 0.50
     logic_drift: float = 0.0,        # Prob [0.0, 1.0] - rejects if > 0.70
-    tier_penalty: float = 0.0, # 0.00 (High), 0.05 (Lite), 0.15 (Offline AST)
+    tier_penalty: float = 0.0, # 0.00 for co-equal tournament peers (Qwen, GPT-OSS, Gemini)
 ) -> float:
     """Subsystem 4: Composite scoring with fail-closed multiplicative vetoes."""
     # Hard multiplicative vetoes (fail-closed)
