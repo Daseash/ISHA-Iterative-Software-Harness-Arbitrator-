@@ -1,0 +1,11 @@
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -626,6 +626,8 @@ class Response(object):
+             try:
+                 for chunk in self.raw.stream(chunk_size, decode_content=True):
+                     yield chunk
++            except socket.error as e:
++                raise ConnectionError(e)
+             except urllib3_exceptions.IncompleteRead as e:
+                 raise ChunkedEncodingError(e)
+             except urllib3_exceptions.DecodeError as e:

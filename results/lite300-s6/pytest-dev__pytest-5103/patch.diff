@@ -1,0 +1,21 @@
+diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py
+index 2903b8995..a8348fbe9 100644
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -933,6 +933,16 @@ warn_explicit(
+                 self.on_failure = fail_inner
+             self.push_format_context()
+             res, expl = self.visit(v)
++        if isinstance(call.args[0], ast.GeneratorExp):
++            gen = call.args[0]
++            elt = gen.elt
++            generators = gen.generators
++            loop = ast.For(generators[0].target, generators[0].iter, [ast.If(generators[0].ifs, [ast.Expr(elt)], [])] if generators[0].ifs else [ast.Expr(elt)], [])
++            # rewrite generator to list comprehension or loop
++            # actually, let's unroll it to a list comprehension: [elt for ... in ...]
++            list_comp = ast.ListComp(elt=elt, generators=generators)
++            call.args[0] = list_comp
++            res, expl = self.visit(call.args[0])
+             body.append(ast.Assign([ast.Name(res_var, ast.Store())], res))
+             expl_format = self.pop_format_context(ast.Str(expl))
+             call = ast_Call(app, [expl_format], [])

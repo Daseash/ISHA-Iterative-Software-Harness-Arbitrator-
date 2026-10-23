@@ -1,152 +1,127 @@
 [
   {
-    "instance_id": "matplotlib__matplotlib-18869",
-    "model_patch": "diff --git a/lib/matplotlib/__init__.py b/lib/matplotlib/__init__.py\nindex b657a35..fdf94e0 100644\n--- a/lib/matplotlib/__init__.py\n+++ b/lib/matplotlib/__init__.py\n@@ -148,6 +148,9 @@ def __getattr__(name):\n         else:  # Get the version from the _version.py setuptools_scm file.\n             __version__ = _version.version\n         return __version__\n+    elif name == \"version_info\":\n+        from packaging.version import parse as parse_version\n+        return parse_version(__version__)\n     raise AttributeError(f\"module {__name__!r} has no attribute {name!r}\")\n",
-    "model_name_or_path": "isha"
+    "instance_id": "mwaskom/seaborn-2848",
+    "model_patch": "diff --git a/seaborn/_oldcore.py b/seaborn/_oldcore.py\nindex c9218c1f..eb4384bb 100644\n--- a/seaborn/_oldcore.py\n+++ b/seaborn/_oldcore.py\n@@ -57,7 +57,7 @@ class SemanticMapping:\n \n     def _lookup_single(self, key):\n         \"\"\"Apply the mapping to a single data value.\"\"\"\n-        return self.lookup_table[key]\n+        return self.lookup_table.get(key, np.nan)\n \n     def __call__(self, key, *args, **kwargs):\n         \"\"\"Get the attribute(s) values for the data key.\"\"\"",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-22711",
-    "model_patch": "diff --git a/lib/matplotlib/widgets.py b/lib/matplotlib/widgets.py\nindex da5b40a..b3101cd 100644\n--- a/lib/matplotlib/widgets.py\n+++ b/lib/matplotlib/widgets.py\n@@ -903,13 +903,11 @@ class RangeSlider(SliderBase):\n             xy[1] = .25, val[1]\n             xy[2] = .75, val[1]\n             xy[3] = .75, val[0]\n-            xy[4] = .25, val[0]\n         else:\n             xy[0] = val[0], .25\n             xy[1] = val[0], .75\n             xy[2] = val[1], .75\n             xy[3] = val[1], .25\n-            xy[4] = val[0], .25\n         self.poly.xy = xy\n         self.valtext.set_text(self._format(val))\n         if self.drawon:\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-25079",
+    "model_patch": "diff --git a/lib/matplotlib/image.py b/lib/matplotlib/image.py\nindex 7b066bdaf7..1adccd368d 100644\n--- a/lib/matplotlib/image.py\n+++ b/lib/matplotlib/image.py\n@@ -107,7 +107,7 @@ def composite_images(images, renderer, magnification=1.0):\n         _image.resample(data, output, trans, _image.NEAREST,\n                         resample=False, alpha=alpha)\n \n-    return output, bbox.x0 / magnification, bbox.y0 / magnification\n+    return output, bbox.x0 // magnification, bbox.y0 // magnification\n \n \n def _draw_list_compositing_images(",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-22835",
-    "model_patch": "",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-26020",
+    "model_patch": "diff --git a/lib/mpl_toolkits/axes_grid1/axes_grid.py b/lib/mpl_toolkits/axes_grid1/axes_grid.py\nindex 2b1b1d3200..1fdc174a1c 100644\n--- a/lib/mpl_toolkits/axes_grid1/axes_grid.py\n+++ b/lib/mpl_toolkits/axes_grid1/axes_grid.py\n@@ -13,11 +13,14 @@ from .mpl_axes import Axes\n def _tick_only(ax, bottom_on, left_on):\n     bottom_off = not bottom_on\n     left_off = not left_on\n-    ax.axis[\"bottom\"].toggle(ticklabels=bottom_off, label=bottom_off)\n-    ax.axis[\"left\"].toggle(ticklabels=left_off, label=left_off)\n+    axis = ax.axis\n+    if callable(axis):\n+        axis = axis()\n+    axis[\"bottom\"].toggle(ticklabels=bottom_off, label=bottom_off)\n+    axis[\"left\"].toggle(ticklabels=left_off, label=left_off)\n \n \n-class CbarAxesBase:\n+class CbarAxes(Axes):\n     def __init__(self, *args, orientation, **kwargs):\n         self.orientation = orientation\n         super().__init__(*args, **kwargs)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23299",
-    "model_patch": "diff --git a/lib/matplotlib/__init__.py b/lib/matplotlib/__init__.py\nindex c268a56..0acba41 100644\n--- a/lib/matplotlib/__init__.py\n+++ b/lib/matplotlib/__init__.py\n@@ -1175,7 +1175,7 @@ def get_backend():\n     --------\n     matplotlib.use\n     \"\"\"\n-    return rcParams['backend']\n+    return rcParams._get_backend_or_none() or rcParams['backend']\n \n \n def interactive(b):\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23987",
+    "model_patch": "diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py\nindex 5bbb786984..0829b56f82 100644\n--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -2565,7 +2565,7 @@ class Figure(FigureBase):\n             new_layout_engine = ConstrainedLayoutEngine(compress=True,\n                                                         **kwargs)\n         elif layout == 'none':\n-            if self._layout_engine is not None:\n+            if self.get_layout_engine() is not None:\n                 new_layout_engine = PlaceHolderLayoutEngine(\n                     self._layout_engine.adjust_compatible,\n                     self._layout_engine.colorbar_gridspec",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23314",
-    "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/axes3d.py b/lib/mpl_toolkits/mplot3d/axes3d.py\nindex 9db44b7..43f7eb5 100644\n--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -329,6 +329,12 @@ class Axes3D(Axes):\n         super().set_aspect(\n             aspect, adjustable=adjustable, anchor=anchor, share=share)\n \n+    def set_visible(self, b):\n+        super().set_visible(b)\n+        for coll in self.collections + self.patches + self.lines + self.texts:\n+            coll.set_visible(b)\n+        self.gridlines.set_visible(b)\n+\n     def set_box_aspect(self, aspect, *, zoom=1):\n         \"\"\"\n         Set the Axes box aspect.\n",
-    "model_name_or_path": "isha"
+    "instance_id": "mwaskom/seaborn-3190",
+    "model_patch": "diff --git a/seaborn/_core/scales.py b/seaborn/_core/scales.py\nindex 6c9ecbc9..f1988906 100644\n--- a/seaborn/_core/scales.py\n+++ b/seaborn/_core/scales.py\n@@ -347,8 +347,8 @@ class ContinuousBase(Scale):\n             else:\n                 vmin, vmax = new.norm\n             vmin, vmax = axis.convert_units((vmin, vmax))\n-            a = forward(vmin)\n-            b = forward(vmax) - forward(vmin)\n+            a = forward(np.float64(vmin))\n+            b = forward(np.float64(vmax)) - forward(np.float64(vmin))\n \n             def normalize(x):\n                 return (x - a) / b",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23476",
-    "model_patch": "diff --git a/lib/matplotlib/backends/backend_macosx.py b/lib/matplotlib/backends/backend_macosx.py\nindex 700d1d4..16e8292 100644\n--- a/lib/matplotlib/backends/backend_macosx.py\n+++ b/lib/matplotlib/backends/backend_macosx.py\n@@ -39,6 +39,8 @@ class FigureCanvasMac(FigureCanvasAgg, _macosx.FigureCanvas, FigureCanvasBase):\n         super().__init__(figure=figure)\n         self._draw_pending = False\n         self._is_drawing = False\n+        if self.figure.dpi == self.device_pixel_ratio * mpl.rcParams['figure.dpi']:\n+            self.figure.dpi /= self.device_pixel_ratio\n \n     def draw(self):\n         \"\"\"Render the figure and update the macosx canvas.\"\"\"\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-24149",
+    "model_patch": "diff --git a/lib/matplotlib/cbook/__init__.py b/lib/matplotlib/cbook/__init__.py\nindex 34c6ddb861..f965139cef 100644\n--- a/lib/matplotlib/cbook/__init__.py\n+++ b/lib/matplotlib/cbook/__init__.py\n@@ -1746,7 +1746,7 @@ def _safe_first_finite(obj, *, skip_nonfinite=True):\n         raise RuntimeError(\"matplotlib does not \"\n                            \"support generators as input\")\n     else:\n-        return next(val for val in obj if safe_isfinite(val))\n+        return next((val for val in obj if safe_isfinite(val)), next(iter(obj), np.nan))\n \n \n def sanitize_sequence(data):",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23562",
-    "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a..d60e370 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -867,7 +867,7 @@ class Poly3DCollection(PolyCollection):\n         self.stale = True\n \n     def get_facecolor(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolors())\n \n     def get_edgecolor(self):\n         return self._edgecolors2d\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-25442",
+    "model_patch": "diff --git a/lib/matplotlib/offsetbox.py b/lib/matplotlib/offsetbox.py\nindex 77768e7383..65ea294e2f 100644\n--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1466,7 +1466,7 @@ or callable, default: value of *xycoords*\n \n \n class DraggableBase:\n-    \"\"\"\n+    \"\"\"    canvas = property(lambda self: self.ref_artist.figure.canvas)\n     Helper base class for a draggable artist (legend, offsetbox).\n \n     Derived classes must override the following methods::\n@@ -1521,7 +1521,8 @@ class DraggableBase:\n                     self.ref_artist.figure._get_renderer())\n                 self.canvas.blit()\n             else:\n-                self.canvas.draw()\n+                if self.canvas is not None:\n+                    self.canvas.draw_idle()\n \n     def on_pick(self, evt):\n         if self._check_still_parented() and evt.artist == self.ref_artist:\n@@ -1544,7 +1545,8 @@ class DraggableBase:\n         if self._check_still_parented() and self.got_artist:\n             self.finalize_offset()\n             self.got_artist = False\n-            self.canvas.mpl_disconnect(self._c1)\n+            if self.canvas is not None:\n+                self.canvas.mpl_disconnect(self._id_drag)\n \n             if self._use_blit:\n                 self.ref_artist.set_animated(False)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23563",
-    "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a..8306482 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -211,6 +211,8 @@ class Line3D(lines.Line2D):\n \n     @artist.allow_rasterization\n     def draw(self, renderer):\n+        if not hasattr(self, '_verts3d'):\n+            return\n         xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)\n",
-    "model_name_or_path": "isha"
+    "instance_id": "pallets/flask-5063",
+    "model_patch": "diff --git a/src/flask/cli.py b/src/flask/cli.py\nindex 37a15ff2..8b5283a1 100644\n--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -1002,6 +1002,7 @@ def routes_command(sort: str, all_methods: bool) -> None:\n     \"\"\"Show all registered routes with endpoints and methods.\"\"\"\n \n     rules = list(current_app.url_map.iter_rules())\n+    has_subdomains = any(rule.subdomain for rule in rules)\n     if not rules:\n         click.echo(\"No routes were registered.\")\n         return\n@@ -1019,6 +1020,9 @@ def routes_command(sort: str, all_methods: bool) -> None:\n     ]\n \n     headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    if has_subdomains:\n+        headers = (\"Domain\",) + headers\n+\n     widths = (\n         max(len(rule.endpoint) for rule in rules),\n         max(len(methods) for methods in rule_methods),",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23913",
-    "model_patch": "diff --git a/lib/matplotlib/legend.py b/lib/matplotlib/legend.py\nindex 9e5b903..d99e42f 100644\n--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -339,6 +339,7 @@ class Legend(Artist):\n         bbox_transform=None,  # transform for the bbox\n         frameon=None,         # draw frame\n         handler_map=None,\n+                 draggable=False,\n         title_fontproperties=None,  # properties for the legend title\n         alignment=\"center\",       # control the alignment within the legend box\n         *,\n@@ -700,6 +701,8 @@ class Legend(Artist):\n         Return a legend handler from *legend_handler_map* that\n         corresponds to *orig_handler*.\n \n+        self.set_draggable(draggable)\n+\n         *legend_handler_map* should be a dictionary object (that is\n         returned by the get_legend_handler_map method).\n \n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-24970",
+    "model_patch": "diff --git a/lib/matplotlib/colors.py b/lib/matplotlib/colors.py\nindex 2d3072da04..d9f97d8529 100644\n--- a/lib/matplotlib/colors.py\n+++ b/lib/matplotlib/colors.py\n@@ -727,9 +727,8 @@ class Colormap:\n                 xa = xa.astype(int)\n         # Set the over-range indices before the under-range;\n         # otherwise the under-range values get converted to over-range.\n-        xa[xa > self.N - 1] = self._i_over\n-        xa[xa < 0] = self._i_under\n-        xa[mask_bad] = self._i_bad\n+        np.clip(xa, 0, self.N - 1, out=xa)\n+        xa[mask_bad] = self._i_bad if self._i_bad is not np.ma.masked else 0\n \n         lut = self._lut\n         if bytes:",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23964",
-    "model_patch": "diff --git a/lib/matplotlib/backends/backend_ps.py b/lib/matplotlib/backends/backend_ps.py\nindex f209e81..9c5d5ab 100644\n--- a/lib/matplotlib/backends/backend_ps.py\n+++ b/lib/matplotlib/backends/backend_ps.py\n@@ -670,7 +670,7 @@ grestore\n \n         self.set_color(*gc.get_rgb())\n \n-        for ps_name, xs_names in stream:\n+        for ps_name, xs_names in (stream or []):\n             self.set_font(ps_name, prop.get_size_in_points(), False)\n             thetext = \"\\n\".join(f\"{x:g} 0 m /{name:s} glyphshow\"\n                                 for x, name in xs_names)\n",
-    "model_name_or_path": "isha"
+    "instance_id": "pallets/flask-4045",
+    "model_patch": "diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py\nindex 5fb84d86..688f7f95 100644\n--- a/src/flask/blueprints.py\n+++ b/src/flask/blueprints.py\n@@ -81,6 +81,9 @@ class BlueprintSetupState:\n         view_func: t.Optional[t.Callable] = None,\n         **options: t.Any,\n     ) -> None:\n+        if \".\" in name:\n+            raise ValueError(\"Blueprint name cannot contain dots.\")\n+\n         \"\"\"A helper method to register a rule (and optionally a view function)\n         to the application.  The endpoint is automatically prefixed with the\n         blueprint's name.",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-23987",
-    "model_patch": "diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py\nindex 5bbb786..17df212 100644\n--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -1248,6 +1248,7 @@ default: %(va)s\n             ax = getattr(mappable, \"axes\", None)\n \n         if (self.get_layout_engine() is not None and\n+                self.get_layout_engine().adjust_compatible and\n                 not self.get_layout_engine().colorbar_gridspec):\n             use_gridspec = False\n         # Store the value of gca so that we can set it back later on.\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-25332",
+    "model_patch": "--- a/lib/matplotlib/pyplot.py\n+++ b/lib/matplotlib/pyplot.py\n@@ -98,7 +98,7 @@\n     # or @_api.make_keyword_only decorators; if so, propagate them to the\n     # pyplot wrapper as well.\n     while getattr(method, \"__wrapped__\", None) is not None:\n-        decorator = _api.deprecation.DECORATORS.get(method)\n+        decorator = _api.deprecation.DECORATORS.get(id(method))\n         if decorator:\n             decorators.append(decorator)\n         method = method.__wrapped__",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-24149",
-    "model_patch": "diff --git a/lib/matplotlib/axes/_axes.py b/lib/matplotlib/axes/_axes.py\nindex fdac0f3..14b1861 100644\n--- a/lib/matplotlib/axes/_axes.py\n+++ b/lib/matplotlib/axes/_axes.py\n@@ -2180,7 +2180,7 @@ class Axes(_AxesBase):\n             # wrap numpy arrays.\n             try:\n                 x0 = cbook._safe_first_finite(x0)\n-            except (TypeError, IndexError, KeyError):\n+            except (TypeError, IndexError, KeyError, StopIteration):\n                 pass\n \n             try:\n",
-    "model_name_or_path": "isha"
+    "instance_id": "mwaskom/seaborn-3407",
+    "model_patch": "diff --git a/seaborn/axisgrid.py b/seaborn/axisgrid.py\nindex 75349099..76c3e22c 100644\n--- a/seaborn/axisgrid.py\n+++ b/seaborn/axisgrid.py\n@@ -1487,7 +1487,7 @@ class PairGrid(Grid):\n             else:\n                 plt.sca(ax)\n \n-            vector = self.data[var]\n+            vector = self.data.iloc[:, self.data.columns.get_loc(var)]\n             if self._hue_var is not None:\n                 hue = self.data[self._hue_var]\n             else:",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-24265",
-    "model_patch": "diff --git a/lib/matplotlib/style/core.py b/lib/matplotlib/style/core.py\nindex fb0a542..42e4fcc 100644\n--- a/lib/matplotlib/style/core.py\n+++ b/lib/matplotlib/style/core.py\n@@ -199,6 +199,11 @@ def context(style, after_reset=False):\n def load_base_library():\n     \"\"\"Load style library defined in this package.\"\"\"\n     library = read_style_directory(BASE_LIBRARY_PATH)\n+    for name in list(library):\n+        if name.startswith('seaborn-v0_8-'):\n+            library[name.replace('seaborn-v0_8-', 'seaborn-')] = library[name]\n+        elif name == 'seaborn-v0_8':\n+            library['seaborn'] = library[name]\n     return library\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-25498",
+    "model_patch": "diff --git a/lib/matplotlib/colorbar.py b/lib/matplotlib/colorbar.py\nindex d3d53e3d98..b11a4516ad 100644\n--- a/lib/matplotlib/colorbar.py\n+++ b/lib/matplotlib/colorbar.py\n@@ -323,6 +323,7 @@ class Colorbar:\n             alpha = mappable.get_alpha()\n \n         mappable.colorbar = self\n+        self.norm = mappable.norm\n         mappable.colorbar_cid = mappable.callbacks.connect(\n             'changed', self.update_normal)\n \n@@ -505,6 +506,7 @@ class Colorbar:\n         \"\"\"\n         _log.debug('colorbar update normal %r %r', mappable.norm, self.norm)\n         self.mappable = mappable\n+        self.norm = mappable.norm\n         self.set_alpha(mappable.get_alpha())\n         self.cmap = mappable.cmap\n         if mappable.norm != self.norm:",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-24334",
-    "model_patch": "diff --git a/lib/matplotlib/axis.py b/lib/matplotlib/axis.py\nindex af0815d..79753fe 100644\n--- a/lib/matplotlib/axis.py\n+++ b/lib/matplotlib/axis.py\n@@ -2022,7 +2022,7 @@ class Axis(martist.Artist):\n         ticks.\n         \"\"\"\n         result = self._set_tick_locations(ticks, minor=minor)\n-        if labels is not None:\n+        if labels is not None or kwargs:\n             self.set_ticklabels(labels, minor=minor, **kwargs)\n         return result\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23562",
+    "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a9c1..b740f369f9 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -514,6 +514,7 @@ class Path3DCollection(PathCollection):\n         super().__init__(*args, **kwargs)\n         self.set_3d_properties(zs, zdir)\n \n+        self._facecolors2d = self._shade_colors(self._facecolors, self._face_zmean)\n     def draw(self, renderer):\n         with cbook._setattr_cm(self, _in_draw=True):\n             super().draw(renderer)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-24970",
-    "model_patch": "diff --git a/lib/matplotlib/colors.py b/lib/matplotlib/colors.py\nindex 2d3072d..a79da96 100644\n--- a/lib/matplotlib/colors.py\n+++ b/lib/matplotlib/colors.py\n@@ -727,9 +727,10 @@ class Colormap:\n                 xa = xa.astype(int)\n         # Set the over-range indices before the under-range;\n         # otherwise the under-range values get converted to over-range.\n-        xa[xa > self.N - 1] = self._i_over\n-        xa[xa < 0] = self._i_under\n-        xa[mask_bad] = self._i_bad\n+        dtype = xa.dtype\n+        xa[xa > self.N - 1] = np.array(self._i_over).astype(dtype)\n+        xa[xa < 0] = np.array(self._i_under).astype(dtype)\n+        xa[mask_bad] = np.array(self._i_bad).astype(dtype)\n \n         lut = self._lut\n         if bytes:\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-22711",
+    "model_patch": "--- a/lib/matplotlib/widgets.py\n+++ b/lib/matplotlib/widgets.py\n@@ -912,7 +912,6 @@\n             xy[1] = .25, val[1]\n             xy[2] = .75, val[1]\n             xy[3] = .75, val[0]\n-            xy[4] = .25, val[0]\n         else:\n             xy[0] = val[0], .25\n             xy[1] = val[0], .75\n-            xy[4] = val[0], .25",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25079",
-    "model_patch": "diff --git a/lib/matplotlib/cm.py b/lib/matplotlib/cm.py\nindex 0f3b25d..0888b61 100644\n--- a/lib/matplotlib/cm.py\n+++ b/lib/matplotlib/cm.py\n@@ -504,6 +504,8 @@ class ScalarMappable:\n             The values that are mapped to colors.\n \n             The base class `.ScalarMappable` does not make any assumptions on\n+            self.norm.vmin = None\n+            self.norm.vmax = None\n             the dimensionality and shape of the value array *A*.\n         \"\"\"\n         if A is None:\n",
-    "model_name_or_path": "isha"
+    "instance_id": "mwaskom/seaborn-3010",
+    "model_patch": "diff --git a/seaborn/_stats/regression.py b/seaborn/_stats/regression.py\nindex 7b7ddc8d..9c1ea2f4 100644\n--- a/seaborn/_stats/regression.py\n+++ b/seaborn/_stats/regression.py\n@@ -21,8 +21,8 @@ class PolyFit(Stat):\n \n     def _fit_predict(self, data):\n \n-        x = data[\"x\"]\n-        y = data[\"y\"]\n+        x = data[\"x\"].dropna()\n+        y = data[\"y\"].loc[x.index]\n         if x.nunique() <= self.order:\n             # TODO warn?\n             xx = yy = []",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25311",
-    "model_patch": "diff --git a/lib/matplotlib/legend.py b/lib/matplotlib/legend.py\nindex ff6abdb..29961e8 100644\n--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -73,6 +73,11 @@ class DraggableLegend(DraggableOffsetBox):\n \n         super().__init__(legend, legend._legend_box, use_blit=use_blit)\n \n+    def __getstate__(self):\n+        state = self.__dict__.copy()\n+        state['canvas'] = None\n+        return state\n+\n     def finalize_offset(self):\n         if self._update == \"loc\":\n             self._update_loc(self.get_loc_in_canvas())\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23314",
+    "model_patch": "--- a/lib/matplotlib/pyplot.py\n+++ b/lib/matplotlib/pyplot.py\n@@ -95,7 +95,7 @@\n     # Check whether the definition of *method* includes @_api.rename_parameter\n     # or @_api.make_keyword_only decorators; if so, propagate them to the\n     # pyplot wrapper as well.\n-    while getattr(method, \"__wrapped__\", None) is not None:\n+    while hasattr(method, \"__wrapped__\"):\n         decorator = _api.deprecation.DECORATORS.get(method)\n         if decorator:\n             decorators.append(decorator)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25332",
-    "model_patch": "diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py\nindex b4c3836..e5bedeb 100644\n--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3158,6 +3158,7 @@ None}, default: None\n \n     def __getstate__(self):\n         state = super().__getstate__()\n+        state.pop('_align_label_groups', None)\n \n         # The canvas cannot currently be pickled, but this has the benefit\n         # of meaning that a figure can be detached from one canvas, and\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23299",
+    "model_patch": "diff --git a/lib/matplotlib/_pylab_helpers.py b/lib/matplotlib/_pylab_helpers.py\nindex 24fcb81fc9..238dfda55c 100644\n--- a/lib/matplotlib/_pylab_helpers.py\n+++ b/lib/matplotlib/_pylab_helpers.py\n@@ -29,7 +29,7 @@ class Gcf:\n         end.\n     \"\"\"\n \n-    figs = OrderedDict()\n+    figs = {}\n \n     @classmethod\n     def get_fig_manager(cls, num):",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25433",
-    "model_patch": "diff --git a/lib/matplotlib/widgets.py b/lib/matplotlib/widgets.py\nindex ebe5da4..2b6661a 100644\n--- a/lib/matplotlib/widgets.py\n+++ b/lib/matplotlib/widgets.py\n@@ -581,6 +581,8 @@ class Slider(SliderBase):\n         self.valtext.set_text(self._format(val))\n         if self.drawon:\n             self.ax.figure.canvas.draw_idle()\n+        if self.ax.figure.canvas is not self.canvas:\n+            self.canvas = self.ax.figure.canvas\n         self.val = val\n         if self.eventson:\n             self._observers.process('changed', val)\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-25311",
+    "model_patch": "diff --git a/lib/matplotlib/offsetbox.py b/lib/matplotlib/offsetbox.py\nindex 1dee8a2..bb3e381 100644\n--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1254,6 +1254,8 @@ class AnnotationBbox(martist.Artist, mtext._AnnotationBase):\n             The position *(x, y)* to place the text at. The coordinate system\n             is determined by *boxcoords*.\n \n+            self.canvas = canvas\n+        if self.canvas is not None:\n         xycoords : single or two-tuple of str or `.Artist` or `.Transform` or \\\n callable, default: 'data'\n             The coordinate system that *xy* is given in. See the parameter\n@@ -1295,6 +1297,8 @@ or callable, default: value of *xycoords*\n         arrowprops: dict, optional\n             Arrow properties, see `.Annotation` for description.\n \n+        if canvas is None:\n+            return\n         fontsize: float or str, optional\n             Translated to points and passed as *mutation_scale* into\n             `.FancyBboxPatch` to scale attributes of the box style (e.g. pad",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25442",
-    "model_patch": "",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23476",
+    "model_patch": "--- a/lib/matplotlib/backends/backend_macosx.py\n+++ b/lib/matplotlib/backends/backend_macosx.py\n@@ -39,3 +39,3 @@\n     def __init__(self, figure):\n-        super().__init__(figure=figure)\n+        super().__init__(figure)\n         self._draw_pending = False",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-25498",
-    "model_patch": "diff --git a/lib/matplotlib/colorbar.py b/lib/matplotlib/colorbar.py\nindex d3d53e3..7ff8e2e 100644\n--- a/lib/matplotlib/colorbar.py\n+++ b/lib/matplotlib/colorbar.py\n@@ -492,6 +492,8 @@ class Colorbar:\n \n     def update_normal(self, mappable):\n         \"\"\"\n+        self.norm = mappable.norm\n+        self.cmap = mappable.cmap\n         Update solid patches, lines, etc.\n \n         This is meant to be called when the norm of the image or contour plot\n",
-    "model_name_or_path": "isha"
+    "instance_id": "pallets/flask-4992",
+    "model_patch": "diff --git a/src/flask/config.py b/src/flask/config.py\nindex d4fc310f..a86600fc 100644\n--- a/src/flask/config.py\n+++ b/src/flask/config.py\n@@ -115,6 +115,7 @@ class Config(dict):\n         keys with double underscores (``__``). If an intermediate key\n         doesn't exist, it will be initialized to an empty dict.\n \n+            app.config.from_file(\"config.toml\", tomllib.load, mode=\"rb\")\n         :param prefix: Load env vars that start with this prefix,\n             separated with an underscore (``_``).\n         :param loads: Pass each string value to this function and use\n@@ -234,6 +235,7 @@ class Config(dict):\n         filename: str,\n         load: t.Callable[[t.IO[t.Any]], t.Mapping],\n         silent: bool = False,\n+        mode: str = \"r\",\n     ) -> bool:\n         \"\"\"Update the values in the config from a file that is loaded\n         using the ``load`` parameter. The loaded data is passed to the\n@@ -261,7 +263,7 @@ class Config(dict):\n         filename = os.path.join(self.root_path, filename)\n \n         try:\n-            with open(filename) as f:\n+            with open(filename, mode) as f:\n                 obj = load(f)\n         except OSError as e:\n             if silent and e.errno in (errno.ENOENT, errno.EISDIR):",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-26011",
-    "model_patch": "diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py\nindex 9c2ba63..8078005 100644\n--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -1138,6 +1138,7 @@ class _AxesBase(martist.Artist):\n             if which in ('both', 'original'):\n                 ax._originalPosition.set(pos)\n         self.stale = True\n+        self.callbacks.process('xlim_changed', self)\n \n     def reset_position(self):\n         \"\"\"\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-24334",
+    "model_patch": "diff --git a/lib/matplotlib/axis.py b/lib/matplotlib/axis.py\nindex af0815d41d..51e520f339 100644\n--- a/lib/matplotlib/axis.py\n+++ b/lib/matplotlib/axis.py\n@@ -1895,6 +1895,8 @@ class Axis(martist.Artist):\n         if minor:\n             self.set_minor_formatter(formatter)\n             locs = self.get_minorticklocs()\n+        if labels is None and kwargs:\n+            cbook._warn_external(\"kwargs argument(s) are not used if labels is not passed.\")\n             ticks = self.get_minor_ticks(len(locs))\n         else:\n             self.set_major_formatter(formatter)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "matplotlib__matplotlib-26020",
-    "model_patch": "diff --git a/lib/mpl_toolkits/axes_grid1/axes_grid.py b/lib/mpl_toolkits/axes_grid1/axes_grid.py\nindex 2b1b1d3..ee2f34a 100644\n--- a/lib/mpl_toolkits/axes_grid1/axes_grid.py\n+++ b/lib/mpl_toolkits/axes_grid1/axes_grid.py\n@@ -13,8 +13,12 @@ from .mpl_axes import Axes\n def _tick_only(ax, bottom_on, left_on):\n     bottom_off = not bottom_on\n     left_off = not left_on\n-    ax.axis[\"bottom\"].toggle(ticklabels=bottom_off, label=bottom_off)\n-    ax.axis[\"left\"].toggle(ticklabels=left_off, label=left_off)\n+    try:\n+        ax.axis[\"bottom\"].toggle(ticklabels=bottom_off, label=bottom_off)\n+        ax.axis[\"left\"].toggle(ticklabels=left_off, label=left_off)\n+    except TypeError:\n+        ax.xaxis.set_tick_params(labelbottom=bottom_on)\n+        ax.yaxis.set_tick_params(labelleft=left_on)\n \n \n class CbarAxesBase:\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-26011",
+    "model_patch": "diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py\nindex 9c2ba63901..b650ab1e55 100644\n--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -1287,6 +1287,8 @@ class _AxesBase(martist.Artist):\n         self._tight = None\n         self._use_sticky_edges = True\n \n+        self.callbacks.process('xlim_changed', self)\n+        self.stale = True\n         self._get_lines = _process_plot_var_args()\n         self._get_patches_for_fill = _process_plot_var_args('fill')\n \n@@ -1355,6 +1357,8 @@ class _AxesBase(martist.Artist):\n         self.xaxis.set_clip_path(self.patch)\n         self.yaxis.set_clip_path(self.patch)\n \n+        self.callbacks.process('ylim_changed', self)\n+        self.stale = True\n         if self._sharex is not None:\n             self.xaxis.set_visible(xaxis_visible)\n             self.patch.set_visible(patch_visible)",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "mwaskom__seaborn-2848",
-    "model_patch": "",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23563",
+    "model_patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -166,3 +166,3 @@\n         \"\"\"\n-        super().__init__([], [], *args, **kwargs)\n+        super().__init__(*args, **kwargs)\n         self._verts3d = xs, ys, zs",
+    "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "mwaskom__seaborn-3010",
-    "model_patch": "diff --git a/seaborn/_stats/regression.py b/seaborn/_stats/regression.py\nindex 7b7ddc8..8143177 100644\n--- a/seaborn/_stats/regression.py\n+++ b/seaborn/_stats/regression.py\n@@ -20,6 +20,7 @@ class PolyFit(Stat):\n     gridsize: int = 100\n \n     def _fit_predict(self, data):\n+        data = data.dropna(subset=[\"x\", \"y\"])\n \n         x = data[\"x\"]\n         y = data[\"y\"]\n",
-    "model_name_or_path": "isha"
-  },
-  {
-    "instance_id": "mwaskom__seaborn-3190",
-    "model_patch": "diff --git a/seaborn/_core/scales.py b/seaborn/_core/scales.py\nindex 6c9ecbc..2a323d3 100644\n--- a/seaborn/_core/scales.py\n+++ b/seaborn/_core/scales.py\n@@ -348,7 +348,7 @@ class ContinuousBase(Scale):\n                 vmin, vmax = new.norm\n             vmin, vmax = axis.convert_units((vmin, vmax))\n             a = forward(vmin)\n-            b = forward(vmax) - forward(vmin)\n+            b = np.subtract(forward(vmax), forward(vmin))\n \n             def normalize(x):\n                 return (x - a) / b\n",
-    "model_name_or_path": "isha"
-  },
-  {
-    "instance_id": "mwaskom__seaborn-3407",
-    "model_patch": "diff --git a/seaborn/axisgrid.py b/seaborn/axisgrid.py\nindex 7534909..d5e6e0a 100644\n--- a/seaborn/axisgrid.py\n+++ b/seaborn/axisgrid.py\n@@ -1487,7 +1487,7 @@ class PairGrid(Grid):\n             else:\n                 plt.sca(ax)\n \n-            vector = self.data[var]\n+            vector = self.data[var] if var in self.data else self.data.xs(var, axis=1, level=-1)\n             if self._hue_var is not None:\n                 hue = self.data[self._hue_var]\n             else:\n",
-    "model_name_or_path": "isha"
-  },
-  {
-    "instance_id": "pallets__flask-4045",
-    "model_patch": "",
-    "model_name_or_path": "isha"
-  },
-  {
-    "instance_id": "pallets__flask-4992",
-    "model_patch": "diff --git a/src/flask/config.py b/src/flask/config.py\nindex d4fc310..45ce3fb 100644\n--- a/src/flask/config.py\n+++ b/src/flask/config.py\n@@ -234,6 +234,7 @@ class Config(dict):\n         filename: str,\n         load: t.Callable[[t.IO[t.Any]], t.Mapping],\n         silent: bool = False,\n+        mode: str = \"r\",\n     ) -> bool:\n         \"\"\"Update the values in the config from a file that is loaded\n         using the ``load`` parameter. The loaded data is passed to the\n@@ -261,13 +262,13 @@ class Config(dict):\n         filename = os.path.join(self.root_path, filename)\n \n         try:\n-            with open(filename) as f:\n+            with open(filename, mode) as f:\n                 obj = load(f)\n         except OSError as e:\n-            if silent and e.errno in (errno.ENOENT, errno.EISDIR):\n+            if silent and e.errno in (errno.ENOENT, errno.EISDIR, errno.EACCES):\n                 return False\n \n-            e.strerror = f\"Unable to load configuration file ({e.strerror})\"\n+            e.strerror = f\"Unable to load configuration file {filename!r}: {e.strerror}\"\n             raise\n \n         return self.from_mapping(obj)\n",
-    "model_name_or_path": "isha"
-  },
-  {
-    "instance_id": "pallets__flask-5063",
-    "model_patch": "diff --git a/src/flask/cli.py b/src/flask/cli.py\nindex 37a15ff..61184e1 100644\n--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -887,6 +887,7 @@ def run_command(\n ):\n     \"\"\"Run a local development server.\n \n+        domain = rule.subdomain or \"\"\n     This server is for development purposes only. It does not provide\n     the stability, security, or performance of production WSGI servers.\n \n@@ -1018,7 +1019,7 @@ def routes_command(sort: str, all_methods: bool) -> None:\n         for rule in rules\n     ]\n \n-    headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    headers = (\"Domain\", \"Endpoint\", \"Methods\", \"Rule\")\n     widths = (\n         max(len(rule.endpoint) for rule in rules),\n         max(len(methods) for methods in rule_methods),\n",
-    "model_name_or_path": "isha"
+    "instance_id": "matplotlib/matplotlib-23913",
+    "model_patch": "diff --git a/lib/matplotlib/legend.py b/lib/matplotlib/legend.py\nindex 9e5b903d59..6de75cf2e7 100644\n--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -923,6 +923,8 @@ class Legend(Artist):\n             self._legend_title_box._text.set_fontproperties(prop)\n \n         self.stale = True\n+        if kwargs.pop(\"draggable\", False):\n+            self.set_draggable(True)\n \n     def get_title(self):\n         \"\"\"Return the `.Text` instance for the legend title.\"\"\"",
+    "model_name_or_path": "ISHA"
   }
 ]

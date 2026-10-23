@@ -1,0 +1,22 @@
+diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py
+index 9c2ba63901..b650ab1e55 100644
+--- a/lib/matplotlib/axes/_base.py
++++ b/lib/matplotlib/axes/_base.py
+@@ -1287,6 +1287,8 @@ class _AxesBase(martist.Artist):
+         self._tight = None
+         self._use_sticky_edges = True
+ 
++        self.callbacks.process('xlim_changed', self)
++        self.stale = True
+         self._get_lines = _process_plot_var_args()
+         self._get_patches_for_fill = _process_plot_var_args('fill')
+ 
+@@ -1355,6 +1357,8 @@ class _AxesBase(martist.Artist):
+         self.xaxis.set_clip_path(self.patch)
+         self.yaxis.set_clip_path(self.patch)
+ 
++        self.callbacks.process('ylim_changed', self)
++        self.stale = True
+         if self._sharex is not None:
+             self.xaxis.set_visible(xaxis_visible)
+             self.patch.set_visible(patch_visible)

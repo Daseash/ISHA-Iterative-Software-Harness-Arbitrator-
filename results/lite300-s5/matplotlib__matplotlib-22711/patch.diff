@@ -1,0 +1,11 @@
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -912,7 +912,6 @@
+             xy[1] = .25, val[1]
+             xy[2] = .75, val[1]
+             xy[3] = .75, val[0]
+-            xy[4] = .25, val[0]
+         else:
+             xy[0] = val[0], .25
+             xy[1] = val[0], .75
+-            xy[4] = val[0], .25

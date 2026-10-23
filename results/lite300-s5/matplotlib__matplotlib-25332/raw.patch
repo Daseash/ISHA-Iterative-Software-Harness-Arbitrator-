@@ -1,0 +1,11 @@
+--- a/lib/matplotlib/pyplot.py
++++ b/lib/matplotlib/pyplot.py
+@@ -98,7 +98,7 @@
+     # or @_api.make_keyword_only decorators; if so, propagate them to the
+     # pyplot wrapper as well.
+     while getattr(method, "__wrapped__", None) is not None:
+-        decorator = _api.deprecation.DECORATORS.get(method)
++        decorator = _api.deprecation.DECORATORS.get(id(method))
+         if decorator:
+             decorators.append(decorator)
+         method = method.__wrapped__

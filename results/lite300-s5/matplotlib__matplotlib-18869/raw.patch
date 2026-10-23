@@ -1,0 +1,9 @@
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -58,6 +58,8 @@
+         "Error importing matplotlib.  Please check that the "
+         "package is installed correctly.")
+ 
++version_info = _version.version_info
++
+ __version__ = _version.version

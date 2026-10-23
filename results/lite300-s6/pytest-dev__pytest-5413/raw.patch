@@ -1,0 +1,14 @@
+diff --git a/src/_pytest/_code/code.py b/src/_pytest/_code/code.py
+index c4ed961ac..1d4d1e44b 100644
+--- a/src/_pytest/_code/code.py
++++ b/src/_pytest/_code/code.py
+@@ -627,8 +627,7 @@ class FormattedExcinfo:
+     def get_exconly(self, excinfo, indent=4, markall=False):
+         lines = []
+         indent = " " * indent
+-        # get the real exception information out
+-        exlines = excinfo.exconly(tryshort=True).split("\n")
++        exlines = str(excinfo.value).split("\n")
+         failindent = self.fail_marker + indent[1:]
+         for line in exlines:
+             lines.append(failindent + line)

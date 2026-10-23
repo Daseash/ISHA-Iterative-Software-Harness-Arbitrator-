@@ -1,0 +1,6 @@
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -183,2 +183,3 @@
+             i += 1
++            req = prepared_request
+             yield resp

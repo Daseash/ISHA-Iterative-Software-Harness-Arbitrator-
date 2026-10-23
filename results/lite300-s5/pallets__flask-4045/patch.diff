@@ -1,0 +1,14 @@
+diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py
+index 5fb84d86..688f7f95 100644
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -81,6 +81,9 @@ class BlueprintSetupState:
+         view_func: t.Optional[t.Callable] = None,
+         **options: t.Any,
+     ) -> None:
++        if "." in name:
++            raise ValueError("Blueprint name cannot contain dots.")
++
+         """A helper method to register a rule (and optionally a view function)
+         to the application.  The endpoint is automatically prefixed with the
+         blueprint's name.

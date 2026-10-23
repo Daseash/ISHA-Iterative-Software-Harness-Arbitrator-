@@ -1,0 +1,13 @@
+diff --git a/seaborn/_oldcore.py b/seaborn/_oldcore.py
+index c9218c1f..eb4384bb 100644
+--- a/seaborn/_oldcore.py
++++ b/seaborn/_oldcore.py
+@@ -57,7 +57,7 @@ class SemanticMapping:
+ 
+     def _lookup_single(self, key):
+         """Apply the mapping to a single data value."""
+-        return self.lookup_table[key]
++        return self.lookup_table.get(key, np.nan)
+ 
+     def __call__(self, key, *args, **kwargs):
+         """Get the attribute(s) values for the data key."""

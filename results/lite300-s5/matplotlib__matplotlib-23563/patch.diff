@@ -1,0 +1,7 @@
+--- a/lib/mpl_toolkits/mplot3d/art3d.py
++++ b/lib/mpl_toolkits/mplot3d/art3d.py
+@@ -166,3 +166,3 @@
+         """
+-        super().__init__([], [], *args, **kwargs)
++        super().__init__(*args, **kwargs)
+         self._verts3d = xs, ys, zs

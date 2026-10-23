@@ -1,0 +1,24 @@
+{"event": "start", "instance_id": "pytest-dev__pytest-5227", "ts": 1792782444.8915043}
+{"event": "attempt", "n": 1, "ts": 1792782444.939977}
+{"ts": 1792782449.6041443, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782449.6045353, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782449.6274788, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782449.6276572, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782451.0702798, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782451.0705345, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782451.0925446, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782451.0927804, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782452.9915097, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782452.9917598, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782453.036619, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782453.036725, "role": "repro", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792782521.1715264, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "model", "ts": 1792782449.6045988, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782449.62771, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782451.070586, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782451.0928326, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782452.9918144, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782453.0367687, "role": "repro", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1792782457.1121857, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1792782521.8811011, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1792782522.3495574}

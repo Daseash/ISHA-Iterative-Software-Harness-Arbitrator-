@@ -1,0 +1,18 @@
+diff --git a/requests/models.py b/requests/models.py
+index 0dc5556..80a6031 100644
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -636,9 +636,11 @@ class Response(object):
+                 try:
+                     for chunk in self.raw.stream(chunk_size, decode_content=True):
+                         yield chunk
+-                except IncompleteRead as e:
++                except socket.error as e:
++                    raise ConnectionError(e)
++                except urllib3_exceptions.IncompleteRead as e:
+                     raise ChunkedEncodingError(e)
+-                except DecodeError as e:
++                except urllib3_exceptions.DecodeError as e:
+                     raise ContentDecodingError(e)
+             except AttributeError:
+                 # Standard file-like object.

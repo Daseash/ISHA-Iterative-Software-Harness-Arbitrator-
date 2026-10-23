@@ -1,0 +1,18 @@
+{"event": "start", "instance_id": "psf__requests-1963", "ts": 1792781462.3150377}
+{"event": "attempt", "n": 1, "ts": 1792781464.7165267}
+{"ts": 1792781573.7507038, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1792781573.7657554, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792781573.7659752, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1792781574.0888395, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792781591.33954, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792781656.5631883, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1792781656.5634372, "role": "planner", "model": "gemini-3.5-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "model", "ts": 1792781519.2391639, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1792781572.8227873, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1792781573.7506897, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1792781573.765961, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1792781591.3354797, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1792781599.118432, "role": "repro", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: ServiceUnavailableError"}
+{"event": "model", "ts": 1792781601.4911785, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1792781656.563489, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (3 models): gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1792781657.1036563}

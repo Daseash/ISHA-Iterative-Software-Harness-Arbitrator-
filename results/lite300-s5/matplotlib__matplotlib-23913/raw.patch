@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/legend.py b/lib/matplotlib/legend.py
+index 9e5b903d59..6de75cf2e7 100644
+--- a/lib/matplotlib/legend.py
++++ b/lib/matplotlib/legend.py
+@@ -923,6 +923,8 @@ class Legend(Artist):
+             self._legend_title_box._text.set_fontproperties(prop)
+ 
+         self.stale = True
++        if kwargs.pop("draggable", False):
++            self.set_draggable(True)
+ 
+     def get_title(self):
+         """Return the `.Text` instance for the legend title."""

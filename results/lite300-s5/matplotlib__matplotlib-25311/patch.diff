@@ -1,0 +1,22 @@
+diff --git a/lib/matplotlib/offsetbox.py b/lib/matplotlib/offsetbox.py
+index 1dee8a2..bb3e381 100644
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1254,6 +1254,8 @@ class AnnotationBbox(martist.Artist, mtext._AnnotationBase):
+             The position *(x, y)* to place the text at. The coordinate system
+             is determined by *boxcoords*.
+ 
++            self.canvas = canvas
++        if self.canvas is not None:
+         xycoords : single or two-tuple of str or `.Artist` or `.Transform` or \
+ callable, default: 'data'
+             The coordinate system that *xy* is given in. See the parameter
+@@ -1295,6 +1297,8 @@ or callable, default: value of *xycoords*
+         arrowprops: dict, optional
+             Arrow properties, see `.Annotation` for description.
+ 
++        if canvas is None:
++            return
+         fontsize: float or str, optional
+             Translated to points and passed as *mutation_scale* into
+             `.FancyBboxPatch` to scale attributes of the box style (e.g. pad

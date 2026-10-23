@@ -1,0 +1,38 @@
+--- a/src/_pytest/_io/saferepr.py
++++ b/src/_pytest/_io/saferepr.py
+@@ -10,7 +10,7 @@
+ def _try_repr_or_str(obj):
+     try:
+         return repr(obj)
+-    except (KeyboardInterrupt, SystemExit):
++    except (KeyboardInterrupt, SystemExit, RuntimeError):
+         raise
+     except BaseException:
+         return '{}("{}")'.format(type(obj).__name__, obj)
+@@ -19,7 +19,7 @@
+ def _format_repr_exception(exc: BaseException, obj: Any) -> str:
+     try:
+         exc_info = _try_repr_or_str(exc)
+-    except (KeyboardInterrupt, SystemExit):
++    except (KeyboardInterrupt, SystemExit, RuntimeError):
+         raise
+     except BaseException as exc:
+         exc_info = "unpresentable exception ({})".format(_try_repr_or_str(exc))
+@@ -45,7 +45,7 @@
+     def repr(self, x: Any) -> str:
+         try:
+             s = super().repr(x)
+-        except (KeyboardInterrupt, SystemExit):
++        except (KeyboardInterrupt, SystemExit, RuntimeError):
+             raise
+         except BaseException as exc:
+             s = _format_repr_exception(exc, x)
+@@ -54,7 +54,7 @@
+     def repr_instance(self, x: Any, level: int) -> str:
+         try:
+             s = repr(x)
+-        except (KeyboardInterrupt, SystemExit):
++        except (KeyboardInterrupt, SystemExit, RuntimeError):
+             raise
+         except BaseException as exc:
+             s = _format_repr_exception(exc, x)
