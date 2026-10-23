@@ -113,7 +113,7 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
     
     # Regenerate predictions.json to ensure all patches are synced
     pred_path = ROOT / "results" / session_name / "predictions.json"
-    preds = {}
+    preds = []
     run_dir = ROOT / "results" / session_name
     if run_dir.is_dir():
         for p in run_dir.iterdir():
@@ -121,7 +121,11 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
             if diff.is_file():
                 text = diff.read_text(encoding="utf-8", errors="ignore").strip()
                 if text:
-                    preds[p.name.replace("__", "/")] = text
+                    preds.append({
+                        "instance_id": p.name.replace("__", "/"),
+                        "model_patch": text,
+                        "model_name_or_path": "ISHA",
+                    })
         pred_path.write_text(json.dumps(preds, indent=2), encoding="utf-8")
         log(f"Synced {len(preds)} patches into {pred_path.name}")
 

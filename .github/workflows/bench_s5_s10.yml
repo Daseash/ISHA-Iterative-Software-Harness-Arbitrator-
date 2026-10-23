@@ -28,12 +28,15 @@ on:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 360  # Maximum 6-hour autonomous cloud run
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Git Author
         run: |
@@ -73,9 +76,20 @@ jobs:
             --gen-workers ${{ inputs.gen_workers }} \
             $EXTRA_ARGS
 
+      - name: Archive Benchmark Results Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.run_id }}
+          path: |
+            results/
+            data/slices/
+          retention-days: 14
+
       - name: Commit and Push Results to Origin Main
         if: always()
         run: |
+          git pull --rebase origin main || true
           git add results/ data/slices/
           git commit -m "chore(bench): auto-sync S5-S10 patches & Docker eval [skip ci]" || echo "No changes to commit"
           git push origin main || echo "Push skipped or no new changes"

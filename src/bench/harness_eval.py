@@ -143,7 +143,19 @@ def evaluate(
     install_lf_writes()
 
     predictions_path = _predictions(run_dir)
-    preds = json.loads(predictions_path.read_text(encoding="utf-8"))
+    raw_preds = json.loads(predictions_path.read_text(encoding="utf-8"))
+    if isinstance(raw_preds, dict):
+        preds = [
+            {
+                "instance_id": k,
+                "model_patch": v if isinstance(v, str) else v.get("model_patch", ""),
+                "model_name_or_path": "ISHA",
+            }
+            for k, v in raw_preds.items()
+        ]
+    else:
+        preds = raw_preds
+
     # P1-06: whitespace-only patches are not submittable (harness would grade noise).
     instance_ids = [p["instance_id"] for p in preds
                     if (p.get("model_patch") or "").strip() and not _is_whitespace_noop(p.get("model_patch") or "")]
