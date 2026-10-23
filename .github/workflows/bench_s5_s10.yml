@@ -15,6 +15,15 @@ on:
         description: "Parallel Docker evaluation containers"
         required: true
         default: "2"
+      gen_workers:
+        description: "Parallel patch generation tournament workers"
+        required: true
+        default: "2"
+      skip_eval:
+        description: "Skip Docker eval and generate patches only"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   benchmark:
@@ -53,10 +62,16 @@ jobs:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           ISHA_CANDIDATES: ${{ inputs.candidates }}
         run: |
+          EXTRA_ARGS=""
+          if [ "${{ inputs.skip_eval }}" = "true" ]; then
+            EXTRA_ARGS="--skip-eval"
+          fi
           python scripts/codespaces_s5_s10_pipeline.py \
             --sessions ${{ inputs.sessions }} \
             --candidates ${{ inputs.candidates }} \
-            --eval-workers ${{ inputs.eval_workers }}
+            --eval-workers ${{ inputs.eval_workers }} \
+            --gen-workers ${{ inputs.gen_workers }} \
+            $EXTRA_ARGS
 
       - name: Commit and Push Results to Origin Main
         if: always()
