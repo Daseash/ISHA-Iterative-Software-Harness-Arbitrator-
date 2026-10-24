@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       sessions:
-        description: "Sessions to run (space-separated, e.g. lite300-s5 lite300-s6)"
+        description: "Sessions to run (space-separated, e.g. lite300-s5 or lite300-s5 lite300-s6)"
         required: true
-        default: "lite300-s5 lite300-s6 lite300-s7 lite300-s8 lite300-s9 lite300-s10"
+        default: "lite300-s5"
       candidates:
         description: "Number of tournament candidates per issue"
         required: true
@@ -14,7 +14,7 @@ on:
       eval_workers:
         description: "Parallel Docker evaluation containers"
         required: true
-        default: "2"
+        default: "3"
       gen_workers:
         description: "Parallel patch generation tournament workers"
         required: true

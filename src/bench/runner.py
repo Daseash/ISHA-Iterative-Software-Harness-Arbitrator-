@@ -99,6 +99,72 @@ def instance_dir(run_dir: Path, instance_id: str) -> Path:
 _APPEND_LOCK = threading.Lock()
 
 
+def _benchmark_blacklist() -> set:
+    """AGENTS.md invariant #2: benchmark instance ids NEVER reach the RLVR
+    training tables. One source of truth: the real Lite benchmark file."""
+    global _BENCH_BLACKLIST
+    if _BENCH_BLACKLIST is None:
+        ids = set()
+        lite = ROOT / "data" / "swebench_lite.json"
+        try:
+            for row in json.loads(lite.read_text(encoding="utf-8")):
+                if isinstance(row, dict) and row.get("instance_id"):
+                    ids.add(row["instance_id"])
+        except Exception:
+            pass
+        _BENCH_BLACKLIST = ids
+    return _BENCH_BLACKLIST
+
+
+_BENCH_BLACKLIST: set | None = None
+
+
+def _record_flywheel(meta: dict, record: dict) -> None:
+    """Gap-12 flywheel glue: every sweep instance feeds the RLVR tables
+    (trajectories + auto DPO pairs) so the next build/cycle has fresh fuel.
+    Decontamination: instances inside the Lite benchmark file are dropped
+    BEFORE anything is written. Patch text here is the model's own output;
+    `resolved` carries the in-loop verification outcome, never the official
+    container truth (report.json remains the only ground truth for scores)."""
+    iid = record.get("instance_id", "")
+    if iid in _benchmark_blacklist():
+        return
+    from isha.memory.rlvr_flywheel import record_rlvr_outcome
+
+    db_path = os.environ.get("ISHA_MEMORY_DB") or str(ROOT / "data" / "memory.db")
+    candidates_payload = []
+    for idx, cand in enumerate(meta.get("candidates") or []):
+        if not isinstance(cand, dict):
+            continue
+        patch = cand.get("patch") or cand.get("diff") or cand.get("model_patch") or ""
+        critic = cand.get("critic") or cand.get("critic_scores") or {}
+        try:
+            composite = float(critic.get("composite") or cand.get("composite") or 0.0)
+        except (TypeError, ValueError):
+            composite = 0.0
+        candidates_payload.append({
+            "candidate_id": cand.get("id", idx),
+            "strategy": cand.get("strategy") or "",
+            "model": cand.get("model") or meta.get("model") or "",
+            "patch": (patch or "")[:8000],
+            "resolved": bool(cand.get("verified") or cand.get("passed") or cand.get("resolved")),
+            "repro_valid": int(cand.get("repro_valid", 1)) if cand.get("repro_valid") is not None else 1,
+            "fail_bucket": cand.get("failure_category") or meta.get("failure_category") or "unknown",
+            "critic_scores": critic if isinstance(critic, dict) else {},
+            "composite": composite,
+            "pytest_stderr": (cand.get("test_output") or cand.get("stderr") or "")[:1500],
+        })
+    if candidates_payload:
+        repo = str(meta.get("repo") or record.get("repo") or "")
+        record_rlvr_outcome(
+            instance_id=iid,
+            repo_org=repo.split("/")[-1].lower() if repo else "",
+            prompt_text=(record.get("problem_statement") or "")[:3000],
+            candidates_results=candidates_payload,
+            db_path=db_path,
+        )
+
+
 def _append(path: Path, payload: dict) -> None:
     """Append one JSONL line. Lock-guarded: with workers>1 the parent thread
     (attempt/timeout/model events) and the pool worker thread (LLM call-event
@@ -704,6 +770,11 @@ def run_bench(
             print(f"  [{idx}/{total}] {record['instance_id']} — solving ...", flush=True)
         meta = run_instance(record, path, timeout=timeout, max_retries=max_retries,
                             thread_id=f"{run_id}-{idx}")
+        try:
+            _record_flywheel(meta, record)
+        except Exception as flywheel_exc:  # noqa: BLE001
+            with print_lock:
+                print(f"      [flywheel] skipped ({type(flywheel_exc).__name__})", flush=True)
         patch = (path / "patch.diff").read_text(encoding="utf-8") if (path / "patch.diff").is_file() else ""
         with print_lock:
             print(

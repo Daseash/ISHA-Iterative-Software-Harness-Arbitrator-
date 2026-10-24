@@ -132,6 +132,28 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
     return res.returncode == 0
 
 
+def sync_session_to_git(session_name: str) -> None:
+    """Commit and push this session's artifacts to origin main immediately."""
+    try:
+        log(f"Auto-syncing results for {session_name} to GitHub origin main...")
+        subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(ROOT), timeout=45)
+        res_dir = ROOT / "results" / session_name
+        if res_dir.is_dir():
+            subprocess.run(["git", "add", f"results/{session_name}"], cwd=str(ROOT), timeout=45)
+            slices_dir = ROOT / "data" / "slices"
+            if slices_dir.is_dir():
+                subprocess.run(["git", "add", "data/slices"], cwd=str(ROOT), timeout=45)
+            subprocess.run(
+                ["git", "commit", "-m", f"chore(bench): sync official Docker eval for {session_name} [skip ci]"],
+                cwd=str(ROOT),
+                timeout=45,
+            )
+            subprocess.run(["git", "push", "origin", "main"], cwd=str(ROOT), timeout=90)
+            log(f"Successfully synced {session_name} to origin main!")
+    except Exception as e:
+        log(f"Git auto-sync notice for {session_name}: {e}")
+
+
 def run_docker_evaluation(session_name: str, workers: int = 2) -> None:
     """Run official SWE-bench evaluation container harness."""
     pred_path = ROOT / "results" / session_name / "predictions.json"
@@ -147,6 +169,8 @@ def run_docker_evaluation(session_name: str, workers: int = 2) -> None:
     ]
     subprocess.run(cmd, cwd=str(ROOT))
     log(f"Docker evaluation complete for {session_name}!")
+    # Immediately sync this session to origin main so zero work is ever lost
+    sync_session_to_git(session_name)
 
 
 def main() -> None:
