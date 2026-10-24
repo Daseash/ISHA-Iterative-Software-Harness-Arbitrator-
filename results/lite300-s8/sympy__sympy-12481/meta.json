@@ -1,0 +1,403 @@
+{
+  "instance_id": "sympy__sympy-12481",
+  "repo": "sympy/sympy",
+  "base_commit": "c807dfe7569692cad24f02a08477b70c1679a4dd",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970735.1083245
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970737.7372415
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970745.9816296
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970748.0906017
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970757.8661678
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970839.8912005
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/combinatorics/permutations.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/combinatorics/permutations.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791970693.9935484,
+  "elapsed_s": 153.94,
+  "plan": "if has_dups(flatten(args)):\n      p = Permutation(args[0])\n      for arg in args[1:]:\n          p = p * Permutation(arg)\n      _array_form = p._array_form\n      # and ensure size/array form variables are correctly populated/assigned for the current instance as done elsewhere in the constructor.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/combinatorics/permutations.py",
+      "symbol": "sympy/combinatorics/permutations.py::_af_commutes_with",
+      "symbols": [
+        "_af_commutes_with",
+        "_hashable_content",
+        "_merge",
+        "_af_rmul"
+      ],
+      "line_range": [
+        213,
+        232
+      ],
+      "score": 0.5688,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.9898,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: with, permutation)"
+    },
+    {
+      "file": "sympy/combinatorics/polyhedron.py",
+      "symbol": "sympy/combinatorics/polyhedron.py::_pgroup_of_double",
+      "symbols": [
+        "_pgroup_of_double",
+        "rotate",
+        "pgroup",
+        "_pgroup_calcs"
+      ],
+      "line_range": [
+        669,
+        694
+      ],
+      "score": 0.4543,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7875,
+        "vector": 0.4785,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: should, resulting, permutation, they)"
+    },
+    {
+      "file": "sympy/combinatorics/util.py",
+      "symbol": "sympy/combinatorics/util.py::_strip_af",
+      "symbols": [
+        "_strip_af",
+        "_check_cycles_alt_sym",
+        "_strip",
+        "_base_ordering"
+      ],
+      "line_range": [
+        456,
+        476
+      ],
+      "score": 0.4526,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6677,
+        "vector": 0.714,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: with, identity)"
+    },
+    {
+      "file": "sympy/matrices/expressions/matexpr.py",
+      "symbol": "sympy/matrices/expressions/matexpr.py::__pow__",
+      "symbols": [
+        "__pow__",
+        "as_mutable",
+        "as_explicit",
+        "_sympifyit"
+      ],
+      "line_range": [
+        518,
+        526
+      ],
+      "score": 0.5269,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1452,
+        "vector": 0.3382,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: valueerror, identity)"
+    },
+    {
+      "file": "sympy/strategies/branch/core.py",
+      "symbol": "sympy/strategies/branch/core.py::chain",
+      "symbols": [
+        "chain"
+      ],
+      "line_range": [
+        91,
+        106
+      ],
+      "score": 0.5213,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0627,
+        "vector": 0.4639,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: they)"
+    },
+    {
+      "file": "sympy/solvers/solveset.py",
+      "symbol": "sympy/solvers/solveset.py::_check_exclude",
+      "symbols": [
+        "_check_exclude",
+        "_is_finite_with_finite_vars",
+        "_new_order_result",
+        "_extract_main_soln"
+      ],
+      "line_range": [
+        1563,
+        1584
+      ],
+      "score": 0.4305,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4855,
+        "vector": 0.9095,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: should, with, right, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.622275,
+  "laya_scores": {
+    "fix_quality": 1.2114,
+    "matches_issue": 0.6961,
+    "safe_to_apply": 0.5816,
+    "composite": 0.622275,
+    "secrets_or_danger": 0.1655,
+    "logic_drift": 0.4753,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS: No security vulnerabilities introduced in the permutation logic.\n- PERFORMANCE: PASS: Unbounded loops or N+1 queries are not present.\n- ROBUSTNESS: FAIL: The newly added code is unreachable due to being placed after a `raise ValueError` statement.\n- MINIMAL DIFF / YAGNI: PASS: Changes are directly targeted at resolving the bug report.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sympy.combinatorics.permutations import Permutation\n\ndef test_permutation_non_disjoint_cycles_reproduction():\n    \"\"\"Test that constructing a Permutation with non-disjoint cycles succeeds\n    and applies them in left-to-right order instead of raising a ValueError.\"\"\"\n    Permutation.print_cyclic = True\n    p = Permutation([[0, 1], [0, 1]])\n    assert p.is_identity\n\ndef test_permutation_non_disjoint_cycles_composition():\n    \"\"\"Test non-disjoint cycles that result in a non-identity permutation.\"\"\"\n    Permutation.print_cyclic = True\n    # [[0, 1, 2], [1, 2]] applied left to right:\n    # 0 -> 1, 1 -> 2 in first cycle, then 2 -> 2, 1 -> 2 in second cycle.\n    p = Permutation([[0, 1, 2], [1, 2]])\n    # Check explicitly against expected product or behavior\n    p1 = Permutation([1, 2, 0])\n    p2 = Permutation([0, 2, 1])\n    expected = p1 * p2\n    assert p == expected\n\ndef test_permutation_single_non_disjoint_cycle_with_duplicates():\n    \"\"\"Test edge case where a single cycle contains duplicate elements.\"\"\"\n    Permutation.print_cyclic = True\n    p = Permutation([[0, 1, 0]])\n    assert p == Permutation([[0, 1]])\n\ndef test_permutation_multiple_overlapping_cycles():\n    \"\"\"Test multiple overlapping cycles with various lengths.\"\"\"\n    Permutation.print_cyclic = True\n    p = Permutation([[0, 1], [1, 2], [0, 2]])\n    p1 = Permutation([[0, 1]])\n    p2 = Permutation([[1, 2]])\n    p3 = Permutation([[0, 2]])\n    expected = p1 * p2 * p3\n    assert p == expected",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/combinatorics/permutations.py b/sympy/combinatorics/permutations.py\nindex 136ed5a478..096497231f 100644\n--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -901,6 +901,11 @@ def __new__(cls, *args, **kwargs):\n                 'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))\n             else:\n                 raise ValueError('there were repeated elements.')\n+                if has_dups(flatten(temp)):\n+                    p = Permutation(temp[0])\n+                    for arg in temp[1:]:\n+                        p = p * Permutation(arg)\n+                    temp = p._array_form\n         temp = set(temp)\n \n         if not is_cycle and \\\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/combinatorics/permutations.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/combinatorics/permutations.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2114,
+        "matches_issue": 0.6961,
+        "safe_to_apply": 0.5816,
+        "composite": 0.622275,
+        "secrets_or_danger": 0.1655,
+        "logic_drift": 0.4753,
+        "flagged": false
+      },
+      "laya_combined": 0.6223,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 31.08,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "An error occurred while generating the diff.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.0035,
+        "matches_issue": 0.7169,
+        "safe_to_apply": 0.4549,
+        "composite": 0.543825,
+        "secrets_or_danger": 0.0337,
+        "logic_drift": 0.1013,
+        "flagged": false
+      },
+      "laya_combined": 0.5438,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.87,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -531,7 +531,12 @@\n         if is_sequence(args[0]):\n             if len(args) == 1:\n                 args = args[0]\n-            else:\n+            elif has_dups(flatten(args)):\n+                p = Permutation(args[0])\n+                for arg in args[1:]:\n+                    p = p * Permutation(arg)\n+                args = p.list()\n+            else:\n                 raise ValueError(\"Permutation argument must be a list of \"\n                                  \"disjoint cycles or a list of integers.\")\n         if not args:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c3\\sympy\\combinatorics\\permutations.py: undefined name 'args'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c3\\sympy\\combinatorics\\permutations.py: undefined name 'args'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c3\\sympy\\combinatorics\\permutations.py: undefined name 'args'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c3\\sympy\\combinatorics\\permutations.py: local variable 'args' is assigned to but never used"
+      ],
+      "changed_files": [
+        "sympy/combinatorics/permutations.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3368,
+        "matches_issue": 0.7582,
+        "safe_to_apply": 0.6421,
+        "composite": 0.684275,
+        "secrets_or_danger": 0.0817,
+        "logic_drift": 0.3133,
+        "flagged": false
+      },
+      "laya_combined": 0.6843,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 32.64,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/combinatorics/permutations.py b/sympy/combinatorics/permutations.py\nindex 136ed5a478..096497231f 100644\n--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -901,6 +901,11 @@ def __new__(cls, *args, **kwargs):\n                 'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))\n             else:\n                 raise ValueError('there were repeated elements.')\n+                if has_dups(flatten(temp)):\n+                    p = Permutation(temp[0])\n+                    for arg in temp[1:]:\n+                        p = p * Permutation(arg)\n+                    temp = p._array_form\n         temp = set(temp)\n \n         if not is_cycle and \\\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12481-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/combinatorics/permutations.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/combinatorics/permutations.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.2114,
+      "matches_issue": 0.6961,
+      "safe_to_apply": 0.5816,
+      "composite": 0.622275,
+      "secrets_or_danger": 0.1655,
+      "logic_drift": 0.4753,
+      "flagged": false
+    },
+    "laya_combined": 0.6223,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 31.08,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/combinatorics/permutations.py b/sympy/combinatorics/permutations.py\nindex 136ed5a..0964972 100644\n--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -901,6 +901,11 @@ def __new__(cls, *args, **kwargs):\n                 'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))\n             else:\n                 raise ValueError('there were repeated elements.')\n+                if has_dups(flatten(temp)):\n+                    p = Permutation(temp[0])\n+                    for arg in temp[1:]:\n+                        p = p * Permutation(arg)\n+                    temp = p._array_form\n         temp = set(temp)\n \n         if not is_cycle and \\\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,398 @@
+{
+  "instance_id": "sphinx-doc__sphinx-8801",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "7ca279e33aebb60168d35e6be4ed059f4a68f2c1",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960469.3778827
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960470.1861048
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960474.7156682
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960478.3070235
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960486.9705775
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960528.5416691
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/ext/autodoc/importer.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/importer.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791960453.1725962,
+  "elapsed_s": 83.51,
+  "plan": "### Step 1: Root Cause\nWhen autodoc documents members of a class with `:inherited-members:`, it retrieves members of superclasses using `get_class_members` from `sphinx.ext.autodoc.importer`. For attribute-only members defined with type annotations (like `attr1: int`), their docstring or documentation status comes from analyzer or source comments (e.g., `#: docstring`). When inherited, autodoc checks if the member is documented or should be filtered out based on whether it has a docstring or is considered \"undocumented\". Specifically, annotation-only members defined in a base class might not be properly recognized as having documentation or being valid members during the inheritance check/filtering in `ClassDocumenter.get_object_members()` or when collecting/filtering class members, leading them to be treated as undocumented unless `:undoc-members:` is specified.\n\n### Step 2: Exact Changes to Make\n\n**File to change:**\n`sphinx/ext/autodoc/__init__.py` (and potentially `sphinx/ext/autodoc/importer.py` if member filtering happens there).\n\n**Function to change:**\n`ClassDocumenter.get_object_members()` and/or `get_class_members()` in `sphinx/ext/autodoc/importer.py`.\n\n**What to change:**\n1. Ensure that annotation-only attributes (and attributes with docstring comments like `#:`) in superclasses are correctly recognized as documented members (not treated as undocumented) even when inherited via `:inherited-members:`, so they are included unless `:undoc-members:` is explicitly required/not required according to the class member filtering logic.\n2. In `sphinx/ext/autodoc/importer.py` (`get_class_members`), ensure that attributes defined via type annotations with inline docstrings in base classes are correctly populated with their docstrings/metadata so that `ClassDocumenter` does not filter them out as undocumented.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sphinx/ext/autodoc/__init__.py",
+      "symbol": "sphinx/ext/autodoc/__init__.py::_All",
+      "symbols": [
+        "_All",
+        "_Empty",
+        "members_option",
+        "members_set_option"
+      ],
+      "line_range": [
+        71,
+        77
+      ],
+      "score": 0.652,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5443,
+        "vector": 0.5911,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: member, class, members)"
+    },
+    {
+      "file": "sphinx/ext/napoleon/__init__.py",
+      "symbol": "sphinx/ext/napoleon/__init__.py::setup",
+      "symbols": [
+        "setup",
+        "_process_docstring",
+        "_skip_member",
+        "__init__"
+      ],
+      "line_range": [
+        297,
+        333
+      ],
+      "score": 0.6744,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6182,
+        "vector": 0.6237,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: member, docstring, sphinx, call)"
+    },
+    {
+      "file": "sphinx/ext/autosummary/__init__.py",
+      "symbol": "sphinx/ext/autosummary/__init__.py::FakeDirective",
+      "symbols": [
+        "FakeDirective",
+        "get_documenter",
+        "create_documenter",
+        "get_items"
+      ],
+      "line_range": [
+        175,
+        184
+      ],
+      "score": 0.6058,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.317,
+        "vector": 0.6797,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: option, directive, class, environment)"
+    },
+    {
+      "file": "sphinx/addnodes.py",
+      "symbol": "sphinx/addnodes.py::document",
+      "symbols": [
+        "document",
+        "set_id",
+        "desc_signature",
+        "desc_signature_line"
+      ],
+      "line_range": [
+        24,
+        50
+      ],
+      "score": 0.6206,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3361,
+        "vector": 0.7214,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: will, sphinx, your, class)"
+    },
+    {
+      "file": "tests/roots/test-ext-autodoc/target/__init__.py",
+      "symbol": "tests/roots/test-ext-autodoc/target/__init__.py::_funky_classmethod",
+      "symbols": [
+        "_funky_classmethod",
+        "__special2__",
+        "Outer",
+        "InstAttCls"
+      ],
+      "line_range": [
+        24,
+        35
+      ],
+      "score": 0.6577,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.404,
+        "vector": 0.4825,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: docstring, class, tools)"
+    },
+    {
+      "file": "tests/roots/test-ext-autodoc/target/name_conflict/__init__.py",
+      "symbol": "tests/roots/test-ext-autodoc/target/name_conflict/__init__.py::foo",
+      "symbols": [
+        "foo"
+      ],
+      "line_range": [
+        4,
+        6
+      ],
+      "score": 0.6177,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0997,
+        "vector": 0.6398,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: docstring, class)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.662825,
+  "laya_scores": {
+    "fix_quality": 1.4103,
+    "matches_issue": 0.6393,
+    "safe_to_apply": 0.6017,
+    "composite": 0.662825,
+    "secrets_or_danger": 0.1573,
+    "logic_drift": 0.2354,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No security-related concerns introduced in this metadata/doc-fetching logic.\n- PERFORMANCE: PASS - Standard dictionary and attribute lookups without unbounded loops or N+1 queries.\n- ROBUSTNESS: FAIL - Changing `name not in members` to `name in members and members[name].docstring` inverts the logic and filters out enum members that lack docstrings or weren't pre-populated, likely causing regression bugs.\n- MINIMAL DIFF / YAGNI: PASS - The changes are scoped directly to resolving the bug report.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.ext.autodoc import ClassDocumenter\nfrom sphinx.ext.autodoc.importer import get_class_members\n\n\nclass BaseWithAnnotation:\n    \"\"\"Base class docstring.\"\"\"\n    attr1: int  #: docstring for attr1\n\n\nclass DerivedWithoutUndoc(BaseWithAnnotation):\n    \"\"\"Derived class docstring.\"\"\"\n    attr2: str  #: docstring for attr2\n\n\nclass BaseWithMultipleAnnotations:\n    \"\"\"Base class.\"\"\"\n    x: int  #: x docstring\n    y: str  #: y docstring\n\n\nclass DerivedWithMultipleAnnotations(BaseWithMultipleAnnotations):\n    \"\"\"Derived class.\"\"\"\n    z: float  #: z docstring\n\n\nclass BaseWithoutDocComment:\n    \"\"\"Base class.\"\"\"\n    hidden_attr: int\n\n\nclass DerivedWithHidden(BaseWithoutDocComment):\n    \"\"\"Derived class.\"\"\"\n    visible_attr: str  #: visible docstring\n\n\n@pytest.mark.parametrize('include_private', [False, True])\ndefst_inherited_annotation_member(app, include_private):\n    # Verify that an annotation-only member with an inline comment in a superclass\n    # is recognized as documented and included when using inherited-members,\n    # even without specifying undoc-members.\n    class DummyDirective:\n        env = app.env\n        config = app.config\n        genopt = {'inherited-members': True}\n        def __init__(self):\n            self.directive = self\n\n    directive = DummyDirective()\n    documenter = ClassDocumenter(directive, 'DerivedWithoutUndoc')\n    \n    members = documenter.get_object_members(True)\n    member_names = [m[0] for m in members]\n\n    # attr1 comes from BaseWithAnnotation and has a comment docstring,\n    # so it should be treated as documented.\n    assert 'attr1' in member_names\n    assert 'attr2' in member_names\n\n\ndef test_inherited_multiple_annotations(app):\n    class DummyDirective:\n        env = app.env\n        config = app.config\n        genopt = {'inherited-members': True}\n        def __init__(self):\n            self.directive = self\n\n    directive = DummyDirective()\n    documenter = ClassDocumenter(directive, 'DerivedWithMultipleAnnotations')\n    \n    members = documenter.get_object_members(True)\n    member_names = [m[0] for m in members]\n\n    assert 'x' in member_names\n    assert 'y' in member_names\n    assert 'z' in member_names\n\n\ndef test_inherited_annotation_without_comment_is_undocumented(app):\n    # An annotation-only attribute in a superclass WITHOUT a docstring comment\n    # should remain undocumented unless undoc-members is enabled.\n    class DummyDirective:\n        env = app.env\n        config = app.config\n        genopt = {'inherited-members': True}\n        def __init__(self):\n            self.directive = self\n\n    directive = DummyDirective()\n    documenter = ClassDocumenter(directive, 'DerivedWithHidden')\n    \n    members = documenter.get_object_members(True)\n    member_names = [m[0] for m in members]\n\n    # hidden_attr has no docstring or comment, so without undoc-members it should be filtered out\n    assert 'hidden_attr' not in member_names\n    # visible_attr has a docstring comment, so it should be present\n    assert 'visible_attr' in member_names",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py\nindex 477aae247..7bff80663 100644\n--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -194,7 +194,7 @@ def get_object_members(subject: Any, objpath: List[str], attrgetter: Callable,\n     # enum members\n     if isenumclass(subject):\n         for name, value in subject.__members__.items():\n-            if name not in members:\n+            if name in members and members[name].docstring:\n                 members[name] = Attribute(name, True, value)\n \n         superclass = subject.__mro__[1]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8801-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/ext/autodoc/importer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/importer.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4103,
+        "matches_issue": 0.6393,
+        "safe_to_apply": 0.6017,
+        "composite": 0.662825,
+        "secrets_or_danger": 0.1573,
+        "logic_drift": 0.2354,
+        "flagged": false
+      },
+      "laya_combined": 0.6628,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.23,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -147,7 +147,7 @@\n         # docstring or annotation\n         try:\n             doc = getdoc(obj, attrgetter, allow_doc=False)\n-            if doc:\n+            if doc or (getattr(obj, '__annotations__', None) and name in obj.__annotations__):\n                 return True\n         except AttributeError:\n             pass",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8801-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/importer.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3821,
+        "matches_issue": 0.6223,
+        "safe_to_apply": 0.5515,
+        "composite": 0.638975,
+        "secrets_or_danger": 0.0762,
+        "logic_drift": 0.104,
+        "flagged": false
+      },
+      "laya_combined": 0.639,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0078,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.94,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -147,3 +147,3 @@\n             try:\n-                docstring = analyzer.annotations.get((name,))\n+                docstring = analyzer.annotations.get(name)\n             except AttributeError:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8801-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/importer.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4623,
+        "matches_issue": 0.6834,
+        "safe_to_apply": 0.6201,
+        "composite": 0.6914499999999999,
+        "secrets_or_danger": 0.1455,
+        "logic_drift": 0.2416,
+        "flagged": false
+      },
+      "laya_combined": 0.6914,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.01,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py\nindex 477aae247..7bff80663 100644\n--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -194,7 +194,7 @@ def get_object_members(subject: Any, objpath: List[str], attrgetter: Callable,\n     # enum members\n     if isenumclass(subject):\n         for name, value in subject.__members__.items():\n-            if name not in members:\n+            if name in members and members[name].docstring:\n                 members[name] = Attribute(name, True, value)\n \n         superclass = subject.__mro__[1]\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8801-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sphinx/ext/autodoc/importer.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/ext/autodoc/importer.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4103,
+      "matches_issue": 0.6393,
+      "safe_to_apply": 0.6017,
+      "composite": 0.662825,
+      "secrets_or_danger": 0.1573,
+      "logic_drift": 0.2354,
+      "flagged": false
+    },
+    "laya_combined": 0.6628,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0075,
+    "rank_reason": "logistic",
+    "elapsed_s": 11.23,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/ext/autodoc/importer.py b/sphinx/ext/autodoc/importer.py\nindex 477aae2..7bff806 100644\n--- a/sphinx/ext/autodoc/importer.py\n+++ b/sphinx/ext/autodoc/importer.py\n@@ -194,7 +194,7 @@ def get_object_members(subject: Any, objpath: List[str], attrgetter: Callable,\n     # enum members\n     if isenumclass(subject):\n         for name, value in subject.__members__.items():\n-            if name not in members:\n+            if name in members and members[name].docstring:\n                 members[name] = Attribute(name, True, value)\n \n         superclass = subject.__mro__[1]\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,394 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-10508",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "c753b77ac49e72ebc0fe5e3c2369fe628f975017",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897517.9336112
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897520.0491343
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897527.1365514
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897527.9270854
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897542.736737
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897613.4549773
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897637.009633
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/preprocessing/label.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:14"
+  },
+  "started_at": 1791897486.6560156,
+  "elapsed_s": 158.62,
+  "plan": "def transform(self, y):\n        # ... existing lines ...\n        check_is_fitted(self, 'classes_')\n        y = column_or_1d(y, warn=True)\n\n        if len(y) == 0:\n            return np.array([], dtype=self.classes_.dtype)\n\n        classes = np.unique(y)\n        # ... existing lines ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/preprocessing/label.py",
+      "symbol": "sklearn/preprocessing/label.py::_transform",
+      "symbols": [
+        "_transform",
+        "fit",
+        "transform",
+        "fit"
+      ],
+      "line_range": [
+        774,
+        797
+      ],
+      "score": 0.6913,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6008,
+        "vector": 0.8009,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: array, transform, label, dtype)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::safe_mask",
+      "symbols": [
+        "safe_mask",
+        "axis0_safe_slice",
+        "safe_indexing",
+        "shuffle"
+      ],
+      "line_range": [
+        77,
+        101
+      ],
+      "score": 0.6787,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7202,
+        "vector": 0.4474,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: which, array, used, asarray)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::config_context",
+      "symbols": [
+        "config_context",
+        "setup_module",
+        "get_config"
+      ],
+      "line_range": [
+        57,
+        96
+      ],
+      "score": 0.7029,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7153,
+        "vector": 0.6593,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: last, call, most, traceback)"
+    },
+    {
+      "file": "sklearn/externals/joblib/numpy_pickle.py",
+      "symbol": "sklearn/externals/joblib/numpy_pickle.py::write_array",
+      "symbols": [
+        "write_array",
+        "_create_array_wrapper",
+        "__init__",
+        "read_array"
+      ],
+      "line_range": [
+        73,
+        94
+      ],
+      "score": 0.5898,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7315,
+        "vector": 0.4114,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: array; body matches report terms: numpy, array, python, cannot)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions",
+      "symbols": [
+        "maybe_cythonize_extensions",
+        "build_from_c_and_cpp_files",
+        "atlas_not_found",
+        "get_blas_info"
+      ],
+      "line_range": [
+        63,
+        84
+      ],
+      "score": 0.5796,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0787,
+        "vector": 0.9574,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: args, file, module)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.531,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1121,
+        "vector": 0.4827,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: sklearn, file)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.76305,
+  "laya_scores": {
+    "fix_quality": 1.6418,
+    "matches_issue": 0.7775,
+    "safe_to_apply": 0.6329,
+    "composite": 0.76305,
+    "secrets_or_danger": 0.0911,
+    "logic_drift": 0.2074,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input handling changes that introduce injection or escalation risks.\n- PERFORMANCE: PASS, Fast early return for empty input avoids unnecessary computation.\n- ROBUSTNESS: PASS, Correctly handles edge cases that previously triggered dtype casting errors.\n- MINIMAL DIFF / YAGNI: PASS, Minimal and direct fix for the reported regression.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator().calculate(\"two\", 2)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -131,6 +131,9 @@\n         check_is_fitted(self, 'classes_')\n         y = column_or_1d(y, warn=True)\n\n+        if len(y) == 0:\n+            return np.array([], dtype=int)\n+\n         classes = np.unique(y)\n         if len(np.intersect1d(classes, self.classes_)) < len(classes):\n             diff = np.setdiff1d(classes, self.classes_)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10508-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6477,
+        "matches_issue": 0.782,
+        "safe_to_apply": 0.6422,
+        "composite": 0.767975,
+        "secrets_or_danger": 0.0933,
+        "logic_drift": 0.2241,
+        "flagged": false
+      },
+      "laya_combined": 0.768,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 35.09,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -131,6 +131,9 @@\n         check_is_fitted(self, 'classes_')\n         y = column_or_1d(y, warn=True)\n\n+        if len(y) == 0:\n+            return np.array([], dtype=self.classes_.dtype)\n+\n         classes = np.unique(y)\n         if len(np.intersect1d(classes, self.classes_)) < len(classes):\n             diff = np.setdiff1d(classes, self.classes_)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10508-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7181,
+        "matches_issue": 0.8161,
+        "safe_to_apply": 0.6665,
+        "composite": 0.8001750000000001,
+        "secrets_or_danger": 0.0933,
+        "logic_drift": 0.2428,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.7,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -131,6 +131,9 @@\n         check_is_fitted(self, 'classes_')\n         y = column_or_1d(y, warn=True)\n\n+        if len(y) == 0:\n+            return np.array([], dtype=self.classes_.dtype)\n+\n         classes = np.unique(y)\n         if len(np.intersect1d(classes, self.classes_)) < len(classes):\n             diff = np.setdiff1d(classes, self.classes_)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10508-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7181,
+        "matches_issue": 0.8161,
+        "safe_to_apply": 0.6665,
+        "composite": 0.8001750000000001,
+        "secrets_or_danger": 0.0933,
+        "logic_drift": 0.2428,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 31.47,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -131,6 +131,9 @@\n         check_is_fitted(self, 'classes_')\n         y = column_or_1d(y, warn=True)\n\n+        if len(y) == 0:\n+            return np.array([], dtype=int)\n+\n         classes = np.unique(y)\n         if len(np.intersect1d(classes, self.classes_)) < len(classes):\n             diff = np.setdiff1d(classes, self.classes_)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10508-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/preprocessing/label.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6477,
+      "matches_issue": 0.782,
+      "safe_to_apply": 0.6422,
+      "composite": 0.767975,
+      "secrets_or_danger": 0.0933,
+      "logic_drift": 0.2241,
+      "flagged": false
+    },
+    "laya_combined": 0.768,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 35.09,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/preprocessing/label.py b/sklearn/preprocessing/label.py\nindex 61b8d4a..48eedda 100644\n--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -93,6 +93,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):\n         self : returns an instance of self.\n         \"\"\"\n         y = column_or_1d(y, warn=True)\n+        if len(y) == 0:\n+            return np.array([], dtype=int)\n+\n         self.classes_ = np.unique(y)\n         return self\n \n",
+  "offline_calls": 1
+}

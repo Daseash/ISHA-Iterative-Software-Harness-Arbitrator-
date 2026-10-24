@@ -1,0 +1,401 @@
+{
+  "instance_id": "sphinx-doc__sphinx-7975",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "4ec6cbe341fd84468c448e20082c778043bbea4b",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958813.7773256
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958815.2203848
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958822.0729268
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958825.54699
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958834.4323943
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958882.4143693
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/environment/adapters/indexentries.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/indexentries.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791958793.5841002,
+  "elapsed_s": 96.91,
+  "plan": "if lckey[0:1].isalpha() or lckey.startswith('_'):\n                lckey = chr(127) + lckey",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sphinx/environment/adapters/indexentries.py",
+      "symbol": "sphinx/environment/adapters/indexentries.py::add_entry",
+      "symbols": [
+        "add_entry",
+        "keyfunc",
+        "keyfunc3",
+        "keyfunc0"
+      ],
+      "line_range": [
+        38,
+        56
+      ],
+      "score": 0.4675,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8163,
+        "vector": 0.5283,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: with, index, normal)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::Index",
+      "symbols": [
+        "Index",
+        "generate",
+        "resolve_xref",
+        "resolve_any_xref"
+      ],
+      "line_range": [
+        68,
+        154
+      ],
+      "score": 0.4099,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6667,
+        "vector": 0.3601,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: have, anchor, html, section)"
+    },
+    {
+      "file": "sphinx/addnodes.py",
+      "symbol": "sphinx/addnodes.py::index",
+      "symbols": [
+        "index",
+        "pending_xref",
+        "literal_emphasis",
+        "literal_strong"
+      ],
+      "line_range": [
+        266,
+        280
+      ],
+      "score": 0.6178,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3642,
+        "vector": 0.6395,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: page, entries, characters)"
+    },
+    {
+      "file": "sphinx/roles.py",
+      "symbol": "sphinx/roles.py::process_link",
+      "symbols": [
+        "process_link",
+        "run",
+        "result_nodes",
+        "index_role"
+      ],
+      "line_range": [
+        170,
+        178
+      ],
+      "score": 0.5945,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4004,
+        "vector": 0.3702,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: same, called, after)"
+    },
+    {
+      "file": "sphinx/builders/latex/transforms.py",
+      "symbol": "sphinx/builders/latex/transforms.py::IndexInSectionTitleTransform",
+      "symbols": [
+        "IndexInSectionTitleTransform",
+        "DocumentTargetTransform",
+        "apply",
+        "setup"
+      ],
+      "line_range": [
+        566,
+        602
+      ],
+      "score": 0.3734,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4132,
+        "vector": 0.5842,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: section, with, before, index)"
+    },
+    {
+      "file": "sphinx/search/__init__.py",
+      "symbol": "sphinx/search/__init__.py::SearchLanguage",
+      "symbols": [
+        "SearchLanguage",
+        "stem",
+        "word_filter",
+        "dispatch_visit"
+      ],
+      "line_range": [
+        33,
+        68
+      ],
+      "score": 0.3904,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5648,
+        "vector": 0.4102,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: have, html, before, index)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7428499999999999,
+  "laya_scores": {
+    "fix_quality": 1.6273,
+    "matches_issue": 0.7219,
+    "safe_to_apply": 0.6222,
+    "composite": 0.7428499999999999,
+    "secrets_or_danger": 0.0836,
+    "logic_drift": 0.265,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related concerns or injection vectors introduced.\n- PERFORMANCE: PASS - Simple string and character checks with no performance impact.\n- ROBUSTNESS: PASS - Correctly normalizes and classifies leading characters to prevent duplicate sections.\n- MINIMAL DIFF / YAGNI: PASS - Minimal and targeted change directly addressing the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.environment.adapters.indexentries import IndexEntries\nfrom sphinx.environment import BuildEnvironment\nfrom sphinx.builders import Builder\n\n\nclass DummyBuilder(Builder):\n    name = 'dummy'\n\n    def get_relative_uri(self, from_: str, to: str) -> str:\n        return to\n\n\nclass MockDomain:\n    def __init__(self, entries):\n        self.entries = entries\n\n\nclass MockEnv(BuildEnvironment):\n    def __init__(self, entries):\n        self.domain_data = MockDomain(entries)\n\n    def get_domain(self, name):\n        return self.domain_data\n\n\ndef run_create_index(entries_list):\n    # Construct entries format expected by IndexEntries:\n    # list of (filename, list of entry tuples)\n    # Entry tuple format: (type, word, tid, main, category_key, ...)\n    # Let's see how IndexEntries.create_index consumes domain.entries.\n    # Looking at sphinx/environment/adapters/indexentries.py:\n    # for fn, entries in domain.entries.items():\n    #     for entry in entries:\n    #         ...\n    env = MockEnv({'index.rst': entries_list})\n    adapter = IndexEntries(env)\n    builder = DummyBuilder(None, None)  # type: ignore\n    return adapter.create_index(builder)\n\n\ndef test_symbols_index_grouping_with_underscore_prefix():\n    # Bug report mentions leading characters like _@_, _£_, and _←_\n    # resulting in two separate \"Symbols\" sections.\n    # We test entries starting with '_' (like '_@') alongside normal words and other symbols (_£, _←).\n    entries = [\n        ('single', '_@test', 'target-at', '', None),\n        ('single', 'Apple', 'target-apple', '', None),\n        ('single', '_£test', 'target-pound', '', None),\n        ('single', '_←test', 'target-arrow', '', None),\n        ('single', 'Banana', 'target-banana', '', None),\n    ]\n\n    index = run_create_index(entries)\n\n    # index is a list of (letter, list of entries) tuples\n    # Extract all section headers (letters)\n    sections = [item[0] for item in index]\n\n    # Count how many times 'Symbols' appears as a section header\n    symbols_count = sections.count('Symbols')\n\n    # Before the fix, '_@' goes to Symbols (before letters) and '_£' / '_←'\n    # go to Symbols (after letters), yielding 2 separate 'Symbols' sections.\n    # After the fix, all of them should be grouped into a single Symbols section.\n    assert symbols_count == 1, f\"Expected exactly 1 'Symbols' section, but got {symbols_count}. Sections: {sections}\"\n\n\ndef test_pure_alphabetical_entries():\n    # Edge case: standard alphabetical entries only, no symbols or leading underscores.\n    entries = [\n        ('single', 'Apple', 'target-apple', '', None),\n        ('single', 'Banana', 'target-banana', '', None),\n    ]\n\n    index = run_create_index(entries)\n    sections = [item[0] for item in index]\n\n    assert 'Symbols' not in sections\n    assert sections == ['A', 'B']\n\n\ndef test_mixed_symbols_and_numbers():\n    # Edge case: numbers and various symbols mixed with regular words.\n    entries = [\n        ('single', '123', 'target-num', '', None),\n        ('single', '@符号', 'target-sym', '', None),\n        ('single', 'Zebra', 'target-zebra', '', None),\n    ]\n\n    index = run_create_index(entries)\n    sections = [item[0] for item in index]\n\n    # Numbers and symbols typically fall under 'Symbols'\n    assert sections.count('Symbols') == 1\n    assert 'Z' in sections\n\n\ndef test_empty_index_entries():\n    # Edge case: empty index entries list.\n    entries = []\n\n    index = run_create_index(entries)\n    assert index == []",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af213932..f2459dc80 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    # get all other symbols under 'Symbols' section\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7975-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/environment/adapters/indexentries.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/indexentries.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6273,
+        "matches_issue": 0.7219,
+        "safe_to_apply": 0.6222,
+        "composite": 0.7428499999999999,
+        "secrets_or_danger": 0.0836,
+        "logic_drift": 0.265,
+        "flagged": false
+      },
+      "laya_combined": 0.7428,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 19.43,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af213932..1e2b7f4a9 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -108,7 +108,7 @@ class IndexEntries:\n             lckey = unicodedata.normalize('NFD', key.lower())\n             if lckey.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                 lckey = lckey[1:]\n-            if lckey[0:1].isalpha() or lckey.startswith('_'):\n+            if lckey[0:1].isalpha():\n                 lckey = chr(127) + lckey\n             # ensure a determinstic order *within* letters by also sorting on\n             # the entry itself\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    # get all other symbols u\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7975-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/environment/adapters/indexentries.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/indexentries.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6587,
+        "matches_issue": 0.8136,
+        "safe_to_apply": 0.6829,
+        "composite": 0.7888000000000001,
+        "secrets_or_danger": 0.5835,
+        "logic_drift": 0.4524,
+        "flagged": true
+      },
+      "laya_combined": 0.7888,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 20.44,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af213932..9793b1762 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    return _('Symbols')\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7975-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/environment/adapters/indexentries.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/indexentries.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5526,
+        "matches_issue": 0.8263,
+        "safe_to_apply": 0.7747,
+        "composite": 0.7884,
+        "secrets_or_danger": 0.0811,
+        "logic_drift": 0.2123,
+        "flagged": false
+      },
+      "laya_combined": 0.7884,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 4.96,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af213932..f2459dc80 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    # get all other symbols under 'Symbols' section\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7975-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sphinx/environment/adapters/indexentries.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/environment/adapters/indexentries.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6273,
+      "matches_issue": 0.7219,
+      "safe_to_apply": 0.6222,
+      "composite": 0.7428499999999999,
+      "secrets_or_danger": 0.0836,
+      "logic_drift": 0.265,
+      "flagged": false
+    },
+    "laya_combined": 0.7428,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 19.43,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py\nindex 5af2139..f2459dc 100644\n--- a/sphinx/environment/adapters/indexentries.py\n+++ b/sphinx/environment/adapters/indexentries.py\n@@ -165,10 +165,10 @@ class IndexEntries:\n                 if k.startswith('\\N{RIGHT-TO-LEFT MARK}'):\n                     k = k[1:]\n                 letter = unicodedata.normalize('NFD', k[0])[0].upper()\n-                if letter.isalpha() or letter == '_':\n+                if letter.isalpha():\n                     return letter\n                 else:\n-                    # get all other symbols under one heading\n+                    # get all other symbols under 'Symbols' section\n                     return _('Symbols')\n             else:\n                 return v[2]\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,382 @@
+{
+  "instance_id": "sympy__sympy-13773",
+  "repo": "sympy/sympy",
+  "base_commit": "7121bdf1facdd90d05b6994b4c2e5b2865a4638a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973368.5052483
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973372.944952
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973393.3393342
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973395.3226638
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973431.2168274
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973602.8135815
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/matrices/common.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791973293.4730291,
+  "elapsed_s": 317.05,
+  "plan": "### Step 1: Root Cause\n\nIn SymPy (specifically in `MatrixBase` or matrix expression classes where `__matmul__` is defined), the matrix multiplication operator `@` (`__matmul__`) is currently implemented by directly aliasing or calling `__mul__`. Consequently, when a scalar is multiplied on the left-hand side using `@` (e.g., `2 @ B`), it falls back to standard scalar-matrix multiplication (`2 * B`), returning a matrix rather than failing. \n\nAccording to Python's operator specifications and NumPy's behavior, `@` should only be valid if at least one operand is a matrix/matrix expression (or specifically, matrix operands are expected, or scalar operands are not allowed / raise a `ValueError` or `TypeError`—NumPy raises a `ValueError` with \"Scalar operands are not allowed, use '*' instead\"). In SymPy matrix classes (like `MatrixBase` in `sympy/matrices/common.py` or equivalent matrix base classes), `__matmul__` needs to explicitly check whether both arguments are matrices (or whether the other argument is a matrix/matrix-like object), and raise a `ValueError` (or `TypeError`) if a scalar operand is used with `@`.\n\n---\n\n### Step 2: Exact Changes to Make\n\n1. **File:** `sympy/matrices/common.py` (or wherever `MatrixBase.__matmul__` / matrix arithmetic operations are defined).\n   - **Function:** `__matmul__`, `__rmatmul__` (and potentially `__imatmul__`).\n   - **What to change:** Modify `__matmul__` so that it checks if the other operand is a matrix (e.g., `hasattr(other, 'is_Matrix')` or isinstance checks for matrices/MatrixExpressions). If one of the arguments is a scalar (i.e. not a matrix or matrix expression), raise a `ValueError` (e.g., `\"Scalar operands are not allowed, use '*' instead\"`).\n\n2. **File:** `sympy/matrices/expressions/matmul.py` (if matrix expressions also define `__matmul__` or inherit it).\n   - Ensure matrix expression multiplication also validates operands correctly under `@`.",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "sympy/core/mul.py",
+      "symbol": "sympy/core/mul.py::prod",
+      "symbols": [
+        "prod",
+        "base_exp",
+        "ndiv",
+        "as_two_terms"
+      ],
+      "line_range": [
+        1678,
+        1703
+      ],
+      "score": 0.5272,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3267,
+        "vector": 0.7335,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: a; body matches report terms: only)"
+    },
+    {
+      "file": "sympy/tensor/array/arrayop.py",
+      "symbol": "sympy/tensor/array/arrayop.py::_arrayfy",
+      "symbols": [
+        "_arrayfy",
+        "tensorcontraction",
+        "derive_by_array",
+        "tensorproduct"
+      ],
+      "line_range": [
+        11,
+        20
+      ],
+      "score": 0.5285,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3518,
+        "vector": 0.6926,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: a; body matches report terms: array, matrix)"
+    },
+    {
+      "file": "sympy/utilities/codegen.py",
+      "symbol": "sympy/utilities/codegen.py::OutputArgument",
+      "symbols": [
+        "OutputArgument",
+        "__init__",
+        "_declare_locals",
+        "_get_routine_opening"
+      ],
+      "line_range": [
+        378,
+        423
+      ],
+      "score": 0.6961,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6471,
+        "vector": 0.7028,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: should, call, argument, this)"
+    },
+    {
+      "file": "sympy/utilities/mathml/__init__.py",
+      "symbol": "sympy/utilities/mathml/__init__.py::apply_xsl",
+      "symbols": [
+        "apply_xsl"
+      ],
+      "line_range": [
+        20,
+        42
+      ],
+      "score": 0.5577,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1456,
+        "vector": 0.6361,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: file, line, this)"
+    },
+    {
+      "file": "sympy/tensor/array/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.4248,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.508,
+        "vector": 0.4401,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in traceback)"
+    },
+    {
+      "file": "sympy/categories/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3496,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1358,
+        "vector": 0.5886,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7383500000000001,
+  "laya_scores": {
+    "fix_quality": 1.4254,
+    "matches_issue": 0.8215,
+    "safe_to_apply": 0.7065,
+    "composite": 0.7383500000000001,
+    "secrets_or_danger": 0.1885,
+    "logic_drift": 0.4987,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related concerns or injection vectors introduced.\n- PERFORMANCE: PASS - O(1) attribute check does not impact hot path performance.\n- ROBUSTNESS: PASS - Safely uses getattr with a default to check for matrix operands.\n- MINIMAL DIFF / YAGNI: PASS - The changes are direct, minimal, and fully address the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sympy import Matrix, Symbol\nfrom sympy.matrices.expressions import MatrixSymbol\n\n\ndef test_scalar_matmul_raises_value_error():\n    \"\"\"Test that multiplying a scalar on the left-hand side with @ raises ValueError.\"\"\"\n    B = Matrix([[2, 3], [1, 2]])\n    with pytest.raises(ValueError, match=\"Scalar operands are not allowed\"):\n        2 @ B\n\n\ndef test_matrix_matrix_matmul_valid():\n    \"\"\"Test that matrix @ matrix multiplication works correctly.\"\"\"\n    A = Matrix([[1, 2], [3, 4]])\n    B = Matrix([[2, 3], [1, 2]])\n    res = A @ B\n    expected = Matrix([[4, 7], [10, 17]])\n    assert res == expected\n\n\ndef test_matrix_scalar_rmatmul_raises_value_error():\n    \"\"\"Test that multiplying a matrix on the right-hand side with @ by a scalar raises ValueError.\"\"\"\n    A = Matrix([[1, 2], [3, 4]])\n    with pytest.raises(ValueError, match=\"Scalar operands are not allowed\"):\n        A @ 2\n\n\ndef test_matrix_symbol_scalar_matmul_raises_value_error():\n    \"\"\"Test that matrix expressions / MatrixSymbols also reject scalar @ operands.\"\"\"\n    X = MatrixSymbol('X', 2, 2)\n    with pytest.raises(ValueError, match=\"Scalar operands are not allowed\"):\n        2 @ X\n\n\ndef test_matrix_symbol_matrix_symbol_matmul_valid():\n    \"\"\"Test that matrix symbol @ matrix symbol works correctly.\"\"\"\n    X = MatrixSymbol('X', 2, 2)\n    Y = MatrixSymbol('Y', 2, 2)\n    res = X @ Y\n    assert res is not None",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a2917aa..9ac99f9171 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13773-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/matrices/common.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4254,
+        "matches_issue": 0.8215,
+        "safe_to_apply": 0.7065,
+        "composite": 0.7383500000000001,
+        "secrets_or_danger": 0.1885,
+        "logic_drift": 0.4987,
+        "flagged": false
+      },
+      "laya_combined": 0.7384,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 2.13,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a2917aa..9ac99f9171 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13773-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/matrices/common.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4254,
+        "matches_issue": 0.8215,
+        "safe_to_apply": 0.7065,
+        "composite": 0.7383500000000001,
+        "secrets_or_danger": 0.1885,
+        "logic_drift": 0.4987,
+        "flagged": false
+      },
+      "laya_combined": 0.7384,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 125.2,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a2917aa..2ab975c490 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not (hasattr(other, 'is_Matrix') or getattr(other, 'is_Matrix', False)):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not (hasattr(other, 'is_Matrix') or getattr(other, 'is_Matrix', False)):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13773-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/matrices/common.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4789,
+        "matches_issue": 0.8178,
+        "safe_to_apply": 0.7199,
+        "composite": 0.75415,
+        "secrets_or_danger": 0.2067,
+        "logic_drift": 0.5652,
+        "flagged": false
+      },
+      "laya_combined": 0.7541,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 77.13,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a2917aa..9ac99f9171 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13773-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/matrices/common.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/matrices/common.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4254,
+      "matches_issue": 0.8215,
+      "safe_to_apply": 0.7065,
+      "composite": 0.7383500000000001,
+      "secrets_or_danger": 0.1885,
+      "logic_drift": 0.4987,
+      "flagged": false
+    },
+    "laya_combined": 0.7384,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0059,
+    "rank_reason": "logistic",
+    "elapsed_s": 2.13,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 379a291..9ac99f9 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -1973,6 +1973,8 @@ def __div__(self, other):\n \n     @call_highest_priority('__rmatmul__')\n     def __matmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__mul__(other)\n \n     @call_highest_priority('__rmul__')\n@@ -2068,6 +2070,8 @@ def __radd__(self, other):\n \n     @call_highest_priority('__matmul__')\n     def __rmatmul__(self, other):\n+        if not getattr(other, 'is_Matrix', False):\n+            raise ValueError(\"Scalar operands are not allowed, use '*' instead\")\n         return self.__rmul__(other)\n \n     @call_highest_priority('__mul__')\n",
+  "offline_calls": 0
+}

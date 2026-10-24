@@ -1,0 +1,11 @@
+--- a/sphinx/util/rst.py
++++ b/sphinx/util/rst.py
+@@ -74,7 +74,7 @@
+     if prolog:
+         pos = 0
+         for line in content:
+-            if docinfo_re.match(line):
++            if docinfo_re.match(line) or (role_re := re.compile(':[a-zA-Z0-9_-]+:`.*?`')).match(line):
+                 pos += 1
+             else:
+                 break

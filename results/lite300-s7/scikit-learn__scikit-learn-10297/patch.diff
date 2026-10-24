@@ -1,0 +1,12 @@
+diff --git a/sklearn/linear_model/ridge.py b/sklearn/linear_model/ridge.py
+index 911c74ae3b..f0ea872713 100644
+--- a/sklearn/linear_model/ridge.py
++++ b/sklearn/linear_model/ridge.py
+@@ -1089,6 +1089,7 @@ class _BaseRidgeCV(LinearModel):
+                  fit_intercept=True, normalize=False, scoring=None,
+                  cv=None, gcv_mode=None,
+                  store_cv_values=False):
++        self.store_cv_values = store_cv_values
+         self.alphas = alphas
+         self.fit_intercept = fit_intercept
+         self.normalize = normalize

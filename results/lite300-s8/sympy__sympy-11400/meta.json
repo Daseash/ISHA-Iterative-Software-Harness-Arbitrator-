@@ -1,0 +1,390 @@
+{
+  "instance_id": "sympy__sympy-11400",
+  "repo": "sympy/sympy",
+  "base_commit": "8dcb12a6cf500e8738d6729ab954a261758f49ca",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960577.3444343
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960579.616492
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960588.6212063
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960590.6987746
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960603.342299
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960671.3648028
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/printing/ccode.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/printing/ccode.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791960541.4936879,
+  "elapsed_s": 137.99,
+  "plan": "def _print_sinc(self, expr):\n        from sympy import Piecewise, sin, Ne\n        x = expr.args[0]\n        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/printing/ccode.py",
+      "symbol": "sympy/printing/ccode.py::_print_Piecewise",
+      "symbols": [
+        "_print_Piecewise",
+        "_print_ITE",
+        "_print_Symbol",
+        "_print_For"
+      ],
+      "line_range": [
+        184,
+        215
+      ],
+      "score": 0.4954,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8856,
+        "vector": 0.6164,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: piecewise, work)"
+    },
+    {
+      "file": "sympy/printing/octave.py",
+      "symbol": "sympy/printing/octave.py::_print_Piecewise",
+      "symbols": [
+        "_print_Piecewise",
+        "_print_sinc",
+        "_print_Assignment",
+        "indent_code"
+      ],
+      "line_range": [
+        441,
+        477
+      ],
+      "score": 0.5007,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.4228,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: piecewise, work)"
+    },
+    {
+      "file": "sympy/functions/special/spherical_harmonics.py",
+      "symbol": "sympy/functions/special/spherical_harmonics.py::_eval_evalf",
+      "symbols": [
+        "_eval_evalf",
+        "eval",
+        "Ynm_c",
+        "_eval_expand_func"
+      ],
+      "line_range": [
+        219,
+        232
+      ],
+      "score": 0.5352,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3734,
+        "vector": 0.7029,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: work, theta, math)"
+    },
+    {
+      "file": "sympy/concrete/expr_with_limits.py",
+      "symbol": "sympy/concrete/expr_with_limits.py::__new__",
+      "symbols": [
+        "__new__",
+        "__new__"
+      ],
+      "line_range": [
+        77,
+        119
+      ],
+      "score": 0.4875,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3599,
+        "vector": 0.3338,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: piecewise, supported)"
+    },
+    {
+      "file": "sympy/physics/quantum/shor.py",
+      "symbol": "sympy/physics/quantum/shor.py::_apply_operator_Qubit",
+      "symbols": [
+        "_apply_operator_Qubit",
+        "CMod",
+        "period_find"
+      ],
+      "line_range": [
+        63,
+        88
+      ],
+      "score": 0.5399,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5624,
+        "vector": 0.3481,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: work)"
+    },
+    {
+      "file": "sympy/plotting/pygletplot/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3352,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1782,
+        "vector": 0.3803,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.74975,
+  "laya_scores": {
+    "fix_quality": 1.4747,
+    "matches_issue": 0.8004,
+    "safe_to_apply": 0.7239,
+    "composite": 0.74975,
+    "secrets_or_danger": 0.1149,
+    "logic_drift": 0.2243,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Uses safe SymPy expression manipulation with no injection or execution risks.\n- PERFORMANCE: PASS - Performs standard AST translation without unbounded loops or N+1 queries.\n- ROBUSTNESS: PASS - Correctly leverages existing Piecewise and printing infrastructure without edge case failures.\n- MINIMAL DIFF / YAGNI: PASS - Fixes the bug cleanly and minimally using SymPy's existing constructs.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from sympy import symbols, sinc, Piecewise, Ne, sin\nfrom sympy.printing.ccode import ccode\n\ndef test_ccode_sinc_reproduction():\n    x = symbols('x')\n    # Before the fix, ccode(sinc(x)) returns '// Not supported in C:\\n// sinc\\nsinc(x)'\n    # After the fix, it should print the Piecewise expansion of sinc(x) i.e., sin(x)/x at Ne(x, 0) else 1.\n    result = ccode(sinc(x))\n    assert \"sinc\" not in result\n    assert \"sin(x)/x\" in result\n\ndef test_ccode_sinc_with_theta():\n    theta = symbols('theta')\n    result = ccode(sinc(theta))\n    assert \"sin(theta)/theta\" in result\n\ndef test_ccode_piecewise_explicit_equivalence():\n    x = symbols('x')\n    expected = ccode(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n    actual = ccode(sinc(x))\n    assert actual == expected",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7b59..21d14d2a80 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -181,6 +181,11 @@ def _print_Infinity(self, expr):\n     def _print_NegativeInfinity(self, expr):\n         return '-HUGE_VAL'\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_Piecewise(self, expr):\n         if expr.args[-1].cond != True:\n             # We need the last conditional to be a True, otherwise the resulting\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11400-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/ccode.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/ccode.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4747,
+        "matches_issue": 0.8004,
+        "safe_to_apply": 0.7239,
+        "composite": 0.74975,
+        "secrets_or_danger": 0.1149,
+        "logic_drift": 0.2243,
+        "flagged": false
+      },
+      "laya_combined": 0.7498,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 2.25,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7b59..36f975e300 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -218,6 +218,11 @@ def _print_ITE(self, expr):\n         _piecewise = Piecewise((expr.args[1], expr.args[0]), (expr.args[2], True))\n         return self._print(_piecewise)\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_MatrixElement(self, expr):\n         return \"{0}[{1}]\".format(expr.parent, expr.j +\n                 expr.i*expr.parent.shape[1])\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11400-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/ccode.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/ccode.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4747,
+        "matches_issue": 0.8004,
+        "safe_to_apply": 0.7239,
+        "composite": 0.74975,
+        "secrets_or_danger": 0.1354,
+        "logic_drift": 0.665,
+        "flagged": false
+      },
+      "laya_combined": 0.7498,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 27.56,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7b59..471ef8046f 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -213,6 +213,11 @@ def _print_Piecewise(self, expr):\n             last_line = \": (\\n%s\\n)\" % self._print(expr.args[-1].expr)\n             return \": \".join(ecpairs) + last_line + \" \".join([\")\"*len(ecpairs)])\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_ITE(self, expr):\n         from sympy.functions import Piecewise\n         _piecewise = Piecewise((expr.args[1], expr.args[0]), (expr.args[2], True))\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11400-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/ccode.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/ccode.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4747,
+        "matches_issue": 0.8004,
+        "safe_to_apply": 0.7239,
+        "composite": 0.74975,
+        "secrets_or_danger": 0.1159,
+        "logic_drift": 0.5724,
+        "flagged": false
+      },
+      "laya_combined": 0.7498,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 14.96,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7b59..21d14d2a80 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -181,6 +181,11 @@ def _print_Infinity(self, expr):\n     def _print_NegativeInfinity(self, expr):\n         return '-HUGE_VAL'\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_Piecewise(self, expr):\n         if expr.args[-1].cond != True:\n             # We need the last conditional to be a True, otherwise the resulting\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11400-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/printing/ccode.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/printing/ccode.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4747,
+      "matches_issue": 0.8004,
+      "safe_to_apply": 0.7239,
+      "composite": 0.74975,
+      "secrets_or_danger": 0.1149,
+      "logic_drift": 0.2243,
+      "flagged": false
+    },
+    "laya_combined": 0.7498,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 2.25,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/printing/ccode.py b/sympy/printing/ccode.py\nindex 30a07a7..21d14d2 100644\n--- a/sympy/printing/ccode.py\n+++ b/sympy/printing/ccode.py\n@@ -181,6 +181,11 @@ def _print_Infinity(self, expr):\n     def _print_NegativeInfinity(self, expr):\n         return '-HUGE_VAL'\n \n+    def _print_sinc(self, expr):\n+        from sympy import Piecewise, sin, Ne\n+        x = expr.args[0]\n+        return self._print(Piecewise((sin(x)/x, Ne(x, 0)), (1, True)))\n+\n     def _print_Piecewise(self, expr):\n         if expr.args[-1].cond != True:\n             # We need the last conditional to be a True, otherwise the resulting\n",
+  "offline_calls": 0
+}

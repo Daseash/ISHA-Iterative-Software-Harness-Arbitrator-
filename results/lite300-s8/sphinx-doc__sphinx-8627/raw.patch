@@ -1,0 +1,15 @@
+diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py
+index 2d4f67bba..e044ced56 100644
+--- a/sphinx/util/typing.py
++++ b/sphinx/util/typing.py
+@@ -98,8 +98,8 @@ def restify(cls: Optional["Type"]) -> str:
+         return ':class:`%s`' % cls.__name__
+     elif cls.__module__ in ('__builtin__', 'builtins'):
+         return ':class:`%s`' % cls.__name__
+-    else:
+-        if sys.version_info >= (3, 7):  # py37+
++    elif hasattr(cls, '__qualname__'):
++        if sys.version_info >= (3, 7):
+             return _restify_py37(cls)
+         else:
+             return _restify_py36(cls)

@@ -1,0 +1,10 @@
+--- a/src/_pytest/skipping.py
++++ b/src/_pytest/skipping.py
+@@ -270,7 +270,7 @@
+ def pytest_runtest_setup(item: Item) -> None:
+     skipped = evaluate_skip_marks(item)
+     if skipped:
+         raise skipped
+-    if not item.config.option.runxfail:
++    if not item.config.option.runxfail and item.get_closest_marker("xfail"):
+         item.ihook.pytest_xfail_runtest_setup(item=item)

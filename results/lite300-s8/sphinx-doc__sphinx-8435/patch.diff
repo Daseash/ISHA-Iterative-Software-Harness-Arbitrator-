@@ -1,0 +1,14 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 171a3e7..64d0793 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1715,7 +1715,8 @@ class DataDocumenter(ModuleLevelDocumenter):
+                 # AttributeError is raised on 3.5.2 (fixed by 3.5.3)
+                 annotations = {}
+ 
+-            if self.objpath[-1] in annotations:
++            name = self.objpath[-1]
++            if name in annotations:
+                 objrepr = stringify_typehint(annotations.get(self.objpath[-1]))
+                 self.add_line('   :type: ' + objrepr, sourcename)
+             else:

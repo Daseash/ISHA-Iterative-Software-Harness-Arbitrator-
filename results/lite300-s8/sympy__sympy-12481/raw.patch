@@ -1,0 +1,16 @@
+diff --git a/sympy/combinatorics/permutations.py b/sympy/combinatorics/permutations.py
+index 136ed5a478..096497231f 100644
+--- a/sympy/combinatorics/permutations.py
++++ b/sympy/combinatorics/permutations.py
+@@ -901,6 +901,11 @@ def __new__(cls, *args, **kwargs):
+                 'cycles use Cycle%s.' % ''.join([str(tuple(c)) for c in args]))
+             else:
+                 raise ValueError('there were repeated elements.')
++                if has_dups(flatten(temp)):
++                    p = Permutation(temp[0])
++                    for arg in temp[1:]:
++                        p = p * Permutation(arg)
++                    temp = p._array_form
+         temp = set(temp)
+ 
+         if not is_cycle and \

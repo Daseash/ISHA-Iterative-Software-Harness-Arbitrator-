@@ -1,0 +1,403 @@
+{
+  "instance_id": "sphinx-doc__sphinx-7686",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "752d3285d250bbaf673cff25e83f03f247502021",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958479.000932
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958479.9151802
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958484.884065
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958488.5770075
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958499.057809
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958619.686116
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791958638.2441728
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/ext/autosummary/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791958452.0774186,
+  "elapsed_s": 192.62,
+  "plan": "Step 1: What is the root cause\nWhen `sphinx.ext.autosummary` generates documentation for a module (via `autosummary_generate` or the autosummary machinery), it sets up an `ModuleDocumenter` or queries members to pass into the template variable `members`. However, the filtering of members based on `autosummary_imported_members` (which controls whether imported members are included) is not correctly applied or respected when collecting the list of members for the module template context. Specifically, `ModuleDocumenter.get_object_members()` or the autosummary generation logic does not filter out imported members when `autosummary_imported_members` is set to `False`, causing builtins and imported modules (like `os` in the example) to appear in the `members` list.\n\nStep 2: What exact changes to make\n- File: `sphinx/ext/autosummary/__init__.py` (or `sphinx/ext/autodoc/__init__.py` depending on where the autosummary module template context is populated)\n- Function: Look at where `get_documenter` or the module template variables are generated/populated in `sphinx/ext/autosummary/__init__.py` (specifically in `Autosummary.get_items` or the helper functions that extract module members for autosummary).\n- What to change: Ensure that when building the list of members for a module template in autosummary, the `autosummary_imported_members` configuration value (defaulting to `True` or `False`) is checked, and if it is `False`, members whose `__module__` does not match the current module (i.e., imported members) are filtered out from the `members` list before it is passed to the template context.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sphinx/ext/autosummary/__init__.py",
+      "symbol": "sphinx/ext/autosummary/__init__.py::process_autosummary_toc",
+      "symbols": [
+        "process_autosummary_toc",
+        "crawl_toc",
+        "autosummary_toc_visit_html",
+        "get_documenter"
+      ],
+      "line_range": [
+        109,
+        134
+      ],
+      "score": 0.6027,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3357,
+        "vector": 0.6149,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: sphinx, toctree, describe, autosummary)"
+    },
+    {
+      "file": "sphinx/ext/autodoc/__init__.py",
+      "symbol": "sphinx/ext/autodoc/__init__.py::filter_members",
+      "symbols": [
+        "filter_members",
+        "cut_lines",
+        "__init__",
+        "add_line"
+      ],
+      "line_range": [
+        531,
+        656
+      ],
+      "score": 0.6241,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3797,
+        "vector": 0.7015,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: members; body matches report terms: result, module, should, doc__)"
+    },
+    {
+      "file": "sphinx/ext/napoleon/__init__.py",
+      "symbol": "sphinx/ext/napoleon/__init__.py::setup",
+      "symbols": [
+        "setup",
+        "_process_docstring",
+        "_skip_member",
+        "__unicode__"
+      ],
+      "line_range": [
+        274,
+        310
+      ],
+      "score": 0.5864,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2623,
+        "vector": 0.6319,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: module, sphinx, version, extensions)"
+    },
+    {
+      "file": "sphinx/util/__init__.py",
+      "symbol": "sphinx/util/__init__.py::save_traceback",
+      "symbols": [
+        "save_traceback",
+        "get_module_source",
+        "split_full_qualified_name",
+        "md5"
+      ],
+      "line_range": [
+        242,
+        276
+      ],
+      "score": 0.5431,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2098,
+        "vector": 0.3805,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: file__, module, sphinx, info)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::Index",
+      "symbols": [
+        "Index",
+        "__init__",
+        "generate",
+        "__init__"
+      ],
+      "line_range": [
+        68,
+        154
+      ],
+      "score": 0.5317,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2082,
+        "vector": 0.2883,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: should, sphinx, your, info)"
+    },
+    {
+      "file": "sphinx/builders/latex/__init__.py",
+      "symbol": "sphinx/builders/latex/__init__.py::assemble_doctree",
+      "symbols": [
+        "assemble_doctree",
+        "copy_support_files",
+        "copy_latex_additional_files",
+        "write_message_catalog"
+      ],
+      "line_range": [
+        321,
+        363
+      ],
+      "score": 0.528,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1315,
+        "vector": 0.4175,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: toctree, index, info, extra)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.754075,
+  "laya_scores": {
+    "fix_quality": 1.6784,
+    "matches_issue": 0.7846,
+    "safe_to_apply": 0.5533,
+    "composite": 0.754075,
+    "secrets_or_danger": 0.2084,
+    "logic_drift": 0.3744,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No injection, credential leakage, path traversal, or unsafe execution primitives are introduced.\n- PERFORMANCE: PASS: Simple attribute and configuration checks on an existing member iteration loop without adding N+1 queries or unbounded growth.\n- ROBUSTNESS: PASS: Uses safe attribute lookup (`getattr`) with a fallback default to prevent unexpected exceptions when checking module provenance.\n- MINIMAL DIFF / YAGNI: PASS: The change is extremely targeted and directly addresses the reported bug with minimal code.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.ext.autosummary import get_documenter\nfrom sphinx.ext.autodoc import ModuleDocumenter\n\n\n@pytest.mark.sphinx('html', testroot='autosummary')\ndef test_autosummary_imported_members_false(app):\n    \"\"\"Test that imported members (like imported modules or builtins) are excluded\n    from the module template's `members` variable when autosummary_imported_members\n    is set to False.\n    \"\"\"\n    app.config.autosummary_imported_members = False\n\n    # Create a dummy module with an imported member\n    mod_name = 'autosummary_imported_test_mod'\n    imported_mod_name = 'os'\n\n    # Dynamically mock/inject into sys.modules or use a real module\n    import sys\n    from types import ModuleType\n\n    test_mod = ModuleType(mod_name)\n    test_mod.__file__ = 'dummy.py'\n    test_mod.os = __import__('os')\n    test_mod.__all__ = ['os']\n    sys.modules[mod_name] = test_mod\n\n    try:\n        documenter = get_documenter(app, test_mod)\n        assert isinstance(documenter, ModuleDocumenter)\n        \n        # Retrieve members using documenter or autosummary logic\n        # Depending on implementation, get_object_members or template context generation \n        # populates members.\n        _, members = documenter.get_object_members(True)\n        member_names = [m[0] for m in members]\n\n        # Since autosummary_imported_members is False and 'os' was imported from another module,\n        # it should be filtered out.\n        assert 'os' not in member_names\n    finally:\n        sys.modules.pop(mod_name, None)\n\n\n@pytest.mark.sphinx('html', testroot='autosummary')\ndef test_autosummary_imported_members_true(app):\n    \"\"\"Edge case: When autosummary_imported_members is True, imported members \n    should be included in the members list.\n    \"\"\"\n    app.config.autosummary_imported_members = True\n\n    mod_name = 'autosummary_imported_test_mod_true'\n    import sys\n    from types import ModuleType\n\n    test_mod = ModuleType(mod_name)\n    test_mod.__file__ = 'dummy.py'\n    test_mod.os = __import__('os')\n    sys.modules[mod_name] = test_mod\n\n    try:\n        documenter = get_documenter(app, test_mod)\n        _, members = documenter.get_object_members(True)\n        member_names = [m[0] for m in members]\n\n        # With imported members allowed, 'os' should be present.\n        assert 'os' in member_names\n    finally:\n        sys.modules.pop(mod_name, None)\n\n\n@pytest.mark.sphinx('html', testroot='autosummary')\ndef test_autosummary_module_with_no_members(app):\n    \"\"\"Edge case: A module with no defined or imported members should return an empty list\n    without errors when autosummary_imported_members is False.\n    \"\"\"\n    app.config.autosummary_imported_members = False\n\n    mod_name = 'autosummary_empty_mod'\n    import sys\n    from types import ModuleType\n\n    test_mod = ModuleType(mod_name)\n    test_mod.__file__ = 'dummy.py'\n    sys.modules[mod_name] = test_mod\n\n    try:\n        documenter = get_documenter(app, test_mod)\n        _, members = documenter.get_object_members(True)\n        member_names = [m[0] for m in members]\n\n        assert member_names == []\n    finally:\n        sys.modules.pop(mod_name, None)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- sphinx/ext/autosummary/__init__.py\n+++ sphinx/ext/autosummary/__init__.py\n@@ -367,6 +367,8 @@\n                 if doc.options.members and not doc.options.noindex:\n                     _, members = doc.get_object_members(want_all)\n                     for name, obj in members:\n+                        if not doc.env.config.autosummary_imported_members and getattr(obj, '__module__', None) != real_name:\n+                            continue\n                         qualname = real_name + '.' + name\n                         items.append((qualname, prefix, real_name, name))\n             except ImportError:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c1\\sphinx\\ext\\autosummary\\__init__.py: SyntaxError line 238: unexpected indent"
+      ],
+      "changed_files": [],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.757,
+        "matches_issue": 0.8033,
+        "safe_to_apply": 0.6203,
+        "composite": 0.7951499999999999,
+        "secrets_or_danger": 0.292,
+        "logic_drift": 0.4984,
+        "flagged": false
+      },
+      "laya_combined": 0.7951,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.56,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sphinx/ext/autosummary/__init__.py\n+++ b/sphinx/ext/autosummary/__init__.py\n@@ -370,6 +370,8 @@ class Autosummary(SphinxDirective):\n             if doc.options.members and not doc.options.noindex:\n                 allow_inherited = doc.env.config.autodoc_inherit_docstrings\n                 for name, val in doc.get_object_members(allow_inherited):\n+                    if not doc.env.config.autosummary_imported_members and getattr(val, '__module__', None) != obj.__name__:\n+                        continue\n                     members.append(name)\n             return members",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c2\\sphinx\\ext\\autosummary\\__init__.py: SyntaxError line 370: unexpected indent"
+      ],
+      "changed_files": [
+        "sphinx/ext/autosummary/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7245,
+        "matches_issue": 0.8112,
+        "safe_to_apply": 0.6092,
+        "composite": 0.786225,
+        "secrets_or_danger": 0.11,
+        "logic_drift": 0.5206,
+        "flagged": false
+      },
+      "laya_combined": 0.7862,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 37.43,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/ext/autosummary/__init__.py\n+++ b/sphinx/ext/autosummary/__init__.py\n@@ -375,6 +375,10 @@ def get_autodoc_modules(app: Sphinx, obj: Any, parent: Any, more_content: Any) -> List[str]:\n         # ... existing code ...\n         members = doc.get_object_members(want_all=True)[1]\n+        if not app.config.autosummary_imported_members:\n+            members = [m for m in members if m[1].__module__ == obj.__name__]\n         return [m[0] for m in members]",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c3\\sphinx\\ext\\autosummary\\__init__.py: undefined name 'app'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c3\\sphinx\\ext\\autosummary\\__init__.py: undefined name 'members'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c3\\sphinx\\ext\\autosummary\\__init__.py: undefined name 'obj'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c3\\sphinx\\ext\\autosummary\\__init__.py: local variable 'members' is assigned to but never used"
+      ],
+      "changed_files": [
+        "sphinx/ext/autosummary/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6721,
+        "matches_issue": 0.781,
+        "safe_to_apply": 0.6117,
+        "composite": 0.7662,
+        "secrets_or_danger": 0.1091,
+        "logic_drift": 0.5228,
+        "flagged": false
+      },
+      "laya_combined": 0.7662,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 28.52,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- sphinx/ext/autosummary/__init__.py\n+++ sphinx/ext/autosummary/__init__.py\n@@ -367,6 +367,8 @@\n                 if doc.options.members and not doc.options.noindex:\n                     _, members = doc.get_object_members(want_all)\n                     for name, obj in members:\n+                        if not doc.env.config.autosummary_imported_members and getattr(obj, '__module__', None) != real_name:\n+                            continue\n                         qualname = real_name + '.' + name\n                         items.append((qualname, prefix, real_name, name))\n             except ImportError:",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-7686-c1\\sphinx\\ext\\autosummary\\__init__.py: SyntaxError line 238: unexpected indent"
+    ],
+    "changed_files": [],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.757,
+      "matches_issue": 0.8033,
+      "safe_to_apply": 0.6203,
+      "composite": 0.7951499999999999,
+      "secrets_or_danger": 0.292,
+      "logic_drift": 0.4984,
+      "flagged": false
+    },
+    "laya_combined": 0.7951,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 12.56,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/ext/autosummary/__init__.py b/sphinx/ext/autosummary/__init__.py\nindex 0cdd88f..b1c4f05 100644\n--- a/sphinx/ext/autosummary/__init__.py\n+++ b/sphinx/ext/autosummary/__init__.py\n@@ -364,6 +364,8 @@ class Autosummary(SphinxDirective):\n     def get_table(self, items: List[Tuple[str, str, str, str]]) -> List[Node]:\n         \"\"\"Generate a proper list of table nodes for autosummary:: directive.\n \n+                        if not doc.env.config.autosummary_imported_members and getattr(obj, '__module__', None) != real_name:\n+                            continue\n         *items* is a list produced by :meth:`get_items`.\n         \"\"\"\n         table_spec = addnodes.tabular_col_spec()\n",
+  "offline_calls": 0
+}

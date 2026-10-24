@@ -1,0 +1,15 @@
+diff --git a/src/_pytest/_code/source.py b/src/_pytest/_code/source.py
+index 6f54057c0..2ee83db2a 100644
+--- a/src/_pytest/_code/source.py
++++ b/src/_pytest/_code/source.py
+@@ -203,8 +203,8 @@ def getstatementrange_ast(
+             pass
+ 
+     # The end might still point to a comment or empty line, correct it.
+-    while end:
+-        line = source.lines[end - 1].lstrip()
++    while end > start:
++        line = lines[end - 1].lstrip()
+         if line.startswith("#") or not line:
+             end -= 1
+         else:

@@ -1,0 +1,391 @@
+{
+  "instance_id": "sympy__sympy-13647",
+  "repo": "sympy/sympy",
+  "base_commit": "67e3c956083d0128a621f65ee86a7dacd4f9f19f",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791972908.5862353
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791972913.5865934
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791972935.816923
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791972943.3998332
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791972981.7035375
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791973278.130684
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/matrices/common.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791972826.897141,
+  "elapsed_s": 458.99,
+  "plan": "def _eval_col_insert(self, pos, other):\n        cols = self.cols\n\n        def entry(i, j):\n            if j < pos:\n                return self[i, j]\n            elif pos <= j < pos + other.cols:\n                return other[i, j - pos]\n            return self[i, j - pos - other.cols]\n\n        return self._new(self.rows, self.cols + other.cols,\n                         lambda i, j: entry(i, j))",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/matrices/common.py",
+      "symbol": "sympy/matrices/common.py::recurse_sub_blocks",
+      "symbols": [
+        "recurse_sub_blocks",
+        "_eval_col_insert",
+        "_eval_ones",
+        "col_insert"
+      ],
+      "line_range": [
+        115,
+        134
+      ],
+      "score": 0.5384,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.7364,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: M; body matches report terms: bottom, right)"
+    },
+    {
+      "file": "sympy/matrices/dense.py",
+      "symbol": "sympy/matrices/dense.py::ones",
+      "symbols": [
+        "ones",
+        "eye",
+        "_eval_matrix_mul",
+        "_lower_triangular_solve"
+      ],
+      "line_range": [
+        1327,
+        1345
+      ],
+      "score": 0.7616,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7887,
+        "vector": 0.9537,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: columns, with, rows, matrix; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/matrices/densetools.py",
+      "symbol": "sympy/matrices/densetools.py::eye",
+      "symbols": [
+        "eye",
+        "transpose",
+        "conjugate",
+        "conjugate_transpose"
+      ],
+      "line_range": [
+        149,
+        171
+      ],
+      "score": 0.5989,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3269,
+        "vector": 0.5595,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: example, sympy, matrix; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/__init__.py",
+      "symbol": "sympy/__init__.py::enable_warnings",
+      "symbols": [
+        "enable_warnings",
+        "__sympy_debug"
+      ],
+      "line_range": [
+        29,
+        32
+      ],
+      "score": 0.5772,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2499,
+        "vector": 0.5807,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: sympy)"
+    },
+    {
+      "file": "sympy/plotting/pygletplot/__init__.py",
+      "symbol": "sympy/plotting/pygletplot/__init__.py::PygletPlot",
+      "symbols": [
+        "PygletPlot"
+      ],
+      "line_range": [
+        8,
+        141
+      ],
+      "score": 0.5419,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2759,
+        "vector": 0.2327,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: example, your, with, three)"
+    },
+    {
+      "file": "sympy/tensor/array/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.4126,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4553,
+        "vector": 0.448,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.569825,
+  "laya_scores": {
+    "fix_quality": 1.1205,
+    "matches_issue": 0.5839,
+    "safe_to_apply": 0.5749,
+    "composite": 0.569825,
+    "secrets_or_danger": 0.1398,
+    "logic_drift": 0.4463,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, credentials, or unsafe execution primitives are present.\n- PERFORMANCE: PASS - No unbounded loops, N+1 queries, or blocking calls introduced.\n- ROBUSTNESS: PASS - The index correction logic accurately fixes the column indexing bug without introducing edge cases or race conditions.\n- MINIMAL DIFF / YAGNI: PASS - The patch consists of a single line correction directly addressing the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import sympy as sm\n\n\ndef test_col_insert_reproduction():\n    M = sm.eye(6)\n    V = 2 * sm.ones(6, 2)\n    res = M.col_insert(3, V)\n    \n    # Expected shape: 6 rows, 6 + 2 = 8 cols\n    assert res.shape == (6, 8)\n    \n    # Verify that columns 3 and 4 are the inserted ones (all 2s)\n    for i in range(6):\n        assert res[i, 3] == 2\n        assert res[i, 4] == 2\n        \n    # Verify that the original identity structure is preserved on the right/left\n    # Row 0 should be: [1, 0, 0, 2, 2, 0, 0, 0]\n    expected_row_0 = [1, 0, 0, 2, 2, 0, 0, 0]\n    for j in range(8):\n        assert res[0, j] == expected_row_0[j]\n\n    # Row 3 should be: [0, 0, 0, 2, 2, 1, 0, 0]\n    expected_row_3 = [0, 0, 0, 2, 2, 1, 0, 0]\n    for j in range(8):\n        assert res[3, j] == expected_row_3[j]\n\n\ndef test_col_insert_at_start():\n    M = sm.eye(3)\n    V = sm.ones(3, 1)\n    res = M.col_insert(0, V)\n    assert res.shape == (3, 4)\n    # First column should be V (all ones)\n    for i in range(3):\n        assert res[i, 0] == 1\n        assert res[i, 1] == 1  # original M[0,0] shifted\n\n\ndef test_col_insert_at_end():\n    M = sm.eye(3)\n    V = sm.ones(3, 1)\n    res = M.col_insert(3, V)\n    assert res.shape == (3, 4)\n    # Last column should be V (all ones)\n    for i in range(3):\n        assert res[i, 3] == 1\n        assert res[i, 2] == 1  # original M[2,2]",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 056d9bc497..5e811b36af 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,8 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n+\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/matrices/common.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1205,
+        "matches_issue": 0.5839,
+        "safe_to_apply": 0.5749,
+        "composite": 0.569825,
+        "secrets_or_danger": 0.1398,
+        "logic_drift": 0.4463,
+        "flagged": false
+      },
+      "laya_combined": 0.5698,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 210.37,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 056d9bc497..5e811b36af 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,8 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n+\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/matrices/common.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1205,
+        "matches_issue": 0.5839,
+        "safe_to_apply": 0.5749,
+        "composite": 0.569825,
+        "secrets_or_danger": 0.1398,
+        "logic_drift": 0.4463,
+        "flagged": false
+      },
+      "laya_combined": 0.5698,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 109.05,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -107,7 +107,7 @@ def _eval_col_insert(self, pos, other):\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos]\n+            return self[i, j - pos - other.cols]\n\n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c1\\sympy\\matrices\\common.py: undefined name 'pos'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c1\\sympy\\matrices\\common.py: undefined name 'other'"
+      ],
+      "changed_files": [
+        "sympy/matrices/common.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3821,
+        "matches_issue": 0.6757,
+        "safe_to_apply": 0.619,
+        "composite": 0.6692,
+        "secrets_or_danger": 0.1717,
+        "logic_drift": 0.3063,
+        "flagged": false
+      },
+      "laya_combined": 0.6692,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 129.62,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 056d9bc497..5e811b36af 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,8 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n+\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-13647-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/matrices/common.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/matrices/common.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.1205,
+      "matches_issue": 0.5839,
+      "safe_to_apply": 0.5749,
+      "composite": 0.569825,
+      "secrets_or_danger": 0.1398,
+      "logic_drift": 0.4463,
+      "flagged": false
+    },
+    "laya_combined": 0.5698,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0076,
+    "rank_reason": "logistic",
+    "elapsed_s": 210.37,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/matrices/common.py b/sympy/matrices/common.py\nindex 056d9bc..5e811b3 100644\n--- a/sympy/matrices/common.py\n+++ b/sympy/matrices/common.py\n@@ -86,7 +86,8 @@ def entry(i, j):\n                 return self[i, j]\n             elif pos <= j < pos + other.cols:\n                 return other[i, j - pos]\n-            return self[i, j - pos - other.cols]\n+            return self[i, j - other.cols]\n+\n \n         return self._new(self.rows, self.cols + other.cols,\n                          lambda i, j: entry(i, j))\n",
+  "offline_calls": 0
+}

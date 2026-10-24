@@ -147,14 +147,22 @@ def evaluate(
     if isinstance(raw_preds, dict):
         preds = [
             {
-                "instance_id": k,
+                "instance_id": k.replace("/", "__"),
                 "model_patch": v if isinstance(v, str) else v.get("model_patch", ""),
                 "model_name_or_path": "ISHA",
             }
             for k, v in raw_preds.items()
         ]
     else:
-        preds = raw_preds
+        preds = [
+            {
+                "instance_id": p.get("instance_id", "").replace("/", "__"),
+                "model_patch": p.get("model_patch", ""),
+                "model_name_or_path": p.get("model_name_or_path", "ISHA"),
+            }
+            for p in raw_preds
+            if isinstance(p, dict)
+        ]
 
     # P1-06: whitespace-only patches are not submittable (harness would grade noise).
     instance_ids = [p["instance_id"] for p in preds

@@ -1,0 +1,401 @@
+{
+  "instance_id": "sphinx-doc__sphinx-8627",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "332d80ba8433aea41c3709fa52737ede4405072b",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960095.5103662
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960096.4078147
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960105.004534
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960106.9623268
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960113.052755
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960213.9450903
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/util/typing.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/util/typing.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791960077.5754569,
+  "elapsed_s": 144.69,
+  "plan": "### Step 1: Root Cause\nWhen autodoc formats type annotations (using `sphinx.util.typing.restify` or `stringify`), `struct.Struct` (which is defined in the built-in `struct` module as `struct.Struct`) is evaluated. However, `struct.Struct` is actually a factory/type whose `__module__` attribute is `struct` and whose `__qualname__` is `Struct`. \n\nIn Python, `struct.Struct` is a class object, but when Sphinx resolves references for type annotations, type-checking or stringifying functions might look for it or inspect it via autodoc's evaluation/type-hint helpers. Specifically, `struct.Struct` has a module attribute `struct`, but because of how it's exposed or how `struct` is a C extension module, its type representation or qualification can sometimes cause Sphinx's cross-referencing to fail or treat it improperly as an unresolvable class reference target if not properly mapped or if its module path isn't correctly preserved or handled by `restify`/`stringify`.\n\nWait, let's look at how standard library types or similar objects are handled in `sphinx.util.typing`. In `sphinx.util.typing`, objects like `Struct` might be stringified or restified. Alternatively, `struct.Struct` is a type where `obj.__module__` is `'struct'` and `obj.__name__` is `'Struct'`, but `struct.Struct` isn't found as a direct attribute/class exported under `struct` module dict in a way that autodoc expects, or `struct.Struct` is a class whose full name is `struct.Struct`, but `restify` / `stringify` fails to generate the correct cross-reference role because `struct` is a built-in/extension module or `Struct` isn't in `struct.__all__` or similar module inspection checks. \nActually, `struct.Struct` is a type, but `struct` module does not list `Struct` in `__all__` (in fact, `struct` has no `__all__` in some python versions, or `inspect` / autodoc checks membership). More precisely, `struct.Struct` is an alias or class defined in C, and `safe_getattr(struct, 'Struct')` works, but when `restify()` or `stringify()` tries to get the canonical name or module, or when autodoc imports/resolves it, it might fail or be treated as a general class where `_restify` or type formatting doesn't qualify it properly or treats it as an unresolved target.\n\nLet's check `sphinx/util/typing.py` or inspect how other built-in types or classes are handled. Although `sphinx/util/typing.py` isn't fully in the snippet, we know that type hints formatting relies on `restify` and `stringify` in `sphinx.util.typing`.\n\n### Step 2: Exact Changes to Make\nWe need to examine and update `sphinx/util/typing.py` (or wherever `restify` / `stringify` / type evaluation for classes is implemented) to correctly handle `struct.Struct` or similar extension types whose module might need special handling, OR update how classes/types from the `struct` module are stringified/restified.\n\nSince we need to provide the exact plan:\n1. **File:** `sphinx/util/typing.py`\n   - **Function:** `restify` and/or `stringify` (or the helper that converts type objects to cross-references/strings).\n   - **What to change:** Ensure that when a type object like `struct.Struct` (or any class whose `__module__` is `'struct'`) is processed, it correctly formats as a cross-reference to `struct.Struct` rather than failing to resolve or dropping the module prefix. Specifically, ensure `restify` handles classes from built-in or extension modules like `struct` correctly by checking if `qualname` and `module` can be fully resolved.\n\nLet's verify the exact file and functions in `sphinx/util/typing.py`:\n- Function `rest(cls)` or `restify(cls)`\n- Function `stringify(annotation)`\n\nMake sure `struct.Struct` is properly recognized with its full module path (`struct.Struct`) during type stringification and restification.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sphinx/ext/autodoc/__init__.py",
+      "symbol": "sphinx/ext/autodoc/__init__.py::cut_lines",
+      "symbols": [
+        "cut_lines",
+        "between",
+        "ObjectMember",
+        "__init__"
+      ],
+      "line_range": [
+        185,
+        212
+      ],
+      "score": 0.6865,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5746,
+        "vector": 0.8154,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: sphinx, able, docs, automodule)"
+    },
+    {
+      "file": "sphinx/ext/autosummary/__init__.py",
+      "symbol": "sphinx/ext/autosummary/__init__.py::autosummary_toc",
+      "symbols": [
+        "autosummary_toc",
+        "autosummary_table",
+        "autosummary_table_visit_html",
+        "FakeDirective"
+      ],
+      "line_range": [
+        106,
+        109
+      ],
+      "score": 0.6727,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6146,
+        "vector": 0.6171,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: comment, class, pass)"
+    },
+    {
+      "file": "sphinx/transforms/post_transforms/__init__.py",
+      "symbol": "sphinx/transforms/post_transforms/__init__.py::SphinxPostTransform",
+      "symbols": [
+        "SphinxPostTransform",
+        "resolve_anyref",
+        "warn_missing_reference",
+        "OnlyNodeTransform"
+      ],
+      "line_range": [
+        30,
+        60
+      ],
+      "score": 0.6976,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7873,
+        "vector": 0.465,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: struct, sphinx, class, reference)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::ObjType",
+      "symbols": [
+        "ObjType",
+        "Index",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        33,
+        58
+      ],
+      "score": 0.7097,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6772,
+        "vector": 0.7953,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: struct, fine, index, class)"
+    },
+    {
+      "file": "sphinx/ext/doctest.py",
+      "symbol": "sphinx/ext/doctest.py::SphinxDocTestRunner",
+      "symbols": [
+        "SphinxDocTestRunner",
+        "doctest_encode",
+        "TestDirective",
+        "DoctestDirective"
+      ],
+      "line_range": [
+        251,
+        280
+      ],
+      "score": 0.7099,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7075,
+        "vector": 0.7334,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: doctest; body matches report terms: have, sphinx, able, index)"
+    },
+    {
+      "file": "sphinx/ext/todo.py",
+      "symbol": "sphinx/ext/todo.py::create_todo_reference",
+      "symbols": [
+        "create_todo_reference",
+        "todo_node",
+        "todolist",
+        "Todo"
+      ],
+      "line_range": [
+        190,
+        218
+      ],
+      "score": 0.9365,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7249,
+        "vector": 0.5025,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: todo; body matches report terms: class, reference, pass, todo)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.587075,
+  "laya_scores": {
+    "fix_quality": 1.1452,
+    "matches_issue": 0.6737,
+    "safe_to_apply": 0.5294,
+    "composite": 0.587075,
+    "secrets_or_danger": 0.1749,
+    "logic_drift": 0.5965,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, credentials, or unsafe execution patterns introduced.\n- PERFORMANCE: PASS - No unbounded loops, N+1 queries, or blocking operations added.\n- ROBUSTNESS: PASS - Guarding `restify` with `hasattr(cls, '__qualname__')` prevents crashes on unusual objects lacking standard attributes.\n- MINIMAL DIFF / YAGNI: PASS - The diff directly addresses the bug with minimal changes.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import struct\nimport pathlib\nimport pytest\nfrom sphinx.util.typing import restify, stringify\n\n\ndef test_struct_type_annotation_restify():\n    \"\"\"Test that restify correctly resolves struct.Struct type annotations.\"\"\"\n    assert restify(struct.Struct) == \":class:`struct.Struct`\"\n\n\ndef test_struct_type_annotation_stringify():\n    \"\"\"Test that stringify correctly formats struct.Struct type annotations.\"\"\"\n    assert stringify(struct.Struct) == \"struct.Struct\"\n\n\ndef test_pathlib_path_type_annotation_restify():\n    \"\"\"Edge case: boundary/standard library type comparison (pathlib.Path).\"\"\"\n    assert restify(pathlib.Path) == \":class:`pathlib.Path`\"\n\n\ndef test_builtin_primitive_type_restify():\n    \"\"\"Edge case: basic built-in types should remain simple or stringified correctly.\"\"\"\n    assert restify(int) == \":class:`int`\" or restify(int) == \"int\"\n\n\ndef test_invalid_type_annotation_handling():\n    \"\"\"Edge case: invalid type inputs or non-types should raise or handle gracefully.\"\"\"\n    with pytest.raises((TypeError, AttributeError, ValueError)):\n        restify(None)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67bba..e044ced56 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -98,8 +98,8 @@ def restify(cls: Optional[\"Type\"]) -> str:\n         return ':class:`%s`' % cls.__name__\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n-    else:\n-        if sys.version_info >= (3, 7):  # py37+\n+    elif hasattr(cls, '__qualname__'):\n+        if sys.version_info >= (3, 7):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8627-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/util/typing.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/util/typing.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.1452,
+        "matches_issue": 0.6737,
+        "safe_to_apply": 0.5294,
+        "composite": 0.587075,
+        "secrets_or_danger": 0.1749,
+        "logic_drift": 0.5965,
+        "flagged": false
+      },
+      "laya_combined": 0.5871,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 58.8,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67bba..912c9b645 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -98,8 +98,10 @@ def restify(cls: Optional[\"Type\"]) -> str:\n         return ':class:`%s`' % cls.__name__\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n+    elif cls.__module__ == 'struct' and cls.__name__ == 'Struct':\n+        return ':class:`%s.%s`' % (cls.__module__, cls.__name__)\n     else:\n-        if sys.version_info >= (3, 7):  # py37+\n+        if sys.version_info[:2] >= (3, 7):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8627-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/util/typing.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/util/typing.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3874,
+        "matches_issue": 0.6793,
+        "safe_to_apply": 0.5877,
+        "composite": 0.6636,
+        "secrets_or_danger": 0.1315,
+        "logic_drift": 0.4899,
+        "flagged": false
+      },
+      "laya_combined": 0.6636,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 4.96,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67bba..95ac2677f 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -99,7 +99,7 @@ def restify(cls: Optional[\"Type\"]) -> str:\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n     else:\n-        if sys.version_info >= (3, 7):  # py37+\n+        if sys.version_info >= (3, 7) and not isinstance(cls, getattr(sys.modules.get('struct'), 'Struct', None)):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8627-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/util/typing.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/util/typing.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5576,
+        "matches_issue": 0.7849,
+        "safe_to_apply": 0.724,
+        "composite": 0.7666250000000001,
+        "secrets_or_danger": 0.1419,
+        "logic_drift": 0.4369,
+        "flagged": false
+      },
+      "laya_combined": 0.7666,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 2.06,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67bba..e044ced56 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -98,8 +98,8 @@ def restify(cls: Optional[\"Type\"]) -> str:\n         return ':class:`%s`' % cls.__name__\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n-    else:\n-        if sys.version_info >= (3, 7):  # py37+\n+    elif hasattr(cls, '__qualname__'):\n+        if sys.version_info >= (3, 7):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8627-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sphinx/util/typing.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/util/typing.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.1452,
+      "matches_issue": 0.6737,
+      "safe_to_apply": 0.5294,
+      "composite": 0.587075,
+      "secrets_or_danger": 0.1749,
+      "logic_drift": 0.5965,
+      "flagged": false
+    },
+    "laya_combined": 0.5871,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0072,
+    "rank_reason": "logistic",
+    "elapsed_s": 58.8,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/util/typing.py b/sphinx/util/typing.py\nindex 2d4f67b..e044ced 100644\n--- a/sphinx/util/typing.py\n+++ b/sphinx/util/typing.py\n@@ -98,8 +98,8 @@ def restify(cls: Optional[\"Type\"]) -> str:\n         return ':class:`%s`' % cls.__name__\n     elif cls.__module__ in ('__builtin__', 'builtins'):\n         return ':class:`%s`' % cls.__name__\n-    else:\n-        if sys.version_info >= (3, 7):  # py37+\n+    elif hasattr(cls, '__qualname__'):\n+        if sys.version_info >= (3, 7):\n             return _restify_py37(cls)\n         else:\n             return _restify_py36(cls)\n",
+  "offline_calls": 0
+}

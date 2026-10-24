@@ -1,0 +1,398 @@
+{
+  "instance_id": "sphinx-doc__sphinx-8282",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "2c2335bbb8af99fa132e1573bbf45dc91584d5a2",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959070.7961977
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959071.9352944
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959079.5702224
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959085.5416412
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959100.9432302
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959212.5711136
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/ext/autodoc/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791959036.2510808,
+  "elapsed_s": 184.38,
+  "plan": "Step 1: Root Cause\nThe `autodoc_typehints` configuration (specifically when set to `'none'`) is intended to suppress the generation of type hint information for documented objects. In the case of overloaded callables (using the `@overload` decorator), `autodoc` processes the underlying implementation (the non-overloaded function definition). Because `autodoc` treats each `@overload` variant as a separate logical entry for documentation purposes, it is bypassing the `autodoc_typehints` check within the `Documenter` logic responsible for rendering these signatures. The logic that generates the signature and type representation for these objects is not respecting the global configuration override.\n\nStep 2: Exact Changes\nIn `sphinx/ext/autodoc/__init__.py`, locate the `FunctionDocumenter` and `MethodDocumenter` classes (or the base `Documenter` class if applicable, as it handles the logic for formatting signatures).\n\n1. Modify the `format_signature` method in the relevant `Documenter` subclass (or the common base class).\n2. Before the signature and type hints are generated or appended to the docstring, check the value of `self.env.config.autodoc_typehints`.\n3. If `self.env.config.autodoc_typehints == 'none'`, ensure that the type annotations are stripped or ignored regardless of whether the function is an overloaded callable or a standard function. Specifically, ensure that the `format_signature` logic adheres to the `autodoc_typehints` setting by passing the appropriate flag to the underlying `stringify_signature` or `get_type_hints` calls used within the `Documenter` formatting chain.\n\nSpecifically, in `sphinx/ext/autodoc/__init__.py`:\n- Locate the code responsible for processing signatures for `FunctionDocumenter`.\n- Update the condition that checks `autodoc_typehints` to explicitly handle overloaded signatures by forcing them to follow the global configuration if they are being processed for documentation generation.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sphinx/ext/autodoc/__init__.py",
+      "symbol": "sphinx/ext/autodoc/__init__.py::cut_lines",
+      "symbols": [
+        "cut_lines",
+        "get_doc",
+        "resolve_name",
+        "format_args"
+      ],
+      "line_range": [
+        186,
+        213
+      ],
+      "score": 0.5984,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4035,
+        "vector": 0.4379,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: sphinx, automodule, autodoc, conf)"
+    },
+    {
+      "file": "sphinx/ext/napoleon/__init__.py",
+      "symbol": "sphinx/ext/napoleon/__init__.py::setup",
+      "symbols": [
+        "setup",
+        "_process_docstring",
+        "_skip_member",
+        "__init__"
+      ],
+      "line_range": [
+        287,
+        323
+      ],
+      "score": 0.594,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4461,
+        "vector": 0.3126,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: sphinx, version, autodoc, extensions)"
+    },
+    {
+      "file": "sphinx/addnodes.py",
+      "symbol": "sphinx/addnodes.py::document",
+      "symbols": [
+        "document",
+        "set_id",
+        "desc_signature",
+        "pending_xref"
+      ],
+      "line_range": [
+        24,
+        50
+      ],
+      "score": 0.5844,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3769,
+        "vector": 0.3345,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: sphinx, your, info, does)"
+    },
+    {
+      "file": "sphinx/builders/html/__init__.py",
+      "symbol": "sphinx/builders/html/__init__.py::load",
+      "symbols": [
+        "load",
+        "dump",
+        "finish",
+        "gen_additional_pages"
+      ],
+      "line_range": [
+        132,
+        145
+      ],
+      "score": 0.5801,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3894,
+        "vector": 0.3149,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: sphinx, info, version, conf)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "setup",
+        "process_field_xref",
+        "resolve_xref"
+      ],
+      "line_range": [
+        95,
+        100
+      ],
+      "score": 0.5752,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4164,
+        "vector": 0.2174,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: sphinx, index)"
+    },
+    {
+      "file": "tests/roots/test-ext-autodoc/target/name_conflict/__init__.py",
+      "symbol": "tests/roots/test-ext-autodoc/target/name_conflict/__init__.py::foo",
+      "symbols": [
+        "foo"
+      ],
+      "line_range": [
+        3,
+        5
+      ],
+      "score": 0.5795,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0346,
+        "vector": 0.3205,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: conf; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.70645,
+  "laya_scores": {
+    "fix_quality": 1.5516,
+    "matches_issue": 0.69,
+    "safe_to_apply": 0.5842,
+    "composite": 0.70645,
+    "secrets_or_danger": 0.1445,
+    "logic_drift": 0.2557,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, path traversal, or unsafe execution patterns introduced.\n- PERFORMANCE: PASS - No N+1 queries, unbounded loops, memory growth, or blocking calls added.\n- ROBUSTNESS: PASS - Correctly uses dictionary methods (`setdefault`) and standard configuration checks.\n- MINIMAL DIFF / YAGNI: PASS - Changes are minimal and directly address the bug report without unrequested abstractions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.ext.autodoc import FunctionDocumenter\nfrom sphinx.util.inspect import stringify_signature\nfrom typing import overload\n\n@overload\ndef overloaded_func(x: int) -> int:\n    ...\n\n@overload\ndef overloaded_func(x: str) -> str:\n    ...\n\ndef overloaded_func(x):\n    return x\n\n\nclass DummyEnv:\n    def __init__(self, config):\n        self.config = config\n\n\nclass DummyConfig:\n    def __init__(self, autodoc_typehints):\n        self.autodoc_typehints = autodoc_typehints\n\n\nclass DummyDirective:\n    def __init__(self, env):\n        self.env = env\n        self.options = {}\n        self.bundler = None\n\n\n@pytest.mark.parametrize(\"autodoc_typehints_setting,expected_signature\", [\n    (\"none\", \"(x)\"),\n    (\"signature\", \"(x: int) -> int\"),\n])\ndef test_autodoc_typehints_overloaded_callable(autodoc_typehints_setting, expected_signature):\n    \"\"\"\n    Test that autodoc_typehints setting is correctly respected for @overload callables.\n    When set to 'none', type hints should be stripped from the generated signature.\n    \"\"\"\n    config = DummyConfig(autodoc_typehints=autodoc_typehints_setting)\n    env = DummyEnv(config)\n    directive = DummyDirective(env)\n    \n    docer = FunctionDocumenter(directive, \"overloaded_func\")\n    docer.object = overloaded_func\n    \n    sig = docer.format_signature()\n    assert expected_signature in sig\n\n\ndef test_autodoc_typehints_overload_edge_case_typehints_val_signature():\n    \"\"\"\n    Edge case: ensure 'signature' mode explicitly retains type hints on overloaded callables.\n    \"\"\"\n    config = DummyConfig(autodoc_typehints=\"signature\")\n    env = DummyEnv(config)\n    directive = DummyDirective(env)\n    \n    docer = FunctionDocumenter(directive, \"overloaded_func\")\n    docer.object = overloaded_func\n    \n    sig = docer.format_signature()\n    # Should include type annotations when set to signature\n    assert \":\" in sig or \"->\" in sig\n\n\ndef test_autodoc_typehints_overload_edge_case_typehints_val_description():\n    \"\"\"\n    Edge case: when autodoc_typehints is 'description', the signature itself should not contain type hints.\n    \"\"\"\n    config = DummyConfig(autodoc_typehints=\"description\")\n    env = DummyEnv(config)\n    directive = DummyDirective(env)\n    \n    docer = FunctionDocumenter(directive, \"overloaded_func\")\n    docer.object = overloaded_func\n    \n    sig = docer.format_signature()\n    # Description mode strips type hints from the signature, moving them to docstrings\n    assert \"int\" not in sig\n    assert \"str\" not in sig\n    assert \"(x)\" in sig",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 978fd5df8..d678e6008 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1461,10 +1461,12 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:\n                            self.fullname, exc)\n             return None\n \n-        if sig is None:\n+        if self.options.noindex:\n             return None\n \n-        return stringify_signature(sig, show_return_annotation=False, **kwargs)\n+        if self.env.config.autodoc_typehints == 'none':\n+            kwargs.setdefault('show_annotation', False)\n+        return self.format_signature(**kwargs)\n \n     def format_signature(self, **kwargs: Any) -> str:\n         if self.doc_as_attr:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8282-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/ext/autodoc/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5516,
+        "matches_issue": 0.69,
+        "safe_to_apply": 0.5842,
+        "composite": 0.70645,
+        "secrets_or_danger": 0.1445,
+        "logic_drift": 0.2557,
+        "flagged": false
+      },
+      "laya_combined": 0.7065,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 19.8,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 978fd5df8..4a6093ad8 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1380,7 +1380,7 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:\n         def get_user_defined_function_or_method(obj: Any, attr: str) -> Any:\n             \"\"\" Get the `attr` function or method from `obj`, if it is user-defined. \"\"\"\n             if inspect.is_builtin_class_method(obj, attr):\n-                return None\n+                return super().format_signature()\n             attr = self.get_attr(obj, attr, None)\n             if not (inspect.ismethod(attr) or inspect.isfunction(attr)):\n                 return None\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8282-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/ext/autodoc/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5002,
+        "matches_issue": 0.7706,
+        "safe_to_apply": 0.6809,
+        "composite": 0.7379249999999999,
+        "secrets_or_danger": 0.0879,
+        "logic_drift": 0.3432,
+        "flagged": false
+      },
+      "laya_combined": 0.7379,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 7.88,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1245,3 +1245,5 @@\n             sig = inspect.format_signature(self.object,\n-                                           showations=self.config.autodoc_typehints != 'none',\n+                                           show_annotation=self.config.autodoc_typehints != 'none',\n                                            skip_stub_arg=True)\n         except TypeError:\n@@ -1669,3 +1671,3 @@\n         try:\n-            sig = inspect.format_signature(self.object, showations=showations)\n+            sig = inspect.format_signature(self.object, show_annotation=showations)\n         except TypeError:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8282-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.447,
+        "matches_issue": 0.6695,
+        "safe_to_apply": 0.6018,
+        "composite": 0.679575,
+        "secrets_or_danger": 0.0901,
+        "logic_drift": 0.3035,
+        "flagged": false
+      },
+      "laya_combined": 0.6796,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 76.66,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 978fd5df8..d678e6008 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1461,10 +1461,12 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:\n                            self.fullname, exc)\n             return None\n \n-        if sig is None:\n+        if self.options.noindex:\n             return None\n \n-        return stringify_signature(sig, show_return_annotation=False, **kwargs)\n+        if self.env.config.autodoc_typehints == 'none':\n+            kwargs.setdefault('show_annotation', False)\n+        return self.format_signature(**kwargs)\n \n     def format_signature(self, **kwargs: Any) -> str:\n         if self.doc_as_attr:\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8282-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sphinx/ext/autodoc/__init__.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/ext/autodoc/__init__.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5516,
+      "matches_issue": 0.69,
+      "safe_to_apply": 0.5842,
+      "composite": 0.70645,
+      "secrets_or_danger": 0.1445,
+      "logic_drift": 0.2557,
+      "flagged": false
+    },
+    "laya_combined": 0.7065,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0074,
+    "rank_reason": "logistic",
+    "elapsed_s": 19.8,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex 978fd5d..d678e60 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1461,10 +1461,12 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:\n                            self.fullname, exc)\n             return None\n \n-        if sig is None:\n+        if self.options.noindex:\n             return None\n \n-        return stringify_signature(sig, show_return_annotation=False, **kwargs)\n+        if self.env.config.autodoc_typehints == 'none':\n+            kwargs.setdefault('show_annotation', False)\n+        return self.format_signature(**kwargs)\n \n     def format_signature(self, **kwargs: Any) -> str:\n         if self.doc_as_attr:\n",
+  "offline_calls": 0
+}

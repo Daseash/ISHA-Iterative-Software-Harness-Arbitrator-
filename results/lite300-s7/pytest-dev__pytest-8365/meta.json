@@ -1,0 +1,481 @@
+{
+  "instance_id": "pytest-dev__pytest-8365",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "4964b468c83c06971eb743fbc57cc404f760c573",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896575.9470208
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896576.933324
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896581.0092313
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896587.237414
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896596.779488
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896701.3772132
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896710.9566538
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: RateLimitError; gemini-3.8-flash: RateLimitError; gemini-3.8-flash: RateLimitError; gemini-3.8-flash: RateLimitError; gemini-3.8-flash: RateLimitError; gemini-3.8-flash: RateLimitError; gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896724.173588
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896733.68559
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896742.08005
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896753.3445423
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896766.7921355
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: src/_pytest/tmpdir.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "src/_pytest/tmpdir.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791896559.7896752,
+  "elapsed_s": 215.38,
+  "plan": "# Before\nuser = get_user() or \"unknown\"\n# use a sub-directory in the temproot to speed-up\n# make_numbered_dir() call\nrootdir = temproot.joinpath(f\"pytest-of-{user}\")\n\n# After\nimport re\nuser = get_user() or \"unknown\"\n# Replace characters that are illegal in file names\nuser = re.sub(r'[^\\w\\-]', '_', user)\n# use a sub-directory in the temproot to speed-up\n# make_numbered_dir() call\nrootdir = temproot.joinpath(f\"pytest-of-{user}\")",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/tmpdir.py",
+      "symbol": "src/_pytest/tmpdir.py::mktemp",
+      "symbols": [
+        "mktemp",
+        "tmpdir",
+        "getbasetemp",
+        "tmp_path"
+      ],
+      "line_range": [
+        142,
+        145
+      ],
+      "score": 0.9494,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 1.0,
+        "vector": 0.7661,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: py; body matches report terms: local, name, temp, path; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/_pytest/pathlib.py",
+      "symbol": "src/_pytest/pathlib.py::_ignore_error",
+      "symbols": [
+        "_ignore_error",
+        "ensure_reset_dir",
+        "on_rm_rf_error",
+        "ensure_extended_length_path"
+      ],
+      "line_range": [
+        54,
+        60
+      ],
+      "score": 0.6302,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5083,
+        "vector": 0.4843,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: winerror, errors, error)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::invocation_dir",
+      "symbols": [
+        "invocation_dir",
+        "rootdir",
+        "inifile",
+        "_warn_about_missing_assertion"
+      ],
+      "line_range": [
+        940,
+        949
+      ],
+      "score": 0.6008,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4717,
+        "vector": 0.3154,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: py; body matches report terms: which, local, directory, pytest)"
+    },
+    {
+      "file": "src/_pytest/pytester.py",
+      "symbol": "src/_pytest/pytester.py::tmpdir",
+      "symbols": [
+        "tmpdir",
+        "mkdir",
+        "pytester",
+        "spawn"
+      ],
+      "line_range": [
+        1539,
+        1542
+      ],
+      "score": 0.5858,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6625,
+        "vector": 0.5222,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: py; body matches report terms: local, temporary, directory, pytest; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_cmdline_main",
+        "KeywordMatcher",
+        "from_item"
+      ],
+      "line_range": [
+        74,
+        115
+      ],
+      "score": 0.5832,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3283,
+        "vector": 0.4677,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: contains, names, which, python)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "pytest_addoption",
+        "register_assert_rewrite",
+        "DummyRewriteHook"
+      ],
+      "line_range": [
+        83,
+        88
+      ],
+      "score": 0.5398,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1295,
+        "vector": 0.5206,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: mode; body matches report terms: mode)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.72075,
+  "laya_scores": {
+    "fix_quality": 1.6016,
+    "matches_issue": 0.7887,
+    "safe_to_apply": 0.4927,
+    "composite": 0.72075,
+    "secrets_or_danger": 0.2715,
+    "logic_drift": 0.3343,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Regex sanitization of a username string is safe and does not introduce injection risks.\n- PERFORMANCE: PASS - Regex substitution on a single short string is negligible in impact.\n- ROBUSTNESS: PASS - Sanitizing illegal filesystem characters fixes the reported `FileNotFoundError` robustly.\n- MINIMAL DIFF / YAGNI: PASS - The regex is narrowly scoped to the issue and necessary to ensure cross-platform compatibility.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport os\nfrom pathlib import Path\nfrom _pytest.tmpdir import TempPathFactory\n\ndef test_tmpdir_factory_illegal_username_characters(monkeypatch, tmp_path):\n    \"\"\"\n    Reproduce the bug: Ensure that illegal characters in usernames (like backslashes)\n    do not cause FileNotFoundError when creating the base temp directory.\n    \"\"\"\n    # Mock getpass.getuser to return a string containing illegal characters for Windows/POSIX paths\n    # The fix plan uses 're.sub(r\"[^\\w\\-]\", \"_\", user)'\n    illegal_user = \"contoso\\\\john_doe\"\n    monkeypatch.setattr(\"getpass.getuser\", lambda: illegal_user)\n\n    # Use a temp directory for the base\n    basetemp = tmp_path / \"basetemp\"\n    \n    # Initialize the factory\n    factory = TempPathFactory(given_basetemp=basetemp, trace=None, _ispytest=True)\n    \n    # This should trigger the creation of the directory 'pytest-of-contoso_john_doe'\n    # without raising FileNotFoundError\n    try:\n        factory.mktemp(\"foobar\")\n    except FileNotFoundError as e:\n        pytest.fail(f\"TempPathFactory failed to create directory due to illegal characters: {e}\")\n\ndef test_tmpdir_factory_sanitization_normalization(monkeypatch, tmp_path):\n    \"\"\"\n    Edge case: Ensure that multiple different illegal characters are normalized to underscores,\n    and valid characters are preserved.\n    \"\"\"\n    # Contains spaces, @, backslashes, and forward slashes\n    complex_user = \"user name@home\\\\folder/sub\"\n    monkeypatch.setattr(\"getpass.getuser\", lambda: complex_user)\n\n    basetemp = tmp_path / \"basetemp\"\n    factory = TempPathFactory(given_basetemp=basetemp, trace=None, _ispytest=True)\n    \n    # Trigger the directory creation\n    factory.mktemp(\"test\")\n    \n    # Check if the directory name was sanitized as expected (all non-\\w or - replaced by _)\n    expected_name = \"pytest-of-user_name_home_folder_sub\"\n    assert (basetemp / expected_name).exists()\n\ndef test_tmpdir_factory_empty_username(monkeypatch, tmp_path):\n    \"\"\"\n    Edge case: Ensure empty string username defaults to a safe string.\n    \"\"\"\n    monkeypatch.setattr(\"getpass.getuser\", lambda: \"\")\n\n    basetemp = tmp_path / \"basetemp\"\n    factory = TempPathFactory(given_basetemp=basetemp, trace=None, _ispytest=True)\n    factory.mktemp(\"test\")\n    \n    # Fix plan suggests using \"unknown\" if get_user() returns None/empty\n    assert (basetemp / \"pytest-of-unknown\").exists()",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -113,8 +113,10 @@\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8365-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/tmpdir.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/tmpdir.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6117,
+        "matches_issue": 0.7829,
+        "safe_to_apply": 0.5098,
+        "composite": 0.7261,
+        "secrets_or_danger": 0.3019,
+        "logic_drift": 0.4316,
+        "flagged": false
+      },
+      "laya_combined": 0.7261,
+      "repro": {
+        "available": false,
+        "before_ok": null,
+        "after_ok": null,
+        "regressions": 0,
+        "reason": "image not present locally: swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8365:latest",
+        "repro_target": "",
+        "before_exit": null,
+        "after_exit": null
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 0.96,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py\nindex 29c7e19d7..dadb6bde2 100644\n--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -111,7 +111,9 @@ class TempPathFactory:\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8365-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/tmpdir.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/tmpdir.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6016,
+        "matches_issue": 0.7887,
+        "safe_to_apply": 0.4927,
+        "composite": 0.72075,
+        "secrets_or_danger": 0.3304,
+        "logic_drift": 0.4474,
+        "flagged": false
+      },
+      "laya_combined": 0.7208,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_______________ test_tmpdir_factory_illegal_username_characters ________________\ntest_isha_repro.py:25: in test_tmpdir_factory_illegal_username_characters\n    factory.mktemp(\"foobar\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n________________ test_tmpdir_factory_sanitization_normalization ________________\ntest_isha_repro.py:42: in test_tmpdir_factory_sanitization_normalization\n    factory.mktemp(\"test\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n______________________ test_tmpdir_factory_empty_username ______________________\ntest_isha_repro.py:56: in test_tmpdir_factory_empty_username\n    factory.mktemp(\"test\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_tmpdir_factory_illegal_username_characters - ...\nFAILED test_isha_repro.py::test_tmpdir_factory_sanitization_normalization - T...\nFAILED test_isha_repro.py::test_tmpdir_factory_empty_username - TypeError: 'N...\n3 failed in 0.02s\n\nwarning: src/_pytest/tmpdir.py has type 100755, expected 100644\nerror: patch failed: src/_pytest/tmpdir.py:111\nerror: src/_pytest/tmpdir.py: patch does not apply\nerror: src/_pytest/tmpdir.py: does not match index\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.64,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -115,8 +115,10 @@\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r\"[^\\w\\-]\", \"_\", user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8365-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/tmpdir.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/tmpdir.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6016,
+        "matches_issue": 0.7887,
+        "safe_to_apply": 0.4927,
+        "composite": 0.72075,
+        "secrets_or_danger": 0.3304,
+        "logic_drift": 0.4474,
+        "flagged": false
+      },
+      "laya_combined": 0.7208,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_______________ test_tmpdir_factory_illegal_username_characters ________________\ntest_isha_repro.py:25: in test_tmpdir_factory_illegal_username_characters\n    factory.mktemp(\"foobar\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n________________ test_tmpdir_factory_sanitization_normalization ________________\ntest_isha_repro.py:42: in test_tmpdir_factory_sanitization_normalization\n    factory.mktemp(\"test\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n______________________ test_tmpdir_factory_empty_username ______________________\ntest_isha_repro.py:56: in test_tmpdir_factory_empty_username\n    factory.mktemp(\"test\")\nsrc/_pytest/tmpdir.py:93: in mktemp\n    basename = self._ensure_relative_to_basetemp(basename)\nsrc/_pytest/tmpdir.py:74: in _ensure_relative_to_basetemp\n    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():\nsrc/_pytest/tmpdir.py:124: in getbasetemp\n    self._trace(\"new basetemp\", t)\nE   TypeError: 'NoneType' object is not callable\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_tmpdir_factory_illegal_username_characters - ...\nFAILED test_isha_repro.py::test_tmpdir_factory_sanitization_normalization - T...\nFAILED test_isha_repro.py::test_tmpdir_factory_empty_username - TypeError: 'N...\n3 failed in 0.02s\n\nerror: corrupt patch at line 12\nerror: corrupt patch at line 12\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.09,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -113,8 +113,10 @@\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8365-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: src/_pytest/tmpdir.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/_pytest/tmpdir.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6117,
+      "matches_issue": 0.7829,
+      "safe_to_apply": 0.5098,
+      "composite": 0.7261,
+      "secrets_or_danger": 0.3019,
+      "logic_drift": 0.4316,
+      "flagged": false
+    },
+    "laya_combined": 0.7261,
+    "repro": {
+      "available": false,
+      "before_ok": null,
+      "after_ok": null,
+      "regressions": 0,
+      "reason": "image not present locally: swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8365:latest",
+      "repro_target": "",
+      "before_exit": null,
+      "after_exit": null
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 0.96,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py\nindex 29c7e19..dadb6bd 100644\n--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -111,7 +111,9 @@ class TempPathFactory:\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")\n",
+  "offline_calls": 1
+}

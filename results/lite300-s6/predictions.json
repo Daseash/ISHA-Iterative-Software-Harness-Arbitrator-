@@ -1,92 +1,92 @@
 [
   {
-    "instance_id": "pytest-dev/pytest-6116",
-    "model_patch": "diff --git a/src/_pytest/main.py b/src/_pytest/main.py\nindex 843c5b5f7..ff0e8b20e 100644\n--- a/src/_pytest/main.py\n+++ b/src/_pytest/main.py\n@@ -108,6 +108,7 @@ def pytest_addoption(parser):\n     group = parser.getgroup(\"collect\", \"collection\")\n     group.addoption(\n         \"--collectonly\",\n+            \"-c\",\n         \"--collect-only\",\n         action=\"store_true\",\n         help=\"only collect tests, don't execute them.\",",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "psf/requests-2148",
-    "model_patch": "diff --git a/requests/models.py b/requests/models.py\nindex 0dc5556..80a6031 100644\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -636,9 +636,11 @@ class Response(object):\n                 try:\n                     for chunk in self.raw.stream(chunk_size, decode_content=True):\n                         yield chunk\n-                except IncompleteRead as e:\n+                except socket.error as e:\n+                    raise ConnectionError(e)\n+                except urllib3_exceptions.IncompleteRead as e:\n                     raise ChunkedEncodingError(e)\n-                except DecodeError as e:\n+                except urllib3_exceptions.DecodeError as e:\n                     raise ContentDecodingError(e)\n             except AttributeError:\n                 # Standard file-like object.",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "pylint-dev/pylint-7228",
-    "model_patch": "diff --git a/pylint/config/option.py b/pylint/config/option.py\nindex 5043fe765..30ce119b7 100644\n--- a/pylint/config/option.py\n+++ b/pylint/config/option.py\n@@ -23,7 +23,7 @@ def _csv_validator(_, name, value):\n def _regexp_validator(_, name, value):\n     if hasattr(value, \"pattern\"):\n         return value\n-    return re.compile(value)\n+    return re.compile(value, re.UNICODE)\n \n \n # pylint: disable=unused-argument",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "psf/requests-2317",
-    "model_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\nindex d701ff2e..c142a5af 100644\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -425,7 +425,7 @@ class Session(SessionRedirectMixin):\n             If Tuple, ('cert', 'key') pair.\n         \"\"\"\n \n-        method = builtin_str(method)\n+        method = builtin_str(method.decode('utf-8') if isinstance(method, bytes) else method)\n \n         # Create the Request.\n         req = Request(",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "pylint-dev/pylint-7993",
-    "model_patch": "diff --git a/pylint/reporters/text.py b/pylint/reporters/text.py\nindex 29bd46798..dd79b588a 100644\n--- a/pylint/reporters/text.py\n+++ b/pylint/reporters/text.py\n@@ -175,7 +175,7 @@ class TextReporter(BaseReporter):\n         self._template = template\n \n         # Check to see if all parameters in the template are attributes of the Message\n-        arguments = re.findall(r\"\\{(.+?)(:.*)?\\}\", template)\n+        arguments = re.findall(r\"(?<!\\{)\\{(?!\\{)(.+?)(:.*)?\\}(?!\\})\", template)\n         for argument in arguments:\n             if argument[0] not in MESSAGE_FIELDS:\n                 warnings.warn(",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "pytest-dev/pytest-7168",
-    "model_patch": "--- a/src/_pytest/_io/saferepr.py\n+++ b/src/_pytest/_io/saferepr.py\n@@ -10,7 +10,7 @@\n def _try_repr_or_str(obj):\n     try:\n         return repr(obj)\n-    except (KeyboardInterrupt, SystemExit):\n+    except (KeyboardInterrupt, SystemExit, RuntimeError):\n         raise\n     except BaseException:\n         return '{}(\"{}\")'.format(type(obj).__name__, obj)\n@@ -19,7 +19,7 @@\n def _format_repr_exception(exc: BaseException, obj: Any) -> str:\n     try:\n         exc_info = _try_repr_or_str(exc)\n-    except (KeyboardInterrupt, SystemExit):\n+    except (KeyboardInterrupt, SystemExit, RuntimeError):\n         raise\n     except BaseException as exc:\n         exc_info = \"unpresentable exception ({})\".format(_try_repr_or_str(exc))\n@@ -45,7 +45,7 @@\n     def repr(self, x: Any) -> str:\n         try:\n             s = super().repr(x)\n-        except (KeyboardInterrupt, SystemExit):\n+        except (KeyboardInterrupt, SystemExit, RuntimeError):\n             raise\n         except BaseException as exc:\n             s = _format_repr_exception(exc, x)\n@@ -54,7 +54,7 @@\n     def repr_instance(self, x: Any, level: int) -> str:\n         try:\n             s = repr(x)\n-        except (KeyboardInterrupt, SystemExit):\n+        except (KeyboardInterrupt, SystemExit, RuntimeError):\n             raise\n         except BaseException as exc:\n             s = _format_repr_exception(exc, x)",
-    "model_name_or_path": "ISHA"
-  },
-  {
-    "instance_id": "psf/requests-1963",
+    "instance_id": "psf__requests-1963",
     "model_patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -183,2 +183,3 @@\n             i += 1\n+            req = prepared_request\n             yield resp",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-11148",
-    "model_patch": "diff --git a/src/_pytest/pathlib.py b/src/_pytest/pathlib.py\nindex e43310ef0..ea7fd7c8a 100644\n--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -348,6 +348,7 @@ def cleanup_candidates(root: Path, prefix: str, keep: int) -> Iterator[Path]:\n     max_delete = max_existing - keep\n     paths = find_prefixed(root, prefix)\n     paths, paths2 = itertools.tee(paths)\n+    module.__package__ = modname.rpartition(\".\")[0]\n     numbers = map(parse_num, extract_suffixes(paths2, prefix))\n     for path, number in zip(paths, numbers):\n         if number <= max_delete:",
+    "instance_id": "psf__requests-2148",
+    "model_patch": "diff --git a/requests/models.py b/requests/models.py\nindex 0dc5556..80a6031 100644\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -636,9 +636,11 @@ class Response(object):\n                 try:\n                     for chunk in self.raw.stream(chunk_size, decode_content=True):\n                         yield chunk\n-                except IncompleteRead as e:\n+                except socket.error as e:\n+                    raise ConnectionError(e)\n+                except urllib3_exceptions.IncompleteRead as e:\n                     raise ChunkedEncodingError(e)\n-                except DecodeError as e:\n+                except urllib3_exceptions.DecodeError as e:\n                     raise ContentDecodingError(e)\n             except AttributeError:\n                 # Standard file-like object.",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pylint-dev/pylint-6506",
-    "model_patch": "diff --git a/pylint/__init__.py b/pylint/__init__.py\nindex 3aa4b7f9d..827c54199 100644\n--- a/pylint/__init__.py\n+++ b/pylint/__init__.py\n@@ -10,6 +10,7 @@ from collections.abc import Sequence\n from typing import NoReturn\n \n from pylint.__pkginfo__ import __version__\n+from pylint.config.exceptions import _UnrecognizedOptionError\n \n # pylint: disable=import-outside-toplevel\n \n@@ -25,6 +26,8 @@ def run_pylint(argv: Sequence[str] | None = None) -> None:\n         PylintRun(argv or sys.argv[1:])\n     except KeyboardInterrupt:\n         sys.exit(1)\n+    except _UnrecognizedOptionError:\n+        sys.exit(32)\n \n \n def run_epylint(argv: Sequence[str] | None = None) -> NoReturn:",
+    "instance_id": "psf__requests-2317",
+    "model_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\nindex d701ff2e..c142a5af 100644\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -425,7 +425,7 @@ class Session(SessionRedirectMixin):\n             If Tuple, ('cert', 'key') pair.\n         \"\"\"\n \n-        method = builtin_str(method)\n+        method = builtin_str(method.decode('utf-8') if isinstance(method, bytes) else method)\n \n         # Create the Request.\n         req = Request(",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pydata/xarray-4248",
+    "instance_id": "pydata__xarray-4248",
     "model_patch": "diff --git a/xarray/core/formatting.py b/xarray/core/formatting.py\nindex 28eaae5f..b17cbdae 100644\n--- a/xarray/core/formatting.py\n+++ b/xarray/core/formatting.py\n@@ -104,7 +104,9 @@ def format_timestamp(t):\n         datetime_str = str(t)\n \n     try:\n-        date_str, time_str = datetime_str.split()\n+        units = var.attrs.get(\"units\", None)\n+        if units:\n+            first_col += f\", in {units}\"\n     except ValueError:\n         # catch NaT and others that don't split nicely\n         return datetime_str",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-11143",
-    "model_patch": "diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py\nindex 157903faf..6de9269e5 100644\n--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -743,7 +743,7 @@ class AssertionRewriter(ast.NodeVisitor):\n \n     @staticmethod\n     def is_rewrite_disabled(docstring: str) -> bool:\n-        return \"PYTEST_DONT_REWRITE\" in docstring\n+        return isinstance(docstring, str) and \"PYTEST_DONT_REWRITE\" in docstring\n \n     def variable(self) -> str:\n         \"\"\"Get a new variable.\"\"\"",
+    "instance_id": "pylint-dev__pylint-6506",
+    "model_patch": "diff --git a/pylint/__init__.py b/pylint/__init__.py\nindex 3aa4b7f9d..827c54199 100644\n--- a/pylint/__init__.py\n+++ b/pylint/__init__.py\n@@ -10,6 +10,7 @@ from collections.abc import Sequence\n from typing import NoReturn\n \n from pylint.__pkginfo__ import __version__\n+from pylint.config.exceptions import _UnrecognizedOptionError\n \n # pylint: disable=import-outside-toplevel\n \n@@ -25,6 +26,8 @@ def run_pylint(argv: Sequence[str] | None = None) -> None:\n         PylintRun(argv or sys.argv[1:])\n     except KeyboardInterrupt:\n         sys.exit(1)\n+    except _UnrecognizedOptionError:\n+        sys.exit(32)\n \n \n def run_epylint(argv: Sequence[str] | None = None) -> NoReturn:",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pylint-dev/pylint-7114",
+    "instance_id": "pylint-dev__pylint-7114",
     "model_patch": "diff --git a/pylint/lint/expand_modules.py b/pylint/lint/expand_modules.py\nindex 289e1afce..3d2b96855 100644\n--- a/pylint/lint/expand_modules.py\n+++ b/pylint/lint/expand_modules.py\n@@ -54,7 +54,7 @@ def _is_ignored_file(\n ) -> bool:\n     element = os.path.normpath(element)\n     basename = os.path.basename(element)\n-    return (\n+    return basename != \"__init__.py\" and (\n         basename in ignore_list\n         or _is_in_ignore_list_re(basename, ignore_list_re)\n         or _is_in_ignore_list_re(element, ignore_list_paths_re)",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-7432",
-    "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 7bd975e5a..f7e0b142d 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -238,7 +238,7 @@ def pytest_runtest_setup(item: Item) -> None:\n         item._store[skipped_by_mark_key] = True\n         skip(skipped.reason)\n \n-    if not item.config.option.runxfail:\n+    if xfailed and item.config.option.runxfail:\n         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)\n         if xfailed and not xfailed.run:\n             xfail(\"[NOTRUN] \" + xfailed.reason)",
+    "instance_id": "pylint-dev__pylint-7228",
+    "model_patch": "diff --git a/pylint/config/option.py b/pylint/config/option.py\nindex 5043fe765..30ce119b7 100644\n--- a/pylint/config/option.py\n+++ b/pylint/config/option.py\n@@ -23,7 +23,7 @@ def _csv_validator(_, name, value):\n def _regexp_validator(_, name, value):\n     if hasattr(value, \"pattern\"):\n         return value\n-    return re.compile(value)\n+    return re.compile(value, re.UNICODE)\n \n \n # pylint: disable=unused-argument",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-5495",
-    "model_patch": "diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py\nindex 762e5761d..eca7b21ee 100644\n--- a/src/_pytest/assertion/util.py\n+++ b/src/_pytest/assertion/util.py\n@@ -114,6 +114,8 @@ def isiterable(obj):\n \n \n def assertrepr_compare(config, op, left, right):\n+    if isinstance(left, bytes) and isinstance(right, bytes):\n+        return None\n     \"\"\"Return specialised explanations for some operators/operands\"\"\"\n     width = 80 - 15 - len(op) - 2  # 15 chars indentation, 1 space around op\n     left_repr = saferepr(left, maxsize=int(width // 2))",
+    "instance_id": "pylint-dev__pylint-7993",
+    "model_patch": "diff --git a/pylint/reporters/text.py b/pylint/reporters/text.py\nindex 29bd46798..dd79b588a 100644\n--- a/pylint/reporters/text.py\n+++ b/pylint/reporters/text.py\n@@ -175,7 +175,7 @@ class TextReporter(BaseReporter):\n         self._template = template\n \n         # Check to see if all parameters in the template are attributes of the Message\n-        arguments = re.findall(r\"\\{(.+?)(:.*)?\\}\", template)\n+        arguments = re.findall(r\"(?<!\\{)\\{(?!\\{)(.+?)(:.*)?\\}(?!\\})\", template)\n         for argument in arguments:\n             if argument[0] not in MESSAGE_FIELDS:\n                 warnings.warn(",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-5103",
+    "instance_id": "pytest-dev__pytest-11143",
+    "model_patch": "diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py\nindex 157903faf..6de9269e5 100644\n--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -743,7 +743,7 @@ class AssertionRewriter(ast.NodeVisitor):\n \n     @staticmethod\n     def is_rewrite_disabled(docstring: str) -> bool:\n-        return \"PYTEST_DONT_REWRITE\" in docstring\n+        return isinstance(docstring, str) and \"PYTEST_DONT_REWRITE\" in docstring\n \n     def variable(self) -> str:\n         \"\"\"Get a new variable.\"\"\"",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-11148",
+    "model_patch": "diff --git a/src/_pytest/pathlib.py b/src/_pytest/pathlib.py\nindex e43310ef0..ea7fd7c8a 100644\n--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -348,6 +348,7 @@ def cleanup_candidates(root: Path, prefix: str, keep: int) -> Iterator[Path]:\n     max_delete = max_existing - keep\n     paths = find_prefixed(root, prefix)\n     paths, paths2 = itertools.tee(paths)\n+    module.__package__ = modname.rpartition(\".\")[0]\n     numbers = map(parse_num, extract_suffixes(paths2, prefix))\n     for path, number in zip(paths, numbers):\n         if number <= max_delete:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5103",
     "model_patch": "diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py\nindex 2903b8995..a8348fbe9 100644\n--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -933,6 +933,16 @@ warn_explicit(\n                 self.on_failure = fail_inner\n             self.push_format_context()\n             res, expl = self.visit(v)\n+        if isinstance(call.args[0], ast.GeneratorExp):\n+            gen = call.args[0]\n+            elt = gen.elt\n+            generators = gen.generators\n+            loop = ast.For(generators[0].target, generators[0].iter, [ast.If(generators[0].ifs, [ast.Expr(elt)], [])] if generators[0].ifs else [ast.Expr(elt)], [])\n+            # rewrite generator to list comprehension or loop\n+            # actually, let's unroll it to a list comprehension: [elt for ... in ...]\n+            list_comp = ast.ListComp(elt=elt, generators=generators)\n+            call.args[0] = list_comp\n+            res, expl = self.visit(call.args[0])\n             body.append(ast.Assign([ast.Name(res_var, ast.Store())], res))\n             expl_format = self.pop_format_context(ast.Str(expl))\n             call = ast_Call(app, [expl_format], [])",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-5227",
+    "instance_id": "pytest-dev__pytest-5227",
     "model_patch": "--- a/src/_pytest/logging.py\n+++ b/src/_pytest/logging.py\n@@ -17,3 +17,3 @@\n \n-DEFAULT_LOG_FORMAT = \"%(filename)-25s %(lineno)4d %(levelname)-8s %(message)s\"\n+DEFAULT_LOG_FORMAT = \"%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s\"\n DEFAULT_LOG_DATE_FORMAT = \"%H:%M:%S\"",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-5413",
+    "instance_id": "pytest-dev__pytest-5413",
     "model_patch": "diff --git a/src/_pytest/_code/code.py b/src/_pytest/_code/code.py\nindex c4ed961ac..1d4d1e44b 100644\n--- a/src/_pytest/_code/code.py\n+++ b/src/_pytest/_code/code.py\n@@ -627,8 +627,7 @@ class FormattedExcinfo:\n     def get_exconly(self, excinfo, indent=4, markall=False):\n         lines = []\n         indent = \" \" * indent\n-        # get the real exception information out\n-        exlines = excinfo.exconly(tryshort=True).split(\"\\n\")\n+        exlines = str(excinfo.value).split(\"\\n\")\n         failindent = self.fail_marker + indent[1:]\n         for line in exlines:\n             lines.append(failindent + line)",
     "model_name_or_path": "ISHA"
   },
   {
-    "instance_id": "pytest-dev/pytest-5692",
+    "instance_id": "pytest-dev__pytest-5495",
+    "model_patch": "diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py\nindex 762e5761d..eca7b21ee 100644\n--- a/src/_pytest/assertion/util.py\n+++ b/src/_pytest/assertion/util.py\n@@ -114,6 +114,8 @@ def isiterable(obj):\n \n \n def assertrepr_compare(config, op, left, right):\n+    if isinstance(left, bytes) and isinstance(right, bytes):\n+        return None\n     \"\"\"Return specialised explanations for some operators/operands\"\"\"\n     width = 80 - 15 - len(op) - 2  # 15 chars indentation, 1 space around op\n     left_repr = saferepr(left, maxsize=int(width // 2))",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5692",
     "model_patch": "diff --git a/src/_pytest/junitxml.py b/src/_pytest/junitxml.py\nindex 15c630b1d..a77a45fac 100644\n--- a/src/_pytest/junitxml.py\n+++ b/src/_pytest/junitxml.py\n@@ -233,6 +233,8 @@ class _NodeReporter:\n         self.append(\n             Junit.error(bin_xml_escape(report.longrepr), message=\"collection failure\")\n         )\n+        self.attrs[\"timestamp\"] = time.strftime(\"%Y-%m-%dT%H:%M:%S\", time.localtime(self.starttime))\n+        self.attrs[\"hostname\"] = socket.gethostname()\n \n     def append_collect_skipped(self, report):\n         self._add_simple(Junit.skipped, \"collection skipped\", report.longrepr)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-6116",
+    "model_patch": "diff --git a/src/_pytest/main.py b/src/_pytest/main.py\nindex 843c5b5f7..ff0e8b20e 100644\n--- a/src/_pytest/main.py\n+++ b/src/_pytest/main.py\n@@ -108,6 +108,7 @@ def pytest_addoption(parser):\n     group = parser.getgroup(\"collect\", \"collection\")\n     group.addoption(\n         \"--collectonly\",\n+            \"-c\",\n         \"--collect-only\",\n         action=\"store_true\",\n         help=\"only collect tests, don't execute them.\",",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7168",
+    "model_patch": "--- a/src/_pytest/_io/saferepr.py\n+++ b/src/_pytest/_io/saferepr.py\n@@ -10,7 +10,7 @@\n def _try_repr_or_str(obj):\n     try:\n         return repr(obj)\n-    except (KeyboardInterrupt, SystemExit):\n+    except (KeyboardInterrupt, SystemExit, RuntimeError):\n         raise\n     except BaseException:\n         return '{}(\"{}\")'.format(type(obj).__name__, obj)\n@@ -19,7 +19,7 @@\n def _format_repr_exception(exc: BaseException, obj: Any) -> str:\n     try:\n         exc_info = _try_repr_or_str(exc)\n-    except (KeyboardInterrupt, SystemExit):\n+    except (KeyboardInterrupt, SystemExit, RuntimeError):\n         raise\n     except BaseException as exc:\n         exc_info = \"unpresentable exception ({})\".format(_try_repr_or_str(exc))\n@@ -45,7 +45,7 @@\n     def repr(self, x: Any) -> str:\n         try:\n             s = super().repr(x)\n-        except (KeyboardInterrupt, SystemExit):\n+        except (KeyboardInterrupt, SystemExit, RuntimeError):\n             raise\n         except BaseException as exc:\n             s = _format_repr_exception(exc, x)\n@@ -54,7 +54,7 @@\n     def repr_instance(self, x: Any, level: int) -> str:\n         try:\n             s = repr(x)\n-        except (KeyboardInterrupt, SystemExit):\n+        except (KeyboardInterrupt, SystemExit, RuntimeError):\n             raise\n         except BaseException as exc:\n             s = _format_repr_exception(exc, x)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7432",
+    "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 7bd975e5a..f7e0b142d 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -238,7 +238,7 @@ def pytest_runtest_setup(item: Item) -> None:\n         item._store[skipped_by_mark_key] = True\n         skip(skipped.reason)\n \n-    if not item.config.option.runxfail:\n+    if xfailed and item.config.option.runxfail:\n         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)\n         if xfailed and not xfailed.run:\n             xfail(\"[NOTRUN] \" + xfailed.reason)",
     "model_name_or_path": "ISHA"
   }
 ]

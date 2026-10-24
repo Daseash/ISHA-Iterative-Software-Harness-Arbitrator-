@@ -122,7 +122,7 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
                 text = diff.read_text(encoding="utf-8", errors="ignore").strip()
                 if text:
                     preds.append({
-                        "instance_id": p.name.replace("__", "/"),
+                        "instance_id": p.name,
                         "model_patch": text,
                         "model_name_or_path": "ISHA",
                     })

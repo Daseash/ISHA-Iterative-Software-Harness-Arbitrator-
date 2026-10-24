@@ -1,0 +1,16 @@
+diff --git a/sklearn/decomposition/kernel_pca.py b/sklearn/decomposition/kernel_pca.py
+index bb91d0cbba..81fcd62724 100644
+--- a/sklearn/decomposition/kernel_pca.py
++++ b/sklearn/decomposition/kernel_pca.py
+@@ -74,6 +74,11 @@ class KernelPCA(BaseEstimator, TransformerMixin, _UnstableOn32BitMixin):
+         When n_components is None, this parameter is ignored and components
+         with zero eigenvalues are removed regardless.
+ 
++        # Flip signs relative to a deterministic reference point for each component
++        max_abs_cols = np.argmax(np.abs(self.alphas_), axis=0)
++        signs = np.sign(self.alphas_[max_abs_cols, range(self.alphas_.shape[1])])
++        self.alphas_ *= signs
++
+     random_state : int, RandomState instance or None, optional (default=None)
+         If int, random_state is the seed used by the random number generator;
+         If RandomState instance, random_state is the random number generator;

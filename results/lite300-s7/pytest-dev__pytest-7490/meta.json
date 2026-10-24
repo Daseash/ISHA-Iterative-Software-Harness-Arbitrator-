@@ -1,0 +1,400 @@
+{
+  "instance_id": "pytest-dev__pytest-7490",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "7f7a36478abe7dd1fa993b115d22606aa0e35e88",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896347.1453621
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896348.1027653
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896363.8092523
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896390.0616033
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896412.5253778
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896535.661715
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896548.9594514
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: src/_pytest/skipping.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791896319.263667,
+  "elapsed_s": 236.11,
+  "plan": "reason = mark.kwargs.get(\"reason\", None)\n    if reason is None:\n        if isinstance(condition, str):\n            reason = \"condition: \" + condition\n        else:\n            # XXX better be checked at collection time\n            msg = (\n                \"Error evaluating %r: \" % mark.name\n                + \"you need to specify reason=STRING when using booleans as conditions.\"\n            )\n            fail(msg, pytrace=False)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/skipping.py",
+      "symbol": "src/_pytest/skipping.py::evaluate_condition",
+      "symbols": [
+        "evaluate_condition",
+        "pytest_addoption",
+        "pytest_configure",
+        "evaluate_skip_marks"
+      ],
+      "line_range": [
+        87,
+        151
+      ],
+      "score": 0.6345,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4067,
+        "vector": 0.69,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: mark; body matches report terms: mark, file, this, line)"
+    },
+    {
+      "file": "src/_pytest/outcomes.py",
+      "symbol": "src/_pytest/outcomes.py::xfail",
+      "symbols": [
+        "xfail",
+        "OutcomeException",
+        "exit",
+        "skip"
+      ],
+      "line_range": [
+        164,
+        177
+      ],
+      "score": 0.5854,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2959,
+        "vector": 0.5118,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: reason; body matches report terms: mark, this, test, marker; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::param",
+      "symbols": [
+        "param",
+        "pytest_addoption",
+        "pytest_cmdline_main",
+        "KeywordMatcher"
+      ],
+      "line_range": [
+        40,
+        43
+      ],
+      "score": 0.5995,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4362,
+        "vector": 0.3784,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: mark, typing, decorator, object)"
+    },
+    {
+      "file": "src/_pytest/python.py",
+      "symbol": "src/_pytest/python.py::pytest_collect_file",
+      "symbols": [
+        "pytest_collect_file",
+        "pytest_pycollect_makemodule",
+        "reportinfo",
+        "xunit_setup_function_fixture"
+      ],
+      "line_range": [
+        185,
+        200
+      ],
+      "score": 0.5454,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4864,
+        "vector": 0.5522,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: py; body matches report terms: file, python, test, session)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::_prepareconfig",
+      "symbols": [
+        "_prepareconfig",
+        "__init__",
+        "invocation_dir",
+        "ExitCode"
+      ],
+      "line_range": [
+        292,
+        294
+      ],
+      "score": 0.6067,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4091,
+        "vector": 0.4956,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: py; body matches report terms: pluggy, plugins)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "register_assert_rewrite",
+        "pytest_collection",
+        "pytest_runtest_protocol"
+      ],
+      "line_range": [
+        24,
+        48
+      ],
+      "score": 0.5545,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2696,
+        "vector": 0.3512,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: modules, file, provide, test)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.66055,
+  "laya_scores": {
+    "fix_quality": 1.4711,
+    "matches_issue": 0.6259,
+    "safe_to_apply": 0.5452,
+    "composite": 0.66055,
+    "secrets_or_danger": 0.1473,
+    "logic_drift": 0.3339,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - The change is restricted to logic flow within the pytest framework and does not introduce external input exposure.\n- PERFORMANCE: PASS - Checking for an existing marker via `get_closest_marker` is an efficient O(1) dictionary lookup.\n- ROBUSTNESS: PASS - This restores expected behavior for dynamic xfail markers by ensuring the setup hook only triggers when an xfail marker is actually present.\n- MINIMAL DIFF / YAGNI: PASS - The patch is a minimal fix addressing the specific regression in marker handling.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\n\n\ndef test_dynamically_add_xfail_marker(request):\n    \"\"\"\n    Reproduces the bug where dynamically adding an xfail marker inside a test via\n    request.node.add_marker() raises an error or fails to ignore the failure properly.\n    \"\"\"\n    mark = pytest.mark.xfail(reason=\"dynamically xfailed\")\n    request.node.add_marker(mark)\n    assert 0\n\n\ndef test_dynamically_add_xfail_with_condition_string(request):\n    \"\"\"\n    Edge case: dynamically adding an xfail marker with a string condition.\n    \"\"\"\n    mark = pytest.mark.xfail(\"True\", reason=\"dynamic string condition\")\n    request.node.add_marker(mark)\n    assert 1 == 1\n\n\ndef test_dynamically_add_xfail_strict_keyword(request):\n    \"\"\"\n    Edge case: dynamically adding an xfail marker with explicit strict=False.\n    \"\"\"\n    mark = pytest.mark.xfail(strict=False, reason=\"dynamic non-strict xfail\")\n    request.node.add_marker(mark)\n    assert 1 == 2",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -270,7 +270,7 @@\n def pytest_runtest_setup(item: Item) -> None:\n     skipped = evaluate_skip_marks(item)\n     if skipped:\n         raise skipped\n-    if not item.config.option.runxfail:\n+    if not item.config.option.runxfail and item.get_closest_marker(\"xfail\"):\n         item.ihook.pytest_xfail_runtest_setup(item=item)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7490-c2",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.0055,
+        "matches_issue": 0.4824,
+        "safe_to_apply": 0.5146,
+        "composite": 0.500625,
+        "secrets_or_danger": 0.1325,
+        "logic_drift": 0.5159,
+        "flagged": false
+      },
+      "laya_combined": 0.5006,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0086,
+      "rank_reason": "logistic",
+      "elapsed_s": 29.88,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -107,7 +107,7 @@\n     if mark.name == \"xfail\":\n         return evaluate_xfail_marks(item)\n \n-    if mark.name == \"skipif\":\n+    if mark.name in (\"skipif\", \"xfail\"):\n         condition = mark.args[0]\n         reason = mark.kwargs.get(\"reason\", None)\n         if reason is None:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7490-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.627,
+        "matches_issue": 0.7676,
+        "safe_to_apply": 0.5876,
+        "composite": 0.74555,
+        "secrets_or_danger": 0.1369,
+        "logic_drift": 0.2192,
+        "flagged": false
+      },
+      "laya_combined": 0.7456,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 44.3,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -104,7 +104,11 @@\n             )\n             fail(msg, pytrace=False)\n \n-    return reason\n+    # If the marker was added dynamically, it might not have the 'reason'\n+    # attribute set in its kwargs, so we default to None.\n+    return reason or mark.kwargs.get(\"reason\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7490-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7490-c3\\src\\_pytest\\skipping.py: local variable 'result' is assigned to but never used"
+      ],
+      "changed_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4711,
+        "matches_issue": 0.703,
+        "safe_to_apply": 0.5799,
+        "composite": 0.6885,
+        "secrets_or_danger": 0.1141,
+        "logic_drift": 0.1628,
+        "flagged": false
+      },
+      "laya_combined": 0.6885,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 15.77,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -270,7 +270,7 @@\n def pytest_runtest_setup(item: Item) -> None:\n     skipped = evaluate_skip_marks(item)\n     if skipped:\n         raise skipped\n-    if not item.config.option.runxfail:\n+    if not item.config.option.runxfail and item.get_closest_marker(\"xfail\"):\n         item.ihook.pytest_xfail_runtest_setup(item=item)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7490-c2",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/_pytest/skipping.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.0055,
+      "matches_issue": 0.4824,
+      "safe_to_apply": 0.5146,
+      "composite": 0.500625,
+      "secrets_or_danger": 0.1325,
+      "logic_drift": 0.5159,
+      "flagged": false
+    },
+    "laya_combined": 0.5006,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0086,
+    "rank_reason": "logistic",
+    "elapsed_s": 29.88,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 335e109..d1a1ad8 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -238,7 +238,7 @@ def pytest_runtest_setup(item: Item) -> None:\n         item._store[skipped_by_mark_key] = True\n         skip(skipped.reason)\n \n-    if not item.config.option.runxfail:\n+    if not item.config.option.runxfail and item.get_closest_marker(\"xfail\"):\n         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)\n         if xfailed and not xfailed.run:\n             xfail(\"[NOTRUN] \" + xfailed.reason)\n",
+  "offline_calls": 0
+}
