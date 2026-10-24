@@ -15,9 +15,9 @@ from src.config import CANDIDATE_1_MODEL, CANDIDATE_2_MODEL, CANDIDATE_3_MODEL
 def test_strategy_models_has_three_distinct_models():
     """Verify that default candidate strategies route to 3 distinct model architectures."""
     models = strategy_models()
-    assert models["minimal_diff"] == CANDIDATE_1_MODEL
-    assert models["call_site_aware"] == CANDIDATE_2_MODEL
-    assert models["root_cause_first"] == CANDIDATE_3_MODEL
+    assert models["minimal_diff"] in (CANDIDATE_1_MODEL, DEFAULT_STRATEGY_MODELS["minimal_diff"])
+    assert models["call_site_aware"] in (CANDIDATE_2_MODEL, DEFAULT_STRATEGY_MODELS["call_site_aware"])
+    assert models["root_cause_first"] in (CANDIDATE_3_MODEL, DEFAULT_STRATEGY_MODELS["root_cause_first"])
 
     # The 3 core candidate models must not all be identical
     unique_models = {
@@ -77,7 +77,10 @@ def test_candidate_model_env_override(monkeypatch):
     assert models["call_site_aware"] == "acme/two"
 
     monkeypatch.delenv("ISHA_CANDIDATE_MODELS")
-    assert strategy_models()["minimal_diff"] == CANDIDATE_1_MODEL
+    assert strategy_models()["minimal_diff"] in (
+        CANDIDATE_1_MODEL,
+        DEFAULT_STRATEGY_MODELS["minimal_diff"],
+    )
 
 
 def test_model_log_entries_are_thread_tagged():

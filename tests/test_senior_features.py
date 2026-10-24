@@ -76,7 +76,7 @@ def test_planner_parses_confidence_and_strips_line(monkeypatch, tmp_path):
     monkeypatch.setattr(
         nodes,
         "call_planner",
-        lambda prompt: "Step 1: root cause\nStep 2: fix\nCONFIDENCE: 0.25",
+        lambda prompt, *args, **kwargs: "Step 1: root cause\nStep 2: fix\nCONFIDENCE: 0.25",
     )
     state = AgentState(issue_text="bug", repo_path=str(tmp_path))
     state = nodes.planner_node(state)
@@ -185,7 +185,7 @@ def test_regression_prompt_requests_edge_cases(monkeypatch, tmp_path):
     import src.agents.nodes as nodes
 
     captured = {}
-    monkeypatch.setattr(nodes, "call_planner", lambda prompt: captured.update(prompt=prompt) or "pass")
+    monkeypatch.setattr(nodes, "call_repro", lambda prompt, *args, **kwargs: captured.update(prompt=prompt) or "pass")
     state = AgentState(issue_text="bug", repo_path=str(tmp_path))
     nodes.regression_test_node(state)
     assert "edge-case tests" in captured["prompt"]
@@ -196,7 +196,7 @@ def test_coder_prompt_includes_history_and_style(monkeypatch, tmp_path):
 
     repo = _make_repo(tmp_path)
     captured = {}
-    monkeypatch.setattr(nodes, "call_coder", lambda prompt: captured.update(prompt=prompt) or "--- a/calc.py\n+++ b/calc.py\n")
+    monkeypatch.setattr(nodes, "call_coder", lambda prompt, *args, **kwargs: captured.update(prompt=prompt) or "--- a/calc.py\n+++ b/calc.py\n")
     state = AgentState(
         issue_text="mul wrong for negatives",
         repo_path=str(repo),

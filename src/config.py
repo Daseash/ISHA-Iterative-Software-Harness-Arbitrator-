@@ -101,9 +101,9 @@ CODER_FALLBACKS = CODER_CHAIN[1:]
 REPRO_FALLBACKS = REPRO_CHAIN[1:]
 
 # Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
-CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "gemini/gemini-3.5-flash-lite")
+CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen-2.5-coder-32b")
 CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "gemini/gemini-3.8-flash")
-CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "gemini/gemini-3.5-flash")
+CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "groq/openai/gpt-oss-120b")
 
 # Architecture defaults: 3 diverse tournament candidates by default
 DEFAULT_CANDIDATES = int(os.getenv("ISHA_CANDIDATES", "3"))

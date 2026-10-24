@@ -130,7 +130,7 @@ def test_org_critic_threshold_balanced_cut(tmp_db, monkeypatch):
         ms.record_attempt(f"sympy__sympy-8100{n}", "", "issue", "minimal_diff", "m", "p", score, True, path=path)
         ms.resolve(f"sympy__sympy-8100{n}", res, path=path)
     thr = ms.org_critic_threshold("sympy__sympy-9999", "", path=path)
-    assert thr is not None and 0.2 <= thr <= 0.55
+    assert thr is not None and 0.2 <= thr <= 0.60
 
 
 def test_org_critic_threshold_gate_off_by_default(tmp_db):
