@@ -85,4 +85,17 @@ scratch/
 .vercel/
 website/.vercel/
 
+# Local databases and checkpoints
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+checkpoints.db
+
+# Local dataset builds, training scratch, and temporary runs
+dataset_build/
+runs/
+training/
+results_cloud_*/
+
 
