@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "scikit-learn__scikit-learn-25500", "ts": 1791997623.9766133}
+{"event": "attempt", "n": 1, "ts": 1791997624.2043915}
+{"event": "model", "ts": 1791997665.2603796, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791997668.697275, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791997675.5796366, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791997677.9105794, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791997691.331107, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791997851.2980645, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791997867.5768576}

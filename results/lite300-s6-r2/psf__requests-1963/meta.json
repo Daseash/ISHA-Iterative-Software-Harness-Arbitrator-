@@ -1,0 +1,392 @@
+{
+  "instance_id": "psf__requests-1963",
+  "repo": "psf/requests",
+  "base_commit": "110048f9837f8441ea536804115e80b69f400277",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890652.0265093
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890652.293629
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890655.450914
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890659.4471653
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890662.1696599
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890750.5970597
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791890759.9846578
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: requests/sessions.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:13"
+  },
+  "started_at": 1791890637.5941362,
+  "elapsed_s": 129.8,
+  "plan": "Step 1: Root Cause\nIn `Session.resolve_redirects` (located in `requests/sessions.py`), every iteration of the redirect-handling loop currently copies the original request object (`req.copy()`) rather than the request object that generated the current response (`resp.request.copy()`). When a redirection chain spans multiple steps (e.g., a `POST` redirected via 303 See Other into a `GET`, followed by a 307 Temporary Redirect), the loop resets the method and headers back to the original request's state (`POST`) instead of preserving the method and state from the immediately preceding request (`GET`).\n\nStep 2: Exact Changes to Make\n- File: `requests/sessions.py`\n- Function: `SessionRedirectMixin.resolve_redirects`\n- What to change: \n  Change line 91 from:\n  `prepared_request = req.copy()`\n  to:\n  `prepared_request = resp.request.copy()`",
+  "planner_confidence": 1.0,
+  "localization": [
+    {
+      "file": "requests/sessions.py",
+      "symbol": "requests/sessions.py::resolve_redirects",
+      "symbols": [
+        "resolve_redirects",
+        "merge_hooks",
+        "SessionRedirectMixin",
+        "__init__"
+      ],
+      "line_range": [
+        84,
+        186
+      ],
+      "score": 0.6895,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6348,
+        "vector": 0.6735,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: post, temporary, redirect, should; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "requests/models.py",
+      "symbol": "requests/models.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "is_redirect",
+        "json"
+      ],
+      "line_range": [
+        274,
+        288
+      ],
+      "score": 0.3971,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4719,
+        "vector": 0.6596,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: method, will, request, server)"
+    },
+    {
+      "file": "requests/api.py",
+      "symbol": "requests/api.py::request",
+      "symbols": [
+        "request",
+        "get",
+        "options",
+        "head"
+      ],
+      "line_range": [
+        17,
+        46
+      ],
+      "score": 0.6944,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4974,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: post, redirect, session, method)"
+    },
+    {
+      "file": "requests/packages/urllib3/connectionpool.py",
+      "symbol": "requests/packages/urllib3/connectionpool.py::ConnectionPool",
+      "symbols": [
+        "ConnectionPool",
+        "__init__",
+        "_put_conn",
+        "_make_request"
+      ],
+      "line_range": [
+        57,
+        76
+      ],
+      "score": 0.3947,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5303,
+        "vector": 0.518,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: host, object, http)"
+    },
+    {
+      "file": "requests/packages/chardet/__init__.py",
+      "symbol": "requests/packages/chardet/__init__.py::detect",
+      "symbols": [
+        "detect"
+      ],
+      "line_range": [
+        22,
+        32
+      ],
+      "score": 0.4836,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.3215,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: object)"
+    },
+    {
+      "file": "requests/packages/urllib3/__init__.py",
+      "symbol": "requests/packages/urllib3/__init__.py::add_stderr_logger",
+      "symbols": [
+        "add_stderr_logger"
+      ],
+      "line_range": [
+        40,
+        56
+      ],
+      "score": 0.4854,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0577,
+        "vector": 0.2164,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: other, method)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7409,
+  "laya_scores": {
+    "fix_quality": 1.5078,
+    "matches_issue": 0.7849,
+    "safe_to_apply": 0.6709,
+    "composite": 0.7409,
+    "secrets_or_danger": 0.1783,
+    "logic_drift": 0.1819,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No security vulnerabilities introduced by using the response's request object.\n- PERFORMANCE: PASS: No impact on performance, maintaining the existing loop structure.\n- ROBUSTNESS: PASS: Correctly preserves the method mutation from intermediate redirects in a chain.\n- MINIMAL DIFF / YAGNI: PASS: The change is extremely targeted and solves the bug with a single line.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport requests\nfrom requests.sessions import Session\nfrom requests.models import Response\nfrom requests.compat import urljoin\n\nclass MockAdapter(requests.adapters.HTTPAdapter):\n    \"\"\"A mock adapter that simulates a multi-step redirect chain with varying status codes.\"\"\"\n    \n    def __init__(self, responses):\n        super(MockAdapter, self).__init__()\n        self.responses = responses\n        self.request_history = []\n\n    def send(self, request, **kwargs):\n        self.request_history.append(request)\n        if len(self.request_history) > len(self.responses):\n            raise RuntimeError(\"Too many requests sent to mock adapter\")\n        \n        resp_def = self.responses[len(self.request_history) - 1]\n        \n        response = Response()\n        response.status_code = resp_def['status_code']\n        response.url = request.url\n        response.headers = resp_def.get('headers', {})\n        response.raw = None\n        response.request = request\n        \n        # If there's a Location header, resolve it relative to the current request url\n        location = response.headers.get('Location')\n        if location:\n            response.url = urljoin(request.url, location)\n            \n        return response\n\n\ndef test_redirect_chain_preserves_intermediate_method():\n    \"\"\"\n    Test a redirection chain:\n    POST /do_something -> 303 See Other -> GET /new_thing -> 307 Temporary Redirect -> GET /failover\n    \n    The final request should be a GET, not a POST (which would happen if the original request is copied).\n    \"\"\"\n    responses = [\n        {\n            'status_code': 303,\n            'headers': {'Location': '/new_thing'}\n        },\n        {\n            'status_code': 307,\n            'headers': {'Location': '/failover'}\n        },\n        {\n            'status_code': 200,\n            'headers': {}\n        }\n    ]\n\n    adapter = MockAdapter(responses)\n    session = Session()\n    session.mount('http://', adapter)\n    session.mount('https://', adapter)\n\n    response = session.post('http://server.example.com/do_something', data={'key': 'value'})\n\n    # Verify the sequence of requests made\n    assert len(adapter.request_history) == 3\n    assert adapter.request_history[0].method == 'POST'\n    assert adapter.request_history[1].method == 'GET'\n    assert adapter.request_history[2].method == 'GET'\n    assert response.status_code == 200\n\n\ndef test_redirect_chain_302_to_307():\n    \"\"\"\n    Edge case: POST redirected via 302 (which often becomes GET or stays POST depending on implementation,\n    but here becomes GET per standard 302 behavior or explicit redirect logic), followed by 307\n    which must preserve the resulting method.\n    \"\"\"\n    responses = [\n        {\n            'status_code': 302,\n            'headers': {'Location': '/intermediate'}\n        },\n        {\n            'status_code': 307,\n            'headers': {'Location': '/final'}\n        },\n        {\n            'status_code': 200,\n            'headers': {}\n        }\n    ]\n\n    adapter = MockAdapter(responses)\n    session = Session()\n    session.mount('http://', adapter)\n\n    session.post('http://server.example.com/start', data='test')\n\n    assert len(adapter.request_history) == 3\n    assert adapter.request_history[0].method == 'POST'\n    # 302 traditionally turns POST into GET in requests\n    assert adapter.request_history[1].method == 'GET'\n    # 307 must preserve the GET method from the intermediate request, not revert to POST\n    assert adapter.request_history[2].method == 'GET'\n\n\ndef test_single_redirect_preserves_method():\n    \"\"\"\n    Edge case: Standard single-step redirection (e.g., GET -> 301 -> GET).\n    Ensures normal redirect behavior is unaffected.\n    \"\"\"\n    responses = [\n        {\n            'status_code': 301,\n            'headers': {'Location': '/target'}\n        },\n        {\n            'status_code': 200,\n            'headers': {}\n        }\n    ]\n\n    adapter = MockAdapter(responses)\n    session = Session()\n    session.mount('http://', adapter)\n\n    session.get('http://server.example.com/source')\n\n    assert len(adapter.request_history) == 2\n    assert adapter.request_history[0].method == 'GET'\n    assert adapter.request_history[1].method == 'GET'\n\n\ndef test_multiple_301_redirects_preserve_headers():\n    \"\"\"\n    Edge case: Multiple 301 redirects ensuring custom headers added or modified \n    during the flow are correctly maintained across steps if applicable.\n    \"\"\"\n    responses = [\n        {\n            'status_code': 301,\n            'headers': {'Location': '/step2'}\n        },\n        {\n            'status_code': 200,\n            'headers': {}\n        }\n    ]\n\n    adapter = MockAdapter(responses)\n    session = Session()\n    session.mount('http://', adapter)\n\n    session.get('http://server.example.com/step1', headers={'X-Custom': 'value'})\n\n    assert len(adapter.request_history) == 2\n    assert adapter.request_history[0].headers.get('X-Custom') == 'value'\n    assert adapter.request_history[1].headers.get('X-Custom') == 'value'",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -91,3 +91,3 @@ class SessionRedirectMixin(object):\n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-1963-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.5078,
+        "matches_issue": 0.7849,
+        "safe_to_apply": 0.6709,
+        "composite": 0.7409,
+        "secrets_or_danger": 0.1722,
+        "logic_drift": 0.1792,
+        "flagged": false
+      },
+      "laya_combined": 0.7409,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 4.23,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -91,3 +91,3 @@\n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-1963-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5078,
+        "matches_issue": 0.7849,
+        "safe_to_apply": 0.6709,
+        "composite": 0.7409,
+        "secrets_or_danger": 0.2358,
+        "logic_drift": 0.221,
+        "flagged": false
+      },
+      "laya_combined": 0.7409,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 14.13,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -91,7 +91,7 @@\n         i = 0\n \n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()\n \n             resp.content  # Consume socket so it can be released",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-1963-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5078,
+        "matches_issue": 0.7849,
+        "safe_to_apply": 0.6709,
+        "composite": 0.7409,
+        "secrets_or_danger": 0.1491,
+        "logic_drift": 0.167,
+        "flagged": false
+      },
+      "laya_combined": 0.7409,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.16,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -91,3 +91,3 @@ class SessionRedirectMixin(object):\n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-1963-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "requests/sessions.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.5078,
+      "matches_issue": 0.7849,
+      "safe_to_apply": 0.6709,
+      "composite": 0.7409,
+      "secrets_or_danger": 0.1722,
+      "logic_drift": 0.1792,
+      "flagged": false
+    },
+    "laya_combined": 0.7409,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0063,
+    "rank_reason": "logistic",
+    "elapsed_s": 4.23,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\nindex 425db22..23d2563 100644\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -88,7 +88,7 @@ class SessionRedirectMixin(object):\n         i = 0\n \n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()\n \n             resp.content  # Consume socket so it can be released\n \n",
+  "offline_calls": 0
+}

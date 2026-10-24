@@ -1,0 +1,386 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-15535",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "70b0ddea992c01df1a41588fa9e2d130fb6b13f8",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980317.818124
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980328.9930775
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980344.0315266
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980345.7204
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980364.5989032
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980609.6640375
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/metrics/cluster/_supervised.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/metrics/cluster/_supervised.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791980216.8265924,
+  "elapsed_s": 401.36,
+  "plan": "### Step 1: Root Cause\nWhen evaluating clustering metrics like `mutual_info_score(x, x)`, input validation (such as `check_array` or internal label checking) enforces numeric dtypes or tries to convert string-typed arrays (e.g. `object` arrays containing strings) to numeric arrays, leading to a `ValueError: could not convert string to float`. \nIn scikit-learn clustering and metrics (like `mutual_info_score`, `adjusted_rand_score`, etc.), inputs can be discrete categorical labels represented as strings or integers. Previously (e.g., in version 0.21.1), string labels were accepted natively or handled correctly via label encoding or dtype acceptance without forcing a numeric conversion on string object arrays. A recent regression in input validation or label checking for clustering metrics rejects or improperly converts string/object arrays.\n\n### Step 2: Exact Changes to Make\n1. **File:** `sklearn/metrics/cluster/_supervised.py` (or the relevant file defining `mutual_info_score` and related supervised clustering metrics).\n2. **Function:** `mutual_info_score` and any helper checking/validation functions for cluster labels (e.g., `check_cluster_labels` or equivalent input validation call).\n3. **What to change:** \n   - Update the input validation logic for cluster metrics to accept string and object arrays containing discrete labels, rather than forcing numeric conversion or treating them as continuous/numeric data arrays. \n   - Ensure that `check_array` or `_check_targets` allows string/object dtype for discrete clustering evaluation metrics, or maps them using label encoders appropriately without raising a `ValueError`.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sklearn/metrics/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.4084,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4669,
+        "vector": 0.389,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in traceback)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::is_scalar_nan",
+      "symbols": [
+        "is_scalar_nan",
+        "tosequence",
+        "gen_even_slices",
+        "indices_to_mask"
+      ],
+      "line_range": [
+        969,
+        1000
+      ],
+      "score": 0.6814,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7736,
+        "vector": 0.3581,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: x; body matches report terms: python, convert, numpy, this)"
+    },
+    {
+      "file": "sklearn/cluster/_bicluster.py",
+      "symbol": "sklearn/cluster/_bicluster.py::_check_parameters",
+      "symbols": [
+        "_check_parameters",
+        "__init__",
+        "_check_parameters",
+        "fit"
+      ],
+      "line_range": [
+        437,
+        465
+      ],
+      "score": 0.5145,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3624,
+        "vector": 0.5534,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: should, valueerror, with, cluster)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::build_from_c_and_cpp_files",
+      "symbols": [
+        "build_from_c_and_cpp_files",
+        "maybe_cythonize_extensions",
+        "gen_from_templates"
+      ],
+      "line_range": [
+        21,
+        40
+      ],
+      "score": 0.5061,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1297,
+        "vector": 0.239,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: python, this)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.5051,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1102,
+        "vector": 0.2714,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: sklearn, this)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        94,
+        107
+      ],
+      "score": 0.6238,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.446,
+        "vector": 0.5609,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: numpy, with, sklearn, random"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.679125,
+  "laya_scores": {
+    "fix_quality": 1.4851,
+    "matches_issue": 0.6361,
+    "safe_to_apply": 0.5953,
+    "composite": 0.679125,
+    "secrets_or_danger": 0.1061,
+    "logic_drift": 0.3249,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No security-related issues identified in this patch.\n- PERFORMANCE: PASS - The changes do not introduce N+1 queries, unbounded loops, or blocking calls.\n- ROBUSTNESS: FAIL - The patch overwrites `labels_pred` twice instead of validating both `labels_true` and `labels_pred`, leaving `labels_true` unchecked.\n- MINIMAL DIFF / YAGNI: PASS - The diff is minimal and directly addresses the bug report domain.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom sklearn.metrics.cluster import mutual_info_score, adjusted_rand_score\n\n\ndef test_mutual_info_score_string_object_array():\n    # Reproduces the bug where object/string arrays raise ValueError\n    # instead of being accepted/handled natively.\n    x = np.random.choice(['a', 'b'], size=20).astype(object)\n    score = mutual_info_score(x, x)\n    assert isinstance(score, float)\n    assert score > 0.0\n\n\ndef test_mutual_info_score_integer_labels():\n    # Edge case: integer labels in object array\n    x = np.random.choice([1, 2], size=20).astype(object)\n    score = mutual_info_score(x, x)\n    assert isinstance(score, float)\n\n\ndef test_mutual_info_score_mixed_type_array():\n    # Edge case: mixed string/int types inside an object array\n    x = np.array(['a', 1, 'a', 1], dtype=object)\n    score = mutual_info_score(x, x)\n    assert isinstance(score, float)\n\n\ndef test_adjusted_rand_score_string_object_array():\n    # Edge case: related supervised clustering metric with string object arrays\n    x = np.random.choice(['cat', 'dog'], size=15).astype(object)\n    score = adjusted_rand_score(x, x)\n    assert score == 1.0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sklearn/metrics/cluster/_supervised.py b/sklearn/metrics/cluster/_supervised.py\nindex 4bddae35c9..5df956c948 100644\n--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -42,8 +42,8 @@ def check_clusterings(labels_true, labels_pred):\n     labels_pred : array-like of shape (n_samples,)\n         The predicted labels.\n     \"\"\"\n-    labels_true = check_array(\n-        labels_true, ensure_2d=False, ensure_min_samples=0\n+    labels_pred = check_array(\n+        labels_pred, ensure_2d=False, accept_sparse=True, dtype=None\n     )\n     labels_pred = check_array(\n         labels_pred, ensure_2d=False, ensure_min_samples=0\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-15535-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/metrics/cluster/_supervised.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/metrics/cluster/_supervised.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4851,
+        "matches_issue": 0.6361,
+        "safe_to_apply": 0.5953,
+        "composite": 0.679125,
+        "secrets_or_danger": 0.1061,
+        "logic_drift": 0.3249,
+        "flagged": false
+      },
+      "laya_combined": 0.6791,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 67.16,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sklearn/metrics/cluster/_supervised.py b/sklearn/metrics/cluster/_supervised.py\nindex 4bddae35c9..09d4839c86 100644\n--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -16,6 +16,7 @@ better.\n \n \n from math import log\n+from ...preprocessing import LabelEncoder\n \n import numpy as np\n from scipy import sparse as sp\n@@ -616,6 +617,10 @@ def mutual_info_score(labels_true, labels_pred, contingency=None):\n     normalized_mutual_info_score: Normalized Mutual Information\n     \"\"\"\n     if contingency is None:\n+        if labels_true.dtype.kind in {'U', 'S', 'O'}:\n+            labels_true = LabelEncoder().fit_transform(labels_true)\n+        if labels_pred.dtype.kind in {'U', 'S', 'O'}:\n+            labels_pred = LabelEncoder().fit_transform(labels_pred)\n         labels_true, labels_pred = check_clusterings(labels_true, labels_pred)\n         contingency = contingency_matrix(labels_true, labels_pred, sparse=True)\n     else:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-15535-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/metrics/cluster/_supervised.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/metrics/cluster/_supervised.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4905,
+        "matches_issue": 0.65,
+        "safe_to_apply": 0.5884,
+        "composite": 0.682225,
+        "secrets_or_danger": 0.1113,
+        "logic_drift": 0.2468,
+        "flagged": false
+      },
+      "laya_combined": 0.6822,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 86.15,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -41,3 +41,3 @@\n def _check_cluster_labels(labels_true, labels_pred):\n-    \"\"\"Check that labels_true and labels_pred have same shape, and are valid.\"\"\"\n+    \"\"\"Check that labels_true and labels_pred have same shape, and are valid.\"\"\"\n     labels_true = check_array(\n@@ -45,3 +45,3 @@\n         ensure_2d=False,\n-        dtype=\"numeric\",\n+        dtype=None,\n         force_all_finite=\"allow-nan\",\n@@ -52,3 +52,3 @@\n         ensure_2d=False,\n-        dtype=\"numeric\",\n+        dtype=None,\n         force_all_finite=\"allow-nan\",",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-15535-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/metrics/cluster/_supervised.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5123,
+        "matches_issue": 0.6739,
+        "safe_to_apply": 0.6205,
+        "composite": 0.701675,
+        "secrets_or_danger": 0.1433,
+        "logic_drift": 0.3254,
+        "flagged": false
+      },
+      "laya_combined": 0.7017,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.03,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "diff --git a/sklearn/metrics/cluster/_supervised.py b/sklearn/metrics/cluster/_supervised.py\nindex 4bddae35c9..5df956c948 100644\n--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -42,8 +42,8 @@ def check_clusterings(labels_true, labels_pred):\n     labels_pred : array-like of shape (n_samples,)\n         The predicted labels.\n     \"\"\"\n-    labels_true = check_array(\n-        labels_true, ensure_2d=False, ensure_min_samples=0\n+    labels_pred = check_array(\n+        labels_pred, ensure_2d=False, accept_sparse=True, dtype=None\n     )\n     labels_pred = check_array(\n         labels_pred, ensure_2d=False, ensure_min_samples=0\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-15535-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/metrics/cluster/_supervised.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/metrics/cluster/_supervised.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4851,
+      "matches_issue": 0.6361,
+      "safe_to_apply": 0.5953,
+      "composite": 0.679125,
+      "secrets_or_danger": 0.1061,
+      "logic_drift": 0.3249,
+      "flagged": false
+    },
+    "laya_combined": 0.6791,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0076,
+    "rank_reason": "logistic",
+    "elapsed_s": 67.16,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/metrics/cluster/_supervised.py b/sklearn/metrics/cluster/_supervised.py\nindex 4bddae3..5df956c 100644\n--- a/sklearn/metrics/cluster/_supervised.py\n+++ b/sklearn/metrics/cluster/_supervised.py\n@@ -42,8 +42,8 @@ def check_clusterings(labels_true, labels_pred):\n     labels_pred : array-like of shape (n_samples,)\n         The predicted labels.\n     \"\"\"\n-    labels_true = check_array(\n-        labels_true, ensure_2d=False, ensure_min_samples=0\n+    labels_pred = check_array(\n+        labels_pred, ensure_2d=False, accept_sparse=True, dtype=None\n     )\n     labels_pred = check_array(\n         labels_pred, ensure_2d=False, ensure_min_samples=0\n",
+  "offline_calls": 0
+}

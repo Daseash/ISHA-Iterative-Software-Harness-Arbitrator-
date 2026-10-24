@@ -1,0 +1,13 @@
+diff --git a/sympy/vector/vector.py b/sympy/vector/vector.py
+index c62b1db..4cb6b78 100644
+--- a/sympy/vector/vector.py
++++ b/sympy/vector/vector.py
+@@ -17,7 +17,7 @@ class Vector(BasisDependent):
+     """
+ 
+     is_Vector = True
+-    _op_priority = 12.0
++    _op_priority = 13.0
+ 
+     @property
+     def components(self):

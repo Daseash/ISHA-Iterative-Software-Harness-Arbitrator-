@@ -1,0 +1,15 @@
+--- a/lib/matplotlib/__init__.py
++++ b/lib/matplotlib/__init__.py
+@@ -133,6 +133,12 @@
+ def __getattr__(name):
+     if name == "__version__":
+         import setuptools_scm
++    if name == "version_info":
++        def _parse_to_version_info(version_str):
++            import re
++            parts = re.split(r"[\.+-]", version_str)
++            return tuple(int(p) if p.isdigit() else p for p in parts)
++        return _parse_to_version_info(__version__)
+         global __version__  # cache it.
+         # Only shell out to a git subprocess if really needed, and not on a
+         # shallow clone, such as those used by CI, as the latter would trigger

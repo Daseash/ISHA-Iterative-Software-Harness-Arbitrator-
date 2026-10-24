@@ -1,0 +1,371 @@
+{
+  "instance_id": "pytest-dev__pytest-5692",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "29e336bd9bf87eaef8e2683196ee1975f1ad4088",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980112.429511
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980116.1625028
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980170.8960652
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980172.7273257
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980190.1199899
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791980326.5291529
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791980066.1752963,
+  "elapsed_s": 266.67,
+  "plan": "# In LogXML.__init__ or the appropriate setup method:\nself.suite_start_time = time.strftime(\"%Y-%m-%dT%H:%M:%S\", time.localtime())\nself.hostname = socket.gethostname()\n\n# In the method writing the testsuite tag:\ndef pytest_sessionfinish(self, session):\n    ...\n    suite = Junit.testsuite(\n        name=self.suite_name,\n        tests=str(self.suite_cnt),\n        errors=str(self.stats[\"error\"]),\n        failures=str(self.stats[\"failure\"]),\n        skipped=str(self.stats[\"skipped\"]),\n        time=\"%.3f\" % suite_duration,\n        timestamp=self.suite_start_time,\n        hostname=self.hostname,\n    )\n    ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/junitxml.py",
+      "symbol": "src/_pytest/junitxml.py::record_func",
+      "symbols": [
+        "record_func",
+        "add_global_property",
+        "add_property",
+        "append_property"
+      ],
+      "line_range": [
+        370,
+        374
+      ],
+      "score": 0.7516,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9004,
+        "vector": 0.6375,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: name; body matches report terms: name, junit, line, check)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::addinivalue_line",
+      "symbols": [
+        "addinivalue_line",
+        "getini",
+        "_getconftest_pathlist",
+        "getoption"
+      ],
+      "line_range": [
+        939,
+        946
+      ],
+      "score": 0.5983,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4303,
+        "vector": 0.3814,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: line, name; body matches report terms: name, file, option, line)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_collection",
+        "call_assertion_pass_hook",
+        "callbinrepr"
+      ],
+      "line_range": [
+        11,
+        34
+      ],
+      "score": 0.5181,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2008,
+        "vector": 0.1904,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: generated, file, option, pytest)"
+    },
+    {
+      "file": "src/_pytest/pytester.py",
+      "symbol": "src/_pytest/pytester.py::popcall",
+      "symbols": [
+        "popcall",
+        "_makefile",
+        "copy_example",
+        "mkpydir"
+      ],
+      "line_range": [
+        227,
+        236
+      ],
+      "score": 0.5168,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4713,
+        "vector": 0.3455,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: name; body matches report terms: name, pytest, line)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_cmdline_main",
+        "deselect_by_mark",
+        "pytest_configure"
+      ],
+      "line_range": [
+        36,
+        76
+      ],
+      "score": 0.4998,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0997,
+        "vector": 0.2488,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: name, example, option, pytest)"
+    },
+    {
+      "file": "src/_pytest/python.py",
+      "symbol": "src/_pytest/python.py::pytest_pycollect_makeitem",
+      "symbols": [
+        "pytest_pycollect_makeitem",
+        "classnamefilter",
+        "istestclass",
+        "_matches_prefix_or_glob_option"
+      ],
+      "line_range": [
+        193,
+        230
+      ],
+      "score": 0.4697,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.292,
+        "vector": 0.3264,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: name; body matches report terms: name, testclass, file, pytest)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import xml.etree.ElementTree as ET\n\ndef test_testsuite_has_hostname_and_timestamp(testdir):\n    \"\"\"\n    Test that generated JUnit XML report includes 'hostname' and 'timestamp'\n    attributes on the <testsuite> element.\n    \"\"\"\n    testdir.makepyfile(\n        \"\"\"\n        def test_pass():\n            assert True\n    \"\"\"\n    )\n    result = testdir.runpytest(\"--junitxml=report.xml\")\n    result.assert_outcomes(passed=1)\n\n    report_path = testdir.tmpdir.join(\"report.xml\")\n    assert report_path.check()\n\n    tree = ET.parse(str(report_path))\n    testsuite = tree.getroot()\n\n    # If the root is <testsuites>, find the <testsuite> child, otherwise it's <testsuite>\n    if testsuite.tag == \"testsuites\":\n        testsuite = testsuite.find(\"testsuite\")\n\n    assert testsuite is not None\n    assert \"hostname\" in testsuite.attrib\n    assert testsuite.attrib[\"hostname\"] != \"\"\n\n    assert \"timestamp\" in testsuite.attrib\n    # Verify timestamp format (ISO 8601 basic or extended subset, e.g., YYYY-MM-DDTHH:MM:SS)\n    timestamp = testsuite.attrib[\"timestamp\"]\n    assert len(timestamp) >= 19\n    assert \"T\" in timestamp",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "An error occurred while generating the patch. Please ensure the context lines match the target file exactly.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3771,
+        "matches_issue": 0.6895,
+        "safe_to_apply": 0.6129,
+        "composite": 0.669875,
+        "secrets_or_danger": 0.0317,
+        "logic_drift": 0.1068,
+        "flagged": false
+      },
+      "laya_combined": 0.6699,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 16.78,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/junitxml.py\n+++ b/src/_pytest/junitxml.py\n@@ -10,6 +10,8 @@\n \"\"\"\n import functools\n import os\n+import socket\n+import time\n import re\n \n import py\n@@ -165,6 +167,8 @@\n         self.stats = {\"error\": 0, \"failure\": 0, \"skipped\": 0, \"passed\": 0}\n         self.node_reporters = {}\n         self.node_reporters_stack = []\n+        self.suite_start_time = time.strftime(\"%Y-%m-%dT%H:%M:%S\", time.localtime())\n+        self.hostname = socket.gethostname()\n         # Map file name to a list of LogXML.TestReport objects\n         self.open_reports = {}\n \n@@ -330,6 +334,8 @@\n             errors=str(self.stats[\"error\"]),\n             failures=str(self.stats[\"failure\"]),\n             skipped=str(self.stats[\"skipped\"]),\n+            timestamp=self.suite_start_time,\n+            hostname=self.hostname,\n             time=\"%.3f\" % suite_duration,\n         )\n         self.__write_report_item(suite)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c3\\src\\_pytest\\junitxml.py: SyntaxError line 330: unexpected indent"
+      ],
+      "changed_files": [
+        "src/_pytest/junitxml.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5729,
+        "matches_issue": 0.7005,
+        "safe_to_apply": 0.6249,
+        "composite": 0.724575,
+        "secrets_or_danger": 0.1688,
+        "logic_drift": 0.388,
+        "flagged": false
+      },
+      "laya_combined": 0.7246,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 25.59,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/junitxml.py\n+++ b/src/_pytest/junitxml.py\n@@ -107,6 +107,8 @@\n         self.family = family\n         self.logpath = logpath\n         self.stats = {\"error\": 0, \"failure\": 0, \"skipped\": 0, \"passed\": 0}\n+        self.suite_start_time = time.strftime(\"%Y-%m-%dT%H:%M:%S\", time.localtime())\n+        self.hostname = socket.gethostname()\n         self.node_reporters = {}\n         self.node_reporters_nested = {}\n         self.combined_properties = []\n@@ -262,6 +264,8 @@\n             skipped=str(self.stats[\"skipped\"]),\n             tests=str(numtests),\n             time=\"%.3f\" % suite_duration,\n+            timestamp=self.suite_start_time,\n+            hostname=self.hostname,\n         )\n         logfile.write(xml.unicode(indent=0))\n         logfile.close()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1\\src\\_pytest\\junitxml.py: undefined name 'socket'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1\\src\\_pytest\\junitxml.py: local variable 'suite_time_delta' is assigned to but never used",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1\\src\\_pytest\\junitxml.py: local variable 'suite_node' is assigned to but never used",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1\\src\\_pytest\\junitxml.py: undefined name 'suite_duration'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c1\\src\\_pytest\\junitxml.py: undefined name 'xml'"
+      ],
+      "changed_files": [
+        "src/_pytest/junitxml.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7531,
+        "matches_issue": 0.8393,
+        "safe_to_apply": 0.7094,
+        "composite": 0.82545,
+        "secrets_or_danger": 0.1637,
+        "logic_drift": 0.3861,
+        "flagged": false
+      },
+      "laya_combined": 0.8255,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 26.53,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "An error occurred while generating the patch. Please ensure the context lines match the target file exactly.",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5692-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+    ],
+    "changed_files": [],
+    "added_lines": 0,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3771,
+      "matches_issue": 0.6895,
+      "safe_to_apply": 0.6129,
+      "composite": 0.669875,
+      "secrets_or_danger": 0.0317,
+      "logic_drift": 0.1068,
+      "flagged": false
+    },
+    "laya_combined": 0.6699,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 16.78,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

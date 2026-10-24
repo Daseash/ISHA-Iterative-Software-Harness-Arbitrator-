@@ -1,0 +1,13 @@
+diff --git a/xarray/core/variable.py b/xarray/core/variable.py
+index 64c1895..09b0934 100644
+--- a/xarray/core/variable.py
++++ b/xarray/core/variable.py
+@@ -162,6 +162,8 @@ def as_variable(obj, name=None) -> "Union[Variable, IndexVariable]":
+         obj = obj.to_index_variable()
+ 
+     return obj
++    if hasattr(obj, "variable") and hasattr(obj, "dims"):
++        return obj.variable
+ 
+ 
+ def _maybe_wrap_data(data):

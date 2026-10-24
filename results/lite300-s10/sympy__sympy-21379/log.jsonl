@@ -1,0 +1,6 @@
+{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1792328713.7769551}
+{"event": "attempt", "n": 1, "ts": 1792328715.152608}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792330523.4689007}
+{"event": "attempt", "n": 2, "ts": 1792330528.3739705}
+{"ts": 1792331446.716601, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1792332338.818954}

@@ -1,0 +1,354 @@
+{
+  "instance_id": "astropy__astropy-14995",
+  "repo": "astropy/astropy",
+  "base_commit": "b16c7d12ccbc7b2d20364b89fb44285bcbfede54",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619635.3732142
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619637.838056
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619644.4326122
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619647.4544594
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619660.1287777
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791619752.1264274
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791619609.74795,
+  "elapsed_s": 143.66,
+  "plan": "if handle_mask is not None:\n            if self.mask is None:\n                mask = operand.mask\n            elif operand.mask is None:\n                mask = self.mask\n            else:\n                mask = handle_mask(self.mask, operand.mask)\n        else:\n            mask = None",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/nddata/nddata_withmixins.py",
+      "symbol": "astropy/nddata/nddata_withmixins.py::NDDataRef",
+      "symbols": [
+        "NDDataRef"
+      ],
+      "line_range": [
+        16,
+        72
+      ],
+      "score": 0.7938,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3227,
+        "vector": 0.8804,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: astropy, like, multiply, array; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/nddata/nddata.py",
+      "symbol": "astropy/nddata/nddata.py::__init__",
+      "symbols": [
+        "__init__",
+        "mask",
+        "data",
+        "wcs"
+      ],
+      "line_range": [
+        126,
+        135
+      ],
+      "score": 0.7077,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7041,
+        "vector": 0.7224,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: mask; body matches report terms: mask)"
+    },
+    {
+      "file": "astropy/nddata/__init__.py",
+      "symbol": "astropy/nddata/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        29,
+        48
+      ],
+      "score": 0.5835,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2213,
+        "vector": 0.6929,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: astropy, propagation, that, when)"
+    },
+    {
+      "file": "astropy/io/votable/converters.py",
+      "symbol": "astropy/io/votable/converters.py::_make_masked_array",
+      "symbols": [
+        "_make_masked_array",
+        "output",
+        "binoutput",
+        "output"
+      ],
+      "line_range": [
+        80,
+        93
+      ],
+      "score": 0.6033,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2136,
+        "vector": 0.8327,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: mask; body matches report terms: mask, like, array, have)"
+    },
+    {
+      "file": "astropy/__init__.py",
+      "symbol": "astropy/__init__.py::Conf",
+      "symbols": [
+        "Conf",
+        "base_constants_version",
+        "validate",
+        "set"
+      ],
+      "line_range": [
+        24,
+        61
+      ],
+      "score": 0.6088,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3618,
+        "vector": 0.6109,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: astropy, description, output, when)"
+    },
+    {
+      "file": "astropy/version.py",
+      "symbol": "astropy/version.py::split_version",
+      "symbols": [
+        "split_version"
+      ],
+      "line_range": [
+        22,
+        36
+      ],
+      "score": 0.5661,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1531,
+        "vector": 0.6899,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: version; body matches report terms: version)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import numpy as np\nimport pytest\nfrom astropy.nddata import NDDataRef\n\n\ndef test_nddataref_mask_propagation_one_missing():\n    \"\"\"\n    Test that mask propagation works when one operand has a mask and the other\n    does not, specifically using bitwise_or.\n    - mask * nomask -> should return the mask\n    - nomask * mask -> should return the mask\n    \"\"\"\n    array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\n    mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\n\n    nref_nomask = NDDataRef(array)\n    nref_mask = NDDataRef(array, mask=mask)\n\n    # Multiply mask by nomask\n    res1 = nref_mask.multiply(nref_nomask, handle_mask=np.bitwise_or)\n    np.testing.assert_array_equal(res1.mask, mask)\n\n    # Multiply nomask by mask\n    res2 = nref_nomask.multiply(nref_mask, handle_mask=np.bitwise_or)\n    np.testing.assert_array_equal(res2.mask, mask)\n\n\ndef test_nddataref_mask_propagation_both_missing():\n    \"\"\"\n    Test arithmetic when both operands have no masks.\n    Should return an NDDataRef with no mask (None).\n    \"\"\"\n    array = np.array([[1, 2], [3, 4]])\n    nref1 = NDDataRef(array)\n    nref2 = NDDataRef(array)\n\n    res = nref1.multiply(nref2, handle_mask=np.bitwise_or)\n    assert res.mask is None\n\n\ndef test_nddataref_mask_propagation_both_present():\n    \"\"\"\n    Test arithmetic when both operands have masks.\n    Should correctly combine masks using the handler.\n    \"\"\"\n    array = np.array([[1, 2], [3, 4]])\n    mask1 = np.array([[1, 0], [0, 1]])\n    mask2 = np.array([[0, 1], [0, 0]])\n\n    nref1 = NDDataRef(array, mask=mask1)\n    nref2 = NDDataRef(array, mask=mask2)\n\n    res = nref1.multiply(nref2, handle_mask=np.bitwise_or)\n    expected_mask = np.bitwise_or(mask1, mask2)\n    np.testing.assert_array_equal(res.mask, expected_mask)\n\n\ndef test_nddataref_mask_propagation_handle_mask_none():\n    \"\"\"\n    Test arithmetic when handle_mask is explicitly set to None,\n    regardless of whether masks are present or absent.\n    \"\"\"\n    array = np.array([[1, 2], [3, 4]])\n    mask = np.array([[1, 0], [0, 1]])\n\n    nref_mask = NDDataRef(array, mask=mask)\n    nref_nomask = NDDataRef(array)\n\n    res1 = nref_mask.multiply(nref_nomask, handle_mask=None)\n    assert res1.mask is None\n\n    res2 = nref_mask.multiply(nref_mask, handle_mask=None)\n    assert res2.mask is None",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/astropy/nddata/mixins/ndarithmetic.py\n+++ b/astropy/nddata/mixins/ndarithmetic.py\n@@ -514,7 +514,12 @@\n         # -- Mask\n         if handle_mask is not None:\n             if self.mask is None:\n-                mask = handle_mask(operand.mask, self.mask)\n+                mask = operand.mask\n+            elif operand.mask is None:\n+                mask = self.mask\n             else:\n                 mask = handle_mask(self.mask, operand.mask)\n         else:\n             mask = None",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-gyechl44",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6174,
+        "matches_issue": 0.7513,
+        "safe_to_apply": 0.6099,
+        "composite": 0.74465,
+        "secrets_or_danger": 0.1907,
+        "logic_drift": 0.348,
+        "flagged": false
+      },
+      "laya_combined": 0.7447,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 40.96,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/astropy/nddata/mixins/ndarithmetic.py\n+++ b/astropy/nddata/mixins/ndarithmetic.py\n@@ -512,7 +512,12 @@\n         elif self.mask is None and operand.mask is None:\n             mask = None\n         elif handle_mask is not None:\n-            mask = handle_mask(self.mask, operand.mask)\n+            if self.mask is None:\n+                mask = operand.mask\n+            elif operand.mask is None:\n+                mask = self.mask\n+            else:\n+                mask = handle_mask(self.mask, operand.mask)\n         else:\n             mask = None",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9969x8uu",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.497,
+        "matches_issue": 0.7813,
+        "safe_to_apply": 0.6411,
+        "composite": 0.7298500000000001,
+        "secrets_or_danger": 0.1479,
+        "logic_drift": 0.3167,
+        "flagged": false
+      },
+      "laya_combined": 0.7299,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 40.54,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/astropy/nddata/mixins/ndarithmetic.py\n+++ b/astropy/nddata/mixins/ndarithmetic.py\n@@ -470,7 +470,11 @@\n         if handle_mask is not None:\n-            mask = handle_mask(self.mask, operand.mask)\n+            if self.mask is None:\n+                mask = operand.mask\n+            elif operand.mask is None:\n+                mask = self.mask\n+            else:\n+                mask = handle_mask(self.mask, operand.mask)\n         else:\n             mask = None",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-uijqqvbg",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.497,
+        "matches_issue": 0.7813,
+        "safe_to_apply": 0.6411,
+        "composite": 0.7298500000000001,
+        "secrets_or_danger": 0.1618,
+        "logic_drift": 0.2809,
+        "flagged": false
+      },
+      "laya_combined": 0.7299,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 67.62,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/astropy/nddata/mixins/ndarithmetic.py\n+++ b/astropy/nddata/mixins/ndarithmetic.py\n@@ -514,7 +514,12 @@\n         # -- Mask\n         if handle_mask is not None:\n             if self.mask is None:\n-                mask = handle_mask(operand.mask, self.mask)\n+                mask = operand.mask\n+            elif operand.mask is None:\n+                mask = self.mask\n             else:\n                 mask = handle_mask(self.mask, operand.mask)\n         else:\n             mask = None",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-gyechl44",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "astropy/nddata/mixins/ndarithmetic.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6174,
+      "matches_issue": 0.7513,
+      "safe_to_apply": 0.6099,
+      "composite": 0.74465,
+      "secrets_or_danger": 0.1907,
+      "logic_drift": 0.348,
+      "flagged": false
+    },
+    "laya_combined": 0.7447,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 40.96,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

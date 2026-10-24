@@ -1,0 +1,19 @@
+--- sympy/assumptions/refine.py
++++ sympy/assumptions/refine.py
+@@ -107,2 +107,13 @@
+ 
++def refine_arg(expr, assumptions):
++    from sympy import S, Pi
++    arg = expr.args[0]
++    if ask(Q.positive(arg), assumptions):
++        return S.Zero
++    if ask(Q.negative(arg), assumptions):
++        return Pi
++    if ask(Q.zero(arg), assumptions):
++        return S.NaN
++
+ 
+@@ -342,2 +353,3 @@
+     'Abs': refine_abs,
++    'arg': refine_arg,
+     'atan2': refine_atan2,

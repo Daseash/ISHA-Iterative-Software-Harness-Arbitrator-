@@ -1,0 +1,364 @@
+{
+  "instance_id": "django__django-13590",
+  "repo": "django/django",
+  "base_commit": "755dbf39fcdc491fe9b588358303e259c7750be4",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464213.4503474
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464218.6877742
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464226.9798691
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464227.0131283
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464250.2709131
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464411.5569022
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791463801.5044215,
+  "elapsed_s": 243.54,
+  "plan": "# Check if the type is a tuple/namedtuple and unpack the values\nif isinstance(value, tuple):\n    return value.__class__(*resolved_values)\nreturn value.__class__(resolved_values)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "deconstruct",
+        "clone",
+        "__lt__"
+      ],
+      "line_range": [
+        320,
+        337
+      ],
+      "score": 0.6294,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4309,
+        "vector": 0.6387,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: have, argument, this, error)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "fetch_command",
+        "autocomplete",
+        "execute"
+      ],
+      "line_range": [
+        44,
+        77
+      ],
+      "score": 0.6641,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4697,
+        "vector": 0.8469,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: django, with, used, path)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "serialize",
+        "_load_serializers",
+        "sort_dependencies"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.5829,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3794,
+        "vector": 0.3592,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: used, this, when, error)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "_get_number_value",
+        "get_language_info",
+        "NumberAwareString"
+      ],
+      "line_range": [
+        42,
+        69
+      ],
+      "score": 0.5747,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2525,
+        "vector": 0.5549,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: django, with, have, path)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__new__",
+      "symbols": [
+        "__new__",
+        "_setup",
+        "configure",
+        "_add_script_prefix"
+      ],
+      "line_range": [
+        42,
+        44
+      ],
+      "score": 0.5711,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.281,
+        "vector": 0.4655,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: new__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/__init__.py",
+      "symbol": "django/__init__.py::setup",
+      "symbols": [
+        "setup"
+      ],
+      "line_range": [
+        8,
+        24
+      ],
+      "score": 0.5575,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.17,
+        "vector": 0.5831,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: django, resolve, happens, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom collections import namedtuple\nfrom django.db.models.sql.query import Query\nfrom django.db.models import Model, IntegerField\n\n# Mocking a basic scenario for testing resolve_lookup_value\n# resolve_lookup_value is a method on Query\n@pytest.fixture\ndef query():\n    return Query(Model)\n\ndef test_namedtuple_range_lookup_reproduction(query):\n    \"\"\"\n    Reproduce: Passing a named tuple as a range argument causes a TypeError\n    because the constructor receives an iterator instead of unpacked arguments.\n    \"\"\"\n    RangeTuple = namedtuple('RangeTuple', ['near', 'far'])\n    val = RangeTuple(1, 10)\n    \n    # In Django 3.0, resolve_lookup_value logic (simplified reproduction):\n    # It attempts to reconstruct the named tuple using val.__class__(resolved_iterator)\n    # which fails for namedtuples.\n    \n    resolved_values = [1, 10]\n    \n    # This should succeed after the fix (unpacking the values)\n    # The bug causes this to raise: TypeError: __new__() missing 1 required positional argument: 'far'\n    result = val.__class__(*resolved_values)\n    \n    assert isinstance(result, RangeTuple)\n    assert result.near == 1\n    assert result.far == 10\n\ndef test_namedtuple_with_different_field_counts(query):\n    \"\"\"\n    Test that the fix works for namedtuples of varying lengths (boundary values).\n    \"\"\"\n    Triple = namedtuple('Triple', ['a', 'b', 'c'])\n    val = Triple(1, 2, 3)\n    resolved_values = [4, 5, 6]\n    \n    result = val.__class__(*resolved_values)\n    \n    assert result == (4, 5, 6)\n    assert result.a == 4\n\ndef test_standard_tuple_behavior(query):\n    \"\"\"\n    Verify that standard tuples still function correctly.\n    \"\"\"\n    val = (1, 2)\n    resolved_values = [3, 4]\n    \n    result = val.__class__(*resolved_values)\n    \n    assert result == (3, 4)\n    assert isinstance(result, tuple)\n    assert not hasattr(result, 'near')\n\ndef test_namedtuple_single_element(query):\n    \"\"\"\n    Test a single-element named tuple to ensure unpacking logic holds.\n    \"\"\"\n    Single = namedtuple('Single', ['x'])\n    val = Single(1)\n    resolved_values = [99]\n    \n    result = val.__class__(*resolved_values)\n    \n    assert result.x == 99",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1075,7 +1075,7 @@\n         if isinstance(value, (list, tuple)):\n             resolved_values = [self.resolve_lookup_value(sub_value, can_reuse, allow_joins) for sub_value in value]\n             if isinstance(value, tuple):\n-                return value.__class__(resolved_values)\n+                return value.__class__(*resolved_values)\n             return resolved_values\n         if isinstance(value, dict):\n             return {k: self.resolve_lookup_value(v, can_reuse, allow_joins) for k, v in value.items()}",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13590-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6398,
+        "matches_issue": 0.8083,
+        "safe_to_apply": 0.709,
+        "composite": 0.7892750000000001,
+        "secrets_or_danger": 0.1452,
+        "logic_drift": 0.2839,
+        "flagged": false
+      },
+      "laya_combined": 0.7893,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.17,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1071,7 +1071,7 @@\n         if isinstance(value, (list, tuple)):\n             return value.__class__(*(\n                 self.resolve_lookup_value(subvalue, can_reuse, allow_joins)\n                 for subvalue in value\n             ))\n         return value",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13590-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5441,
+        "matches_issue": 0.7329,
+        "safe_to_apply": 0.6684,
+        "composite": 0.7363500000000001,
+        "secrets_or_danger": 0.0964,
+        "logic_drift": 0.3675,
+        "flagged": false
+      },
+      "laya_combined": 0.7364,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.45,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1071,7 +1071,7 @@\n         if isinstance(value, (list, tuple)):\n             return value.__class__(*(\n                 self.resolve_lookup_value(subvalue, can_reuse, allow_joins)\n                 for subvalue in value\n             ))\n         return value",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13590-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5441,
+        "matches_issue": 0.7329,
+        "safe_to_apply": 0.6684,
+        "composite": 0.7363500000000001,
+        "secrets_or_danger": 0.0964,
+        "logic_drift": 0.3675,
+        "flagged": false
+      },
+      "laya_combined": 0.7364,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 104.14,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1075,7 +1075,7 @@\n         if isinstance(value, (list, tuple)):\n             resolved_values = [self.resolve_lookup_value(sub_value, can_reuse, allow_joins) for sub_value in value]\n             if isinstance(value, tuple):\n-                return value.__class__(resolved_values)\n+                return value.__class__(*resolved_values)\n             return resolved_values\n         if isinstance(value, dict):\n             return {k: self.resolve_lookup_value(v, can_reuse, allow_joins) for k, v in value.items()}",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13590-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/query.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6398,
+      "matches_issue": 0.8083,
+      "safe_to_apply": 0.709,
+      "composite": 0.7892750000000001,
+      "secrets_or_danger": 0.1452,
+      "logic_drift": 0.2839,
+      "flagged": false
+    },
+    "laya_combined": 0.7893,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0062,
+    "rank_reason": "logistic",
+    "elapsed_s": 103.17,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

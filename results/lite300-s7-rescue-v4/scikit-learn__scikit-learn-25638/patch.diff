@@ -1,0 +1,15 @@
+diff --git a/sklearn/utils/multiclass.py b/sklearn/utils/multiclass.py
+index 5eaef2f..7585a96 100644
+--- a/sklearn/utils/multiclass.py
++++ b/sklearn/utils/multiclass.py
+@@ -22,7 +22,9 @@ from ..utils._array_api import get_namespace
+ 
+ def _unique_multiclass(y):
+     xp, is_array_api = get_namespace(y)
+-    if hasattr(y, "__array__") or is_array_api:
++    if hasattr(y, "dtypes") and hasattr(y, "iloc"):
++        return set(y.dropna()) if y.isna().any() else set(y)
++    elif hasattr(y, "__array__") or is_array_api:
+         return xp.unique_values(xp.asarray(y))
+     else:
+         return set(y)

@@ -1,0 +1,25 @@
+diff --git a/sympy/core/expr.py b/sympy/core/expr.py
+index c36d6f2..b5e304b 100644
+--- a/sympy/core/expr.py
++++ b/sympy/core/expr.py
+@@ -543,6 +543,8 @@ def is_constant(self, *wrt, **flags):
+         True
+ 
+         >>> (0**x).is_constant()
++        from sympy.calculus.util import periodicity
++        from sympy.core.function import PoleError
+         False
+         >>> x.is_constant()
+         False
+@@ -1434,6 +1436,11 @@ def find(l, sub, first=True):
+                         hit = ii, r, n
+                     else:
+                         break
++            if rv.has(Zoo, S.NaN, S.Infinity, S.NegativeInfinity):
++                try:
++                    rv = limit(self, old, new)
++                except Exception:
++                    pass
+             else:
+                 if hit:
+                     ii, r, n = hit

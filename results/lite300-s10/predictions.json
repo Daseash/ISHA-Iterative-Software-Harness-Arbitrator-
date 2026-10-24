@@ -1,0 +1,152 @@
+[
+  {
+    "instance_id": "sympy__sympy-18698",
+    "model_patch": "",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-18835",
+    "model_patch": "diff --git a/sympy/utilities/iterables.py b/sympy/utilities/iterables.py\nindex d96e762..92605b6 100644\n--- a/sympy/utilities/iterables.py\n+++ b/sympy/utilities/iterables.py\n@@ -582,6 +582,8 @@ def variations(seq, n, repetition=False):\n         else:\n             for i in product(seq, repeat=n):\n                 yield i\n+                if n is not None and len(seq) != n:\n+                    raise RuntimeError(\"sequence changed size during iteration\")\n \n \n def subsets(seq, k=None, repetition=False):\n@@ -1983,6 +1985,10 @@ def ordered_partitions(n, m=None, sort=True):\n \n def binary_partitions(n):\n     \"\"\"\n+    try:\n+        n = len(seq)\n+    except (TypeError, AttributeError):\n+        n = None\n     Generates the binary partition of n.\n \n     A binary partition consists only of numbers that are\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-19007",
+    "model_patch": "",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-19254",
+    "model_patch": "diff --git a/sympy/polys/factortools.py b/sympy/polys/factortools.py\nindex 93298f4..4085775 100644\n--- a/sympy/polys/factortools.py\n+++ b/sympy/polys/factortools.py\n@@ -129,7 +129,7 @@ def dup_zz_mignotte_bound(f, K):\n     b = abs(dup_LC(f, K))\n     n = dup_degree(f)\n \n-    return K.sqrt(K(n + 1))*2**n*a*b\n+    return 2**n*a*b\n \n \n def dmp_zz_mignotte_bound(f, u, K):\n@@ -138,7 +138,7 @@ def dmp_zz_mignotte_bound(f, u, K):\n     b = abs(dmp_ground_LC(f, u, K))\n     n = sum(dmp_degree_list(f, u))\n \n-    return K.sqrt(K(n + 1))*2**n*a*b\n+    return 2**n*a*b\n \n \n def dup_zz_hensel_step(m, f, g, h, s, t, K):\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-19487",
+    "model_patch": "diff --git a/sympy/functions/elementary/complexes.py b/sympy/functions/elementary/complexes.py\nindex 7fda459..e448d78 100644\n--- a/sympy/functions/elementary/complexes.py\n+++ b/sympy/functions/elementary/complexes.py\n@@ -395,7 +395,10 @@ def _eval_rewrite_as_Heaviside(self, arg, **kwargs):\n             return Heaviside(arg, H0=S(1)/2) * 2 - 1\n \n     def _eval_simplify(self, **kwargs):\n-        return self.func(self.args[0].factor())  # XXX include doit?\n+        return sign(self.args[0].conjugate())\n+\n+    def _eval_rewrite_as_Abs(self, arg, **kwargs):\n+        return arg / Abs(arg)\n \n \n class Abs(Function):\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20049",
+    "model_patch": "diff --git a/sympy/physics/vector/point.py b/sympy/physics/vector/point.py\nindex d4e3cfc..8c6672b 100644\n--- a/sympy/physics/vector/point.py\n+++ b/sympy/physics/vector/point.py\n@@ -518,10 +518,13 @@ def vel(self, frame):\n         \"\"\"\n \n         _check_frame(frame)\n-        if not (frame in self._vel_dict):\n+        try:\n+            return self._vel_dict[frame]\n+        except KeyError:\n             raise ValueError('Velocity of point ' + self.name + ' has not been'\n                              ' defined in ReferenceFrame ' + frame.name)\n-        return self._vel_dict[frame]\n+        except AttributeError:\n+            return self.pos_from(self._pdict_list(self, 0)[0]).dt(frame)\n \n     def partial_velocity(self, frame, *gen_speeds):\n         \"\"\"Returns the partial velocities of the linear velocity vector of this\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20154",
+    "model_patch": "",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20212",
+    "model_patch": "diff --git a/sympy/core/power.py b/sympy/core/power.py\nindex 984398c..a28b2d2 100644\n--- a/sympy/core/power.py\n+++ b/sympy/core/power.py\n@@ -471,6 +471,8 @@ def _eval_Mod(self, q):\n         if exp.is_integer and exp.is_positive:\n             if q.is_integer and base % q == 0:\n                 return S.Zero\n+            if exp.is_negative:\n+                return S.ComplexInfinity\n \n             if base.is_Integer and exp.is_Integer and q.is_Integer:\n                 b, e, m = int(base), int(exp), int(q)\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20322",
+    "model_patch": "",
+    "model_name_or_path": "gemini-3.8-flash"
+  },
+  {
+    "instance_id": "sympy__sympy-20442",
+    "model_patch": "",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20590",
+    "model_patch": "diff --git a/sympy/core/symbol.py b/sympy/core/symbol.py\nindex 70e6953..0c93ec4 100644\n--- a/sympy/core/symbol.py\n+++ b/sympy/core/symbol.py\n@@ -180,6 +180,8 @@ def numbered_string_incr(s, start=0):\n _uniquely_named_symbol = uniquely_named_symbol\n \n class Symbol(AtomicExpr, Boolean):\n+    __slots__ = ('name',)\n+\n     \"\"\"\n     Assumptions:\n        commutative = True\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-20639",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21055",
+    "model_patch": "diff --git a/sympy/assumptions/refine.py b/sympy/assumptions/refine.py\nindex e1f9719..e3ecb9e 100644\n--- a/sympy/assumptions/refine.py\n+++ b/sympy/assumptions/refine.py\n@@ -5,6 +5,16 @@\n \n from sympy.assumptions import ask, Q  # type: ignore\n \n+def refine_arg(expr, assumptions):\n+    from sympy import S, Pi\n+    arg = expr.args[0]\n+    if ask(Q.positive(arg), assumptions):\n+        return S.Zero\n+    if ask(Q.negative(arg), assumptions):\n+        return Pi\n+    if ask(Q.zero(arg), assumptions):\n+        return S.NaN\n+\n \n def refine(expr, assumptions=True):\n     \"\"\"\n@@ -375,7 +385,8 @@ def refine_matrixelement(expr, assumptions):\n \n handlers_dict = {\n     'Abs': refine_abs,\n-    'Pow': refine_Pow,\n+    'Abs': refine_abs,\n+    'arg': refine_arg,\n     'atan2': refine_atan2,\n     're': refine_re,\n     'im': refine_im,\n",
+    "model_name_or_path": "gemini-3.5-flash-lite"
+  },
+  {
+    "instance_id": "sympy__sympy-21171",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21379",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21612",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21614",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21627",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-21847",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-22005",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-22714",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-22840",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-23117",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-23191",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-23262",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-24066",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-24102",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-24152",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-24213",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "sympy__sympy-24909",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  }
+]

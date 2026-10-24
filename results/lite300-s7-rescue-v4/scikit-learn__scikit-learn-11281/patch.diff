@@ -1,0 +1,17 @@
+diff --git a/sklearn/mixture/base.py b/sklearn/mixture/base.py
+index a9f6674..5ffecf4 100644
+--- a/sklearn/mixture/base.py
++++ b/sklearn/mixture/base.py
+@@ -320,7 +320,11 @@ class BaseMixture(six.with_metaclass(ABCMeta, DensityMixin, BaseEstimator)):
+         log_likelihood : float
+             Log likelihood of the Gaussian mixture given X.
+         """
+-        return self.score_samples(X).mean()
++        return self.fit_predict(X)
++
++    def fit_predict(self, X, y=None):
++        """Fit the model to X and return cluster labels."""
++        return self.fit(X).predict(X)
+ 
+     def predict(self, X):
+         """Predict the labels for the data samples in X using trained model.

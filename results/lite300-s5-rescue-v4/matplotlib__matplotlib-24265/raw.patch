@@ -1,0 +1,10 @@
+--- a/lib/matplotlib/style/core.py
++++ b/lib/matplotlib/style/core.py
+@@ -248,6 +248,11 @@ def load_base_library():
+     library = read_style_directory(BASE_LIBRARY_PATH)
++    for name in list(library):
++        if name.startswith('seaborn-v0_8-'):
++            library[name.replace('seaborn-v0_8-', 'seaborn-')] = library[name]
++        elif name == 'seaborn-v0_8':
++            library['seaborn'] = library[name]
+     return library

@@ -1,0 +1,122 @@
+[
+  {
+    "instance_id": "psf__requests-1963",
+    "model_patch": "diff --git a/requests/sessions.py b/requests/sessions.py\nindex 425db22..23d2563 100644\n--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -88,7 +88,7 @@ class SessionRedirectMixin(object):\n         i = 0\n \n         while resp.is_redirect:\n-            prepared_request = req.copy()\n+            prepared_request = resp.request.copy()\n \n             resp.content  # Consume socket so it can be released\n \n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "psf__requests-2148",
+    "model_patch": "diff --git a/requests/adapters.py b/requests/adapters.py\nindex 1ce5447..ef514f8 100644\n--- a/requests/adapters.py\n+++ b/requests/adapters.py\n@@ -282,6 +282,9 @@ class HTTPAdapter(BaseAdapter):\n         when subclassing the\n         :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.\n \n+            except socket.error as e:\n+                raise ConnectionError(e, request=request)\n+\n         :param request: The :class:`PreparedRequest <PreparedRequest>` to add headers to.\n         :param kwargs: The keyword arguments from the call to send().\n         \"\"\"\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "psf__requests-2317",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "psf__requests-2674",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "psf__requests-3362",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pydata__xarray-3364",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pydata__xarray-4094",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pydata__xarray-4248",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pydata__xarray-4493",
+    "model_patch": "diff --git a/xarray/core/variable.py b/xarray/core/variable.py\nindex 64c1895..09b0934 100644\n--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -162,6 +162,8 @@ def as_variable(obj, name=None) -> \"Union[Variable, IndexVariable]\":\n         obj = obj.to_index_variable()\n \n     return obj\n+    if hasattr(obj, \"variable\") and hasattr(obj, \"dims\"):\n+        return obj.variable\n \n \n def _maybe_wrap_data(data):\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pydata__xarray-5131",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-5859",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-6506",
+    "model_patch": "diff --git a/pylint/lint/run.py b/pylint/lint/run.py\nindex 778e644..cebc15f 100644\n--- a/pylint/lint/run.py\n+++ b/pylint/lint/run.py\n@@ -13,7 +13,7 @@ from typing import Any\n \n from pylint import config\n from pylint.config.config_initialization import _config_initialization\n-from pylint.config.exceptions import ArgumentPreprocessingError\n+from pylint.config.exceptions import ArgumentPreprocessingError, _UnrecognizedOptionError\n from pylint.config.utils import _preprocess_options\n from pylint.constants import full_version\n from pylint.lint.base_options import _make_run_options\n@@ -132,9 +132,14 @@ group are mutually exclusive.\",\n         linter.disable(\"I\")\n         linter.enable(\"c-extension-no-member\")\n \n-        args = _config_initialization(\n-            linter, args, reporter, config_file=self._rcfile, verbose_mode=self.verbose\n-        )\n+        try:\n+            args = _config_initialization(\n+                linter, args, reporter, config_file=self._rcfile, verbose_mode=self.verbose\n+            )\n+        except _UnrecognizedOptionError as ex:\n+            print(ex, file=sys.stderr)\n+            sys.exit(32)\n+\n \n         if linter.config.jobs < 0:\n             print(\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7080",
+    "model_patch": "diff --git a/pylint/lint/expand_modules.py b/pylint/lint/expand_modules.py\nindex 5cacc03..4af7518 100644\n--- a/pylint/lint/expand_modules.py\n+++ b/pylint/lint/expand_modules.py\n@@ -76,6 +76,7 @@ def expand_modules(\n     for something in files_or_modules:\n         basename = os.path.basename(something)\n         if _is_ignored_file(\n+                    ignore_list_paths_re,\n             something, ignore_list, ignore_list_re, ignore_list_paths_re\n         ):\n             continue\n",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7114",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7228",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pylint-dev__pylint-7993",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-11148",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5103",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5221",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5413",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-5692",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7220",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7373",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-7432",
+    "model_patch": "",
+    "model_name_or_path": "isha"
+  }
+]

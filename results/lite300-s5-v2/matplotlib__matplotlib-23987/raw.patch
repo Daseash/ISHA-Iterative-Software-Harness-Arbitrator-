@@ -1,0 +1,12 @@
+diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py
+index 5bbb786984..17df212ce3 100644
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -1248,6 +1248,7 @@ default: %(va)s
+             ax = getattr(mappable, "axes", None)
+ 
+         if (self.get_layout_engine() is not None and
++                self.get_layout_engine().adjust_compatible and
+                 not self.get_layout_engine().colorbar_gridspec):
+             use_gridspec = False
+         # Store the value of gca so that we can set it back later on.

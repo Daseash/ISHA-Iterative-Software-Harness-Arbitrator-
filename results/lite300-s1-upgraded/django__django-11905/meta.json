@@ -1,0 +1,397 @@
+{
+  "instance_id": "django__django-11905",
+  "repo": "django/django",
+  "base_commit": "2f72480fbd27896c986c45193e1603e35c0b19a7",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456807.6463995
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456814.2476509
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456826.9813273
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456829.87465
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456896.790042
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457089.3664942
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457159.0651171
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/datastructures.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/sql/datastructures.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:16"
+  },
+  "started_at": 1791456727.8856964,
+  "elapsed_s": 438.91,
+  "plan": "def __init__(self, table_name, parent_alias, table_alias, join_type,\n                 join_field, nullable, filtered_relation=None):\n        # ... (existing assignments)\n        self.join_field = join_field\n        \n        # Add the type check\n        if not isinstance(nullable, bool):\n            raise TypeError(\n                \"__isnull lookup requires a boolean value; got %r of type %s\" \n                % (nullable, type(nullable).__name__)\n            )\n            \n        # Is this join nullabled?\n        self.nullable = nullable\n        self.filtered_relation = filtered_relation",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/sql/datastructures.py",
+      "symbol": "django/db/models/sql/datastructures.py::MultiJoin",
+      "symbols": [
+        "MultiJoin",
+        "__init__",
+        "__init__",
+        "equals"
+      ],
+      "line_range": [
+        8,
+        19
+      ],
+      "score": 0.3822,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6331,
+        "vector": 0.1998,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: value, join, with)"
+    },
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::_execute_query",
+      "symbols": [
+        "_execute_query",
+        "__str__",
+        "get_compiler",
+        "promote_joins"
+      ],
+      "line_range": [
+        128,
+        145
+      ],
+      "score": 0.4996,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.413,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: using, error, value)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::linenumbers",
+      "symbols": [
+        "linenumbers",
+        "stringformat",
+        "truncatewords",
+        "dictsort"
+      ],
+      "line_range": [
+        175,
+        189
+      ],
+      "score": 0.5435,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1723,
+        "vector": 0.4206,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: value, join, with)"
+    },
+    {
+      "file": "tests/queries/tests.py",
+      "symbol": "tests/queries/tests.py::test_get_clears_ordering",
+      "symbols": [
+        "test_get_clears_ordering",
+        "test_avoid_infinite_loop_on_too_many_subqueries",
+        "test_heterogeneous_qs_combination",
+        "test_tickets_2076_7256"
+      ],
+      "line_range": [
+        290,
+        297
+      ],
+      "score": 0.4155,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9599,
+        "vector": 0.5658,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: should, queries, with)"
+    },
+    {
+      "file": "django/contrib/gis/db/backends/oracle/adapter.py",
+      "symbol": "django/contrib/gis/db/backends/oracle/adapter.py::__init__",
+      "symbols": [
+        "__init__",
+        "OracleSpatialAdapter",
+        "_isClockwise"
+      ],
+      "line_range": [
+        10,
+        25
+      ],
+      "score": 0.3987,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5725,
+        "vector": 0.4629,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: inner, outer)"
+    },
+    {
+      "file": "django/db/backends/oracle/introspection.py",
+      "symbol": "django/db/backends/oracle/introspection.py::get_field_type",
+      "symbols": [
+        "get_field_type",
+        "get_table_description",
+        "get_key_columns",
+        "get_constraints"
+      ],
+      "line_range": [
+        32,
+        50
+      ],
+      "score": 0.3844,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6772,
+        "vector": 0.126,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: boolean, description)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.9017499999999999,
+  "laya_scores": {
+    "fix_quality": 1.8312,
+    "matches_issue": 0.9263,
+    "safe_to_apply": 0.8495,
+    "composite": 0.9017499999999999,
+    "secrets_or_danger": 0.3881,
+    "logic_drift": 0.2963,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security or vulnerability surface.\n- PERFORMANCE: PASS, Negligible overhead added by a single type check.\n- ROBUSTNESS: PASS, Improves code reliability by enforcing strict typing and preventing ambiguous behavior.\n- PONYTAIL / YAGNI: PASS, Appropriate check to enforce documented API constraints.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db.models.sql.datastructures import Join\nfrom unittest.mock import Mock\n\n# Mocking the join_field object which requires get_joining_columns\nclass MockJoinField:\n    def get_joining_columns(self):\n        return [(\"id\", \"parent_id\")]\n\ndef test_join_nullable_non_boolean_fails():\n    \"\"\"\n    Reproduction of the bug:\n    The Join constructor should raise a TypeError if 'nullable' is not a boolean.\n    Currently, this code fails to raise the error.\n    \"\"\"\n    field = MockJoinField()\n    with pytest.raises(TypeError) as excinfo:\n        Join(\"table\", \"parent\", \"alias\", \"INNER\", field, nullable=1)\n    \n    assert \"__isnull lookup requires a boolean value\" in str(excinfo.value)\n    assert \"got 1 of type int\" in str(excinfo.value)\n\ndef test_join_nullable_boolean_passes():\n    \"\"\"\n    Ensure that passing valid boolean values works as expected.\n    \"\"\"\n    field = MockJoinField()\n    # Should not raise TypeError\n    join = Join(\"table\", \"parent\", \"alias\", \"INNER\", field, nullable=True)\n    assert join.nullable is True\n    \n    join2 = Join(\"table\", \"parent\", \"alias\", \"INNER\", field, nullable=False)\n    assert join2.nullable is False\n\ndef test_join_nullable_none_fails():\n    \"\"\"\n    Ensure that None (a common non-boolean type) is caught by the validation.\n    \"\"\"\n    field = MockJoinField()\n    with pytest.raises(TypeError) as excinfo:\n        Join(\"table\", \"parent\", \"alias\", \"INNER\", field, nullable=None)\n    \n    assert \"got None of type NoneType\" in str(excinfo.value)\n\ndef test_join_nullable_string_fails():\n    \"\"\"\n    Ensure that strings are rejected as non-boolean inputs.\n    \"\"\"\n    field = MockJoinField()\n    with pytest.raises(TypeError) as excinfo:\n        Join(\"table\", \"parent\", \"alias\", \"INNER\", field, nullable=\"True\")\n    \n    assert \"got 'True' of type str\" in str(excinfo.value)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -46,6 +46,11 @@\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6s0lpre0",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/datastructures.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.8312,
+        "matches_issue": 0.9263,
+        "safe_to_apply": 0.8495,
+        "composite": 0.9017499999999999,
+        "secrets_or_danger": 0.3774,
+        "logic_drift": 0.2995,
+        "flagged": false
+      },
+      "laya_combined": 0.9017,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0052,
+      "rank_reason": "logistic",
+      "elapsed_s": 117.53,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -46,6 +46,11 @@\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-p2zojzm7",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/datastructures.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.8312,
+        "matches_issue": 0.9263,
+        "safe_to_apply": 0.8495,
+        "composite": 0.9017499999999999,
+        "secrets_or_danger": 0.3881,
+        "logic_drift": 0.2963,
+        "flagged": false
+      },
+      "laya_combined": 0.9017,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0052,
+      "rank_reason": "logistic",
+      "elapsed_s": 120.32,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -41,6 +41,11 @@\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-n2uyu8v5",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/datastructures.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.8312,
+        "matches_issue": 0.9263,
+        "safe_to_apply": 0.8495,
+        "composite": 0.9017499999999999,
+        "secrets_or_danger": 0.4024,
+        "logic_drift": 0.2981,
+        "flagged": false
+      },
+      "laya_combined": 0.9017,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0052,
+      "rank_reason": "logistic",
+      "elapsed_s": 125.51,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -46,6 +46,11 @@\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6s0lpre0",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/datastructures.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.8312,
+      "matches_issue": 0.9263,
+      "safe_to_apply": 0.8495,
+      "composite": 0.9017499999999999,
+      "secrets_or_danger": 0.3774,
+      "logic_drift": 0.2995,
+      "flagged": false
+    },
+    "laya_combined": 0.9017,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0052,
+    "rank_reason": "logistic",
+    "elapsed_s": 117.53,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/sql/datastructures.py b/django/db/models/sql/datastructures.py\nindex c2c347b..104b7bb 100644\n--- a/django/db/models/sql/datastructures.py\n+++ b/django/db/models/sql/datastructures.py\n@@ -53,6 +53,11 @@ class Join:\n         # Along which field (or ForeignObjectRel in the reverse join case)\n         self.join_field = join_field\n         # Is this join nullabled?\n+        if not isinstance(nullable, bool):\n+            raise TypeError(\n+                \"__isnull lookup requires a boolean value; got %r of type %s\"\n+                % (nullable, type(nullable).__name__)\n+            )\n         self.nullable = nullable\n         self.filtered_relation = filtered_relation\n \n",
+  "offline_calls": 0
+}

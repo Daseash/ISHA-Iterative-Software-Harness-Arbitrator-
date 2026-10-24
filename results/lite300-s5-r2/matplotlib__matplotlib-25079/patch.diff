@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/cm.py b/lib/matplotlib/cm.py
+index 0f3b25d..0888b61 100644
+--- a/lib/matplotlib/cm.py
++++ b/lib/matplotlib/cm.py
+@@ -504,6 +504,8 @@ class ScalarMappable:
+             The values that are mapped to colors.
+ 
+             The base class `.ScalarMappable` does not make any assumptions on
++            self.norm.vmin = None
++            self.norm.vmax = None
+             the dimensionality and shape of the value array *A*.
+         """
+         if A is None:

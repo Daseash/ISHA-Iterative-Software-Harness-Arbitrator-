@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/widgets.py b/lib/matplotlib/widgets.py
+index ebe5da4..2b6661a 100644
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -581,6 +581,8 @@ class Slider(SliderBase):
+         self.valtext.set_text(self._format(val))
+         if self.drawon:
+             self.ax.figure.canvas.draw_idle()
++        if self.ax.figure.canvas is not self.canvas:
++            self.canvas = self.ax.figure.canvas
+         self.val = val
+         if self.eventson:
+             self._observers.process('changed', val)

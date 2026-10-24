@@ -1,0 +1,388 @@
+{
+  "instance_id": "pallets__flask-5063",
+  "repo": "pallets/flask",
+  "base_commit": "182ce3dd15dfa3537391c3efaf9c3ff407d134d4",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819471.265834
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819471.625368
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819474.2593396
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819476.9154162
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819480.682644
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819598.725963
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819604.6607854
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791819458.9423327,
+  "elapsed_s": 146.95,
+  "plan": "To solve the issue where `flask routes` does not show the subdomain associated with each route, we need to locate where the `flask routes` CLI command is implemented (typically in `src/flask/cli.py`) and update it to retrieve and display the subdomain (or domain using `SERVER_NAME` and the rule's subdomain) for each route.\n\nHere is the structured 2-step fix plan:\n\n### Step 1: Root Cause\nThe `flask routes` CLI command (found in `src/flask/cli.py` under the routes command function) iterates over the app's url map rules (`app.url_map.iter_rules()`) to extract information such as endpoint, methods, and rule path. However, it currently omits the `subdomain` attribute present on each `Rule` object (or the combined domain/subdomain using `SERVER_NAME`), and consequently the output table template does not include a \"Domain\" or \"Subdomain\" column. \n\n### Step 2: Exact Changes to Make\n- **File**: `src/flask/cli.py`\n- **Function**: The `routes_command` (or equivalent click command responsible for `flask routes`).\n- **What to change**:\n  1. Update the table headers/columns to include a column for the domain or subdomain (e.g., displaying `rule.subdomain` combined with the app's `SERVER_NAME`, or simply showing the subdomain/domain).\n  2. For each rule iterated from `app.url_map.iter_rules()`, extract `rule.subdomain` and construct the full domain name using `app.config[\"SERVER_NAME\"]` if a subdomain exists (or fallback appropriately).\n  3. Format and output the table rows including this new domain/subdomain information so that users can clearly see which routes are assigned to which subdomains.",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "src/flask/app.py",
+      "symbol": "src/flask/app.py::register_blueprint",
+      "symbols": [
+        "register_blueprint",
+        "__init__",
+        "_check_setup_finished",
+        "name"
+      ],
+      "line_range": [
+        985,
+        1011
+      ],
+      "score": 0.5146,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8794,
+        "vector": 0.7899,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: domain, routes, used, route; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/flask/blueprints.py",
+      "symbol": "src/flask/blueprints.py::register_blueprint",
+      "symbols": [
+        "register_blueprint",
+        "BlueprintSetupState",
+        "__init__",
+        "_check_setup_finished"
+      ],
+      "line_range": [
+        254,
+        270
+      ],
+      "score": 0.5326,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.6879,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: used, will, default, blueprints; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/flask/__init__.py",
+      "symbol": "src/flask/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__"
+      ],
+      "line_range": [
+        44,
+        102
+      ],
+      "score": 0.5157,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1293,
+        "vector": 0.3196,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: will, request, flask, name)"
+    },
+    {
+      "file": "src/flask/json/__init__.py",
+      "symbol": "src/flask/json/__init__.py::dumps",
+      "symbols": [
+        "dumps",
+        "dump",
+        "loads",
+        "jsonify"
+      ],
+      "line_range": [
+        13,
+        46
+      ],
+      "score": 0.5396,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0421,
+        "vector": 0.7003,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: configuration, will, default, method)"
+    },
+    {
+      "file": "src/flask/sessions.py",
+      "symbol": "src/flask/sessions.py::SecureCookieSession",
+      "symbols": [
+        "SecureCookieSession",
+        "NullSession",
+        "SessionInterface",
+        "make_null_session"
+      ],
+      "line_range": [
+        47,
+        88
+      ],
+      "score": 0.4601,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6422,
+        "vector": 0.8293,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: used, will, that, default)"
+    },
+    {
+      "file": "tests/test_apps/blueprintapp/apps/admin/__init__.py",
+      "symbol": "tests/test_apps/blueprintapp/apps/admin/__init__.py::index",
+      "symbols": [
+        "index"
+      ],
+      "line_range": [
+        14,
+        17
+      ],
+      "score": 0.4585,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1746,
+        "vector": 0.6724,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: admin"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import click\nfrom click.testing import CliRunner\nimport pytest\nfrom flask import Blueprint\nfrom flask import Flask\nfrom flask.cli import routes_command\n\n\n@pytest.fixture\ndef app_with_subdomains():\n    app = Flask(\"test_app\")\n    app.config[\"SERVER_NAME\"] = \"test.local\"\n\n    admin_blueprint = Blueprint(\"admin_blueprint\", __name__)\n\n    @admin_blueprint.route(\"/home\")\n    def home():\n        return \"admin home\"\n\n    test_subdomain_blueprint = Blueprint(\"test_subdomain_blueprint\", __name__)\n\n    @test_subdomain_blueprint.route(\"/home\")\n    def test_home():\n        return \"test home\"\n\n    app.register_blueprint(admin_blueprint, url_prefix=\"\", subdomain=\"admin\")\n    app.register_blueprint(test_subdomain_blueprint, url_prefix=\"\", subdomain=\"test\")\n\n    return app\n\n\ndef test_routes_cli_displays_subdomain(app_with_subdomains):\n    runner = CliRunner()\n    result = runner.invoke(routes_command)\n\n    assert result.exit_code == 0\n    # The fix ensures the domain/subdomain is shown in the output\n    assert \"admin.test.local\" in result.output\n    assert \"test.test.local\" in result.output\n    assert \"test.local\" in result.output\n    assert \"admin_blueprint.home\" in result.output\n    assert \"test_subdomain_blueprint.home\" in result.output\n\n\ndef test_routes_cli_no_server_name():\n    app = Flask(\"test_app_no_server\")\n    \n    @app.route(\"/\")\n    def index():\n        return \"index\"\n\n    runner = CliRunner()\n    result = runner.invoke(routes_command)\n\n    assert result.exit_code == 0\n    assert \"index\" in result.output\n\n\ndef test_routes_cli_empty_app():\n    app = Flask(\"empty_app\")\n    runner = CliRunner()\n    result = runner.invoke(routes_command)\n\n    assert result.exit_code == 0\n    assert \"Endpoint\" in result.output\n\n\ndef test_routes_cli_multiple_subdomains_same_blueprint():\n    app = Flask(\"multi_sub_app\")\n    app.config[\"SERVER_NAME\"] = \"example.com\"\n\n    bp = Blueprint(\"bp\", __name__)\n\n    @bp.route(\"/path\")\n    def path():\n        return \"path\"\n\n    app.register_blueprint(bp, url_prefix=\"/sub1\", subdomain=\"sub1\")\n    app.register_blueprint(bp, url_prefix=\"/sub2\", subdomain=\"sub2\")\n\n    runner = CliRunner()\n    result = runner.invoke(routes_command)\n\n    assert result.exit_code == 0\n    assert \"sub1.example.com\" in result.output\n    assert \"sub2.example.com\" in result.output\n    assert \"bp.path\" in result.output",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": true,
+      "patch": "diff --git a/src/flask/cli.py b/src/flask/cli.py\nindex 37a15ff2..5019061c 100644\n--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -890,6 +890,15 @@ def run_command(\n     This server is for development purposes only. It does not provide\n     the stability, security, or performance of production WSGI servers.\n \n+        subdomain = rule.subdomain or \"\"\n+        server_name = current_app.config[\"SERVER_NAME\"]\n+\n+        if subdomain and server_name:\n+            domain = f\"{subdomain}.{server_name}\"\n+        else:\n+            domain = subdomain or server_name or \"\"\n+\n+                domain,\n     The reloader and debugger are enabled by default with the '--debug'\n     option.\n     \"\"\"\n@@ -1009,7 +1018,8 @@ def routes_command(sort: str, all_methods: bool) -> None:\n     ignored_methods = set(() if all_methods else (\"HEAD\", \"OPTIONS\"))\n \n     if sort in (\"endpoint\", \"rule\"):\n-        rules = sorted(rules, key=attrgetter(sort))\n+        # Sort by subdomain first when sorting by endpoint or rule\n+        rules = sorted(rules, key=lambda rule: (rule.subdomain or \"\", attrgetter(sort)(rule)))\n     elif sort == \"methods\":\n         rules = sorted(rules, key=lambda rule: sorted(rule.methods))  # type: ignore\n \n@@ -1018,7 +1028,7 @@ def routes_command(sort: str, all_methods: bool) -> None:\n         for rule in rules\n     ]\n \n-    headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    headers = (\"Domain\", \"Endpoint\", \"Methods\", \"Rule\")\n     widths = (\n         max(len(rule.endpoint) for rule in rules),\n         max(len(methods) for methods in rule_methods),\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pallets__flask-5063-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/flask/cli.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/flask/cli.py"
+      ],
+      "added_lines": 12,
+      "removed_lines": 2,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5525,
+        "matches_issue": 0.6869,
+        "safe_to_apply": 0.5934,
+        "composite": 0.7081999999999999,
+        "secrets_or_danger": 0.2506,
+        "logic_drift": 0.5933,
+        "flagged": false
+      },
+      "laya_combined": 0.7082,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "FFFF                                                                     [100%]\n=================================== FAILURES ===================================\n______________________ test_routes_cli_displays_subdomain ______________________\ntest_isha_repro.py:36: in test_routes_cli_displays_subdomain\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n________________________ test_routes_cli_no_server_name ________________________\ntest_isha_repro.py:55: in test_routes_cli_no_server_name\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n__________________________ test_routes_cli_empty_app ___________________________\ntest_isha_repro.py:64: in test_routes_cli_empty_app\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n______________ test_routes_cli_multiple_subdomains_same_blueprint ______________\ntest_isha_repro.py:79: in test_routes_cli_multiple_subdomains_same_blueprint\n    app.register_blueprint(bp, url_prefix=\"/sub2\", subdomain=\"sub2\")\nsrc/flask/scaffold.py:49: in wrapper_func\n    return f(self, *args, **kwargs)\nsrc/flask/app.py:1010: in register_blueprint\n    blueprint.register(self, options)\nsrc/flask/blueprints.py:308: in register\n    raise ValueError(\nE   ValueError: The name 'bp' is already registered for this blueprint. Use 'name=' to provide a unique name.\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_routes_cli_displays_subdomain - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_no_server_name - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_empty_app - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_multiple_subdomains_same_blueprint\n4 failed in 0.10s\n\nwarning: src/flask/cli.py has type 100755, expected 100644\nerror: patch failed: src/flask/cli.py:890\nerror: src/flask/cli.py: patch does not apply\nerror: src/flask/cli.py: does not match index\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.59,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": true,
+      "patch": "--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -1016,8 +1016,10 @@\n\n     data = []\n+    server_name = current_app.config[\"SERVER_NAME\"]\n+\n     for rule in rules:\n         methods = \",\".join(sorted(rule.methods - ignored_methods))\n-        data.append((rule.endpoint, methods, rule.rule))\n+        data.append((rule.subdomain or server_name or \"\", rule.endpoint, methods, rule.rule))\n\n-    headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    headers = (\"Subdomain\", \"Endpoint\", \"Methods\", \"Rule\")\n     widths = [\n@@ -1028,3 +1030,3 @@\n     for row in data:\n-        click.echo(f\"{row[0]:<{widths[0]}}  {row[1]:<{widths[1]}}  {row[2]}\")\n+        click.echo(f\"{row[0]:<{widths[0]}}  {row[1]:<{widths[1]}}  {row[2]:<{widths[2]}}  {row[3]}\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pallets__flask-5063-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/flask/cli.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4302,
+        "matches_issue": 0.6158,
+        "safe_to_apply": 0.6049,
+        "composite": 0.662725,
+        "secrets_or_danger": 0.3692,
+        "logic_drift": 0.4247,
+        "flagged": false
+      },
+      "laya_combined": 0.6627,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0077,
+      "rank_reason": "logistic",
+      "elapsed_s": 21.02,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -1004,11 +1004,14 @@\n     elif sort == \"rule\":\n         rules = sorted(rules, key=attrgetter(\"rule\"))\n \n-    headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    headers = (\"Domain\", \"Endpoint\", \"Methods\", \"Rule\")\n+    server_name = current_app.config[\"SERVER_NAME\"] or \"\"\n \n     row_data = []\n \n     for rule in rules:\n+        subdomain = rule.subdomain or \"\"\n+        domain = f\"{subdomain}.{server_name}\" if subdomain and server_name else (subdomain or server_name)\n         methods = sorted(rule.methods - ignored_methods)\n         row_data.append(\n             (\n+                domain,\n                 rule.endpoint,\n                 \", \".join(methods),\n                 rule.rule,",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pallets__flask-5063-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pallets__flask-5063-c1\\src\\flask\\cli.py: SyntaxError line 791: unexpected indent"
+      ],
+      "changed_files": [
+        "src/flask/cli.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4478,
+        "matches_issue": 0.6138,
+        "safe_to_apply": 0.5334,
+        "composite": 0.6487499999999999,
+        "secrets_or_danger": 0.1484,
+        "logic_drift": 0.202,
+        "flagged": false
+      },
+      "laya_combined": 0.6487,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0012,
+      "rank_reason": "logistic",
+      "elapsed_s": 9.4,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "openrouter/deepseek/deepseek-chat",
+    "substituted": true,
+    "patch": "diff --git a/src/flask/cli.py b/src/flask/cli.py\nindex 37a15ff2..5019061c 100644\n--- a/src/flask/cli.py\n+++ b/src/flask/cli.py\n@@ -890,6 +890,15 @@ def run_command(\n     This server is for development purposes only. It does not provide\n     the stability, security, or performance of production WSGI servers.\n \n+        subdomain = rule.subdomain or \"\"\n+        server_name = current_app.config[\"SERVER_NAME\"]\n+\n+        if subdomain and server_name:\n+            domain = f\"{subdomain}.{server_name}\"\n+        else:\n+            domain = subdomain or server_name or \"\"\n+\n+                domain,\n     The reloader and debugger are enabled by default with the '--debug'\n     option.\n     \"\"\"\n@@ -1009,7 +1018,8 @@ def routes_command(sort: str, all_methods: bool) -> None:\n     ignored_methods = set(() if all_methods else (\"HEAD\", \"OPTIONS\"))\n \n     if sort in (\"endpoint\", \"rule\"):\n-        rules = sorted(rules, key=attrgetter(sort))\n+        # Sort by subdomain first when sorting by endpoint or rule\n+        rules = sorted(rules, key=lambda rule: (rule.subdomain or \"\", attrgetter(sort)(rule)))\n     elif sort == \"methods\":\n         rules = sorted(rules, key=lambda rule: sorted(rule.methods))  # type: ignore\n \n@@ -1018,7 +1028,7 @@ def routes_command(sort: str, all_methods: bool) -> None:\n         for rule in rules\n     ]\n \n-    headers = (\"Endpoint\", \"Methods\", \"Rule\")\n+    headers = (\"Domain\", \"Endpoint\", \"Methods\", \"Rule\")\n     widths = (\n         max(len(rule.endpoint) for rule in rules),\n         max(len(methods) for methods in rule_methods),\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pallets__flask-5063-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: src/flask/cli.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/flask/cli.py"
+    ],
+    "added_lines": 12,
+    "removed_lines": 2,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5525,
+      "matches_issue": 0.6869,
+      "safe_to_apply": 0.5934,
+      "composite": 0.7081999999999999,
+      "secrets_or_danger": 0.2506,
+      "logic_drift": 0.5933,
+      "flagged": false
+    },
+    "laya_combined": 0.7082,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "test_isha_repro.py",
+      "before_exit": 1,
+      "after_exit": 1,
+      "after_output": "FFFF                                                                     [100%]\n=================================== FAILURES ===================================\n______________________ test_routes_cli_displays_subdomain ______________________\ntest_isha_repro.py:36: in test_routes_cli_displays_subdomain\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n________________________ test_routes_cli_no_server_name ________________________\ntest_isha_repro.py:55: in test_routes_cli_no_server_name\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n__________________________ test_routes_cli_empty_app ___________________________\ntest_isha_repro.py:64: in test_routes_cli_empty_app\n    assert result.exit_code == 0\nE   assert 2 == 0\nE    +  where 2 = <Result SystemExit(2)>.exit_code\n______________ test_routes_cli_multiple_subdomains_same_blueprint ______________\ntest_isha_repro.py:79: in test_routes_cli_multiple_subdomains_same_blueprint\n    app.register_blueprint(bp, url_prefix=\"/sub2\", subdomain=\"sub2\")\nsrc/flask/scaffold.py:49: in wrapper_func\n    return f(self, *args, **kwargs)\nsrc/flask/app.py:1010: in register_blueprint\n    blueprint.register(self, options)\nsrc/flask/blueprints.py:308: in register\n    raise ValueError(\nE   ValueError: The name 'bp' is already registered for this blueprint. Use 'name=' to provide a unique name.\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_routes_cli_displays_subdomain - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_no_server_name - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_empty_app - assert 2 == 0\nFAILED test_isha_repro.py::test_routes_cli_multiple_subdomains_same_blueprint\n4 failed in 0.10s\n\nwarning: src/flask/cli.py has type 100755, expected 100644\nerror: patch failed: src/flask/cli.py:890\nerror: src/flask/cli.py: patch does not apply\nerror: src/flask/cli.py: does not match index\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.0074,
+    "rank_reason": "logistic",
+    "elapsed_s": 11.59,
+    "valid": true
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

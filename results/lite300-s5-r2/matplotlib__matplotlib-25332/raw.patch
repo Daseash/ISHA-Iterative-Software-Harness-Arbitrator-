@@ -1,0 +1,10 @@
+--- a/lib/matplotlib/figure.py
++++ b/lib/matplotlib/figure.py
+@@ -3081,6 +3081,11 @@
+         state = super().__getstate__()
+         state.pop('_stale_figure_callback', None)
+         state.pop('canvas', None)
++        state.pop('_align_label_groups', None)
+         return state
+ 
+     def __setstate__(self, state):

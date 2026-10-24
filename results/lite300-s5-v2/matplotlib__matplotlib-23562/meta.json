@@ -1,0 +1,403 @@
+{
+  "instance_id": "matplotlib__matplotlib-23562",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "29a86636a9c45ab5ac4d80ac76eaee497f460dce",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975309.6708384
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975320.4976954
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975330.0196877
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975332.1074224
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975360.583043
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975565.6050825
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied via git apply --3way",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791975164.8177347,
+  "elapsed_s": 408.35,
+  "plan": "def get_facecolor(self):\n        return getattr(self, '_facecolors2d', super().get_facecolor())\n\n    def get_edgecolor(self):\n        return getattr(self, '_edgecolors2d', super().get_edgecolor())",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class",
+        "ProjectionRegistry",
+        "__init__",
+        "register"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.7062,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.77,
+        "vector": 0.5722,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: projection; body matches report terms: line, projection)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_rc_params_in_file",
+      "symbols": [
+        "_rc_params_in_file",
+        "inner",
+        "_check_versions",
+        "_ensure_handler"
+      ],
+      "line_range": [
+        769,
+        836
+      ],
+      "score": 0.6805,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6452,
+        "vector": 0.6183,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: x; body matches report terms: call, line, level, attribute)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::_auto_draw_if_interactive",
+      "symbols": [
+        "_auto_draw_if_interactive",
+        "set_loglevel",
+        "close",
+        "subplot2grid"
+      ],
+      "line_range": [
+        796,
+        816
+      ],
+      "score": 0.679,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.68,
+        "vector": 0.533,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; signature parameter matches report: fig; body matches report terms: with, object, this, python)"
+    },
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::_add_axes_internal",
+      "symbols": [
+        "_add_axes_internal",
+        "delaxes",
+        "_process_projection_requirements",
+        "figimage"
+      ],
+      "line_range": [
+        756,
+        768
+      ],
+      "score": 0.6714,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6342,
+        "vector": 0.5655,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: ax; body matches report terms: call, projection, local, this)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::caching_module_getattr",
+      "symbols": [
+        "caching_module_getattr",
+        "__getattr__",
+        "warn_external",
+        "select_matching_signature"
+      ],
+      "line_range": [
+        195,
+        229
+      ],
+      "score": 0.6456,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6188,
+        "vector": 0.3823,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: level, attribute, more, module)"
+    },
+    {
+      "file": "lib/matplotlib/cbook/__init__.py",
+      "symbol": "lib/matplotlib/cbook/__init__.py::_check_1d",
+      "symbols": [
+        "_check_1d",
+        "_array_patch_perimeters",
+        "_unpack_to_numpy",
+        "to_filehandle"
+      ],
+      "line_range": [
+        1360,
+        1374
+      ],
+      "score": 0.6123,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4522,
+        "vector": 0.4522,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: x; body matches report terms: object, this, numpy)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.521625,
+  "laya_scores": {
+    "fix_quality": 1.0198,
+    "matches_issue": 0.4931,
+    "safe_to_apply": 0.5736,
+    "composite": 0.521625,
+    "secrets_or_danger": 0.15,
+    "logic_drift": 0.3606,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related concerns or injection risks in this attribute fallback.\n- PERFORMANCE: PASS - Standard attribute check with a fallback, no impact on hot paths.\n- ROBUSTNESS: PASS - Safely handles missing `_facecolors2d` attribute by falling back to the parent class implementation.\n- MINIMAL DIFF / YAGNI: PASS - Minimal and direct fix targeting the reported `AttributeError`.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport matplotlib.pyplot as plt\nfrom mpl_toolkits.mplot3d.art3d import Poly3DCollection\n\n\ndef test_poly3d_collection_get_facecolors():\n    # Reproduces the bug where Poly3DCollection lacks _facecolors2d\n    y, x = np.ogrid[1:10:10j, 1:10:10j]\n    z = np.cos(x) ** 3 - np.sin(y) ** 2\n    fig = plt.figure()\n    ax = fig.add_subplot(111, projection='3d')\n    r = ax.plot_surface(x, y, z, cmap='hot')\n    \n    # This should not raise AttributeError: 'Poly3DCollection' object has no attribute '_facecolors2d'\n    facecolors = r.get_facecolors()\n    assert facecolors is not None\n\n\ndef test_poly3d_collection_get_edgecolors():\n    # Edge-case test checking edge colors retrieval as well\n    y, x = np.ogrid[1:5:5j, 1:5:5j]\n    z = x + y\n    fig = plt.figure()\n    ax = fig.add_subplot(111, projection='3d')\n    r = ax.plot_surface(x, y, z)\n    \n    edgecolors = r.get_edgecolors()\n    assert edgecolors is not None\n\n\ndef test_poly3d_collection_manual_instantiation():\n    # Edge-case test with manual Poly3DCollection creation without 2d attributes\n    verts = [\n        [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 0)]\n    ]\n    coll = Poly3DCollection(verts)\n    \n    # Should safely fallback to super().get_facecolor() / get_edgecolor()\n    fc = coll.get_facecolor()\n    ec = coll.get_edgecolor()\n    assert fc is not None or len(fc) == 0\n    assert ec is not None or len(ec) == 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a9c1..d60e370aae 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -867,7 +867,7 @@ class Poly3DCollection(PolyCollection):\n         self.stale = True\n \n     def get_facecolor(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolors())\n \n     def get_edgecolor(self):\n         return self._edgecolors2d\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-23562-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.0198,
+        "matches_issue": 0.4931,
+        "safe_to_apply": 0.5736,
+        "composite": 0.521625,
+        "secrets_or_danger": 0.15,
+        "logic_drift": 0.3606,
+        "flagged": false
+      },
+      "laya_combined": 0.5216,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0082,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.48,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": false,
+      "patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a9c1..46058eeebf 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -867,10 +867,11 @@ class Poly3DCollection(PolyCollection):\n         self.stale = True\n \n     def get_facecolor(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolor())\n+\n \n     def get_edgecolor(self):\n-        return self._edgecolors2d\n+        return getattr(self, '_edgecolors2d', super().get_edgecolor())\n \n \n def poly_collection_2d_to_3d(col, zs=0, zdir='z'):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-23562-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 0.6877,
+        "matches_issue": 0.7426,
+        "safe_to_apply": 0.6168,
+        "composite": 0.511775,
+        "secrets_or_danger": 0.1833,
+        "logic_drift": 0.415,
+        "flagged": false
+      },
+      "laya_combined": 0.5118,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 89.19,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -634,5 +634,11 @@\n     def get_facecolors(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolors())\n     get_facecolor = get_facecolors\n \n+    def get_edgecolors(self):\n+        return getattr(self, '_edgecolors2d', super().get_edgecolors())\n+    get_edgecolor = get_edgecolors\n+\n+\n     def set_facecolor(self, colors):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-23562-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-23562-c1\\lib\\mpl_toolkits\\mplot3d\\art3d.py: redefinition of unused 'get_edgecolor' from line 761"
+      ],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3458,
+        "matches_issue": 0.7571,
+        "safe_to_apply": 0.669,
+        "composite": 0.692975,
+        "secrets_or_danger": 0.2921,
+        "logic_drift": 0.5294,
+        "flagged": false
+      },
+      "laya_combined": 0.693,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 80.14,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a9c1..d60e370aae 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -867,7 +867,7 @@ class Poly3DCollection(PolyCollection):\n         self.stale = True\n \n     def get_facecolor(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolors())\n \n     def get_edgecolor(self):\n         return self._edgecolors2d\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-23562-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/mpl_toolkits/mplot3d/art3d.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.0198,
+      "matches_issue": 0.4931,
+      "safe_to_apply": 0.5736,
+      "composite": 0.521625,
+      "secrets_or_danger": 0.15,
+      "logic_drift": 0.3606,
+      "flagged": false
+    },
+    "laya_combined": 0.5216,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0082,
+    "rank_reason": "logistic",
+    "elapsed_s": 70.48,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a..d60e370 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -867,7 +867,7 @@ class Poly3DCollection(PolyCollection):\n         self.stale = True\n \n     def get_facecolor(self):\n-        return self._facecolors2d\n+        return getattr(self, '_facecolors2d', super().get_facecolors())\n \n     def get_edgecolor(self):\n         return self._edgecolors2d\n",
+  "offline_calls": 0
+}

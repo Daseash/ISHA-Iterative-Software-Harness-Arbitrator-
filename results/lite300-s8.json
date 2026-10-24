@@ -1,0 +1,777 @@
+{
+  "run_id": "lite300-s8",
+  "generated_at": "2026-10-16 17:14:37",
+  "total_instances": 30,
+  "resolved": 4,
+  "resolve_rate": 0.1333,
+  "resolve_ci_95": [
+    0.0531,
+    0.2968
+  ],
+  "instances_with_patch": 25,
+  "patch_rate": 0.8333,
+  "patch_ci_95": [
+    0.6644,
+    0.9266
+  ],
+  "stage_breakdown": {
+    "localization_hit_file": {
+      "count": 14,
+      "rate": 0.4667,
+      "ci_95": [
+        0.3023,
+        0.6386
+      ]
+    },
+    "localization_hit_func": {
+      "count": 3,
+      "rate": 0.1,
+      "ci_95": [
+        0.0346,
+        0.2562
+      ]
+    },
+    "patch_applied": {
+      "count": 25,
+      "rate": 0.8333,
+      "ci_95": [
+        0.6644,
+        0.9266
+      ]
+    },
+    "static_gate_passed": {
+      "count": 25,
+      "rate": 0.8333,
+      "ci_95": [
+        0.6644,
+        0.9266
+      ]
+    },
+    "env_ok": {
+      "count": 30,
+      "rate": 1.0,
+      "ci_95": [
+        0.8865,
+        1.0
+      ]
+    },
+    "repro_fails_before": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.1135
+      ]
+    },
+    "repro_passes_after": {
+      "count": 0,
+      "rate": 0.0,
+      "ci_95": [
+        0.0,
+        0.1135
+      ]
+    },
+    "zero_regressions": {
+      "count": 13,
+      "rate": 0.4333,
+      "ci_95": [
+        0.2738,
+        0.608
+      ]
+    },
+    "resolved": {
+      "count": 4,
+      "rate": 0.1333,
+      "ci_95": [
+        0.0531,
+        0.2968
+      ]
+    }
+  },
+  "failure_breakdown": {
+    "localization_wrong": 4,
+    "patch_apply_failed": 0,
+    "syntax_error": 0,
+    "tests_failed": 17,
+    "timeout": 0,
+    "api_failure": 0,
+    "no_confident_fix": 5,
+    "not_run": 0,
+    "harness_no_output": 0,
+    "checkout_failed": 0,
+    "prefiltered": 0
+  },
+  "official_report": {
+    "total_instances": 25,
+    "submitted_instances": 30,
+    "completed_instances": 25,
+    "resolved_instances": 4,
+    "unresolved_instances": 21,
+    "empty_patch_instances": 0,
+    "error_instances": 0,
+    "infra_failure_instances": 0,
+    "ambiguous_failure_instances": 0
+  },
+  "instances": [
+    {
+      "instance_id": "sphinx-doc__sphinx-7686",
+      "resolved": false,
+      "category": "localization_wrong",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 192.62,
+      "critic_score": 0.754075,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7738",
+      "resolved": false,
+      "category": "no_confident_fix",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 136.33,
+      "critic_score": 0.0,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-7975",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 96.91,
+      "critic_score": 0.7428499999999999,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8273",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 131.81,
+      "critic_score": 0.6410750000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": true,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8282",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 184.38,
+      "critic_score": 0.70645,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8435",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 201.76,
+      "critic_score": 0.681775,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8474",
+      "resolved": false,
+      "category": "localization_wrong",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 267.76,
+      "critic_score": 0.6385749999999999,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.1-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8506",
+      "resolved": false,
+      "category": "no_confident_fix",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 185.18,
+      "critic_score": 0.0,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.1-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": true,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8595",
+      "resolved": false,
+      "category": "no_confident_fix",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 184.5,
+      "critic_score": 0.0,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8627",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 144.69,
+      "critic_score": 0.587075,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8713",
+      "resolved": true,
+      "category": "resolved",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 119.31,
+      "critic_score": 0.7822,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": true
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8721",
+      "resolved": true,
+      "category": "resolved",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 93.15,
+      "critic_score": 0.8095749999999999,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": true
+      }
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8801",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 83.51,
+      "critic_score": 0.662825,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-11400",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 137.99,
+      "critic_score": 0.74975,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-11870",
+      "resolved": false,
+      "category": "no_confident_fix",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 190.51,
+      "critic_score": 0.0,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-11897",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 151.98,
+      "critic_score": 0.7855249999999999,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12171",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 380.4,
+      "critic_score": 0.76435,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12236",
+      "resolved": false,
+      "category": "localization_wrong",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 267.06,
+      "critic_score": 0.7417750000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12419",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 184.43,
+      "critic_score": 0.45904999999999996,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12454",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 213.95,
+      "critic_score": 0.6868000000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-12481",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 153.94,
+      "critic_score": 0.622275,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13031",
+      "resolved": false,
+      "category": "no_confident_fix",
+      "has_patch": false,
+      "attempts": 1,
+      "elapsed_s": 241.6,
+      "critic_score": 0.0,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": false,
+        "static_gate_passed": false,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13043",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 294.24,
+      "critic_score": 0.6404,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": true,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13146",
+      "resolved": false,
+      "category": "localization_wrong",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 241.91,
+      "critic_score": 0.59035,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 218.78,
+      "critic_score": 0.6809000000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13437",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 308.21,
+      "critic_score": 0.6815749999999999,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13471",
+      "resolved": true,
+      "category": "resolved",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 265.22,
+      "critic_score": 0.45542499999999997,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": true
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13480",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 353.64,
+      "critic_score": 0.5784750000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13647",
+      "resolved": true,
+      "category": "resolved",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 458.99,
+      "critic_score": 0.569825,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": true,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": true,
+        "resolved": true
+      }
+    },
+    {
+      "instance_id": "sympy__sympy-13773",
+      "resolved": false,
+      "category": "tests_failed",
+      "has_patch": true,
+      "attempts": 1,
+      "elapsed_s": 317.05,
+      "critic_score": 0.7383500000000001,
+      "offline_calls": 0,
+      "primary_model": "gemini-3.5-flash-lite [primary]",
+      "stage_outcomes": {
+        "localization_hit_file": false,
+        "localization_hit_func": false,
+        "patch_applied": true,
+        "static_gate_passed": true,
+        "env_ok": true,
+        "repro_fails_before": false,
+        "repro_passes_after": false,
+        "zero_regressions": false,
+        "resolved": false
+      }
+    }
+  ]
+}

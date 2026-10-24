@@ -1,0 +1,405 @@
+{
+  "instance_id": "django__django-13448",
+  "repo": "django/django",
+  "base_commit": "7b9596b974fb0ad1868b10c8c2174e10b72be403",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463281.822553
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463288.4445994
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463305.7449803
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463311.8403137
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463338.7463315
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463497.570354
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/backends/base/creation.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791463190.894573,
+  "elapsed_s": 314.65,
+  "plan": "# Around line 77 in django/db/backends/base/creation.py\n\n        # ... (previous code)\n        if self.connection.settings_dict['TEST']['MIGRATE']:\n            # ... (migrate command call)\n            call_command(\n                'migrate',\n                # ...\n            )\n            # Only attempt to serialize if the database was migrated\n            if serialize:\n                self.connection._test_serialized_contents = self.serialize_db_to_string()\n\n        call_command('createcachetable', database=self.connection.alias)\n        # ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/backends/base/creation.py",
+      "symbol": "django/db/backends/base/creation.py::create_test_db",
+      "symbols": [
+        "create_test_db",
+        "serialize_db_to_string",
+        "get_objects",
+        "BaseDatabaseCreation"
+      ],
+      "line_range": [
+        30,
+        86
+      ],
+      "score": 0.8787,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 1.0,
+        "vector": 0.6556,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: serialize; body matches report terms: exist, call, into, databases)"
+    },
+    {
+      "file": "django/db/backends/oracle/creation.py",
+      "symbol": "django/db/backends/oracle/creation.py::_maindb_connection",
+      "symbols": [
+        "_maindb_connection",
+        "_create_test_db",
+        "_switch_to_test_user",
+        "set_as_test_mirror"
+      ],
+      "line_range": [
+        15,
+        29
+      ],
+      "score": 0.7692,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6489,
+        "vector": 0.475,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: databases, that, connection, test)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::run_from_argv",
+      "symbols": [
+        "run_from_argv",
+        "execute",
+        "handle",
+        "handle"
+      ],
+      "line_range": [
+        333,
+        368
+      ],
+      "score": 0.7161,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4176,
+        "vector": 0.5139,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: argv; body matches report terms: call, traceback, connection, legacy; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute_from_command_line",
+      "symbols": [
+        "execute_from_command_line",
+        "__init__",
+        "fetch_command",
+        "execute"
+      ],
+      "line_range": [
+        398,
+        401
+      ],
+      "score": 0.9929,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4234,
+        "vector": 0.7256,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: argv; body matches report terms: utility, manage, line, management; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/utils.py",
+      "symbol": "django/db/utils.py::ProgrammingError",
+      "symbols": [
+        "ProgrammingError",
+        "DatabaseErrorWrapper",
+        "__init__",
+        "__exit__"
+      ],
+      "line_range": [
+        44,
+        47
+      ],
+      "score": 0.954,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3126,
+        "vector": 0.6324,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: base, database; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::serialize",
+      "symbols": [
+        "serialize",
+        "BadSerializer",
+        "__init__",
+        "__call__"
+      ],
+      "line_range": [
+        123,
+        132
+      ],
+      "score": 0.9415,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4114,
+        "vector": 0.3223,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: that, options, queryset, base; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.711225,
+  "laya_scores": {
+    "fix_quality": 1.4079,
+    "matches_issue": 0.7957,
+    "safe_to_apply": 0.6413,
+    "composite": 0.711225,
+    "secrets_or_danger": 0.2543,
+    "logic_drift": 0.166,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No change to security boundaries or input handling.\n- PERFORMANCE: PASS, Minimal overhead introduced by a boolean lookup in configuration.\n- ROBUSTNESS: PASS, Correctly aligns the `run_syncdb` flag with the intended `MIGRATE` configuration setting.\n- PONYTAIL / YAGNI: PASS, Necessary fix to enable the requested functionality in the test runner.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.conf import settings\nfrom django.db import connections\nfrom django.test import TransactionTestCase\nfrom django.test.runner import DiscoverRunner\nfrom django.db.backends.base.creation import BaseDatabaseCreation\n\nclass TestMigrateFalseIssue(TransactionTestCase):\n    \"\"\"\n    Test that ensures 'TEST': {'MIGRATE': False} doesn't crash during database creation.\n    The crash happens because the runner attempts to serialize the database\n    even when migrations haven't run, resulting in a ProgrammingError (or similar)\n    when querying non-existent tables.\n    \"\"\"\n    \n    def test_migrate_false_does_not_crash(self):\n        # This test checks if the environment can handle the MIGRATE=False setting.\n        # We rely on the django test runner logic.\n        # If the bug exists, this will raise a ProgrammingError during setup.\n        runner = DiscoverRunner(verbosity=0)\n        \n        # Configure a dummy DB with MIGRATE: False\n        custom_db = {\n            'default': {\n                'ENGINE': 'django.db.backends.sqlite3',\n                'NAME': ':memory:',\n                'TEST': {'MIGRATE': False}\n            }\n        }\n        \n        try:\n            # We trigger the setup of the test databases\n            runner.setup_databases(aliases=['default'], verbosity=0)\n        except Exception as e:\n            pytest.fail(f\"setup_databases failed with 'MIGRATE': False: {e}\")\n        finally:\n            runner.teardown_databases(old_config=None, verbosity=0)\n\n    def test_invalid_test_setting_raises_error(self):\n        \"\"\"Ensure that malformed TEST settings still raise appropriate errors.\"\"\"\n        # Testing boundary: passing something invalid in the TEST dictionary\n        # (Assuming the fix doesn't change validation behavior)\n        with pytest.raises(TypeError):\n            # Simulate a scenario where TEST is not a dict\n            old_test = settings.DATABASES['default'].get('TEST')\n            settings.DATABASES['default']['TEST'] = \"invalid_type\"\n            try:\n                runner = DiscoverRunner(verbosity=0)\n                runner.setup_databases(aliases=['default'], verbosity=0)\n            finally:\n                settings.DATABASES['default']['TEST'] = old_test\n\n    def test_migrate_true_still_serializes(self):\n        \"\"\"Ensure standard behavior (MIGRATE: True) still functions correctly.\"\"\"\n        runner = DiscoverRunner(verbosity=0)\n        # Verify that with standard settings, serialization remains functional\n        try:\n            # This should not trigger the bug\n            runner.setup_databases(aliases=['default'], verbosity=0)\n        except Exception as e:\n            pytest.fail(f\"Standard setup_databases failed: {e}\")\n        finally:\n            runner.teardown_databases(old_config=None, verbosity=0)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex 503f7f56fd..f2438f32ca 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -67,7 +67,7 @@ class BaseDatabaseCreation:\n                 verbosity=max(verbosity - 1, 0),\n                 interactive=False,\n                 database=self.connection.alias,\n-                run_syncdb=True,\n+                run_syncdb=not self.connection.settings_dict['TEST'].get('MIGRATE', True),\n             )\n \n         # We then serialize the current state of the database into a string\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13448-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4079,
+        "matches_issue": 0.7957,
+        "safe_to_apply": 0.6413,
+        "composite": 0.711225,
+        "secrets_or_danger": 0.2543,
+        "logic_drift": 0.166,
+        "flagged": false
+      },
+      "laya_combined": 0.7112,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 72.86,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -75,7 +75,7 @@\n                 'migrate',\n                 '--run-syncdb',\n                 '--verbosity', str(verbosity),\n-                '--database', self.connection.alias,\n+                '--database', self.connection.alias,\n             )\n             # Only attempt to serialize if the database was migrated\n             if serialize:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13448-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1178,
+        "matches_issue": 0.2623,
+        "safe_to_apply": 0.3357,
+        "composite": 0.42894999999999994,
+        "secrets_or_danger": 0.207,
+        "logic_drift": 0.2314,
+        "flagged": false
+      },
+      "laya_combined": 0.4289,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0019,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.8,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -75,7 +75,7 @@\n             )\n             # Only attempt to serialize if the database was migrated\n-            if serialize:\n+            if serialize and self.connection.settings_dict['TEST'].get('MIGRATE', True):\n                 self.connection._test_serialized_contents = self.serialize_db_to_string()\n \n         call_command('createcachetable', database=self.connection.alias)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13448-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13448-c3\\django\\db\\backends\\base\\creation.py: SyntaxError line 78: expected an indented block after 'if' statement on line 77"
+      ],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4126,
+        "matches_issue": 0.5805,
+        "safe_to_apply": 0.5132,
+        "composite": 0.626575,
+        "secrets_or_danger": 0.2376,
+        "logic_drift": 0.5054,
+        "flagged": false
+      },
+      "laya_combined": 0.6266,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0013,
+      "rank_reason": "logistic",
+      "elapsed_s": 73.86,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex 503f7f56fd..f2438f32ca 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -67,7 +67,7 @@ class BaseDatabaseCreation:\n                 verbosity=max(verbosity - 1, 0),\n                 interactive=False,\n                 database=self.connection.alias,\n-                run_syncdb=True,\n+                run_syncdb=not self.connection.settings_dict['TEST'].get('MIGRATE', True),\n             )\n \n         # We then serialize the current state of the database into a string\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13448-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/backends/base/creation.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4079,
+      "matches_issue": 0.7957,
+      "safe_to_apply": 0.6413,
+      "composite": 0.711225,
+      "secrets_or_danger": 0.2543,
+      "logic_drift": 0.166,
+      "flagged": false
+    },
+    "laya_combined": 0.7112,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0063,
+    "rank_reason": "logistic",
+    "elapsed_s": 72.86,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex 503f7f5..f2438f3 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -67,7 +67,7 @@ class BaseDatabaseCreation:\n                 verbosity=max(verbosity - 1, 0),\n                 interactive=False,\n                 database=self.connection.alias,\n-                run_syncdb=True,\n+                run_syncdb=not self.connection.settings_dict['TEST'].get('MIGRATE', True),\n             )\n \n         # We then serialize the current state of the database into a string\n",
+  "offline_calls": 0
+}

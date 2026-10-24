@@ -1,0 +1,372 @@
+{
+  "instance_id": "django__django-11964",
+  "repo": "django/django",
+  "base_commit": "fc2b1cc926e34041953738e58fa6ad3053059b22",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621466.7293713
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621473.3519707
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621487.2674618
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621490.013298
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621522.3267171
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791621698.2281678
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791621381.620168,
+  "elapsed_s": 323.93,
+  "plan": "import enum\n   # ... inside forms.Field class:\n   def to_python(self, value):\n       if isinstance(value, enum.Enum):\n           return value.value\n       return value",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "CommaSeparatedIntegerField",
+        "EmailField",
+        "SlugField"
+      ],
+      "line_range": [
+        131,
+        177
+      ],
+      "score": 0.7311,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8416,
+        "vector": 0.6312,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: choices, max_length; body matches report terms: create, default, class, choices)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "RegexField",
+        "EmailField",
+        "__init__"
+      ],
+      "line_range": [
+        208,
+        219
+      ],
+      "score": 0.678,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5904,
+        "vector": 0.6697,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: max_length; body matches report terms: value, max_length)"
+    },
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::construct_instance",
+      "symbols": [
+        "construct_instance",
+        "model_to_dict",
+        "apply_limit_choices_to_to_formfield",
+        "fields_for_model"
+      ],
+      "line_range": [
+        31,
+        69
+      ],
+      "score": 0.6778,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6391,
+        "vector": 0.6083,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: file, value, default, call)"
+    },
+    {
+      "file": "django/contrib/contenttypes/models.py",
+      "symbol": "django/contrib/contenttypes/models.py::ContentTypeManager",
+      "symbols": [
+        "ContentTypeManager",
+        "get_for_models",
+        "ContentType",
+        "__str__"
+      ],
+      "line_range": [
+        8,
+        132
+      ],
+      "score": 0.6883,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6752,
+        "vector": 0.6208,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: models; body matches report terms: create, objects, default, creating)"
+    },
+    {
+      "file": "tests/queries/models.py",
+      "symbol": "tests/queries/models.py::MyObject",
+      "symbols": [
+        "MyObject",
+        "DumbCategory",
+        "Tag",
+        "Note"
+      ],
+      "line_range": [
+        591,
+        595
+      ],
+      "score": 0.7119,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6312,
+        "vector": 0.6542,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; signature parameter matches report: Model, models; body matches report terms: create, class, created, models; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/__init__.py",
+      "symbol": "django/__init__.py::setup",
+      "symbols": [
+        "setup"
+      ],
+      "line_range": [
+        8,
+        24
+      ],
+      "score": 0.7441,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0866,
+        "vector": 0.2288,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: first, this, utils, django)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "from django.db import models\nfrom django.test import TestCase\nfrom django.utils.translation import gettext_lazy as _\n\n\nclass MyChoice(models.TextChoices):\n    FIRST_CHOICE = \"first\", _(\"The first choice, it is\")\n    SECOND_CHOICE = \"second\", _(\"The second choice, it is\")\n\n\nclass IntegerMyChoice(models.IntegerChoices):\n    ONE = 1, _(\"One\")\n    TWO = 2, _(\"Two\")\n\n\nclass MyObject(models.Model):\n    my_str_value = models.CharField(max_length=10, choices=MyChoice.choices)\n    my_int_value = models.IntegerField(choices=IntegerMyChoice.choices, null=True, blank=True)\n\n\nclass EnumChoicesFieldTest(TestCase):\n    def test_created_object_enum_value_is_scalar_str(self):\n        # This test reproduces the reported bug where passing a TextChoices enum member\n        # directly to model creation leaves the field instance storing the Enum member itself\n        # rather than its underlying scalar value (str).\n        obj = MyObject.objects.create(my_str_value=MyChoice.FIRST_CHOICE)\n        self.assertIsInstance(obj.my_str_value, str)\n        self.assertEqual(obj.my_str_value, \"first\")\n\n        # Refetch from database to ensure consistency between create and retrieve\n        obj.refresh_from_db()\n        self.assertIsInstance(obj.my_str_value, str)\n        self.assertEqual(obj.my_str_value, \"first\")\n\n    def test_created_object_integer_choices_is_scalar(self):\n        # Edge case: IntegerChoices validation/assignment behaving identically\n        obj = MyObject.objects.create(my_str_value=\"first\", my_int_value=IntegerMyChoice.ONE)\n        self.assertIsInstance(obj.my_int_value, int)\n        self.assertEqual(obj.my_int_value, 1)\n\n        obj.refresh_from_db()\n        self.assertIsInstance(obj.my_int_value, int)\n        self.assertEqual(obj.my_int_value, 1)\n\n    def test_created_object_with_raw_scalar_value(self):\n        # Edge case: passing raw scalar strings/ints directly instead of Enum members\n        obj = MyObject.objects.create(my_str_value=\"second\", my_int_value=2)\n        self.assertIsInstance(obj.my_str_value, str)\n        self.assertEqual(obj.my_str_value, \"second\")\n        self.assertIsInstance(obj.my_int_value, int)\n        self.assertEqual(obj.my_int_value, 2)\n\n    def test_created_object_with_none_nullable_field(self):\n        # Edge case: None values for nullable fields should remain None\n        obj = MyObject.objects.create(my_str_value=\"first\", my_int_value=None)\n        self.assertIsNone(obj.my_int_value)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-b0ofpo4a",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/forms/fields.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5482,
+        "matches_issue": 0.6171,
+        "safe_to_apply": 0.4756,
+        "composite": 0.6602250000000001,
+        "secrets_or_danger": 0.1055,
+        "logic_drift": 0.1862,
+        "flagged": false
+      },
+      "laya_combined": 0.6602,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0013,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.79,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -1,3 +1,4 @@\n+import enum\n import copy\n import datetime\n import decimal\n@@ -198,6 +199,8 @@\n         return value\n\n     def to_python(self, value):\n+        if isinstance(value, enum.Enum):\n+            return value.value\n         return value\n\n     def validate(self, value):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-zo23kg3x",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-zo23kg3x\\django\\forms\\fields.py: 'decimal' imported but unused",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-zo23kg3x\\django\\forms\\fields.py: undefined name 'math'"
+      ],
+      "changed_files": [
+        "django/forms/fields.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.8725,
+        "matches_issue": 0.8869,
+        "safe_to_apply": 0.8048,
+        "composite": 0.8910500000000001,
+        "secrets_or_danger": 0.1505,
+        "logic_drift": 0.2104,
+        "flagged": false
+      },
+      "laya_combined": 0.8911,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 101.85,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -1,3 +1,4 @@\n+import enum\n import copy\n import datetime\n import decimal\n@@ -106,7 +107,9 @@\n         return value\n \n     def to_python(self, value):\n-        return value\n+        if isinstance(value, enum.Enum):\n+            return value.value\n+        return value\n \n     def validate(self, value):\n         if value in self.empty_values and self.required:",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0bu0hg14",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0bu0hg14\\django\\forms\\fields.py: redefinition of unused 'enum' from line 5",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0bu0hg14\\django\\forms\\fields.py: redefinition of unused 'enum' from line 6",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0bu0hg14\\django\\forms\\fields.py: 'decimal' imported but unused",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0bu0hg14\\django\\forms\\fields.py: undefined name 'math'"
+      ],
+      "changed_files": [
+        "django/forms/fields.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.8322,
+        "matches_issue": 0.839,
+        "safe_to_apply": 0.7346,
+        "composite": 0.8514499999999999,
+        "secrets_or_danger": 0.1214,
+        "logic_drift": 0.2188,
+        "flagged": false
+      },
+      "laya_combined": 0.8514,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 128.26,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/django/forms/fields.py\n+++ b/django/forms/fields.py",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-b0ofpo4a",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+    ],
+    "changed_files": [
+      "django/forms/fields.py"
+    ],
+    "added_lines": 0,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.5482,
+      "matches_issue": 0.6171,
+      "safe_to_apply": 0.4756,
+      "composite": 0.6602250000000001,
+      "secrets_or_danger": 0.1055,
+      "logic_drift": 0.1862,
+      "flagged": false
+    },
+    "laya_combined": 0.6602,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0013,
+    "rank_reason": "logistic",
+    "elapsed_s": 99.79,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

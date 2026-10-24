@@ -1,0 +1,368 @@
+{
+  "instance_id": "pytest-dev__pytest-11148",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "2f7415cfbc4b6ca62f9013f1abd27136f46b9653",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894874.1070194
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894875.2176232
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894880.377604
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894886.8344254
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894900.5167203
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791894967.9949558
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791894850.9860332,
+  "elapsed_s": 118.58,
+  "plan": "# Before\nspec = importlib.util.spec_from_file_location(module_name, path)\n...\nmodule = importlib.util.module_from_spec(spec)\nsys.modules[module_name] = module\nspec.loader.exec_module(module)\n\n# Change to\nif module_name in sys.modules:\n    return sys.modules[module_name]\nspec = importlib.util.spec_from_file_location(module_name, path)\n...\n# (Keep the rest as is, but ensure sys.modules is checked first)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::pytest_configure",
+      "symbols": [
+        "pytest_configure",
+        "_is_in_confcutdir",
+        "_warn_or_fail_if_strict",
+        "_warn_about_missing_assertion"
+      ],
+      "line_range": [
+        508,
+        525
+      ],
+      "score": 0.6854,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6032,
+        "vector": 0.7468,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: config; body matches report terms: that, pytest, test, first)"
+    },
+    {
+      "file": "src/_pytest/logging.py",
+      "symbol": "src/_pytest/logging.py::DatetimeFormatter",
+      "symbols": [
+        "DatetimeFormatter",
+        "format",
+        "handleError",
+        "get_log_level_for_setting"
+      ],
+      "line_range": [
+        60,
+        77
+      ],
+      "score": 0.6744,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6117,
+        "vector": 0.6375,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: logging; body matches report terms: class, logging, object)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "install_importhook",
+        "pytest_addoption",
+        "register_assert_rewrite"
+      ],
+      "line_range": [
+        83,
+        88
+      ],
+      "score": 0.6088,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4626,
+        "vector": 0.4009,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: config, mode; body matches report terms: mode, config)"
+    },
+    {
+      "file": "src/_pytest/_py/path.py",
+      "symbol": "src/_pytest/_py/path.py::__init__",
+      "symbols": [
+        "__init__",
+        "read",
+        "open",
+        "write"
+      ],
+      "line_range": [
+        278,
+        301
+      ],
+      "score": 0.5412,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.424,
+        "vector": 0.6473,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: path; body matches report terms: that, working, path, initialize)"
+    },
+    {
+      "file": "testing/test_setuponly.py",
+      "symbol": "testing/test_setuponly.py::test_show_different_scopes",
+      "symbols": [
+        "test_show_different_scopes",
+        "test_show_fixtures_with_autouse",
+        "test_show_fixtures_with_parameters",
+        "test_show_fixtures_with_parameter_ids"
+      ],
+      "line_range": [
+        39,
+        67
+      ],
+      "score": 0.5342,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0327,
+        "vector": 0.5144,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: mode; body matches report terms: pytest, test, different, mode)"
+    },
+    {
+      "file": "testing/example_scripts/unittest/test_unittest_plain_async.py",
+      "symbol": "testing/example_scripts/unittest/test_unittest_plain_async.py::Test",
+      "symbols": [
+        "Test"
+      ],
+      "line_range": [
+        4,
+        6
+      ],
+      "score": 0.5398,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0642,
+        "vector": 0.5156,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: class, unit)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import sys\nimport importlib.util\nimport pytest\nfrom pathlib import Path\n\n# Reproduction helper: simulates the logic used in pytest's importlib mode\ndef import_module_from_path(module_name, path):\n    spec = importlib.util.spec_from_file_location(module_name, path)\n    module = importlib.util.module_from_spec(spec)\n    # The bug is here: if this is called twice for the same module_name,\n    # it overwrites sys.modules with a new object, causing identity issues.\n    sys.modules[module_name] = module\n    spec.loader.exec_module(module)\n    return module\n\ndef test_module_identity_consistency(tmp_path):\n    \"\"\"\n    Reproduces the bug: ensure that importing the same module path twice\n    results in the same object in sys.modules.\n    \"\"\"\n    pkg_dir = tmp_path / \"pmxbot\"\n    pkg_dir.mkdir()\n    mod_file = pkg_dir / \"logging.py\"\n    mod_file.write_text(\"store = 'initialized'\")\n\n    mod1 = import_module_from_path(\"pmxbot.logging\", mod_file)\n    mod1.store = \"modified\"\n\n    mod2 = import_module_from_path(\"pmxbot.logging\", mod_file)\n\n    # In the buggy state, mod2 is a fresh module and mod1.store was lost.\n    # After the fix, mod2 should be the same as mod1.\n    assert mod1 is mod2\n    assert mod2.store == \"modified\"\n\ndef test_none_input_raises_error():\n    \"\"\"Edge case: ensure that trying to import a non-existent path handles gracefully.\"\"\"\n    with pytest.raises(Exception):\n        import_module_from_path(\"non.existent\", \"non_existent_path.py\")\n\ndef test_empty_module_name_raises():\n    \"\"\"Edge case: Ensure invalid module names don't crash the loader infrastructure unexpectedly.\"\"\"\n    with pytest.raises(ValueError):\n        import_module_from_path(\"\", \"/tmp/somefile.py\")\n\ndef test_reimport_persists_state(tmp_path):\n    \"\"\"\n    Boundary case: Ensure that if we set a class variable, \n    subsequent 'imports' return the same object and retain that variable.\n    \"\"\"\n    pkg_dir = tmp_path / \"bot\"\n    pkg_dir.mkdir()\n    mod_file = pkg_dir / \"core.py\"\n    mod_file.write_text(\"class Logger: pass\")\n\n    mod = import_module_from_path(\"bot.core\", mod_file)\n    mod.Logger.store = \"test_data\"\n\n    # Re-importing\n    re_mod = import_module_from_path(\"bot.core\", mod_file)\n    \n    assert hasattr(re_mod.Logger, \"store\")\n    assert re_mod.Logger.store == \"test_data\"",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -166,6 +166,8 @@\n         module_name = spec.name\n         if module_name in sys.modules:\n             return sys.modules[module_name]\n+        if module_name in sys.modules:\n+            return sys.modules[module_name]\n         module = importlib.util.module_from_spec(spec)\n         sys.modules[module_name] = module\n         spec.loader.exec_module(module)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1\\src\\_pytest\\assertion\\rewrite.py: SyntaxError line 166: expected an indented block after 'else' statement on line 165"
+      ],
+      "changed_files": [
+        "src/_pytest/assertion/rewrite.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3986,
+        "matches_issue": 0.7101,
+        "safe_to_apply": 0.6313,
+        "composite": 0.6849999999999999,
+        "secrets_or_danger": 0.3547,
+        "logic_drift": 0.3073,
+        "flagged": false
+      },
+      "laya_combined": 0.685,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 34.52,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -31,6 +31,8 @@\n     module_name: str, path: str\n ) -> types.ModuleType:\n     \"\"\"Import a module, possibly rewriting it.\"\"\"\n+    if module_name in sys.modules:\n+        return sys.modules[module_name]\n     spec = importlib.util.spec_from_file_location(module_name, path)\n     if spec is None:\n         raise ImportError(f\"Could not find spec for {module_name!r} at {path!r}\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c2\\src\\_pytest\\assertion\\rewrite.py: SyntaxError line 31: unexpected indent"
+      ],
+      "changed_files": [
+        "src/_pytest/assertion/rewrite.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4722,
+        "matches_issue": 0.7315,
+        "safe_to_apply": 0.6354,
+        "composite": 0.709775,
+        "secrets_or_danger": 0.1912,
+        "logic_drift": 0.1515,
+        "flagged": false
+      },
+      "laya_combined": 0.7098,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 34.09,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -35,6 +35,8 @@\n     module_name: str, path: str, *, safe: bool = True\n ) -> types.ModuleType:\n     import importlib.util\n+    if module_name in sys.modules:\n+        return sys.modules[module_name]\n     spec = importlib.util.spec_from_file_location(module_name, path)\n     if spec is None:\n         raise ImportError(f\"Could not load module {module_name} from {path}\")",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c3\\src\\_pytest\\pathlib.py: SyntaxError line 5: unexpected indent"
+      ],
+      "changed_files": [
+        "src/_pytest/pathlib.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4722,
+        "matches_issue": 0.7315,
+        "safe_to_apply": 0.6354,
+        "composite": 0.709775,
+        "secrets_or_danger": 0.1692,
+        "logic_drift": 0.1413,
+        "flagged": false
+      },
+      "laya_combined": 0.7098,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 35.16,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -166,6 +166,8 @@\n         module_name = spec.name\n         if module_name in sys.modules:\n             return sys.modules[module_name]\n+        if module_name in sys.modules:\n+            return sys.modules[module_name]\n         module = importlib.util.module_from_spec(spec)\n         sys.modules[module_name] = module\n         spec.loader.exec_module(module)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1\\src\\_pytest\\assertion\\rewrite.py: SyntaxError line 166: expected an indented block after 'else' statement on line 165"
+    ],
+    "changed_files": [
+      "src/_pytest/assertion/rewrite.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3986,
+      "matches_issue": 0.7101,
+      "safe_to_apply": 0.6313,
+      "composite": 0.6849999999999999,
+      "secrets_or_danger": 0.3547,
+      "logic_drift": 0.3073,
+      "flagged": false
+    },
+    "laya_combined": 0.685,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 34.52,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

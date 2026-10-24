@@ -1,0 +1,372 @@
+{
+  "instance_id": "matplotlib__matplotlib-26011",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "00afcc0c6d4d2e4390338127f05b8f4fdb4e7087",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737728.7952595
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737730.8461146
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737737.7877958
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737743.522018
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737757.335074
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737857.2733836
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791737701.7196212,
+  "elapsed_s": 161.07,
+  "plan": "# Around lines 2085 in _base.py\n        if emit:\n            self.callbacks.process('xlim_changed', self)\n            # Call all of the other x-axes that are shared with this one\n            for other in self._shared_x_axes.get_siblings(self):\n                if other is not self:\n                    other.set_xlim(self.viewLim.intervalx,\n                                   emit=False, auto=auto)\n                    # ADD THIS:\n                    other.callbacks.process('xlim_changed', other)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/axes/_base.py",
+      "symbol": "lib/matplotlib/axes/_base.py::axis",
+      "symbols": [
+        "axis",
+        "set_xlim",
+        "_request_autoscale_view",
+        "autoscale"
+      ],
+      "line_range": [
+        2000,
+        2133
+      ],
+      "score": 0.7016,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6184,
+        "vector": 0.8502,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: emit; body matches report terms: fill, with, auto, change; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::ticklabel_format",
+      "symbols": [
+        "ticklabel_format",
+        "tick_params",
+        "install_repl_displayhook",
+        "_get_backend_mod"
+      ],
+      "line_range": [
+        3889,
+        3896
+      ],
+      "score": 0.8126,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3806,
+        "vector": 0.9163,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: axis; body matches report terms: axis, both, limits, form)"
+    },
+    {
+      "file": "lib/matplotlib/axes/__init__.py",
+      "symbol": "lib/matplotlib/axes/__init__.py::_SubplotBaseMeta",
+      "symbols": [
+        "_SubplotBaseMeta",
+        "__instancecheck__",
+        "SubplotBase"
+      ],
+      "line_range": [
+        8,
+        13
+      ],
+      "score": 0.5292,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2524,
+        "vector": 0.176,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: axes, base)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::ProjectionRegistry",
+      "symbols": [
+        "ProjectionRegistry",
+        "get_projection_names"
+      ],
+      "line_range": [
+        61,
+        81
+      ],
+      "score": 0.5376,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.278,
+        "vector": 0.1926,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: registered)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::check_shape",
+      "symbols": [
+        "check_shape",
+        "caching_module_getattr",
+        "select_matching_signature",
+        "warn_external"
+      ],
+      "line_range": [
+        132,
+        168
+      ],
+      "score": 0.5738,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3206,
+        "vector": 0.4056,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, other, free, your)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_get_version",
+      "symbols": [
+        "_get_version",
+        "_check_versions",
+        "_ensure_handler",
+        "set_loglevel"
+      ],
+      "line_range": [
+        213,
+        232
+      ],
+      "score": 0.576,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3593,
+        "vector": 0.3429,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: process, trigger, really, resolve)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import matplotlib.pyplot as plt\nimport pytest\n\ndef test_shared_axis_xlim_changed_callback():\n    \"\"\"\n    Test that 'xlim_changed' callback is triggered on shared axes\n    when the limit is set on the primary axis.\n    \"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True)\n    \n    events = []\n    def on_xlim_changed(ax):\n        events.append(ax)\n\n    ax2.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    # Changing ax1 should trigger the callback on ax2 due to sharex=True\n    ax1.set_xlim(0, 10)\n\n    assert len(events) == 1\n    assert events[0] is ax2\n\ndef test_shared_axis_callback_on_self():\n    \"\"\"\n    Test that 'xlim_changed' callback is triggered on the axis that \n    the change was called on.\n    \"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True)\n    \n    events = []\n    def on_xlim_changed(ax):\n        events.append(ax)\n\n    ax1.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    ax1.set_xlim(5, 15)\n\n    assert len(events) == 1\n    assert events[0] is ax1\n\ndef test_shared_axis_no_emit():\n    \"\"\"\n    Test that setting emit=False prevents callbacks on shared axis.\n    \"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True)\n    \n    events = []\n    def on_xlim_changed(ax):\n        events.append(ax)\n\n    ax2.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    # Explicitly disabling emit should not trigger callback on sibling\n    ax1.set_xlim(0, 5, emit=False)\n\n    assert len(events) == 0\n\ndef test_shared_axis_multiple_siblings():\n    \"\"\"\n    Test that callback triggers on multiple shared siblings.\n    \"\"\"\n    fig = plt.figure()\n    ax1 = fig.add_subplot(1, 3, 1)\n    ax2 = fig.add_subplot(1, 3, 2, sharex=ax1)\n    ax3 = fig.add_subplot(1, 3, 3, sharex=ax1)\n    \n    events = []\n    def on_xlim_changed(ax):\n        events.append(ax)\n\n    ax2.callbacks.connect('xlim_changed', on_xlim_changed)\n    ax3.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    ax1.set_xlim(1, 2)\n\n    assert len(events) == 2\n    assert ax2 in events\n    assert ax3 in events",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2086,6 +2086,7 @@\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n                                    emit=False, auto=auto)\n+                    other.callbacks.process('xlim_changed', other)\n \n         if self._sharex is not None:\n             self._sharex.viewLim.intervalx = self.viewLim.intervalx",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4224,
+        "matches_issue": 0.7047,
+        "safe_to_apply": 0.5081,
+        "composite": 0.6588,
+        "secrets_or_danger": 0.1819,
+        "logic_drift": 0.2502,
+        "flagged": false
+      },
+      "laya_combined": 0.6588,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 69.09,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.8-flash",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2089,6 +2089,7 @@\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n                                    emit=False, auto=auto)\n+                    other.callbacks.process('xlim_changed', other)\n \n         if auto is not None:\n             self._autoscaleXon = bool(auto)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c2\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c2\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4224,
+        "matches_issue": 0.7047,
+        "safe_to_apply": 0.5081,
+        "composite": 0.6588,
+        "secrets_or_danger": 0.1226,
+        "logic_drift": 0.2196,
+        "flagged": false
+      },
+      "laya_combined": 0.6588,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.13,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2089,6 +2089,7 @@\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n                                    emit=False, auto=auto)\n+                    other.callbacks.process('xlim_changed', other)\n \n         if self._request_autoscale_view:\n             self.autoscale_view(scalex=True, scaley=False)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c3\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c3\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4224,
+        "matches_issue": 0.7047,
+        "safe_to_apply": 0.5081,
+        "composite": 0.6588,
+        "secrets_or_danger": 0.1327,
+        "logic_drift": 0.2203,
+        "flagged": false
+      },
+      "laya_combined": 0.6588,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 68.3,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2086,6 +2086,7 @@\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n                                    emit=False, auto=auto)\n+                    other.callbacks.process('xlim_changed', other)\n \n         if self._sharex is not None:\n             self._sharex.viewLim.intervalx = self.viewLim.intervalx",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1\\lib\\matplotlib\\axes\\_base.py: undefined name 'other'"
+    ],
+    "changed_files": [
+      "lib/matplotlib/axes/_base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.4224,
+      "matches_issue": 0.7047,
+      "safe_to_apply": 0.5081,
+      "composite": 0.6588,
+      "secrets_or_danger": 0.1819,
+      "logic_drift": 0.2502,
+      "flagged": false
+    },
+    "laya_combined": 0.6588,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 69.09,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

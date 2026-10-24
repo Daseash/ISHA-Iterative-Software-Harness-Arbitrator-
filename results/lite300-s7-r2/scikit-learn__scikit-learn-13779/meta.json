@@ -1,0 +1,385 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-13779",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "b34751b7ed02b2cfcc36037fb729d4360480a299",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977809.7064285
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977820.4464278
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977833.9117012
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977837.7535388
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977862.7235928
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978051.680976
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/ensemble/voting.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/ensemble/voting.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791977700.6925106,
+  "elapsed_s": 358.47,
+  "plan": "if sample_weight is not None:\n            for name, step in self.estimators:\n                if step is not None and not has_fit_parameter(step, 'sample_weight'):\n                    raise ValueError('Underlying estimator \\'%s\\' does not'\n                                     ' support sample weights.' % name)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/ensemble/voting.py",
+      "symbol": "sklearn/ensemble/voting.py::fit",
+      "symbols": [
+        "fit",
+        "fit",
+        "fit",
+        "_parallel_fit_estimator"
+      ],
+      "line_range": [
+        64,
+        102
+      ],
+      "score": 0.5612,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.927,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: sample_weight, y; body matches report terms: estimator, sample_weight, estimators, attributeerror; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "check_matplotlib_support",
+        "safe_indexing",
+        "Bunch"
+      ],
+      "line_range": [
+        103,
+        108
+      ],
+      "score": 0.5358,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1462,
+        "vector": 0.4517,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: attributeerror, attribute)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.5275,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1357,
+        "vector": 0.4049,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: will, check)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        96,
+        109
+      ],
+      "score": 0.5168,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1463,
+        "vector": 0.2937,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: check)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions",
+      "symbols": [
+        "maybe_cythonize_extensions",
+        "build_from_c_and_cpp_files"
+      ],
+      "line_range": [
+        66,
+        92
+      ],
+      "score": 0.4929,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0809,
+        "vector": 0.2305,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: support, check)"
+    },
+    {
+      "file": "sklearn/ensemble/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3402,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2866,
+        "vector": 0.1966,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7780750000000001,
+  "laya_scores": {
+    "fix_quality": 1.5591,
+    "matches_issue": 0.841,
+    "safe_to_apply": 0.7122,
+    "composite": 0.7780750000000001,
+    "secrets_or_danger": 0.1888,
+    "logic_drift": 0.1581,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security implications introduced by checking for None.\n- PERFORMANCE: PASS - No performance degradation added.\n- ROBUSTNESS: PASS - Correctly prevents AttributeError when an estimator is set to None.\n- MINIMAL DIFF / YAGNI: PASS - Minimal and direct fix for the reported bug.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\n\nfrom sklearn.datasets import load_iris\nfrom sklearn.ensemble import VotingClassifier, VotingRegressor\nfrom sklearn.linear_model import LogisticRegression, LinearRegression\nfrom sklearn.ensemble import RandomForestClassifier, RandomForestRegressor\n\n\ndef test_voting_classifier_fit_with_sample_weight_and_none_estimator():\n    \"\"\"Test that VotingClassifier.fit succeeds with sample_weight when an\n    estimator has been set to None (e.g., via set_params).\n    \"\"\"\n    X, y = load_iris(return_X_y=True)\n    voter = VotingClassifier(\n        estimators=[('lr', LogisticRegression()),\n                    ('rf', RandomForestClassifier())]\n    )\n    voter.set_params(lr=None)\n    # Should not raise AttributeError: 'NoneType' object has no attribute 'fit'\n    voter.fit(X, y, sample_weight=np.ones(y.shape))\n\n\ndef test_voting_regressor_fit_with_sample_weight_and_none_estimator():\n    \"\"\"Test that VotingRegressor.fit succeeds with sample_weight when an\n    estimator has been set to None (edge case for regressor counterpart).\n    \"\"\"\n    X, y = load_iris(return_X_y=True)\n    voter = VotingRegressor(\n        estimators=[('lr', LinearRegression()),\n                    ('rf', RandomForestRegressor())]\n    )\n    voter.set_params(lr=None)\n    voter.fit(X, y, sample_weight=np.ones(y.shape))\n\n\ndef test_voting_classifier_all_estimators_none_with_sample_weight():\n    \"\"\"Test VotingClassifier with all estimators set to None and sample_weight.\"\"\"\n    X, y = load_iris(return_X_y=True)\n    voter = VotingClassifier(\n        estimators=[('lr', LogisticRegression()),\n                    ('rf', RandomForestClassifier())]\n    )\n    voter.set_params(lr=None, rf=None)\n    # Should not raise an error even if all are None\n    with pytest.raises(ValueError):\n        # A VotingClassifier with no estimators typically raises ValueError during fit\n        voter.fit(X, y, sample_weight=np.ones(y.shape))\n\n\ndef test_voting_classifier_sample_weight_unsupported_estimator():\n    \"\"\"Test that estimators not supporting sample weights still raise ValueError\n    when sample_weight is provided, even if another estimator is None.\n    \"\"\"\n    class DummyEstimator:\n        def fit(self, X, y):\n            return self\n        def predict(self, X):\n            return np.zeros(X.shape[0])\n\n    X, y = load_iris(return_X_y=True)\n    voter = VotingClassifier(\n        estimators=[('lr', LogisticRegression()),\n                    ('dummy', DummyEstimator())]\n    )\n    voter.set_params(lr=None)\n    with pytest.raises(ValueError, match=\"does not support sample weights\"):\n        voter.fit(X, y, sample_weight=np.ones(y.shape))",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\nindex 7afa7180cc..f4c7012ccd 100644\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,7 +30,8 @@ from ..utils import Bunch\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n     if sample_weight is not None:\n-        estimator.fit(X, y, sample_weight=sample_weight)\n+        if estimator is not None:\n+            estimator.fit(X, y, sample_weight=sample_weight)\n     else:\n         estimator.fit(X, y)\n     return estimator\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13779-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/ensemble/voting.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/ensemble/voting.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5591,
+        "matches_issue": 0.841,
+        "safe_to_apply": 0.7122,
+        "composite": 0.7780750000000001,
+        "secrets_or_danger": 0.1888,
+        "logic_drift": 0.1581,
+        "flagged": false
+      },
+      "laya_combined": 0.7781,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 43.32,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\nindex 7afa7180cc..f4c7012ccd 100644\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,7 +30,8 @@ from ..utils import Bunch\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n     if sample_weight is not None:\n-        estimator.fit(X, y, sample_weight=sample_weight)\n+        if estimator is not None:\n+            estimator.fit(X, y, sample_weight=sample_weight)\n     else:\n         estimator.fit(X, y)\n     return estimator\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13779-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/ensemble/voting.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/ensemble/voting.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5591,
+        "matches_issue": 0.841,
+        "safe_to_apply": 0.7122,
+        "composite": 0.7780750000000001,
+        "secrets_or_danger": 0.1888,
+        "logic_drift": 0.1581,
+        "flagged": false
+      },
+      "laya_combined": 0.7781,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 57.64,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -32,7 +32,7 @@\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n-    if sample_weight is not None:\n+    if sample_weight is not None and estimator is not None:\n         estimator.fit(X, y, sample_weight=sample_weight)\n-    else:\n+    elif estimator is not None:\n         estimator.fit(X, y)\n     return estimator",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13779-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/ensemble/voting.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6016,
+        "matches_issue": 0.816,
+        "safe_to_apply": 0.686,
+        "composite": 0.7758999999999999,
+        "secrets_or_danger": 0.2087,
+        "logic_drift": 0.2542,
+        "flagged": false
+      },
+      "laya_combined": 0.7759,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.4,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\nindex 7afa7180cc..f4c7012ccd 100644\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,7 +30,8 @@ from ..utils import Bunch\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n     if sample_weight is not None:\n-        estimator.fit(X, y, sample_weight=sample_weight)\n+        if estimator is not None:\n+            estimator.fit(X, y, sample_weight=sample_weight)\n     else:\n         estimator.fit(X, y)\n     return estimator\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13779-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/ensemble/voting.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/ensemble/voting.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5591,
+      "matches_issue": 0.841,
+      "safe_to_apply": 0.7122,
+      "composite": 0.7780750000000001,
+      "secrets_or_danger": 0.1888,
+      "logic_drift": 0.1581,
+      "flagged": false
+    },
+    "laya_combined": 0.7781,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0059,
+    "rank_reason": "logistic",
+    "elapsed_s": 43.32,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/ensemble/voting.py b/sklearn/ensemble/voting.py\nindex 7afa718..f4c7012 100644\n--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,7 +30,8 @@ from ..utils import Bunch\n def _parallel_fit_estimator(estimator, X, y, sample_weight=None):\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n     if sample_weight is not None:\n-        estimator.fit(X, y, sample_weight=sample_weight)\n+        if estimator is not None:\n+            estimator.fit(X, y, sample_weight=sample_weight)\n     else:\n         estimator.fit(X, y)\n     return estimator\n",
+  "offline_calls": 0
+}

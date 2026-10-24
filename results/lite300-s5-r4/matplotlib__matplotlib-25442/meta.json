@@ -1,0 +1,367 @@
+{
+  "instance_id": "matplotlib__matplotlib-25442",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "73394f2b11321e03a5df199ec0196f27a728b0b0",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819233.0587647
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819236.5820756
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819244.328857
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819246.3633249
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819256.2455544
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791819330.94325
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791819191.1717894,
+  "elapsed_s": 144.32,
+  "plan": "@property\ndef canvas(self):\n    if self.ref_artist is None or self.ref_artist.figure is None:\n        return None\n    return self.ref_artist.figure.canvas",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/offsetbox.py",
+      "symbol": "lib/matplotlib/offsetbox.py::_check_still_parented",
+      "symbols": [
+        "_check_still_parented",
+        "disconnect",
+        "_compat_get_offset",
+        "_get_packed_offsets"
+      ],
+      "line_range": [
+        1552,
+        1558
+      ],
+      "score": 0.6227,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3226,
+        "vector": 0.8086,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: disconnect, ref_artist, figure, check_still_parented; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::scatter",
+      "symbols": [
+        "scatter",
+        "set_loglevel",
+        "acorr",
+        "angle_spectrum"
+      ],
+      "line_range": [
+        2857,
+        2869
+      ],
+      "score": 0.9328,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5957,
+        "vector": 0.7403,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: x; body matches report terms: data, args, kwargs, line; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_logged_cached",
+      "symbols": [
+        "_logged_cached",
+        "_rc_params_in_file",
+        "_preprocess_data",
+        "_get_version"
+      ],
+      "line_range": [
+        282,
+        312
+      ],
+      "score": 0.6493,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5368,
+        "vector": 0.5841,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: func; body matches report terms: after, using, call, actual)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::classproperty",
+      "symbols": [
+        "classproperty",
+        "__init__",
+        "check_shape",
+        "check_getitem"
+      ],
+      "line_range": [
+        27,
+        60
+      ],
+      "score": 0.5814,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3875,
+        "vector": 0.3292,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: error, property, init__, trigger)"
+    },
+    {
+      "file": "lib/matplotlib/testing/jpl_units/__init__.py",
+      "symbol": "lib/matplotlib/testing/jpl_units/__init__.py::register",
+      "symbols": [
+        "register"
+      ],
+      "line_range": [
+        53,
+        62
+      ],
+      "score": 0.5793,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2991,
+        "vector": 0.4959,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: version, matplotlib)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::ProjectionRegistry",
+      "symbols": [
+        "ProjectionRegistry",
+        "__init__",
+        "get_projection_class"
+      ],
+      "line_range": [
+        61,
+        81
+      ],
+      "score": 0.5692,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2817,
+        "vector": 0.4483,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: init__)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom matplotlib.offsetbox import Rubberband\n\n\nclass DummyArtist:\n    def __init__(self, figure=None):\n        self.figure = figure\n\n\ndef test_rubberband_canvas_property_none_ref_artist():\n    \"\"\"\n    Test that accessing the canvas property when ref_artist is None\n    returns None instead of raising an AttributeError.\n    \"\"\"\n    rb = Rubberband()\n    rb.ref_artist = None\n    assert rb.canvas is None\n\n\ndef test_rubberband_canvas_property_none_figure():\n    \"\"\"\n    Test that accessing the canvas property when ref_artist.figure is None\n    returns None instead of raising an AttributeError.\n    \"\"\"\n    rb = Rubberband()\n    rb.ref_artist = DummyArtist(figure=None)\n    assert rb.canvas is None\n\n\ndef test_rubberband_canvas_property_valid_figure():\n    \"\"\"\n    Test that accessing the canvas property when ref_artist and figure\n    are valid returns the expected canvas.\n    \"\"\"\n    class DummyCanvas:\n        pass\n\n    class DummyFigure:\n        def __init__(self, canvas):\n            self.canvas = canvas\n\n    canvas = DummyCanvas()\n    figure = DummyFigure(canvas)\n    rb = Rubberband()\n    rb.ref_artist = DummyArtist(figure=figure)\n    assert rb.canvas is canvas",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1514,7 +1514,9 @@ class Rubberband(OffsetBox):\n     def __init__(self):\n         super().__init__()\n \n     _text = property(lambda self: None)\n-    canvas = property(lambda self: self.ref_artist.figure.canvas)\n+    canvas = property(lambda self: (\n+        self.ref_artist.figure.canvas\n+        if self.ref_artist and self.ref_artist.figure else None))\n \n     def set_figure(self, fig):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rythvqb1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rythvqb1\\lib\\matplotlib\\offsetbox.py: SyntaxError line 625: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6261,
+        "matches_issue": 0.7714,
+        "safe_to_apply": 0.6736,
+        "composite": 0.767775,
+        "secrets_or_danger": 0.2534,
+        "logic_drift": 0.3906,
+        "flagged": false
+      },
+      "laya_combined": 0.7678,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 30.59,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1514,7 +1514,10 @@\n     get_offset = _compat_get_offset(get_offset)\n \n     draggable = property(_get_draggable, _set_draggable)\n-    canvas = property(lambda self: self.ref_artist.figure.canvas)\n+    @property\n+    def canvas(self):\n+        if self.ref_artist is None or self.ref_artist.figure is None:\n+            return None\n+        return self.ref_artist.figure.canvas\n \n \n class DraggableBase:",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-5a4ssc9g",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-5a4ssc9g\\lib\\matplotlib\\offsetbox.py: SyntaxError line 625: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5923,
+        "matches_issue": 0.7471,
+        "safe_to_apply": 0.6568,
+        "composite": 0.74905,
+        "secrets_or_danger": 0.1908,
+        "logic_drift": 0.3388,
+        "flagged": false
+      },
+      "laya_combined": 0.749,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.23,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1514,3 +1514,5 @@\n     @property\n     def canvas(self):\n+        if self.ref_artist is None or self.ref_artist.figure is None:\n+            return None\n         return self.ref_artist.figure.canvas",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-cqcn11h_",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-cqcn11h_\\lib\\matplotlib\\offsetbox.py: SyntaxError line 625: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.682,
+        "matches_issue": 0.8549,
+        "safe_to_apply": 0.7106,
+        "composite": 0.811875,
+        "secrets_or_danger": 0.2754,
+        "logic_drift": 0.1905,
+        "flagged": false
+      },
+      "laya_combined": 0.8119,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 41.25,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1514,7 +1514,9 @@ class Rubberband(OffsetBox):\n     def __init__(self):\n         super().__init__()\n \n     _text = property(lambda self: None)\n-    canvas = property(lambda self: self.ref_artist.figure.canvas)\n+    canvas = property(lambda self: (\n+        self.ref_artist.figure.canvas\n+        if self.ref_artist and self.ref_artist.figure else None))\n \n     def set_figure(self, fig):",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rythvqb1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rythvqb1\\lib\\matplotlib\\offsetbox.py: SyntaxError line 625: unexpected indent"
+    ],
+    "changed_files": [
+      "lib/matplotlib/offsetbox.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6261,
+      "matches_issue": 0.7714,
+      "safe_to_apply": 0.6736,
+      "composite": 0.767775,
+      "secrets_or_danger": 0.2534,
+      "logic_drift": 0.3906,
+      "flagged": false
+    },
+    "laya_combined": 0.7678,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 30.59,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

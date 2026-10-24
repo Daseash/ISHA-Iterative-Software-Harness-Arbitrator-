@@ -1,0 +1,363 @@
+{
+  "instance_id": "matplotlib__matplotlib-25442",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "73394f2b11321e03a5df199ec0196f27a728b0b0",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737624.4141998
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737626.651871
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737635.1786811
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737638.5837796
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737644.6936069
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791737699.5959675
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791737596.5291827,
+  "elapsed_s": 105.01,
+  "plan": "def _check_still_parented(self):\n         if self.ref_artist.figure is None:\n             return False\n         return self.ref_artist.figure.canvas is not None",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/offsetbox.py",
+      "symbol": "lib/matplotlib/offsetbox.py::_check_still_parented",
+      "symbols": [
+        "_check_still_parented",
+        "disconnect",
+        "_compat_get_offset",
+        "_get_packed_offsets"
+      ],
+      "line_range": [
+        1552,
+        1558
+      ],
+      "score": 0.6227,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3226,
+        "vector": 0.8086,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: check_still_parented, figure, ref_artist, disconnect; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::scatter",
+      "symbols": [
+        "scatter",
+        "set_loglevel",
+        "acorr",
+        "angle_spectrum"
+      ],
+      "line_range": [
+        2857,
+        2869
+      ],
+      "score": 0.9328,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5957,
+        "vector": 0.7403,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: x; body matches report terms: line, data, kwargs, args; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_logged_cached",
+      "symbols": [
+        "_logged_cached",
+        "_rc_params_in_file",
+        "_preprocess_data",
+        "_get_version"
+      ],
+      "line_range": [
+        282,
+        312
+      ],
+      "score": 0.6493,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5368,
+        "vector": 0.5841,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: func; body matches report terms: func, after, using, will)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::classproperty",
+      "symbols": [
+        "classproperty",
+        "__init__",
+        "check_shape",
+        "check_getitem"
+      ],
+      "line_range": [
+        27,
+        60
+      ],
+      "score": 0.5814,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3875,
+        "vector": 0.3292,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: trigger, init__, property, error)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::ProjectionRegistry",
+      "symbols": [
+        "ProjectionRegistry",
+        "__init__",
+        "get_projection_class"
+      ],
+      "line_range": [
+        61,
+        81
+      ],
+      "score": 0.5692,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2817,
+        "vector": 0.4483,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: init__)"
+    },
+    {
+      "file": "lib/matplotlib/testing/jpl_units/__init__.py",
+      "symbol": "lib/matplotlib/testing/jpl_units/__init__.py::register",
+      "symbols": [
+        "register"
+      ],
+      "line_range": [
+        53,
+        62
+      ],
+      "score": 0.5793,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2991,
+        "vector": 0.4959,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: version, matplotlib)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nimport numpy as np\nimport matplotlib.pyplot as plt\nfrom matplotlib.offsetbox import AnnotationBbox\nimport mplcursors\n\ndef test_mplcursors_attribute_error_reproduction():\n    \"\"\"\n    Reproduces the AttributeError: 'NoneType' object has no attribute 'canvas'\n    encountered when mplcursors interacts with artist lifecycle in Matplotlib 3.7.1.\n    \"\"\"\n    x = np.arange(1, 11)\n    y1 = x\n    fig, ax = plt.subplots()\n    ax.scatter(x, y1)\n\n    # Initialize cursor\n    cursor = mplcursors.cursor()\n\n    # The bug is triggered when an annotation is created and then the \n    # underlying artist's figure is accessed after removal or during cleanup.\n    # We simulate a selection event that leads to the traceback.\n    artist = ax.get_children()[0]\n    cursor.connect(\"add\", lambda sel: None)\n    \n    # Trigger the bug: The error occurs inside OffsetBox.on_release -> _check_still_parented\n    # when an annotation exists on an artist that is being re-parented or cleaned up.\n    try:\n        # Create an annotation and simulate the condition leading to the crash\n        ann = ax.annotate(\"test\", xy=(1, 1))\n        ann.remove()  # Removing can trigger the state check\n        \n        # Call the problematic method directly to verify the fix\n        assert ann._check_still_parented() is False\n    except AttributeError as e:\n        if \"'NoneType' object has no attribute 'canvas'\" in str(e):\n            pytest.fail(\"Caught expected AttributeError in _check_still_parented\")\n        raise e\n\ndef test_check_still_parented_with_no_figure():\n    \"\"\"\n    Test that _check_still_parented returns False when figure is None.\n    This is the boundary condition for the fix.\n    \"\"\"\n    ann = AnnotationBbox(None, (0, 0))\n    # In the bug state, ref_artist.figure is None.\n    # The fix ensures this doesn't attempt to access .canvas\n    assert ann._check_still_parented() is False\n\ndef test_check_still_parented_with_valid_figure():\n    \"\"\"\n    Test that _check_still_parented returns True when figure and canvas are valid.\n    \"\"\"\n    fig, ax = plt.subplots()\n    ann = AnnotationBbox(None, (0, 0))\n    ann.ref_artist = ax\n    # Since figure is assigned, it should return True assuming canvas exists\n    assert ann._check_still_parented() is True\n    plt.close(fig)\n\ndef test_invalid_input_on_annotation():\n    \"\"\"\n    Test that constructing an AnnotationBbox with minimal invalid structure\n    still handles the internal state checks gracefully.\n    \"\"\"\n    ann = AnnotationBbox(None, (0, 0))\n    # Verify that calling the logic on an uninitialized annotation does not crash\n    try:\n        ann._check_still_parented()\n    except Exception as e:\n        pytest.fail(f\"_check_still_parented raised {type(e).__name__} unexpectedly\")",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.8-flash",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1557,7 +1557,7 @@\n     def _check_still_parented(self):\n-        return self.ref_artist.figure.canvas is not None\n+        return self.ref_artist.figure is not None and self.ref_artist.figure.canvas is not None\n \n     def _check_still_parented(self):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-mgyiclgg",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6705,
+        "matches_issue": 0.8628,
+        "safe_to_apply": 0.7405,
+        "composite": 0.81845,
+        "secrets_or_danger": 0.1664,
+        "logic_drift": 0.0311,
+        "flagged": false
+      },
+      "laya_combined": 0.8185,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0058,
+      "rank_reason": "logistic",
+      "elapsed_s": 26.87,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1557,7 +1557,7 @@\n     def _check_still_parented(self):\n         if self.ref_artist.figure is None:\n             return False\n-        return self.ref_artist.figure.canvas is not None\n+        return self.ref_artist.figure.canvas is not None\n \n     def _check_still_parented(self):\n         return self.ref_artist.figure is not None and self.ref_artist.figure.canvas is not None",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9zhay18a",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5779,
+        "matches_issue": 0.7542,
+        "safe_to_apply": 0.6375,
+        "composite": 0.7424,
+        "secrets_or_danger": 0.2382,
+        "logic_drift": 0.3048,
+        "flagged": false
+      },
+      "laya_combined": 0.7424,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 16.7,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1557,7 +1557,7 @@\n     def _check_still_parented(self):\n-        return self.ref_artist.figure.canvas is not None\n+        return self.ref_artist.figure is not None and self.ref_artist.figure.canvas is not None",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-tsvjjq46",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-tsvjjq46\\lib\\matplotlib\\offsetbox.py: SyntaxError line 1554: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/matplotlib/offsetbox.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6705,
+        "matches_issue": 0.8628,
+        "safe_to_apply": 0.7405,
+        "composite": 0.81845,
+        "secrets_or_danger": 0.3095,
+        "logic_drift": 0.2497,
+        "flagged": false
+      },
+      "laya_combined": 0.8185,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 28.91,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.8-flash",
+    "substituted": true,
+    "patch": "--- a/lib/matplotlib/offsetbox.py\n+++ b/lib/matplotlib/offsetbox.py\n@@ -1557,7 +1557,7 @@\n     def _check_still_parented(self):\n-        return self.ref_artist.figure.canvas is not None\n+        return self.ref_artist.figure is not None and self.ref_artist.figure.canvas is not None\n \n     def _check_still_parented(self):",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-mgyiclgg",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/offsetbox.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6705,
+      "matches_issue": 0.8628,
+      "safe_to_apply": 0.7405,
+      "composite": 0.81845,
+      "secrets_or_danger": 0.1664,
+      "logic_drift": 0.0311,
+      "flagged": false
+    },
+    "laya_combined": 0.8185,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0058,
+    "rank_reason": "logistic",
+    "elapsed_s": 26.87,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

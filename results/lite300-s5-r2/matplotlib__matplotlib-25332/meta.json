@@ -1,0 +1,404 @@
+{
+  "instance_id": "matplotlib__matplotlib-25332",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "66ba515e671638971bd11a34cff12c107a437e0b",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736711.6638384
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736714.123053
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736720.8500392
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736725.9663093
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736740.1360655
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736831.9340038
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791736861.104749
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: lib/matplotlib/figure.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/matplotlib/figure.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791736682.5695684,
+  "elapsed_s": 186.56,
+  "plan": "def __getstate__(self):\n        state = super().__getstate__()\n        # Remove _align_label_groups as it contains weakrefs which are not picklable\n        state.pop('_align_label_groups', None)\n        return state",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::__init__",
+      "symbols": [
+        "__init__",
+        "align_labels",
+        "show",
+        "add_subplot"
+      ],
+      "line_range": [
+        2366,
+        2423
+      ],
+      "score": 0.6922,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.569,
+        "vector": 0.8742,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: figure; body matches report terms: plot, figure, this, line)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::set_loglevel",
+      "symbols": [
+        "set_loglevel",
+        "_auto_draw_if_interactive",
+        "close",
+        "subplot2grid"
+      ],
+      "line_range": [
+        173,
+        176
+      ],
+      "score": 0.9366,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5986,
+        "vector": 0.7665,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: pyplot; body matches report terms: plot, matplotlib, pyplot, this)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::kwarg_error",
+      "symbols": [
+        "kwarg_error",
+        "warn_external",
+        "nargs_error",
+        "caching_module_getattr"
+      ],
+      "line_range": [
+        345,
+        361
+      ],
+      "score": 0.5548,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2138,
+        "vector": 0.4693,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: with, typeerror, calling, expected)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.5541,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2546,
+        "vector": 0.3788,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: line)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_get_version",
+      "symbols": [
+        "_get_version",
+        "_check_versions",
+        "_ensure_handler",
+        "set_loglevel"
+      ],
+      "line_range": [
+        183,
+        202
+      ],
+      "score": 0.6398,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4703,
+        "vector": 0.6437,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: plot, matplotlib, version)"
+    },
+    {
+      "file": "setupext.py",
+      "symbol": "setupext.py::_get_xdg_cache_dir",
+      "symbols": [
+        "_get_xdg_cache_dir",
+        "get_package_data",
+        "Tests",
+        "get_package_data"
+      ],
+      "line_range": [
+        25,
+        38
+      ],
+      "score": 0.5865,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2693,
+        "vector": 0.5766,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: plot, with, matplotlib)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.80525,
+  "laya_scores": {
+    "fix_quality": 1.618,
+    "matches_issue": 0.8672,
+    "safe_to_apply": 0.7358,
+    "composite": 0.80525,
+    "secrets_or_danger": 0.4303,
+    "logic_drift": 0.3041,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No influence on security or execution context.\n- PERFORMANCE: PASS - Removing an object from the state dictionary is O(1).\n- ROBUSTNESS: PASS - Correctly removes a non-pickleable weakref object that is naturally reconstructed if needed.\n- MINIMAL DIFF / YAGNI: PASS - Minimal surgical fix for the reported pickling failure.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pickle\nimport pytest\nimport matplotlib.pyplot as plt\n\ndef test_pickle_figure_with_aligned_labels():\n    \"\"\"\n    Test that pickling a figure after calling align_labels() succeeds.\n    This reproduces the TypeError: cannot pickle 'weakref.ReferenceType' object.\n    \"\"\"\n    fig = plt.figure()\n    ax1 = fig.add_subplot(211)\n    ax2 = fig.add_subplot(212)\n    ax1.plot([0, 1], [0, 1])\n    ax1.set_ylabel('speed')\n    ax2.plot([0, 1], [0, 1])\n    ax2.set_ylabel('acc')\n\n    fig.align_labels()\n\n    # This should not raise TypeError after the fix\n    try:\n        pickle.dumps(fig)\n    except TypeError as e:\n        pytest.fail(f\"Pickling failed with TypeError: {e}\")\n\ndef test_pickle_figure_without_aligned_labels():\n    \"\"\"\n    Ensure normal pickling of figures still works.\n    \"\"\"\n    fig = plt.figure()\n    ax = fig.add_subplot(111)\n    ax.plot([1, 2], [3, 4])\n    \n    # Should work as before\n    pickle.dumps(fig)\n\ndef test_pickle_figure_with_empty_align_labels():\n    \"\"\"\n    Test align_labels on a figure with no axes (or just one axes) \n    where no alignment groups are created.\n    \"\"\"\n    fig = plt.figure()\n    fig.add_subplot(111)\n    fig.align_labels()\n    \n    pickle.dumps(fig)\n\ndef test_pickle_multiple_figures_with_alignment():\n    \"\"\"\n    Check if calling align_labels on multiple figures works independently.\n    \"\"\"\n    figs = []\n    for _ in range(2):\n        fig = plt.figure()\n        fig.add_subplot(211).set_ylabel('a')\n        fig.add_subplot(212).set_ylabel('b')\n        fig.align_labels()\n        figs.append(fig)\n        \n    for fig in figs:\n        pickle.dumps(fig)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3081,6 +3081,11 @@\n         state = super().__getstate__()\n         state.pop('_stale_figure_callback', None)\n         state.pop('canvas', None)\n+        state.pop('_align_label_groups', None)\n         return state\n \n     def __setstate__(self, state):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-s0l6o_et",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/figure.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6244,
+        "matches_issue": 0.8331,
+        "safe_to_apply": 0.7908,
+        "composite": 0.812075,
+        "secrets_or_danger": 0.118,
+        "logic_drift": 0.1527,
+        "flagged": false
+      },
+      "laya_combined": 0.8121,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 53.36,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3104,6 +3104,11 @@\n         state.pop(\"_canvas\", None)\n         return state\n \n+    def __getstate__(self):\n+        state = super().__getstate__()\n+        state.pop('_align_label_groups', None)\n+        return state\n+\n     def __setstate__(self, state):\n         self.__dict__.update(state)\n         # re-initialise some of the unstored state",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-c1lx8148",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/figure.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6244,
+        "matches_issue": 0.8331,
+        "safe_to_apply": 0.7908,
+        "composite": 0.812075,
+        "secrets_or_danger": 0.3381,
+        "logic_drift": 0.2506,
+        "flagged": false
+      },
+      "laya_combined": 0.8121,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 57.83,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.8-flash",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3084,6 +3084,12 @@\n         self.stale = True\n         self.stale_callback = _stale_figure_callback\n \n+    def __getstate__(self):\n+        state = super().__getstate__()\n+        # Remove _align_label_groups as it contains weakrefs which are not picklable\n+        state.pop('_align_label_groups', None)\n+        return state\n+\n     def _get_draw_artists(self, renderer):\n         \"\"\"\n         Return a list of artists to draw in the figure.",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: local variable 'w_pad' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: local variable 'h_pad' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: local variable 'wspace' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: local variable 'hspace' is assigned to but never used",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: redefinition of unused '__getstate__' from line 2874",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: undefined name 'relative'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: undefined name 'w_pad'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-rhho5gun\\lib\\matplotlib\\figure.py: undefined name 'h_pad'"
+      ],
+      "changed_files": [
+        "lib/matplotlib/figure.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6073,
+        "matches_issue": 0.8385,
+        "safe_to_apply": 0.7889,
+        "composite": 0.808675,
+        "secrets_or_danger": 0.1295,
+        "logic_drift": 0.2646,
+        "flagged": false
+      },
+      "laya_combined": 0.8087,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 51.25,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3081,6 +3081,11 @@\n         state = super().__getstate__()\n         state.pop('_stale_figure_callback', None)\n         state.pop('canvas', None)\n+        state.pop('_align_label_groups', None)\n         return state\n \n     def __setstate__(self, state):",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-s0l6o_et",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/figure.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6244,
+      "matches_issue": 0.8331,
+      "safe_to_apply": 0.7908,
+      "composite": 0.812075,
+      "secrets_or_danger": 0.118,
+      "logic_drift": 0.1527,
+      "flagged": false
+    },
+    "laya_combined": 0.8121,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0057,
+    "rank_reason": "logistic",
+    "elapsed_s": 53.36,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/lib/matplotlib/figure.py b/lib/matplotlib/figure.py\nindex b4c3836..e5bedeb 100644\n--- a/lib/matplotlib/figure.py\n+++ b/lib/matplotlib/figure.py\n@@ -3158,6 +3158,7 @@ None}, default: None\n \n     def __getstate__(self):\n         state = super().__getstate__()\n+        state.pop('_align_label_groups', None)\n \n         # The canvas cannot currently be pickled, but this has the benefit\n         # of meaning that a figure can be detached from one canvas, and\n",
+  "offline_calls": 0
+}

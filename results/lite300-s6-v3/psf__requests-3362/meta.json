@@ -1,0 +1,399 @@
+{
+  "instance_id": "psf__requests-3362",
+  "repo": "psf/requests",
+  "base_commit": "36453b95b13079296776d11b09cab2567ea3e703",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976338.9713337
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976339.9840226
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976350.8336458
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976353.791275
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976359.9261806
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976538.8092675
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: requests/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "requests/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791976315.988272,
+  "elapsed_s": 231.4,
+  "plan": "if decode_unicode:\n    # ... calls stream_decode_response_unicode ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "requests/models.py",
+      "symbol": "requests/models.py::iter_content",
+      "symbols": [
+        "iter_content",
+        "iter_lines",
+        "text",
+        "prepare_cookies"
+      ],
+      "line_range": [
+        653,
+        701
+      ],
+      "score": 0.4486,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6014,
+        "vector": 0.8183,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: decode_unicode; body matches report terms: when, content, unicode, should; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "requests/utils.py",
+      "symbol": "requests/utils.py::super_len",
+      "symbols": [
+        "super_len",
+        "from_key_val_list",
+        "to_key_val_list",
+        "unquote_header_value"
+      ],
+      "line_range": [
+        48,
+        95
+      ],
+      "score": 0.4194,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6604,
+        "vector": 0.4528,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: when, content, requests, that)"
+    },
+    {
+      "file": "requests/packages/chardet/__init__.py",
+      "symbol": "requests/packages/chardet/__init__.py::detect",
+      "symbols": [
+        "detect"
+      ],
+      "line_range": [
+        22,
+        32
+      ],
+      "score": 0.5104,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2618,
+        "vector": 0.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: unicode, bytes, object)"
+    },
+    {
+      "file": "requests/exceptions.py",
+      "symbol": "requests/exceptions.py::RequestException",
+      "symbols": [
+        "RequestException",
+        "Timeout",
+        "ConnectTimeout",
+        "FileModeWarning"
+      ],
+      "line_range": [
+        13,
+        29
+      ],
+      "score": 0.4239,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4157,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: that, object)"
+    },
+    {
+      "file": "requests/packages/urllib3/__init__.py",
+      "symbol": "requests/packages/urllib3/__init__.py::add_stderr_logger",
+      "symbols": [
+        "add_stderr_logger"
+      ],
+      "line_range": [
+        57,
+        73
+      ],
+      "score": 0.4811,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0353,
+        "vector": 0.2274,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: returns)"
+    },
+    {
+      "file": "requests/packages/urllib3/packages/six.py",
+      "symbol": "requests/packages/urllib3/packages/six.py::Iterator",
+      "symbols": [
+        "Iterator",
+        "X",
+        "_add_doc",
+        "_import_module"
+      ],
+      "line_range": [
+        247,
+        251
+      ],
+      "score": 0.3877,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5398,
+        "vector": 0.4392,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: next, object)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.75885,
+  "laya_scores": {
+    "fix_quality": 1.6594,
+    "matches_issue": 0.7549,
+    "safe_to_apply": 0.6211,
+    "composite": 0.75885,
+    "secrets_or_danger": 0.1467,
+    "logic_drift": 0.2455,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No injection, credential exposure, or path traversal vectors introduced.\n- PERFORMANCE: RISK: Wrapping the stream in an additional generator function adds overhead to the response iteration loop.\n- ROBUSTNESS: PASS: Exception handling for ProtocolError remains intact around the inner stream.\n- MINIMAL DIFF / YAGNI: PASS: The change directly addresses the unicode iteration issue via a dedicated helper method.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom requests.models import Response\nfrom io import BytesIO\n\n\ndef test_iter_content_decode_unicode_returns_str():\n    \"\"\"\n    Test that Response.iter_content(decode_unicode=True) yields unicode strings (str)\n    rather than bytes, matching the behavior of Response.text.\n    \"\"\"\n    response = Response()\n    response.raw = BytesIO(b\"Hello, world!\")\n    response.encoding = \"utf-8\"\n\n    chunks = list(response.iter_content(chunk_size=5, decode_unicode=True))\n    \n    assert len(chunks) > 0\n    for chunk in chunks:\n        assert isinstance(chunk, str)\n\n\ndef test_iter_content_default_decode_unicode_returns_bytes():\n    \"\"\"\n    Test that Response.iter_content() with default decode_unicode=False\n    yields bytes objects.\n    \"\"\"\n    response = Response()\n    response.raw = BytesIO(b\"Hello, world!\")\n    response.encoding = \"utf-8\"\n\n    chunks = list(response.iter_content(chunk_size=5, decode_unicode=False))\n    \n    assert len(chunks) > 0\n    for chunk in chunks:\n        assert isinstance(chunk, bytes)\n\n\ndef test_iter_content_decode_unicode_with_custom_encoding():\n    \"\"\"\n    Test that decode_unicode correctly respects non-utf8 encodings (e.g., latin-1).\n    \"\"\"\n    response = Response()\n    # \\xe4 is 'ä' in latin-1\n    response.raw = BytesIO(b\"H\\xe4llo\")\n    response.encoding = \"latin-1\"\n\n    chunks = list(response.iter_content(chunk_size=10, decode_unicode=True))\n    \n    assert len(chunks) == 1\n    assert isinstance(chunks[0], str)\n    assert chunks[0] == \"Hällo\"\n\n\ndef test_iter_content_empty_content():\n    \"\"\"\n    Test iter_content with decode_unicode=True on an empty response stream.\n    \"\"\"\n    response = Response()\n    response.raw = BytesIO(b\"\")\n    response.encoding = \"utf-8\"\n\n    chunks = list(response.iter_content(chunk_size=10, decode_unicode=True))\n    \n    assert chunks == []",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/requests/models.py b/requests/models.py\nindex fbb3c7e6..84b7870d 100644\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -665,7 +665,7 @@ class Response(object):\n             # Special case for urllib3.\n             if hasattr(self.raw, 'stream'):\n                 try:\n-                    for chunk in self.raw.stream(chunk_size, decode_content=True):\n+                    for chunk in self.stream_decode_response_unicode(self.raw.stream(chunk_size, decode_content=True), self):\n                         yield chunk\n                 except ProtocolError as e:\n                     raise ChunkedEncodingError(e)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: requests/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "requests/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6594,
+        "matches_issue": 0.7549,
+        "safe_to_apply": 0.6211,
+        "composite": 0.75885,
+        "secrets_or_danger": 0.1467,
+        "logic_drift": 0.2455,
+        "flagged": false
+      },
+      "laya_combined": 0.7589,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 22.23,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/requests/models.py\n+++ b/requests/models.py\n@@ -671,7 +671,7 @@\n         # If decode_unicode is set, we want to decode the content.\n         if decode_unicode:\n             iterator = stream_decode_response_unicode(iterator, self)\n-        return iterator\n+        return (chunk.decode(self.encoding or 'utf-8') if decode_unicode and isinstance(chunk, bytes) else chunk for chunk in iterator)\n \n     @property\n     def content(self):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "requests/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5666,
+        "matches_issue": 0.7115,
+        "safe_to_apply": 0.5543,
+        "composite": 0.7081000000000001,
+        "secrets_or_danger": 0.076,
+        "logic_drift": 0.1908,
+        "flagged": false
+      },
+      "laya_combined": 0.7081,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 30.29,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/requests/models.py\n+++ b/requests/models.py\n@@ -699,7 +699,7 @@\n         if decode_unicode:\n             iter = self.stream_decode_response_unicode(iter, self.encoding)\n \n-        return iter\n+        return iter if decode_unicode else iter\n \n     def iter_lines(self, chunk_size=ITER_CHUNK_SIZE, decode_unicode=None, delimiter=None):\n         \"\"\"Iterate over the response data, one line at a time.  When",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c2\\requests\\models.py: '.utils.stream_decode_response_unicode' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c2\\requests\\models.py: local variable 'chunks' is assigned to but never used",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c2\\requests\\models.py: local variable 'iter' defined as a builtin referenced before assignment"
+      ],
+      "changed_files": [
+        "requests/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6174,
+        "matches_issue": 0.7105,
+        "safe_to_apply": 0.4881,
+        "composite": 0.704,
+        "secrets_or_danger": 0.0845,
+        "logic_drift": 0.1625,
+        "flagged": false
+      },
+      "laya_combined": 0.704,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0012,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.06,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/requests/models.py b/requests/models.py\nindex fbb3c7e6..84b7870d 100644\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -665,7 +665,7 @@ class Response(object):\n             # Special case for urllib3.\n             if hasattr(self.raw, 'stream'):\n                 try:\n-                    for chunk in self.raw.stream(chunk_size, decode_content=True):\n+                    for chunk in self.stream_decode_response_unicode(self.raw.stream(chunk_size, decode_content=True), self):\n                         yield chunk\n                 except ProtocolError as e:\n                     raise ChunkedEncodingError(e)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-3362-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: requests/models.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "requests/models.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6594,
+      "matches_issue": 0.7549,
+      "safe_to_apply": 0.6211,
+      "composite": 0.75885,
+      "secrets_or_danger": 0.1467,
+      "logic_drift": 0.2455,
+      "flagged": false
+    },
+    "laya_combined": 0.7589,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 22.23,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/requests/models.py b/requests/models.py\nindex fbb3c7e..84b7870 100644\n--- a/requests/models.py\n+++ b/requests/models.py\n@@ -665,7 +665,7 @@ class Response(object):\n             # Special case for urllib3.\n             if hasattr(self.raw, 'stream'):\n                 try:\n-                    for chunk in self.raw.stream(chunk_size, decode_content=True):\n+                    for chunk in self.stream_decode_response_unicode(self.raw.stream(chunk_size, decode_content=True), self):\n                         yield chunk\n                 except ProtocolError as e:\n                     raise ChunkedEncodingError(e)\n",
+  "offline_calls": 0
+}

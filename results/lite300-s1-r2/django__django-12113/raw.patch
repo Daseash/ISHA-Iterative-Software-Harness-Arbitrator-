@@ -1,0 +1,10 @@
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -173,6 +173,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):
+ 
+     def get_new_connection(self, conn_params):
++        if 'timeout' not in conn_params:
++            conn_params['timeout'] = 20
+         return Database.connect(**conn_params)
+ 
+     def init_connection_state(self):

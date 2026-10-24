@@ -1,0 +1,21 @@
+diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py
+index 737e16c..ebe7516 100644
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -1853,12 +1853,12 @@ def _print_PolynomialRingBase(self, expr):
+         return r"%s%s\left[%s\right]" % (inv, domain, symbols)
+ 
+     def _print_Poly(self, poly):
+-        cls = poly.__class__.__name__
++        cls = poly.__class__
+         expr = self._print(poly.as_expr())
+-        gens = list(map(self._print, poly.gens))
+-        domain = "domain=%s" % self._print(poly.get_domain())
++        gens = [self._print(gen) for gen in poly.gens]
++        domain = self._print(poly.get_domain())
+ 
+-        args = ", ".join([expr] + gens + [domain])
++        args = ", ".join([expr] + gens + ["domain={}".format(domain)])
+         if cls in accepted_latex_functions:
+             tex = r"\%s {\left (%s \right )}" % (cls, args)
+         else:

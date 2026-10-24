@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "matplotlib__matplotlib-23987", "ts": 1791740735.8244748}
+{"event": "attempt", "n": 1, "ts": 1791740736.2692614}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791741236.2697852}
+{"event": "attempt", "n": 2, "ts": 1791741236.3629847}
+{"event": "model", "ts": 1791741254.7347484, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791741256.7340832, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791741264.9536915, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791741269.957581, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791741277.6730757, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791741354.613459, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791741365.6718256}

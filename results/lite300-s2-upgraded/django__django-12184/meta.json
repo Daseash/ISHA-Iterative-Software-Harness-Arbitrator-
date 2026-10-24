@@ -1,0 +1,398 @@
+{
+  "instance_id": "django__django-12184",
+  "repo": "django/django",
+  "base_commit": "5d674eac871a306405b0fbbaeb17bbeba9c68bf3",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453702.7474844
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453707.7754624
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453733.3113413
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453736.6429465
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453760.3910558
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453916.6832108
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791453980.037831
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/handlers/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/handlers/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:13"
+  },
+  "started_at": 1791453631.850109,
+  "elapsed_s": 355.89,
+  "plan": "# Within django/core/handlers/base.py, inside _get_response:\n\n        if response is None:\n            wrapped_callback = self.make_view_atomic(callback)\n            try:\n                # Filter out None values from callback_kwargs to allow default arguments in views\n                filtered_kwargs = {k: v for k, v in callback_kwargs.items() if v is not None}\n                response = wrapped_callback(request, *callback_args, **filtered_kwargs)\n            except Exception as e:\n                response = self.process_exception_by_middleware(e, request)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/handlers/base.py",
+      "symbol": "django/core/handlers/base.py::get_response",
+      "symbols": [
+        "get_response",
+        "process_exception_by_middleware",
+        "BaseHandler",
+        "load_middleware"
+      ],
+      "line_range": [
+        71,
+        84
+      ],
+      "score": 0.7192,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4941,
+        "vector": 0.3808,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: given, urlconf, this, response; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/views/generic/base.py",
+      "symbol": "django/views/generic/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "as_view",
+        "view",
+        "dispatch"
+      ],
+      "line_range": [
+        38,
+        47
+      ],
+      "score": 0.6949,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4486,
+        "vector": 0.2725,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: value, call, arguments, urlconf)"
+    },
+    {
+      "file": "django/core/handlers/exception.py",
+      "symbol": "django/core/handlers/exception.py::convert_exception_to_response",
+      "symbols": [
+        "convert_exception_to_response",
+        "inner",
+        "response_for_exception",
+        "get_exception_response"
+      ],
+      "line_range": [
+        18,
+        40
+      ],
+      "score": 0.6567,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2471,
+        "vector": 0.3742,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: get_response; body matches report terms: call, exception, given, this)"
+    },
+    {
+      "file": "django/urls/base.py",
+      "symbol": "django/urls/base.py::set_urlconf",
+      "symbols": [
+        "set_urlconf",
+        "is_valid_path",
+        "translate_url",
+        "set_script_prefix"
+      ],
+      "line_range": [
+        127,
+        138
+      ],
+      "score": 0.6784,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3802,
+        "vector": 0.2779,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value, name, urlconf)"
+    },
+    {
+      "file": "django/template/base.py",
+      "symbol": "django/template/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "args_check",
+        "__init__",
+        "render"
+      ],
+      "line_range": [
+        141,
+        156
+      ],
+      "score": 0.7238,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5024,
+        "vector": 0.402,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: name; body matches report terms: django, render, name, this)"
+    },
+    {
+      "file": "django/db/backends/oracle/base.py",
+      "symbol": "django/db/backends/oracle/base.py::_output_type_handler",
+      "symbols": [
+        "_output_type_handler",
+        "create_cursor",
+        "_setup_environment",
+        "wrap_oracle_errors"
+      ],
+      "line_range": [
+        416,
+        447
+      ],
+      "score": 0.6652,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2108,
+        "vector": 0.5213,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: name; body matches report terms: value, call, format, name)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7035,
+  "laya_scores": {
+    "fix_quality": 1.5384,
+    "matches_issue": 0.6734,
+    "safe_to_apply": 0.6022,
+    "composite": 0.7035,
+    "secrets_or_danger": 0.1046,
+    "logic_drift": 0.1738,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS. Filtering None values from kwargs does not expose injection vectors.\n- PERFORMANCE: RISK. Dictionary comprehension in a hot request path adds overhead to every view call.\n- ROBUSTNESS: FAIL. This globally alters behavior for all Django views, potentially breaking custom middleware or views that rely on explicit None values.\n- PONYTAIL / YAGNI: FAIL. This is a framework-level \"magic\" fix for a specific routing configuration issue that should be handled at the app/view level.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core.handlers.base import BaseHandler\nfrom django.http import HttpRequest\n\ndef mock_view(request, format='html'):\n    \"\"\"View function that reproduces the bug: has an optional argument.\"\"\"\n    return f\"Format is {format}\"\n\nclass MockHandler(BaseHandler):\n    def get_response(self, request):\n        # This mirrors the logic in BaseHandler._get_response\n        callback = mock_view\n        callback_args = ()\n        callback_kwargs = {'format': None}\n        \n        # This line reproduces the bug in older Django versions\n        # By passing the None-valued argument to the view\n        return callback(request, *callback_args, **callback_kwargs)\n\ndef test_optional_url_param_with_none_crashes():\n    \"\"\"\n    Test that calling a view with an explicit None value for an \n    optional argument causes a TypeError if the view defines a default.\n    \"\"\"\n    handler = MockHandler()\n    request = HttpRequest()\n    \n    # In the reported bug, the resolver passes {'format': None} for optional groups\n    # that don't match. This should fail with TypeError: modules() got an unexpected keyword argument\n    # or TypeError: ... takes from X to Y positional arguments but Z were given\n    with pytest.raises(TypeError):\n        handler.get_response(request)\n\ndef test_view_with_provided_argument():\n    \"\"\"Ensure standard views still work when arguments are provided.\"\"\"\n    def view(request, format='html'):\n        return format\n    \n    assert view(HttpRequest(), format='json') == 'json'\n\ndef test_view_with_multiple_optional_params():\n    \"\"\"Ensure views with multiple optional params handle missing/None combinations.\"\"\"\n    def multi_view(request, a='1', b='2'):\n        return f\"{a}{b}\"\n    \n    # Simulate a scenario where only one parameter is missing (None)\n    # The fix should allow the default to be used by filtering out None\n    kwargs = {'a': None, 'b': '3'}\n    filtered_kwargs = {k: v for k, v in kwargs.items() if v is not None}\n    \n    assert multi_view(HttpRequest(), **filtered_kwargs) == '13'\n\ndef test_invalid_argument_raises_error():\n    \"\"\"Ensure that real TypeError (actual wrong args) still occurs after fix.\"\"\"\n    def simple_view(request):\n        return \"ok\"\n    \n    # Passing an argument the view doesn't accept should still raise TypeError\n    with pytest.raises(TypeError):\n        simple_view(HttpRequest(), invalid_arg='value')",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "--- a/django/core/handlers/base.py\n+++ b/django/core/handlers/base.py\n@@ -109,7 +109,7 @@ class BaseHandler:\n         if response is None:\n             wrapped_callback = self.make_view_atomic(callback)\n             try:\n-                response = wrapped_callback(request, *callback_args, **callback_kwargs)\n+                response = wrapped_callback(request, *callback_args, **{k: v for k, v in callback_kwargs.items() if v is not None})\n             except Exception as e:\n                 response = self.process_exception_by_middleware(e, request)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12184-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/handlers/base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.2804,
+        "matches_issue": 0.7656,
+        "safe_to_apply": 0.6165,
+        "composite": 0.6656249999999999,
+        "secrets_or_danger": 0.117,
+        "logic_drift": 0.199,
+        "flagged": false
+      },
+      "laya_combined": 0.6656,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 88.13,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/core/handlers/base.py\n+++ b/django/core/handlers/base.py\n@@ -94,7 +94,8 @@ class BaseHandler:\n         if response is None:\n             wrapped_callback = self.make_view_atomic(callback)\n             try:\n-                response = wrapped_callback(request, *callback_args, **callback_kwargs)\n+                filtered_kwargs = {k: v for k, v in callback_kwargs.items() if v is not None}\n+                response = wrapped_callback(request, *callback_args, **filtered_kwargs)\n             except Exception as e:\n                 response = self.process_exception_by_middleware(e, request)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12184-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/handlers/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2804,
+        "matches_issue": 0.7656,
+        "safe_to_apply": 0.6165,
+        "composite": 0.6656249999999999,
+        "secrets_or_danger": 0.1113,
+        "logic_drift": 0.2036,
+        "flagged": false
+      },
+      "laya_combined": 0.6656,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 104.68,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/core/handlers/base.py\n+++ b/django/core/handlers/base.py\n@@ -107,7 +107,8 @@\n         if response is None:\n             wrapped_callback = self.make_view_atomic(callback)\n             try:\n-                response = wrapped_callback(request, *callback_args, **callback_kwargs)\n+                filtered_kwargs = {k: v for k, v in callback_kwargs.items() if v is not None}\n+                response = wrapped_callback(request, *callback_args, **filtered_kwargs)\n             except Exception as e:\n                 response = self.process_exception_by_middleware(e, request)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12184-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/handlers/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2804,
+        "matches_issue": 0.7656,
+        "safe_to_apply": 0.6165,
+        "composite": 0.6656249999999999,
+        "secrets_or_danger": 0.1272,
+        "logic_drift": 0.2701,
+        "flagged": false
+      },
+      "laya_combined": 0.6656,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 98.34,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "groq/qwen/qwen3.8-27b",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": false,
+    "patch": "--- a/django/core/handlers/base.py\n+++ b/django/core/handlers/base.py\n@@ -109,7 +109,7 @@ class BaseHandler:\n         if response is None:\n             wrapped_callback = self.make_view_atomic(callback)\n             try:\n-                response = wrapped_callback(request, *callback_args, **callback_kwargs)\n+                response = wrapped_callback(request, *callback_args, **{k: v for k, v in callback_kwargs.items() if v is not None})\n             except Exception as e:\n                 response = self.process_exception_by_middleware(e, request)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12184-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/handlers/base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.2804,
+      "matches_issue": 0.7656,
+      "safe_to_apply": 0.6165,
+      "composite": 0.6656249999999999,
+      "secrets_or_danger": 0.117,
+      "logic_drift": 0.199,
+      "flagged": false
+    },
+    "laya_combined": 0.6656,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 88.13,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/handlers/base.py b/django/core/handlers/base.py\nindex 2304e77..245c45c 100644\n--- a/django/core/handlers/base.py\n+++ b/django/core/handlers/base.py\n@@ -110,7 +110,7 @@ class BaseHandler:\n         if response is None:\n             wrapped_callback = self.make_view_atomic(callback)\n             try:\n-                response = wrapped_callback(request, *callback_args, **callback_kwargs)\n+                response = wrapped_callback(request, *callback_args, **{k: v for k, v in callback_kwargs.items() if v is not None})\n             except Exception as e:\n                 response = self.process_exception_by_middleware(e, request)\n \n",
+  "offline_calls": 0
+}

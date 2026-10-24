@@ -1,0 +1,7 @@
+--- sklearn/compose/_column_transformer.py
++++ sklearn/compose/_column_transformer.py
+@@ -853,3 +853,3 @@
+         names_out = []
+-        for name, trans, column in self._iter(fitted=True):
++        for name, trans, column in self._iter(fitted=True, replace_passthrough=False):
+             if trans == "drop":

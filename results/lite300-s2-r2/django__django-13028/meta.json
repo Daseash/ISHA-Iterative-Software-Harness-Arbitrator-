@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-13028",
+  "repo": "django/django",
+  "base_commit": "78ad4b4b0201003792bfdbf1a7781cbc9ee03539",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622504.9024522
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622511.8197637
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622525.5813384
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622528.0033045
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622562.228035
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622779.9434474
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622828.445014
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791622412.6620195,
+  "elapsed_s": 422.35,
+  "plan": "### Step 1: What is the root cause\nThe `check_filterable` method in `django/db/models/sql/query.py` validates whether objects passed into filter clauses are allowed to be filtered on. When checking if a model instance or class is filterable, it checks `getattr(value, 'filterable', True)`. \n\nIn the reported bug, the model `ProductMetaDataType` defines a custom model field named `filterable` (`filterable = models.BooleanField(...)`). When a model instance or class has an attribute or field named `filterable`, `getattr(value, 'filterable', True)` returns the model field instance (or its database value) rather than checking whether the object itself is permitted in filter clauses (which is meant to be a boolean attribute/flag indicating if an object/expression is allowed to be filtered against, like `QuerySet` or model instances). Because a field object or its value evaluates differently or isn't a boolean/expected marker, Django incorrectly assumes the object is not filterable and raises a `NotSupportedError: ... is disallowed in the filter clause.`\n\n### Step 2: What exact changes to make\nTo fix this, Django should not rely on a generic `filterable` attribute check on arbitrary model objects/values using `getattr(value, 'filterable', True)`, or it should ensure it only checks an explicit attribute or instance flag (e.g., checking `getattr(value, 'filterable', None) is False` or checking against a specific internal attribute name/protocol like `_filterable` or checking `isinstance(value, ...)`). \n\nLooking at `django/db/models/sql/query.py`, update the `check_filterable` method to avoid false positives when a model has a field or attribute named `filterable`.\n\n**File to modify:**\n- `django/db/models/sql/query.py`\n\n**Function to modify:**\n- `check_filterable(self, value)`\n\n**What to change:**\nModify how `filterable` is checked on `value`. Instead of doing a simple `getattr(value, 'filterable', True)`, check whether the attribute is explicitly set to `False` using a dedicated attribute (or verify that `value` is not a model field/instance attribute clash). Alternatively, check `getattr(value, 'filterable', True)` only when appropriate, or use an internal attribute name or attribute check that doesn't conflict with model fields named `filterable`. Specifically, check if `getattr(value, 'filterable', None) is False` (or check an attribute like `_filterable` or check if `value` has a specific attribute indicating it's an unfiltered query/queryset marker rather than a model instance with a `filterable` field).",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::_add_q",
+      "symbols": [
+        "_add_q",
+        "build_filter",
+        "check_query_object_type",
+        "check_related_objects"
+      ],
+      "line_range": [
+        1364,
+        1385
+      ],
+      "score": 0.7624,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6517,
+        "vector": 0.4123,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; signature parameter matches report: check_filterable, used_aliases; body matches report terms: check_filterable, filterable, q_object, child_clause; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::_filter_or_exclude",
+      "symbols": [
+        "_filter_or_exclude",
+        "_filter_or_exclude_inplace",
+        "_chain",
+        "_not_support_combined_queries"
+      ],
+      "line_range": [
+        952,
+        964
+      ],
+      "score": 0.756,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5533,
+        "vector": 0.5637,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; private helper called by a symbol the report names; body matches report terms: filter, filter_or_exclude, clone, args; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/manager.py",
+      "symbol": "django/db/models/manager.py::__str__",
+      "symbols": [
+        "__str__",
+        "get_queryset",
+        "BaseManager",
+        "__class_getitem__"
+      ],
+      "line_range": [
+        34,
+        37
+      ],
+      "score": 0.7356,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5281,
+        "vector": 0.4467,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: label, manager, meta, model; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "__init__",
+        "to_python",
+        "validate"
+      ],
+      "line_range": [
+        55,
+        58
+      ],
+      "score": 0.9731,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8916,
+        "vector": 0.4601,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: app_label; body matches report terms: label, field, meta, model)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "to_python",
+        "to_python"
+      ],
+      "line_range": [
+        58,
+        119
+      ],
+      "score": 0.7663,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4433,
+        "vector": 0.3999,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: label; body matches report terms: label, local, field, data)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::linenumbers",
+      "symbols": [
+        "linenumbers",
+        "stringformat",
+        "truncatechars_html",
+        "truncatewords"
+      ],
+      "line_range": [
+        176,
+        190
+      ],
+      "score": 0.7101,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2663,
+        "vector": 0.3003,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: value; body matches report terms: data, value, line, with)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.708925,
+  "laya_scores": {
+    "fix_quality": 1.5709,
+    "matches_issue": 0.7397,
+    "safe_to_apply": 0.5251,
+    "composite": 0.708925,
+    "secrets_or_danger": 0.09,
+    "logic_drift": 0.2142,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security implications in checking attribute filterability.\n- PERFORMANCE: PASS - Simple attribute lookup with no noticeable performance impact.\n- ROBUSTNESS: PASS - Correctly refines the truthiness check to only block explicit `False` values instead of truthy/falsy confusion.\n- PONYTAIL / YAGNI: PASS - Minimal, targeted fix directly addressing the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.db import models, NotSupportedError\nfrom django.test import TestCase\n\nclass ProductMetaDataType(models.Model):\n    label = models.CharField(max_length=255, unique=True, blank=False, null=False)\n    filterable = models.BooleanField(default=False, verbose_name=\"filterable\")\n\n    class Meta:\n        app_label = \"queries\"\n\nclass ProductMetaData(models.Model):\n    id = models.BigAutoField(primary_key=True)\n    value = models.TextField(null=False, blank=False)\n    metadata_type = models.ForeignKey(\n        ProductMetaDataType, null=False, blank=False, on_delete=models.CASCADE\n    )\n\n    class Meta:\n        app_label = \"queries\"\n\nclass FilterableModelAttributeTests(TestCase):\n    def test_filter_with_model_having_filterable_field(self):\n        \"\"\"\n        Filtering by a model instance whose model class defines a field named\n        'filterable' should not raise a NotSupportedError due to attribute collision.\n        \"\"\"\n        meta_type = ProductMetaDataType.objects.create(label=\"brand\", filterable=False)\n        ProductMetaData.objects.create(value=\"Dark Vador\", metadata_type=meta_type)\n\n        # This should execute successfully without raising NotSupportedError\n        qs = ProductMetaData.objects.filter(value=\"Dark Vador\", metadata_type=meta_type)\n        self.assertEqual(qs.count(), 1)\n\n    def test_filter_with_exact_lookup_on_model_with_filterable_field(self):\n        \"\"\"\n        Edge case: Explicitly using the __exact lookup on a model instance\n        whose model defines a 'filterable' field.\n        \"\"\"\n        meta_type = ProductMetaDataType.objects.create(label=\"size\", filterable=True)\n        ProductMetaData.objects.create(value=\"XL\", metadata_type=meta_type)\n\n        qs = ProductMetaData.objects.filter(metadata_type__exact=meta_type)\n        self.assertEqual(qs.count(), 1)\n\n    def test_exclude_with_model_having_filterable_field(self):\n        \"\"\"\n        Edge case: Using exclude() on a model instance whose model defines a\n        'filterable' field.\n<div></div>\n        \"\"\"\n        meta_type1 = ProductMetaDataType.objects.create(label=\"color\", filterable=False)\n        meta_type2 = ProductMetaDataType.objects.create(label=\"material\", filterable=False)\n        p1 = ProductMetaData.objects.create(value=\"Red\", metadata_type=meta_type1)\n        p2 = ProductMetaData.objects.create(value=\"Wood\", metadata_type=meta_type2)\n\n        qs = ProductMetaData.objects.exclude(metadata_type=meta_type1)\n        self.assertEqual(qs.count(), 1)\n        self.assertEqual(qs.first().value, \"Wood\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- django/db/models/sql/query.py\n+++ django/db/models/sql/query.py\n@@ -1127,3 +1127,3 @@\n     def check_filterable(self, obj):\n-        if not getattr(obj, 'filterable', True):\n+        if getattr(obj, 'filterable', None) is False:\n             raise NotSupportedError(",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c1\\django\\db\\models\\sql\\query.py: undefined name 'value'"
+      ],
+      "changed_files": [],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6034,
+        "matches_issue": 0.7494,
+        "safe_to_apply": 0.52,
+        "composite": 0.7182,
+        "secrets_or_danger": 0.0816,
+        "logic_drift": 0.1924,
+        "flagged": false
+      },
+      "laya_combined": 0.7182,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 116.54,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1128,7 +1128,7 @@ class Query(BaseExpression):\n \n     def check_filterable(self, value):\n-        if not getattr(value, 'filterable', True):\n+        if hasattr(value, 'filterable') and not value.filterable:\n             raise NotSupportedError(\n                 '%s is disallowed in the filter clause.' % value.__class__.__name__\n             )",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c2\\django\\db\\models\\sql\\query.py: undefined name 'value'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c2\\django\\db\\models\\sql\\query.py: undefined name 'value'"
+      ],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7063,
+        "matches_issue": 0.7625,
+        "safe_to_apply": 0.5486,
+        "composite": 0.75435,
+        "secrets_or_danger": 0.0788,
+        "logic_drift": 0.1769,
+        "flagged": false
+      },
+      "laya_combined": 0.7543,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 116.15,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1128,3 +1128,3 @@\n     def check_filterable(self, value):\n-        if not getattr(value, 'filterable', True):\n+        if getattr(value, 'filterable', None) is False:\n             raise NotSupportedError(",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c3\\django\\db\\models\\sql\\query.py: undefined name 'value'"
+      ],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6034,
+        "matches_issue": 0.7494,
+        "safe_to_apply": 0.52,
+        "composite": 0.7182,
+        "secrets_or_danger": 0.1006,
+        "logic_drift": 0.2188,
+        "flagged": false
+      },
+      "laya_combined": 0.7182,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 113.21,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- django/db/models/sql/query.py\n+++ django/db/models/sql/query.py\n@@ -1127,3 +1127,3 @@\n     def check_filterable(self, obj):\n-        if not getattr(obj, 'filterable', True):\n+        if getattr(obj, 'filterable', None) is False:\n             raise NotSupportedError(",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13028-c1\\django\\db\\models\\sql\\query.py: undefined name 'value'"
+    ],
+    "changed_files": [],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6034,
+      "matches_issue": 0.7494,
+      "safe_to_apply": 0.52,
+      "composite": 0.7182,
+      "secrets_or_danger": 0.0816,
+      "logic_drift": 0.1924,
+      "flagged": false
+    },
+    "laya_combined": 0.7182,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 116.54,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex ce18098..50c4cbb 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1124,7 +1124,7 @@ class Query(BaseExpression):\n \n     def check_filterable(self, expression):\n         \"\"\"Raise an error if expression cannot be used in a WHERE clause.\"\"\"\n-        if not getattr(expression, 'filterable', True):\n+        if getattr(obj, 'filterable', None) is False:\n             raise NotSupportedError(\n                 expression.__class__.__name__ + ' is disallowed in the filter '\n                 'clause.'\n",
+  "offline_calls": 0
+}

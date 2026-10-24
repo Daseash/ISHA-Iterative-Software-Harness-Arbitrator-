@@ -1,0 +1,401 @@
+{
+  "instance_id": "sympy__sympy-14817",
+  "repo": "sympy/sympy",
+  "base_commit": "0dbdc0ea83d339936da175f8c3a97d0d6bafb9f8",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995651.5946734
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995655.2257345
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995677.3698678
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995679.2616146
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995707.8363113
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995852.1606128
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/printing/pretty/pretty.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791995581.801428,
+  "elapsed_s": 277.89,
+  "plan": "### Step 1: Root Cause\nIn `sympy/printing/pretty/pretty.py`, the `_print_MatAdd` method attempts to check whether the first term of a matrix addition is negative by passing its string representation or using `S(item.args[0])` or calling `S(item)` via `sympify`. Specifically, `S(item.args[0])` or similar parsing attempts to interpret the string/expression (such as `y*` or parts of a matrix expression) using `sympify`, which invokes the sympy parser. When an expression contains characters like `*` in a symbol name (e.g., adjoint/conjugate notation like `MatrixSymbol('y*', n, n)`), `sympify` treats it as multiplication syntax rather than a valid symbol name, leading to a `SyntaxError` and a `SympifyError`. \n\nFurthermore, `MatAdd` terms are matrix expressions or scaled matrix expressions, not arbitrary scalar numbers where `.is_negative` can be checked directly via `S(...)` string/sympify parsing. Instead, determining if a term has a negative coefficient or should be printed with a leading minus sign should use robust coefficient extraction methods (such as `_coeff_isneg` or checking the structure of scalar multipliers) rather than calling `sympify()` on parts of the expression.\n\n### Step 2: Exact Changes to Make\n\n**File to modify:**\n`sympy/printing/pretty/pretty.py`\n\n**Function to modify:**\n`_print_MatAdd`\n\n**What to change:**\n1. Locate `_print_MatAdd` in `sympy/printing/pretty/pretty.py`.\n2. Remove the use of `S(...)` or `sympify()` parsing on `item.args[0]` or items within `_print_MatAdd`.\n3. Replace the check with proper coefficient/sign handling using existing utilities (like `_coeff_isneg` or standard expression methods) or handle matrix addition printing similarly to `_print_Add` or standard vector/matrix addition formatting without resorting to string parsing via `sympify`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "sympy/printing/pretty/pretty.py",
+      "symbol": "sympy/printing/pretty/pretty.py::doprint",
+      "symbols": [
+        "doprint",
+        "_print_Product",
+        "_print_TensorProduct",
+        "_print_WedgeProduct"
+      ],
+      "line_range": [
+        61,
+        63
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5572,
+        "vector": 0.6945,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: expr; body matches report terms: settings, render, expr; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/core/sympify.py",
+      "symbol": "sympy/core/sympify.py::sympify",
+      "symbols": [
+        "sympify",
+        "__init__",
+        "_clear",
+        "SympifyError"
+      ],
+      "line_range": [
+        76,
+        374
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 1.0,
+        "vector": 0.7123,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: evaluate; body matches report terms: take, arguments, sympy, local)"
+    },
+    {
+      "file": "sympy/parsing/sympy_parser.py",
+      "symbol": "sympy/parsing/sympy_parser.py::eval_expr",
+      "symbols": [
+        "eval_expr",
+        "parse_expr",
+        "_token_callable",
+        "_inner"
+      ],
+      "line_range": [
+        856,
+        867
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.9679,
+        "vector": 0.5922,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: local_dict; body matches report terms: take, local, preference, code; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/printing/printer.py",
+      "symbol": "sympy/printing/printer.py::_print",
+      "symbols": [
+        "_print",
+        "doprint",
+        "_print_Derivative",
+        "print_my_latex"
+      ],
+      "line_range": [
+        238,
+        279
+      ],
+      "score": 0.7203,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4649,
+        "vector": 0.4506,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; private helper called by a symbol the report names; signature parameter matches report: args, expr; body matches report terms: take, printing, printer, that; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/matrices/expressions/matadd.py",
+      "symbol": "sympy/matrices/expressions/matadd.py::__new__",
+      "symbols": [
+        "__new__",
+        "validate",
+        "MatAdd",
+        "doit"
+      ],
+      "line_range": [
+        30,
+        38
+      ],
+      "score": 0.6571,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3712,
+        "vector": 0.9526,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: args; body matches report terms: sympify, kwargs, args)"
+    },
+    {
+      "file": "sympy/parsing/ast_parser.py",
+      "symbol": "sympy/parsing/ast_parser.py::parse_expr",
+      "symbols": [
+        "parse_expr",
+        "__init__",
+        "Transform",
+        "visit_Name"
+      ],
+      "line_range": [
+        68,
+        83
+      ],
+      "score": 0.6467,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5606,
+        "vector": 0.4717,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: local_dict; body matches report terms: sympy, local, call, global_dict; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.5986,
+  "laya_scores": {
+    "fix_quality": 1.2862,
+    "matches_issue": 0.637,
+    "safe_to_apply": 0.4712,
+    "composite": 0.5986,
+    "secrets_or_danger": 0.1193,
+    "logic_drift": 0.2211,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-sensitive functions or inputs are introduced.\n- PERFORMANCE: PASS - Replaces an expensive `sympify` call with a lightweight helper function `_coeff_isneg`.\n- ROBUSTNESS: PASS - Avoids a parsing crash when encountering identifiers containing special characters like `*`.\n- MINIMAL DIFF / YAGNI: PASS - The diff directly fixes the bug with minimal changes.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from sympy import symbols, MatrixSymbol\nfrom sympy.printing.pretty import pretty\nfrom sympy.printing.pretty.pretty import pprint\n\n\ndef test_matadd_pretty_print_symbol_with_asterisk():\n    \"\"\"Test that pretty printing a MatAdd involving a MatrixSymbol with an asterisk\n    (e.g., conjugate/adjoint notation like 'y*') does not crash with a SympifyError/SyntaxError.\n    \"\"\"\n    n = symbols('n', integer=True)\n    x = MatrixSymbol('x', n, n)\n    y_star = MatrixSymbol('y*', n, n)\n    \n    expr = x + y_star\n    \n    # This should not raise SyntaxError or SympifyError\n    result = pretty(expr)\n    assert isinstance(result, str)\n    assert \"x\" in result\n    assert \"y*\" in result\n\n\ndef test_matadd_pretty_print_multiple_matrix_symbols_with_asterisk():\n    \"\"\"Edge case: Multiple MatrixSymbols containing asterisks or special characters.\"\"\"\n    n = symbols('n', integer=True)\n    a_star = MatrixSymbol('A*', n, n)\n    b_star = MatrixSymbol('B*', n, n)\n    \n    expr = a_star + b_star\n    result = pretty(expr)\n    assert isinstance(result, str)\n    assert \"A*\" in result\n    assert \"B*\" in result\n\n\ndef test_matadd_pretty_print_negated_term_with_asterisk():\n    \"\"\"Edge case: Matrix addition with a negated MatrixSymbol containing an asterisk.\"\"\"\n    n = symbols('n', integer=True)\n    x = MatrixSymbol('x', n, n)\n    y_star = MatrixSymbol('y*', n, n)\n    \n    expr = x - y_star\n    result = pretty(expr)\n    assert isinstance(result, str)\n    assert \"x\" in result\n    assert \"y*\" in result",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py\nindex 0545797d5f..968bceac9d 100644\n--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -825,7 +825,7 @@ def _print_MatAdd(self, expr):\n             if s is None:\n                 s = pform     # First element\n             else:\n-                if S(item.args[0]).is_negative:\n+                if _coeff_isneg(item):\n                     s = prettyForm(*stringPict.next(s, ' '))\n                     pform = self._print(item)\n                 else:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14817-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/pretty/pretty.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2862,
+        "matches_issue": 0.637,
+        "safe_to_apply": 0.4712,
+        "composite": 0.5986,
+        "secrets_or_danger": 0.1193,
+        "logic_drift": 0.2211,
+        "flagged": false
+      },
+      "laya_combined": 0.5986,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 3.08,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py\nindex 0545797d5f..968bceac9d 100644\n--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -825,7 +825,7 @@ def _print_MatAdd(self, expr):\n             if s is None:\n                 s = pform     # First element\n             else:\n-                if S(item.args[0]).is_negative:\n+                if _coeff_isneg(item):\n                     s = prettyForm(*stringPict.next(s, ' '))\n                     pform = self._print(item)\n                 else:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14817-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/pretty/pretty.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.2862,
+        "matches_issue": 0.637,
+        "safe_to_apply": 0.4712,
+        "composite": 0.5986,
+        "secrets_or_danger": 0.1193,
+        "logic_drift": 0.2211,
+        "flagged": false
+      },
+      "laya_combined": 0.5986,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 64.5,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py\nindex 0545797d5f..639d583fd9 100644\n--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -825,7 +825,7 @@ def _print_MatAdd(self, expr):\n             if s is None:\n                 s = pform     # First element\n             else:\n-                if S(item.args[0]).is_negative:\n+                if getattr(item.args[0], 'is_negative', None):\n                     s = prettyForm(*stringPict.next(s, ' '))\n                     pform = self._print(item)\n                 else:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14817-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/pretty/pretty.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.456,
+        "matches_issue": 0.7317,
+        "safe_to_apply": 0.5039,
+        "composite": 0.6729,
+        "secrets_or_danger": 0.1955,
+        "logic_drift": 0.2126,
+        "flagged": false
+      },
+      "laya_combined": 0.6729,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 62.64,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py\nindex 0545797d5f..968bceac9d 100644\n--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -825,7 +825,7 @@ def _print_MatAdd(self, expr):\n             if s is None:\n                 s = pform     # First element\n             else:\n-                if S(item.args[0]).is_negative:\n+                if _coeff_isneg(item):\n                     s = prettyForm(*stringPict.next(s, ' '))\n                     pform = self._print(item)\n                 else:\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14817-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/printing/pretty/pretty.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/printing/pretty/pretty.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.2862,
+      "matches_issue": 0.637,
+      "safe_to_apply": 0.4712,
+      "composite": 0.5986,
+      "secrets_or_danger": 0.1193,
+      "logic_drift": 0.2211,
+      "flagged": false
+    },
+    "laya_combined": 0.5986,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.008,
+    "rank_reason": "logistic",
+    "elapsed_s": 3.08,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/printing/pretty/pretty.py b/sympy/printing/pretty/pretty.py\nindex 0545797..968bcea 100644\n--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -825,7 +825,7 @@ def _print_MatAdd(self, expr):\n             if s is None:\n                 s = pform     # First element\n             else:\n-                if S(item.args[0]).is_negative:\n+                if _coeff_isneg(item):\n                     s = prettyForm(*stringPict.next(s, ' '))\n                     pform = self._print(item)\n                 else:\n",
+  "offline_calls": 0
+}

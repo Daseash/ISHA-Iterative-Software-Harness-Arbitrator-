@@ -1,0 +1,403 @@
+{
+  "instance_id": "django__django-12470",
+  "repo": "django/django",
+  "base_commit": "142ab6846ac09d6d401e26fc8b6b988a583ac0f5",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456240.3193665
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456249.3633149
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456272.6701038
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456275.7255132
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456310.28471
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456490.1630197
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/options.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/options.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791456153.3635285,
+  "elapsed_s": 344.39,
+  "plan": "# In django/db/models/options.py\n\n# When processing the Meta options for a child model:\nif self.ordering is None and self.proxy == False and self.parents:\n    # Get the ordering from the primary parent (the first one)\n    parent = list(self.parents.keys())[0]\n    self.ordering = parent._meta.ordering",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/related_descriptors.py",
+      "symbol": "django/db/models/fields/related_descriptors.py::Parent",
+      "symbols": [
+        "Parent",
+        "Child",
+        "Child",
+        "Child"
+      ],
+      "line_range": [
+        14,
+        16
+      ],
+      "score": 0.678,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5703,
+        "vector": 0.712,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: Model; body matches report terms: class, pass, model; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::get_choices",
+      "symbols": [
+        "get_choices",
+        "_description",
+        "__str__",
+        "get_col"
+      ],
+      "line_range": [
+        842,
+        867
+      ],
+      "score": 0.6003,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3938,
+        "vector": 0.4735,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: ordering; body matches report terms: ordering, order, model, select)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::get_default_username",
+      "symbols": [
+        "get_default_username",
+        "create_permissions",
+        "_get_all_permissions",
+        "get_system_username"
+      ],
+      "line_range": [
+        104,
+        145
+      ],
+      "score": 0.5445,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2564,
+        "vector": 0.2951,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: models, django, pass, meta)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "unregister_serializer",
+        "serialize",
+        "sort_dependencies"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.5664,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3166,
+        "vector": 0.3525,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: class, pass, when)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::TranslatorCommentWarning",
+      "symbols": [
+        "TranslatorCommentWarning",
+        "__mod__",
+        "NumberAwareString",
+        "Trans"
+      ],
+      "line_range": [
+        30,
+        33
+      ],
+      "score": 0.5469,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1377,
+        "vector": 0.5622,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: class, pass)"
+    },
+    {
+      "file": "tests/queries/models.py",
+      "symbol": "tests/queries/models.py::Child",
+      "symbols": [
+        "Child",
+        "DumbCategory",
+        "Tag",
+        "Note"
+      ],
+      "line_range": [
+        243,
+        246
+      ],
+      "score": 0.5687,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6656,
+        "vector": 0.9193,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: Model; body matches report terms: class, models, parent, model; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.75295,
+  "laya_scores": {
+    "fix_quality": 1.6753,
+    "matches_issue": 0.7523,
+    "safe_to_apply": 0.5842,
+    "composite": 0.75295,
+    "secrets_or_danger": 0.2035,
+    "logic_drift": 0.2912,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to input handling or execution context.\n- PERFORMANCE: PASS, Minimal overhead added to model meta-initialization.\n- ROBUSTNESS: RISK, Accessing the first key of a dictionary is order-dependent (Python 3.7+ makes this stable, but it relies on an implicit assumption about parent definition order).\n- PONYTAIL / YAGNI: PASS, Necessary fix for correct Django model inheritance behavior.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.test import TestCase\n\n# Models definition for reproduction\nclass Parent(models.Model):\n    class Meta:\n        app_label = 'myapp'\n        ordering = [\"-pk\"]\n\nclass Child(Parent):\n    class Meta:\n        app_label = 'myapp'\n\nclass TestInheritedOrdering(TestCase):\n    def test_child_inherits_parent_ordering(self):\n        \"\"\"\n        Test that Child correctly inherits ordering from Parent.\n        The reported bug is that it defaults to ASC when '-pk' is expected.\n        \"\"\"\n        query = str(Child.objects.all().query)\n        # Check that the query ordering contains the descending indicator\n        assert 'ORDER BY \"myapp_parent\".\"id\" DESC' in query\n        assert 'ORDER BY \"myapp_parent\".\"id\" ASC' not in query\n\n    def test_child_with_explicit_ordering_overrides_parent(self):\n        \"\"\"\n        Edge case: If Child specifies its own ordering, it should not inherit\n        from Parent.\n        \"\"\"\n        class OrderedChild(Parent):\n            class Meta:\n                app_label = 'myapp'\n                ordering = [\"pk\"]\n        \n        query = str(OrderedChild.objects.all().query)\n        assert 'ORDER BY \"myapp_parent\".\"id\" ASC' in query\n        assert 'ORDER BY \"myapp_parent\".\"id\" DESC' not in query\n\n    def test_multi_inheritance_ordering(self):\n        \"\"\"\n        Edge case: If there are multiple parents, it should inherit from the \n        first parent in the MRO (as per the fix plan).\n        \"\"\"\n        class OtherParent(models.Model):\n            class Meta:\n                app_label = 'myapp'\n                ordering = [\"pk\"]\n\n        class MultiChild(OtherParent, Parent):\n            class Meta:\n                app_label = 'myapp'\n\n        # Should follow the first parent in inheritance list (OtherParent)\n        query = str(MultiChild.objects.all().query)\n        assert 'ORDER BY \"myapp_otherparent\".\"id\" ASC' in query",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/options.py b/django/db/models/options.py\nindex f027a74976..9e3fe0cc40 100644\n--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -155,6 +155,9 @@ class Options:\n         self.model_name = self.object_name.lower()\n         self.verbose_name = camel_case_to_spaces(self.object_name)\n \n+        if self.ordering is None and not self.proxy and self.parents:\n+            self.ordering = list(self.parents.keys())[0]._meta.ordering\n+\n         # Store the original user-defined values for each option,\n         # for use when serializing the model definition\n         self.original_attrs = {}\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12470-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/options.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/options.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6753,
+        "matches_issue": 0.7523,
+        "safe_to_apply": 0.5842,
+        "composite": 0.75295,
+        "secrets_or_danger": 0.2035,
+        "logic_drift": 0.2912,
+        "flagged": false
+      },
+      "laya_combined": 0.753,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.06,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -236,6 +236,8 @@\n         if self.ordering is None:\n             self.ordering = self.original_attrs.get('ordering', [])\n+        elif self.ordering == [] and self.parents:\n+            self.ordering = list(self.parents.values())[0]._meta.ordering\n         if not isinstance(self.ordering, (list, tuple)):\n             self.ordering = (self.ordering,)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12470-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/options.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6114,
+        "matches_issue": 0.7668,
+        "safe_to_apply": 0.6014,
+        "composite": 0.7449,
+        "secrets_or_danger": 0.2148,
+        "logic_drift": 0.2446,
+        "flagged": false
+      },
+      "laya_combined": 0.7449,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 67.98,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -198,6 +198,8 @@\n         if self.ordering is None:\n             self.ordering = []\n+        elif self.parents and self.ordering == [] and not self.proxy:\n+            self.ordering = list(self.parents.keys())[0]._meta.ordering\n         if not isinstance(self.ordering, (list, tuple)):\n             self.ordering = (self.ordering,)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12470-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12470-c3\\django\\db\\models\\options.py: SyntaxError line 198: expected an indented block after 'if' statement on line 197"
+      ],
+      "changed_files": [
+        "django/db/models/options.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6502,
+        "matches_issue": 0.7614,
+        "safe_to_apply": 0.5911,
+        "composite": 0.750675,
+        "secrets_or_danger": 0.2559,
+        "logic_drift": 0.2347,
+        "flagged": false
+      },
+      "laya_combined": 0.7507,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 66.29,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/options.py b/django/db/models/options.py\nindex f027a74976..9e3fe0cc40 100644\n--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -155,6 +155,9 @@ class Options:\n         self.model_name = self.object_name.lower()\n         self.verbose_name = camel_case_to_spaces(self.object_name)\n \n+        if self.ordering is None and not self.proxy and self.parents:\n+            self.ordering = list(self.parents.keys())[0]._meta.ordering\n+\n         # Store the original user-defined values for each option,\n         # for use when serializing the model definition\n         self.original_attrs = {}\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12470-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/options.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/options.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6753,
+      "matches_issue": 0.7523,
+      "safe_to_apply": 0.5842,
+      "composite": 0.75295,
+      "secrets_or_danger": 0.2035,
+      "logic_drift": 0.2912,
+      "flagged": false
+    },
+    "laya_combined": 0.753,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 39.06,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/options.py b/django/db/models/options.py\nindex f027a74..9e3fe0c 100644\n--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -155,6 +155,9 @@ class Options:\n         self.model_name = self.object_name.lower()\n         self.verbose_name = camel_case_to_spaces(self.object_name)\n \n+        if self.ordering is None and not self.proxy and self.parents:\n+            self.ordering = list(self.parents.keys())[0]._meta.ordering\n+\n         # Store the original user-defined values for each option,\n         # for use when serializing the model definition\n         self.original_attrs = {}\n",
+  "offline_calls": 0
+}

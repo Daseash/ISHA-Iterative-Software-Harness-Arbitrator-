@@ -1,0 +1,395 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-14983",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "06632c0d185128a53c57ccc73b25b6408e90bb89",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979290.3939543
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979297.1955333
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979305.2602367
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979306.9537594
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979333.0331616
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979720.2164156
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/model_selection/_split.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791979229.297886,
+  "elapsed_s": 499.6,
+  "plan": "### Step 1: What is the root cause\n`RepeatedKFold` and `RepeatedStratifiedKFold` inherit from `object` (or do not inherit from `BaseCrossValidator` or `BaseEstimator`, or do not implement a `__repr__` method or `BaseEstimator`'s `__repr__`). Because they do not inherit from `BaseCrossValidator` (which defines `__repr__(self): return _build_repr(self)`), Python falls back to the default object representation (`<sklearn.model_selection._split.RepeatedKFold object at ...>`). Making them inherit from `BaseCrossValidator` will automatically give them the correct `__repr__` string via `BaseCrossValidator.__repr__`.\n\n### Step 2: What exact changes to make\nFile: `sklearn/model_selection/_split.py`\nFunctions/Classes: `RepeatedKFold` and `RepeatedStratifiedKFold`\n\nChange their class definitions to inherit from `BaseCrossValidator`:\n- Change `class RepeatedKFold:` to `class RepeatedKFold(BaseCrossValidator):`\n- Change `class RepeatedStratifiedKFold:` to `class RepeatedStratifiedKFold(BaseCrossValidator):`",
+  "planner_confidence": 1.0,
+  "localization": [
+    {
+      "file": "sklearn/model_selection/_split.py",
+      "symbol": "sklearn/model_selection/_split.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        273,
+        293
+      ],
+      "score": 0.6995,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7676,
+        "vector": 0.4803,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: n_splits, random_state; body matches report terms: n_splits, split, random_state)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::_array_indexing",
+      "symbols": [
+        "_array_indexing",
+        "axis0_safe_slice",
+        "shuffle",
+        "_print_elapsed_time"
+      ],
+      "line_range": [
+        184,
+        193
+      ],
+      "score": 0.6292,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.526,
+        "vector": 0.4391,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: numpy, scipy)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        96,
+        109
+      ],
+      "score": 0.6167,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4827,
+        "vector": 0.425,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: numpy, sklearn)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.5332,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2252,
+        "vector": 0.2656,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: split, sklearn)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::build_from_c_and_cpp_files",
+      "symbols": [
+        "build_from_c_and_cpp_files",
+        "maybe_cythonize_extensions"
+      ],
+      "line_range": [
+        21,
+        40
+      ],
+      "score": 0.5263,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2173,
+        "vector": 0.2252,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: python, cython, split)"
+    },
+    {
+      "file": "setup.py",
+      "symbol": "setup.py::configuration",
+      "symbols": [
+        "configuration",
+        "CleanCommand",
+        "get_numpy_status",
+        "setup_package"
+      ],
+      "line_range": [
+        159,
+        178
+      ],
+      "score": 0.5012,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.4263,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: numpy, sklearn, default)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7651749999999999,
+  "laya_scores": {
+    "fix_quality": 1.5047,
+    "matches_issue": 0.8406,
+    "safe_to_apply": 0.7154,
+    "composite": 0.7651749999999999,
+    "secrets_or_danger": 0.1571,
+    "logic_drift": 0.4743,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No security-related code modified.\n- PERFORMANCE: PASS - No performance-related changes introduced.\n- ROBUSTNESS: FAIL - Changing the base class from `_RepeatedSplits` to `BaseCrossValidator` breaks core functionality since `_RepeatedSplits` implements the required iteration logic (`split`, `get_n_splits`) that `BaseCrossValidator` expects.\n- MINIMAL DIFF / YAGNI: PASS - The changes target the reported problem directly.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sklearn.model_selection import RepeatedKFold, RepeatedStratifiedKFold\n\n\ndef test_repeated_kfold_repr():\n    cv = RepeatedKFold(n_splits=5, n_repeats=10, random_state=42)\n    expected = \"RepeatedKFold(n_splits=5, n_repeats=10, random_state=42)\"\n    assert repr(cv) == expected\n\n\ndef test_repeated_stratified_kfold_repr():\n    cv = RepeatedStratifiedKFold(n_splits=3, n_repeats=5, random_state=0)\n    expected = \"RepeatedStratifiedKFold(n_splits=3, n_repeats=5, random_state=0)\"\n    assert repr(cv) == expected\n\n\ndef test_repeated_kfold_default_repr():\n    cv = RepeatedKFold()\n    expected = \"RepeatedKFold(n_splits=5, n_repeats=10, random_state=None)\"\n    assert repr(cv) == expected\n\n\ndef test_repeated_stratified_kfold_default_repr():\n    cv = RepeatedStratifiedKFold()\n    expected = \"RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=None)\"\n    assert repr(cv) == expected\n\n\ndef test_repeated_kfold_custom_parameters_repr():\n    cv = RepeatedKFold(n_splits=2, n_repeats=3, random_state=123)\n    expected = \"RepeatedKFold(n_splits=2, n_repeats=3, random_state=123)\"\n    assert repr(cv) == expected",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce6ae..98a4df8abf 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1164,7 +1164,7 @@ class _RepeatedSplits(metaclass=ABCMeta):\n         return cv.get_n_splits(X, y, groups) * self.n_repeats\n \n \n-class RepeatedKFold(_RepeatedSplits):\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1217,7 +1217,7 @@ class RepeatedKFold(_RepeatedSplits):\n             KFold, n_repeats, random_state, n_splits=n_splits)\n \n \n-class RepeatedStratifiedKFold(_RepeatedSplits):\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14983-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/model_selection/_split.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5047,
+        "matches_issue": 0.8406,
+        "safe_to_apply": 0.7154,
+        "composite": 0.7651749999999999,
+        "secrets_or_danger": 0.1571,
+        "logic_drift": 0.4743,
+        "flagged": false
+      },
+      "laya_combined": 0.7652,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0058,
+      "rank_reason": "logistic",
+      "elapsed_s": 102.95,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce6ae..98a4df8abf 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1164,7 +1164,7 @@ class _RepeatedSplits(metaclass=ABCMeta):\n         return cv.get_n_splits(X, y, groups) * self.n_repeats\n \n \n-class RepeatedKFold(_RepeatedSplits):\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1217,7 +1217,7 @@ class RepeatedKFold(_RepeatedSplits):\n             KFold, n_repeats, random_state, n_splits=n_splits)\n \n \n-class RepeatedStratifiedKFold(_RepeatedSplits):\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14983-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/model_selection/_split.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5047,
+        "matches_issue": 0.8406,
+        "safe_to_apply": 0.7154,
+        "composite": 0.7651749999999999,
+        "secrets_or_danger": 0.1571,
+        "logic_drift": 0.4743,
+        "flagged": false
+      },
+      "laya_combined": 0.7652,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0058,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.85,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1213,7 +1213,7 @@ def get_n_splits(self, X=None, y=None, groups=None):\n         return self.n_repeats * self.cv.get_n_splits(X, y, groups)\n \n \n-class RepeatedKFold:\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1297,7 +1297,7 @@ def split(self, X, y=None, groups=None):\n         return self.cv.split(X, y, groups)\n \n \n-class RepeatedStratifiedKFold:\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14983-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14983-c3\\sklearn\\model_selection\\_split.py: SyntaxError line 1216: '(' was never closed"
+      ],
+      "changed_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4227,
+        "matches_issue": 0.8051,
+        "safe_to_apply": 0.7088,
+        "composite": 0.7341500000000001,
+        "secrets_or_danger": 0.13,
+        "logic_drift": 0.3446,
+        "flagged": false
+      },
+      "laya_combined": 0.7342,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 107.83,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce6ae..98a4df8abf 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1164,7 +1164,7 @@ class _RepeatedSplits(metaclass=ABCMeta):\n         return cv.get_n_splits(X, y, groups) * self.n_repeats\n \n \n-class RepeatedKFold(_RepeatedSplits):\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1217,7 +1217,7 @@ class RepeatedKFold(_RepeatedSplits):\n             KFold, n_repeats, random_state, n_splits=n_splits)\n \n \n-class RepeatedStratifiedKFold(_RepeatedSplits):\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14983-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/model_selection/_split.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/model_selection/_split.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5047,
+      "matches_issue": 0.8406,
+      "safe_to_apply": 0.7154,
+      "composite": 0.7651749999999999,
+      "secrets_or_danger": 0.1571,
+      "logic_drift": 0.4743,
+      "flagged": false
+    },
+    "laya_combined": 0.7652,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0058,
+    "rank_reason": "logistic",
+    "elapsed_s": 102.95,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce..98a4df8 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -1164,7 +1164,7 @@ class _RepeatedSplits(metaclass=ABCMeta):\n         return cv.get_n_splits(X, y, groups) * self.n_repeats\n \n \n-class RepeatedKFold(_RepeatedSplits):\n+class RepeatedKFold(BaseCrossValidator):\n     \"\"\"Repeated K-Fold cross validator.\n \n     Repeats K-Fold n times with different randomization in each repetition.\n@@ -1217,7 +1217,7 @@ class RepeatedKFold(_RepeatedSplits):\n             KFold, n_repeats, random_state, n_splits=n_splits)\n \n \n-class RepeatedStratifiedKFold(_RepeatedSplits):\n+class RepeatedStratifiedKFold(BaseCrossValidator):\n     \"\"\"Repeated Stratified K-Fold cross validator.\n \n     Repeats Stratified K-Fold n times with different randomization in each\n",
+  "offline_calls": 0
+}

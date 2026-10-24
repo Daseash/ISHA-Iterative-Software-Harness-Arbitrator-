@@ -1,0 +1,360 @@
+{
+  "instance_id": "matplotlib__matplotlib-22835",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "c33557d120eefe3148ebfcf2e758ff2357966000",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732220.8101602
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732223.3495152
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732228.7679017
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732230.854028
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732242.1694484
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791732427.5683768
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791732182.9593718,
+  "elapsed_s": 246.12,
+  "plan": "Step 1: What is the root cause\nWhen hovering over an image or artist that uses a `ScalarMappable` with a non-invertible normalization such as `BoundaryNorm`, `Artist.format_cursor_data` attempts to call `self.norm.inverse(...)` to find neighboring values for formatting the cursor data. Since `BoundaryNorm` is not invertible, its `inverse` method raises a `ValueError` (\"BoundaryNorm is not invertible\"), crashing the event handler and stopping GUI interaction.\n\nStep 2: What exact changes to make\n- File: `lib/matplotlib/artist.py`\n- Function: `format_cursor_data`\n- What to change: Wrap the call to `self.norm.inverse(...)` in a `try...except (ValueError, AttributeError):` block so that if the norm is not invertible or doesn't support inversion, `neighbors` falls back to `None` and cursor formatting gracefully proceeds without crashing.",
+  "planner_confidence": 0.98,
+  "localization": [
+    {
+      "file": "lib/matplotlib/artist.py",
+      "symbol": "lib/matplotlib/artist.py::__init_subclass__",
+      "symbols": [
+        "__init_subclass__",
+        "remove",
+        "get_window_extent",
+        "add_callback"
+      ],
+      "line_range": [
+        104,
+        120
+      ],
+      "score": 0.7277,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5307,
+        "vector": 0.3754,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: with, artist, over, here)"
+    },
+    {
+      "file": "lib/matplotlib/colors.py",
+      "symbol": "lib/matplotlib/colors.py::_warn_if_global_cmap_modified",
+      "symbols": [
+        "_warn_if_global_cmap_modified",
+        "shade",
+        "__call__",
+        "inverse"
+      ],
+      "line_range": [
+        542,
+        555
+      ],
+      "score": 0.7419,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.622,
+        "vector": 0.303,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: cmap; body matches report terms: make, cmap)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::imshow",
+      "symbols": [
+        "imshow",
+        "set_loglevel",
+        "twinx",
+        "twiny"
+      ],
+      "line_range": [
+        2657,
+        2673
+      ],
+      "score": 0.8864,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4986,
+        "vector": 0.5559,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: X, cmap, norm; body matches report terms: norm, cmap; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::inner",
+      "symbols": [
+        "inner",
+        "_check_versions",
+        "set_loglevel",
+        "impl"
+      ],
+      "line_range": [
+        1416,
+        1445
+      ],
+      "score": 0.637,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.516,
+        "vector": 0.5252,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: ax)"
+    },
+    {
+      "file": "lib/matplotlib/cbook/__init__.py",
+      "symbol": "lib/matplotlib/cbook/__init__.py::_reshape_2D",
+      "symbols": [
+        "_reshape_2D",
+        "violin_stats",
+        "boxplot_stats",
+        "get_sample_data"
+      ],
+      "line_range": [
+        1343,
+        1409
+      ],
+      "score": 0.5979,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3854,
+        "vector": 0.471,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: X; body matches report terms: check, numpy, scalar, valueerror)"
+    },
+    {
+      "file": "tutorials/colors/colors.py",
+      "symbol": "tutorials/colors/colors.py::demo",
+      "symbols": [
+        "demo"
+      ],
+      "line_range": [
+        125,
+        135
+      ],
+      "score": 0.6566,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2416,
+        "vector": 0.385,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: subplots"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import matplotlib.pyplot as plt\nimport numpy as np\nimport matplotlib as mpl\n\n\ndef test_format_cursor_data_boundary_norm():\n    fig, ax = plt.subplots()\n    norm = mpl.colors.BoundaryNorm(np.linspace(-4, 4, 5), 256)\n    X = np.random.randn(10, 10)\n    pc = ax.imshow(X, cmap='RdBu_r', norm=norm)\n    \n    # format_cursor_data should not raise ValueError even though BoundaryNorm.inverse is not supported\n    cursor_data = pc.format_cursor_data((0, 0))\n    # Should successfully return a string or None, rather than crashing with ValueError\n    assert cursor_data is None or isinstance(cursor_data, str)\n\n\ndef test_format_cursor_data_normal_norm():\n    fig, ax = plt.subplots()\n    norm = mpl.colors.Normalize(vmin=-4, vmax=4)\n    X = np.random.randn(10, 10)\n    pc = ax.imshow(X, cmap='RdBu_r', norm=norm)\n    \n    cursor_data = pc.format_cursor_data((0, 0))\n    assert cursor_data is None or isinstance(cursor_data, str)\n\n\ndef test_format_cursor_data_no_norm():\n    fig, ax = plt.subplots()\n    X = np.random.randn(10, 10)\n    pc = ax.imshow(X, cmap='RdBu_r')\n    # Default norm is Normalize, but let's clear or check behavior\n    pc.norm = None\n    \n    # Should handle missing norm or lack of inverse gracefully\n    cursor_data = pc.format_cursor_data((0, 0))\n    assert cursor_data is None or isinstance(cursor_data, str)\n\n\ndef test_format_cursor_data_out_of_bounds_coords():\n    fig, ax = plt.subplots()\n    norm = mpl.colors.BoundaryNorm(np.linspace(-4, 4, 5), 256)\n    X = np.random.randn(10, 10)\n    pc = ax.imshow(X, cmap='RdBu_r', norm=norm)\n    \n    # Passing coordinates far outside the image data array\n    cursor_data = pc.format_cursor_data((-100, -100))\n    assert cursor_data is None or isinstance(cursor_data, str)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.8-flash",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/artist.py\n+++ b/lib/matplotlib/artist.py\n@@ -1280,4 +1280,7 @@\n         try:\n-            neighbors = self.norm.inverse(\n-                np.array([data - delta, data + delta])\n-            )\n+            with _api.suppress_matplotlib_deprecation_warning():\n+                neighbors = self.norm.inverse(\n+                    np.array([data - delta, data + delta])\n+                )\n+        except (ValueError, AttributeError):\n+            neighbors = None",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-22835-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/artist.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1003,
+        "matches_issue": 0.589,
+        "safe_to_apply": 0.4804,
+        "composite": 0.542425,
+        "secrets_or_danger": 0.182,
+        "logic_drift": 0.255,
+        "flagged": false
+      },
+      "laya_combined": 0.5424,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 89.85,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/artist.py\n+++ b/lib/matplotlib/artist.py\n@@ -1279,8 +1279,11 @@ class Artist:\n                 # vmin/vmax of the norm.\n                 res = self.norm(res)\n         if self.norm is not None:\n-            neighbors = self.norm.inverse(\n-                np.array([res - delta, res + delta]))\n+            try:\n+                neighbors = self.norm.inverse(\n+                    np.array([res - delta, res + delta]))\n+            except (ValueError, AttributeError):\n+                neighbors = None\n         else:\n             neighbors = None\n         data = cbook._format_cursor_data(res)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-22835-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/artist.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.0544,
+        "matches_issue": 0.6463,
+        "safe_to_apply": 0.5341,
+        "composite": 0.5587,
+        "secrets_or_danger": 0.1008,
+        "logic_drift": 0.2417,
+        "flagged": false
+      },
+      "laya_combined": 0.5587,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 46.86,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/artist.py\n+++ b/lib/matplotlib/artist.py\n@@ -1281,4 +1281,7 @@\n-            neighbors = self.norm.inverse(\n-                np.array([data - delta, data + delta])\n-            )\n+            try:\n+                neighbors = self.norm.inverse([data - delta, data + delta])\n+            except (ValueError, AttributeError):\n+                neighbors = None",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-22835-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/artist.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1494,
+        "matches_issue": 0.6617,
+        "safe_to_apply": 0.528,
+        "composite": 0.584775,
+        "secrets_or_danger": 0.1264,
+        "logic_drift": 0.1718,
+        "flagged": false
+      },
+      "laya_combined": 0.5848,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0073,
+      "rank_reason": "logistic",
+      "elapsed_s": 43.75,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.8-flash",
+    "substituted": true,
+    "patch": "--- a/lib/matplotlib/artist.py\n+++ b/lib/matplotlib/artist.py\n@@ -1280,4 +1280,7 @@\n         try:\n-            neighbors = self.norm.inverse(\n-                np.array([data - delta, data + delta])\n-            )\n+            with _api.suppress_matplotlib_deprecation_warning():\n+                neighbors = self.norm.inverse(\n+                    np.array([data - delta, data + delta])\n+                )\n+        except (ValueError, AttributeError):\n+            neighbors = None",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-22835-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/artist.py"
+    ],
+    "added_lines": 6,
+    "removed_lines": 3,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.1003,
+      "matches_issue": 0.589,
+      "safe_to_apply": 0.4804,
+      "composite": 0.542425,
+      "secrets_or_danger": 0.182,
+      "logic_drift": 0.255,
+      "flagged": false
+    },
+    "laya_combined": 0.5424,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.008,
+    "rank_reason": "logistic",
+    "elapsed_s": 89.85,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

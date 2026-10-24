@@ -1,0 +1,398 @@
+{
+  "instance_id": "sympy__sympy-14774",
+  "repo": "sympy/sympy",
+  "base_commit": "8fc63c2d71752389a44367b8ef4aba8a91af6a45",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995365.2473323
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995368.732792
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995382.243684
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995384.330923
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995429.64153
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791995566.8615644
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/printing/latex.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791995312.0107968,
+  "elapsed_s": 262.91,
+  "plan": "inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/printing/latex.py",
+      "symbol": "sympy/printing/latex.py::latex",
+      "symbols": [
+        "latex",
+        "_print_Cycle",
+        "_print_Sum",
+        "_print_Product"
+      ],
+      "line_range": [
+        2212,
+        2347
+      ],
+      "score": 0.7218,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6272,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: instead, names, right, sympy; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/physics/vector/printing.py",
+      "symbol": "sympy/physics/vector/printing.py::VectorStrPrinter",
+      "symbols": [
+        "VectorStrPrinter",
+        "_print_Derivative",
+        "_print_Function",
+        "VectorLatexPrinter"
+      ],
+      "line_range": [
+        16,
+        38
+      ],
+      "score": 0.5506,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.8386,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: sympy, function, printer)"
+    },
+    {
+      "file": "sympy/printing/python.py",
+      "symbol": "sympy/printing/python.py::PythonPrinter",
+      "symbols": [
+        "PythonPrinter",
+        "__init__",
+        "_print_Function",
+        "python"
+      ],
+      "line_range": [
+        15,
+        47
+      ],
+      "score": 0.5297,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3751,
+        "vector": 0.6531,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: instead, sympy, function, printer)"
+    },
+    {
+      "file": "sympy/parsing/sympy_parser.py",
+      "symbol": "sympy/parsing/sympy_parser.py::implicit_multiplication",
+      "symbols": [
+        "implicit_multiplication",
+        "implicit_application",
+        "implicit_multiplication_application",
+        "_transform_equals_sign"
+      ],
+      "line_range": [
+        426,
+        450
+      ],
+      "score": 0.5329,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3129,
+        "vector": 0.8098,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: example, sympy, function)"
+    },
+    {
+      "file": "sympy/utilities/benchmarking.py",
+      "symbol": "sympy/utilities/benchmarking.py::Function",
+      "symbols": [
+        "Function",
+        "Directory",
+        "Module",
+        "main"
+      ],
+      "line_range": [
+        60,
+        110
+      ],
+      "score": 0.561,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1966,
+        "vector": 0.5158,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: py; body matches report terms: line)"
+    },
+    {
+      "file": "sympy/plotting/pygletplot/__init__.py",
+      "symbol": "sympy/plotting/pygletplot/__init__.py::PygletPlot",
+      "symbols": [
+        "PygletPlot"
+      ],
+      "line_range": [
+        8,
+        141
+      ],
+      "score": 0.5359,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1704,
+        "vector": 0.4025,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: example, names, sympy, left)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8731749999999999,
+  "laya_scores": {
+    "fix_quality": 1.6088,
+    "matches_issue": 0.9854,
+    "safe_to_apply": 0.8985,
+    "composite": 0.8731749999999999,
+    "secrets_or_danger": 0.0901,
+    "logic_drift": 0.1565,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security implications in this string table update.\n- PERFORMANCE: PASS - Operations on a small local list have negligible performance impact.\n- ROBUSTNESS: PASS - Correctly extends the inverse trigonometric function support without logical flaws.\n- MINIMAL DIFF / YAGNI: PASS - Minimal and direct fix matching the reported bug description.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from sympy import symbols, latex, asin, acos, atan, acsc, asec, acot\n\ndef test_latex_inv_trig_style_full_acsc_asec():\n    \"\"\"Test that acsc and asec use full inverse trig names when inv_trig_style='full'.\"\"\"\n    x = symbols('x')\n    assert latex(acsc(x), inv_trig_style=\"full\") == r\"\\operatorname{arccsc}{\\left (x \\right )}\"\n    assert latex(asec(x), inv_trig_style=\"full\") == r\"\\operatorname{arcsec}{\\left (x \\right )}\"\n\ndef test_latex_inv_trig_style_full_standard_functions():\n    \"\"\"Test standard inverse trig functions with inv_trig_style='full'.\"\"\"\n    x = symbols('x')\n    assert latex(asin(x), inv_trig_style=\"full\") == r\"\\arcsin{\\left (x \\right )}\"\n    assert latex(acos(x), inv_trig_style=\"full\") == r\"\\arccos{\\left (x \\right )}\"\n    assert latex(atan(x), inv_trig_style=\"full\") == r\"\\arctan{\\left (x \\right )}\"\n    assert latex(acot(x), inv_trig_style=\"full\") == r\"\\operatorname{arccot}{\\left (x \\right )}\"\n\ndef test_latex_inv_trig_style_default():\n    \"\"\"Test that default inv_trig_style (short/trig names) works correctly for acsc and asec.\"\"\"\n    x = symbols('x')\n    assert latex(acsc(x)) == r\"\\operatorname{acsc}{\\left (x \\right )}\"\n    assert latex(asec(x)) == r\"\\operatorname{asec}{\\left (x \\right )}\"\n\ndef test_latex_inv_trig_style_full_with_expression():\n    \"\"\"Test inv_trig_style='full' with compound expressions containing acsc and asec.\"\"\"\n    x = symbols('x')\n    expr = acsc(x) + asec(x)\n    expected = r\"\\operatorname{arccsc}{\\left (x \\right )} + \\operatorname{arcsec}{\\left (x \\right )}\"\n    assert latex(expr, inv_trig_style=\"full\") == expected",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex a3ead157c1..f3b7669e96 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -740,7 +740,7 @@ def _print_Function(self, expr, exp=None):\n                 len(args) == 1 and \\\n                 not self._needs_function_brackets(expr.args[0])\n \n-            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acot\"]\n+            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]\n \n             # If the function is an inverse trig function, handle the style\n             if func in inv_trig_table:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14774-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/latex.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6088,
+        "matches_issue": 0.9854,
+        "safe_to_apply": 0.8985,
+        "composite": 0.8731749999999999,
+        "secrets_or_danger": 0.0901,
+        "logic_drift": 0.1565,
+        "flagged": false
+      },
+      "laya_combined": 0.8732,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0046,
+      "rank_reason": "logistic",
+      "elapsed_s": 2.51,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex a3ead157c1..f3b7669e96 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -740,7 +740,7 @@ def _print_Function(self, expr, exp=None):\n                 len(args) == 1 and \\\n                 not self._needs_function_brackets(expr.args[0])\n \n-            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acot\"]\n+            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]\n \n             # If the function is an inverse trig function, handle the style\n             if func in inv_trig_table:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14774-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/latex.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6088,
+        "matches_issue": 0.9854,
+        "safe_to_apply": 0.8985,
+        "composite": 0.8731749999999999,
+        "secrets_or_danger": 0.0901,
+        "logic_drift": 0.1565,
+        "flagged": false
+      },
+      "laya_combined": 0.8732,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0046,
+      "rank_reason": "logistic",
+      "elapsed_s": 72.33,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex a3ead157c1..f3b7669e96 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -740,7 +740,7 @@ def _print_Function(self, expr, exp=None):\n                 len(args) == 1 and \\\n                 not self._needs_function_brackets(expr.args[0])\n \n-            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acot\"]\n+            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]\n \n             # If the function is an inverse trig function, handle the style\n             if func in inv_trig_table:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14774-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/latex.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6088,
+        "matches_issue": 0.9854,
+        "safe_to_apply": 0.8985,
+        "composite": 0.8731749999999999,
+        "secrets_or_danger": 0.0901,
+        "logic_drift": 0.1565,
+        "flagged": false
+      },
+      "laya_combined": 0.8732,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0046,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.47,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex a3ead157c1..f3b7669e96 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -740,7 +740,7 @@ def _print_Function(self, expr, exp=None):\n                 len(args) == 1 and \\\n                 not self._needs_function_brackets(expr.args[0])\n \n-            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acot\"]\n+            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]\n \n             # If the function is an inverse trig function, handle the style\n             if func in inv_trig_table:\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-14774-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/printing/latex.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/printing/latex.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6088,
+      "matches_issue": 0.9854,
+      "safe_to_apply": 0.8985,
+      "composite": 0.8731749999999999,
+      "secrets_or_danger": 0.0901,
+      "logic_drift": 0.1565,
+      "flagged": false
+    },
+    "laya_combined": 0.8732,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0046,
+    "rank_reason": "logistic",
+    "elapsed_s": 2.51,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex a3ead15..f3b7669 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -740,7 +740,7 @@ def _print_Function(self, expr, exp=None):\n                 len(args) == 1 and \\\n                 not self._needs_function_brackets(expr.args[0])\n \n-            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acot\"]\n+            inv_trig_table = [\"asin\", \"acos\", \"atan\", \"acsc\", \"asec\", \"acot\"]\n \n             # If the function is an inverse trig function, handle the style\n             if func in inv_trig_table:\n",
+  "offline_calls": 0
+}

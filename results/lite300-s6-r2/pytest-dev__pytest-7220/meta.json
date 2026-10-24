@@ -1,0 +1,363 @@
+{
+  "instance_id": "pytest-dev__pytest-7220",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "56bf819c2f4eaf8b36bd8c42c06bb59d5a3bfc0f",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895883.06329
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895883.93847
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895887.7927535
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895898.468906
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895905.12823
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895942.6999414
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791895759.0379188,
+  "elapsed_s": 73.64,
+  "plan": "# In src/_pytest/python.py, inside reportinfo():\n# Change from:\n# return self.fspath, None, ...\n# To something that forces relative to config.rootdir:\ndef reportinfo(self):\n    # Ensure the path is reported relative to the rootdir of the session\n    return self.fspath.relto(self.config.rootdir), None, \"test\"",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/python.py",
+      "symbol": "src/_pytest/python.py::reportinfo",
+      "symbols": [
+        "reportinfo",
+        "_show_fixtures_per_test",
+        "_showfixtures_main",
+        "__init__"
+      ],
+      "line_range": [
+        298,
+        315
+      ],
+      "score": 0.6124,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5959,
+        "vector": 0.8823,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: py; body matches report terms: assert, with, file, path)"
+    },
+    {
+      "file": "src/_pytest/nodes.py",
+      "symbol": "src/_pytest/nodes.py::_gethookproxy",
+      "symbols": [
+        "_gethookproxy",
+        "_recurse",
+        "__init__",
+        "_check_initialpaths_for_relpath"
+      ],
+      "line_range": [
+        504,
+        517
+      ],
+      "score": 0.619,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3886,
+        "vector": 0.5991,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: py; body matches report terms: more, with, test, file)"
+    },
+    {
+      "file": "src/_pytest/fixtures.py",
+      "symbol": "src/_pytest/fixtures.py::pytest_sessionstart",
+      "symbols": [
+        "pytest_sessionstart",
+        "fspath",
+        "__init__",
+        "session"
+      ],
+      "line_range": [
+        52,
+        67
+      ],
+      "score": 0.5685,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5225,
+        "vector": 0.6698,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: session; body matches report terms: pytest, test, python, fixture)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::ExitCode",
+      "symbols": [
+        "ExitCode",
+        "main",
+        "console_main",
+        "filename_arg"
+      ],
+      "line_range": [
+        65,
+        87
+      ],
+      "score": 0.6599,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5504,
+        "vector": 0.6439,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: code, pytest, test, collected)"
+    },
+    {
+      "file": "src/_pytest/pytester.py",
+      "symbol": "src/_pytest/pytester.py::parseconfig",
+      "symbols": [
+        "parseconfig",
+        "_dump_lines",
+        "run",
+        "chdir"
+      ],
+      "line_range": [
+        1028,
+        1050
+      ],
+      "score": 0.6261,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7475,
+        "vector": 0.6806,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: py; body matches report terms: code, pytest, with, test)"
+    },
+    {
+      "file": "src/_pytest/doctest.py",
+      "symbol": "src/_pytest/doctest.py::pytest_collect_file",
+      "symbols": [
+        "pytest_collect_file",
+        "report_unexpected_exception",
+        "DoctestTextfile",
+        "DoctestModule"
+      ],
+      "line_range": [
+        111,
+        119
+      ],
+      "score": 0.5659,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4296,
+        "vector": 0.8416,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: py; body matches report terms: pytest, test, file, path)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import os\nimport errno\nimport shutil\nimport pytest\nfrom pathlib import Path\n\n@pytest.fixture\ndef private_dir(tmp_path):\n    \"\"\"\n    Creates a subdirectory, changes the current working directory to it,\n    and ensures restoration after the test.\n    \"\"\"\n    out_dir = tmp_path / \"ddd\"\n    out_dir.mkdir()\n    \n    old_dir = os.getcwd()\n    os.chdir(str(out_dir))\n    yield str(out_dir)\n    os.chdir(old_dir)\n\ndef test_show_wrong_path(private_dir, pytester):\n    \"\"\"\n    Reproduces the bug: When the CWD is changed in a fixture, pytest\n    reports the file path as relative to the new CWD (e.g., ../test_file.py)\n    instead of relative to the project root.\n    \"\"\"\n    pytester.makepyfile(\"\"\"\n        import pytest\n        import os\n        \n        @pytest.fixture\n        def change_dir(tmp_path):\n            d = tmp_path / \"sub\"\n            d.mkdir()\n            os.chdir(str(d))\n            \n        def test_fail(change_dir):\n            assert False\n    \"\"\")\n    \n    result = pytester.runpytest()\n    \n    # The output should contain the file path relative to root, not starting with '../'\n    # We check that the failure line does not include the '..' traversal\n    for line in result.stdout.lines:\n        if \"test_fail\" in line and \"AssertionError\" in line:\n            assert \"../\" not in line, f\"Path reported as relative to sub-dir: {line}\"\n\ndef test_path_reporting_consistency_at_root(pytester):\n    \"\"\"Edge case: Verify reporting when no directory change occurs (baseline).\"\"\"\n    pytester.makepyfile(\"\"\"\n        def test_pass():\n            assert True\n    \"\"\")\n    result = pytester.runpytest()\n    # Path should just be the filename\n    result.stdout.fnmatch_lines([\"*test_path_reporting_consistency_at_root.py*\"])\n\ndef test_nested_path_integrity(pytester):\n    \"\"\"Edge case: Ensure that even with deep nesting, root-relative paths are maintained.\"\"\"\n    subdir = pytester.path / \"level1\" / \"level2\"\n    subdir.mkdir(parents=True)\n    test_file = subdir / \"test_nested.py\"\n    test_file.write_text(\"def test_nested(): assert False\")\n    \n    result = pytester.runpytest(str(test_file))\n    \n    # Assert that the path reported contains 'level1/level2' rather than being relative to 'level2'\n    # The output should show the path from the root of the test execution\n    result.stdout.fnmatch_lines([\n        \"*level1/level2/test_nested.py:1: AssertionError\"\n    ])",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -310,7 +310,7 @@\n \n     def reportinfo(self):\n-        return self.fspath, None, \"test\"\n+        return self.fspath.relto(self.config.rootdir), None, \"test\"\n \n     def _prunetraceback(self, traceback):\n         if hasattr(self, \"_obj\"):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7220-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/python.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3296,
+        "matches_issue": 0.684,
+        "safe_to_apply": 0.5604,
+        "composite": 0.6435,
+        "secrets_or_danger": 0.1741,
+        "logic_drift": 0.2306,
+        "flagged": false
+      },
+      "laya_combined": 0.6435,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.63,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -325,7 +325,7 @@\n     def reportinfo(self):\n-        return self.fspath, None, \"test\"\n+        return self.fspath.relto(self.config.rootdir), None, \"test\"\n \n     def _prunetraceback(self, excinfo):\n         if hasattr(self, \"_obj\"):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7220-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/python.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3296,
+        "matches_issue": 0.684,
+        "safe_to_apply": 0.5604,
+        "composite": 0.6435,
+        "secrets_or_danger": 0.1693,
+        "logic_drift": 0.2088,
+        "flagged": false
+      },
+      "laya_combined": 0.6435,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 14.47,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -310,7 +310,7 @@\n \n     def reportinfo(self):\n-        return self.fspath, None, \"test\"\n+        return self.fspath.relto(self.config.rootdir), None, \"test\"\n \n     def _prunetraceback(self, excinfo):\n         if hasattr(self, \"_obj\"):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7220-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/python.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3296,
+        "matches_issue": 0.684,
+        "safe_to_apply": 0.5604,
+        "composite": 0.6435,
+        "secrets_or_danger": 0.1827,
+        "logic_drift": 0.2081,
+        "flagged": false
+      },
+      "laya_combined": 0.6435,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.85,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -310,7 +310,7 @@\n \n     def reportinfo(self):\n-        return self.fspath, None, \"test\"\n+        return self.fspath.relto(self.config.rootdir), None, \"test\"\n \n     def _prunetraceback(self, traceback):\n         if hasattr(self, \"_obj\"):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7220-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/_pytest/python.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3296,
+      "matches_issue": 0.684,
+      "safe_to_apply": 0.5604,
+      "composite": 0.6435,
+      "secrets_or_danger": 0.1741,
+      "logic_drift": 0.2306,
+      "flagged": false
+    },
+    "laya_combined": 0.6435,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0072,
+    "rank_reason": "logistic",
+    "elapsed_s": 11.63,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

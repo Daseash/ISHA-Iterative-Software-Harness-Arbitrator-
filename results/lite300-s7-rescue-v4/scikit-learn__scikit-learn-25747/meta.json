@@ -1,0 +1,403 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-25747",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "2c867b8f822eb7a684f0d5c4359e4426e1c9cfe0",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998268.337098
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998271.681028
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998278.9639583
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998282.318397
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998296.3741705
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998399.5882602
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/utils/_set_output.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/utils/_set_output.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791998228.6100533,
+  "elapsed_s": 179.01,
+  "plan": "if isinstance(data_to_wrap, (pd.DataFrame, pd.Series)):\n        if columns is not None and isinstance(data_to_wrap, pd.DataFrame):\n            data_to_wrap.columns = columns\n        if index is not None and len(index) == len(data_to_wrap):\n            data_to_wrap.index = index\n        return data_to_wrap",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/utils/_set_output.py",
+      "symbol": "sklearn/utils/_set_output.py::_wrap_in_pandas_container",
+      "symbols": [
+        "_wrap_in_pandas_container",
+        "_wrap_data_with_container",
+        "__init_subclass__",
+        "set_output"
+      ],
+      "line_range": [
+        10,
+        14
+      ],
+      "score": 0.8058,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5664,
+        "vector": 0.9512,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; signature parameter matches report: columns, data_to_wrap, index; body matches report terms: data, pandas, wrap, columns; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sklearn/pipeline.py",
+      "symbol": "sklearn/pipeline.py::set_output",
+      "symbols": [
+        "set_output",
+        "set_output",
+        "_iter",
+        "_name_estimators"
+      ],
+      "line_range": [
+        157,
+        179
+      ],
+      "score": 0.7635,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.9381,
+        "vector": 0.6999,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: transform; body matches report terms: data, when, output, pandas)"
+    },
+    {
+      "file": "sklearn/compose/_column_transformer.py",
+      "symbol": "sklearn/compose/_column_transformer.py::set_output",
+      "symbols": [
+        "set_output",
+        "replace_passthrough",
+        "_iter",
+        "_validate_transformers"
+      ],
+      "line_range": [
+        274,
+        306
+      ],
+      "score": 0.6152,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6733,
+        "vector": 0.7452,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: transform; body matches report terms: data, getattr, when, output)"
+    },
+    {
+      "file": "sklearn/base.py",
+      "symbol": "sklearn/base.py::get_submatrix",
+      "symbols": [
+        "get_submatrix",
+        "fit_transform",
+        "get_feature_names_out",
+        "get_feature_names_out"
+      ],
+      "line_range": [
+        831,
+        857
+      ],
+      "score": 0.767,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5557,
+        "vector": 0.6507,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: data; body matches report terms: data, feature, utils, works)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::_in_unstable_openblas_configuration",
+      "symbols": [
+        "_in_unstable_openblas_configuration",
+        "axis0_safe_slice",
+        "_array_indexing",
+        "_pandas_indexing"
+      ],
+      "line_range": [
+        83,
+        115
+      ],
+      "score": 0.681,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5978,
+        "vector": 0.721,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: architecture, scipy, version, numpy)"
+    },
+    {
+      "file": "sklearn/metrics/_plot/base.py",
+      "symbol": "sklearn/metrics/_plot/base.py::_check_classifier_response_method",
+      "symbols": [
+        "_check_classifier_response_method",
+        "_get_response"
+      ],
+      "line_range": [
+        4,
+        49
+      ],
+      "score": 0.6124,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1231,
+        "vector": 0.264,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: valueerror, getattr, first, class)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.672075,
+  "laya_scores": {
+    "fix_quality": 1.3986,
+    "matches_issue": 0.6875,
+    "safe_to_apply": 0.6022,
+    "composite": 0.672075,
+    "secrets_or_danger": 0.0915,
+    "logic_drift": 0.3261,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related concerns or injection risks in this wrapper logic.\n- PERFORMANCE: PASS - O(1) length check addition adds negligible overhead before assigning pandas index.\n- ROBUSTNESS: PASS - Correctly guards against length mismatch errors when aggregation alters the output shape.\n- MINIMAL DIFF / YAGNI: PASS - Minimal, targeted fix directly addressing the bug without extra abstractions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pandas as pd\nimport pytest\nfrom sklearn import set_config\nfrom sklearn.base import BaseEstimator, TransformerMixin\nfrom sklearn.pipeline import make_union\n\n\nclass AggregatingTransformer(BaseEstimator, TransformerMixin):\n    def fit(self, X: pd.DataFrame, y=None, **kwargs):\n        return self\n\n    def transform(self, X: pd.DataFrame, y=None) -> pd.DataFrame:\n        # Aggregates data and reduces the number of rows/index elements\n        return X[\"value\"].groupby(X[\"date\"]).sum()\n\n\nclass StandardTransformer(BaseEstimator, TransformerMixin):\n    def fit(self, X: pd.DataFrame, y=None, **kwargs):\n        return self\n\n    def transform(self, X: pd.DataFrame, y=None) -> pd.DataFrame:\n        # Preserves the shape and index of X\n        return X[[\"value\"]]\n\n\ndef test_feature_union_aggregating_pandas_output():\n    \"\"\"Test that FeatureUnion works with a custom aggregating transformer\n\n    when pandas transform output is selected (reproduces the bug where\n    wrapping attempts to apply the original input's index to a reduced output).\n    \"\"\"\n    index = pd.date_range(start=\"2020-01-01\", end=\"2020-01-05\", inclusive=\"left\", freq=\"H\")\n    data = pd.DataFrame(index=index, data=[10] * len(index), columns=[\"value\"])\n    data[\"date\"] = index.date\n\n    set_config(transform_output=\"pandas\")\n    try:\n        union = make_union(AggregatingTransformer())\n        result = union.fit_transform(data)\n        assert isinstance(result, pd.DataFrame)\n        assert len(result) == 4  # Aggregated into 4 unique dates\n    finally:\n        set_config(transform_output=\"default\")\n\n\ndef test_feature_union_mixed_transformers_pandas_output():\n    \"\"\"Edge case: FeatureUnion combining an aggregating transformer\n\n    and a standard shape-preserving transformer under pandas output config.\n    \"\"\"\n    index = pd.date_range(start=\"2020-01-01\", end=\"2020-01-03\", inclusive=\"left\", freq=\"H\")\n    data = pd.DataFrame(index=index, data=[5] * len(index), columns=[\"value\"])\n    data[\"date\"] = index.date\n\n    set_config(transform_output=\"pandas\")\n    try:\n        union = make_union(StandardTransformer(), AggregatingTransformer())\n        result = union.fit_transform(data)\n        assert isinstance(result, pd.DataFrame)\n    finally:\n        set_config(transform_output=\"default\")\n\n\ndef test_feature_union_transformer_returning_series():\n    \"\"\"Edge case: Transformer whose transform method returns a pandas Series\n\n    rather than a DataFrame, ensuring robust container wrapping.\n    \"\"\"\n    class SeriesTransformer(BaseEstimator, TransformerMixin):\n        def fit(self, X, y=None):\n            return self\n\n        def transform(self, X):\n            return pd.Series([1, 2, 3], index=[\"a\", \"b\", \"c\"])\n\n    set_config(transform_output=\"pandas\")\n    try:\n        X_dummy = pd.DataFrame({\"col\": [1, 2, 3, 4]})\n        union = make_union(SeriesTransformer())\n        result = union.fit_transform(X_dummy)\n        assert isinstance(result, pd.DataFrame)\n        assert len(result.columns) == 1\n    finally:\n        set_config(transform_output=\"default\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py\nindex 335773c6af..0e40cb94d6 100644\n--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -56,7 +56,8 @@ def _wrap_in_pandas_container(\n         if columns is not None:\n             data_to_wrap.columns = columns\n         if index is not None:\n-            data_to_wrap.index = index\n+            if len(index) == len(data_to_wrap):\n+                data_to_wrap.index = index\n         return data_to_wrap\n \n     return pd.DataFrame(data_to_wrap, index=index, columns=columns)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-25747-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/utils/_set_output.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/utils/_set_output.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3986,
+        "matches_issue": 0.6875,
+        "safe_to_apply": 0.6022,
+        "composite": 0.672075,
+        "secrets_or_danger": 0.0915,
+        "logic_drift": 0.3261,
+        "flagged": false
+      },
+      "laya_combined": 0.6721,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 33.52,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-25747-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "sklearn/utils/_set_output.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5207,
+        "matches_issue": 0.7135,
+        "safe_to_apply": 0.6709,
+        "composite": 0.726275,
+        "secrets_or_danger": 0.0994,
+        "logic_drift": 0.2077,
+        "flagged": false
+      },
+      "laya_combined": 0.7263,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 38.5,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -52,9 +52,11 @@\n     if isinstance(data_to_wrap, pd.DataFrame):\n         if columns is not None:\n             data_to_wrap.columns = columns\n-        if index is not None:\n+        if index is not None and len(index) == len(data_to_wrap):\n             data_to_wrap.index = index\n         return data_to_wrap\n+    elif isinstance(data_to_wrap, pd.Series) and index is not None and len(index) == len(data_to_wrap):\n+        data_to_wrap.index = index\n \n return pd.DataFrame(data_to_wrap, index=index, columns=columns)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-25747-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-25747-c1\\sklearn\\utils\\_set_output.py: 'return' outside function"
+      ],
+      "changed_files": [
+        "sklearn/utils/_set_output.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5981,
+        "matches_issue": 0.7482,
+        "safe_to_apply": 0.6381,
+        "composite": 0.7461000000000001,
+        "secrets_or_danger": 0.109,
+        "logic_drift": 0.2353,
+        "flagged": false
+      },
+      "laya_combined": 0.7461,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.86,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": true,
+    "patch": "diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py\nindex 335773c6af..0e40cb94d6 100644\n--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -56,7 +56,8 @@ def _wrap_in_pandas_container(\n         if columns is not None:\n             data_to_wrap.columns = columns\n         if index is not None:\n-            data_to_wrap.index = index\n+            if len(index) == len(data_to_wrap):\n+                data_to_wrap.index = index\n         return data_to_wrap\n \n     return pd.DataFrame(data_to_wrap, index=index, columns=columns)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-25747-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/utils/_set_output.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/utils/_set_output.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3986,
+      "matches_issue": 0.6875,
+      "safe_to_apply": 0.6022,
+      "composite": 0.672075,
+      "secrets_or_danger": 0.0915,
+      "logic_drift": 0.3261,
+      "flagged": false
+    },
+    "laya_combined": 0.6721,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 33.52,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py\nindex 335773c..0e40cb9 100644\n--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -56,7 +56,8 @@ def _wrap_in_pandas_container(\n         if columns is not None:\n             data_to_wrap.columns = columns\n         if index is not None:\n-            data_to_wrap.index = index\n+            if len(index) == len(data_to_wrap):\n+                data_to_wrap.index = index\n         return data_to_wrap\n \n     return pd.DataFrame(data_to_wrap, index=index, columns=columns)\n",
+  "offline_calls": 0
+}

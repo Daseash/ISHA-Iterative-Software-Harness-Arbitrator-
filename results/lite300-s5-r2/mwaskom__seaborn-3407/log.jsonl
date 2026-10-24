@@ -1,0 +1,12 @@
+{"event": "start", "instance_id": "mwaskom__seaborn-3407", "ts": 1791738148.5440245}
+{"event": "attempt", "n": 1, "ts": 1791738148.6198928}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791738648.6275122}
+{"event": "attempt", "n": 2, "ts": 1791738648.6958444}
+{"event": "model", "ts": 1791738659.312259, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791738659.6953886, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791738663.6790698, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791738666.0357087, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791738668.6638734, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791738705.6736014, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791738716.264312, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791738726.6944537}

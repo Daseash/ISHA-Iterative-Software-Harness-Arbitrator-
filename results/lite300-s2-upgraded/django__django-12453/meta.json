@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12453",
+  "repo": "django/django",
+  "base_commit": "b330b918e979ea39a21d47b61172d112caf432c3",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455787.0585682
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455798.1473014
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (5 models): gemini-3.1-flash-lite: Timeout; qwen3.8-27b: RateLimitError; north-mini-code:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455853.6316974
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455862.036718
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455901.0218194
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456113.5351615
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/backends/base/creation.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 4,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791455637.3628082,
+  "elapsed_s": 483.76,
+  "plan": "Step 1: Root cause — create_test_db() does not validate operand types before computing.\nStep 2: Edit creation.py — in create_test_db(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/backends/base/creation.py",
+      "symbol": "django/db/backends/base/creation.py::deserialize_db_from_string",
+      "symbols": [
+        "deserialize_db_from_string",
+        "_get_database_display_str",
+        "_get_test_db_name",
+        "_execute_create_test_db"
+      ],
+      "line_range": [
+        123,
+        131
+      ],
+      "score": 0.7515,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.9042,
+        "vector": 0.6701,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: data; body matches report terms: stringio, deserialize, save, json; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::deserialize",
+      "symbols": [
+        "deserialize",
+        "sort_dependencies",
+        "BadSerializer",
+        "unregister_serializer"
+      ],
+      "line_range": [
+        132,
+        142
+      ],
+      "score": 0.8368,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3368,
+        "vector": 0.4797,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: save, that, saved, objects; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/commands/loaddata.py",
+      "symbol": "django/core/management/commands/loaddata.py::handle",
+      "symbols": [
+        "handle",
+        "loaddata",
+        "Command",
+        "add_arguments"
+      ],
+      "line_range": [
+        63,
+        80
+      ],
+      "score": 0.6185,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3398,
+        "vector": 0.7383,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: result, verbosity, transaction, case; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "django/db/transaction.py::atomic",
+      "symbols": [
+        "atomic",
+        "get_connection",
+        "commit",
+        "rollback"
+      ],
+      "line_range": [
+        285,
+        294
+      ],
+      "score": 0.6927,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7075,
+        "vector": 0.5482,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: using; body matches report terms: actual, save, alias, using; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/backends/base/base.py",
+      "symbol": "django/db/backends/base/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "copy",
+        "timezone",
+        "timezone_name"
+      ],
+      "line_range": [
+        48,
+        109
+      ],
+      "score": 0.6329,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.8857,
+        "vector": 0.4496,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: alias; body matches report terms: settings, save, transaction, alias)"
+    },
+    {
+      "file": "django/db/backends/oracle/creation.py",
+      "symbol": "django/db/backends/oracle/creation.py::DatabaseCreation",
+      "symbols": [
+        "DatabaseCreation",
+        "_maindb_connection",
+        "_create_test_db",
+        "_switch_to_test_user"
+      ],
+      "line_range": [
+        12,
+        400
+      ],
+      "score": 0.6233,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5246,
+        "vector": 0.3927,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: BaseDatabaseCreation; body matches report terms: settings, description, conf, verbosity)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.57845,
+  "laya_scores": {
+    "fix_quality": 1.1805,
+    "matches_issue": 0.576,
+    "safe_to_apply": 0.5573,
+    "composite": 0.57845,
+    "secrets_or_danger": 0.2974,
+    "logic_drift": 0.3594,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No changes to input validation or execution context.\n- PERFORMANCE: PASS, Atomic transactions are the standard way to batch database operations in Django.\n- ROBUSTNESS: PASS, Encapsulating bulk deserialization in a transaction prevents partial data states upon IntegrityErrors.\n- PONYTAIL / YAGNI: PASS, This is a necessary fix for the described race condition/integrity issue in test setup.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models, transaction\nfrom django.test import TransactionTestCase\nfrom django.db.backends.base.creation import BaseDatabaseCreation\n\n# Define models that have a Foreign Key relationship\n# The bug occurs when the dependent model is processed before the parent model\nclass Parent(models.Model):\n    name = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = 'test_app'\n\nclass Child(models.Model):\n    parent = models.ForeignKey(Parent, on_delete=models.CASCADE)\n\n    class Meta:\n        app_label = 'test_app'\n\nclass TestSerializedRollback(TransactionTestCase):\n    \"\"\"\n    Tests for serialized_rollback behavior.\n    \"\"\"\n    serialized_rollback = True\n\n    def test_serialized_rollback_integrity(self):\n        \"\"\"\n        Reproduce: deserialize_db_from_string fails to wrap in a transaction,\n        causing integrity errors if child is processed before parent.\n        \"\"\"\n        # This triggers the serialized_rollback logic during setup.\n        # We manually check if we can deserialize without failure.\n        # Note: The fix involves adding transaction.atomic in \n        # BaseDatabaseCreation.deserialize_db_from_string.\n        from django.core import serializers\n        from django.db import connection\n        \n        # Simulate serialized data where Child appears before Parent\n        raw_data = \"\"\"[\n            {\"model\": \"test_app.child\", \"pk\": 1, \"fields\": {\"parent\": 1}},\n            {\"model\": \"test_app.parent\", \"pk\": 1, \"fields\": {\"name\": \"Test\"}}\n        ]\"\"\"\n        \n        # This call should fail without the transaction atomic block \n        # because Child(parent_id=1) will try to save before Parent(pk=1) exists.\n        connection.creation.deserialize_db_from_string(raw_data)\n\n    def test_empty_serialization(self):\n        \"\"\"\n        Edge Case: Empty serialized input should not raise an error.\n        \"\"\"\n        from django.db import connection\n        try:\n            connection.creation.deserialize_db_from_string(\"[]\")\n        except Exception as e:\n            pytest.fail(f\"Deserializing empty list raised exception: {e}\")\n\n    def test_invalid_json_raises_error(self):\n        \"\"\"\n        Edge Case: Invalid JSON string should propagate the serialization error.\n        \"\"\"\n        from django.db import connection\n        with pytest.raises(Exception):\n            connection.creation.deserialize_db_from_string(\"invalid-json-data\")\n\n    def test_none_input_behavior(self):\n        \"\"\"\n        Edge Case: Ensuring None/Empty string handled gracefully.\n        \"\"\"\n        from django.db import connection\n        # Depending on implementation, might raise AttributeError or ValueError\n        with pytest.raises((AttributeError, ValueError, TypeError)):\n            connection.creation.deserialize_db_from_string(None)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex c50fc90171..4cc38e1970 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -5,7 +5,7 @@ from io import StringIO\n from django.apps import apps\n from django.conf import settings\n from django.core import serializers\n-from django.db import router\n+from django.db import router, transaction\n \n # The prefix to put on the default database name when creating\n # the test database.\n@@ -123,11 +123,12 @@ class BaseDatabaseCreation:\n     def deserialize_db_from_string(self, data):\n         \"\"\"\n         Reload the database with data from a string generated by\n-        the serialize_db_to_string() method.\n+        the serialize_db_to_string method.\n         \"\"\"\n         data = StringIO(data)\n-        for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n-            obj.save()\n+        with transaction.atomic(using=self.connection.alias):\n+            for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n+                obj.save()\n \n     def _get_database_display_str(self, verbosity, database_name):\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12453-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1805,
+        "matches_issue": 0.576,
+        "safe_to_apply": 0.5573,
+        "composite": 0.57845,
+        "secrets_or_danger": 0.2974,
+        "logic_drift": 0.3594,
+        "flagged": false
+      },
+      "laya_combined": 0.5785,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 19.21,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex c50fc90171..4cc38e1970 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -5,7 +5,7 @@ from io import StringIO\n from django.apps import apps\n from django.conf import settings\n from django.core import serializers\n-from django.db import router\n+from django.db import router, transaction\n \n # The prefix to put on the default database name when creating\n # the test database.\n@@ -123,11 +123,12 @@ class BaseDatabaseCreation:\n     def deserialize_db_from_string(self, data):\n         \"\"\"\n         Reload the database with data from a string generated by\n-        the serialize_db_to_string() method.\n+        the serialize_db_to_string method.\n         \"\"\"\n         data = StringIO(data)\n-        for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n-            obj.save()\n+        with transaction.atomic(using=self.connection.alias):\n+            for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n+                obj.save()\n \n     def _get_database_display_str(self, verbosity, database_name):\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12453-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1805,
+        "matches_issue": 0.576,
+        "safe_to_apply": 0.5573,
+        "composite": 0.57845,
+        "secrets_or_danger": 0.2974,
+        "logic_drift": 0.3594,
+        "flagged": false
+      },
+      "laya_combined": 0.5785,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 88.59,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex c50fc90171..4cc38e1970 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -5,7 +5,7 @@ from io import StringIO\n from django.apps import apps\n from django.conf import settings\n from django.core import serializers\n-from django.db import router\n+from django.db import router, transaction\n \n # The prefix to put on the default database name when creating\n # the test database.\n@@ -123,11 +123,12 @@ class BaseDatabaseCreation:\n     def deserialize_db_from_string(self, data):\n         \"\"\"\n         Reload the database with data from a string generated by\n-        the serialize_db_to_string() method.\n+        the serialize_db_to_string method.\n         \"\"\"\n         data = StringIO(data)\n-        for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n-            obj.save()\n+        with transaction.atomic(using=self.connection.alias):\n+            for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n+                obj.save()\n \n     def _get_database_display_str(self, verbosity, database_name):\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12453-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/base/creation.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1805,
+        "matches_issue": 0.576,
+        "safe_to_apply": 0.5573,
+        "composite": 0.57845,
+        "secrets_or_danger": 0.2974,
+        "logic_drift": 0.3594,
+        "flagged": false
+      },
+      "laya_combined": 0.5785,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 91.87,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex c50fc90171..4cc38e1970 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -5,7 +5,7 @@ from io import StringIO\n from django.apps import apps\n from django.conf import settings\n from django.core import serializers\n-from django.db import router\n+from django.db import router, transaction\n \n # The prefix to put on the default database name when creating\n # the test database.\n@@ -123,11 +123,12 @@ class BaseDatabaseCreation:\n     def deserialize_db_from_string(self, data):\n         \"\"\"\n         Reload the database with data from a string generated by\n-        the serialize_db_to_string() method.\n+        the serialize_db_to_string method.\n         \"\"\"\n         data = StringIO(data)\n-        for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n-            obj.save()\n+        with transaction.atomic(using=self.connection.alias):\n+            for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n+                obj.save()\n \n     def _get_database_display_str(self, verbosity, database_name):\n         \"\"\"\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12453-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/backends/base/creation.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/backends/base/creation.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 4,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.1805,
+      "matches_issue": 0.576,
+      "safe_to_apply": 0.5573,
+      "composite": 0.57845,
+      "secrets_or_danger": 0.2974,
+      "logic_drift": 0.3594,
+      "flagged": false
+    },
+    "laya_combined": 0.5785,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0079,
+    "rank_reason": "logistic",
+    "elapsed_s": 19.21,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/backends/base/creation.py b/django/db/backends/base/creation.py\nindex c50fc90..4cc38e1 100644\n--- a/django/db/backends/base/creation.py\n+++ b/django/db/backends/base/creation.py\n@@ -5,7 +5,7 @@ from io import StringIO\n from django.apps import apps\n from django.conf import settings\n from django.core import serializers\n-from django.db import router\n+from django.db import router, transaction\n \n # The prefix to put on the default database name when creating\n # the test database.\n@@ -123,11 +123,12 @@ class BaseDatabaseCreation:\n     def deserialize_db_from_string(self, data):\n         \"\"\"\n         Reload the database with data from a string generated by\n-        the serialize_db_to_string() method.\n+        the serialize_db_to_string method.\n         \"\"\"\n         data = StringIO(data)\n-        for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n-            obj.save()\n+        with transaction.atomic(using=self.connection.alias):\n+            for obj in serializers.deserialize(\"json\", data, using=self.connection.alias):\n+                obj.save()\n \n     def _get_database_display_str(self, verbosity, database_name):\n         \"\"\"\n",
+  "offline_calls": 1
+}

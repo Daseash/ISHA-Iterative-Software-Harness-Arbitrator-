@@ -1,0 +1,401 @@
+{
+  "instance_id": "matplotlib__matplotlib-23563",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "149a0398b391cfc4eddb5e659f50b3c66f32ea65",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975680.3861518
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975687.9785628
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975703.1722207
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975706.2330654
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975744.496593
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791975924.45613
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied via git apply --3way",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791975604.8228352,
+  "elapsed_s": 328.98,
+  "plan": "@artist.allow_rasterization\n    def draw(self, renderer):\n        if not hasattr(self, '_verts3d'):\n            return\n        xs3d, ys3d, zs3d = self._verts3d\n        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n        self.set_data(xs, ys)\n        super().draw(renderer)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/mpl_toolkits/mplot3d/art3d.py",
+      "symbol": "lib/mpl_toolkits/mplot3d/art3d.py::draw",
+      "symbols": [
+        "draw",
+        "draw",
+        "draw",
+        "get_tightbbox"
+      ],
+      "line_range": [
+        135,
+        146
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5083,
+        "vector": 0.8884,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: renderer; body matches report terms: renderer, point, axes, array; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/mpl_toolkits/mplot3d/axes3d.py",
+      "symbol": "lib/mpl_toolkits/mplot3d/axes3d.py::draw",
+      "symbols": [
+        "draw",
+        "view_init",
+        "__init__",
+        "set_zlabel"
+      ],
+      "line_range": [
+        408,
+        462
+      ],
+      "score": 0.7768,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6938,
+        "vector": 0.4445,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: renderer; body matches report terms: size, them, first, call; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::_auto_draw_if_interactive",
+      "symbols": [
+        "_auto_draw_if_interactive",
+        "new_figure_manager_given_figure",
+        "close",
+        "subplot2grid"
+      ],
+      "line_range": [
+        796,
+        816
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6559,
+        "vector": 0.5844,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; signature parameter matches report: fig; body matches report terms: draw, some, them, matplotlib)"
+    },
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::_get_draw_artists",
+      "symbols": [
+        "_get_draw_artists",
+        "draw",
+        "draw",
+        "get_window_extent"
+      ],
+      "line_range": [
+        195,
+        219
+      ],
+      "score": 0.8053,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7774,
+        "vector": 0.5082,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (private helper called by a symbol the report names; signature parameter matches report: renderer; body matches report terms: draw, renderer, local, artist)"
+    },
+    {
+      "file": "lib/matplotlib/image.py",
+      "symbol": "lib/matplotlib/image.py::_draw_list_compositing_images",
+      "symbols": [
+        "_draw_list_compositing_images",
+        "draw",
+        "composite_images",
+        "__init__"
+      ],
+      "line_range": [
+        113,
+        159
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6105,
+        "vector": 0.5682,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; signature parameter matches report: renderer; body matches report terms: size, draw, matplotlib, renderer; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/axes/_base.py",
+      "symbol": "lib/matplotlib/axes/_base.py::_update_title_position",
+      "symbols": [
+        "_update_title_position",
+        "draw",
+        "__call__",
+        "get_window_extent"
+      ],
+      "line_range": [
+        2935,
+        2995
+      ],
+      "score": 0.8001,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.7083,
+        "vector": 0.6083,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (private helper called by a symbol the report names; signature parameter matches report: renderer; body matches report terms: title, right, first, call)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8511,
+  "laya_scores": {
+    "fix_quality": 1.8087,
+    "matches_issue": 0.854,
+    "safe_to_apply": 0.7417,
+    "composite": 0.8511,
+    "secrets_or_danger": 0.1575,
+    "logic_drift": 0.4604,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security implications in this rendering safeguard.\n- PERFORMANCE: PASS - Simple attribute check adds negligible overhead during draw calls.\n- ROBUSTNESS: PASS - Gracefully handles missing `_verts3d` state after failed updates instead of crashing.\n- MINIMAL DIFF / YAGNI: PASS - Minimal, direct fix to prevent the reported AttributeError state.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import matplotlib.pyplot as plt\nfrom mpl_toolkits.mplot3d import art3d\nimport numpy as np\nimport pytest\n\n\ndef test_line3d_missing_verts3d_attribute():\n    \"\"\"Reproduce the AttributeError: 'Line3D' object has no attribute '_verts3d'\n    which occurs when an exception is raised during plotting (e.g., shape mismatch)\n    leaving a Line3D artist partially initialized without `_verts3d`, causing a\n    subsequent draw call or figure rendering to crash.\n    \"\"\"\n    fig = plt.figure()\n    ax = fig.add_subplot(projection='3d')\n\n    # Create a Line3D instance manually or trigger a scenario where it lacks _verts3d\n    line = art3d.Line3D([], [], [])\n    if hasattr(line, '_verts3d'):\n        delattr(line, '_verts3d')\n\n    ax.add_artist(line)\n\n    # Drawing the figure should not raise AttributeError even if _verts3d is missing\n    fig.canvas.draw()\n\n\ndef test_line3d_shape_mismatch_recovery():\n    \"\"\"Test that encountering a shape mismatch/ValueError during a 3D plot operation\n    does not leave the axes or figure in a broken state that crashes on subsequent draw calls.\n    \"\"\"\n    fig = plt.figure()\n    ax = fig.add_subplot(projection='3d')\n\n    # Attempt plotting with mismatched dimensions which raises an exception\n    with pytest.raises((ValueError, RuntimeError)):\n        ax.plot([1, 2], [1, 2], [1, 2, 3])\n\n    # Subsequent valid draw should succeed without AttributeError\n    ax.plot([1, 2], [1, 2], [1, 2])\n    fig.canvas.draw()\n\n\ndef test_line3d_empty_input():\n    \"\"\"Test plotting with empty inputs.\"\"\"\n    fig = plt.figure()\n    ax = fig.add_subplot(projection='3d')\n    ax.plot([], [], [])\n    fig.canvas.draw()",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -211,6 +211,8 @@\n \n     @artist.allow_rasterization\n     def draw(self, renderer):\n+        if not hasattr(self, '_verts3d'):\n+            return\n         xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-y46lwa0g",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.8087,
+        "matches_issue": 0.854,
+        "safe_to_apply": 0.7417,
+        "composite": 0.8511,
+        "secrets_or_danger": 0.1575,
+        "logic_drift": 0.4604,
+        "flagged": false
+      },
+      "laya_combined": 0.8511,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 13.73,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -211,6 +211,8 @@\n \n     @artist.allow_rasterization\n     def draw(self, renderer):\n+        if not hasattr(self, '_verts3d'):\n+            return\n         xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-g31n2s30",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.8087,
+        "matches_issue": 0.854,
+        "safe_to_apply": 0.7417,
+        "composite": 0.8511,
+        "secrets_or_danger": 0.1575,
+        "logic_drift": 0.4604,
+        "flagged": false
+      },
+      "laya_combined": 0.8511,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 41.43,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -212,7 +212,7 @@\n     @artist.allow_rasterization\n     def draw(self, renderer):\n-        xs3d, ys3d, zs3d = self._verts3d\n+        if not hasattr(self, '_verts3d'):\n+            return\n+        xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)\n         super().draw(renderer)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-2ek3vbf5",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/art3d.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.318,
+        "matches_issue": 0.8419,
+        "safe_to_apply": 0.7284,
+        "composite": 0.722075,
+        "secrets_or_danger": 0.1432,
+        "logic_drift": 0.6431,
+        "flagged": false
+      },
+      "laya_combined": 0.7221,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0056,
+      "rank_reason": "logistic",
+      "elapsed_s": 45.9,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -211,6 +211,8 @@\n \n     @artist.allow_rasterization\n     def draw(self, renderer):\n+        if not hasattr(self, '_verts3d'):\n+            return\n         xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-y46lwa0g",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: lib/mpl_toolkits/mplot3d/art3d.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/mpl_toolkits/mplot3d/art3d.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.8087,
+      "matches_issue": 0.854,
+      "safe_to_apply": 0.7417,
+      "composite": 0.8511,
+      "secrets_or_danger": 0.1575,
+      "logic_drift": 0.4604,
+      "flagged": false
+    },
+    "laya_combined": 0.8511,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 13.73,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py\nindex 8fe6e7a..8306482 100644\n--- a/lib/mpl_toolkits/mplot3d/art3d.py\n+++ b/lib/mpl_toolkits/mplot3d/art3d.py\n@@ -211,6 +211,8 @@ class Line3D(lines.Line2D):\n \n     @artist.allow_rasterization\n     def draw(self, renderer):\n+        if not hasattr(self, '_verts3d'):\n+            return\n         xs3d, ys3d, zs3d = self._verts3d\n         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)\n         self.set_data(xs, ys)\n",
+  "offline_calls": 0
+}

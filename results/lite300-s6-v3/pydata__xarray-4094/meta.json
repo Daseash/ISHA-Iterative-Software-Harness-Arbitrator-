@@ -1,0 +1,371 @@
+{
+  "instance_id": "pydata__xarray-4094",
+  "repo": "pydata/xarray",
+  "base_commit": "a64cf2d5476e7bbda099b34c40b7be1880dbd39a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976782.0162804
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976783.9789512
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976793.4927042
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976795.8678362
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976812.2059116
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791977002.2860467
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791976759.4959204,
+  "elapsed_s": 255.69,
+  "plan": "### Step 1: Root Cause\nWhen calling `to_unstacked_dataset('y')` on a stacked `DataArray` where variables originally had a single dimension (e.g., 1D variables sharing dimension `x`), `to_unstacked_dataset` attempts to reconstruct the unstacked datasets/variables by unstacking the stacked dimension and aligning/combining them. \n\nSpecifically, the unstacking implementation splits the stacked array/dataset along the stacked MultiIndex coordinate (like `y`) and performs a reshape or unstack operation. For single-dimensional variables (or variables whose dimensions collapse/expand under stacking/unstacking), the resulting unstacked variables might end up losing their expected dimension coordinate alignment or introducing conflicting/redundant coordinate values or dimension names during the rebuild or merge step, leading to `MergeError: conflicting values for variable 'y' on objects to be combined`.\n\nLooking at `DataArray.to_unstacked_dataset` and `Dataset.to_unstacked_dataset` (typically found in `xarray/core/dataarray.py` and/or `xarray/core/dataset.py`), the method uses `to_dataset()` or internal reshaping combined with merge/concat logic. When variables are 1D, unstacking creates a 2D result or a dataset of 1D arrays where coordinate broadcasting or dimension labeling during unstacking produces a coordinate conflict on the unstacked dimension or index level.\n\n### Step 2: Exact Changes to Make\n\n**File to modify:**\n- `xarray/core/dataarray.py` (and/or `xarray/core/dataset.py`, depending on where `to_unstacked_dataset` is defined)\n\n**Function to modify:**\n- `to_unstacked_dataset`\n\n**What to change:**\n1. Locate `to_unstacked_dataset` in `xarray/core/dataarray.py` (or `Dataset`).\n2. When unstacking variables that have single or reduced dimensions, ensure that when reconstructing the unstacked `Dataset`, coordinate variables corresponding to the unstacked dimensions are properly handled and dropped or aligned without triggering a merge conflict (e.g., by passing appropriate compatibility checks like `compat=\"override\"` or ensuring that redundant/conflicting stacked dimension coordinates are cleanly filtered out or avoided during reconstruction).\n3. Update the dataset reconstruction logic inside `to_unstacked_dataset` so that single-dim variables correctly retain their dimensions and do not cause `MergeError` when combined back into a Dataset.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "xarray/core/dataset.py",
+      "symbol": "xarray/core/dataset.py::_persist_inplace",
+      "symbols": [
+        "_persist_inplace",
+        "_overwrite_indexes",
+        "_copy_listed",
+        "_construct_dataarray"
+      ],
+      "line_range": [
+        816,
+        835
+      ],
+      "score": 0.6431,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7546,
+        "vector": 0.8081,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: Dataset; body matches report terms: variable, values, data, numpy)"
+    },
+    {
+      "file": "xarray/core/merge.py",
+      "symbol": "xarray/core/merge.py::merge_data_and_coords",
+      "symbols": [
+        "merge_data_and_coords",
+        "merge",
+        "dataset_merge_method",
+        "_extract_indexes_from_coords"
+      ],
+      "line_range": [
+        461,
+        470
+      ],
+      "score": 0.5385,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.7378,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: compat, coords, data; body matches report terms: coords, data, compat, objects)"
+    },
+    {
+      "file": "xarray/core/concat.py",
+      "symbol": "xarray/core/concat.py::concat",
+      "symbols": [
+        "concat",
+        "_calc_concat_over",
+        "_dataset_concat",
+        "_dataarray_concat"
+      ],
+      "line_range": [
+        11,
+        20
+      ],
+      "score": 0.5162,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9532,
+        "vector": 0.6494,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: compat, coords; body matches report terms: coords, data, compat, override)"
+    },
+    {
+      "file": "xarray/core/combine.py",
+      "symbol": "xarray/core/combine.py::_combine_nd",
+      "symbols": [
+        "_combine_nd",
+        "_combine_all_along_first_dim",
+        "_combine_1d",
+        "_nested_combine"
+      ],
+      "line_range": [
+        148,
+        156
+      ],
+      "score": 0.4898,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.849,
+        "vector": 0.6462,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: compat, coords; body matches report terms: coords, data, compat, combined)"
+    },
+    {
+      "file": "xarray/core/dataarray.py",
+      "symbol": "xarray/core/dataarray.py::_check_data_shape",
+      "symbols": [
+        "_check_data_shape",
+        "_overwrite_indexes",
+        "_to_temp_dataset",
+        "_to_dataset_split"
+      ],
+      "line_range": [
+        169,
+        186
+      ],
+      "score": 0.4853,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.723,
+        "vector": 0.8709,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (private helper called by a symbol the report names; signature parameter matches report: coords, data; body matches report terms: variable, check, coords, data)"
+    },
+    {
+      "file": "xarray/core/computation.py",
+      "symbol": "xarray/core/computation.py::to_gufunc_string",
+      "symbols": [
+        "to_gufunc_string",
+        "result_name",
+        "_get_coords_list",
+        "apply_groupby_func"
+      ],
+      "line_range": [
+        123,
+        142
+      ],
+      "score": 0.4789,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7378,
+        "vector": 0.7874,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: dimension, output, numpy, python)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import numpy as np\nimport xarray as xr\n\n\ndef test_to_unstacked_dataset_single_dim():\n    # MCVE from the bug report\n    arr = xr.DataArray(\n        np.arange(3),\n        coords=[(\"x\", [0, 1, 2])],\n    )\n    data = xr.Dataset({\"a\": arr, \"b\": arr})\n    stacked = data.to_stacked_array(\"y\", sample_dims=[\"x\"])\n    unstacked = stacked.to_unstacked_dataset(\"y\")\n    xr.testing.assert_identical(unstacked, data)\n\n\ndef test_to_unstacked_dataset_single_dim_multi_var():\n    arr1 = xr.DataArray(np.arange(4), coords=[(\"x\", [10, 20, 30, 40])])\n    arr2 = xr.DataArray(np.arange(4) * 10, coords=[(\"x\", [10, 20, 30, 40])])\n    arr3 = xr.DataArray(np.arange(4) * 100, coords=[(\"x\", [10, 20, 30, 40])])\n    \n    ds = xr.Dataset({\"var1\": arr1, \"var2\": arr2, \"var3\": arr3})\n    stacked = ds.to_stacked_array(\"stacked_dim\", sample_dims=[\"x\"])\n    unstacked = stacked.to_unstacked_dataset(\"stacked_dim\")\n    \n    xr.testing.assert_identical(unstacked, ds)\n\n\ndef test_to_unstacked_dataset_single_dim_different_coords():\n    arr1 = xr.DataArray([1, 2], coords=[(\"x\", [1, 2])])\n    arr2 = xr.DataArray([3, 4], coords=[(\"x\", [1, 2])])\n    \n    ds = xr.Dataset({\"a\": arr1, \"b\": arr2})\n    stacked = ds.to_stacked_array(\"z\", sample_dims=[\"x\"])\n    unstacked = stacked.to_unstacked_dataset(\"z\")\n    \n    xr.testing.assert_identical(unstacked, ds)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2759,3 +2759,3 @@\n         dataset = self._to_temp_dataset().to_unstacked_dataset(\n-            dim, hierarchical=hierarchical\n+            dim, hierarchical=hierarchical, compat=\"override\"\n         )",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-wwp0f1zo",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "xarray/core/dataarray.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4023,
+        "matches_issue": 0.6689,
+        "safe_to_apply": 0.6643,
+        "composite": 0.683875,
+        "secrets_or_danger": 0.1564,
+        "logic_drift": 0.1824,
+        "flagged": false
+      },
+      "laya_combined": 0.6839,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.007,
+      "rank_reason": "logistic",
+      "elapsed_s": 55.94,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2742,3 +2742,3 @@ class DataArray(AbstractArray, DataWithCoords):\n         dataset = self._to_dataset()\n-        return dataset.to_unstacked_dataset(dim, multilevel=multilevel)\n+        return dataset.to_unstacked_dataset(dim, multilevel=multilevel)._overwrite_indexes(self.indexes)\n--- a/xarray/core/dataset.py\n+++ b/xarray/core/dataset.py\n@@ -3935,3 +3935,3 @@ class Dataset(Mapping, ImplementsDatasetReduce, DataWithCoords):\n             vars_dict[k] = v.unstack(dim)\n-        return Dataset(vars_dict)\n+        return Dataset(vars_dict, coords={k: v for k, v in self.coords.items() if k not in stacked_indexes})",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-fw5ww4km",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-fw5ww4km\\xarray\\core\\dataset.py: undefined name 'k'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-fw5ww4km\\xarray\\core\\dataset.py: undefined name 'variables'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-fw5ww4km\\xarray\\core\\dataset.py: undefined name 'stacked_dim'"
+      ],
+      "changed_files": [
+        "xarray/core/dataarray.py",
+        "xarray/core/dataset.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4119,
+        "matches_issue": 0.6613,
+        "safe_to_apply": 0.5681,
+        "composite": 0.660325,
+        "secrets_or_danger": 0.1919,
+        "logic_drift": 0.5119,
+        "flagged": false
+      },
+      "laya_combined": 0.6603,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 95.3,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2718,3 +2718,3 @@\n         \"\"\"\n-        return self.to_dataset().to_unstacked_dataset(dim)\n+        return self.to_dataset().to_unstacked_dataset(dim, compat=\"override\")\n \n--- a/xarray/core/dataset.py\n+++ b/xarray/core/dataset.py\n@@ -3571,3 +3571,3 @@\n         # reconstruct dataset\n-        return merge(data_vars, compat=\"no_conflicts\")\n+        return merge(data_vars, compat=compat)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ht8kllku",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ht8kllku\\xarray\\core\\dataarray.py: undefined name 'dim'"
+      ],
+      "changed_files": [
+        "xarray/core/dataarray.py",
+        "xarray/core/dataset.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3796,
+        "matches_issue": 0.7534,
+        "safe_to_apply": 0.6472,
+        "composite": 0.69505,
+        "secrets_or_danger": 0.271,
+        "logic_drift": 0.4382,
+        "flagged": false
+      },
+      "laya_combined": 0.695,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 61.83,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/xarray/core/dataarray.py\n+++ b/xarray/core/dataarray.py\n@@ -2759,3 +2759,3 @@\n         dataset = self._to_temp_dataset().to_unstacked_dataset(\n-            dim, hierarchical=hierarchical\n+            dim, hierarchical=hierarchical, compat=\"override\"\n         )",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-wwp0f1zo",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "xarray/core/dataarray.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.4023,
+      "matches_issue": 0.6689,
+      "safe_to_apply": 0.6643,
+      "composite": 0.683875,
+      "secrets_or_danger": 0.1564,
+      "logic_drift": 0.1824,
+      "flagged": false
+    },
+    "laya_combined": 0.6839,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.007,
+    "rank_reason": "logistic",
+    "elapsed_s": 55.94,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

@@ -1,0 +1,20 @@
+diff --git a/sklearn/pipeline.py b/sklearn/pipeline.py
+index 7eaf9a4..54fe97f 100644
+--- a/sklearn/pipeline.py
++++ b/sklearn/pipeline.py
+@@ -126,10 +126,13 @@ class Pipeline(_BaseComposition):
+     # BaseEstimator interface
+     _required_parameters = ['steps']
+ 
+-    def __init__(self, steps, memory=None):
++    def __init__(self, steps, memory=None, verbose=False):
+         self.steps = steps
+-        self._validate_steps()
+         self.memory = memory
++        self.verbose = verbose
++
++    def __len__(self):
++        return len(self.steps)
+ 
+     def get_params(self, deep=True):
+         """Get parameters for this estimator.

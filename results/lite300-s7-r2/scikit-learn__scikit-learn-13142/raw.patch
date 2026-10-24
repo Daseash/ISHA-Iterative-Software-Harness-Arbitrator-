@@ -1,0 +1,12 @@
+diff --git a/sklearn/mixture/gaussian_mixture.py b/sklearn/mixture/gaussian_mixture.py
+index 9e3bf3cb4c..d5cffa97ee 100644
+--- a/sklearn/mixture/gaussian_mixture.py
++++ b/sklearn/mixture/gaussian_mixture.py
+@@ -530,6 +530,7 @@ class GaussianMixture(BaseMixture):
+         The weights of each mixture components.
+ 
+     means_ : array-like, shape (n_components, n_features)
++        self.random_state = check_random_state(self.random_state)
+         The mean of each mixture component.
+ 
+     covariances_ : array-like

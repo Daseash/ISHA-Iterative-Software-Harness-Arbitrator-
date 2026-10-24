@@ -1,0 +1,8 @@
+--- sympy/printing/mathml.py
++++ sympy/printing/mathml.py
+@@ -356,3 +356,3 @@
+     def _print_Basic(self, e):
+         x = self.dom.createElement(self.mathml_tag(e))
+-        for arg in e:
++        for arg in e.args:
+             x.appendChild(self._print(arg))

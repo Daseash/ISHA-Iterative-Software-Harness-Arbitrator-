@@ -1,0 +1,386 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-13241",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "f8b108d0c6f2f82b2dc4e32a6793f9d9ac9cf2f4",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976137.1211996
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976145.977032
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976156.549866
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976159.6214912
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976179.6453598
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976417.297904
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791976508.7015116
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/decomposition/kernel_pca.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/decomposition/kernel_pca.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791976092.2827256,
+  "elapsed_s": 424.93,
+  "plan": "### Step 1: Root Cause\nWhen eigenvectors are computed using methods like `eigh` or `eigsh` in eigenvalue decomposition / PCA algorithms, the sign of each eigenvector (column) is arbitrary up to multiplication by $-1$. Because eigenvectors can be returned with varying signs across different runs, libraries like scikit-learn standardise the sign of the eigenvectors/components (often by enforcing that the maximum absolute value element in each column of the projection/eigenvectors is positive). \n\nIn `KernelPCA`, the eigenvectors (`alphas_`) and transformed data (`X_transformed_fit_` or the output of `fit_transform`) do not currently have their signs deterministically standardized (unlike standard `PCA` which uses `sklearn.utils.extmath.svd_flip`). Consequently, running `KernelPCA` multiple times can yield outputs differing by sign flips across components.\n\n### Step 2: Exact Changes to Make\n- **File**: `sklearn/decomposition/kernel_pca.py`\n- **Function**: `_fit` or `fit_transform` (specifically where the eigenvectors are extracted and scaled).\n- **What to change**: Import `svd_flip` from `sklearn.utils.extmath` and use it to flip the signs of the components/eigenvectors (`alphas_` and the transformed data) in a deterministic way, matching the convention used in standard `PCA` (e.g., ensuring the absolute maximum value in each column of `alphas_` is positive).",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "sklearn/decomposition/kernel_pca.py",
+      "symbol": "sklearn/decomposition/kernel_pca.py::__init__",
+      "symbols": [
+        "__init__",
+        "_get_kernel",
+        "_fit_transform",
+        "_pairwise"
+      ],
+      "line_range": [
+        142,
+        165
+      ],
+      "score": 0.4817,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9676,
+        "vector": 0.332,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: copy_X, kernel, n_components, n_jobs; body matches report terms: with, kernel, n_components, copy_x)"
+    },
+    {
+      "file": "sklearn/decomposition/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.5243,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6374,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in traceback)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::axis0_safe_slice",
+      "symbols": [
+        "axis0_safe_slice",
+        "__setstate__",
+        "get_chunk_n_rows",
+        "Bunch"
+      ],
+      "line_range": [
+        144,
+        178
+      ],
+      "score": 0.5904,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4082,
+        "vector": 0.3613,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: code, with, versions, when)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions",
+      "symbols": [
+        "maybe_cythonize_extensions"
+      ],
+      "line_range": [
+        63,
+        84
+      ],
+      "score": 0.4952,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0885,
+        "vector": 0.2338,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.4859,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0908,
+        "vector": 0.1515,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: just)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        83,
+        96
+      ],
+      "score": 0.5066,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0837,
+        "vector": 0.3387,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.717775,
+  "laya_scores": {
+    "fix_quality": 1.5374,
+    "matches_issue": 0.7008,
+    "safe_to_apply": 0.6329,
+    "composite": 0.717775,
+    "secrets_or_danger": 0.1778,
+    "logic_drift": 0.3933,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection, secrets, path traversal, or unsafe execution patterns found.\n- PERFORMANCE: PASS - svd_flip operates efficiently on the eigenvector matrix without introducing N+1 queries or blocking hot paths.\n- ROBUSTNESS: PASS - Uses established scikit-learn utility (`svd_flip`) to handle sign indeterminacy in eigenvalue/SVD decomposition deterministically.\n- MINIMAL DIFF / YAGNI: PASS - The changes are concise and directly address the bug report without unnecessary abstractions or scaffolding.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nfrom numpy.testing import assert_allclose\nimport pytest\n\nfrom sklearn.decomposition import KernelPCA\nfrom sklearn.utils.extmath import svd_flip\n\n\ndef test_kernel_pca_deterministic_sign():\n    \"\"\"Test that KernelPCA produces deterministic signs across fits (reproduces bug).\"\"\"\n    rng = np.random.RandomState(0)\n    X = rng.randn(50, 10)\n\n    # Fit multiple instances and verify that transformed outputs are identical\n    # (previously, eigenvector signs could be arbitrarily flipped).\n    kpca1 = KernelPCA(n_components=3, kernel='rbf', gamma=0.1, random_state=0)\n    X_trans1 = kpca1.fit_transform(X)\n\n    kpca2 = KernelPCA(n_components=3, kernel='rbf', gamma=0.1, random_state=0)\n    X_trans2 = kpca2.fit_transform(X)\n\n    assert_allclose(X_trans1, X_trans2)\n\n\ndef test_kernel_pca_svd_flip_convention():\n    \"\"\"Test that KernelPCA aligns with svd_flip convention (max abs per column is positive).\"\"\"\n    rng = np.random.RandomState(42)\n    X = rng.randn(30, 5)\n\n    kpca = KernelPCA(n_components=2, kernel='rbf', gamma=0.5, random_state=42)\n    X_trans = kpca.fit_transform(X)\n\n    # Check that for each column, the element with maximum absolute value is positive\n    max_abs_idx = np.argmax(np.abs(X_trans), axis=0)\n    for col_idx, row_idx in enumerate(max_abs_idx):\n        assert X_trans[row_idx, col_idx] > 0\n\n\ndef test_kernel_pca_different_kernels_sign_stability():\n    \"\"\"Test sign stability across different standard kernels.\"\"\"\n    rng = np.random.RandomState(123)\n    X = rng.randn(40, 6)\n\n    for kernel in ['linear', 'poly', 'rbf', 'cosine']:\n        kpca_a = KernelPCA(n_components=2, kernel=kernel, random_state=0)\n        kpca_b = KernelPCA(n_components=2, kernel=kernel, random_state=0)\n\n        out_a = kpca_a.fit_transform(X)\n        out_b = kpca_b.fit_transform(X)\n\n        assert_allclose(out_a, out_b, err_msg=f\"Failed stability for kernel={kernel}\")\n\n\ndef test_kernel_pca_edge_case_single_component():\n    \"\"\"Test KernelPCA edge case with n_components=1.\"\"\"\n    rng = np.random.RandomState(7)\n    X = rng.randn(20, 4)\n\n    kpca1 = KernelPCA(n_components=1, kernel='rbf', random_state=42)\n    kpca2 = KernelPCA(n_components=1, kernel='rbf', random_state=42)\n\n    res1 = kpca1.fit_transform(X)\n    res2 = kpca2.fit_transform(X)\n\n    assert res1.shape == (20, 1)\n    assert_allclose(res1, res2)\n    # Check max abs sign convention for 1 component\n    assert res1[np.argmax(np.abs(res1)), 0] > 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": false,
+      "patch": "--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -12,2 +12,3 @@\n from ..utils.validation import check_is_fitted, check_array\n+from ..utils.extmath import svd_flip\n from ..exceptions import NotFittedError\n@@ -127,2 +128,4 @@\n             self.alphas_ = self.alphas_[:, indices]\n+            if self.eigen_solver != 'arpack':\n+                self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n \n@@ -131,2 +134,4 @@\n             self.alphas_ = self.alphas_[:, indices]\n+            if self.eigen_solver != 'arpack':\n+                self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c2",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/decomposition/kernel_pca.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6261,
+        "matches_issue": 0.7164,
+        "safe_to_apply": 0.6147,
+        "composite": 0.7393000000000001,
+        "secrets_or_danger": 0.1609,
+        "logic_drift": 0.3111,
+        "flagged": false
+      },
+      "laya_combined": 0.7393,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 131.03,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -11,3 +11,4 @@\n from ..utils import check_random_state\n from ..utils.validation import check_is_fitted, check_array\n from ..exceptions import NotFittedError\n+from ..utils.extmath import svd_flip\n from ..base import BaseEstimator, TransformerMixin, _UnstableOn32BitMixin\n@@ -133,2 +134,3 @@\n             self.alphas_ = alphas\n+            self.alphas_, self.lambdas_ = svd_flip(self.alphas_, self.lambdas_.reshape(-1, 1)).T",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c1\\sklearn\\decomposition\\kernel_pca.py: undefined name 'alphas'"
+      ],
+      "changed_files": [
+        "sklearn/decomposition/kernel_pca.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5221,
+        "matches_issue": 0.616,
+        "safe_to_apply": 0.5745,
+        "composite": 0.67815,
+        "secrets_or_danger": 0.2385,
+        "logic_drift": 0.4021,
+        "flagged": false
+      },
+      "laya_combined": 0.6782,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0012,
+      "rank_reason": "logistic",
+      "elapsed_s": 78.26,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -10,6 +10,7 @@\n from ..utils import check_random_state\n from ..utils.validation import check_is_fitted, check_array\n+from ..utils.extmath import svd_flip\n from ..exceptions import NotFittedError\n from ..base import BaseEstimator, TransformerMixin\n from ..preprocessing import KernelCenterer\n@@ -148,6 +149,8 @@\n         self.lambdas_ = lambdas\n         self.alphas_ = alphas\n \n+        self.alphas_, _ = svd_flip(self.alphas_, np.empty_like(self.alphas_).T)\n+\n         if self.fit_inverse_transform:\n             self.X_fit_ = X\n             # ... (rest of inverse transform logic)\n@@ -165,6 +168,7 @@\n         K = self._get_kernel(X, self.X_fit_)\n         X_transformed = K @ self.alphas_ / np.sqrt(self.lambdas_)\n \n+        X_transformed *= np.sign(self.alphas_[np.argmax(np.abs(self.alphas_), axis=0), range(self.alphas_.shape[1])])\n         return X_transformed",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c3\\sklearn\\decomposition\\kernel_pca.py: '..utils.extmath.svd_flip' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c3\\sklearn\\decomposition\\kernel_pca.py: undefined name '_UnstableOn32BitMixin'"
+      ],
+      "changed_files": [
+        "sklearn/decomposition/kernel_pca.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5449,
+        "matches_issue": 0.6492,
+        "safe_to_apply": 0.6241,
+        "composite": 0.7045499999999999,
+        "secrets_or_danger": 0.1476,
+        "logic_drift": 0.3465,
+        "flagged": false
+      },
+      "laya_combined": 0.7045,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.68,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": false,
+    "patch": "--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -12,2 +12,3 @@\n from ..utils.validation import check_is_fitted, check_array\n+from ..utils.extmath import svd_flip\n from ..exceptions import NotFittedError\n@@ -127,2 +128,4 @@\n             self.alphas_ = self.alphas_[:, indices]\n+            if self.eigen_solver != 'arpack':\n+                self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n \n@@ -131,2 +134,4 @@\n             self.alphas_ = self.alphas_[:, indices]\n+            if self.eigen_solver != 'arpack':\n+                self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-13241-c2",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/decomposition/kernel_pca.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6261,
+      "matches_issue": 0.7164,
+      "safe_to_apply": 0.6147,
+      "composite": 0.7393000000000001,
+      "secrets_or_danger": 0.1609,
+      "logic_drift": 0.3111,
+      "flagged": false
+    },
+    "laya_combined": 0.7393,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 131.03,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/decomposition/kernel_pca.py b/sklearn/decomposition/kernel_pca.py\nindex bb91d0c..3235e2b 100644\n--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -9,6 +9,7 @@ from scipy.sparse.linalg import eigsh\n \n from ..utils import check_random_state\n from ..utils.validation import check_is_fitted, check_array\n+from ..utils.extmath import svd_flip\n from ..exceptions import NotFittedError\n from ..base import BaseEstimator, TransformerMixin, _UnstableOn32BitMixin\n from ..preprocessing import KernelCenterer\n@@ -214,6 +215,10 @@ class KernelPCA(BaseEstimator, TransformerMixin, _UnstableOn32BitMixin):\n         indices = self.lambdas_.argsort()[::-1]\n         self.lambdas_ = self.lambdas_[indices]\n         self.alphas_ = self.alphas_[:, indices]\n+        if self.eigen_solver != 'arpack':\n+            self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n+        if self.eigen_solver != 'arpack':\n+            self.alphas_, _ = svd_flip(self.alphas_, np.zeros_like(self.alphas_).T)\n \n         # remove eigenvectors with a zero eigenvalue\n         if self.remove_zero_eig or self.n_components is None:\n",
+  "offline_calls": 0
+}

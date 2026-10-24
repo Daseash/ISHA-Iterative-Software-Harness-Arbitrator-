@@ -1,0 +1,10 @@
+--- a/django/core/handlers/base.py
++++ b/django/core/handlers/base.py
+@@ -109,7 +109,7 @@ class BaseHandler:
+         if response is None:
+             wrapped_callback = self.make_view_atomic(callback)
+             try:
+-                response = wrapped_callback(request, *callback_args, **callback_kwargs)
++                response = wrapped_callback(request, *callback_args, **{k: v for k, v in callback_kwargs.items() if v is not None})
+             except Exception as e:
+                 response = self.process_exception_by_middleware(e, request)

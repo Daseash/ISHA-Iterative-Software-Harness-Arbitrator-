@@ -42,7 +42,7 @@ def scan_session_resolutions(session_id: str) -> set:
     for run_dir in sorted(RESULTS_DIR.glob(f"{session_id}*")):
         if not run_dir.is_dir():
             continue
-        for name in ("report.json", "harness_report.json"):
+        for name in ("report.json", "harness_report.json", "ISHA.*.json"):
             for r_file in run_dir.rglob(name):
                 try:
                     with open(r_file, "r", encoding="utf-8") as f:

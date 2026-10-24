@@ -1,0 +1,464 @@
+{
+  "instance_id": "pydata__xarray-4493",
+  "repo": "pydata/xarray",
+  "base_commit": "a5f53e203c52a7605d5db799864046471115d04f",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892368.1594942
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892369.1620603
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892376.6558368
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: ServiceUnavailableError; gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892378.518802
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892392.6084943
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892642.4418316
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892673.8314195
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892721.320531
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892751.406343
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892783.3664134
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791892800.9765341
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: xarray/core/variable.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "xarray/core/variable.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791892347.0062685,
+  "elapsed_s": 462.36,
+  "plan": "Step 1: The root cause is that `xr.Dataset` constructor and `update` logic (which uses `merge_data_and_coords`) explicitly or implicitly attempt to normalize inputs into standard objects. When a DataArray is passed as a value in a dictionary for a `Dataset`, xarray often converts the DataArray to a raw `Variable` or `ndarray` to ensure internal consistency of coordinate alignment. If the conversion logic doesn't preserve the underlying lazy (dask) nature of the array during the constructor's coercion process, the array gets evaluated into a concrete `numpy` array. Specifically, `Dataset` constructor and the `update` method coerce input data to `Variable` objects; when a `DataArray` is provided in the input dictionary, it is being coerced to a `Variable` in a way that ignores the dask-backed lazy data structure and forces evaluation into memory.\n\nStep 2: To fix this, the coercion logic that handles `DataArray` inputs during `Dataset` creation and `update` must be updated to preserve the `Variable` object and its dask-backed data directly, rather than extracting the underlying data into an array or forcing conversion.\n\nThe exact changes are:\n1. In `xarray/core/dataset.py`, modify the `Dataset` class constructor (specifically the part that handles dictionary inputs) and the `update` method to ensure that if a value is an instance of `DataArray`, it is converted to a `Variable` using the `DataArray.variable` property directly, which preserves chunking, instead of potentially evaluating the underlying data.\n2. In `xarray/core/variable.py`, check the `as_variable` function. Ensure that when it receives a `DataArray`, it handles it by returning `obj.variable` rather than `obj.data` or similar, which triggers eager loading. The `as_variable` function should ensure that the dask-backed array is passed through as-is.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "xarray/core/dataset.py",
+      "symbol": "xarray/core/dataset.py::_persist_inplace",
+      "symbols": [
+        "_persist_inplace",
+        "_construct_direct",
+        "_overwrite_indexes",
+        "_copy_listed"
+      ],
+      "line_range": [
+        965,
+        981
+      ],
+      "score": 0.5943,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6148,
+        "vector": 0.6925,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: Dataset; body matches report terms: array, numpy, dataset, dask)"
+    },
+    {
+      "file": "xarray/core/variable.py",
+      "symbol": "xarray/core/variable.py::_parse_dimensions",
+      "symbols": [
+        "_parse_dimensions",
+        "_maybe_wrap_data",
+        "as_compatible_data",
+        "_as_array_or_item"
+      ],
+      "line_range": [
+        588,
+        598
+      ],
+      "score": 0.559,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5394,
+        "vector": 0.5551,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (private helper called by a symbol the report names; signature parameter matches report: dims; body matches report terms: dimension, dimensions, same, dims)"
+    },
+    {
+      "file": "xarray/core/parallel.py",
+      "symbol": "xarray/core/parallel.py::assert_chunks_compatible",
+      "symbols": [
+        "assert_chunks_compatible",
+        "dataset_to_dataarray",
+        "dataarray_to_dataset",
+        "make_dict"
+      ],
+      "line_range": [
+        41,
+        49
+      ],
+      "score": 0.6034,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5427,
+        "vector": 0.9181,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: Dataset, a; body matches report terms: dimension, size, chunk, dataset)"
+    },
+    {
+      "file": "xarray/core/dataarray.py",
+      "symbol": "xarray/core/dataarray.py::_check_data_shape",
+      "symbols": [
+        "_check_data_shape",
+        "_overwrite_indexes",
+        "_to_temp_dataset",
+        "_to_dataset_split"
+      ],
+      "line_range": [
+        175,
+        192
+      ],
+      "score": 0.5795,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5728,
+        "vector": 0.6566,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (private helper called by a symbol the report names; signature parameter matches report: data, dims; body matches report terms: size, variable, dims, data)"
+    },
+    {
+      "file": "xarray/core/computation.py",
+      "symbol": "xarray/core/computation.py::where",
+      "symbols": [
+        "where",
+        "dot",
+        "inner_product",
+        "_calc_idxminmax"
+      ],
+      "line_range": [
+        1491,
+        1585
+      ],
+      "score": 0.5688,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5056,
+        "vector": 0.7071,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: x; body matches report terms: dimension, with, xarray, dimensions)"
+    },
+    {
+      "file": "xarray/tests/test_formatting_html.py",
+      "symbol": "xarray/tests/test_formatting_html.py::dataarray",
+      "symbols": [
+        "dataarray",
+        "dask_dataarray",
+        "multiindex",
+        "dataset"
+      ],
+      "line_range": [
+        12,
+        15
+      ],
+      "score": 0.562,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1978,
+        "vector": 0.5011,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: array, randn, data, random"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.666575,
+  "laya_scores": {
+    "fix_quality": 1.4455,
+    "matches_issue": 0.6671,
+    "safe_to_apply": 0.5537,
+    "composite": 0.666575,
+    "secrets_or_danger": 0.0799,
+    "logic_drift": 0.1081,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input sanitization or execution issues introduced.\n- PERFORMANCE: PASS, Prevents unnecessary eager evaluation by unwrapping underlying variables.\n- ROBUSTNESS: PASS, Correctly handles object extraction without forcing computation.\n- MINIMAL DIFF / YAGNI: PASS, Concise fix using existing object interfaces.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator().requires_dask(\"two\", 2)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -106,6 +106,8 @@\n     if isinstance(obj, Variable):\n         return obj\n+    if hasattr(obj, \"variable\") and hasattr(obj, \"dims\"):\n+        return obj.variable\n     if isinstance(obj, np.ndarray) and obj.ndim == 0:\n         # GH2432: wrap 0-d arrays in Variable objects\n         return Variable((), obj)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pydata__xarray-4493-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: xarray/core/variable.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "xarray/core/variable.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.3953,
+        "matches_issue": 0.6552,
+        "safe_to_apply": 0.4874,
+        "composite": 0.634475,
+        "secrets_or_danger": 0.1865,
+        "logic_drift": 0.1802,
+        "flagged": false
+      },
+      "laya_combined": 0.6345,
+      "repro": {
+        "available": false,
+        "before_ok": null,
+        "after_ok": null,
+        "regressions": 0,
+        "reason": "image not present locally: swebench/sweb.eval.x86_64.pydata_1776_xarray-4493:latest",
+        "repro_target": "",
+        "before_exit": null,
+        "after_exit": null
+      },
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 2.87,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -107,6 +107,8 @@\n     if isinstance(data, Variable):\n         return data\n+    if hasattr(data, \"as_variable\"):\n+        return data.as_variable()\n     if isinstance(data, DataArray):\n         return data.variable\n     if isinstance(data, pd.MultiIndex):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pydata__xarray-4493-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: xarray/core/variable.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "xarray/core/variable.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.4455,
+        "matches_issue": 0.6671,
+        "safe_to_apply": 0.5537,
+        "composite": 0.666575,
+        "secrets_or_danger": 0.1615,
+        "logic_drift": 0.409,
+        "flagged": false
+      },
+      "laya_combined": 0.6666,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 2,
+        "after_exit": 2,
+        "after_output": "\n==================================== ERRORS ====================================\n_____________________ ERROR collecting test_isha_repro.py ______________________\nImportError while importing test module '/testbed/test_isha_repro.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/opt/miniconda3/envs/testbed/lib/python3.10/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntest_isha_repro.py:3: in <module>\n    from calculator import Calculator\nE   ModuleNotFoundError: No module named 'calculator'\n=========================== short test summary info ============================\nERROR test_isha_repro.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.29s\n\nerror: corrupt patch at line 10\nerror: corrupt patch at line 10\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0075,
+      "rank_reason": "logistic",
+      "elapsed_s": 28.67,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -107,6 +107,8 @@ def as_variable(obj, name=None, fastpath=False):\n         obj = obj.variable\n     elif isinstance(obj, tuple):\n         obj = Variable(*obj)\n+    elif hasattr(obj, \"data\") and hasattr(obj, \"dims\"):\n+        obj = Variable(obj.dims, obj.data, obj.attrs, fastpath=True)\n     elif not isinstance(obj, Variable):\n         obj = Variable(None, obj)\n     return obj",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pydata__xarray-4493-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pydata__xarray-4493-c3\\xarray\\core\\variable.py: SyntaxError line 125: expected 'except' or 'finally' block"
+      ],
+      "changed_files": [
+        "xarray/core/variable.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4541,
+        "matches_issue": 0.6474,
+        "safe_to_apply": 0.5294,
+        "composite": 0.6577249999999999,
+        "secrets_or_danger": 0.1187,
+        "logic_drift": 0.3033,
+        "flagged": false
+      },
+      "laya_combined": 0.6577,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0012,
+      "rank_reason": "logistic",
+      "elapsed_s": 28.6,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -106,6 +106,8 @@\n     if isinstance(obj, Variable):\n         return obj\n+    if hasattr(obj, \"variable\") and hasattr(obj, \"dims\"):\n+        return obj.variable\n     if isinstance(obj, np.ndarray) and obj.ndim == 0:\n         # GH2432: wrap 0-d arrays in Variable objects\n         return Variable((), obj)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pydata__xarray-4493-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: xarray/core/variable.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "xarray/core/variable.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.3953,
+      "matches_issue": 0.6552,
+      "safe_to_apply": 0.4874,
+      "composite": 0.634475,
+      "secrets_or_danger": 0.1865,
+      "logic_drift": 0.1802,
+      "flagged": false
+    },
+    "laya_combined": 0.6345,
+    "repro": {
+      "available": false,
+      "before_ok": null,
+      "after_ok": null,
+      "regressions": 0,
+      "reason": "image not present locally: swebench/sweb.eval.x86_64.pydata_1776_xarray-4493:latest",
+      "repro_target": "",
+      "before_exit": null,
+      "after_exit": null
+    },
+    "regression_count": 0,
+    "combined_score": 0.0079,
+    "rank_reason": "logistic",
+    "elapsed_s": 2.87,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/xarray/core/variable.py b/xarray/core/variable.py\nindex 64c1895..09b0934 100644\n--- a/xarray/core/variable.py\n+++ b/xarray/core/variable.py\n@@ -162,6 +162,8 @@ def as_variable(obj, name=None) -> \"Union[Variable, IndexVariable]\":\n         obj = obj.to_index_variable()\n \n     return obj\n+    if hasattr(obj, \"variable\") and hasattr(obj, \"dims\"):\n+        return obj.variable\n \n \n def _maybe_wrap_data(data):\n",
+  "offline_calls": 1
+}

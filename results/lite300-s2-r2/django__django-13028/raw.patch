@@ -1,0 +1,7 @@
+--- django/db/models/sql/query.py
++++ django/db/models/sql/query.py
+@@ -1127,3 +1127,3 @@
+     def check_filterable(self, obj):
+-        if not getattr(obj, 'filterable', True):
++        if getattr(obj, 'filterable', None) is False:
+             raise NotSupportedError(

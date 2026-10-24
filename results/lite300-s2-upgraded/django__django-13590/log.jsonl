@@ -1,0 +1,17 @@
+{"event": "start", "instance_id": "django__django-13590", "ts": 1791463801.5039482}
+{"event": "attempt", "n": 1, "ts": 1791463802.0865715}
+{"event": "model", "ts": 1791463871.4902666, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791463876.9103098, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791463909.0376914, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791463918.7339318, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791463969.1934216, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791464141.9585886, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (6 models): offline-brain: BadRequestError; qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError; gemini-3.1-flash-lite: ServiceUnavailableError"}
+{"event": "api_retry", "backoff_s": 20.0, "ts": 1791464153.4993556}
+{"event": "attempt", "n": 2, "ts": 1791464173.9689386}
+{"event": "model", "ts": 1791464213.4503474, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791464218.6877742, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791464226.9798691, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791464227.0131283, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791464250.2709131, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1791464411.5569022, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791464417.658739}

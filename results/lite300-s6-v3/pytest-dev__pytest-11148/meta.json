@@ -1,0 +1,368 @@
+{
+  "instance_id": "pytest-dev__pytest-11148",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "2f7415cfbc4b6ca62f9013f1abd27136f46b9653",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978951.4587085
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978954.187648
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978963.2171898
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978973.2574646
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979005.6574812
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791979196.625849
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791978901.3197165,
+  "elapsed_s": 302.58,
+  "plan": "Step 1: Root Cause\nWhen running tests with `--import-mode=importlib`, pytest loads test modules using `importlib` and instantiates them with distinct module objects, sometimes resulting in modules being imported twice under different module paths or references (e.g., direct import vs. sys.modules entry discrepancy), leading to duplicate module instances where modifications or class variables set on one (like `core.initialize()` setting `pmxbot.logging.Logger.store`) are not reflected on the other reference used by tests. Specifically, when `import-mode=importlib` is active, modules can be loaded independently of `sys.modules` or create separate module instances, causing split brain between modules present in `sys.modules` and those imported directly.\n\nStep 2: Exact Changes to Make\nFile: `src/_pytest/pathlib.py` (or `src/_pytest/assertion/__init__`, or wherever `import_path` / `import-mode=importlib` handles module loading and caching)\nFunction: `import_path`\nWhat to change: Ensure that when importing modules via `importlib` in `import_path` (when `--import-mode=importlib` is used), the loaded module is correctly registered, checked against, and retrieved from `sys.modules` to prevent duplicate module instances from being created and maintained concurrently. Specifically, check if the module name is already in `sys.modules` or ensure the module object is cached/retrieved via `sys.modules` so that multiple imports of the same path always return the exact same module instance.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::pytest_configure",
+      "symbols": [
+        "pytest_configure",
+        "_is_in_confcutdir",
+        "_warn_or_fail_if_strict",
+        "_warn_about_missing_assertion"
+      ],
+      "line_range": [
+        508,
+        525
+      ],
+      "score": 0.6854,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6032,
+        "vector": 0.7468,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: config; body matches report terms: that, first, last, pytest)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "install_importhook",
+        "pytest_addoption",
+        "register_assert_rewrite"
+      ],
+      "line_range": [
+        83,
+        88
+      ],
+      "score": 0.6088,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4626,
+        "vector": 0.4009,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: config, mode; body matches report terms: mode, config)"
+    },
+    {
+      "file": "src/_pytest/logging.py",
+      "symbol": "src/_pytest/logging.py::DatetimeFormatter",
+      "symbols": [
+        "DatetimeFormatter",
+        "format",
+        "handleError",
+        "get_log_level_for_setting"
+      ],
+      "line_range": [
+        60,
+        77
+      ],
+      "score": 0.6744,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6117,
+        "vector": 0.6375,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: logging; body matches report terms: class, logging, object)"
+    },
+    {
+      "file": "src/_pytest/_py/path.py",
+      "symbol": "src/_pytest/_py/path.py::__init__",
+      "symbols": [
+        "__init__",
+        "read",
+        "open",
+        "write"
+      ],
+      "line_range": [
+        278,
+        301
+      ],
+      "score": 0.5412,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.424,
+        "vector": 0.6473,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: path; body matches report terms: that, initialize, path, object)"
+    },
+    {
+      "file": "testing/test_setuponly.py",
+      "symbol": "testing/test_setuponly.py::test_show_different_scopes",
+      "symbols": [
+        "test_show_different_scopes",
+        "test_show_fixtures_with_autouse",
+        "test_show_fixtures_with_parameters",
+        "test_show_fixtures_with_parameter_ids"
+      ],
+      "line_range": [
+        39,
+        67
+      ],
+      "score": 0.5342,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0327,
+        "vector": 0.5144,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: mode; body matches report terms: session, mode, pytest, different)"
+    },
+    {
+      "file": "testing/example_scripts/unittest/test_unittest_plain_async.py",
+      "symbol": "testing/example_scripts/unittest/test_unittest_plain_async.py::Test",
+      "symbols": [
+        "Test"
+      ],
+      "line_range": [
+        4,
+        6
+      ],
+      "score": 0.5398,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.0642,
+        "vector": 0.5156,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: unit, class)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import sys\nimport types\nfrom pathlib import Path\nimport pytest\nfrom _pytest.pathlib import import_path, ImportMode\n\n\ndef test_import_mode_importlib_module_identity(tmp_path: Path) -> None:\n    \"\"\"\n    Test that importing the same path twice using import_path with\n    ImportMode.IMPORTLIB returns the exact same module instance (i.e. cached\n    properly in sys.modules) preventing duplicate/split-brain module instances.\n    \"\"\"\n    # Create a dummy module file\n    mod_file = tmp_path / \"dummy_module.py\"\n    mod_file.write_text(\"X = 1\\n\", encoding=\"utf-8\")\n\n    # Import the path twice using importlib mode\n    mod1 = import_path(mod_file, mode=ImportMode.IMPORTLIB)\n    mod2 = import_path(mod_file, mode=ImportMode.IMPORTLIB)\n\n    # They must refer to the exact same module object\n    assert mod1 is mod2\n    # And sys.modules must contain this instance under the module's name\n    assert sys.modules.get(mod1.__name__) is mod1\n\n\ndef test_import_mode_importlib_preserves_mutation(tmp_path: Path) -> None:\n    \"\"\"\n    Edge case: ensure that modifications made to a class variable or attribute on\n    the imported module instance are preserved and visible when re-imported or\n    accessed via sys.modules under importlib mode.\n    \"\"\"\n    mod_file = tmp_path / \"mutable_module.py\"\n    mod_file.write_text(\"class Holder:\\n    store = None\\n\", encoding=\"utf-8\")\n\n    mod1 = import_path(mod_file, mode=ImportMode.IMPORTLIB)\n    # Simulate an initializer setting a class attribute (similar to core.initialize())\n    mod1.Holder.store = \"initialized_value\"\n\n    mod2 = import_path(mod_file, mode=ImportMode.IMPORTLIB)\n    assert mod2.Holder.store == \"initialized_value\"\n\n\ndef test_import_path_non_existent_file_raises(tmp_path: Path) -> None:\n    \"\"\"\n    Edge case: passing a non-existent path to import_path should raise FileNotFoundError.\n    \"\"\"\n    missing_file = tmp_path / \"does_not_exist.py\"\n    with pytest.raises(FileNotFoundError):\n        import_path(missing_file, mode=ImportMode.IMPORTLIB)\n\n\ndef test_import_path_invalid_mode(tmp_path: Path) -> None:\n    \"\"\"\n    Edge case: passing an invalid import mode should raise ValueError or appropriate error.\n    \"\"\"\n    mod_file = tmp_path / \"dummy.py\"\n    mod_file.write_text(\"x = 1\", encoding=\"utf-8\")\n\n    with pytest.raises((ValueError, TypeError)):\n        import_path(mod_file, mode=\"invalid_mode_string\")  # type: ignore[arg-type]",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -565,2 +565,4 @@\n         module = importlib.import_module(module_name)\n+        if module.__file__ != str(path):\n+            sys.modules[module_name] = module\n         return module",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1\\src\\_pytest\\pathlib.py: SyntaxError line 649: expected 'except' or 'finally' block"
+      ],
+      "changed_files": [
+        "src/_pytest/pathlib.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6292,
+        "matches_issue": 0.7963,
+        "safe_to_apply": 0.684,
+        "composite": 0.777375,
+        "secrets_or_danger": 0.1268,
+        "logic_drift": 0.2297,
+        "flagged": false
+      },
+      "laya_combined": 0.7774,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 112.83,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -559,2 +559,4 @@ def import_path(\n         module = importlib.import_module(module_name)\n+        if module.__file__ != str(path):\n+            sys.modules[module_name] = module\n         return module",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c2\\src\\_pytest\\pathlib.py: SyntaxError line 649: expected 'except' or 'finally' block"
+      ],
+      "changed_files": [
+        "src/_pytest/pathlib.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6292,
+        "matches_issue": 0.7963,
+        "safe_to_apply": 0.684,
+        "composite": 0.777375,
+        "secrets_or_danger": 0.1635,
+        "logic_drift": 0.2848,
+        "flagged": false
+      },
+      "laya_combined": 0.7774,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 121.41,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -575,6 +575,8 @@ def import_path(\n         if mode is ImportMode.importlib:\n             module_name = module_name_from_path(p, root)\n+            if module_name in sys.modules:\n+                return sys.modules[module_name]\n             with contextlib.suppress(ImportError):\n                 return importlib.import_module(module_name)\n             importlib.util.spec_from_file_location(module_name, p)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c3\\src\\_pytest\\pathlib.py: SyntaxError line 527: unindent does not match any outer indentation level"
+      ],
+      "changed_files": [
+        "src/_pytest/pathlib.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5068,
+        "matches_issue": 0.81,
+        "safe_to_apply": 0.6825,
+        "composite": 0.749825,
+        "secrets_or_danger": 0.3371,
+        "logic_drift": 0.3029,
+        "flagged": false
+      },
+      "laya_combined": 0.7498,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 108.56,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/src/_pytest/pathlib.py\n+++ b/src/_pytest/pathlib.py\n@@ -565,2 +565,4 @@\n         module = importlib.import_module(module_name)\n+        if module.__file__ != str(path):\n+            sys.modules[module_name] = module\n         return module",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-11148-c1\\src\\_pytest\\pathlib.py: SyntaxError line 649: expected 'except' or 'finally' block"
+    ],
+    "changed_files": [
+      "src/_pytest/pathlib.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6292,
+      "matches_issue": 0.7963,
+      "safe_to_apply": 0.684,
+      "composite": 0.777375,
+      "secrets_or_danger": 0.1268,
+      "logic_drift": 0.2297,
+      "flagged": false
+    },
+    "laya_combined": 0.7774,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 112.83,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

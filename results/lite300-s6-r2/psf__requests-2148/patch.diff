@@ -1,0 +1,14 @@
+diff --git a/requests/adapters.py b/requests/adapters.py
+index 1ce5447..ef514f8 100644
+--- a/requests/adapters.py
++++ b/requests/adapters.py
+@@ -282,6 +282,9 @@ class HTTPAdapter(BaseAdapter):
+         when subclassing the
+         :class:`HTTPAdapter <requests.adapters.HTTPAdapter>`.
+ 
++            except socket.error as e:
++                raise ConnectionError(e, request=request)
++
+         :param request: The :class:`PreparedRequest <PreparedRequest>` to add headers to.
+         :param kwargs: The keyword arguments from the call to send().
+         """

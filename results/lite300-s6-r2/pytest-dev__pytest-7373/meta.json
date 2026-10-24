@@ -1,0 +1,433 @@
+{
+  "instance_id": "pytest-dev__pytest-7373",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "7b77fc086aab8b3a8ebc890200371884555eea1e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895970.2878826
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895971.1740227
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895975.5981622
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895979.7908144
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895987.8805027
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896086.7537446
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896094.7222502
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896105.9483843
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896114.3638332
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896123.3927772
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791895943.9062848,
+  "elapsed_s": 181.52,
+  "plan": "# Replace:\n        # d = self._getglobals()\n        # result = cached_eval(self.item.config, expr, d)\n        \n        # With:\n        import _pytest._code\n        d = self._getglobals()\n        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n        result = eval(exprcode, d)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "src/_pytest/mark/evaluate.py",
+      "symbol": "src/_pytest/mark/evaluate.py::_getglobals",
+      "symbols": [
+        "_getglobals",
+        "_get_marks",
+        "_istrue",
+        "istrue"
+      ],
+      "line_range": [
+        76,
+        81
+      ],
+      "score": 0.8248,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2834,
+        "vector": 0.4917,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: platform, item, globals)"
+    },
+    {
+      "file": "src/_pytest/skipping.py",
+      "symbol": "src/_pytest/skipping.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_configure",
+        "pytest_runtest_setup",
+        "pytest_pyfunc_call"
+      ],
+      "line_range": [
+        24,
+        42
+      ],
+      "score": 0.6173,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7598,
+        "vector": 0.5818,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: pytest, xfail, results, mark)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "KeywordMatcher",
+        "from_item",
+        "MarkMatcher"
+      ],
+      "line_range": [
+        64,
+        105
+      ],
+      "score": 0.5915,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4089,
+        "vector": 0.3686,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: only, pytest, which, example)"
+    },
+    {
+      "file": "src/_pytest/outcomes.py",
+      "symbol": "src/_pytest/outcomes.py::skip",
+      "symbols": [
+        "skip",
+        "OutcomeException",
+        "__init__",
+        "xfail"
+      ],
+      "line_range": [
+        123,
+        145
+      ],
+      "score": 0.6587,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4238,
+        "vector": 0.8564,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: only, skipped, pytest, condition; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::getoption",
+      "symbols": [
+        "getoption",
+        "invocation_dir",
+        "ExitCode",
+        "parse_hookimpl_opts"
+      ],
+      "line_range": [
+        1261,
+        1284
+      ],
+      "score": 0.5763,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3329,
+        "vector": 0.4003,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: skip; body matches report terms: pytest, also, skip)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::register_assert_rewrite",
+      "symbols": [
+        "register_assert_rewrite",
+        "pytest_collection",
+        "callbinrepr",
+        "call_assertion_pass_hook"
+      ],
+      "line_range": [
+        49,
+        74
+      ],
+      "score": 0.5524,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.32,
+        "vector": 0.2283,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: expected, assert, pytest, actual)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nimport sys\n\n# Reproduction of the bug:\n# pytest evaluates skipif/xfail expressions using a cache keyed only by the string.\n# When different modules use the same string but expect it to be evaluated \n# against different module-level globals, the cache returns the result of the \n# first evaluation.\n\ndef test_skipif_caching_isolation(testdir):\n    \"\"\"\n    Verifies that 'skipif' condition is re-evaluated based on module globals\n    rather than a shared cache.\n    \"\"\"\n    testdir.makepyfile(test_module_1=\"\"\"\n        import pytest\n        skip = True\n        @pytest.mark.skipif(\"skip\")\n        def test_should_skip():\n            assert False\n    \"\"\")\n    testdir.makepyfile(test_module_2=\"\"\"\n        import pytest\n        skip = False\n        @pytest.mark.skipif(\"skip\")\n        def test_should_not_skip():\n            assert True\n    \"\"\")\n    \n    result = testdir.runpytest(\"test_module_1.py\", \"test_module_2.py\")\n    \n    # Expected: 1 test skipped, 1 test passed.\n    # Buggy behavior: 2 tests skipped (because 'skip'=True from module_1 is cached).\n    result.stdout.fnmatch_lines([\n        \"*1 passed, 1 skipped*\"\n    ])\n\ndef test_xfail_caching_isolation(testdir):\n    \"\"\"\n    Verifies that 'xfail' condition is also correctly evaluated per-module.\n    \"\"\"\n    testdir.makepyfile(test_module_xfail=\"\"\"\n        import pytest\n        fail = True\n        @pytest.mark.xfail(\"fail\")\n        def test_xfail():\n            assert False\n    \"\"\")\n    testdir.makepyfile(test_module_run=\"\"\"\n        import pytest\n        fail = False\n        @pytest.mark.xfail(\"fail\")\n        def test_run():\n            assert True\n    \"\"\")\n    \n    result = testdir.runpytest(\"test_module_xfail.py\", \"test_module_run.py\")\n    result.stdout.fnmatch_lines([\n        \"*1 passed, 1 xfailed*\"\n    ])\n\ndef test_skipif_invalid_expression(testdir):\n    \"\"\"\n    Ensures that invalid expressions still trigger the documented error handling \n    (MarkEvaluator stores the exception in .exc).\n    \"\"\"\n    testdir.makepyfile(\"\"\"\n        import pytest\n        @pytest.mark.skipif(\"invalid_syntax @@@\")\n        def test_invalid():\n            pass\n    \"\"\")\n    result = testdir.runpytest()\n    # The evaluation failure leads to an 'E' error result in pytest\n    result.stdout.fnmatch_lines([\"*ERRORS*\"])\n\ndef test_skipif_complex_condition(testdir):\n    \"\"\"\n    Tests that conditions involving standard library lookups in globals \n    still work correctly without caching interference.\n    \"\"\"\n    testdir.makepyfile(test_a=\"\"\"\n        import pytest\n        import sys\n        @pytest.mark.skipif(\"sys.platform == 'nonexistent'\")\n        def test_a():\n            pass\n    \"\"\", test_b=\"\"\"\n        import pytest\n        import sys\n        @pytest.mark.skipif(\"sys.platform == 'nonexistent'\")\n        def test_b():\n            pass\n    \"\"\")\n    result = testdir.runpytest(\"test_a.py\", \"test_b.py\")\n    result.stdout.fnmatch_lines([\"*2 passed*\"])",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/mark/evaluate.py\n+++ b/src/_pytest/mark/evaluate.py\n@@ -106,7 +106,9 @@\n                     self.expr = expr\n                     if isinstance(expr, str):\n                         d = self._getglobals()\n-                        result = cached_eval(self.item.config, expr, d)\n+                        import _pytest._code\n+                        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n+                        result = eval(exprcode, d)\n                     else:\n                         if \"reason\" not in mark.kwargs:\n                             # XXX better be checked at collection time",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/mark/evaluate.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/mark/evaluate.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6612,
+        "matches_issue": 0.8139,
+        "safe_to_apply": 0.7256,
+        "composite": 0.800175,
+        "secrets_or_danger": 0.2539,
+        "logic_drift": 0.3206,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "================'\nE   remains unmatched: '*1 passed, 1 skipped*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_skipif_caching_isolation0\ncollected 2 items\n\ntest_module_1.py s                                                       [ 50%]\ntest_module_2.py s                                                       [100%]\n\n============================== 2 skipped in 0.00s ==============================\n_________________________ test_xfail_caching_isolation _________________________\n/testbed/test_isha_repro.py:58: in test_xfail_caching_isolation\n    result.stdout.fnmatch_lines([\nE   Failed: nomatch: '*1 passed, 1 xfailed*'\nE       and: '============================= test session starts =============================='\nE       and: 'platform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1'\nE       and: 'rootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0'\nE       and: 'collected 2 items'\nE       and: ''\nE       and: 'test_module_xfail.py x                                                   [ 50%]'\nE       and: 'test_module_run.py X                                                     [100%]'\nE       and: ''\nE       and: '======================== 1 xfailed, 1 xpassed in 0.00s ========================='\nE   remains unmatched: '*1 passed, 1 xfailed*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0\ncollected 2 items\n\ntest_module_xfail.py x                                                   [ 50%]\ntest_module_run.py X                                                     [100%]\n\n======================== 1 xfailed, 1 xpassed in 0.00s =========================\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_skipif_caching_isolation - Failed: nomatch: '...\nFAILED test_isha_repro.py::test_xfail_caching_isolation - Failed: nomatch: '*...\n2 failed, 2 passed in 0.08s\n\nerror: corrupt patch at line 13\nerror: corrupt patch at line 13\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 6.34,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/mark/evaluate.py\n+++ b/src/_pytest/mark/evaluate.py\n@@ -102,7 +102,9 @@\n                     self.expr = expr\n                     if isinstance(expr, str):\n                         d = self._getglobals()\n-                        result = cached_eval(self.item.config, expr, d)\n+                        import _pytest._code\n+                        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n+                        result = eval(exprcode, d)\n                     else:\n                         if \"reason\" not in mark.kwargs:\n                             # XXX better be checked at collection time",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/mark/evaluate.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/mark/evaluate.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6612,
+        "matches_issue": 0.8139,
+        "safe_to_apply": 0.7256,
+        "composite": 0.800175,
+        "secrets_or_danger": 0.2539,
+        "logic_drift": 0.3206,
+        "flagged": false
+      },
+      "laya_combined": 0.8002,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 1,
+        "after_exit": 1,
+        "after_output": "================'\nE   remains unmatched: '*1 passed, 1 skipped*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_skipif_caching_isolation0\ncollected 2 items\n\ntest_module_1.py s                                                       [ 50%]\ntest_module_2.py s                                                       [100%]\n\n============================== 2 skipped in 0.00s ==============================\n_________________________ test_xfail_caching_isolation _________________________\n/testbed/test_isha_repro.py:58: in test_xfail_caching_isolation\n    result.stdout.fnmatch_lines([\nE   Failed: nomatch: '*1 passed, 1 xfailed*'\nE       and: '============================= test session starts =============================='\nE       and: 'platform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1'\nE       and: 'rootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0'\nE       and: 'collected 2 items'\nE       and: ''\nE       and: 'test_module_xfail.py x                                                   [ 50%]'\nE       and: 'test_module_run.py X                                                     [100%]'\nE       and: ''\nE       and: '======================== 1 xfailed, 1 xpassed in 0.00s ========================='\nE   remains unmatched: '*1 passed, 1 xfailed*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0\ncollected 2 items\n\ntest_module_xfail.py x                                                   [ 50%]\ntest_module_run.py X                                                     [100%]\n\n======================== 1 xfailed, 1 xpassed in 0.00s =========================\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_skipif_caching_isolation - Failed: nomatch: '...\nFAILED test_isha_repro.py::test_xfail_caching_isolation - Failed: nomatch: '*...\n2 failed, 2 passed in 0.08s\n\nerror: corrupt patch at line 13\nerror: corrupt patch at line 13\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 4.9,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/mark/evaluate.py\n+++ b/src/_pytest/mark/evaluate.py\n@@ -14,18 +14,6 @@\n from _pytest.store import StoreKey\n \n \n-evalcache_key = StoreKey[Dict[str, Any]]()\n-\n-\n-def cached_eval(config: Config, expr: str, d: Dict[str, object]) -> Any:\n-    default = {}  # type: Dict[str, object]\n-    evalcache = config._store.setdefault(evalcache_key, default)\n-    try:\n-        return evalcache[expr]\n-    except KeyError:\n-        import _pytest._code\n-\n-        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n-        evalcache[expr] = x = eval(exprcode, d)\n-        return x\n-\n-\n class MarkEvaluator:\n     def __init__(self, item: Item, name: str) -> None:\n@@ -99,7 +87,9 @@\n                     self.expr = expr\n                     if isinstance(expr, str):\n+                        import _pytest._code\n+\n                         d = self._getglobals()\n-                        result = cached_eval(self.item.config, expr, d)\n+                        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n+                        result = eval(exprcode, d)\n                     else:\n                         if \"reason\" not in mark.kwargs:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c2\\src\\_pytest\\mark\\evaluate.py: 'typing.Any' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c2\\src\\_pytest\\mark\\evaluate.py: '_pytest.config.Config' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c2\\src\\_pytest\\mark\\evaluate.py: '_pytest.store.StoreKey' imported but unused"
+      ],
+      "changed_files": [
+        "src/_pytest/mark/evaluate.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 17,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2509,
+        "matches_issue": 0.653,
+        "safe_to_apply": 0.6372,
+        "composite": 0.635275,
+        "secrets_or_danger": 0.5187,
+        "logic_drift": 0.3978,
+        "flagged": true
+      },
+      "laya_combined": 0.6353,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 13.17,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/mark/evaluate.py\n+++ b/src/_pytest/mark/evaluate.py\n@@ -106,7 +106,9 @@\n                     self.expr = expr\n                     if isinstance(expr, str):\n                         d = self._getglobals()\n-                        result = cached_eval(self.item.config, expr, d)\n+                        import _pytest._code\n+                        exprcode = _pytest._code.compile(expr, mode=\"eval\")\n+                        result = eval(exprcode, d)\n                     else:\n                         if \"reason\" not in mark.kwargs:\n                             # XXX better be checked at collection time",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-7373-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: src/_pytest/mark/evaluate.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/_pytest/mark/evaluate.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6612,
+      "matches_issue": 0.8139,
+      "safe_to_apply": 0.7256,
+      "composite": 0.800175,
+      "secrets_or_danger": 0.2539,
+      "logic_drift": 0.3206,
+      "flagged": false
+    },
+    "laya_combined": 0.8002,
+    "repro": {
+      "available": true,
+      "before_ok": true,
+      "after_ok": false,
+      "regressions": 0,
+      "reason": "patch does not make the repro test pass",
+      "repro_target": "test_isha_repro.py",
+      "before_exit": 1,
+      "after_exit": 1,
+      "after_output": "================'\nE   remains unmatched: '*1 passed, 1 skipped*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_skipif_caching_isolation0\ncollected 2 items\n\ntest_module_1.py s                                                       [ 50%]\ntest_module_2.py s                                                       [100%]\n\n============================== 2 skipped in 0.00s ==============================\n_________________________ test_xfail_caching_isolation _________________________\n/testbed/test_isha_repro.py:58: in test_xfail_caching_isolation\n    result.stdout.fnmatch_lines([\nE   Failed: nomatch: '*1 passed, 1 xfailed*'\nE       and: '============================= test session starts =============================='\nE       and: 'platform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1'\nE       and: 'rootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0'\nE       and: 'collected 2 items'\nE       and: ''\nE       and: 'test_module_xfail.py x                                                   [ 50%]'\nE       and: 'test_module_run.py X                                                     [100%]'\nE       and: ''\nE       and: '======================== 1 xfailed, 1 xpassed in 0.00s ========================='\nE   remains unmatched: '*1 passed, 1 xfailed*'\n----------------------------- Captured stdout call -----------------------------\n============================= test session starts ==============================\nplatform linux -- Python 3.9.20, pytest-5.4.1.dev522+g7b77fc086.d20260815, py-1.11.0, pluggy-0.13.1\nrootdir: /tmp/pytest-of-root/pytest-0/test_xfail_caching_isolation0\ncollected 2 items\n\ntest_module_xfail.py x                                                   [ 50%]\ntest_module_run.py X                                                     [100%]\n\n======================== 1 xfailed, 1 xpassed in 0.00s =========================\n=========================== short test summary info ============================\nFAILED test_isha_repro.py::test_skipif_caching_isolation - Failed: nomatch: '...\nFAILED test_isha_repro.py::test_xfail_caching_isolation - Failed: nomatch: '*...\n2 failed, 2 passed in 0.08s\n\nerror: corrupt patch at line 13\nerror: corrupt patch at line 13\n"
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 6.34,
+    "valid": true
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

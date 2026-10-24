@@ -1,0 +1,382 @@
+{
+  "instance_id": "psf__requests-2317",
+  "repo": "psf/requests",
+  "base_commit": "091991be0da19de9108dbe5e3752917fea3d7fdc",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891132.7417166
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891133.0022666
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891138.823163
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891143.3716571
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891146.6273882
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791891197.6612217
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791891121.6988864,
+  "elapsed_s": 76.88,
+  "plan": "# Locate the line (around line 390-400 depending on the version):\nmethod = builtin_str(method)\n\n# Change to:\nmethod = to_native_string(method)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "requests/sessions.py",
+      "symbol": "requests/sessions.py::request",
+      "symbols": [
+        "request",
+        "__exit__",
+        "merge_hooks",
+        "rebuild_auth"
+      ],
+      "line_range": [
+        378,
+        460
+      ],
+      "score": 0.6031,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4109,
+        "vector": 0.4611,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: method; body matches report terms: response, args, method, with)"
+    },
+    {
+      "file": "requests/utils.py",
+      "symbol": "requests/utils.py::default_user_agent",
+      "symbols": [
+        "default_user_agent",
+        "get_netrc_auth",
+        "parse_list_header",
+        "parse_dict_header"
+      ],
+      "line_range": [
+        519,
+        549
+      ],
+      "score": 0.4121,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3683,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: requests; body matches report terms: python, string, requests)"
+    },
+    {
+      "file": "requests/adapters.py",
+      "symbol": "requests/adapters.py::__setstate__",
+      "symbols": [
+        "__setstate__",
+        "init_poolmanager",
+        "proxy_manager_for",
+        "cert_verify"
+      ],
+      "line_range": [
+        96,
+        107
+      ],
+      "score": 0.3886,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5013,
+        "vector": 0.5275,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: uses, which, value, because)"
+    },
+    {
+      "file": "requests/packages/chardet/__init__.py",
+      "symbol": "requests/packages/chardet/__init__.py::detect",
+      "symbols": [
+        "detect"
+      ],
+      "line_range": [
+        22,
+        32
+      ],
+      "score": 0.4882,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.3597,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value)"
+    },
+    {
+      "file": "requests/packages/urllib3/__init__.py",
+      "symbol": "requests/packages/urllib3/__init__.py::add_stderr_logger",
+      "symbols": [
+        "add_stderr_logger"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.4749,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.077,
+        "vector": 0.0891,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: this, method, with)"
+    },
+    {
+      "file": "requests/packages/urllib3/contrib/pyopenssl.py",
+      "symbol": "requests/packages/urllib3/contrib/pyopenssl.py::recv",
+      "symbols": [
+        "recv",
+        "SubjectAltName",
+        "getpeercert",
+        "inject_into_urllib3"
+      ],
+      "line_range": [
+        181,
+        198
+      ],
+      "score": 0.4289,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1615,
+        "vector": 0.2582,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: args; body matches report terms: args)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom requests import Session\nfrom requests.compat import is_py3\n\n@pytest.mark.skipif(not is_py3, reason=\"Binary method issue is specific to Python 3\")\ndef test_session_request_with_binary_method():\n    \"\"\"\n    Reproduces the bug: passing a binary string as the method name to Session.request\n    should be handled correctly, but historically it gets converted to the string\n    literal \"b'GET'\", causing a failure.\n    \"\"\"\n    s = Session()\n    # The fix ensures that the binary string b'GET' is decoded/handled as 'GET'\n    # rather than resulting in the literal string \"b'GET'\".\n    # We use a mock adapter or inspect the prepared request.\n    prep = s.prepare_request(\n        pytest.importorskip(\"requests\").Request(method=b'GET', url='http://httpbin.org/get')\n    )\n    \n    # Assert that the method was normalized correctly\n    assert prep.method == 'GET', f\"Expected 'GET', but got {prep.method!r}\"\n\ndef test_session_request_with_standard_string():\n    \"\"\"Ensure standard string methods still work.\"\"\"\n    s = Session()\n    prep = s.prepare_request(\n        pytest.importorskip(\"requests\").Request(method='POST', url='http://httpbin.org/post')\n    )\n    assert prep.method == 'POST'\n\ndef test_session_request_case_insensitivity():\n    \"\"\"Verify that the method handling preserves the standard uppercase requirement.\"\"\"\n    s = Session()\n    # While Requests internalizes methods to upper case, verify the conversion works.\n    prep = s.prepare_request(\n        pytest.importorskip(\"requests\").Request(method=b'get', url='http://httpbin.org/get')\n    )\n    assert prep.method == 'GET'\n\ndef test_session_request_invalid_type_raises():\n    \"\"\"Ensure that non-string/non-binary inputs raise appropriate errors.\"\"\"\n    s = Session()\n    with pytest.raises((AttributeError, TypeError)):\n        # Passing an integer should fail as it cannot be decoded/stringified as a method\n        s.prepare_request(\n            pytest.importorskip(\"requests\").Request(method=123, url='http://httpbin.org/')\n        )",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -13,7 +13,7 @@\n from datetime import datetime\n \n from .auth import _basic_auth_str\n-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str\n+from .compat import cookielib, OrderedDict, urljoin, urlparse, to_native_string\n from .cookies import (\n     cookiejar_from_dict, extract_cookie, RequestsCookieJar, merge_cookies)\n from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT\n@@ -387,7 +387,7 @@\n         # Create the Request.\n         method = method.upper()\n \n-        method = builtin_str(method)\n+        method = to_native_string(method)\n \n         # Default empty dicts for dict params.\n         auth = auth if auth is not None else self.auth",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: '.cookies.extract_cookie' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: redefinition of unused 'to_native_string' from line 16",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'"
+      ],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3817,
+        "matches_issue": 0.8042,
+        "safe_to_apply": 0.7072,
+        "composite": 0.7232750000000001,
+        "secrets_or_danger": 0.2542,
+        "logic_drift": 0.2396,
+        "flagged": false
+      },
+      "laya_combined": 0.7233,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.11,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -13,7 +13,7 @@\n from datetime import datetime\n \n from .auth import _basic_auth_str\n-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str\n+from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str, to_native_string\n from .cookies import (\n     cookiejar_from_dict, extract_cookie, RequestsCookieJar, merge_cookies)\n from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT\n@@ -387,7 +387,7 @@\n         # Default empty dicts\n         auth = auth or {}\n \n-        method = builtin_str(method)\n+        method = to_native_string(method)\n \n         # Create the Request.\n         req = Request(",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: '.compat.builtin_str' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: '.cookies.extract_cookie' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: redefinition of unused 'to_native_string' from line 16",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c2\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'"
+      ],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4428,
+        "matches_issue": 0.8177,
+        "safe_to_apply": 0.6983,
+        "composite": 0.7397,
+        "secrets_or_danger": 0.2481,
+        "logic_drift": 0.2323,
+        "flagged": false
+      },
+      "laya_combined": 0.7397,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 26.41,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -13,7 +13,7 @@\n from datetime import datetime\n \n from .auth import _basic_auth_str\n-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str\n+from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str, to_native_string\n from .cookies import (\n     cookiejar_from_dict, extract_cookie, RequestsCookieJar, merge_cookies\n )\n@@ -391,7 +391,7 @@\n         \"\"\"\n \n         # Default empty dicts and lists.\n-        method = builtin_str(method)\n+        method = to_native_string(method)\n         method = method.upper()\n \n         # Default empty dicts and lists.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c3\\requests\\sessions.py: '.compat.builtin_str' imported but unused",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c3\\requests\\sessions.py: redefinition of unused 'to_native_string' from line 16"
+      ],
+      "changed_files": [
+        "requests/sessions.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4428,
+        "matches_issue": 0.8177,
+        "safe_to_apply": 0.6983,
+        "composite": 0.7397,
+        "secrets_or_danger": 0.1517,
+        "logic_drift": 0.303,
+        "flagged": false
+      },
+      "laya_combined": 0.7397,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.74,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/requests/sessions.py\n+++ b/requests/sessions.py\n@@ -13,7 +13,7 @@\n from datetime import datetime\n \n from .auth import _basic_auth_str\n-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str\n+from .compat import cookielib, OrderedDict, urljoin, urlparse, to_native_string\n from .cookies import (\n     cookiejar_from_dict, extract_cookie, RequestsCookieJar, merge_cookies)\n from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT\n@@ -387,7 +387,7 @@\n         # Create the Request.\n         method = method.upper()\n \n-        method = builtin_str(method)\n+        method = to_native_string(method)\n \n         # Default empty dicts for dict params.\n         auth = auth if auth is not None else self.auth",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: '.cookies.extract_cookie' imported but unused",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: redefinition of unused 'to_native_string' from line 16",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'",
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\psf__requests-2317-c1\\requests\\sessions.py: undefined name 'extract_cookies_to_jar'"
+    ],
+    "changed_files": [
+      "requests/sessions.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3817,
+      "matches_issue": 0.8042,
+      "safe_to_apply": 0.7072,
+      "composite": 0.7232750000000001,
+      "secrets_or_danger": 0.2542,
+      "logic_drift": 0.2396,
+      "flagged": false
+    },
+    "laya_combined": 0.7233,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0009,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.11,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

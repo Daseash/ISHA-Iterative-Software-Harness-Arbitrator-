@@ -1,0 +1,395 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-14087",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "a5743ed36fbd3fbc8e351bdab16561fbfca7dfa1",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978152.7761567
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978156.2691436
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978165.0384562
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978167.0507133
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978184.7514722
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791978369.7129247
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/linear_model/logistic.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/linear_model/logistic.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791978072.9918895,
+  "elapsed_s": 305.98,
+  "plan": "w = np.mean([coefs_paths[:, i, best_indices[i], :]\n             for i in range(len(folds))], axis=0)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/linear_model/logistic.py",
+      "symbol": "sklearn/linear_model/logistic.py::_check_solver",
+      "symbols": [
+        "_check_solver",
+        "_check_multi_class",
+        "_log_reg_scoring_path",
+        "_logistic_regression_path"
+      ],
+      "line_range": [
+        427,
+        456
+      ],
+      "score": 0.7663,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.5939,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; signature parameter matches report: solver; body matches report terms: liblinear, saga, logistic, error)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::safe_mask",
+      "symbols": [
+        "safe_mask",
+        "axis0_safe_slice",
+        "safe_indexing",
+        "safe_sqr"
+      ],
+      "line_range": [
+        121,
+        145
+      ],
+      "score": 0.5938,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3422,
+        "vector": 0.5274,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: X; body matches report terms: sign, array, parameter, range)"
+    },
+    {
+      "file": "sklearn/cluster/k_means_.py",
+      "symbol": "sklearn/cluster/k_means_.py::_check_sample_weight",
+      "symbols": [
+        "_check_sample_weight",
+        "_labels_inertia",
+        "_init_centroids",
+        "_mini_batch_step"
+      ],
+      "line_range": [
+        169,
+        183
+      ],
+      "score": 0.4857,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3452,
+        "vector": 0.3496,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (private helper called by a symbol the report names; signature parameter matches report: X; body matches report terms: sample_weight, array, normal, error)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        96,
+        109
+      ],
+      "score": 0.5855,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5484,
+        "vector": 0.0282,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: numpy, random, sklearn, module)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.4727,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0682,
+        "vector": 0.0887,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: sklearn, error)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::get_blas_info",
+      "symbols": [
+        "get_blas_info",
+        "atlas_not_found",
+        "maybe_cythonize_extensions",
+        "build_from_c_and_cpp_files"
+      ],
+      "line_range": [
+        22,
+        45
+      ],
+      "score": 0.4654,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0816,
+        "vector": 0.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: cblas, no_atlas_info, cblas_libs, macros)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6755249999999999,
+  "laya_scores": {
+    "fix_quality": 1.3594,
+    "matches_issue": 0.778,
+    "safe_to_apply": 0.5647,
+    "composite": 0.6755249999999999,
+    "secrets_or_danger": 0.1028,
+    "logic_drift": 0.3563,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related functionality or user inputs are handled in this indexing fix.\n- PERFORMANCE: PASS - The index correction does not impact execution time or loop complexity.\n- ROBUSTNESS: PASS - Corrects an array indexing mismatch (IndexError) during cross-validation without refitting.\n- MINIMAL DIFF / YAGNI: PASS - The change is strictly limited to fixing the bug reported in the issue.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import numpy as np\nimport pytest\nfrom sklearn.linear_model import LogisticRegressionCV\n\n\ndef test_logistic_regression_cv_refit_false():\n    \"\"\"Reproduces the IndexError in LogisticRegressionCV when refit=False.\"\"\"\n    np.random.seed(29)\n    X = np.random.normal(size=(100, 3))\n    beta = np.random.normal(size=3)\n    intercept = np.random.normal(size=None)\n    y = np.sign(intercept + X @ beta)\n    y[y == 0] = 1  # Ensure binary classification targets are strictly non-zero\n\n    clf = LogisticRegressionCV(\n        cv=3,\n        solver='saga',\n        tol=1e-2,\n        refit=False\n    )\n    # This should not raise an IndexError\n    clf.fit(X, y)\n    \n    # Verify attributes set when refit=False\n    assert hasattr(clf, \"coef_\")\n    assert hasattr(clf, \"intercept_\")\n    assert clf.coef_.shape == (1, 3)\n\n\ndef test_logistic_regression_cv_refit_false_liblinear():\n    \"\"\"Test refit=False with liblinear solver.\"\"\"\n    np.random.seed(42)\n    X = np.random.normal(size=(50, 2))\n    y = np.array([0] * 25 + [1] * 25)\n\n    clf = LogisticRegressionCV(\n        cv=3,\n        solver='liblinear',\n        refit=False\n    )\n    clf.fit(X, y)\n    assert clf.coef_.shape == (1, 2)\n\n\ndef test_logistic_regression_cv_refit_false_multiclass():\n    \"\"\"Test refit=False with multiclass classification (multinomial).\"\"\"\n    np.random.seed(42)\n    X = np.random.normal(size=(60, 4))\n    y = np.array([0] * 20 + [1] * 20 + [2] * 20)\n\n    clf = LogisticRegressionCV(\n        cv=3,\n        multi_class='multinomial',\n        solver='saga',\n        refit=False\n    )\n    clf.fit(X, y)\n    assert clf.coef_.shape == (3, 4)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1dae7..7d102d9678 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14087-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/linear_model/logistic.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/linear_model/logistic.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3594,
+        "matches_issue": 0.778,
+        "safe_to_apply": 0.5647,
+        "composite": 0.6755249999999999,
+        "secrets_or_danger": 0.1028,
+        "logic_drift": 0.3563,
+        "flagged": false
+      },
+      "laya_combined": 0.6755,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 26.73,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1dae7..3395af6dd7 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, :, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14087-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/linear_model/logistic.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/linear_model/logistic.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4467,
+        "matches_issue": 0.8113,
+        "safe_to_apply": 0.5934,
+        "composite": 0.71285,
+        "secrets_or_danger": 0.1049,
+        "logic_drift": 0.3753,
+        "flagged": false
+      },
+      "laya_combined": 0.7128,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.88,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1dae7..3395af6dd7 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, :, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14087-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/linear_model/logistic.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/linear_model/logistic.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4467,
+        "matches_issue": 0.8113,
+        "safe_to_apply": 0.5934,
+        "composite": 0.71285,
+        "secrets_or_danger": 0.1049,
+        "logic_drift": 0.3753,
+        "flagged": false
+      },
+      "laya_combined": 0.7128,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 53.98,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1dae7..7d102d9678 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-14087-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/linear_model/logistic.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/linear_model/logistic.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3594,
+      "matches_issue": 0.778,
+      "safe_to_apply": 0.5647,
+      "composite": 0.6755249999999999,
+      "secrets_or_danger": 0.1028,
+      "logic_drift": 0.3563,
+      "flagged": false
+    },
+    "laya_combined": 0.6755,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 26.73,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1d..7d102d9 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -2174,7 +2174,7 @@ class LogisticRegressionCV(LogisticRegression, BaseEstimator,\n                     w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n                 else:\n-                    w = np.mean([coefs_paths[:, i, best_indices[i], :]\n+                    w = np.mean([coefs_paths[i, best_indices[i], :]\n                                  for i in range(len(folds))], axis=0)\n \n                 best_indices_C = best_indices % len(self.Cs_)\n",
+  "offline_calls": 0
+}

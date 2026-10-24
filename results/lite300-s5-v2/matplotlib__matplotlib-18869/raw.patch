@@ -1,0 +1,10 @@
+--- lib/matplotlib/__init__.py
++++ lib/matplotlib/__init__.py
+@@ -150,4 +150,7 @@
+         else:  # Get the version from the _version.py setuptools_scm file.
+             __version__ = _version.version
+         return __version__
++    elif name == "version_info":
++        from packaging.version import parse as parse_version
++        return parse_version(__version__)
+     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

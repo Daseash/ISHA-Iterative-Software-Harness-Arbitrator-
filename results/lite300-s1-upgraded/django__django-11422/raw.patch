@@ -1,0 +1,10 @@
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -103,3 +103,6 @@ def iter_all_python_module_files():
+     modules = tuple(m for m in map(sys.modules.__getitem__, keys) if not isinstance(m, weakref.ProxyTypes))
+-    return iter_modules_and_files(modules, frozenset(_error_files))
++    results = set(iter_modules_and_files(modules, frozenset(_error_files)))
++    main_module = sys.modules.get('__main__')
++    if main_module and getattr(main_module, '__file__', None):
++        results.add(pathlib.Path(main_module.__file__).resolve().absolute())
++    return frozenset(results)

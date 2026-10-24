@@ -1,0 +1,13 @@
+diff --git a/sklearn/neighbors/nca.py b/sklearn/neighbors/nca.py
+index 1d278b6..9d98ad5 100644
+--- a/sklearn/neighbors/nca.py
++++ b/sklearn/neighbors/nca.py
+@@ -161,6 +161,8 @@ class NeighborhoodComponentsAnalysis(BaseEstimator, TransformerMixin):
+         self.n_components = n_components
+         self.init = init
+         self.warm_start = warm_start
++        self.n_components = int(self.n_components) if self.n_components is not None else None
++        self.tol = float(self.tol)
+         self.max_iter = max_iter
+         self.tol = tol
+         self.callback = callback

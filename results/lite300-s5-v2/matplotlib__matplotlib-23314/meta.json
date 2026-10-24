@@ -1,0 +1,368 @@
+{
+  "instance_id": "matplotlib__matplotlib-23314",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "97fc1154992f64cfb2f86321155a7404efeb2d8a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974534.3775423
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974535.9813883
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974542.4483469
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974545.3622086
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974557.7832
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791974623.0702176
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791974513.31582,
+  "elapsed_s": 117.66,
+  "plan": "Step 1: What is the root cause\nIn Matplotlib, standard 2D axes (`Axes`) handle visibility changes by overriding or relying on standard artist/axes visibility methods. However, `Axes3D` (from `mpl_toolkits.mplot3d.axes3d`) maintains its own collections, patches, lines, and texts, or overrides drawing behavior in ways that do not automatically propagate visibility changes (`set_visible(b)`) to its child artists or background elements. When `ax1.set_visible(False)` is called on a 3D subplot, `Axes3D` lacks an overridden `set_visible` method that updates its internal child artists and components (like collections, patches, lines, texts, panes, etc.), causing the 3D plot to remain visible.\n\nStep 2: What exact changes to make (file, function, what to change)\n- File: `lib/mpl_toolkits/mplot3d/axes3d.py`\n- Function: `Axes3D.set_visible` (to be added/implemented within the `Axes3D` class)\n- What to change: Add a `set_visible` method to `Axes3D` that calls `super().set_visible(b)` and correctly sets the visibility of its child collections, patches, lines, texts, and any 3D-specific elements (such as panes and axis components) so that setting visibility to `False` successfully hides the entire 3D subplot.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class",
+        "ProjectionRegistry",
+        "__init__",
+        "register"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.595,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3972,
+        "vector": 0.4223,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: projection; body matches report terms: projection, value)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::subplots",
+      "symbols": [
+        "subplots",
+        "subplot_mosaic",
+        "set_loglevel",
+        "_get_backend_mod"
+      ],
+      "line_range": [
+        1325,
+        1464
+      ],
+      "score": 0.9214,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5618,
+        "vector": 0.716,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: subplot_kw; body matches report terms: even, additional, gridspec, projection; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/gridspec.py",
+      "symbol": "lib/matplotlib/gridspec.py::subplots",
+      "symbols": [
+        "subplots",
+        "__init__",
+        "new_subplotspec",
+        "_check_gridspec_exists"
+      ],
+      "line_range": [
+        264,
+        326
+      ],
+      "score": 0.655,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4655,
+        "vector": 0.7801,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: subplot_kw; body matches report terms: even, work, gridspec, should; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/backends/backend_template.py",
+      "symbol": "lib/matplotlib/backends/backend_template.py::show",
+      "symbols": [
+        "show",
+        "points_to_pixels",
+        "GraphicsContextTemplate",
+        "draw_if_interactive"
+      ],
+      "line_range": [
+        147,
+        158
+      ],
+      "score": 0.6279,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4304,
+        "vector": 0.5862,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: should, pyplot, backend; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/testing/__init__.py",
+      "symbol": "lib/matplotlib/testing/__init__.py::setup",
+      "symbols": [
+        "setup",
+        "subprocess_run_helper",
+        "_check_for_pgf",
+        "set_reproducibility_for_testing"
+      ],
+      "line_range": [
+        28,
+        52
+      ],
+      "score": 0.5477,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2432,
+        "vector": 0.349,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: code, should, value, matplotlib)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::set_loglevel",
+      "symbols": [
+        "set_loglevel",
+        "impl",
+        "matplotlib_fname",
+        "gen_candidates"
+      ],
+      "line_range": [
+        233,
+        255
+      ],
+      "score": 0.6103,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4247,
+        "vector": 0.4926,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: function, additional, should, information)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import matplotlib.pyplot as plt\nimport mpl_toolkits.mplot3d  # noqa: F401\n\n\ndef test_3d_axes_set_visible_false():\n    fig = plt.figure()\n    ax = fig.add_subplot(projection='3d')\n    ax.scatter([1, 2, 3], [4, 5, 6], [7, 8, 9])\n    \n    # This should hide the 3D axes completely\n    ax.set_visible(False)\n    \n    assert ax.get_visible() is False\n\n\ndef test_3d_axes_set_visible_toggle():\n    fig = plt.figure()\n    ax = fig.add_subplot(projection='3d')\n    \n    # Initially visible\n    assert ax.get_visible() is True\n    \n    # Set to False\n    ax.set_visible(False)\n    assert ax.get_visible() is False\n    \n    # Set back to True\n    ax.set_visible(True)\n    assert ax.get_visible() is True\n\n\ndef test_3d_axes_multiple_subplots_visibility():\n    fig, (ax1, ax2) = plt.subplots(1, 2, subplot_kw={'projection': '3d'})\n    \n    ax1.scatter(1, 1, 1)\n    ax2.scatter(2, 2, 2, c='r')\n    \n    # Hide only ax1\n    ax1.set_visible(False)\n    \n    assert ax1.get_visible() is False\n    assert ax2.get_visible() is True",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "An error occurred when attempting to apply the diff. Please ensure the target file paths, class context, and line alignments match the repository.",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-afwqr7pe",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5684,
+        "matches_issue": 0.7534,
+        "safe_to_apply": 0.5844,
+        "composite": 0.72655,
+        "secrets_or_danger": 0.0771,
+        "logic_drift": 0.1373,
+        "flagged": false
+      },
+      "laya_combined": 0.7266,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 14.33,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -375,6 +375,10 @@\n         self.grid(self._axis3d_aspect_ratio != 1)\n         self.stale = True\n \n+    def set_visible(self, b):\n+        super().set_visible(b)\n+        self.stale = True\n+\n     def _init_collections(self):\n         self.collections = []\n         self.patches = []",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9sbt_8rs",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-9sbt_8rs\\lib\\mpl_toolkits\\mplot3d\\axes3d.py: SyntaxError line 41: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/axes3d.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4564,
+        "matches_issue": 0.7056,
+        "safe_to_apply": 0.6619,
+        "composite": 0.705975,
+        "secrets_or_danger": 0.2126,
+        "logic_drift": 0.5051,
+        "flagged": false
+      },
+      "laya_combined": 0.706,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 43.66,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/mpl_toolkits/mplot3d/axes3d.py\n+++ b/lib/mpl_toolkits/mplot3d/axes3d.py\n@@ -342,6 +342,11 @@\n         self.set_box_aspect(box_aspect)\n         self.stale = True\n \n+    def set_visible(self, b):\n+        super().set_visible(b)\n+        for child in self.get_children():\n+            child.set_visible(b)\n+\n     def _init_axis(self):\n         \"\"\"Initialize 3D axes.\"\"\"\n         self.xaxis = axis3d.Axis('x', self.xy_viewLim.intervalx, self)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0lk3p_c7",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0lk3p_c7\\lib\\mpl_toolkits\\mplot3d\\axes3d.py: redefinition of unused 'set_visible' from line 225",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-0lk3p_c7\\lib\\mpl_toolkits\\mplot3d\\axes3d.py: redefinition of unused 'set_visible' from line 258"
+      ],
+      "changed_files": [
+        "lib/mpl_toolkits/mplot3d/axes3d.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5966,
+        "matches_issue": 0.7675,
+        "safe_to_apply": 0.6722,
+        "composite": 0.759075,
+        "secrets_or_danger": 0.1763,
+        "logic_drift": 0.4252,
+        "flagged": false
+      },
+      "laya_combined": 0.7591,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 27.5,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "An error occurred when attempting to apply the diff. Please ensure the target file paths, class context, and line alignments match the repository.",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-afwqr7pe",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+    ],
+    "changed_files": [],
+    "added_lines": 0,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.5684,
+      "matches_issue": 0.7534,
+      "safe_to_apply": 0.5844,
+      "composite": 0.72655,
+      "secrets_or_danger": 0.0771,
+      "logic_drift": 0.1373,
+      "flagged": false
+    },
+    "laya_combined": 0.7266,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 14.33,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

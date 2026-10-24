@@ -1,0 +1,366 @@
+{
+  "instance_id": "matplotlib__matplotlib-24334",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "332937997d03e0c173be6d9fc1841e9186e857df",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811594.9829733
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811600.9673114
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811613.6883252
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811616.191701
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811648.1439223
+    },
+    {
+      "role": "coder",
+      "model": "deepseek-chat",
+      "model_full": "openrouter/deepseek/deepseek-chat",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811866.1543286
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791811043.228086,
+  "error": "attempt 1 exceeded 500s",
+  "elapsed_s": 325.86,
+  "plan": "Step 1: Root Cause\n`Axes.set_xticks`, `Axes.set_yticks`, and `Axis.set_ticks` take `**kwargs` which are intended as `Text` properties for the tick labels. However, validation of these `kwargs` (checking if they are valid `Text` properties using `cbook._check_readonly()` or similar mechanisms, or validating them via `Text(**kwargs)` / `artist.kwdoc` validation) currently only happens when `labels` (or `ticklabels`) are explicitly passed. If `labels` are not passed, `kwargs` are ignored and not validated at all, allowing typos (like `xticklabels=\"a\"` or invalid text properties) to pass silently without raising an error.\n\nStep 2: Exact Changes to Make\n- File: `lib/matplotlib/axes/_base.py` (and/or `lib/matplotlib/axis.py`, depending on where `set_xticks`/`set_yticks`/`set_ticks` are defined)\n- Function: `Axes.set_xticks`, `Axes.set_yticks`, and `Axis.set_ticks`\n- What to change: Update the keyword argument handling so that even when `labels` is None or not provided, any non-empty `kwargs` passed to these methods are validated (e.g., by checking against valid `Text` properties, or raising a `ValueError`/`TypeError` if `kwargs` are provided without `labels`, or validating them unconditionally). Specifically, validate `kwargs` as valid `Text` properties using `cbook._validate_date()` or a text property check regardless of whether `labels` is set, or raise if kwargs are supplied without labels/ticklabels as per the docstring.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::check_in_list",
+      "symbols": [
+        "check_in_list",
+        "check_shape",
+        "check_getitem",
+        "select_matching_signature"
+      ],
+      "line_range": [
+        101,
+        133
+      ],
+      "score": 0.6305,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4289,
+        "vector": 0.6524,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: kwargs; body matches report terms: that, other, kwargs, error)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::tick_params",
+      "symbols": [
+        "tick_params",
+        "draw_if_interactive",
+        "subplot",
+        "xlim"
+      ],
+      "line_range": [
+        2925,
+        2928
+      ],
+      "score": 0.7094,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5826,
+        "vector": 0.9482,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: kwargs; body matches report terms: axis, kwargs; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/cbook/__init__.py",
+      "symbol": "lib/matplotlib/cbook/__init__.py::process",
+      "symbols": [
+        "process",
+        "_check_and_log_subprocess",
+        "_setattr_cm",
+        "_local_over_kwdict"
+      ],
+      "line_range": [
+        291,
+        312
+      ],
+      "score": 0.5884,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3969,
+        "vector": 0.3678,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: kwargs; body matches report terms: kwargs, this, check)"
+    },
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::__init__",
+      "symbols": [
+        "__init__",
+        "_suplabels",
+        "add_subplot",
+        "text"
+      ],
+      "line_range": [
+        158,
+        187
+      ],
+      "score": 0.5879,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6357,
+        "vector": 0.5956,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: kwargs; body matches report terms: axis, axes, kwargs, labels)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::rc",
+      "symbols": [
+        "rc",
+        "wrapper",
+        "__init__",
+        "test"
+      ],
+      "line_range": [
+        924,
+        999
+      ],
+      "score": 0.6099,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4664,
+        "vector": 0.4024,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: kwargs; body matches report terms: axes, kwargs, error, this)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.5632,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3499,
+        "vector": 0.2563,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: error)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import matplotlib.pyplot as plt\nimport pytest\n\n\ndef test_set_xticks_kwargs_validation_without_labels():\n    fig, ax = plt.subplots()\n    # Passing an invalid text property without `labels` or `xticklabels`\n    # should raise an error (e.g. ValueError or TypeError) because kwargs\n    # are not validated when labels are missing.\n    with pytest.raises((ValueError, TypeError)):\n        ax.set_xticks([0, 1], invalid_prop=\"foo\")\n\n\ndef test_set_yticks_kwargs_validation_without_labels():\n    fig, ax = plt.subplots()\n    with pytest.raises((ValueError, TypeError)):\n        ax.set_yticks([0, 1], non_existent_kwarg=123)\n\n\ndef test_axis_set_ticks_kwargs_validation_without_labels():\n    fig, ax = plt.subplots()\n    with pytest.raises((ValueError, TypeError)):\n        ax.xaxis.set_ticks([0, 1], bad_keyword=True)\n\n\ndef test_set_xticks_valid_kwargs_without_labels():\n    fig, ax = plt.subplots()\n    # Even if valid Text properties are passed without labels, the fix plan\n    # requires validating kwargs unconditionally or raising an error if kwargs\n    # are supplied without labels. Let's check that passing valid Text properties\n    # either works or appropriately raises depending on strict design, but typically\n    # invalid kwargs must definitely raise.\n    # If the design makes ANY kwargs without labels an error:\n    with pytest.raises((ValueError, TypeError)):\n        ax.set_xticks([0, 1], color=\"red\")",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "openrouter/deepseek/deepseek-chat",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -3242,2 +3242,3 @@\n     def grid(self, visible=None, which='major', axis='both', **kwargs):\n+        _api.check_isinstance((bool, None), visible=visible)\n         if visible is None:",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-4dg6107e",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1735,
+        "matches_issue": 0.7737,
+        "safe_to_apply": 0.6484,
+        "composite": 0.6489,
+        "secrets_or_danger": 0.1336,
+        "logic_drift": 0.2087,
+        "flagged": false
+      },
+      "laya_combined": 0.6489,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 129.51,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/axis.py\n+++ b/lib/matplotlib/axis.py\n@@ -1763,6 +1763,8 @@\n         if labels is not None:\n             self.set_ticklabels(labels, **kwargs)\n             return\n+        if kwargs:\n+            raise ValueError(\"kwargs are only allowed if labels are set\")\n         return self.set_ticks(ticks, minor=minor)\n \n     def set_ticks(self, ticks, labels=None, *, minor=False, **kwargs):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ge8o2_gk",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ge8o2_gk\\lib\\matplotlib\\axis.py: SyntaxError line 1572: invalid syntax"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axis.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5274,
+        "matches_issue": 0.7913,
+        "safe_to_apply": 0.7222,
+        "composite": 0.760225,
+        "secrets_or_danger": 0.2214,
+        "logic_drift": 0.4034,
+        "flagged": false
+      },
+      "laya_combined": 0.7602,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 170.9,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -342,6 +342,7 @@\n         \"\"\"\n         if labels is not None:\n             self.xaxis.set_ticks(ticks, labels=labels, **kwargs)\n+        elif kwargs:\n+            raise TypeError(\"kwargs are only allowed if labels are provided\")\n         else:\n             self.xaxis.set_ticks(ticks)\n\n--- a/lib/matplotlib/axis.py\n+++ b/lib/matplotlib/axis.py\n@@ -1410,6 +1410,7 @@\n         \"\"\"\n         if labels is not None:\n             self.set_ticks(ticks, labels=labels, **kwargs)\n+        elif kwargs:\n+            raise TypeError(\"kwargs are only allowed if labels are provided\")\n         else:\n             self.set_ticks(ticks)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-04ol6aq3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-04ol6aq3\\lib\\matplotlib\\axis.py: SyntaxError line 2028: expected an indented block after 'if' statement on line 2027"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py",
+        "lib/matplotlib/axis.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3457,
+        "matches_issue": 0.7983,
+        "safe_to_apply": 0.6668,
+        "composite": 0.7027,
+        "secrets_or_danger": 0.1,
+        "logic_drift": 0.2577,
+        "flagged": false
+      },
+      "laya_combined": 0.7027,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 162.63,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "openrouter/deepseek/deepseek-chat",
+    "requested_model": "openrouter/deepseek/deepseek-chat",
+    "substituted": false,
+    "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -3242,2 +3242,3 @@\n     def grid(self, visible=None, which='major', axis='both', **kwargs):\n+        _api.check_isinstance((bool, None), visible=visible)\n         if visible is None:",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-4dg6107e",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/axes/_base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.1735,
+      "matches_issue": 0.7737,
+      "safe_to_apply": 0.6484,
+      "composite": 0.6489,
+      "secrets_or_danger": 0.1336,
+      "logic_drift": 0.2087,
+      "flagged": false
+    },
+    "laya_combined": 0.6489,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 129.51,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

@@ -1,0 +1,371 @@
+{
+  "instance_id": "pytest-dev__pytest-5413",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "450d2646233c670654744d3d24330b69895bb9d2",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895592.5172217
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895593.2917266
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895597.4509616
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895601.6885679
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895609.301128
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791895665.5549374
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791895574.5244493,
+  "elapsed_s": 92.21,
+  "plan": "### Step 1: Root Cause\nThe root cause is in the `__str__` (or `__repr__`) implementation of the `ExceptionInfo` object returned by `pytest.raises`. When using `with pytest.raises(...) as e:`, `e` is an `ExceptionInfo` object. Its string representation currently returns a summary string (which includes the traceback/location and the exception type), rather than delegating to the `str()` representation of the captured exception object (`e.value`). The standard Python behavior for an exception object is to return its message content, while the `ExceptionInfo` object is currently prioritizing its diagnostic metadata as its primary string representation.\n\n### Step 2: Exact Changes\nThe fix involves modifying the `__str__` method of the `ExceptionInfo` class in `src/_pytest/_code/code.py` (which is the class backing the `pytest.raises` context variable) to return the string representation of the underlying captured exception value.\n\n1.  **File:** `src/_pytest/_code/code.py`\n    *   Locate the `ExceptionInfo` class.\n    *   Find or implement the `__str__` method.\n    *   Change/Update `__str__` to return `str(self.value)`.\n\n**Note:** If the intention is to keep the descriptive representation for debugging but allow users to get the message, the current `__str__` is confusing. To match the request of making `str(e)` behave like `str(exception)`, the `__str__` method should simply return `str(self.value)`. If backwards compatibility for the current descriptive string is required by internal pytest machinery, the existing descriptive format should be moved to a different method (like `__repr__` or a new `longrepr` method), but for the purpose of the reported bug, overriding `__str__` is the correct path.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "src/_pytest/python_api.py",
+      "symbol": "src/_pytest/python_api.py::_non_numeric_type_error",
+      "symbols": [
+        "_non_numeric_type_error",
+        "raises",
+        "_cmp_raises_type_error",
+        "_check_type"
+      ],
+      "line_range": [
+        37,
+        45
+      ],
+      "score": 0.4955,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8294,
+        "vector": 0.7347,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: value; body matches report terms: error, value)"
+    },
+    {
+      "file": "testing/python/raises.py",
+      "symbol": "testing/python/raises.py::test_raises",
+      "symbols": [
+        "test_raises",
+        "test_raises_exec",
+        "test_raises_exec_correct_filename",
+        "test_raises_syntax_error"
+      ],
+      "line_range": [
+        9,
+        16
+      ],
+      "score": 0.7271,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7408,
+        "vector": 0.8075,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: raises, pytest, with, error)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::param",
+      "symbols": [
+        "param",
+        "pytest_configure",
+        "pytest_addoption",
+        "deselect_by_keyword"
+      ],
+      "line_range": [
+        16,
+        35
+      ],
+      "score": 0.6837,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6926,
+        "vector": 0.5463,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: pytest, python, variable, this)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::get_plugin_manager",
+      "symbols": [
+        "get_plugin_manager",
+        "consider_pluginarg",
+        "import_plugin",
+        "_get_plugin_specs_as_list"
+      ],
+      "line_range": [
+        164,
+        175
+      ],
+      "score": 0.6593,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5507,
+        "vector": 0.6382,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: pytest, with, this)"
+    },
+    {
+      "file": "src/_pytest/outcomes.py",
+      "symbol": "src/_pytest/outcomes.py::skip",
+      "symbols": [
+        "skip",
+        "fail",
+        "xfail",
+        "importorskip"
+      ],
+      "line_range": [
+        76,
+        98
+      ],
+      "score": 0.5126,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9858,
+        "vector": 0.5509,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: pytest, with, python, message)"
+    },
+    {
+      "file": "src/_pytest/assertion/__init__.py",
+      "symbol": "src/_pytest/assertion/__init__.py::register_assert_rewrite",
+      "symbols": [
+        "register_assert_rewrite",
+        "pytest_collection",
+        "callbinrepr",
+        "pytest_runtest_setup"
+      ],
+      "line_range": [
+        28,
+        51
+      ],
+      "score": 0.4904,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0957,
+        "vector": 0.1785,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: more, error, package, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\n\ndef test_exception_info_str_behavior():\n    \"\"\"\n    Reproduction test for the reported bug:\n    str(exception_info) should return the exception message, \n    matching the behavior of the exception object itself.\n    \"\"\"\n    message = \"A\\nB\\nC\"\n    \n    with pytest.raises(LookupError) as e:\n        raise LookupError(message)\n    \n    # This assertion fails in the buggy version because it currently \n    # includes metadata/traceback info instead of just the message.\n    assert str(e) == message\n\ndef test_exception_info_empty_message():\n    \"\"\"\n    Edge case: Ensure empty exception messages are handled correctly.\n    \"\"\"\n    with pytest.raises(ValueError) as e:\n        raise ValueError(\"\")\n    \n    assert str(e) == \"\"\n\ndef test_exception_info_unicode_message():\n    \"\"\"\n    Edge case: Ensure unicode/special characters in message are preserved.\n    \"\"\"\n    message = \"Error: ⚡️ 🐍\"\n    with pytest.raises(RuntimeError) as e:\n        raise RuntimeError(message)\n        \n    assert str(e) == message\n\ndef test_exception_info_no_message():\n    \"\"\"\n    Edge case: Exceptions initialized without an explicit message \n    usually default to empty strings or specific representation.\n    \"\"\"\n    # Base Exception() has an empty str()\n    with pytest.raises(Exception) as e:\n        raise Exception()\n        \n    assert str(e) == \"\"",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/_code/code.py\n+++ b/src/_pytest/_code/code.py\n@@ -175,6 +175,9 @@ class ExceptionInfo:\n     def __repr__(self):\n         return \"<ExceptionInfo %s tblen=%d>\" % (self.type.__name__, len(self.traceback))\n\n+    def __str__(self):\n+        return str(self.value)\n+\n     def exconly(self, tryshort=False):\n         \"\"\" return the exception as a string.\n             if tryshort is True, we try to return a short summary.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c1\\src\\_pytest\\_code\\code.py: SyntaxError line 178: expected an indented block after function definition on line 177"
+      ],
+      "changed_files": [
+        "src/_pytest/_code/code.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4158,
+        "matches_issue": 0.6661,
+        "safe_to_apply": 0.5947,
+        "composite": 0.66915,
+        "secrets_or_danger": 0.0865,
+        "logic_drift": 0.1952,
+        "flagged": false
+      },
+      "laya_combined": 0.6692,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.16,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/_code/code.py\n+++ b/src/_pytest/_code/code.py\n@@ -102,6 +102,9 @@ class ExceptionInfo:\n     def __repr__(self):\n         return \"<ExceptionInfo %s tblen=%d>\" % (self.type.__name__, len(self.traceback))\n\n+    def __str__(self):\n+        return str(self.value)\n+\n     def exconly(self, tryshort=False):\n         \"\"\" return the exception as a string.\n             if tryshort is True, we try to return a short summary.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c2\\src\\_pytest\\_code\\code.py: SyntaxError line 178: expected an indented block after function definition on line 177"
+      ],
+      "changed_files": [
+        "src/_pytest/_code/code.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4158,
+        "matches_issue": 0.6661,
+        "safe_to_apply": 0.5947,
+        "composite": 0.66915,
+        "secrets_or_danger": 0.0888,
+        "logic_drift": 0.1913,
+        "flagged": false
+      },
+      "laya_combined": 0.6692,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 22.24,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/_code/code.py\n+++ b/src/_pytest/_code/code.py\n@@ -176,6 +176,9 @@\n     def __repr__(self):\n         return \"<ExceptionInfo %s tblen=%d>\" % (self.type.__name__, len(self.traceback))\n\n+    def __str__(self):\n+        return str(self.value)\n+\n     def _getreprcrash(self):\n         return self.traceback[-1]",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c3\\src\\_pytest\\_code\\code.py: SyntaxError line 178: expected an indented block after function definition on line 177"
+      ],
+      "changed_files": [
+        "src/_pytest/_code/code.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4158,
+        "matches_issue": 0.6661,
+        "safe_to_apply": 0.5947,
+        "composite": 0.66915,
+        "secrets_or_danger": 0.1351,
+        "logic_drift": 0.1633,
+        "flagged": false
+      },
+      "laya_combined": 0.6692,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 13.79,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/_code/code.py\n+++ b/src/_pytest/_code/code.py\n@@ -175,6 +175,9 @@ class ExceptionInfo:\n     def __repr__(self):\n         return \"<ExceptionInfo %s tblen=%d>\" % (self.type.__name__, len(self.traceback))\n\n+    def __str__(self):\n+        return str(self.value)\n+\n     def exconly(self, tryshort=False):\n         \"\"\" return the exception as a string.\n             if tryshort is True, we try to return a short summary.",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-5413-c1\\src\\_pytest\\_code\\code.py: SyntaxError line 178: expected an indented block after function definition on line 177"
+    ],
+    "changed_files": [
+      "src/_pytest/_code/code.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.4158,
+      "matches_issue": 0.6661,
+      "safe_to_apply": 0.5947,
+      "composite": 0.66915,
+      "secrets_or_danger": 0.0865,
+      "logic_drift": 0.1952,
+      "flagged": false
+    },
+    "laya_combined": 0.6692,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 10.16,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

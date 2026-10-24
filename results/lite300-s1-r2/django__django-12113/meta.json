@@ -1,0 +1,400 @@
+{
+  "instance_id": "django__django-12113",
+  "repo": "django/django",
+  "base_commit": "62254c5202e80a68f4fe6572a2be46a3d953de1a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622096.290118
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622103.1618521
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622115.874449
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622118.4431496
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622152.6078517
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622315.12394
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791622363.5364041
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/backends/sqlite3/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/backends/sqlite3/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791622016.4102814,
+  "elapsed_s": 355.13,
+  "plan": "@async_unsafe\n    def get_new_connection(self, conn_params):\n        if 'timeout' not in conn_params:\n            conn_params['timeout'] = 20\n        conn = Database.connect(**conn_params)\n        ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/backends/sqlite3/base.py",
+      "symbol": "django/db/backends/sqlite3/base.py::execute",
+      "symbols": [
+        "execute",
+        "decoder",
+        "none_guard",
+        "check_sqlite_version"
+      ],
+      "line_range": [
+        397,
+        402
+      ],
+      "score": 0.6974,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3899,
+        "vector": 0.4159,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: query, cursor, base, database; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/backends/base/base.py",
+      "symbol": "django/db/backends/base/base.py::__init__",
+      "symbols": [
+        "__init__",
+        "timezone",
+        "timezone_name",
+        "queries"
+      ],
+      "line_range": [
+        48,
+        109
+      ],
+      "score": 0.6935,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4487,
+        "vector": 0.2606,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: name, query, user, cursor)"
+    },
+    {
+      "file": "django/db/utils.py",
+      "symbol": "django/db/utils.py::OperationalError",
+      "symbols": [
+        "OperationalError",
+        "DatabaseError",
+        "DataError",
+        "IntegrityError"
+      ],
+      "line_range": [
+        32,
+        35
+      ],
+      "score": 0.9858,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4834,
+        "vector": 0.5416,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: base, error, database; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::check",
+      "symbols": [
+        "check",
+        "execute",
+        "CommandError",
+        "SystemCheckError"
+      ],
+      "line_range": [
+        384,
+        450
+      ],
+      "score": 0.6883,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3576,
+        "vector": 0.4079,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: ERROR; body matches report terms: issue, name, system, error)"
+    },
+    {
+      "file": "django/db/backends/oracle/base.py",
+      "symbol": "django/db/backends/oracle/base.py::_fix_for_params",
+      "symbols": [
+        "_fix_for_params",
+        "_guess_input_sizes",
+        "_param_generator",
+        "execute"
+      ],
+      "line_range": [
+        481,
+        511
+      ],
+      "score": 0.6804,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3211,
+        "vector": 0.4174,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (private helper called by a symbol the report names; body matches report terms: query, execute, only, many)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::_create_user",
+      "symbols": [
+        "_create_user",
+        "create_user",
+        "create_superuser",
+        "save"
+      ],
+      "line_range": [
+        130,
+        142
+      ],
+      "score": 0.6756,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3027,
+        "vector": 0.4165,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: email, password, username; body matches report terms: name, user, username, save; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.885075,
+  "laya_scores": {
+    "fix_quality": 1.8751,
+    "matches_issue": 0.8651,
+    "safe_to_apply": 0.8001,
+    "composite": 0.885075,
+    "secrets_or_danger": 0.1886,
+    "logic_drift": 0.2317,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Adding a default timeout for SQLite connections does not introduce injection or credential risks.\n- PERFORMANCE: PASS - A higher SQLite connection timeout helps avoid lock failures without hurting normal performance.\n- ROBUSTNESS: PASS - Preventing immediate database locked errors makes multi-database persistent SQLite tests more reliable.\n- PONYTAIL / YAGNI: PASS - This is a targeted and minimal fix addressing a specific SQLite test runner concurrency issue.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.db import connections\nfrom django.test import TestCase, override_settings\n\n\n@override_settings(\n    DATABASES={\n        'default': {\n            'ENGINE': 'django.db.backends.sqlite3',\n            'TEST': {'NAME': 'test_default.sqlite3'},\n        },\n        'other': {\n            'ENGINE': 'django.db.backends.sqlite3',\n            'TEST': {'NAME': 'test_other.sqlite3'},\n        },\n    }\n)\nclass SQLitePersistentMultiDbTimeoutTests(TestCase):\n    databases = {'default', 'other'}\n\n    def test_multidb_concurrent_connections_no_lock(self):\n        \"\"\"\n        Using multiple SQLite databases with persistent test names (--keepdb)\n        should not raise 'database is locked' errors due to connection timeouts.\n        \"\"\"\n        # Trigger connections to both default and other databases to ensure\n        # that concurrent access under test setup/operations does not lock.\n        conn_default = connections['default']\n        conn_other = connections['other']\n\n        with conn_default.cursor() as cursor_default:\n            cursor_default.execute(\"SELECT 1\")\n            row = cursor_default.fetchone()\n            self.assertEqual(row[0], 1)\n\n        with conn_other.cursor() as cursor_other:\n            cursor_other.execute(\"SELECT 1\")\n            row = cursor_other.fetchone()\n            self.assertEqual(row[0], 1)\n\n    def test_default_timeout_setting_applied(self):\n        \"\"\"\n        The sqlite3 backend connection parameters include a default timeout of 20\n        when not explicitly provided in connection options.\n        \"\"\"\n        conn = connections['default']\n        conn_params = conn.get_connection_params()\n        self.assertIn('timeout', conn_params)\n        self.assertEqual(conn_params['timeout'], 20)\n\n    def test_custom_timeout_not_overwritten(self):\n        \"\"\"\n        If a custom timeout is provided in OPTIONS, it is respected and not overwritten.\n        \"\"\"\n        conn = connections['default']\n        custom_settings = conn.settings_dict.copy()\n        custom_settings['OPTIONS'] = {'timeout': 42}\n        \n        # Check that get_new_conneciton respects pre-existing timeout in conn_params\n        conn_params = conn.get_connection_params()\n        conn_params.update(custom_settings.get('OPTIONS', {}))\n        \n        if 'timeout' not in conn_params:\n            conn_params['timeout'] = 20\n            \n        self.assertEqual(conn_params['timeout'], 42)\n\n    def test_other_database_timeout_applied(self):\n        \"\"\"\n        The 'other' database connection params also receive the default timeout.\n        \"\"\"\n        conn = connections['other']\n        conn_params = conn.get_connection_params()\n        self.assertIn('timeout', conn_params)\n        self.assertEqual(conn_params['timeout'], 20)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -173,6 +173,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):\n \n     def get_new_connection(self, conn_params):\n+        if 'timeout' not in conn_params:\n+            conn_params['timeout'] = 20\n         return Database.connect(**conn_params)\n \n     def init_connection_state(self):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-kzach1bq",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/sqlite3/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.8751,
+        "matches_issue": 0.8651,
+        "safe_to_apply": 0.8001,
+        "composite": 0.885075,
+        "secrets_or_danger": 0.7653,
+        "logic_drift": 0.3126,
+        "flagged": true
+      },
+      "laya_combined": 0.8851,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0058,
+      "rank_reason": "logistic",
+      "elapsed_s": 106.94,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -165,6 +165,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):\n     def get_new_connection(self, conn_params):\n         if'isolation_level' in conn_params:\n             conn_params['isolation_level'] = self.prepare_isolation_level(conn_params['isolation_level'])\n+        if 'timeout' not in conn_params:\n+            conn_params['timeout'] = 20\n         return Database.connect(**conn_params)\n \n     def init_connection_state(self):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-4hqdvumj",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/sqlite3/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.8751,
+        "matches_issue": 0.8651,
+        "safe_to_apply": 0.8001,
+        "composite": 0.885075,
+        "secrets_or_danger": 0.3135,
+        "logic_drift": 0.2957,
+        "flagged": false
+      },
+      "laya_combined": 0.8851,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 107.4,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -328,6 +328,8 @@\n     def get_new_connection(self, conn_params):\n         if 'timeout' not in conn_params:\n             conn_params['timeout'] = 20\n+        if 'cached_statements' not in conn_params:\n+            conn_params['cached_statements'] = 0\n         conn = Database.connect(**conn_params)\n         conn.create_function(\"django_date_extract\", 2, _sqlite_date_extract)\n         conn.create_function(\"django_date_trunc\", 2, _sqlite_date_trunc)",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-5upcpj0o",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-5upcpj0o\\django\\db\\backends\\sqlite3\\base.py: undefined name '_sqlite_date_extract'"
+      ],
+      "changed_files": [
+        "django/db/backends/sqlite3/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3847,
+        "matches_issue": 0.6354,
+        "safe_to_apply": 0.6301,
+        "composite": 0.6625500000000001,
+        "secrets_or_danger": 0.3013,
+        "logic_drift": 0.4433,
+        "flagged": false
+      },
+      "laya_combined": 0.6626,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 104.57,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -173,6 +173,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):\n \n     def get_new_connection(self, conn_params):\n+        if 'timeout' not in conn_params:\n+            conn_params['timeout'] = 20\n         return Database.connect(**conn_params)\n \n     def init_connection_state(self):",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-kzach1bq",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/backends/sqlite3/base.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.8751,
+      "matches_issue": 0.8651,
+      "safe_to_apply": 0.8001,
+      "composite": 0.885075,
+      "secrets_or_danger": 0.7653,
+      "logic_drift": 0.3126,
+      "flagged": true
+    },
+    "laya_combined": 0.8851,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0058,
+    "rank_reason": "logistic",
+    "elapsed_s": 106.94,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py\nindex a3ae1f0..ec830b2 100644\n--- a/django/db/backends/sqlite3/base.py\n+++ b/django/db/backends/sqlite3/base.py\n@@ -201,6 +201,8 @@ class DatabaseWrapper(BaseDatabaseWrapper):\n \n     @async_unsafe\n     def get_new_connection(self, conn_params):\n+        if 'timeout' not in conn_params:\n+            conn_params['timeout'] = 20\n         conn = Database.connect(**conn_params)\n         conn.create_function(\"django_date_extract\", 2, _sqlite_datetime_extract)\n         conn.create_function(\"django_date_trunc\", 2, _sqlite_date_trunc)\n",
+  "offline_calls": 0
+}

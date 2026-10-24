@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-13551",
+  "repo": "django/django",
+  "base_commit": "7f9e4524d6b23424cf44fbe1bf1f4e70f6bb066e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463585.4513886
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463589.1934927
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463600.377683
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463608.4692407
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463627.8100786
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791463796.559032
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791463534.34683,
+  "elapsed_s": 266.57,
+  "plan": "def _make_hash_value(self, user, timestamp):\n        # ... existing login ...\n        email_field = user.get_email_field_name() if hasattr(user, 'get_email_field_name') else 'email'\n        email = getattr(user, email_field, '') or ''\n        return str(user.pk) + user.password + str(user.last_login) + str(timestamp) + str(email)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::_create_user",
+      "symbols": [
+        "_create_user",
+        "create_user",
+        "create_superuser",
+        "Group"
+      ],
+      "line_range": [
+        132,
+        148
+      ],
+      "score": 0.6171,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.415,
+        "vector": 0.5275,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: email; body matches report terms: password, with, used, email)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_clean_credentials",
+      "symbols": [
+        "_clean_credentials",
+        "_get_user_session_key",
+        "authenticate",
+        "login"
+      ],
+      "line_range": [
+        40,
+        54
+      ],
+      "score": 0.6561,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4685,
+        "vector": 0.7834,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: password, token, user)"
+    },
+    {
+      "file": "django/core/mail/__init__.py",
+      "symbol": "django/core/mail/__init__.py::send_mail",
+      "symbols": [
+        "send_mail",
+        "send_mass_mail",
+        "get_connection",
+        "mail_admins"
+      ],
+      "line_range": [
+        38,
+        63
+      ],
+      "score": 0.5561,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2314,
+        "vector": 0.4435,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: password, should, email, user)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__reduce__",
+      "symbols": [
+        "__reduce__",
+        "get_pk_value_on_save",
+        "rel_db_type",
+        "contribute_to_class"
+      ],
+      "line_range": [
+        570,
+        589
+      ],
+      "score": 0.5737,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3355,
+        "vector": 0.3732,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, used, should, model)"
+    },
+    {
+      "file": "django/template/context_processors.py",
+      "symbol": "django/template/context_processors.py::csrf",
+      "symbols": [
+        "csrf",
+        "_get_val",
+        "debug",
+        "i18n"
+      ],
+      "line_range": [
+        17,
+        34
+      ],
+      "score": 0.5818,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3169,
+        "vector": 0.4386,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: token, request, that)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "to_locale",
+        "__getattr__",
+        "to_language"
+      ],
+      "line_range": [
+        42,
+        69
+      ],
+      "score": 0.5518,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1618,
+        "vector": 0.5531,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, changing, have, changes)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.contrib.auth.models import User\nfrom django.contrib.auth.tokens import PasswordResetTokenGenerator\nfrom django.utils import timezone\n\n@pytest.mark.django_db\ndef test_password_reset_token_invalidated_on_email_change():\n    \"\"\"\n    Test that a password reset token becomes invalid after the user's email changes.\n    \"\"\"\n    user = User.objects.create_user(username='testuser', email='old@example.com', password='password123')\n    token_generator = PasswordResetTokenGenerator()\n    \n    # Generate token\n    token = token_generator.make_token(user)\n    assert token_generator.check_token(user, token) is True\n    \n    # Change email\n    user.email = 'new@example.com'\n    user.save()\n    \n    # Token should now be invalid\n    assert token_generator.check_token(user, token) is False\n\n@pytest.mark.django_db\ndef test_password_reset_token_unchanged_on_non_email_field_change():\n    \"\"\"\n    Ensure unrelated field changes do not invalidate the token.\n    \"\"\"\n    user = User.objects.create_user(username='testuser', email='test@example.com', password='password123')\n    user.last_name = 'NewName'\n    user.save()\n    \n    token_generator = PasswordResetTokenGenerator()\n    token = token_generator.make_token(user)\n    \n    # Token should still be valid\n    assert token_generator.check_token(user, token) is True\n\n@pytest.mark.django_db\ndef test_password_reset_token_with_empty_email():\n    \"\"\"\n    Test handling of empty email strings (boundary condition).\n    \"\"\"\n    user = User.objects.create_user(username='noemailuser', email='', password='password123')\n    token_generator = PasswordResetTokenGenerator()\n    \n    token = token_generator.make_token(user)\n    assert token_generator.check_token(user, token) is True\n    \n    # Change from empty to something\n    user.email = 'now@example.com'\n    user.save()\n    assert token_generator.check_token(user, token) is False\n\n@pytest.mark.django_db\ndef test_password_reset_token_case_sensitivity():\n    \"\"\"\n    Ensure email change to different case invalidates token if the system treats it as different.\n    \"\"\"\n    user = User.objects.create_user(username='caseuser', email='User@Example.com', password='password123')\n    token_generator = PasswordResetTokenGenerator()\n    \n    token = token_generator.make_token(user)\n    \n    # Change to lowercase\n    user.email = 'user@example.com'\n    user.save()\n    \n    # If the hash includes the raw email, case changes will invalidate the token.\n    assert token_generator.check_token(user, token) is False",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/contrib/auth/tokens.py\n+++ b/django/contrib/auth/tokens.py\n@@ -23,4 +23,6 @@\n         # This is the only way to ensure that the token is invalidated when\n         # the user changes their password.\n-        return str(user.pk) + user.password + str(user.last_login) + str(timestamp)\n+        email_field = user.get_email_field_name() if hasattr(user, 'get_email_field_name') else 'email'\n+        email = getattr(user, email_field, '') or ''\n+        return str(user.pk) + user.password + str(user.last_login) + str(timestamp) + str(email)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c1\\django\\contrib\\auth\\tokens.py: local variable 'login_timestamp' is assigned to but never used"
+      ],
+      "changed_files": [
+        "django/contrib/auth/tokens.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1637,
+        "matches_issue": 0.6361,
+        "safe_to_apply": 0.5923,
+        "composite": 0.598025,
+        "secrets_or_danger": 0.2787,
+        "logic_drift": 0.2384,
+        "flagged": false
+      },
+      "laya_combined": 0.598,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 85.14,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/contrib/auth/tokens.py\n+++ b/django/contrib/auth/tokens.py\n@@ -23,4 +23,6 @@\n         # This is a bit of a hack, but it's the only way to get the\n         # password hash in the hash_value without requiring a database hit.\n         # (The user object is often passed in from a request, so it's not\n         # necessarily the same instance as the one in the database.)\n-        return str(user.pk) + user.password + str(user.last_login) + str(timestamp)\n+        email_field = user.get_email_field_name() if hasattr(user, 'get_email_field_name') else 'email'\n+        email = getattr(user, email_field, '') or ''\n+        return str(user.pk) + user.password + str(user.last_login) + str(timestamp) + str(email)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c2\\django\\contrib\\auth\\tokens.py: local variable 'login_timestamp' is assigned to but never used"
+      ],
+      "changed_files": [
+        "django/contrib/auth/tokens.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1637,
+        "matches_issue": 0.6361,
+        "safe_to_apply": 0.5923,
+        "composite": 0.598025,
+        "secrets_or_danger": 0.1463,
+        "logic_drift": 0.164,
+        "flagged": false
+      },
+      "laya_combined": 0.598,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.14,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/contrib/auth/tokens.py\n+++ b/django/contrib/auth/tokens.py\n@@ -21,4 +21,6 @@\n     def _make_hash_value(self, user, timestamp):\n-        return str(user.pk) + user.password + str(user.last_login) + str(timestamp)\n+        email_field = user.get_email_field_name() if hasattr(user, 'get_email_field_name') else 'email'\n+        email = getattr(user, email_field, '') or ''\n+        return str(user.pk) + user.password + str(user.last_login) + str(timestamp) + str(email)\n \n     def _num_days(self, dt):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c3\\django\\contrib\\auth\\tokens.py: local variable 'login_timestamp' is assigned to but never used"
+      ],
+      "changed_files": [
+        "django/contrib/auth/tokens.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.1637,
+        "matches_issue": 0.6361,
+        "safe_to_apply": 0.5923,
+        "composite": 0.598025,
+        "secrets_or_danger": 0.1632,
+        "logic_drift": 0.2953,
+        "flagged": false
+      },
+      "laya_combined": 0.598,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 90.97,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/contrib/auth/tokens.py\n+++ b/django/contrib/auth/tokens.py\n@@ -23,4 +23,6 @@\n         # This is the only way to ensure that the token is invalidated when\n         # the user changes their password.\n-        return str(user.pk) + user.password + str(user.last_login) + str(timestamp)\n+        email_field = user.get_email_field_name() if hasattr(user, 'get_email_field_name') else 'email'\n+        email = getattr(user, email_field, '') or ''\n+        return str(user.pk) + user.password + str(user.last_login) + str(timestamp) + str(email)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13551-c1\\django\\contrib\\auth\\tokens.py: local variable 'login_timestamp' is assigned to but never used"
+    ],
+    "changed_files": [
+      "django/contrib/auth/tokens.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.1637,
+      "matches_issue": 0.6361,
+      "safe_to_apply": 0.5923,
+      "composite": 0.598025,
+      "secrets_or_danger": 0.2787,
+      "logic_drift": 0.2384,
+      "flagged": false
+    },
+    "laya_combined": 0.598,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 85.14,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

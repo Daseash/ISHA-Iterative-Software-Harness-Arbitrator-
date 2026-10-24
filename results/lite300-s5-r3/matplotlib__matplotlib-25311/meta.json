@@ -1,0 +1,440 @@
+{
+  "instance_id": "matplotlib__matplotlib-25311",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "430fb1db88843300fb4baae3edc499bbfe073b0c",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812398.1923308
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812401.4413023
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812411.8211813
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812413.821592
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812434.3231907
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812704.866909
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812753.209083
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812796.5807586
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791812829.5911267
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied via git apply --3way",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/matplotlib/legend.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791811870.3642538,
+  "error": "attempt 1 exceeded 500s",
+  "elapsed_s": 467.3,
+  "plan": "def __getstate__(self):\n         state = self.__dict__.copy()\n         state['canvas'] = None\n         return state",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "lib/matplotlib/legend.py",
+      "symbol": "lib/matplotlib/legend.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "set_draggable",
+        "_findoffset"
+      ],
+      "line_range": [
+        343,
+        384
+      ],
+      "score": 0.6699,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5384,
+        "vector": 0.7526,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: label, legend; body matches report terms: draggable, with, legend, label)"
+    },
+    {
+      "file": "lib/matplotlib/figure.py",
+      "symbol": "lib/matplotlib/figure.py::_add_axes_internal",
+      "symbols": [
+        "_add_axes_internal",
+        "colorbar",
+        "__init__",
+        "delaxes"
+      ],
+      "line_range": [
+        760,
+        772
+      ],
+      "score": 0.663,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5178,
+        "vector": 0.7378,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: ax; body matches report terms: figure, add_subplot, this, plot)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::set_loglevel",
+      "symbols": [
+        "set_loglevel",
+        "_auto_draw_if_interactive",
+        "close",
+        "colorbar"
+      ],
+      "line_range": [
+        173,
+        176
+      ],
+      "score": 0.9296,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4909,
+        "vector": 0.9326,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: pyplot; body matches report terms: matplotlib, this, plot, pyplot)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::inner",
+      "symbols": [
+        "inner",
+        "_get_version",
+        "_check_versions",
+        "_ensure_handler"
+      ],
+      "line_range": [
+        1440,
+        1469
+      ],
+      "score": 0.6228,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4572,
+        "vector": 0.5287,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: ax; body matches report terms: label)"
+    },
+    {
+      "file": "lib/matplotlib/backends/qt_editor/figureoptions.py",
+      "symbol": "lib/matplotlib/backends/qt_editor/figureoptions.py::apply_callback",
+      "symbols": [
+        "apply_callback",
+        "figure_edit",
+        "prepare_data"
+      ],
+      "line_range": [
+        177,
+        258
+      ],
+      "score": 0.573,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3821,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: draggable, expected, set_draggable, legend)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.5728,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2439,
+        "vector": 0.5571,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: error, line)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8052000000000001,
+  "laya_scores": {
+    "fix_quality": 1.606,
+    "matches_issue": 0.831,
+    "safe_to_apply": 0.7838,
+    "composite": 0.8052000000000001,
+    "secrets_or_danger": 0.1456,
+    "logic_drift": 0.2673,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: The change only affects the internal pickling state of a draggable legend helper.\n- PERFORMANCE: PASS: Setting a dictionary attribute to None during pickling has negligible overhead.\n- ROBUSTNESS: PASS: Gracefully handles unpicklable canvas references by omitting them during serialization.\n- MINIMAL DIFF / YAGNI: PASS: Directly addresses the root cause of the bug with minimal, targeted changes.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pickle\nimport matplotlib.pyplot as plt\n\n\ndef test_pickle_figure_with_draggable_legend():\n    fig, ax = plt.subplots()\n    ax.plot([0, 1, 2], [0, 1, 2], label=\"test\")\n    leg = ax.legend()\n    leg.set_draggable(True)\n\n    dumped = pickle.dumps(fig)\n    loaded = pickle.loads(dumped)\n    assert loaded is not None\n\n\ndef test_pickle_legend_alone():\n    fig, ax = plt.subplots()\n    ax.plot([0, 1, 2], [0, 1, 2], label=\"test\")\n    leg = ax.legend()\n    leg.set_draggable(True)\n\n    dumped = pickle.dumps(leg)\n    loaded = pickle.loads(dumped)\n    assert loaded is not None\n\n\ndef test_pickle_figure_with_draggable_annotation():\n    fig, ax = plt.subplots()\n    annot = ax.annotate(\"annotation\", xy=(1, 1))\n    annot.set_draggable(True)\n\n    dumped = pickle.dumps(fig)\n    loaded = pickle.loads(dumped)\n    assert loaded is not None\n\n\ndef test_pickle_figure_with_multiple_draggable_artists():\n    fig, ax = plt.subplots()\n    ax.plot([0, 1], [0, 1], label=\"line1\")\n    leg = ax.legend()\n    leg.set_draggable(True)\n\n    annot = ax.annotate(\"point\", xy=(0.5, 0.5))\n    annot.set_draggable(True)\n\n    dumped = pickle.dumps(fig)\n    loaded = pickle.loads(dumped)\n    assert loaded is not None",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -57,6 +57,11 @@\n \n         super().__init__(legend, legend._legend_box, use_blit=use_blit)\n \n+    def __getstate__(self):\n+        state = self.__dict__.copy()\n+        state['canvas'] = None\n+        return state\n+\n     def finalize_offset(self):\n         if self._update == \"loc\":\n             self._update_loc(self.get_loc_in_canvas())",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ysg169ri",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: lib/matplotlib/legend.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/legend.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.606,
+        "matches_issue": 0.831,
+        "safe_to_apply": 0.7838,
+        "composite": 0.8052000000000001,
+        "secrets_or_danger": 0.1456,
+        "logic_drift": 0.2676,
+        "flagged": false
+      },
+      "laya_combined": 0.8052,
+      "repro": {
+        "available": false,
+        "before_ok": null,
+        "after_ok": null,
+        "regressions": 0,
+        "reason": "image not present locally: swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-25311:latest",
+        "repro_target": "",
+        "before_exit": null,
+        "after_exit": null
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 10.35,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -53,6 +53,10@@\n class DraggableLegend(DraggableOffsetBox):\n     def __init__(self, legend, use_blit=False, update=\"loc\"):\n         \"\"\"\n+        if legend.canvas is not None:\n+            legend.canvas = None\n+\n         Wrapper around a `.Legend` to support mouse dragging.\n \n         Parameters",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-6mb39nq9",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/legend.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5263,
+        "matches_issue": 0.6396,
+        "safe_to_apply": 0.6127,
+        "composite": 0.69465,
+        "secrets_or_danger": 0.0852,
+        "logic_drift": 0.1255,
+        "flagged": false
+      },
+      "laya_combined": 0.6946,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0076,
+      "rank_reason": "logistic",
+      "elapsed_s": 60.62,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "openrouter/deepseek/deepseek-chat",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -96,6 +96,11 @@\n         loc_in_bbox = self.legend.axes.transAxes.transform(loc_in_canvas)\n         self.legend.set_bbox_to_anchor(loc_in_bbox)\n \n+    def __getstate__(self):\n+        state = self.__dict__.copy()\n+        state['legend'] = None\n+        return state\n+\n \n class Legend(Artist):\n     \"\"\"",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: 'matplotlib.axes.Axes' imported but unused",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: 'matplotlib.figure.FigureBase' imported but unused",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'parent'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'Axes'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'parent'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'parent'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'parent'",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xefzhchr\\lib\\matplotlib\\legend.py: undefined name 'FigureBase'"
+      ],
+      "changed_files": [
+        "lib/matplotlib/legend.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5643,
+        "matches_issue": 0.7556,
+        "safe_to_apply": 0.6905,
+        "composite": 0.7526,
+        "secrets_or_danger": 0.1542,
+        "logic_drift": 0.359,
+        "flagged": false
+      },
+      "laya_combined": 0.7526,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 67.68,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -57,6 +57,11 @@\n \n         super().__init__(legend, legend._legend_box, use_blit=use_blit)\n \n+    def __getstate__(self):\n+        state = self.__dict__.copy()\n+        state['canvas'] = None\n+        return state\n+\n     def finalize_offset(self):\n         if self._update == \"loc\":\n             self._update_loc(self.get_loc_in_canvas())",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ysg169ri",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: lib/matplotlib/legend.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/legend.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.606,
+      "matches_issue": 0.831,
+      "safe_to_apply": 0.7838,
+      "composite": 0.8052000000000001,
+      "secrets_or_danger": 0.1456,
+      "logic_drift": 0.2676,
+      "flagged": false
+    },
+    "laya_combined": 0.8052,
+    "repro": {
+      "available": false,
+      "before_ok": null,
+      "after_ok": null,
+      "regressions": 0,
+      "reason": "image not present locally: swebench/sweb.eval.x86_64.matplotlib_1776_matplotlib-25311:latest",
+      "repro_target": "",
+      "before_exit": null,
+      "after_exit": null
+    },
+    "regression_count": 0,
+    "combined_score": 0.0057,
+    "rank_reason": "logistic",
+    "elapsed_s": 10.35,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/lib/matplotlib/legend.py b/lib/matplotlib/legend.py\nindex ff6abdb..29961e8 100644\n--- a/lib/matplotlib/legend.py\n+++ b/lib/matplotlib/legend.py\n@@ -73,6 +73,11 @@ class DraggableLegend(DraggableOffsetBox):\n \n         super().__init__(legend, legend._legend_box, use_blit=use_blit)\n \n+    def __getstate__(self):\n+        state = self.__dict__.copy()\n+        state['canvas'] = None\n+        return state\n+\n     def finalize_offset(self):\n         if self._update == \"loc\":\n             self._update_loc(self.get_loc_in_canvas())\n",
+  "offline_calls": 0
+}

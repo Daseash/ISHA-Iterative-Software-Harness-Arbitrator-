@@ -1,0 +1,402 @@
+{
+  "instance_id": "django__django-12983",
+  "repo": "django/django",
+  "base_commit": "3bc4240d979812bd11365ede04c028ea13fdc8c6",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459647.0123496
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459652.6751406
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459674.8650517
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459684.609126
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459706.1823785
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791459839.9087112
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/text.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/text.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791459575.541619,
+  "elapsed_s": 271.51,
+  "plan": "def slugify(value, allow_unicode=False):\n    # ... logic ...\n    value = re.sub(r'[-\\s]+', '-', value).strip('-')\n    return value",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/text.py",
+      "symbol": "django/utils/text.py::slugify",
+      "symbols": [
+        "slugify",
+        "_text_words",
+        "get_text_list",
+        "smart_split"
+      ],
+      "line_range": [
+        394,
+        408
+      ],
+      "score": 0.6904,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6288,
+        "vector": 0.6932,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: strip, slug, underscores; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::slugify",
+      "symbols": [
+        "slugify",
+        "yesno",
+        "addslashes",
+        "json_script"
+      ],
+      "line_range": [
+        212,
+        220
+      ],
+      "score": 0.6761,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5477,
+        "vector": 0.7434,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: strip, slug, underscores; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::select_format",
+      "symbols": [
+        "select_format",
+        "TextField",
+        "formfield",
+        "db_type"
+      ],
+      "line_range": [
+        409,
+        416
+      ],
+      "score": 0.6125,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3471,
+        "vector": 0.6724,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: text, django, example)"
+    },
+    {
+      "file": "django/db/utils.py",
+      "symbol": "django/db/utils.py::__init__",
+      "symbols": [
+        "__init__",
+        "prepare_test_settings",
+        "load_backend",
+        "DatabaseErrorWrapper"
+      ],
+      "line_range": [
+        137,
+        149
+      ],
+      "score": 0.5827,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2325,
+        "vector": 0.6632,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: text, this, after)"
+    },
+    {
+      "file": "django/db/backends/utils.py",
+      "symbol": "django/db/backends/utils.py::strip_quotes",
+      "symbols": [
+        "strip_quotes",
+        "CursorDebugWrapper",
+        "callproc",
+        "_execute_with_wrappers"
+      ],
+      "line_range": [
+        242,
+        249
+      ],
+      "score": 0.577,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3215,
+        "vector": 0.43,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: example, strip, make)"
+    },
+    {
+      "file": "django/contrib/postgres/utils.py",
+      "symbol": "django/contrib/postgres/utils.py::prefix_validation_error",
+      "symbols": [
+        "prefix_validation_error"
+      ],
+      "line_range": [
+        6,
+        29
+      ],
+      "score": 0.5651,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0163,
+        "vector": 0.967,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: text, example)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.733375,
+  "laya_scores": {
+    "fix_quality": 1.4866,
+    "matches_issue": 0.7724,
+    "safe_to_apply": 0.6745,
+    "composite": 0.733375,
+    "secrets_or_danger": 0.104,
+    "logic_drift": 0.4065,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on input sanitization or execution context.\n- PERFORMANCE: PASS, Minimal regex overhead added to a non-critical string utility.\n- ROBUSTNESS: PASS, Corrects unintended leading/trailing punctuation in generated slugs.\n- PONYTAIL / YAGNI: PASS, Necessary change to satisfy the intended behavior of the utility.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.utils.text import slugify\n\ndef test_slugify_strips_underscores():\n    \"\"\"\n    Reproduction of the bug where slugify() does not strip underscores\n    from the beginning or end of the string.\n    \"\"\"\n    input_str = \"___This is a test ---\"\n    expected = \"this-is-a-test\"\n    # This assertion will fail before the fix because the output \n    # currently includes leading underscores: \"___this-is-a-test-\"\n    assert slugify(input_str) == expected\n\ndef test_slugify_empty_string():\n    \"\"\"Ensure empty input returns empty slug.\"\"\"\n    assert slugify(\"\") == \"\"\n\ndef test_slugify_only_underscores():\n    \"\"\"Ensure strings consisting only of underscores become empty slugs.\"\"\"\n    assert slugify(\"___\") == \"\"\n\ndef test_slugify_mixed_punctuation_boundaries():\n    \"\"\"Ensure complex boundaries of dashes and underscores are handled.\"\"\"\n    # The fix logic (re.sub then strip('-')) should handle underscores \n    # being replaced by dashes and then stripped.\n    assert slugify(\"_hello_world_\") == \"hello-world\"\n    assert slugify(\"---hello---\") == \"hello\"\n    assert slugify(\"_--_hello_--_\") == \"hello\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "diff --git a/django/utils/text.py b/django/utils/text.py\nindex fb5f6298c4..82a141bd43 100644\n--- a/django/utils/text.py\n+++ b/django/utils/text.py\n@@ -403,7 +403,7 @@ def slugify(value, allow_unicode=False):\n     else:\n         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')\n     value = re.sub(r'[^\\w\\s-]', '', value.lower()).strip()\n-    return re.sub(r'[-\\s]+', '-', value)\n+    return re.sub(r'[-\\s]+', '-', value).strip('-')\n \n \n def camel_case_to_spaces(value):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12983-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/utils/text.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/utils/text.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4866,
+        "matches_issue": 0.7724,
+        "safe_to_apply": 0.6745,
+        "composite": 0.733375,
+        "secrets_or_danger": 0.104,
+        "logic_drift": 0.4065,
+        "flagged": false
+      },
+      "laya_combined": 0.7334,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 15.2,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/utils/text.py\n+++ b/django/utils/text.py\n@@ -401,5 +401,5 @@\n     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')\n     value = re.sub(r'[^\\w\\s-]', '', value).lower()\n-    return re.sub(r'[-\\s]+', '-', value).strip('-_')\n+    return re.sub(r'[-\\s]+', '-', value).strip('-_')",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12983-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "django/utils/text.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5815,
+        "matches_issue": 0.8419,
+        "safe_to_apply": 0.7688,
+        "composite": 0.79805,
+        "secrets_or_danger": 0.1073,
+        "logic_drift": 0.3164,
+        "flagged": false
+      },
+      "laya_combined": 0.7981,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 67.21,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/utils/text.py\n+++ b/django/utils/text.py\n@@ -401,5 +401,5 @@\n     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')\n     value = re.sub(r'[^\\w\\s-]', '', value.lower())\n-    return re.sub(r'[-\\s]+', '-', value).strip('-')\n+    return re.sub(r'[-\\s_]+', '-', value).strip('-_')",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12983-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12983-c2\\django\\utils\\text.py: SyntaxError line 404: expected an indented block after 'else' statement on line 403"
+      ],
+      "changed_files": [
+        "django/utils/text.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5736,
+        "matches_issue": 0.8807,
+        "safe_to_apply": 0.7752,
+        "composite": 0.807375,
+        "secrets_or_danger": 0.1203,
+        "logic_drift": 0.3519,
+        "flagged": false
+      },
+      "laya_combined": 0.8074,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0008,
+      "rank_reason": "logistic",
+      "elapsed_s": 72.26,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "groq/qwen/qwen3.8-27b",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": false,
+    "patch": "diff --git a/django/utils/text.py b/django/utils/text.py\nindex fb5f6298c4..82a141bd43 100644\n--- a/django/utils/text.py\n+++ b/django/utils/text.py\n@@ -403,7 +403,7 @@ def slugify(value, allow_unicode=False):\n     else:\n         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')\n     value = re.sub(r'[^\\w\\s-]', '', value.lower()).strip()\n-    return re.sub(r'[-\\s]+', '-', value)\n+    return re.sub(r'[-\\s]+', '-', value).strip('-')\n \n \n def camel_case_to_spaces(value):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12983-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/utils/text.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/utils/text.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4866,
+      "matches_issue": 0.7724,
+      "safe_to_apply": 0.6745,
+      "composite": 0.733375,
+      "secrets_or_danger": 0.104,
+      "logic_drift": 0.4065,
+      "flagged": false
+    },
+    "laya_combined": 0.7334,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 15.2,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/utils/text.py b/django/utils/text.py\nindex fb5f629..82a141b 100644\n--- a/django/utils/text.py\n+++ b/django/utils/text.py\n@@ -403,7 +403,7 @@ def slugify(value, allow_unicode=False):\n     else:\n         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')\n     value = re.sub(r'[^\\w\\s-]', '', value.lower()).strip()\n-    return re.sub(r'[-\\s]+', '-', value)\n+    return re.sub(r'[-\\s]+', '-', value).strip('-')\n \n \n def camel_case_to_spaces(value):\n",
+  "offline_calls": 0
+}

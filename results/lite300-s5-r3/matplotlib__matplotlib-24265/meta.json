@@ -1,0 +1,364 @@
+{
+  "instance_id": "matplotlib__matplotlib-24265",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "e148998d9bed9d1b53a91587ad48f9bb43c7737f",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791810870.2709808
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791810872.9029891
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791810878.9324968
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791810880.8921418
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791810888.0246577
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791811038.2127123
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791810828.5744865,
+  "elapsed_s": 212.2,
+  "plan": "### Step 1: Root Cause\nIn newer versions of Matplotlib (such as 3.6.1), the built-in style names have been updated or prefixed, or seaborn styles are handled differently (e.g., using `seaborn-v0_8-colorblind` instead of `seaborn-colorblind`). When user code attempts to access `plt.style.library[\"seaborn-colorblind\"]`, it raises a `KeyError` because the old style names without version suffixes were removed or mapped to the new `seaborn-v0_8-*` names, or aliases/compatibility mappings were not fully preserved for direct dictionary access on `style.library`. \n\nTo maintain backward compatibility and support style names like `seaborn-colorblind`, Matplotlib's style loading/library dictionary should include compatibility aliases mapping the old style names (e.g., `seaborn-colorblind`, `seaborn-darkgrid`, etc.) to their new counterparts or rcParams dictionaries in `plt.style.library` (or `matplotlib.style.core`).\n\n### Step 2: Exact Changes to Make\n1. **File:** `lib/matplotlib/style/core.py` (or wherever `plt.style.library` / style collection is initialized and populated)\n   - **Function/Block:** Style updating / dictionary loading where built-in styles are populated into `library`.\n   - **What to change:** Add compatibility mappings/aliases for the old seaborn style names (such as `seaborn-colorblind`, `seaborn-darkgrid`, `seaborn-dark`, `seaborn-dark-palette`, `seaborn-deep`, `seaborn-muted`, `seaborn-notebook`, `seaborn-paper`, `seaborn-pastel`, `seaborn-poster`, `seaborn-talk`, `seaborn-ticks`, `seaborn-white`, `seaborn-whitegrid`) so that they map to their corresponding new `seaborn-v0_8-*` entries in `style.library`.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::set_loglevel",
+      "symbols": [
+        "set_loglevel",
+        "install_repl_displayhook",
+        "_get_required_interactive_framework",
+        "_get_backend_mod"
+      ],
+      "line_range": [
+        173,
+        176
+      ],
+      "score": 0.6283,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4348,
+        "vector": 0.6215,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: pyplot; body matches report terms: matplotlib, this, pyplot)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::caching_module_getattr",
+      "symbols": [
+        "caching_module_getattr",
+        "select_matching_signature",
+        "warn_external",
+        "define_aliases"
+      ],
+      "line_range": [
+        195,
+        229
+      ],
+      "score": 0.5437,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2133,
+        "vector": 0.3784,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: that, with, generated, error)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_parse_to_version_info",
+      "symbols": [
+        "_parse_to_version_info",
+        "_check_versions",
+        "_ensure_handler",
+        "set_loglevel"
+      ],
+      "line_range": [
+        159,
+        182
+      ],
+      "score": 0.6876,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7084,
+        "vector": 0.5457,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: python, library, version)"
+    },
+    {
+      "file": "lib/matplotlib/cbook/__init__.py",
+      "symbol": "lib/matplotlib/cbook/__init__.py::_get_running_interactive_framework",
+      "symbols": [
+        "_get_running_interactive_framework",
+        "__init__",
+        "disconnect",
+        "process"
+      ],
+      "line_range": [
+        46,
+        93
+      ],
+      "score": 0.5827,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3584,
+        "vector": 0.4012,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: macosx, version, matplotlib, code)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::get_projection_class",
+      "symbols": [
+        "get_projection_class"
+      ],
+      "line_range": [
+        98,
+        112
+      ],
+      "score": 0.5629,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3074,
+        "vector": 0.3423,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: keyerror, error, line)"
+    },
+    {
+      "file": "lib/matplotlib/testing/__init__.py",
+      "symbol": "lib/matplotlib/testing/__init__.py::setup",
+      "symbols": [
+        "setup",
+        "subprocess_run_helper",
+        "_check_for_pgf",
+        "set_font_settings_for_testing"
+      ],
+      "line_range": [
+        28,
+        52
+      ],
+      "score": 0.5441,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1874,
+        "vector": 0.4356,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, should, error, matplotlib)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nimport matplotlib.pyplot as plt\n\n\ndef test_seaborn_colorblind_style_alias():\n    \"\"\"Test that accessing the old 'seaborn-colorblind' style name works\n    via plt.style.library compatibility aliases.\n    \"\"\"\n    assert \"seaborn-colorblind\" in plt.style.library\n    rc = plt.style.library[\"seaborn-colorblind\"]\n    assert isinstance(rc, dict)\n\n\ndef test_seaborn_style_aliases_completeness():\n    \"\"\"Test that other common legacy seaborn style names are also present\n    in plt.style.library as compatibility aliases.\n    \"\"\"\n    legacy_styles = [\n        \"seaborn-darkgrid\",\n        \"seaborn-dark\",\n        \"seaborn-deep\",\n        \"seaborn-muted\",\n        \"seaborn-pastel\",\n        \"seaborn-white\",\n        \"seaborn-whitegrid\",\n    ]\n    for style_name in legacy_styles:\n        assert style_name in plt.style.library\n        assert isinstance(plt.style.library[style_name], dict)\n\n\ndef test_style_library_invalid_key_raises_keyerror():\n    \"\"\"Test that accessing a completely invalid style name still correctly\n    raises a KeyError.\n    \"\"\"\n    with pytest.raises(KeyError):\n        _ = plt.style.library[\"non-existent-style-name-12345\"]",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/style/core.py\n+++ b/lib/matplotlib/style/core.py\n@@ -262,6 +262,13 @@ def update_user_library(library):\n \n \n defঢ়read_style_library():\n     \"\"\"Read style lib from toml files\"\"\"\n     styles = {}\n     for style_dir in _get_style_dirs():\n         styles.update(\n             {path.stem: path\n              for path in Path(style_dir).glob(f'*.{STYLE_EXTENSION}')})\n+    for k in [\n+        'seaborn-bright', 'seaborn-colorblind', 'seaborn-dark',\n+        'seaborn-darkgrid', 'seaborn-dark-palette', 'seaborn-deep',\n+        'seaborn-muted', 'seaborn-notebook', 'seaborn-paper',\n+        'seaborn-pastel', 'seaborn-poster', 'seaborn-talk',\n+        'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid',\n+    ]:\n+        if k not in styles and k.replace('seaborn-', 'seaborn-v0_8-') in styles:\n+            styles[k] = styles[k.replace('seaborn-', 'seaborn-v0_8-')]\n     return styles",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-2idg98p3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/style/core.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3259,
+        "matches_issue": 0.7062,
+        "safe_to_apply": 0.5953,
+        "composite": 0.65685,
+        "secrets_or_danger": 0.1289,
+        "logic_drift": 0.269,
+        "flagged": false
+      },
+      "laya_combined": 0.6569,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 21.62,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/style/core.py\n+++ b/lib/matplotlib/style/core.py\n@@ -137,5 +137,6 @@ def use(style):\n                     \"correspond to the styles shipped by seaborn. However, \"\n                     \"they will remain available as 'seaborn-v0_8-<style>'. \"\n                     \"Alternatively, directly use the seaborn API instead.\")\n+                style = style.replace(\"seaborn-\", \"seaborn-v0_8-\")\n                 s = s.replace(\"seaborn-\", \"seaborn-v0_8-\")\n         except KeyError:\n             raise KeyError(f\"No such style found: '{style}'\")",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-7b2h1hrf",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-7b2h1hrf\\lib\\matplotlib\\style\\core.py: local variable 'style' defined in enclosing scope on line 146 referenced before assignment"
+      ],
+      "changed_files": [
+        "lib/matplotlib/style/core.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2948,
+        "matches_issue": 0.6749,
+        "safe_to_apply": 0.5707,
+        "composite": 0.6351,
+        "secrets_or_danger": 0.2113,
+        "logic_drift": 0.3572,
+        "flagged": false
+      },
+      "laya_combined": 0.6351,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 32.95,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "openrouter/deepseek/deepseek-chat",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": false,
+      "patch": "diff --git a/lib/matplotlib/style/core.py b/lib/matplotlib/style/core.py\nindex fb0a5426e6..8c8e3d3d1d 100644\n--- a/lib/matplotlib/style/core.py\n+++ b/lib/matplotlib/style/core.py\n@@ -143,6 +143,9 @@ def use(style):\n                     \"they will remain available as 'seaborn-v0_8-<style>'. \"\n                     \"Alternatively, directly use the seaborn API instead.\")\n                 s = s.replace(\"seaborn-\", \"seaborn-v0_8-\")\n+                # Add backwards compatibility for old seaborn style names\n+                if s.startswith(\"seaborn-v0_8-\"):\n+                    library[\"seaborn-\" + s.split(\"seaborn-v0_8-\")[1]] = library[s]\n             style = library[s]\n         except KeyError as err:\n             raise ValueError(f\"{s!r} is not a valid style name.\") from err",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-auwsinev",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-auwsinev\\lib\\matplotlib\\style\\core.py: SyntaxError line 149: unexpected indent"
+      ],
+      "changed_files": [
+        "lib/matplotlib/style/core.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5758,
+        "matches_issue": 0.6944,
+        "safe_to_apply": 0.5971,
+        "composite": 0.716825,
+        "secrets_or_danger": 0.2823,
+        "logic_drift": 0.4225,
+        "flagged": false
+      },
+      "laya_combined": 0.7168,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.58,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "--- a/lib/matplotlib/style/core.py\n+++ b/lib/matplotlib/style/core.py\n@@ -262,6 +262,13 @@ def update_user_library(library):\n \n \n defঢ়read_style_library():\n     \"\"\"Read style lib from toml files\"\"\"\n     styles = {}\n     for style_dir in _get_style_dirs():\n         styles.update(\n             {path.stem: path\n              for path in Path(style_dir).glob(f'*.{STYLE_EXTENSION}')})\n+    for k in [\n+        'seaborn-bright', 'seaborn-colorblind', 'seaborn-dark',\n+        'seaborn-darkgrid', 'seaborn-dark-palette', 'seaborn-deep',\n+        'seaborn-muted', 'seaborn-notebook', 'seaborn-paper',\n+        'seaborn-pastel', 'seaborn-poster', 'seaborn-talk',\n+        'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid',\n+    ]:\n+        if k not in styles and k.replace('seaborn-', 'seaborn-v0_8-') in styles:\n+            styles[k] = styles[k.replace('seaborn-', 'seaborn-v0_8-')]\n     return styles",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-2idg98p3",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/style/core.py"
+    ],
+    "added_lines": 9,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.3259,
+      "matches_issue": 0.7062,
+      "safe_to_apply": 0.5953,
+      "composite": 0.65685,
+      "secrets_or_danger": 0.1289,
+      "logic_drift": 0.269,
+      "flagged": false
+    },
+    "laya_combined": 0.6569,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 21.62,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

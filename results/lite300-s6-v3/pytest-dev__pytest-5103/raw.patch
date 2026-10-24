@@ -1,0 +1,23 @@
+diff --git a/src/_pytest/assertion/rewrite.py b/src/_pytest/assertion/rewrite.py
+index 2903b8995..999d1ee4a 100644
+--- a/src/_pytest/assertion/rewrite.py
++++ b/src/_pytest/assertion/rewrite.py
+@@ -941,6 +941,18 @@ warn_explicit(
+                 cond = res
+                 if is_or:
+                     cond = ast.UnaryOp(ast.Not(), cond)
++            if isinstance(call.func, ast.Name) and call.func.id in ("all", "any") and len(call.args) == 1:
++                func_id = call.func.id
++                seq = self.variable()
++                res_seq = self.visit(call.args[0])
++                self.statements.append(ast.Assign([ast.Name(seq, ast.Store())], res_seq))
++                target = ast.Name(self.temporary(), ast.Store())
++                cond = ast.UnaryOp(ast.Not(), target) if func_id == "all" else target
++                inner_body = [ast.If(cond, [ast.Return(ast.Name(seq, ast.Load()), and_return=False)], [])]
++                loop = ast.For(target, ast.Name(seq, ast.Load()), inner_body, [])
++                ret_val = ast.NameConstant(False) if func_id == "all" else ast.NameConstant(True)
++                after_loop = [ast.Return(ret_val, and_return=False)]
++                return self.run_block([loop] + after_loop)
+                 inner = []
+                 self.statements.append(ast.If(cond, inner, []))
+                 self.statements = body = inner

@@ -1,0 +1,399 @@
+{
+  "instance_id": "matplotlib__matplotlib-26011",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "00afcc0c6d4d2e4390338127f05b8f4fdb4e7087",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813031.2295396
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813034.1886225
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813041.404199
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813043.9642346
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813058.380382
+    },
+    {
+      "role": "coder",
+      "model": "deepseek-chat",
+      "model_full": "openrouter/deepseek/deepseek-chat",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813240.9959905
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791813272.4084718
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: lib/matplotlib/axes/_base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791812996.8115625,
+  "elapsed_s": 283.91,
+  "plan": "### Step 1: Root Cause\nWhen an axis limit is changed (e.g., via `set_xlim()` or `set_ylim()`), the method checks the `emit` parameter. If `emit=True` (the default), it processes the `'xlim_changed'` / `'ylim_changed'` callbacks for the current axis and then iterates over all sibling axes sharing that axis, calling their `set_xlim()` / `set_ylim()` with `emit=False`. Because `emit=False` is passed to the sibling axes, their `'xlim_changed'` / `'ylim_changed'` callbacks are never triggered. Consequently, any observers registered on shared axes to react to limit changes fail to fire when the change is initiated on a primary axis and propagated to the shared sibling.\n\n### Step 2: Exact Changes to Make\n\n**File to modify:**\n- `lib/matplotlib/axes/_base.py`\n\n**Functions to modify:**\n- `set_xlim` and `set_ybound`/`set_ylim` (or wherever shared axes limits are updated recursively with `emit=False`). Specifically, ensure that the callback processing for `'xlim_changed'` and `'ylim_changed'` is not gated inside the `if emit:` block such that it gets skipped on sibling updates, or move the callback process call outside/ensure it runs even when limit updates propagate to shared axes (or invoke the callback whenever the view limits actually change/are set).\n\nLooking specifically at `set_xlim` and `set_ylim` in `lib/matplotlib/axes/_base.py`:\n- Move `self.callbacks.process('xlim_changed', self)` (and the corresponding y-axis counterpart) outside of the `if emit:` conditional block, or ensure that when `set_xlim` is called on sibling axes, their respective change callbacks are appropriately emitted or the callback processing happens regardless of the `emit` flag for the specific axis instance being updated (or adjust `emit` so it only controls recursion/propagation rather than suppressing the axis's own notification callbacks). \n\nAs suggested by the bug report, moving `self.callbacks.process('xlim_changed', self)` outside of the `if emit:` check allows the callback to be triggered when limits are updated via shared axes as well.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "lib/matplotlib/axes/_base.py",
+      "symbol": "lib/matplotlib/axes/_base.py::axis",
+      "symbols": [
+        "axis",
+        "set_xlim",
+        "_request_autoscale_view",
+        "autoscale"
+      ],
+      "line_range": [
+        2000,
+        2133
+      ],
+      "score": 0.7016,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6184,
+        "vector": 0.8502,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: emit; body matches report terms: with, emit, limits, fill; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "lib/matplotlib/pyplot.py",
+      "symbol": "lib/matplotlib/pyplot.py::ticklabel_format",
+      "symbols": [
+        "ticklabel_format",
+        "tick_params",
+        "install_repl_displayhook",
+        "_get_backend_mod"
+      ],
+      "line_range": [
+        3889,
+        3896
+      ],
+      "score": 0.8126,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3806,
+        "vector": 0.9163,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: axis; body matches report terms: limits, both, axis, form)"
+    },
+    {
+      "file": "lib/matplotlib/__init__.py",
+      "symbol": "lib/matplotlib/__init__.py::_get_version",
+      "symbols": [
+        "_get_version",
+        "_check_versions",
+        "_ensure_handler",
+        "set_loglevel"
+      ],
+      "line_range": [
+        213,
+        232
+      ],
+      "score": 0.576,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3593,
+        "vector": 0.3429,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: resolve, really, when, would)"
+    },
+    {
+      "file": "lib/matplotlib/_api/__init__.py",
+      "symbol": "lib/matplotlib/_api/__init__.py::check_shape",
+      "symbols": [
+        "check_shape",
+        "caching_module_getattr",
+        "select_matching_signature",
+        "warn_external"
+      ],
+      "line_range": [
+        132,
+        168
+      ],
+      "score": 0.5738,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3206,
+        "vector": 0.4056,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: that, with, your, other)"
+    },
+    {
+      "file": "lib/matplotlib/projections/__init__.py",
+      "symbol": "lib/matplotlib/projections/__init__.py::ProjectionRegistry",
+      "symbols": [
+        "ProjectionRegistry",
+        "get_projection_names"
+      ],
+      "line_range": [
+        61,
+        81
+      ],
+      "score": 0.5376,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.278,
+        "vector": 0.1926,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: registered)"
+    },
+    {
+      "file": "lib/matplotlib/axes/__init__.py",
+      "symbol": "lib/matplotlib/axes/__init__.py::_SubplotBaseMeta",
+      "symbols": [
+        "_SubplotBaseMeta",
+        "__instancecheck__",
+        "SubplotBase"
+      ],
+      "line_range": [
+        8,
+        13
+      ],
+      "score": 0.5292,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2524,
+        "vector": 0.176,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: base, axes)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.790175,
+  "laya_scores": {
+    "fix_quality": 1.7321,
+    "matches_issue": 0.7904,
+    "safe_to_apply": 0.6382,
+    "composite": 0.790175,
+    "secrets_or_danger": 0.1963,
+    "logic_drift": 0.2307,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS: No security implications in this plotting library fix.\n- PERFORMANCE: PASS: No performance regression or unbounded loops introduced.\n- ROBUSTNESS: FAIL: Moving the callback outside the `emit` check causes duplicate processing when `emit=True` (since it is invoked twice: once unconditionally and once inside the `if emit:` block).\n- MINIMAL DIFF / YAGNI: PASS: The patch directly addresses the bug report.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import matplotlib.pyplot as plt\nimport pytest\n\n\ndef test_xlim_changed_emitted_on_shared_axis():\n    \"\"\"Test that xlim_changed callbacks are emitted on shared axes when limit changes.\"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True)\n\n    callback_calls = []\n\n    def on_xlim_changed(ax):\n        callback_calls.append(ax)\n\n    ax2.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    # Change limit on ax1, which is shared with ax2\n    ax1.set_xlim(0, 10)\n\n    # ax2's xlim_changed callback should be fired even though set_xlim was called on ax1\n    assert ax2 in callback_calls\n    assert ax2.get_xlim() == (0, 10)\n\n\ndef test_ylim_changed_emitted_on_shared_axis():\n    \"\"\"Test that ylim_changed callbacks are emitted on shared y-axes when limit changes.\"\"\"\n    fig, (ax1, ax2) = plt.subplots(2, 1, sharey=True)\n\n    callback_calls = []\n\n    def on_ylim_changed(ax):\n        callback_calls.append(ax)\n\n    ax2.callbacks.connect('ylim_changed', on_ylim_changed)\n\n    # Change limit on ax1, which is shared with ax2\n    ax1.set_ylim(0, 5)\n\n    # ax2's ylim_changed callback should be fired\n    assert ax2 in callback_calls\n    assert ax2.get_ylim() == (0, 5)\n\n\ndef test_shared_axis_emit_false_does_not_trigger_callbacks():\n    \"\"\"Test that setting emit=False explicitly suppresses callback emission as expected.\"\"\"\n    fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True)\n\n    callback_calls = []\n\n    def on_xlim_changed(ax):\n        callback_calls.append(ax)\n\n    ax2.callbacks.connect('xlim_changed', on_xlim_changed)\n\n    # When emit=False is passed explicitly, callbacks should not fire\n    ax1.set_xlim(0, 10, emit=False)\n\n    assert len(callback_calls) == 0\n\n\ndef test_multiple_shared_axes_callbacks():\n    \"\"\"Test that an entire chain of shared axes all trigger their xlim_changed callbacks.\"\"\"\n    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, sharex=True)\n\n    called_axes = set()\n\n    def make_callback(ax):\n        def callback(a):\n            called_axes.add(ax)\n        return callback\n\n    ax2.callbacks.connect('xlim_changed', make_callback(ax2))\n    ax3.callbacks.connect('xlim_changed', make_callback(ax3))\n\n    ax1.set_xlim(1, 4)\n\n    assert ax2 in called_axes\n    assert ax3 in called_axes\n    assert ax2.get_xlim() == (1, 4)\n    assert ax3.get_xlim() == (1, 4)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "openrouter/deepseek/deepseek-chat",
+      "requested_model": "openrouter/deepseek/deepseek-chat",
+      "substituted": false,
+      "patch": "diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py\n--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2000,6 +2000,7 @@\n         if self.get_autoscalex_on():\n             self._request_autoscale_view(\"x\", auto=auto)\n         self.stale = True\n+        self.callbacks.process('xlim_changed', self)\n         if emit:\n             self.callbacks.process('xlim_changed', self)\n             # Call all of the other x-axes that are shared with this one",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c3",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.7486,
+        "matches_issue": 0.8332,
+        "safe_to_apply": 0.6415,
+        "composite": 0.805825,
+        "secrets_or_danger": 0.1845,
+        "logic_drift": 0.2832,
+        "flagged": false
+      },
+      "laya_combined": 0.8058,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 129.95,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -3419,13 +3419,13 @@\n             self.stale = True\n             return self.viewLim.intervalx\n \n+        self.callbacks.process('xlim_changed', self)\n         if emit:\n-            self.callbacks.process('xlim_changed', self)\n             # Call all of the other x-axes that are shared with this one\n             for other in self._shared_x_axes.get_siblings(self):\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n-                                   emit=False, auto=auto)\n+                                   emit=False, auto=auto)                \n             for twin in self._twins:\n                 twin.viewLim.intervalx = self.viewLim.intervalx\n                 twin.stale = True\n@@ -3499,13 +3499,13 @@\n             self.stale = True\n             return self.viewLim.intervaly\n \n+        self.callbacks.process('ylim_changed', self)\n         if emit:\n-            self.callbacks.process('ylim_changed', self)\n             # Call all of the other y-axes that are shared with this one\n             for other in self._shared_y_axes.get_siblings(self):\n                 if other is not self:\n                     other.set_ylim(self.viewLim.intervaly,\n-                                   emit=False, auto=auto)\n+                                   emit=False, auto=auto)                \n             for twin in self._twins:\n                 twin.viewLim.intervaly = self.viewLim.intervaly\n                 twin.stale = True",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 4,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5365,
+        "matches_issue": 0.6979,
+        "safe_to_apply": 0.5754,
+        "composite": 0.70245,
+        "secrets_or_danger": 0.2253,
+        "logic_drift": 0.6075,
+        "flagged": false
+      },
+      "laya_combined": 0.7025,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 135.94,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/qwen/qwen-2.5-coder-32b-instruct",
+      "substituted": true,
+      "patch": "--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -3701,10 +3701,10 @@\n                 self.stale = True\n             return self.viewLim.intervalx\n \n+        self.callbacks.process('xlim_changed', self)\n         if emit:\n-            self.callbacks.process('xlim_changed', self)\n             for other in self._shared_x_axes.get_siblings(self):\n                 if other is not self:\n                     other.set_xlim(self.viewLim.intervalx,\n                                    emit=False, auto=auto)\n             for other in self._shared_x_axes.get_siblings(self):\n@@ -3779,10 +3779,10 @@\n                 self.stale = True\n             return self.viewLim.intervaly\n \n+        self.callbacks.process('ylim_changed', self)\n         if emit:\n-            self.callbacks.process('ylim_changed', self)\n             for other in self._shared_y_axes.get_siblings(self):\n                 if other is not self:\n                     other.set_ylim(self.viewLim.intervaly,\n                                    emit=False, auto=auto)\n             for other in self._shared_y_axes.get_siblings(self):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "lib/matplotlib/axes/_base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7552,
+        "matches_issue": 0.8431,
+        "safe_to_apply": 0.6959,
+        "composite": 0.82355,
+        "secrets_or_danger": 0.1862,
+        "logic_drift": 0.4222,
+        "flagged": false
+      },
+      "laya_combined": 0.8236,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 132.45,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "openrouter/deepseek/deepseek-chat",
+    "requested_model": "openrouter/deepseek/deepseek-chat",
+    "substituted": false,
+    "patch": "diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py\n--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -2000,6 +2000,7 @@\n         if self.get_autoscalex_on():\n             self._request_autoscale_view(\"x\", auto=auto)\n         self.stale = True\n+        self.callbacks.process('xlim_changed', self)\n         if emit:\n             self.callbacks.process('xlim_changed', self)\n             # Call all of the other x-axes that are shared with this one",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\matplotlib__matplotlib-26011-c3",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "lib/matplotlib/axes/_base.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.7486,
+      "matches_issue": 0.8332,
+      "safe_to_apply": 0.6415,
+      "composite": 0.805825,
+      "secrets_or_danger": 0.1845,
+      "logic_drift": 0.2832,
+      "flagged": false
+    },
+    "laya_combined": 0.8058,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0064,
+    "rank_reason": "logistic",
+    "elapsed_s": 129.95,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/lib/matplotlib/axes/_base.py b/lib/matplotlib/axes/_base.py\nindex 9c2ba63..8078005 100644\n--- a/lib/matplotlib/axes/_base.py\n+++ b/lib/matplotlib/axes/_base.py\n@@ -1138,6 +1138,7 @@ class _AxesBase(martist.Artist):\n             if which in ('both', 'original'):\n                 ax._originalPosition.set(pos)\n         self.stale = True\n+        self.callbacks.process('xlim_changed', self)\n \n     def reset_position(self):\n         \"\"\"\n",
+  "offline_calls": 0
+}

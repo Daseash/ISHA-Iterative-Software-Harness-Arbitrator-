@@ -1,0 +1,363 @@
+{
+  "instance_id": "sphinx-doc__sphinx-11445",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "71db08c05197545944949d5aa76cd340e7143627",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998735.7247458
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998736.7187982
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998739.8417616
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998742.1729667
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998754.263695
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791998844.7292464
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791998710.4822676,
+  "elapsed_s": 136.22,
+  "plan": "### Step 1: Root Cause\nWhen `rst_prolog` is set, Docutils prepends the prolog text to every document before parsing. This causes an internal line/source offset shift or affects how Sphinx's document processing and `toctree` generation identifies the document title / top-level heading when the heading contains a domain directive (such as `:mod:`). Specifically, `TocTree.get_toc_for` or the toctree collector looks for top-level sections or nodes to form the table of contents entry, but domain directives acting as titles (or their generated node structures) are not matched correctly or get skipped/misparsed due to the way headings are extracted when `rst_prolog` is active.\n\n### Step 2: Exact Changes to Make\n\n1. **File:** `sphinx/environment/adapters/toctree.py` (or `sphinx/environment/collectors/toctree.py`, depending on where `get_toc_for` resides in the current version)\n   - **Function:** `get_toc_for`\n   - **What to change:** Update the node traversal logic used to find the document title/heading so that it correctly recognizes domain directive title nodes (such as object description titles or domain-specific title nodes) alongside normal `nodes.section` nodes, even when `rst_prolog` shifts or alters the document structure. Specifically, adjust the selector/lambda in `doctree.traverse()` or `doctree.findall()` to include domain directive nodes/titles as valid top-level document titles for toctree inclusion and rendering.",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "sphinx/environment/__init__.py",
+      "symbol": "sphinx/environment/__init__.py::_DomainsType",
+      "symbols": [
+        "_DomainsType",
+        "__init__",
+        "setup",
+        "set_versioning_method"
+      ],
+      "line_range": [
+        96,
+        128
+      ],
+      "score": 0.578,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4051,
+        "vector": 0.2644,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: python, domain, main, index)"
+    },
+    {
+      "file": "sphinx/directives/__init__.py",
+      "symbol": "sphinx/directives/__init__.py::ObjectDescription",
+      "symbols": [
+        "ObjectDescription",
+        "before_content",
+        "after_content",
+        "_object_hierarchy_parts"
+      ],
+      "line_range": [
+        45,
+        275
+      ],
+      "score": 0.5932,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3216,
+        "vector": 0.565,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: toctree, first, extensions, have)"
+    },
+    {
+      "file": "sphinx/builders/__init__.py",
+      "symbol": "sphinx/builders/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "create_translator",
+        "create_template_bridge",
+        "get_outdated_docs"
+      ],
+      "line_range": [
+        80,
+        109
+      ],
+      "score": 0.5671,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3427,
+        "vector": 0.3031,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: sphinx, conf, that, version)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::ObjType",
+      "symbols": [
+        "ObjType",
+        "Index",
+        "__init__",
+        "generate"
+      ],
+      "line_range": [
+        30,
+        55
+      ],
+      "score": 0.5714,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3703,
+        "vector": 0.2816,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: that, domain, this, include)"
+    },
+    {
+      "file": "sphinx/ext/autosummary/__init__.py",
+      "symbol": "sphinx/ext/autosummary/__init__.py::autosummary_table_visit_html",
+      "symbols": [
+        "autosummary_table_visit_html",
+        "FakeApplication",
+        "__init__",
+        "FakeDirective"
+      ],
+      "line_range": [
+        124,
+        141
+      ],
+      "score": 0.5758,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3558,
+        "vector": 0.3488,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: replace, first, html, text)"
+    },
+    {
+      "file": "sphinx/ext/napoleon/__init__.py",
+      "symbol": "sphinx/ext/napoleon/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "_included",
+        "_skipped"
+      ],
+      "line_range": [
+        64,
+        68
+      ],
+      "score": 0.6468,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6492,
+        "vector": 0.3294,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: docs, this, include, will)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom sphinx.testing.util import SphinxTestApp\n\n\n@pytest.mark.sphinx('html', testroot='rst-prolog-domain-heading')\ndef sphinx_build_app(app: SphinxTestApp) -> None:\n    app.build()\n\n\ndef test_rst_prolog_with_domain_directive_heading(app: SphinxTestApp, status, warning) -> None:\n    \"\"\"\n    Test that when rst_prolog is set, a document whose first heading is a domain\n    directive (e.g. :mod:`mypackage2`) renders its heading correctly and includes it in the toctree.\n    \"\"\"\n    app.build()\n    \n    index_html = (app.outdir / 'index.html').read_text(encoding='utf-8')\n    mypackage_html = (app.outdir / 'mypackage.html').read_text(encoding='utf-8')\n\n    # Verify that the domain directive heading is present and rendered in mypackage.html\n    assert 'mypackage2' in mypackage_html\n\n    # Verify that the toctree in index.html links to mypackage and includes its title correctly\n    assert 'mypackage' in index_html\n    assert 'mypackage2' in index_html\n\n\n@pytest.mark.sphinx('html', testroot='rst-prolog-domain-heading')\ndef test_rst_prolog_without_domain_directive_normal_heading(app: SphinxTestApp) -> None:\n    \"\"\"\n    Edge case: A normal text heading with rst_prolog enabled should still render and work fine.\n    \"\"\"\n    app.build()\n    # Check that normal heading behavior isn't broken by the fix\n    index_html = (app.outdir / 'index.html').read_text(encoding='utf-8')\n    assert 'Welcome' in index_html\n\n\n@pytest.mark.sphinx('html', testroot='rst-prolog-domain-heading')\ndef test_multiple_domain_directives_in_prolog_and_content(app: SphinxTestApp) -> None:\n    \"\"\"\n    Edge case: Multiple domain directives or roles used across prolog and title elements.\n    \"\"\"\n    app.build()\n    mypackage_html = (app.outdir / 'mypackage.html').read_text(encoding='utf-8')\n    # Ensure content sections remain intact\n    assert 'Subheading' in mypackage_html",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sphinx/environment/adapters/toctree.py\n+++ b/sphinx/environment/adapters/toctree.py\n@@ -217,3 +217,3 @@ class TocTree:\n         # get the first section title\n-        for node in doctree.traverse(nodes.section):\n+        for node in doctree.traverse(lambda n: isinstance(n, (nodes.section, addnodes.desc))):\n             if node.get('ids'):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-11445-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/toctree.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 0.9068,
+        "matches_issue": 0.3493,
+        "safe_to_apply": 0.2533,
+        "composite": 0.37735,
+        "secrets_or_danger": 0.1357,
+        "logic_drift": 0.1705,
+        "flagged": false
+      },
+      "laya_combined": 0.3774,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0113,
+      "rank_reason": "logistic",
+      "elapsed_s": 28.33,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "--- a/sphinx/environment/adapters/toctree.py\n+++ b/sphinx/environment/adapters/toctree.py\n@@ -211,3 +211,3 @@ class TocTree:\n         # get the first section title\n-        for node in doctree.traverse(nodes.section):\n+        for node in doctree.traverse(lambda n: isinstance(n, (nodes.section, addnodes.desc))):\n             if node.get('ids'):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-11445-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/toctree.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 0.9068,
+        "matches_issue": 0.3493,
+        "safe_to_apply": 0.2533,
+        "composite": 0.37735,
+        "secrets_or_danger": 0.1349,
+        "logic_drift": 0.1578,
+        "flagged": false
+      },
+      "laya_combined": 0.3774,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0113,
+      "rank_reason": "logistic",
+      "elapsed_s": 62.74,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/environment/adapters/toctree.py\n+++ b/sphinx/environment/adapters/toctree.py\n@@ -235,3 +235,3 @@ class TocTree:\n         element = doctree.next_node(nodes.section)\n-        if element and element.get('source') == self.env.doc2path(docname):\n+        if element:\n             # if the first section is the only one, and it has a title that",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-11445-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/environment/adapters/toctree.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4212,
+        "matches_issue": 0.6721,
+        "safe_to_apply": 0.5793,
+        "composite": 0.66815,
+        "secrets_or_danger": 0.084,
+        "logic_drift": 0.26,
+        "flagged": false
+      },
+      "laya_combined": 0.6682,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 29.15,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "--- a/sphinx/environment/adapters/toctree.py\n+++ b/sphinx/environment/adapters/toctree.py\n@@ -217,3 +217,3 @@ class TocTree:\n         # get the first section title\n-        for node in doctree.traverse(nodes.section):\n+        for node in doctree.traverse(lambda n: isinstance(n, (nodes.section, addnodes.desc))):\n             if node.get('ids'):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-11445-c2",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/environment/adapters/toctree.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 0.9068,
+      "matches_issue": 0.3493,
+      "safe_to_apply": 0.2533,
+      "composite": 0.37735,
+      "secrets_or_danger": 0.1357,
+      "logic_drift": 0.1705,
+      "flagged": false
+    },
+    "laya_combined": 0.3774,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0113,
+    "rank_reason": "logistic",
+    "elapsed_s": 28.33,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

@@ -1,0 +1,352 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-10949",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "3b5abf76597ce6aff76192869f92647c1b5259e7",
+  "status": "done",
+  "attempts": 3,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906048.574548
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906049.828471
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906051.3548708
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906051.7248123
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906057.731985
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (5 models): offline-brain: BadRequestError; gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791906085.4463713
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791905856.2341309,
+  "elapsed_s": 52.92,
+  "plan": "Step 1: Root cause — _assert_all_finite() does not validate operand types before computing.\nStep 2: Edit validation.py — in _assert_all_finite(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/utils/validation.py",
+      "symbol": "sklearn/utils/validation.py::_ensure_sparse_format",
+      "symbols": [
+        "_ensure_sparse_format",
+        "check_array",
+        "check_X_y",
+        "_shape_repr"
+      ],
+      "line_range": [
+        256,
+        346
+      ],
+      "score": 0.7504,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.4619,
+        "defs": 0.0
+      },
+      "reason": "private helper called by a symbol the report names; signature parameter matches report: dtype; body matches report terms: when, with, dtype, data"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::Bunch",
+      "symbols": [
+        "Bunch",
+        "__setstate__",
+        "axis0_safe_slice",
+        "safe_indexing"
+      ],
+      "line_range": [
+        32,
+        77
+      ],
+      "score": 0.6848,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.64,
+        "vector": 0.6649,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: when, learn, effect, with"
+    },
+    {
+      "file": "sklearn/exceptions.py",
+      "symbol": "sklearn/exceptions.py::NotFittedError",
+      "symbols": [
+        "NotFittedError",
+        "ChangedBehaviorWarning",
+        "ConvergenceWarning",
+        "DataConversionWarning"
+      ],
+      "line_range": [
+        18,
+        39
+      ],
+      "score": 0.61,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3961,
+        "vector": 0.5085,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: learn, with, validation, utils"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        80,
+        93
+      ],
+      "score": 0.5632,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2842,
+        "vector": 0.3925,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: learn, with, numpy, sklearn"
+    },
+    {
+      "file": "sklearn/utils/tests/test_validation.py",
+      "symbol": "sklearn/utils/tests/test_validation.py::test_np_matrix",
+      "symbols": [
+        "test_np_matrix",
+        "test_memmap",
+        "test_ordering",
+        "test_check_array_force_all_finite_valid"
+      ],
+      "line_range": [
+        108,
+        116
+      ],
+      "score": 0.5116,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.8268,
+        "vector": 0.6743,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: code, input, validation"
+    },
+    {
+      "file": "sklearn/externals/joblib/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3784,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4449,
+        "vector": 0.1848,
+        "defs": 0.0
+      },
+      "reason": "named in traceback"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator()._assert_all_finite(\"two\", 2)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/validation.py\n+++ b/validation.py\n@@ -39,6 +39,8 @@\n \n def _assert_all_finite(X, allow_nan=False):\n     \"\"\"Like assert_all_finite, but only for ndarray.\"\"\"\n+    if not isinstance(X, (int, float)) or not isinstance(allow_nan, (int, float)):\n+        raise TypeError(\"operands must be numbers\")\n     if _get_config()['assume_finite']:\n         return\n     X = np.asanyarray(X)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10949-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "validation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.569,
+        "matches_issue": 0.6412,
+        "safe_to_apply": 0.5511,
+        "composite": 0.690325,
+        "secrets_or_danger": 0.1058,
+        "logic_drift": 0.2333,
+        "flagged": false
+      },
+      "laya_combined": 0.6903,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 14.29,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/validation.py\n+++ b/validation.py\n@@ -39,6 +39,8 @@\n \n def _assert_all_finite(X, allow_nan=False):\n     \"\"\"Like assert_all_finite, but only for ndarray.\"\"\"\n+    if not isinstance(X, (int, float)) or not isinstance(allow_nan, (int, float)):\n+        raise TypeError(\"operands must be numbers\")\n     if _get_config()['assume_finite']:\n         return\n     X = np.asanyarray(X)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10949-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "validation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.569,
+        "matches_issue": 0.6412,
+        "safe_to_apply": 0.5511,
+        "composite": 0.690325,
+        "secrets_or_danger": 0.1058,
+        "logic_drift": 0.2333,
+        "flagged": false
+      },
+      "laya_combined": 0.6903,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.14,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "--- a/validation.py\n+++ b/validation.py\n@@ -39,6 +39,8 @@\n \n def _assert_all_finite(X, allow_nan=False):\n     \"\"\"Like assert_all_finite, but only for ndarray.\"\"\"\n+    if not isinstance(X, (int, float)) or not isinstance(allow_nan, (int, float)):\n+        raise TypeError(\"operands must be numbers\")\n     if _get_config()['assume_finite']:\n         return\n     X = np.asanyarray(X)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10949-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "validation.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.569,
+        "matches_issue": 0.6412,
+        "safe_to_apply": 0.5511,
+        "composite": 0.690325,
+        "secrets_or_danger": 0.1058,
+        "logic_drift": 0.2333,
+        "flagged": false
+      },
+      "laya_combined": 0.6903,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 9.21,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "offline-brain",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/validation.py\n+++ b/validation.py\n@@ -39,6 +39,8 @@\n \n def _assert_all_finite(X, allow_nan=False):\n     \"\"\"Like assert_all_finite, but only for ndarray.\"\"\"\n+    if not isinstance(X, (int, float)) or not isinstance(allow_nan, (int, float)):\n+        raise TypeError(\"operands must be numbers\")\n     if _get_config()['assume_finite']:\n         return\n     X = np.asanyarray(X)",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-10949-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "validation.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.569,
+      "matches_issue": 0.6412,
+      "safe_to_apply": 0.5511,
+      "composite": 0.690325,
+      "secrets_or_danger": 0.1058,
+      "logic_drift": 0.2333,
+      "flagged": false
+    },
+    "laya_combined": 0.6903,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0079,
+    "rank_reason": "logistic",
+    "elapsed_s": 14.29,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 6
+}

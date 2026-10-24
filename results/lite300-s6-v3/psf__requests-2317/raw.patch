@@ -1,0 +1,15 @@
+diff --git a/requests/sessions.py b/requests/sessions.py
+index d701ff2e..3e85c40e 100644
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -429,8 +429,8 @@ class Session(SessionRedirectMixin):
+ 
+         # Create the Request.
+         req = Request(
+-            method = method.upper(),
+-            url = url,
++            method = to_native_string(method),
++            url = builtin_str(url),
+             headers = headers,
+             files = files,
+             data = data or {},
