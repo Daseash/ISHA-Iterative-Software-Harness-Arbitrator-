@@ -184,29 +184,33 @@ def evaluate(
     log_root.mkdir(parents=True, exist_ok=True)
     # The harness resolves logs/run_evaluation relative to the CWD, so run it
     # from the run directory: logs stay next to the results they explain.
+    chunk_size = int(os.getenv("ISHA_EVAL_CHUNK_SIZE", "4"))
+    chunks = [instance_ids[i:i + chunk_size] for i in range(0, len(instance_ids), chunk_size)]
+
     os.chdir(run_dir)
     try:
-        swe_main(
-            dataset_name=ds.DATASET_NAME,
-            split=ds.SPLIT,
-            instance_ids=instance_ids,
-            predictions_path=str(predictions_path),
-            max_workers=max_workers,
-            open_file_limit=4096,
-            run_id=eval_id,
-            timeout=timeout,
-            rewrite_reports=False,
-            modal=False,
-            report_dir=str(report_dir),
-            task_repo=None,
-        )
+        for idx, chunk in enumerate(chunks):
+            print(f"[{idx + 1}/{len(chunks)}] Evaluating batch of {len(chunk)} instance(s) in Docker...", flush=True)
+            swe_main(
+                dataset_name=ds.DATASET_NAME,
+                split=ds.SPLIT,
+                instance_ids=chunk,
+                predictions_path=str(predictions_path),
+                max_workers=max_workers,
+                open_file_limit=4096,
+                run_id=eval_id,
+                timeout=timeout,
+                rewrite_reports=False,
+                modal=False,
+                report_dir=str(report_dir),
+                task_repo=None,
+            )
+            if not keep_images:
+                removed = cleanup_images()
+                if removed:
+                    print(f"Removed {len(removed)} eval image(s) after batch to keep disk free", flush=True)
     finally:
         os.chdir(cwd)
-
-    if not keep_images:
-        removed = cleanup_images()
-        if removed:
-            print(f"Removed {len(removed)} eval image(s) to keep the disk free")
 
     report = load_official_report(run_dir, eval_id)
     # Write-B (P0-05): Docker truth -> SQLite outcomes (best-effort, never fails eval).
@@ -311,10 +315,25 @@ def load_official_report(run_dir: Path, eval_id: str | None = None, write: bool 
     scored.sort(key=lambda t: (t[0], t[1]), reverse=True)
     # Prefer the requested eval_id first, then newest by name.
     if eval_id:
-        for pref, name, payload in scored:
-            if eval_id in name:
-                report = payload
-                break
+        matching = [payload for pref, name, payload in scored if eval_id in name]
+        if len(matching) > 1:
+            all_resolved = set()
+            all_completed = set()
+            all_unresolved = set()
+            for m in matching:
+                all_resolved.update(m.get("resolved_ids", []))
+                all_completed.update(m.get("completed_ids", []))
+                all_unresolved.update(m.get("unresolved_ids", []))
+            base = dict(matching[0])
+            base["resolved_ids"] = sorted(list(all_resolved))
+            base["completed_ids"] = sorted(list(all_completed))
+            base["unresolved_ids"] = sorted(list(all_unresolved - all_resolved))
+            base["resolved_instances"] = len(all_resolved)
+            base["completed_instances"] = len(all_completed)
+            base["total_instances"] = max(base.get("total_instances", 0), len(all_completed))
+            report = base
+        elif matching:
+            report = matching[0]
         else:
             report = scored[0][2]
     else:
