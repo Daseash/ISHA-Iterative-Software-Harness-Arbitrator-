@@ -24,6 +24,11 @@ on:
         type: boolean
         required: false
         default: false
+      eval_only:
+        description: "Skip patch generation and run Docker eval only"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   benchmark:
@@ -68,6 +73,8 @@ jobs:
           EXTRA_ARGS=""
           if [ "${{ inputs.skip_eval }}" = "true" ]; then
             EXTRA_ARGS="--skip-eval"
+          elif [ "${{ inputs.eval_only }}" = "true" ]; then
+            EXTRA_ARGS="--eval-only"
           fi
           python scripts/codespaces_s5_s10_pipeline.py \
             --sessions ${{ inputs.sessions }} \
