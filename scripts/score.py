@@ -52,6 +52,9 @@ def scan_session_resolutions(session_id: str) -> set:
                         for k, v in data.items():
                             if isinstance(v, dict) and v.get("resolved") is True:
                                 resolved.add(k)
+                        if "resolved_ids" in data and isinstance(data["resolved_ids"], list):
+                            for rid in data["resolved_ids"]:
+                                resolved.add(rid)
                 except Exception:
                     pass
     return resolved
