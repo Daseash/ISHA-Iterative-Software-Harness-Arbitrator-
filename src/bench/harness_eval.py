@@ -198,7 +198,7 @@ def evaluate(
                 predictions_path=str(predictions_path),
                 max_workers=max_workers,
                 open_file_limit=4096,
-                run_id=eval_id,
+                run_id=f"{eval_id}-p{idx + 1}" if len(chunks) > 1 else eval_id,
                 timeout=timeout,
                 rewrite_reports=False,
                 modal=False,
