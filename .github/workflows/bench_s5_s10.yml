@@ -104,7 +104,7 @@ jobs:
       - name: Commit and Push Results to Origin Main
         if: always()
         run: |
-          git pull --rebase origin main || true
           git add results/ data/slices/
           git commit -m "chore(bench): auto-sync S5-S10 patches & Docker eval [skip ci]" || echo "No changes to commit"
+          git pull --rebase origin main || true
           git push origin main || echo "Push skipped or no new changes"

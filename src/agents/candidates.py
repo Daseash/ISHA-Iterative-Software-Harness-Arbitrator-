@@ -41,7 +41,7 @@ MAX_REPAIR_ROUNDS = int(os.getenv("ISHA_APPLY_REPAIR_ROUNDS", "2"))
 #   ISHA_CANDIDATE_MODELS=minimal_diff=groq/openai/gpt-oss-20b,call_site_aware=gemini/gemini-3.1-flash-lite
 DEFAULT_STRATEGY_MODELS: dict[str, str] = {
     "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
-    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "groq/qwen/qwen-2.5-coder-32b"),            # Groq Qwen: surgical, low-temp diffs
+    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "groq/qwen/qwen3.8-27b"),            # Groq Qwen: surgical, low-temp diffs
     "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", "groq/openai/gpt-oss-120b"),     # Groq GPT-OSS-120B: root-cause invariants
     "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", "gemini/gemini-3.8-flash"),       # Google Gemini: deep reasoning & full context
     "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", "mistral/codestral-latest"),      # Mistral Codestral: defensive guardrails & edge-cases

@@ -136,7 +136,6 @@ def sync_session_to_git(session_name: str) -> None:
     """Commit and push this session's artifacts to origin main immediately."""
     try:
         log(f"Auto-syncing results for {session_name} to GitHub origin main...")
-        subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(ROOT), timeout=45)
         res_dir = ROOT / "results" / session_name
         if res_dir.is_dir():
             subprocess.run(["git", "add", f"results/{session_name}"], cwd=str(ROOT), timeout=45)
@@ -148,6 +147,7 @@ def sync_session_to_git(session_name: str) -> None:
                 cwd=str(ROOT),
                 timeout=45,
             )
+            subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(ROOT), timeout=45)
             subprocess.run(["git", "push", "origin", "main"], cwd=str(ROOT), timeout=90)
             log(f"Successfully synced {session_name} to origin main!")
     except Exception as e:
