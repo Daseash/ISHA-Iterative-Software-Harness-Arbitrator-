@@ -1,8 +1,5 @@
-{"event": "start", "instance_id": "sympy__sympy-17655", "ts": 1792345403.5623336}
-{"event": "attempt", "n": 1, "ts": 1792345403.9984996}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792345705.3799143}
-{"event": "attempt", "n": 2, "ts": 1792345705.7727478}
-{"ts": 1792345811.328073, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1792346005.8764236}
-{"ts": 1792346042.4245772, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792346083.5104003, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "sympy__sympy-17655", "ts": 1793001680.8085248}
+{"event": "attempt", "n": 1, "ts": 1793001685.4825807}
+{"event": "timeout_retry", "attempt": 1, "ts": 1793002046.1668332}
+{"event": "attempt", "n": 2, "ts": 1793002050.2347705}
+{"event": "timeout", "attempt": 2, "ts": 1793002410.3832815}

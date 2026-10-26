@@ -1,5 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-15345", "ts": 1792314506.1182606}
-{"event": "attempt", "n": 1, "ts": 1792314507.3867993}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792316340.4989045}
-{"event": "attempt", "n": 2, "ts": 1792316341.9527566}
-{"event": "timeout", "attempt": 2, "ts": 1792318303.1463327}
+{"event": "start", "instance_id": "sympy__sympy-15345", "ts": 1792998046.161792}
+{"event": "attempt", "n": 1, "ts": 1792998046.77552}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792998407.5395834}
+{"event": "attempt", "n": 2, "ts": 1792998407.9984362}
+{"event": "timeout", "attempt": 2, "ts": 1792998768.2502215}
+{"ts": 1792999239.5988038, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1792999289.7413435, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1792999786.9626691, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1792999833.5434072, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793000071.137245, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793000075.4933684, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

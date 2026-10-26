@@ -1,5 +1,7 @@
-{"event": "start", "instance_id": "sympy__sympy-16988", "ts": 1792335583.544605}
-{"event": "attempt", "n": 1, "ts": 1792335585.158357}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792337420.2082915}
-{"event": "attempt", "n": 2, "ts": 1792337421.8654761}
-{"event": "timeout", "attempt": 2, "ts": 1792339305.3660798}
+{"event": "start", "instance_id": "sympy__sympy-16988", "ts": 1793000221.0812237}
+{"event": "attempt", "n": 1, "ts": 1793000221.8862407}
+{"event": "timeout_retry", "attempt": 1, "ts": 1793000583.1091766}
+{"event": "attempt", "n": 2, "ts": 1793000583.6973464}
+{"event": "timeout", "attempt": 2, "ts": 1793000944.4779046}
+{"ts": 1793005503.4533763, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793005565.1018512, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

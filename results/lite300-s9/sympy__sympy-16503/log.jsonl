@@ -1,7 +1,10 @@
-{"event": "start", "instance_id": "sympy__sympy-16503", "ts": 1792328623.6486835}
-{"event": "attempt", "n": 1, "ts": 1792328624.3372352}
-{"event": "error", "attempt": 1, "error": "OSError: [WinError 1450] Insufficient system resources exist to complete the requested service: 'C:\\\\Users\\\\Eashwar\\\\ISHA\\\\isha-agent\\\\swebench_checkouts\\\\sympy__sympy-16503\\\\sympy\\\\sets\\\\tests\\\\test_fancysets.py'", "backoff_s": 20.0, "ts": 1792330100.7446556}
-{"event": "attempt", "n": 2, "ts": 1792330122.7450533}
-{"ts": 1792331474.181141, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792331523.6656852, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1792331924.1638145}
+{"event": "start", "instance_id": "sympy__sympy-16503", "ts": 1792999494.772827}
+{"event": "attempt", "n": 1, "ts": 1792999496.8985195}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792999858.356106}
+{"event": "attempt", "n": 2, "ts": 1792999859.0538082}
+{"event": "timeout", "attempt": 2, "ts": 1793000220.5867739}
+{"ts": 1793002322.339438, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002610.6302652, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002662.8086221, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002962.4425986, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002972.6668947, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
