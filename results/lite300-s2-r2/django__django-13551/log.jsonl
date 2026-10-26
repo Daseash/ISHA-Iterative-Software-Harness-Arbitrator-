@@ -1,9 +1,0 @@
-{"event": "start", "instance_id": "django__django-13551", "ts": 1791623821.067754}
-{"event": "attempt", "n": 1, "ts": 1791623821.5694823}
-{"event": "model", "ts": 1791623886.7507818, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791623893.401076, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
-{"event": "model", "ts": 1791623906.3014858, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791623909.230012, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791623941.310156, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791624104.574346, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1791624109.3840134}

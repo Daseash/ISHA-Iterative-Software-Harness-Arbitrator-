@@ -1,8 +1,0 @@
-{"event": "start", "instance_id": "django__django-11564", "ts": 1792242094.1630657}
-{"event": "attempt", "n": 1, "ts": 1792242114.4843638}
-{"ts": 1792242288.63813, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792242714.5233653}
-{"event": "attempt", "n": 2, "ts": 1792242718.0845218}
-{"ts": 1792242928.5667179, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792242969.206107, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1792243318.1127462}

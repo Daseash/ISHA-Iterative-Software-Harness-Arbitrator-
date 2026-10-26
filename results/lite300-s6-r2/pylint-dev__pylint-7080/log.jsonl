@@ -1,9 +1,0 @@
-{"event": "start", "instance_id": "pylint-dev__pylint-7080", "ts": 1791894049.6397252}
-{"event": "attempt", "n": 1, "ts": 1791894049.8043387}
-{"event": "model", "ts": 1791894099.1624594, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791894101.4210942, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791894106.3008142, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791894109.7714727, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791894127.212802, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791894275.063888, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "finish", "status": "done", "has_patch": true, "ts": 1791894294.2070541}

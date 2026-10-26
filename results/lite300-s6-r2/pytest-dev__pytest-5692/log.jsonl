@@ -1,9 +1,0 @@
-{"event": "start", "instance_id": "pytest-dev__pytest-5692", "ts": 1791895666.824253}
-{"event": "attempt", "n": 1, "ts": 1791895666.9039972}
-{"event": "model", "ts": 1791895692.7051394, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791895693.5020063, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791895700.190038, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791895703.4267743, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791895713.5617144, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791895757.7741814, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1791895759.0346317}

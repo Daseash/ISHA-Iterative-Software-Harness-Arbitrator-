@@ -1,6 +1,0 @@
---- a/requests/sessions.py
-+++ b/requests/sessions.py
-@@ -91,3 +91,3 @@ class SessionRedirectMixin(object):
-         while resp.is_redirect:
--            prepared_request = req.copy()
-+            prepared_request = resp.request.copy()
