@@ -63,31 +63,31 @@ def _parse_chain(primary_env: str, primary_default: str,
 PLANNER_CHAIN = _parse_chain(
     "ISHA_PLANNER_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_PLANNER_FALLBACKS",
-    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,groq/openai/gpt-oss-120b",
 )
 
 CODER_CHAIN = _parse_chain(
     "ISHA_CODER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_CODER_FALLBACKS",
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.8-flash",
 )
 
 LOCALIZER_CHAIN = _parse_chain(
     "ISHA_LOCALIZER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_LOCALIZER_FALLBACKS",
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,gemini/gemini-3.8-flash",
 )
 
 CRITIC_CHAIN = _parse_chain(
     "ISHA_CRITIC_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_CRITIC_FALLBACKS",
-    "groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,groq/openai/gpt-oss-120b",
 )
 
 REPRO_CHAIN = _parse_chain(
     "ISHA_REPRO_MODEL", "groq/openai/gpt-oss-120b",
     "ISHA_REPRO_FALLBACKS",
-    "gemini/gemini-3.8-flash,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.8-flash",
 )
 
 # Backward-compatible aliases
@@ -863,10 +863,10 @@ def call_repro(prompt: str, temperature: float | None = None) -> str:
 
 
 STRATEGY_FALLBACK_MODELS: dict[str, list[str]] = {
-    "groq/qwen/qwen3.8-27b": ["gemini/gemini-3.5-flash", "gemini/gemini-3.8-flash"],
-    "groq/openai/gpt-oss-120b": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.5-flash"],
-    "gemini/gemini-3.8-flash": ["gemini/gemini-3.5-flash", "groq/openai/gpt-oss-120b"],
-    "mistral/codestral-latest": ["gemini/gemini-3.5-flash", "groq/qwen/qwen3.8-27b"],
+    "groq/qwen/qwen3.8-27b": ["mistral/codestral-latest", "gemini/gemini-3.8-flash"],
+    "groq/openai/gpt-oss-120b": ["groq/qwen/qwen3.8-27b", "mistral/codestral-latest"],
+    "gemini/gemini-3.8-flash": ["groq/qwen/qwen3.8-27b", "mistral/codestral-latest"],
+    "mistral/codestral-latest": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.8-flash"],
 }
 
 
