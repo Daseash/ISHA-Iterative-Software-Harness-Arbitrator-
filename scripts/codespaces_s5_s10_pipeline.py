@@ -128,6 +128,7 @@ def run_patch_generation(session_name: str, timeout: int = 360, candidates: int 
                     })
         pred_path.write_text(json.dumps(preds, indent=2), encoding="utf-8")
         log(f"Synced {len(preds)} patches into {pred_path.name}")
+        sync_session_to_git(session_name)
 
     return res.returncode == 0
 
