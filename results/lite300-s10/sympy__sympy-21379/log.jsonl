@@ -1,6 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1792328713.7769551}
-{"event": "attempt", "n": 1, "ts": 1792328715.152608}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792330523.4689007}
-{"event": "attempt", "n": 2, "ts": 1792330528.3739705}
-{"ts": 1792331446.716601, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1792332338.818954}
+{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1792999511.9801145}
+{"event": "attempt", "n": 1, "ts": 1792999514.321597}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792999875.9053686}
+{"event": "attempt", "n": 2, "ts": 1792999880.5322013}
+{"event": "timeout", "attempt": 2, "ts": 1793000242.9020402}
+{"ts": 1793004671.0890543, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793004689.759679, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793006298.9053698, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793006353.647215, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793007844.129649, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793007901.5327086, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

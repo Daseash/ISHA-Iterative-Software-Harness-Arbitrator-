@@ -1,11 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-20442", "ts": 1792314778.8347852}
-{"event": "attempt", "n": 1, "ts": 1792314780.1143405}
-{"ts": 1792314913.620998, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792314920.848607, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "model", "ts": 1792314913.6209528, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
-{"event": "model", "ts": 1792314920.8485444, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
-{"event": "model", "ts": 1792314970.0476506, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1792314971.942105, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1792315053.0819938, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1792315330.996755, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1792315338.3365607}
+{"event": "start", "instance_id": "sympy__sympy-20442", "ts": 1792998788.7843826}
+{"event": "attempt", "n": 1, "ts": 1792998789.2518103}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792999149.365696}
+{"event": "attempt", "n": 2, "ts": 1792999151.1338265}
+{"event": "timeout", "attempt": 2, "ts": 1792999511.274009}
+{"ts": 1793001225.0317104, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793001231.556458, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793001447.515417, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793001449.0417364, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002038.8949094, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793002040.547504, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
