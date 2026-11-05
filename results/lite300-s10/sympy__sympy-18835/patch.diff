@@ -1,0 +1,24 @@
+diff --git a/sympy/utilities/iterables.py b/sympy/utilities/iterables.py
+index d96e762..92605b6 100644
+--- a/sympy/utilities/iterables.py
++++ b/sympy/utilities/iterables.py
+@@ -582,6 +582,8 @@ def variations(seq, n, repetition=False):
+         else:
+             for i in product(seq, repeat=n):
+                 yield i
++                if n is not None and len(seq) != n:
++                    raise RuntimeError("sequence changed size during iteration")
+ 
+ 
+ def subsets(seq, k=None, repetition=False):
+@@ -1983,6 +1985,10 @@ def ordered_partitions(n, m=None, sort=True):
+ 
+ def binary_partitions(n):
+     """
++    try:
++        n = len(seq)
++    except (TypeError, AttributeError):
++        n = None
+     Generates the binary partition of n.
+ 
+     A binary partition consists only of numbers that are

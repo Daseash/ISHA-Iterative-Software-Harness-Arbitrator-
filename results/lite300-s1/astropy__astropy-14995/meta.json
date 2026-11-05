@@ -1,0 +1,251 @@
+{
+  "instance_id": "astropy__astropy-14995",
+  "repo": "astropy/astropy",
+  "base_commit": "b16c7d12ccbc7b2d20364b89fb44285bcbfede54",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273096.1071558
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273099.6900299
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273208.6694
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273210.1989167
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273325.7370884
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273458.7612517
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273592.4847019
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273724.2871706
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791273743.549479
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ — expected context not found in file: '        if handle_mask is not None:' (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791272572.9617398,
+  "elapsed_s": 685.2,
+  "plan": "# Now handle the mask\nif handle_mask is not None:\n    # If either operand lacks a mask, propagate the mask that exists.\n    # If both lack a mask, the result mask stays None.\n    if self.mask is None:\n        mask = operand.mask\n    elif operand.mask is None:\n        mask = self.mask\n    else:\n        mask = handle_mask(self.mask, operand.mask)\nelse:\n    mask = None",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "astropy/nddata/nddata_withmixins.py",
+      "symbol": "astropy/nddata/nddata_withmixins.py::NDDataRef",
+      "symbols": [
+        "NDDataRef"
+      ],
+      "line_range": [
+        16,
+        72
+      ],
+      "score": 0.7938,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3227,
+        "vector": 0.8804,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: arithmetic, multiply, works, description; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "astropy/nddata/nddata.py",
+      "symbol": "astropy/nddata/nddata.py::__init__",
+      "symbols": [
+        "__init__",
+        "mask",
+        "data",
+        "wcs"
+      ],
+      "line_range": [
+        126,
+        135
+      ],
+      "score": 0.7077,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7041,
+        "vector": 0.7224,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: mask; body matches report terms: mask)"
+    },
+    {
+      "file": "astropy/__init__.py",
+      "symbol": "astropy/__init__.py::Conf",
+      "symbols": [
+        "Conf",
+        "base_constants_version",
+        "validate",
+        "set"
+      ],
+      "line_range": [
+        24,
+        61
+      ],
+      "score": 0.6088,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3618,
+        "vector": 0.6109,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: description, output, astropy, when"
+    },
+    {
+      "file": "astropy/io/votable/converters.py",
+      "symbol": "astropy/io/votable/converters.py::_make_masked_array",
+      "symbols": [
+        "_make_masked_array",
+        "output",
+        "binoutput",
+        "output"
+      ],
+      "line_range": [
+        80,
+        93
+      ],
+      "score": 0.6033,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2136,
+        "vector": 0.8327,
+        "defs": 1.0
+      },
+      "reason": "signature parameter matches report: mask; body matches report terms: mask, problem, like, have"
+    },
+    {
+      "file": "astropy/nddata/__init__.py",
+      "symbol": "astropy/nddata/__init__.py::Conf",
+      "symbols": [
+        "Conf"
+      ],
+      "line_range": [
+        29,
+        48
+      ],
+      "score": 0.5835,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2213,
+        "vector": 0.6929,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: arithmetic, propagation, astropy, when"
+    },
+    {
+      "file": "astropy/version.py",
+      "symbol": "astropy/version.py::split_version",
+      "symbols": [
+        "split_version"
+      ],
+      "line_range": [
+        22,
+        36
+      ],
+      "score": 0.5661,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1531,
+        "vector": 0.6899,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: version; body matches report terms: version"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.735525,
+  "laya_scores": {
+    "fix_quality": 1.5004,
+    "matches_issue": 0.7596,
+    "safe_to_apply": 0.6821,
+    "composite": 0.735525,
+    "secrets_or_danger": 0.1357,
+    "logic_drift": 0.269,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No inputs are handled unsafely; the change only manipulates numpy array references.\n- PERFORMANCE: PASS - Reduces computation by skipping bitwise operations when one operand lacks a mask; no new loops or memory allocations introduced.\n- ROBUSTNESS: PASS - Fixes a `TypeError` crash when one operand has no mask; behavior is now deterministic and consistent with the None case.\n- PONYTAIL / YAGNI: PASS - The solution is minimal and directly addresses the specific edge case where `None` masks are involved.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — Hunk failed in astropy/nddata/mixins/ndarithmetic.py: @@ — expected context not found in file: '        if handle_mask is not None:' (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "import numpy as np\nimport pytest\n\nfrom astropy.nddata import NDDataRef\n\n\ndef test_mask_propagation_one_operand_no_mask():\n    \"\"\"Minimal reproduction: mask and no-mask operand should propagate mask, not raise.\"\"\"\n    array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\n    mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\n\n    nref_nomask = NDDataRef(array)\n    nref_mask = NDDataRef(array, mask=mask.copy())\n\n    # mask * no mask\n    result = nref_mask.multiply(nref_nomask, handle_mask=np.bitwise_or)\n    assert np.array_equal(result.mask, mask)\n\n    # no mask * mask (reversed operand order)\n    result2 = nref_nomask.multiply(nref_mask, handle_mask=np.bitwise_or)\n    assert np.array_equal(result2.mask, mask)\n\n\ndef test_mask_propagation_both_no_mask():\n    \"\"\"If both operands lack a mask, result mask must remain None.\"\"\"\n    array = np.array([[1, 2], [3, 4]], dtype=float)\n    a = NDDataRef(array)\n    b = NDDataRef(array)\n\n    result = a.multiply(b, handle_mask=np.bitwise_or)\n    assert result.mask is None\n\n\ndef test_mask_propagation_both_masked_bitwise_or():\n    \"\"\"When both have masks, handle_mask (bitwise_or) should be applied.\"\"\"\n    array = np.array([[1, 2], [3, 4]], dtype=float)\n    mask1 = np.array([[0, 1], [2, 3]])\n    mask2 = np.array([[4, 0], [8, 16]])\n\n    a = NDDataRef(array, mask=mask1.copy())\n    b = NDDataRef(array, mask=mask2.copy())\n\n    expected = np.bitwise_or(mask1, mask2)\n    result = a.multiply(b, handle_mask=np.bitwise_or)\n    assert np.array_equal(result.mask, expected)\n\n\ndef test_mask_with_scalar_operand():\n    \"\"\"Multiplying masked data by a scalar (no mask) should retain the original mask.\"\"\"\n    array = np.array([1.0, 2.0, 3.0])\n    mask = np.array([0, 5, 0])\n\n    nref_mask = NDDataRef(array, mask=mask.copy())\n    result = nref_mask.multiply(2.0, handle_mask=np.bitwise_or)\n    assert np.array_equal(result.mask, mask)",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

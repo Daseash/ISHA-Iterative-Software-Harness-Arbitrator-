@@ -1,0 +1,13 @@
+diff --git a/django/forms/fields.py b/django/forms/fields.py
+index a977256..c41e9b3 100644
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@ -393,7 +393,7 @@ class DateField(BaseTemporalField):
+     widget = DateInput
+     input_formats = formats.get_format_lazy('DATE_INPUT_FORMATS')
+     default_error_messages = {
+-        'invalid': _('Enter a valid date.'),
++        'invalid': _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].'),
+     }
+ 
+     def to_python(self, value):

@@ -1,0 +1,361 @@
+{
+  "instance_id": "django__django-16041",
+  "repo": "django/django",
+  "base_commit": "6df9398cce063874ae4d59db126d4adacb0fa8d3",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550724.7588222
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550728.5269597
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550735.7437472
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550737.8982635
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550758.693588
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (5 models): offline-brain: BadRequestError; qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791550901.10924
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791550433.4523945,
+  "elapsed_s": 215.94,
+  "plan": "Step 1: Root cause — _load_field() does not validate operand types before computing.\nStep 2: Edit __init__.py — in _load_field(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::to_python",
+      "symbols": [
+        "to_python",
+        "get_db_prep_value",
+        "get_db_prep_save",
+        "_check_if_value_fixed"
+      ],
+      "line_range": [
+        676,
+        683
+      ],
+      "score": 0.6395,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4476,
+        "vector": 0.6881,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: value; body matches report terms: data, value, expected, input)"
+    },
+    {
+      "file": "django/shortcuts.py",
+      "symbol": "django/shortcuts.py::redirect",
+      "symbols": [
+        "redirect",
+        "get_object_or_404",
+        "get_list_or_404",
+        "resolve_url"
+      ],
+      "line_range": [
+        28,
+        50
+      ],
+      "score": 0.6028,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3073,
+        "vector": 0.6744,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: urls, passed, used, issue)"
+    },
+    {
+      "file": "django/contrib/flatpages/views.py",
+      "symbol": "django/contrib/flatpages/views.py::flatpage",
+      "symbols": [
+        "flatpage",
+        "render_flatpage"
+      ],
+      "line_range": [
+        22,
+        47
+      ],
+      "score": 0.5965,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2826,
+        "vector": 0.6737,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: context, setting, render, template)"
+    },
+    {
+      "file": "django/contrib/syndication/views.py",
+      "symbol": "django/contrib/syndication/views.py::__call__",
+      "symbols": [
+        "__call__",
+        "feed_extra_kwargs",
+        "get_context_data",
+        "_get_dynamic_attr"
+      ],
+      "line_range": [
+        35,
+        50
+      ],
+      "score": 0.5876,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3266,
+        "vector": 0.5081,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: test, content, post, does)"
+    },
+    {
+      "file": "django/utils/html.py",
+      "symbol": "django/utils/html.py::json_script",
+      "symbols": [
+        "json_script",
+        "_strip_once",
+        "strip_tags",
+        "strip_spaces_between_tags"
+      ],
+      "line_range": [
+        62,
+        81
+      ],
+      "score": 0.5828,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3382,
+        "vector": 0.4434,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: value; body matches report terms: value, template, django, html)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__setattr__",
+      "symbols": [
+        "__setattr__",
+        "_add_script_prefix",
+        "__new__",
+        "__init__"
+      ],
+      "line_range": [
+        106,
+        116
+      ],
+      "score": 0.5786,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2461,
+        "vector": 0.6007,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: value; body matches report terms: value, when, setting, does)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\n\nfrom calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    with pytest.raises(TypeError):\n        Calculator().calculate(\"two\", 2)",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "offline-brain",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/base.py\n+++ b/base.py\n@@ -30,6 +30,8 @@\n         super().__init__(func, takes_context, args, kwargs, filename=None)\n \n     def render(self, context):\n+        if not isinstance(context, (int, float)):\n+            raise TypeError(\"operands must be numbers\")\n         opts = context[\"opts\"]\n         app_label = opts.app_label.lower()\n         object_name = opts.object_name.lower()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16041-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7796,
+        "matches_issue": 0.7622,
+        "safe_to_apply": 0.6674,
+        "composite": 0.8023,
+        "secrets_or_danger": 0.0793,
+        "logic_drift": 0.1861,
+        "flagged": false
+      },
+      "laya_combined": 0.8023,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.69,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "--- a/base.py\n+++ b/base.py\n@@ -30,6 +30,8 @@\n         super().__init__(func, takes_context, args, kwargs, filename=None)\n \n     def render(self, context):\n+        if not isinstance(context, (int, float)):\n+            raise TypeError(\"operands must be numbers\")\n         opts = context[\"opts\"]\n         app_label = opts.app_label.lower()\n         object_name = opts.object_name.lower()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16041-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7796,
+        "matches_issue": 0.7622,
+        "safe_to_apply": 0.6674,
+        "composite": 0.8023,
+        "secrets_or_danger": 0.0793,
+        "logic_drift": 0.1861,
+        "flagged": false
+      },
+      "laya_combined": 0.8023,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 104.21,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "offline-brain",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/base.py\n+++ b/base.py\n@@ -30,6 +30,8 @@\n         super().__init__(func, takes_context, args, kwargs, filename=None)\n \n     def render(self, context):\n+        if not isinstance(context, (int, float)):\n+            raise TypeError(\"operands must be numbers\")\n         opts = context[\"opts\"]\n         app_label = opts.app_label.lower()\n         object_name = opts.object_name.lower()",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16041-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7796,
+        "matches_issue": 0.7622,
+        "safe_to_apply": 0.6674,
+        "composite": 0.8023,
+        "secrets_or_danger": 0.0793,
+        "logic_drift": 0.1861,
+        "flagged": false
+      },
+      "laya_combined": 0.8023,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 100.34,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "offline-brain",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/base.py\n+++ b/base.py\n@@ -30,6 +30,8 @@\n         super().__init__(func, takes_context, args, kwargs, filename=None)\n \n     def render(self, context):\n+        if not isinstance(context, (int, float)):\n+            raise TypeError(\"operands must be numbers\")\n         opts = context[\"opts\"]\n         app_label = opts.app_label.lower()\n         object_name = opts.object_name.lower()",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16041-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "base.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.7796,
+      "matches_issue": 0.7622,
+      "safe_to_apply": 0.6674,
+      "composite": 0.8023,
+      "secrets_or_danger": 0.0793,
+      "logic_drift": 0.1861,
+      "flagged": false
+    },
+    "laya_combined": 0.8023,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0068,
+    "rank_reason": "logistic",
+    "elapsed_s": 99.69,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 4
+}

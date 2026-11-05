@@ -1,0 +1,12 @@
+diff --git a/sympy/simplify/simplify.py b/sympy/simplify/simplify.py
+index f1609aa..e2265f7 100644
+--- a/sympy/simplify/simplify.py
++++ b/sympy/simplify/simplify.py
+@@ -446,6 +446,7 @@ def simplify(expr, ratio=1.7, measure=count_ops, fu=False):
+         >>> count_ops(simplify(root, ratio=oo)) > count_ops(root)
+         True
+ 
++    expr = expr.rewrite(Pow)
+     Note that the shortest expression is not necessary the simplest, so
+     setting ``ratio`` to 1 may not be a good idea.
+     Heuristically, the default value ``ratio=1.7`` seems like a reasonable

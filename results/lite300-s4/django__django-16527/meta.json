@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-16527",
+  "repo": "django/django",
+  "base_commit": "bd366ca2aeffa869b7dbc0b0aa01caea75e6dc31",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560367.6702254
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560374.7777078
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560387.9317684
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560391.0749993
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560404.8439643
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560514.8635526
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/admin/templatetags/admin_modify.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/admin/templatetags/admin_modify.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791560291.680008,
+  "elapsed_s": 231.1,
+  "plan": "\"show_save_as_new\": not is_popup\n            and has_add_permission\n            and has_change_permission\n            and change\n            and save_as,",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/templatetags/admin_modify.py",
+      "symbol": "django/contrib/admin/templatetags/admin_modify.py::submit_row",
+      "symbols": [
+        "submit_row",
+        "submit_row_tag",
+        "change_form_object_tools_tag",
+        "cell_count"
+      ],
+      "line_range": [
+        61,
+        114
+      ],
+      "score": 0.7243,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.2438,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: permission, line, has_change_permission, admin)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::_create_user",
+      "symbols": [
+        "_create_user",
+        "get_user_permissions",
+        "get_group_permissions",
+        "has_perm"
+      ],
+      "line_range": [
+        139,
+        157
+      ],
+      "score": 0.6022,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3532,
+        "vector": 0.5322,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: this, must, because)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::_get_builtin_permissions",
+      "symbols": [
+        "_get_builtin_permissions",
+        "get_default_username",
+        "_get_all_permissions",
+        "create_permissions"
+      ],
+      "line_range": [
+        21,
+        36
+      ],
+      "score": 0.5667,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1441,
+        "vector": 0.7141,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: permission, change, this)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringformat",
+      "symbols": [
+        "stringformat",
+        "_property_resolver",
+        "linenumbers",
+        "slugify"
+      ],
+      "line_range": [
+        264,
+        281
+      ],
+      "score": 0.5595,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.159,
+        "vector": 0.5814,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: this, that)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__reduce__",
+      "symbols": [
+        "__reduce__",
+        "contribute_to_class",
+        "_check_fix_default_value",
+        "EmailField"
+      ],
+      "line_range": [
+        665,
+        687
+      ],
+      "score": 0.549,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1934,
+        "vector": 0.4639,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: this, that, without)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "_show_deprecation_warning",
+        "__setattr__",
+        "_setup"
+      ],
+      "line_range": [
+        81,
+        97
+      ],
+      "score": 0.5403,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1448,
+        "vector": 0.4929,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: modification, this, must, modified)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7219,
+  "laya_scores": {
+    "fix_quality": 1.4707,
+    "matches_issue": 0.7333,
+    "safe_to_apply": 0.6836,
+    "composite": 0.7219,
+    "secrets_or_danger": 0.6906,
+    "logic_drift": 0.9362,
+    "flagged": true,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: Adds a proper permission check ensuring users cannot bypass add restrictions via save_as_new.\n- PERFORMANCE: PASS: Performs a simple boolean evaluation without additional queries or loops.\n- ROBUSTNESS: PASS: Uses existing permission variables correctly within the logical expression without introducing race conditions or exceptions.\n- PONYTAIL / YAGNI: PASS: Directly addresses the reported bug without introducing unrequested abstractions or dependencies.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from unittest.mock import MagicMock\nfrom django.contrib.admin.templatetags.admin_modify import submit_row\n\n\ndef test_submit_row_save_as_new_requires_add_permission():\n    \"\"\"\n    Ensure that 'show_save_as_new' is False when the user has change permission\n    and save_as is True, but lacks add permission.\n    \"\"\"\n    context = {\n        \"is_popup\": False,\n        \"has_add_permission\": False,\n        \"has_change_permission\": True,\n        \"has_delete_permission\": True,\n        \"has_view_permission\": True,\n        \"has_editable_inline_admin_formsets\": False,\n        \"change\": True,\n        \"save_as\": True,\n        \"save_on_top\": False,\n        \"original\": MagicMock(),\n    }\n    \n    context_result = submit_row(context)\n    # Before the fix, show_save_as_new was True because it only checked\n    # not is_popup, has_change_permission, change, and save_as.\n    # After the fix, it should require has_add_permission as well, making it False.\n    assert context_result[\"show_save_as_new\"] is False\n\n\ndef test_submit_row_save_as_new_with_add_permission():\n    \"\"\"\n    Ensure that 'show_save_as_new' is True when the user has both change\n    and add permissions, save_as is True, and it's not a popup.\n    \"\"\"\n    context = {\n        \"is_popup\": False,\n        \"has_add_permission\": True,\n        \"has_change_permission\": True,\n        \"has_delete_permission\": True,\n        \"has_view_permission\": True,\n        \"has_editable_inline_admin_formsets\": False,\n        \"change\": True,\n        \"save_as\": True,\n        \"save_on_top\": False,\n        \"original\": MagicMock(),\n    }\n    \n    context_result = submit_row(context)\n    assert context_result[\"show_save_as_new\"] is True\n\n\ndef test_submit_row_save_as_new_popup():\n    \"\"\"\n    Ensure that 'show_save_as_new' is False when it is a popup, even if\n    all permissions and flags are set to True.\n    \"\"\"\n    context = {\n        \"is_popup\": True,\n        \"has_add_permission\": True,\n        \"has_change_permission\": True,\n        \"has_delete_permission\": True,\n        \"has_view_permission\": True,\n        \"has_editable_inline_admin_formsets\": False,\n        \"change\": True,\n        \"save_as\": True,\n        \"save_on_top\": False,\n        \"original\": MagicMock(),\n    }\n    \n    context_result = submit_row(context)\n    assert context_result[\"show_save_as_new\"] is False\n\n\ndef test_submit_row_save_as_new_not_change():\n    \"\"\"\n    Ensure that 'show_save_as_new' is False when 'change' is False (e.g., adding a new object),\n    even if permissions and save_as are True.\n    \"\"\"\n    context = {\n        \"is_popup\": False,\n        \"has_add_permission\": True,\n        \"has_change_permission\": True,\n        \"has_delete_permission\": True,\n        \"has_view_permission\": True,\n        \"has_editable_inline_admin_formsets\": False,\n        \"change\": False,\n        \"save_as\": True,\n        \"save_on_top\": False,\n        \"original\": None,\n    }\n    \n    context_result = submit_row(context)\n    assert context_result[\"show_save_as_new\"] is False",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7aadb..5b742af46a 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16527-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/templatetags/admin_modify.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/templatetags/admin_modify.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4707,
+        "matches_issue": 0.7333,
+        "safe_to_apply": 0.6836,
+        "composite": 0.7219,
+        "secrets_or_danger": 0.6906,
+        "logic_drift": 0.9362,
+        "flagged": true
+      },
+      "laya_combined": 0.7219,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.47,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7aadb..5b742af46a 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16527-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/templatetags/admin_modify.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/templatetags/admin_modify.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4707,
+        "matches_issue": 0.7333,
+        "safe_to_apply": 0.6836,
+        "composite": 0.7219,
+        "secrets_or_danger": 0.6906,
+        "logic_drift": 0.9362,
+        "flagged": true
+      },
+      "laya_combined": 0.7219,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 31.82,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7aadb..5b742af46a 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16527-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/templatetags/admin_modify.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/templatetags/admin_modify.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4707,
+        "matches_issue": 0.7333,
+        "safe_to_apply": 0.6836,
+        "composite": 0.7219,
+        "secrets_or_danger": 0.6906,
+        "logic_drift": 0.9362,
+        "flagged": true
+      },
+      "laya_combined": 0.7219,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 34.04,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7aadb..5b742af46a 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16527-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/admin/templatetags/admin_modify.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/admin/templatetags/admin_modify.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4707,
+      "matches_issue": 0.7333,
+      "safe_to_apply": 0.6836,
+      "composite": 0.7219,
+      "secrets_or_danger": 0.6906,
+      "logic_drift": 0.9362,
+      "flagged": true
+    },
+    "laya_combined": 0.7219,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.47,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/admin/templatetags/admin_modify.py b/django/contrib/admin/templatetags/admin_modify.py\nindex 9df4b7a..5b742af 100644\n--- a/django/contrib/admin/templatetags/admin_modify.py\n+++ b/django/contrib/admin/templatetags/admin_modify.py\n@@ -100,6 +100,7 @@ def submit_row(context):\n                 and context.get(\"show_delete\", True)\n             ),\n             \"show_save_as_new\": not is_popup\n+            and has_add_permission\n             and has_change_permission\n             and change\n             and save_as,\n",
+  "offline_calls": 0
+}

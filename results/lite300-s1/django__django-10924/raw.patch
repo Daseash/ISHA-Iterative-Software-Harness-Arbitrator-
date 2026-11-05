@@ -1,0 +1,19 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1412,7 +1412,12 @@
+         self.match = match
+         self.recursive = recursive
+         self.allow_files = allow_files
+-        self.path = path
++        self._path = path
+         super().__init__(verbose_name, name, **kwargs)
+ 
++    @property
++    def path(self):
++        return self._path() if callable(self._path) else self._path
++
+     def deconstruct(self):
+-        return super().deconstruct() + [('path', self.path), ('match', self.match), ('recursive', self.recursive)]
++        return super().deconstruct() + [('path', self._path), ('match', self.match), ('recursive', self.recursive)]
+ 
+     def get_internal_type(self):

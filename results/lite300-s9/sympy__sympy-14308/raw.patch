@@ -1,0 +1,11 @@
+--- a/sympy/vector/vector.py
++++ b/sympy/vector/vector.py
+@@ -28,7 +28,7 @@
+     """
+ 
+     is_Vector = True
+-    _op_priority = 12.0
++    _op_priority = 13.0
+ 
+     @property
+     def components(self):

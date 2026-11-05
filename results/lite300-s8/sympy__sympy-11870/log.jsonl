@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "sympy__sympy-11870", "ts": 1791960684.2957444}
+{"event": "attempt", "n": 1, "ts": 1791960684.4222255}
+{"event": "model", "ts": 1791960735.9435186, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960739.1295724, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791960753.1909163, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960755.4635181, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960776.5936651, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960873.330071, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791960874.937089}

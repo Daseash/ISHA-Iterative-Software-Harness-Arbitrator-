@@ -1,0 +1,401 @@
+{
+  "instance_id": "sympy__sympy-11897",
+  "repo": "sympy/sympy",
+  "base_commit": "e2918c1205c47345eb73c9be68b14c0f15fdeb17",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960912.4934187
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960915.0709813
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960925.3317685
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960929.0533562
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960940.7223914
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791961018.7952907
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/printing/latex.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791960874.9388423,
+  "elapsed_s": 151.98,
+  "plan": "### Step 1: Root Cause\nThere are two specific issues causing inconsistencies between the LaTeX printer (`sympy/printing/latex.py`) and the pretty printer (`sympy/printing/pretty/pretty.py`):\n1. **`exp(-x)` printing with assumptions**: When `x` has assumptions like `positive=True`, `exp(-x)` gets formatted differently or checks assumptions incorrectly in `LatexPrinter._print_Pow` or related methods, whereas the pretty printer renders it simply as `ℯ⁻ˣ` (using `S.Exp1` base with a negative exponent). Specifically, `LatexPrinter` had special handling or logic involving assumptions that caused `exp(-x)` to be printed as `\\frac{1}{e^{x}}` instead of `e^{-x}` or equivalent depending on assumptions/settings.\n2. **Chained division/multiplication parsing/printing (`1 / (x + y) / 2`)**: The expression `1 / (x + y) / 2` is structurally `Mul(Pow(Mul(x, y), -1), S.Half)` or similar, but the LaTeX printer formats it as `\\frac{1}{2 x + 2 y}` by incorrectly distributing or combining denominators during traversal/printing of `Mul` / `Pow`, whereas the pretty printer respects the structure as `\\frac{1}{2(x+y)}` (or equivalent grouped denominator).\n\n### Step 2: Exact Changes to Make\n\n1. **File**: `sympy/printing/latex.py`\n   - **Function**: `LatexPrinter._print_Pow` (and/or `_print_Mul`)\n   - **What to change**: \n     - Remove or adjust assumption checks that inappropriately alter the representation of `exp(-x)` (ensuring `exp(-x)` or `Pow(E, -x)` prints consistently as `e^{-x}` without letting assumptions like `positive=True` on the exponent or base trigger alternative fraction formatting).\n     - Fix the handling of nested/chained divisions in `_print_Mul` or `_print_Pow` so that expressions like `1/(x + y)/2` do not incorrectly expand out the denominator to `2 x + 2 y`, but rather print as `\\frac{1}{2 \\left(x + y\\right)}` matching the pretty printer's grouped output.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sympy/printing/pretty/pretty.py",
+      "symbol": "sympy/printing/pretty/pretty.py::_print_seq",
+      "symbols": [
+        "_print_seq",
+        "_print_Not",
+        "_print_MatrixElement",
+        "_print_MatrixSlice"
+      ],
+      "line_range": [
+        1720,
+        1741
+      ],
+      "score": 0.637,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5185,
+        "vector": 0.478,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: left; body matches report terms: left, right, pretty)"
+    },
+    {
+      "file": "sympy/interactive/printing.py",
+      "symbol": "sympy/interactive/printing.py::_init_python_printing",
+      "symbols": [
+        "_init_python_printing",
+        "_matplotlib_wrapper",
+        "_can_print_latex",
+        "_result_display"
+      ],
+      "line_range": [
+        15,
+        35
+      ],
+      "score": 0.4333,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7036,
+        "vector": 0.4783,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: printer, pretty, printing)"
+    },
+    {
+      "file": "sympy/physics/vector/printing.py",
+      "symbol": "sympy/physics/vector/printing.py::_print_Function",
+      "symbols": [
+        "_print_Function",
+        "_print_Derivative",
+        "parenthesize",
+        "_print_Function"
+      ],
+      "line_range": [
+        48,
+        120
+      ],
+      "score": 0.4273,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7337,
+        "vector": 0.3658,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: exp; body matches report terms: should, left, right, with)"
+    },
+    {
+      "file": "sympy/vector/tests/test_printing.py",
+      "symbol": "sympy/vector/tests/test_printing.py::test_latex_printing",
+      "symbols": [
+        "test_latex_printing",
+        "upretty",
+        "test_pretty_printing_ascii",
+        "test_pretty_print_unicode"
+      ],
+      "line_range": [
+        141,
+        164
+      ],
+      "score": 0.4697,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2257,
+        "vector": 0.6573,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: left, right, latex, printing)"
+    },
+    {
+      "file": "sympy/physics/quantum/tests/test_printing.py",
+      "symbol": "sympy/physics/quantum/tests/test_printing.py::test_anticommutator",
+      "symbols": [
+        "test_anticommutator",
+        "test_commutator",
+        "test_qubit",
+        "test_state"
+      ],
+      "line_range": [
+        63,
+        74
+      ],
+      "score": 0.4673,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2122,
+        "vector": 0.6573,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: left, right, latex, pretty)"
+    },
+    {
+      "file": "sympy/printing/pretty/tests/test_pretty.py",
+      "symbol": "sympy/printing/pretty/tests/test_pretty.py::upretty",
+      "symbols": [
+        "upretty",
+        "test_missing_in_2X_issue_9047",
+        "test_issue_7117",
+        "test_pretty_class"
+      ],
+      "line_range": [
+        215,
+        219
+      ],
+      "score": 0.4396,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0607,
+        "vector": 0.6428,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: pretty, printing)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7855249999999999,
+  "laya_scores": {
+    "fix_quality": 1.6058,
+    "matches_issue": 0.8501,
+    "safe_to_apply": 0.6862,
+    "composite": 0.7855249999999999,
+    "secrets_or_danger": 0.0962,
+    "logic_drift": 0.2321,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-related concerns or vulnerabilities introduced.\n- PERFORMANCE: PASS - No performance issues, N+1 queries, or unbounded loops.\n- ROBUSTNESS: PASS - Correctly passes keyword arguments instead of positional ones to fix the printer inconsistency.\n- MINIMAL DIFF / YAGNI: PASS - The diff is extremely targeted and directly addresses the bug report.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from sympy import symbols, exp, log, latex, pprint\n\n\ndef test_latex_exp_negative_with_assumptions_reproduction():\n    x = symbols('x', positive=True)\n    expr = exp(-x) * log(x)\n    \n    # Bug report expected/pretty-like latex output vs old faulty latex output\n    # Old faulty latex output: '\\\\frac{1}{e^{x}} \\\\log{\\\\left (x \\\\right )}'\n    # Expected consistency with pretty printer (e^{-x} log(x)):\n    res = latex(expr)\n    assert 'e^{-x}' in res or 'e^{- 1}' not in res\n    assert '\\\\frac{1}{e^{x}}' not in res\n\n\ndef test_latex_chained_division_reproduction():\n    x, y = symbols('x y')\n    expr = 1 / (x + y) / 2\n    \n    res = latex(expr)\n    # Old faulty output: '\\\\frac{1}{2 x + 2 y}'\n    # Expected output matching grouped denominator structure:\n    assert '2 x + 2 y' not in res\n    assert '2 \\\\left(x + y\\\\right)' in res or '2 \\\\left(x + y \\\\right)' in res or '2(x + y)' in res or '2 \\\\cdot \\\\left(' in res\n\n\ndef test_latex_exp_negative_zero_and_constants():\n    # Edge case: exp(-0) or standard symbol without assumptions\n    x = symbols('x')\n    expr = exp(-x)\n    res = latex(expr)\n    assert '\\\\frac{1}{e^{x}}' not in res\n    assert 'e^{-x}' in res\n\n\ndef test_latex_chained_division_with_multiple_factors():\n    x, y, z = symbols('x y z')\n    expr = 1 / (x + y) / 3\n    res = latex(expr)\n    assert '3 x + 3 y' not in res\n\n\ndef test_latex_exp_positive_constant_exponent():\n    x = symbols('x', positive=True)\n    expr = exp(-2*x) * log(x)\n    res = latex(expr)\n    assert '\\\\frac{1}{e^{2 x}}' not in res\n    assert 'e^{-2 x}' in res",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex 1edc712358..3c259fdc94 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -466,7 +466,7 @@ def _print_Pow(self, expr):\n             return self._print_Mul(expr)\n         else:\n             if expr.base.is_Function:\n-                return self._print(expr.base, self._print(expr.exp))\n+                return self._print(expr.base, exp=self._print(expr.exp))\n             else:\n                 if expr.is_commutative and expr.exp == -1:\n                     #solves issue 4129\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11897-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sympy/printing/latex.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6058,
+        "matches_issue": 0.8501,
+        "safe_to_apply": 0.6862,
+        "composite": 0.7855249999999999,
+        "secrets_or_danger": 0.0962,
+        "logic_drift": 0.2321,
+        "flagged": false
+      },
+      "laya_combined": 0.7855,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 24.5,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -377,3 +377,3 @@\n         def pow_print(pow, base=None):\n-            if _is_fraction(pow):\n+            if _is_fraction(pow) and not (base and base.func is S.Exp1):\n                 base = self._print(base)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11897-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4167,
+        "matches_issue": 0.6899,
+        "safe_to_apply": 0.533,
+        "composite": 0.6599,
+        "secrets_or_danger": 0.1076,
+        "logic_drift": 0.1833,
+        "flagged": false
+      },
+      "laya_combined": 0.6599,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 39.58,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -458,7 +458,7 @@ def _print_Pow(self, expr):\n         if expr.exp == -1:\n             return r\"\\frac{1}{%s}\" % self._print(expr.base)\n-        if expr.base.is_Function and expr.base.name == 'exp':\n+        if expr.base is S.Exp1:\n             return r\"e^{%s}\" % self._print(expr.exp)\n         return r\"%s^{%s}\" % (self._print(expr.base), self._print(expr.exp))\n \n@@ -536,7 +536,7 @@ def _print_Mul(self, expr):\n         for i, term in enumerate(args):\n             if term.is_Rational and term is not S.NegativeOne:\n                 if term.p == 1 and term.q != 1:\n-                    if i > 0 and args[i-1].is_Pow and args[i-1].exp.is_negative:\n+                    if i > 0 and (args[i-1].is_Pow or args[i-1].is_Mul):\n                         # this is a division\n                         pass\n                     else:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11897-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/printing/latex.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3903,
+        "matches_issue": 0.7068,
+        "safe_to_apply": 0.5013,
+        "composite": 0.6496000000000001,
+        "secrets_or_danger": 0.0993,
+        "logic_drift": 0.307,
+        "flagged": false
+      },
+      "laya_combined": 0.6496,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 40.99,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex 1edc712358..3c259fdc94 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -466,7 +466,7 @@ def _print_Pow(self, expr):\n             return self._print_Mul(expr)\n         else:\n             if expr.base.is_Function:\n-                return self._print(expr.base, self._print(expr.exp))\n+                return self._print(expr.base, exp=self._print(expr.exp))\n             else:\n                 if expr.is_commutative and expr.exp == -1:\n                     #solves issue 4129\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-11897-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sympy/printing/latex.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/printing/latex.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6058,
+      "matches_issue": 0.8501,
+      "safe_to_apply": 0.6862,
+      "composite": 0.7855249999999999,
+      "secrets_or_danger": 0.0962,
+      "logic_drift": 0.2321,
+      "flagged": false
+    },
+    "laya_combined": 0.7855,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 24.5,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py\nindex 1edc712..3c259fd 100644\n--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -466,7 +466,7 @@ def _print_Pow(self, expr):\n             return self._print_Mul(expr)\n         else:\n             if expr.base.is_Function:\n-                return self._print(expr.base, self._print(expr.exp))\n+                return self._print(expr.base, exp=self._print(expr.exp))\n             else:\n                 if expr.is_commutative and expr.exp == -1:\n                     #solves issue 4129\n",
+  "offline_calls": 0
+}

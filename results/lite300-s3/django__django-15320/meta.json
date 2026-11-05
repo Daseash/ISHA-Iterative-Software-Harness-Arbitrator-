@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-15320",
+  "repo": "django/django",
+  "base_commit": "b55ebe32417e0884b6b8b3e1bc0379033aa221af",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541649.617071
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541656.8936656
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541677.6222632
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541690.6870463
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541734.2828667
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541890.098317
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/expressions.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/expressions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791541570.53396,
+  "elapsed_s": 327.03,
+  "plan": "self.queryset = queryset\n        self.query = queryset.query.clone()\n        self.query.subquery = True  # Add this line\n        self.extra = extra",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/expressions.py",
+      "symbol": "django/db/models/expressions.py::as_sql",
+      "symbols": [
+        "as_sql",
+        "resolve_expression",
+        "resolve_expression",
+        "Exists"
+      ],
+      "line_range": [
+        1177,
+        1187
+      ],
+      "score": 0.6324,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4042,
+        "vector": 0.6777,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: query; body matches report terms: query, subquery, connection; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::resolve_expression",
+      "symbols": [
+        "resolve_expression",
+        "update_join_types",
+        "as_sql",
+        "get_children_from_q"
+      ],
+      "line_range": [
+        1045,
+        1063
+      ],
+      "score": 0.6982,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7099,
+        "vector": 0.6311,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: query; body matches report terms: name, query, subquery)"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::__init__",
+      "symbols": [
+        "__init__",
+        "_combinator_query",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        178,
+        193
+      ],
+      "score": 0.6637,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6278,
+        "vector": 0.5146,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: query; body matches report terms: query, objects, result)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_backend_specific_checks",
+      "symbols": [
+        "_check_backend_specific_checks",
+        "get_col",
+        "select_format",
+        "clone"
+      ],
+      "line_range": [
+        338,
+        347
+      ],
+      "score": 0.6132,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4812,
+        "vector": 0.3991,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: name, valid, connection)"
+    },
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "django/db/transaction.py::get_connection",
+      "symbols": [
+        "get_connection",
+        "savepoint",
+        "savepoint_commit",
+        "clean_savepoints"
+      ],
+      "line_range": [
+        13,
+        22
+      ],
+      "score": 0.61,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4417,
+        "vector": 0.4134,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: name, default, connection, this)"
+    },
+    {
+      "file": "tests/gis_tests/layermap/models.py",
+      "symbol": "tests/gis_tests/layermap/models.py::Invalid",
+      "symbols": [
+        "Invalid",
+        "NamedModel",
+        "HasNulls",
+        "DoesNotAllowNulls"
+      ],
+      "line_range": [
+        68,
+        71
+      ],
+      "score": 0.6637,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2374,
+        "vector": 0.9011,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: models; body matches report terms: valid, point, models)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.748575,
+  "laya_scores": {
+    "fix_quality": 1.4965,
+    "matches_issue": 0.8338,
+    "safe_to_apply": 0.664,
+    "composite": 0.748575,
+    "secrets_or_danger": 0.207,
+    "logic_drift": 0.3773,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, Negligible overhead for attribute assignment.\n- ROBUSTNESS: FAIL, The patch targets `CombinedExpression` instead of `Subquery`, which incorrectly flags every expression combination as a subquery.\n- PONYTAIL / YAGNI: PASS, This is a bug fix attempt, though misplaced.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import connection\nfrom django.db.models import Subquery, OuterRef\nfrom django.test import TestCase\nfrom django.apps.registry import Apps\n\n# Using a standard model from Django tests for reproduction\nfrom django.contrib.contenttypes.models import ContentType\n\n@pytest.mark.django_db\nclass SubquerySqlTests(TestCase):\n    def test_subquery_as_sql_formatting(self):\n        \"\"\"\n        Reproduction of the bug where as_sql() returns stripped SQL\n        instead of bracketed SQL for Subqueries.\n        \"\"\"\n        qs = ContentType.objects.all()\n        subquery = Subquery(qs)\n        \n        compiler = qs.query.get_compiler(connection.alias)\n        sql, _ = subquery.as_sql(compiler, connection)\n        \n        # The bug results in missing start and end characters:\n        # Expected: (SELECT ...)\n        # Buggy: ELECT ... )\n        assert sql.startswith('(')\n        assert sql.endswith(')')\n\n    def test_subquery_with_filter(self):\n        \"\"\"\n        Edge case: Test that Subquery works correctly when containing filters.\n        \"\"\"\n        qs = ContentType.objects.filter(app_label='auth')\n        subquery = Subquery(qs)\n        \n        compiler = qs.query.get_compiler(connection.alias)\n        sql, _ = subquery.as_sql(compiler, connection)\n        \n        assert sql.startswith('(')\n        assert sql.endswith(')')\n        assert 'WHERE' in sql.upper()\n\n    def test_nested_subquery_behaviour(self):\n        \"\"\"\n        Edge case: Ensure that even with complexity, the wrapping is maintained.\n        \"\"\"\n        # OuterRef triggers different paths in query compilation\n        inner = ContentType.objects.filter(model=OuterRef('model'))\n        subquery = Subquery(inner)\n        \n        compiler = ContentType.objects.all().query.get_compiler(connection.alias)\n        sql, _ = subquery.as_sql(compiler, connection)\n        \n        assert sql.startswith('(')\n        assert sql.endswith(')')\n\n    def test_empty_queryset_subquery(self):\n        \"\"\"\n        Edge case: Empty queryset still produces valid SQL with brackets.\n        \"\"\"\n        qs = ContentType.objects.none()\n        subquery = Subquery(qs)\n        \n        compiler = qs.query.get_compiler(connection.alias)\n        sql, _ = subquery.as_sql(compiler, connection)\n        \n        assert sql.startswith('(')\n        assert sql.endswith(')')",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 6f26dff0e0..33b3da909f 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -446,6 +446,7 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n \n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n+        self.query.subquery = True\n         self.connector = connector\n         self.lhs = lhs\n         self.rhs = rhs\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15320-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/expressions.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/expressions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4965,
+        "matches_issue": 0.8338,
+        "safe_to_apply": 0.664,
+        "composite": 0.748575,
+        "secrets_or_danger": 0.207,
+        "logic_drift": 0.3773,
+        "flagged": false
+      },
+      "laya_combined": 0.7486,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.02,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 6f26dff0e0..3d9822ca7a 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1148,6 +1148,7 @@ class Subquery(BaseExpression, Combinable):\n     empty_result_set_value = None\n \n     def __init__(self, queryset, output_field=None, **extra):\n+        self.query.subquery = True\n         # Allow the usage of both QuerySet and sql.Query objects.\n         self.query = getattr(queryset, 'query', queryset)\n         self.extra = extra\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15320-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/expressions.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/expressions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4965,
+        "matches_issue": 0.8338,
+        "safe_to_apply": 0.664,
+        "composite": 0.748575,
+        "secrets_or_danger": 0.1671,
+        "logic_drift": 0.4642,
+        "flagged": false
+      },
+      "laya_combined": 0.7486,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 82.35,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 6f26dff0e0..33b3da909f 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -446,6 +446,7 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n \n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n+        self.query.subquery = True\n         self.connector = connector\n         self.lhs = lhs\n         self.rhs = rhs\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15320-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/expressions.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/expressions.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4965,
+        "matches_issue": 0.8338,
+        "safe_to_apply": 0.664,
+        "composite": 0.748575,
+        "secrets_or_danger": 0.207,
+        "logic_drift": 0.3773,
+        "flagged": false
+      },
+      "laya_combined": 0.7486,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 87.31,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 6f26dff0e0..33b3da909f 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -446,6 +446,7 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n \n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n+        self.query.subquery = True\n         self.connector = connector\n         self.lhs = lhs\n         self.rhs = rhs\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15320-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/expressions.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/expressions.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4965,
+      "matches_issue": 0.8338,
+      "safe_to_apply": 0.664,
+      "composite": 0.748575,
+      "secrets_or_danger": 0.207,
+      "logic_drift": 0.3773,
+      "flagged": false
+    },
+    "laya_combined": 0.7486,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 11.02,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 6f26dff..33b3da9 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -446,6 +446,7 @@ class CombinedExpression(SQLiteNumericMixin, Expression):\n \n     def __init__(self, lhs, connector, rhs, output_field=None):\n         super().__init__(output_field=output_field)\n+        self.query.subquery = True\n         self.connector = connector\n         self.lhs = lhs\n         self.rhs = rhs\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,236 @@
+{
+  "instance_id": "django__django-11564",
+  "repo": "django/django",
+  "base_commit": "580e644f24f1c5ae5b94784fb73a9953a178fd26",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300144.4913383
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300147.8432205
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300156.207277
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300231.1357205
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300355.7424963
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300489.888745
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/templatetags/static.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/templatetags/static.py"
+      ],
+      "added_lines": 15,
+      "removed_lines": 8,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791300104.0396202,
+  "elapsed_s": 393.83,
+  "plan": "def render(self, context):\n            url = self.url(context)\n            # Check for SCRIPT_NAME\n            if context.get('request'):\n                request = context['request']\n                script_name = request.META.get('SCRIPT_NAME', '')\n                if script_name and not url.startswith('http'):\n                    if not script_name.endswith('/'):\n                        script_name += '/'\n                    url = script_name + url\n            if context.autoescape:\n                url = conditional_escape(url)\n            if self.varname is None:\n                return url\n            context[self.varname] = url\n            return ''",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/templatetags/static.py",
+      "symbol": "django/templatetags/static.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "render",
+        "url"
+      ],
+      "line_range": [
+        94,
+        100
+      ],
+      "score": 0.931,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 1.0,
+        "vector": 0.6126,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: varname; body matches report terms: varname, static, path)"
+    },
+    {
+      "file": "django/conf/urls/__init__.py",
+      "symbol": "django/conf/urls/__init__.py::url",
+      "symbols": [],
+      "line_range": [
+        12,
+        13
+      ],
+      "score": 0.6898,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.3737,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (symbol match)"
+    },
+    {
+      "file": "django/conf/urls/static.py",
+      "symbol": "django/conf/urls/static.py::static",
+      "symbols": [
+        "static"
+      ],
+      "line_range": [
+        10,
+        28
+      ],
+      "score": 0.7814,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.462,
+        "vector": 0.4866,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: here, settings, media_url, prefix)"
+    },
+    {
+      "file": "django/template/context_processors.py",
+      "symbol": "django/template/context_processors.py::csrf",
+      "symbols": [
+        "csrf",
+        "debug",
+        "i18n",
+        "static"
+      ],
+      "line_range": [
+        17,
+        34
+      ],
+      "score": 0.6162,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3121,
+        "vector": 0.7344,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value, request, that, context)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "__init__",
+        "main_help_text"
+      ],
+      "line_range": [
+        21,
+        30
+      ],
+      "score": 0.5796,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2456,
+        "vector": 0.6104,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, that, path)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::deconstruct",
+      "symbols": [
+        "deconstruct",
+        "__reduce__",
+        "get_pk_value_on_save",
+        "to_python"
+      ],
+      "line_range": [
+        413,
+        501
+      ],
+      "score": 0.5845,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.357,
+        "vector": 0.4188,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: here, following, default, work)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7384249999999999,
+  "laya_scores": {
+    "fix_quality": 1.5286,
+    "matches_issue": 0.7331,
+    "safe_to_apply": 0.692,
+    "composite": 0.7384249999999999,
+    "secrets_or_danger": 0.2031,
+    "logic_drift": 0.3379,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "**SECURITY: PASS**\nThe update correctly checks for full URLs (`startsWith('http')`) to prevent prefixing external links, and uses `request.META` which is standard practice; no injection or path traversal risks introduced.\n\n**PERFORMANCE: PASS**\nThe added logic involves simple string operations and a dictionary lookup, which are negligible overheads compared to the existing template rendering and URL resolution costs.\n\n**ROBUSTNESS: RISK**\nWhile it handles the request existence, overriding the base path for *local* static URLs (relative or same-host absolute) can break caching strategies if the cache manager expects paths without the script name prepended, or if `STATIC_URL` already contains the full path in a way that conflicts with this logic.\n\n**PONYTAIL / YAGNI: PASS**\nThis is a minimal, targeted fix to a specific bug regarding sub-deployments, avoiding unnecessary abstraction or new dependencies.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\nimport django\nfrom django.conf import settings\n\nos.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django.test.utils')\nif settings.configured:\n    pass\nelse:\n    settings.configure()\n\nfrom django.test import RequestFactory\nfrom django.template import Context, Template\nfrom django.utils.html import mark_safe\n\n\ndef test_static_url_prepends_script_name():\n    request = RequestFactory().get('/', SERVER_NAME='testserver')\n    request.META['SCRIPT_NAME'] = '/subdir'\n    context = Context({'request': request})\n    template = Template('{% load static %}{% static \"css/style.css\" %}')\n    output = template.render(context)\n    assert '/subdir/static/css/style.css' in output, (\n        \"Expected SCRIPT_NAME to be prepended to the static URL, \"\n        \"got: %r\" % output\n    )\n\n\ndef test_static_url_without_script_name():\n    request = RequestFactory().get('/', SERVER_NAME='testserver')\n    request.META['SCRIPT_NAME'] = ''\n    context = Context({'request': request})\n    template = Template('{% load static %}{% static \"css/style.css\" %}')\n    output = template.render(context)\n    assert output == 'static/css/style.css'\n\n\ndef test_static_url_with_external_http_url():\n    from django.test import override_settings\n\n    request = RequestFactory().get('/', SERVER_NAME='testserver')\n    request.META['SCRIPT_NAME'] = '/subdir'\n    context = Context({'request': request})\n    template = Template('{% load static %}{% static \"assets/img.png\" %}')\n    with override_settings(STATIC_URL='http://example.com/static/'):\n        output = template.render(context)\n    assert output == 'http://example.com/static/assets/img.png'\n    assert '/subdir' not in output\n\n\ndef test_static_url_no_request_in_context():\n    context = Context({})\n    template = Template('{% load static %}{% static \"js/script.js\" %}')\n    output = template.render(context)\n    assert output == 'static/js/script.js'",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/templatetags/static.py b/django/templatetags/static.py\nindex 39712aa..930d9bc 100644\n--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -104,6 +104,13 @@ class StaticNode(template.Node):\n \n     def render(self, context):\n         url = self.url(context)\n+        request = context.get('request')\n+        if request:\n+            script_name = request.META.get('SCRIPT_NAME', '')\n+            if script_name and not url.startswith('http'):\n+                if not script_name.endswith('/'):\n+                    script_name += '/'\n+                url = script_name + url.lstrip('/')\n         if context.autoescape:\n             url = conditional_escape(url)\n         if self.varname is None:\n",
+  "offline_calls": 0
+}

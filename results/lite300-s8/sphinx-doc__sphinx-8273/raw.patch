@@ -1,0 +1,32 @@
+diff --git a/sphinx/builders/manpage.py b/sphinx/builders/manpage.py
+index 4166dece9..e67c1a35a 100644
+--- a/sphinx/builders/manpage.py
++++ b/sphinx/builders/manpage.py
+@@ -17,6 +17,7 @@ from docutils.io import FileOutput
+ from sphinx import addnodes
+ from sphinx.application import Sphinx
+ from sphinx.builders import Builder
++from sphinx.util import ensuredir
+ from sphinx.config import Config
+ from sphinx.errors import NoUri
+ from sphinx.locale import __
+@@ -64,7 +65,9 @@ class ManualPageBuilder(Builder):
+             read_config_files=True).get_default_values()  # type: Any
+ 
+         for info in self.config.man_pages:
+-            docname, name, description, authors, section = info
++            docname, name, description, authors, section = info[:5]
++            targetdir = path.join(self.outdir, 'man%s' % section)
++            ensuredir(targetdir)
+             if docname not in self.env.all_docs:
+                 logger.warning(__('"man_pages" config value references unknown '
+                                   'document %s'), docname)
+@@ -80,7 +83,7 @@ class ManualPageBuilder(Builder):
+             docsettings.authors = authors
+             docsettings.section = section
+ 
+-            targetname = '%s.%s' % (name, section)
++            targetname = path.join('man%s' % section, '%s.%s' % (name, section))
+             logger.info(darkgreen(targetname) + ' { ', nonl=True)
+             destination = FileOutput(
+                 destination_path=path.join(self.outdir, targetname),

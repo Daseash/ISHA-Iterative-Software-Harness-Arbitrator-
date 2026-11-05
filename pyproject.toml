@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "isha"
+version = "0.3.0"
+description = "Autonomous AI Software Engineering Agent with TDD Red-to-Green Verification"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "ISHA Team"}]
+
+dependencies = [
+    "langgraph",
+    "litellm",
+    "qdrant-client",
+    "tree-sitter",
+    "tree-sitter-python",
+    "docling",
+    "nemoguardrails",
+    "langfuse",
+    "pydantic>=2",
+    "pytest",
+    "docker",
+    "datasets",
+    "streamlit",
+    "laya",
+    "python-dotenv",
+    "swebench",
+    "mcp",
+]
+
+[project.scripts]
+isha = "src.main:main"
+isha-fix = "src.main:main"
+isha-mcp = "src.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [".worktrees", ".*", "__pycache__", "tests/dummy_repo", "dummy_repo"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+extraPaths = [
+    ".",
+    "src",
+    "scripts",
+    "tests/dummy_repo"
+]
+typeCheckingMode = "basic"

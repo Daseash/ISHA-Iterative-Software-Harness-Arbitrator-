@@ -1,0 +1,20 @@
+--- a/lib/matplotlib/offsetbox.py
++++ b/lib/matplotlib/offsetbox.py
+@@ -1257,6 +1257,8 @@ class DraggableBase:
+         self.canvas = canvas
+         self._cbs = []
+         if canvas is not None:
++            self.canvas = canvas
++        if self.canvas is not None:
+             self.connect()
+ 
+     def on_motion(self, evt):
+@@ -1300,6 +1302,8 @@ class DraggableBase:
+         if not self.canvas:
+             return
+         canvas = fig.canvas
++        if canvas is None:
++            return
+         self.cids = [
+             canvas.mpl_connect('button_release_event', self.on_release),
+             canvas.mpl_connect('motion_notify_event', self.on_motion),

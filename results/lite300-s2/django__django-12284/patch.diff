@@ -1,0 +1,15 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 1a55d3d..c4eac37 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -799,6 +799,10 @@ class Field(RegisterLookupMixin):
+             value = value._proxy____cast()
+         return value
+ 
++        if self.model and hasattr(self.model, self.name):
++            choices = getattr(self.model, self.name).field.choices
++            if choices is not None:
++                return list(choices)
+     def get_db_prep_value(self, value, connection, prepared=False):
+         """
+         Return field's value prepared for interacting with the database backend.

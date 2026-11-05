@@ -1,0 +1,20 @@
+diff --git a/lib/matplotlib/colorbar.py b/lib/matplotlib/colorbar.py
+index d3d53e3d98..b11a4516ad 100644
+--- a/lib/matplotlib/colorbar.py
++++ b/lib/matplotlib/colorbar.py
+@@ -323,6 +323,7 @@ class Colorbar:
+             alpha = mappable.get_alpha()
+ 
+         mappable.colorbar = self
++        self.norm = mappable.norm
+         mappable.colorbar_cid = mappable.callbacks.connect(
+             'changed', self.update_normal)
+ 
+@@ -505,6 +506,7 @@ class Colorbar:
+         """
+         _log.debug('colorbar update normal %r %r', mappable.norm, self.norm)
+         self.mappable = mappable
++        self.norm = mappable.norm
+         self.set_alpha(mappable.get_alpha())
+         self.cmap = mappable.cmap
+         if mappable.norm != self.norm:

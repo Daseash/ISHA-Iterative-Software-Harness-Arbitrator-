@@ -1,0 +1,16 @@
+--- a/sympy/utilities/iterables.py
++++ b/sympy/utilities/iterables.py
+@@ -2074,4 +2074,9 @@ def uniq(seq, result=None):
+     """
++    try:
++        n = len(seq)
++    except (TypeError, AttributeError):
++        n = None
+     seen = set()
+     try:
+         for i in seq:
+@@ -2079,2 +2084,4 @@ def uniq(seq, result=None):
+                 yield i
++                if n is not None and len(seq) != n:
++                    raise RuntimeError("sequence changed size during iteration")
+                 seen.add(i)

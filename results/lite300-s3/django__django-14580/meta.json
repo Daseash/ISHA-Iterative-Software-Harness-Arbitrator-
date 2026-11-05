@@ -1,0 +1,383 @@
+{
+  "instance_id": "django__django-14580",
+  "repo": "django/django",
+  "base_commit": "36fa071d6ebd18a61c4d7f1b5c9d17106134bd44",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536239.718318
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536246.780564
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536261.0265515
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536282.7986872
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536322.091039
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536518.9414065
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/writer.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791536139.236782,
+  "elapsed_s": 387.72,
+  "plan": "Step 1: Root Cause\nThe root cause is in `django/db/migrations/writer.py`. When the migration writer serializes the `bases` of a `CreateModel` operation, it relies on the `MigrationWriter.serialize` logic to generate the code. If a base class is referred to by its module (e.g., `models.Model`), the writer fails to ensure that `django.db.models` is imported in the migration file as `models`. Currently, the writer identifies that `models.Model` is used in the `bases` attribute, but it does not account for the missing `import django.db.models as models` (or similar) when it is required in the `bases` tuple, resulting in a `NameError` at runtime.\n\nStep 2: Exact Changes\nThe fix requires modifying `django/db/migrations/writer.py` to ensure that `models` is added to the imports if it is used in the `bases` section of a `CreateModel` operation. Specifically:\n\n1.  In `django/db/migrations/writer.py`, locate the `MigrationWriter.as_string` method or the helper method responsible for collecting imports for the migration file.\n2.  Update the logic that scans for dependencies. When the writer encounters a `models.Model` or other `django.db.models` classes in the `bases` argument of a `CreateModel` operation, it must explicitly add `django.db.models` to the list of imports and alias it as `models` if that name is referenced in the generated `bases` sequence.\n3.  Ensure that `models` is included in the list of imports generated at the top of the migration file.\n\nBy ensuring the `MigrationWriter` tracks usages of `django.db.models` within the migration's operation definitions, the generated code will correctly include `from django.db import models`.",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "django/contrib/contenttypes/migrations/0001_initial.py",
+      "symbol": "django/contrib/contenttypes/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        5,
+        34
+      ],
+      "score": 0.9534,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2451,
+        "vector": 0.7678,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, operations, bases, createmodel; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/sessions/migrations/0001_initial.py",
+      "symbol": "django/contrib/sessions/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        5,
+        30
+      ],
+      "score": 0.9501,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1999,
+        "vector": 0.8344,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, textfield, operations, createmodel; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/sites/migrations/0001_initial.py",
+      "symbol": "django/contrib/sites/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        6,
+        31
+      ],
+      "score": 0.9425,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1993,
+        "vector": 0.7721,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, valid, operations, bases; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/redirects/migrations/0001_initial.py",
+      "symbol": "django/contrib/redirects/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        39
+      ],
+      "score": 0.9364,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1901,
+        "vector": 0.7405,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, operations, bases, createmodel; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/flatpages/migrations/0001_initial.py",
+      "symbol": "django/contrib/flatpages/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        39
+      ],
+      "score": 0.936,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1886,
+        "vector": 0.7405,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, textfield, operations, bases; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/contrib/admin/migrations/0001_initial.py",
+      "symbol": "django/contrib/admin/migrations/0001_initial.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        6,
+        46
+      ],
+      "score": 0.9323,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.1928,
+        "vector": 0.7011,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: name, textfield, operations, bases; named, but usually the entry point — check below it"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7249,
+  "laya_scores": {
+    "fix_quality": 1.5944,
+    "matches_issue": 0.7065,
+    "safe_to_apply": 0.5987,
+    "composite": 0.7249,
+    "secrets_or_danger": 0.2495,
+    "logic_drift": 0.3324,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, Minimal impact on the migration generation process.\n- ROBUSTNESS: RISK, Blindly adding the import to every operation with a 'bases' attribute may introduce redundant imports or mask specific scope issues in complex migrations.\n- PONYTAIL / YAGNI: PASS, This addresses a specific breakage in generated code.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import migrations, models\nfrom django.db.migrations.writer import MigrationWriter\nfrom django.db.migrations.operations import CreateModel\n\nclass TestMigrationWriterBasesImport:\n    \"\"\"\n    Tests that the MigrationWriter correctly handles imports when\n    CreateModel bases contain references that require 'models' to be imported.\n    \"\"\"\n\n    def test_reproduce_name_error_in_bases(self):\n        \"\"\"\n        Reproduction of the reported bug: \n        When 'models.Model' is used in bases, the writer must ensure \n        'from django.db import models' is present.\n        \"\"\"\n        operation = migrations.CreateModel(\n            name='MyModel',\n            fields=[],\n            bases=('app.models.MyMixin', models.Model),\n        )\n        migration = type('Migration', (migrations.Migration,), {\n            'operations': [operation]\n        })\n        \n        writer = MigrationWriter(migration)\n        content = writer.as_string()\n        \n        # The bug is that 'models' is missing from the imports\n        # while being used in the 'bases' tuple.\n        assert \"from django.db import models\" in content\n        assert \"bases=(app.models.MyMixin, models.Model)\" in content\n\n    def test_empty_bases_does_not_require_models_import(self):\n        \"\"\"\n        Edge case: If no bases are provided (or object is implied),\n        we shouldn't force a 'models' import if not used elsewhere.\n        \"\"\"\n        operation = migrations.CreateModel(\n            name='EmptyModel',\n            fields=[],\n            bases=(),\n        )\n        migration = type('Migration', (migrations.Migration,), {\n            'operations': [operation]\n        })\n        \n        writer = MigrationWriter(migration)\n        content = writer.as_string()\n        \n        # Verify it doesn't crash, but confirm import logic only triggers when needed\n        assert \"from django.db import migrations\" in content\n\n    def test_multiple_bases_with_mixed_types(self):\n        \"\"\"\n        Edge case: Multiple bases including custom mixins and Django models.\n        \"\"\"\n        operation = migrations.CreateModel(\n            name='ComplexModel',\n            fields=[],\n            bases=('app.models.Mixin1', 'app.models.Mixin2', models.Model),\n        )\n        migration = type('Migration', (migrations.Migration,), {\n            'operations': [operation]\n        })\n        \n        writer = MigrationWriter(migration)\n        content = writer.as_string()\n        \n        assert \"from django.db import models\" in content\n        assert \"models.Model\" in content\n        assert \"app.models.Mixin1\" in content",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..2fdada6157 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -138,6 +138,8 @@ class MigrationWriter:\n         # Deconstruct operations\n         operations = []\n         for operation in self.migration.operations:\n+            if hasattr(operation, 'bases'):\n+                imports.add('from django.db import models')\n             operation_string, operation_imports = OperationWriter(operation).serialize()\n             imports.update(operation_imports)\n             operations.append(operation_string)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14580-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/writer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5944,
+        "matches_issue": 0.7065,
+        "safe_to_apply": 0.5987,
+        "composite": 0.7249,
+        "secrets_or_danger": 0.2495,
+        "logic_drift": 0.3324,
+        "flagged": false
+      },
+      "laya_combined": 0.7249,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.61,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..6b157f20fb 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -163,6 +163,8 @@ class MigrationWriter:\n                 self.needs_manual_porting = True\n \n         # django.db.migrations is always used, but models import may not be.\n+        else:\n+            imports.add(\"from django.db import models\")\n         # If models import exists, merge it with migrations import.\n         if \"from django.db import models\" in imports:\n             imports.discard(\"from django.db import models\")\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14580-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/writer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5908,
+        "matches_issue": 0.7328,
+        "safe_to_apply": 0.6454,
+        "composite": 0.74225,
+        "secrets_or_danger": 0.1843,
+        "logic_drift": 0.2822,
+        "flagged": false
+      },
+      "laya_combined": 0.7422,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 119.99,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -163,6 +163,8 @@ class MigrationWriter:\n         # In case of a \"from django.db import models\" import, it is possible that\n         # the two lines are not consecutive in the imports list.\n         imports.add(\"from django.db import migrations, models\")\n+        if 'models' in self.needs_import:\n+            self.needs_import.remove('models')\n \n         # Sort imports by the package name, but keep \"from django.db\" imports\n         # at the top.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14580-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6384,
+        "matches_issue": 0.7132,
+        "safe_to_apply": 0.6047,
+        "composite": 0.7390749999999999,
+        "secrets_or_danger": 0.0914,
+        "logic_drift": 0.1931,
+        "flagged": false
+      },
+      "laya_combined": 0.7391,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 123.03,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..2fdada6157 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -138,6 +138,8 @@ class MigrationWriter:\n         # Deconstruct operations\n         operations = []\n         for operation in self.migration.operations:\n+            if hasattr(operation, 'bases'):\n+                imports.add('from django.db import models')\n             operation_string, operation_imports = OperationWriter(operation).serialize()\n             imports.update(operation_imports)\n             operations.append(operation_string)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14580-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/writer.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/writer.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5944,
+      "matches_issue": 0.7065,
+      "safe_to_apply": 0.5987,
+      "composite": 0.7249,
+      "secrets_or_danger": 0.2495,
+      "logic_drift": 0.3324,
+      "flagged": false
+    },
+    "laya_combined": 0.7249,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0072,
+    "rank_reason": "logistic",
+    "elapsed_s": 103.61,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261..2fdada6 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -138,6 +138,8 @@ class MigrationWriter:\n         # Deconstruct operations\n         operations = []\n         for operation in self.migration.operations:\n+            if hasattr(operation, 'bases'):\n+                imports.add('from django.db import models')\n             operation_string, operation_imports = OperationWriter(operation).serialize()\n             imports.update(operation_imports)\n             operations.append(operation_string)\n",
+  "offline_calls": 0
+}

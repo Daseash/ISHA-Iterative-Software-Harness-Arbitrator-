@@ -1,0 +1,11 @@
+--- a/lib/matplotlib/pyplot.py
++++ b/lib/matplotlib/pyplot.py
+@@ -95,7 +95,7 @@
+     # Check whether the definition of *method* includes @_api.rename_parameter
+     # or @_api.make_keyword_only decorators; if so, propagate them to the
+     # pyplot wrapper as well.
+-    while getattr(method, "__wrapped__", None) is not None:
++    while hasattr(method, "__wrapped__"):
+         decorator = _api.deprecation.DECORATORS.get(method)
+         if decorator:
+             decorators.append(decorator)

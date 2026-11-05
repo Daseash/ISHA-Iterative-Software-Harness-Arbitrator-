@@ -1,0 +1,14 @@
+--- a/sphinx/builders/singlehtml.py
++++ b/sphinx/builders/singlehtml.py
+@@ -106,9 +106,8 @@
+         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}
+         for docname, fignumlist in self.env.toc_fignumbers.items():
+             for figtype, fignums in fignumlist.items():
+-                alias = "%s/%s" % (docname, figtype)
+-                new_fignumbers.setdefault(alias, {})
++                new_fignumbers.setdefault(figtype, {})
+                 for id, fignum in fignums.items():
+-                    new_fignumbers[alias][id] = fignum
++                    new_fignumbers[figtype][id] = fignum
+ 
+         return {self.config.master_doc: new_fignumbers}

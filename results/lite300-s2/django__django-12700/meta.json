@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12700",
+  "repo": "django/django",
+  "base_commit": "d51c50d836c5cf8db5566da17963f871be554615",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457461.0745356
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457468.5892873
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457483.707434
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457487.266822
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457528.6455715
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791457723.4938993
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/views/debug.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/views/debug.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791457386.6650374,
+  "elapsed_s": 344.26,
+  "plan": "def cleanse_setting(self, key, value):\n        \"\"\"\n        Cleanse an individual setting key/value of sensitive content. If the\n        value is a dictionary, list, or tuple, recursively cleanse the\n        contents.\n        \"\"\"\n        try:\n            if self.hidden_settings.search(key):\n                cleansed = self.cleansed_substitute\n            elif isinstance(value, dict):\n                cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n            elif isinstance(value, (list, tuple)):\n                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n            else:\n                cleansed = value\n        except TypeError:\n            # If the key isn't regex-able, just return as-is.\n            cleansed = value\n\n        if callable(cleansed):\n            cleansed = CallableSettingWrapper(cleansed)\n\n        return cleansed",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/views/debug.py",
+      "symbol": "django/views/debug.py::SafeExceptionReporterFilter",
+      "symbols": [
+        "SafeExceptionReporterFilter",
+        "cleanse_setting",
+        "get_safe_settings",
+        "get_safe_request_meta"
+      ],
+      "line_range": [
+        75,
+        235
+      ],
+      "score": 0.7407,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.9247,
+        "vector": 0.5381,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: value, settings, other, values; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/template/context_processors.py",
+      "symbol": "django/template/context_processors.py::debug",
+      "symbols": [
+        "debug",
+        "csrf",
+        "_get_val",
+        "i18n"
+      ],
+      "line_range": [
+        35,
+        51
+      ],
+      "score": 0.6125,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3844,
+        "vector": 0.5535,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: settings, django, after, this; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::deconstruct",
+      "symbols": [
+        "deconstruct",
+        "__lt__",
+        "__reduce__",
+        "get_pk_value_on_save"
+      ],
+      "line_range": [
+        417,
+        505
+      ],
+      "score": 0.646,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4801,
+        "vector": 0.6744,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: value, django, other, values)"
+    },
+    {
+      "file": "django/template/defaulttags.py",
+      "symbol": "django/template/defaulttags.py::CsrfTokenNode",
+      "symbols": [
+        "CsrfTokenNode",
+        "render",
+        "render",
+        "render"
+      ],
+      "line_range": [
+        51,
+        70
+      ],
+      "score": 0.668,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5228,
+        "vector": 0.7274,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value, settings, token, debug)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "main_help_text",
+        "execute",
+        "autocomplete"
+      ],
+      "line_range": [
+        42,
+        75
+      ],
+      "score": 0.5999,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3072,
+        "vector": 0.6505,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: value, settings, django, with)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "to_locale",
+        "__getattr__",
+        "_get_number_value"
+      ],
+      "line_range": [
+        42,
+        67
+      ],
+      "score": 0.5995,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.302,
+        "vector": 0.6581,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: settings, django, with, have)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.80965,
+  "laya_scores": {
+    "fix_quality": 1.6902,
+    "matches_issue": 0.8016,
+    "safe_to_apply": 0.7468,
+    "composite": 0.80965,
+    "secrets_or_danger": 0.2157,
+    "logic_drift": 0.2934,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: RISK, the patch logic for `dict` handling appears to be inverted in the diff (checking for `hidden_settings` instead of the original logic).\n- PERFORMANCE: PASS, the recursive cleansing of nested structures is necessary and proportional to the input size.\n- ROBUSTNESS: FAIL, the patch modifies `cleanse_setting` such that if `hidden_settings` matches, it attempts to iterate over the `value` as if it were a dictionary, which will crash on simple string/number values.\n- PONYTAIL / YAGNI: PASS, this is a necessary fix for intended functionality.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.views.debug import SafeExceptionReporterFilter\n\n@pytest.fixture\ndef filter():\n    return SafeExceptionReporterFilter()\n\ndef test_cleanse_nested_iterables(filter):\n    \"\"\"\n    Reproduce the bug where nested lists containing sensitive dictionaries\n    are not cleansed.\n    \"\"\"\n    settings = {\n        \"SECRET_KEY\": \"value\",\n        \"nested\": [\n            {\"secret\": \"value\"},\n            [{\"token\": \"value\"}]\n        ]\n    }\n    \n    # We override the filter's hidden_settings to target our keys\n    filter.hidden_settings = filter.hidden_settings.pattern + \"|SECRET_KEY|secret|token\"\n    \n    cleansed = filter.get_safe_settings()\n    \n    # Verify top level\n    assert cleansed[\"SECRET_KEY\"] == \"********************\"\n    \n    # Verify nested list of dicts\n    assert cleansed[\"nested\"][0][\"secret\"] == \"********************\"\n    \n    # Verify deep nested list of lists of dicts\n    assert cleansed[\"nested\"][1][0][\"token\"] == \"********************\"\n\ndef test_cleanse_tuple_preservation(filter):\n    \"\"\"\n    Verify that tuples are cleansed and returned as tuples (not lists).\n    \"\"\"\n    filter.hidden_settings = \"SECRET\"\n    data = {\"MY_TUPLE\": ({\"SECRET\": \"value\"},)}\n    \n    cleansed = filter.cleanse_setting(\"MY_TUPLE\", data[\"MY_TUPLE\"])\n    \n    assert isinstance(cleansed, tuple)\n    assert cleansed[0][\"SECRET\"] == \"********************\"\n\ndef test_cleanse_empty_and_none(filter):\n    \"\"\"\n    Verify that empty structures and None do not raise errors.\n    \"\"\"\n    assert filter.cleanse_setting(\"KEY\", None) is None\n    assert filter.cleanse_setting(\"KEY\", []) == []\n    assert filter.cleanse_setting(\"KEY\", {}) == {}\n\ndef test_cleanse_invalid_key_type(filter):\n    \"\"\"\n    Verify that keys which cannot be processed by regex (like integers) \n    are handled gracefully.\n    \"\"\"\n    # The current implementation uses try/except TypeError to handle non-regexable keys\n    value = {\"inner\": \"secret\"}\n    # Passing an integer as key (which usually isn't in settings, but good for robustness)\n    result = filter.cleanse_setting(123, value)\n    \n    # Should still recursively cleanse the dict even if the key itself failed regex\n    assert result[\"inner\"] == \"secret\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d821..fa81876683 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -87,9 +87,11 @@ class SafeExceptionReporterFilter:\n         \"\"\"\n         try:\n             if self.hidden_settings.search(key):\n-                cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n+            elif isinstance(value, (set, frozenset)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n             else:\n                 cleansed = value\n         except TypeError:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12700-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/debug.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/debug.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6902,
+        "matches_issue": 0.8016,
+        "safe_to_apply": 0.7468,
+        "composite": 0.80965,
+        "secrets_or_danger": 0.2157,
+        "logic_drift": 0.2934,
+        "flagged": false
+      },
+      "laya_combined": 0.8096,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 83.09,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d821..bdcb366519 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -87,9 +87,11 @@ class SafeExceptionReporterFilter:\n         \"\"\"\n         try:\n             if self.hidden_settings.search(key):\n-                cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n+            elif isinstance(value, set):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n             else:\n                 cleansed = value\n         except TypeError:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12700-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/debug.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/debug.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7269,
+        "matches_issue": 0.8277,
+        "safe_to_apply": 0.7743,
+        "composite": 0.832225,
+        "secrets_or_danger": 0.229,
+        "logic_drift": 0.249,
+        "flagged": false
+      },
+      "laya_combined": 0.8322,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 27.32,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d821..bdcb366519 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -87,9 +87,11 @@ class SafeExceptionReporterFilter:\n         \"\"\"\n         try:\n             if self.hidden_settings.search(key):\n-                cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n+            elif isinstance(value, set):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n             else:\n                 cleansed = value\n         except TypeError:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12700-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/views/debug.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/views/debug.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7269,
+        "matches_issue": 0.8277,
+        "safe_to_apply": 0.7743,
+        "composite": 0.832225,
+        "secrets_or_danger": 0.229,
+        "logic_drift": 0.249,
+        "flagged": false
+      },
+      "laya_combined": 0.8322,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0059,
+      "rank_reason": "logistic",
+      "elapsed_s": 87.51,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d821..fa81876683 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -87,9 +87,11 @@ class SafeExceptionReporterFilter:\n         \"\"\"\n         try:\n             if self.hidden_settings.search(key):\n-                cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n+            elif isinstance(value, (set, frozenset)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n             else:\n                 cleansed = value\n         except TypeError:\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12700-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/views/debug.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/views/debug.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6902,
+      "matches_issue": 0.8016,
+      "safe_to_apply": 0.7468,
+      "composite": 0.80965,
+      "secrets_or_danger": 0.2157,
+      "logic_drift": 0.2934,
+      "flagged": false
+    },
+    "laya_combined": 0.8096,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0061,
+    "rank_reason": "logistic",
+    "elapsed_s": 83.09,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d..fa81876 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -87,9 +87,11 @@ class SafeExceptionReporterFilter:\n         \"\"\"\n         try:\n             if self.hidden_settings.search(key):\n-                cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n+            elif isinstance(value, (set, frozenset)):\n+                cleansed = type(value)(self.cleanse_setting(key, v) for v in value)\n             else:\n                 cleansed = value\n         except TypeError:\n",
+  "offline_calls": 0
+}

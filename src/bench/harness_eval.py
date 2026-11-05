@@ -1,0 +1,408 @@
+"""
+ISHA SWE-bench Harness Evaluation — thin, faithful wrapper around the
+**official** swebench Docker harness.
+
+Nothing here re-implements grading: the container images, the FAIL_TO_PASS /
+PASS_TO_PASS lists and the per-repo log parsers all come from the official
+package.  This module only
+
+  * writes the predictions file the harness expects,
+  * runs ``swebench.harness.run_evaluation`` with logs confined to the run
+    directory, and
+  * reads back the official report.
+
+Windows note
+------------
+The harness itself is pure Python + the Docker API, so it runs from Windows
+PowerShell against Docker Desktop's Linux engine.  WSL2 is the supported
+backend for Docker Desktop (Settings -> General -> use WSL2).  If you prefer
+to drive everything from a Linux shell, the same commands work inside WSL2:
+
+    wsl -d Ubuntu -- bash -lc "cd /mnt/c/Users/Eashwar/ISHA/isha-agent && \\
+        python -m src.bench.harness_eval --run-id baseline"
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.bench import dataset as ds  # noqa: E402
+
+RESULTS_DIR = ROOT / "results"
+
+# Files swebench materialises and then copies into the eval container.  On
+# Windows ``Path.write_text`` turns every ``\n`` into ``\r\n``; bash dies on the
+# CRs in ``/eval.sh`` (``set: pipefail\r: invalid option name``) and git apply
+# dies on them in ``/tmp/patch.diff`` (``Stripping trailing CRs from patch``).
+_CONTAINER_SUFFIXES = {".sh", ".diff", ".patch"}
+
+_write_text_lf_installed = False
+
+
+def install_lf_writes() -> None:
+    """Force LF line endings for the files swebench ships into containers."""
+    global _write_text_lf_installed
+    if _write_text_lf_installed:
+        return
+    original = Path.write_text
+
+    def write_text(self, data, *args, **kwargs):  # type: ignore[no-untyped-def]
+        if self.suffix in _CONTAINER_SUFFIXES:
+            kwargs.setdefault("newline", "\n")
+        # swebench writes eval.sh / patch files without an explicit encoding;
+        # on Windows that falls back to the cp1252 locale codec and crashes
+        # with UnicodeEncodeError the moment a test spec contains any
+        # non-ASCII character.  Force UTF-8 for everything the harness writes.
+        kwargs.setdefault("encoding", "utf-8")
+        return original(self, data, *args, **kwargs)
+
+    Path.write_text = write_text  # type: ignore[method-assign]
+
+    # swebench also uses bare ``open()`` (no encoding) in several text
+    # places: run_evaluation.py writes the test output / reports, and
+    # grading.py reads the test output back.  On Windows the cp1252 locale
+    # default crashes on any non-ASCII test output, marking a perfectly good
+    # grading run as an infra error.  Force UTF-8 for those modules' ``open``.
+    try:
+        import builtins
+        import swebench.harness.grading as _grading
+        import swebench.harness.run_evaluation as _run_eval
+
+        builtin_open = builtins.open
+
+        def utf8_open(file, mode="r", *args, **kwargs):  # type: ignore[no-untyped-def]
+            if "b" not in str(mode):
+                kwargs.setdefault("encoding", "utf-8")
+                kwargs.setdefault("errors", "replace")
+            return builtin_open(file, mode, *args, **kwargs)
+
+        for _mod in (_run_eval, _grading):
+            if not getattr(_mod, "_isha_utf8_open", False):
+                _mod.open = utf8_open  # type: ignore[attr-defined]
+                _mod._isha_utf8_open = True  # type: ignore[attr-defined]
+    except Exception:
+        pass
+    _write_text_lf_installed = True
+
+
+def cleanup_images(prefix: str = "swebench/sweb.eval.") -> list[str]:
+    """Drop eval images after a run — one per instance, ~4GB each."""
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["docker", "images", "--format", "{{.Repository}}:{{.Tag}}"],
+            capture_output=True, text=True, timeout=60,
+        )
+        if out.returncode != 0:
+            return []
+        names = [n for n in out.stdout.split() if n.startswith(prefix)]
+        for name in names:
+            subprocess.run(
+                ["docker", "rmi", "-f", name],
+                capture_output=True, text=True, timeout=300,
+            )
+        return names
+    except Exception:
+        return []
+
+
+def _predictions(run_dir: Path) -> Path:
+    path = run_dir / "predictions.json"
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"{path} not found — run `python -m src.bench.runner --run-id "
+            f"{run_dir.name}` first."
+        )
+    return path
+
+
+def evaluate(
+    run_dir: Path,
+    max_workers: int = 3,
+    timeout: int = 1800,
+    run_eval_id: str | None = None,
+    keep_images: bool = False,
+    instances: list[str] | None = None,
+) -> dict:
+    """Run the official harness over a run's predictions and return its report."""
+    ready, message = is_docker_ready()
+    if not ready:
+        raise RuntimeError(message)
+
+    from swebench.harness.run_evaluation import main as swe_main
+
+    install_lf_writes()
+
+    predictions_path = _predictions(run_dir)
+    raw_preds = json.loads(predictions_path.read_text(encoding="utf-8"))
+    if isinstance(raw_preds, dict):
+        preds = [
+            {
+                "instance_id": k.replace("/", "__"),
+                "model_patch": v if isinstance(v, str) else v.get("model_patch", ""),
+                "model_name_or_path": "ISHA",
+            }
+            for k, v in raw_preds.items()
+        ]
+    else:
+        preds = [
+            {
+                "instance_id": p.get("instance_id", "").replace("/", "__"),
+                "model_patch": p.get("model_patch", ""),
+                "model_name_or_path": p.get("model_name_or_path", "ISHA"),
+            }
+            for p in raw_preds
+            if isinstance(p, dict)
+        ]
+
+    # P1-06: whitespace-only patches are not submittable (harness would grade noise).
+    instance_ids = [p["instance_id"] for p in preds
+                    if (p.get("model_patch") or "").strip() and not _is_whitespace_noop(p.get("model_patch") or "")]
+    if instances:
+        target_set = set(instances)
+        instance_ids = [i for i in instance_ids if i in target_set]
+    if not instance_ids:
+        report = _empty_report(len(preds))
+        _write_report(run_dir, report)
+        return report
+
+    eval_id = run_eval_id or run_dir.name
+    report_dir = run_dir / "harness"
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    cwd = Path.cwd()
+    log_root = run_dir / "harness"
+    log_root.mkdir(parents=True, exist_ok=True)
+    # The harness resolves logs/run_evaluation relative to the CWD, so run it
+    # from the run directory: logs stay next to the results they explain.
+    chunk_size = int(os.getenv("ISHA_EVAL_CHUNK_SIZE", "4"))
+    chunks = [instance_ids[i:i + chunk_size] for i in range(0, len(instance_ids), chunk_size)]
+
+    os.chdir(run_dir)
+    try:
+        for idx, chunk in enumerate(chunks):
+            print(f"[{idx + 1}/{len(chunks)}] Evaluating batch of {len(chunk)} instance(s) in Docker...", flush=True)
+            swe_main(
+                dataset_name=ds.DATASET_NAME,
+                split=ds.SPLIT,
+                instance_ids=chunk,
+                predictions_path=str(predictions_path),
+                max_workers=max_workers,
+                open_file_limit=4096,
+                run_id=f"{eval_id}-p{idx + 1}" if len(chunks) > 1 else eval_id,
+                timeout=timeout,
+                rewrite_reports=False,
+                modal=False,
+                report_dir=str(report_dir),
+                task_repo=None,
+            )
+            if not keep_images:
+                removed = cleanup_images()
+                if removed:
+                    print(f"Removed {len(removed)} eval image(s) after batch to keep disk free", flush=True)
+    finally:
+        os.chdir(cwd)
+
+    report = load_official_report(run_dir, eval_id)
+    # Write-B (P0-05): Docker truth -> SQLite outcomes (best-effort, never fails eval).
+    try:
+        _writeback_resolved(run_dir, report)
+    except Exception:
+        pass
+    return report
+
+
+def _writeback_resolved(run_dir: Path, report: dict) -> int:
+    """UPDATE outcomes SET resolved=? for every graded instance (Sec 6 Write-B)."""
+    from src.memory import store as _mem
+
+    n = 0
+    # 1. Per-instance reports: .../logs/.../<iid>/report.json = {iid: {resolved: bool}}
+    for rep_file in run_dir.rglob("report.json"):
+        try:
+            data = json.loads(rep_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        for iid, val in data.items():
+            if isinstance(val, dict) and "resolved" in val:
+                try:
+                    _mem.resolve(str(iid), bool(val.get("resolved") is True))
+                    n += 1
+                except Exception:
+                    pass
+    # 2. Summary report resolved_ids list (if present).
+    try:
+        ids = (report or {}).get("resolved_ids") or []
+        if isinstance(ids, list):
+            for iid in ids:
+                try:
+                    _mem.resolve(str(iid), True)
+                    n += 1
+                except Exception:
+                    pass
+    except Exception:
+        pass
+
+    try:
+        from scripts.sync_resolved_to_memory import sync_all
+        sync_all()
+    except Exception:
+        pass
+
+    return n
+
+
+def _is_whitespace_noop(patch: str) -> bool:
+    """True when the patch has no +/- content lines (headers only)."""
+    try:
+        from src.bench.gates import is_semantic_noop
+
+        return bool(is_semantic_noop(patch))
+    except Exception:
+        lines = [ln for ln in (patch or "").splitlines()
+                 if ln.startswith(("+", "-")) and not ln.startswith(("+++", "---"))]
+        return not lines
+
+
+def _empty_report(total: int) -> dict:
+    return {
+        "total_instances": total,
+        "resolved_instances": 0,
+        "resolved_ids": [],
+        "note": "no non-empty model_patch was produced",
+    }
+
+
+def _write_report(run_dir: Path, report: dict) -> Path:
+    out = run_dir / "harness_report.json"
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    return out
+
+
+def load_official_report(run_dir: Path, eval_id: str | None = None, write: bool = True) -> dict:
+    """Read back the harness report for a run (newest if not specified).
+
+    P1-09: read-only when write=False (was always writing harness_report.json
+    on the read path).
+    """
+    report_dir = run_dir / "harness"
+    candidates = sorted(report_dir.glob("*.json")) if report_dir.is_dir() else []
+    # Prefer a run report over run.json metadata.
+    scored = []
+    for path in candidates:
+        if path.name in ("run.json", "harness_report.json"):
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if "resolved_ids" in payload:
+            scored.append((0 if (eval_id and eval_id in path.name) else 1, path.name, payload))
+    if not scored:
+        return {}
+    # P1-06: newest report wins (was oldest: scored[0] after ascending sort).
+    scored.sort(key=lambda t: (t[0], t[1]), reverse=True)
+    # Prefer the requested eval_id first, then newest by name.
+    if eval_id:
+        matching = [payload for pref, name, payload in scored if eval_id in name]
+        if len(matching) > 1:
+            all_resolved = set()
+            all_completed = set()
+            all_unresolved = set()
+            for m in matching:
+                all_resolved.update(m.get("resolved_ids", []))
+                all_completed.update(m.get("completed_ids", []))
+                all_unresolved.update(m.get("unresolved_ids", []))
+            base = dict(matching[0])
+            base["resolved_ids"] = sorted(list(all_resolved))
+            base["completed_ids"] = sorted(list(all_completed))
+            base["unresolved_ids"] = sorted(list(all_unresolved - all_resolved))
+            base["resolved_instances"] = len(all_resolved)
+            base["completed_instances"] = len(all_completed)
+            base["total_instances"] = max(base.get("total_instances", 0), len(all_completed))
+            report = base
+        elif matching:
+            report = matching[0]
+        else:
+            report = scored[0][2]
+    else:
+        report = scored[0][2]
+    if write:
+        _write_report(run_dir, report)
+    return report
+
+
+def is_docker_ready() -> tuple[bool, str]:
+    """(reachable, message) for the Docker daemon the harness needs."""
+    try:
+        import docker
+
+        client = docker.from_env(timeout=10)
+        version = client.version().get("Version", "unknown")
+        return True, f"Docker {version} reachable"
+    except Exception as exc:
+        return False, (
+            f"Docker daemon unreachable ({exc.__class__.__name__}: {exc}). "
+            "Start Docker Desktop (WSL2 backend) and retry."
+        )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run the official SWE-bench harness")
+    parser.add_argument("--run-id", required=True, help="results/<run-id> to evaluate")
+    parser.add_argument("--max-workers", type=int, default=3)
+    parser.add_argument("--timeout", type=int, default=1800)
+    parser.add_argument(
+        "--keep-images",
+        action="store_true",
+        help="keep the ~4GB-per-instance eval images after grading",
+    )
+    parser.add_argument(
+        "--instances",
+        nargs="*",
+        default=None,
+        help="Optional subset of instance IDs to evaluate",
+    )
+    args = parser.parse_args()
+
+    run_dir = RESULTS_DIR / args.run_id
+    if not run_dir.is_dir():
+        print(f"Unknown run: {run_dir}")
+        return 2
+
+    ready, message = is_docker_ready()
+    print(message)
+    if not ready:
+        return 3
+
+    report = evaluate(
+        run_dir,
+        max_workers=args.max_workers,
+        timeout=args.timeout,
+        keep_images=args.keep_images,
+        instances=args.instances,
+    )
+    # The harness only submits instances with a non-empty patch; count the whole
+    # slice as the denominator so empty patches are not silently excluded.
+    expected = len(json.loads(_predictions(run_dir).read_text(encoding="utf-8")))
+    resolved = report.get("resolved_instances", 0)
+    rate = (resolved / expected) if expected else 0.0
+    print(f"\nOfficial harness: {resolved}/{expected} resolved ({rate:.1%})"
+          f" — {report.get('total_instances', 0)} submitted")
+    print(f"Report: {run_dir / 'harness_report.json'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

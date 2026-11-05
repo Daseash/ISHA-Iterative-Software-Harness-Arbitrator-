@@ -1,0 +1,8 @@
+--- a/astropy/wcs/wcs.py
++++ b/astropy/wcs/wcs.py
+@@
+-            output = func(xy, origin)
++            # Guard against empty input arrays: return empty outputs without invoking wcslib.
++            if any(arr.size == 0 for arr in xy):
++                return [np.empty(0, dtype=np.float64) for _ in xy]
++            output = func(xy, origin)

@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/image.py b/lib/matplotlib/image.py
+index 7b066bdaf7..1adccd368d 100644
+--- a/lib/matplotlib/image.py
++++ b/lib/matplotlib/image.py
+@@ -107,7 +107,7 @@ def composite_images(images, renderer, magnification=1.0):
+         _image.resample(data, output, trans, _image.NEAREST,
+                         resample=False, alpha=alpha)
+ 
+-    return output, bbox.x0 / magnification, bbox.y0 / magnification
++    return output, bbox.x0 // magnification, bbox.y0 // magnification
+ 
+ 
+ def _draw_list_compositing_images(

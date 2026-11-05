@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-11910",
+  "repo": "django/django",
+  "base_commit": "d232fd76a85870daf345fd8f8d617fe7802ae194",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443450.663231
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443466.7172678
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443489.8872843
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443489.9896472
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443568.555742
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791443900.460173
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/writer.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791442742.34774,
+  "error": "attempt 1 exceeded 600s",
+  "elapsed_s": 565.74,
+  "plan": "Step 1: Root cause\nThe issue occurs because the OperationWriter.serialize method in django/db/migrations/writer.py incorrectly includes the 'self' argument when retrieving argument names via get_func_args. This causes a misalignment when writing operation arguments, where the first actual argument (e.g., 'model') gets assigned to the 'self' placeholder, shifting all subsequent arguments. For AlterField operations involving ForeignKey fields pointing to a renamed primary key, this results in the to_field parameter receiving the old field name instead of the new one.\n\nStep 2: Exact changes\nModify django/db/migrations/writer.py in the OperationWriter.serialize method:\n- Replace line 76: `operation_args = get_func_args(self.operation.__init__)`\n- With: `operation_args = get_func_args(self.operation.__init__)[1:]`\n- Add explanatory comment: `# Exclude 'self' from the list of argument names returned by get_func_args`",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/migrations/writer.py",
+      "symbol": "django/db/migrations/writer.py::as_string",
+      "symbols": [
+        "as_string",
+        "filename",
+        "basedir",
+        "MigrationWriter"
+      ],
+      "line_range": [
+        129,
+        200
+      ],
+      "score": 0.6287,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4837,
+        "vector": 0.4818,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: operations, migrations, django, models)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "__init__",
+        "contribute_to_class",
+        "CommaSeparatedIntegerField"
+      ],
+      "line_range": [
+        55,
+        58
+      ],
+      "score": 0.6598,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6025,
+        "vector": 0.5346,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: model_name; body matches report terms: name, model_name, field, model)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::CASCADE",
+      "symbols": [
+        "CASCADE",
+        "PROTECT",
+        "add_field_update",
+        "SET_NULL"
+      ],
+      "line_range": [
+        17,
+        23
+      ],
+      "score": 0.6549,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5316,
+        "vector": 0.6001,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: field; body matches report terms: name, field, null, model; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "sort_dependencies",
+        "register_serializer"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.5963,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4003,
+        "vector": 0.4268,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: class, when)"
+    },
+    {
+      "file": "django/contrib/contenttypes/management/__init__.py",
+      "symbol": "django/contrib/contenttypes/management/__init__.py::RenameContentType",
+      "symbols": [
+        "RenameContentType",
+        "_rename",
+        "inject_rename_contenttypes_operations",
+        "get_contenttypes_and_models"
+      ],
+      "line_range": [
+        6,
+        44
+      ],
+      "score": 0.5935,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4504,
+        "vector": 0.299,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: renamed, class, name, migrations)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0011_update_proxy_permissions.py",
+      "symbol": "django/contrib/auth/migrations/0011_update_proxy_permissions.py::Migration",
+      "symbols": [
+        "Migration",
+        "update_proxy_model_permissions",
+        "revert_proxy_model_permissions"
+      ],
+      "line_range": [
+        61,
+        68
+      ],
+      "score": 0.5839,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3537,
+        "vector": 0.3786,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: operations, class, name, migrations; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.703025,
+  "laya_scores": {
+    "fix_quality": 1.5232,
+    "matches_issue": 0.7578,
+    "safe_to_apply": 0.5311,
+    "composite": 0.703025,
+    "secrets_or_danger": 0.1051,
+    "logic_drift": 0.1934,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "SECURITY: PASS – change only alters argument extraction, no injection or secret exposure.  \nPERFORMANCE: PASS – no effect on query complexity or runtime overhead.  \nROBUSTNESS: PASS – simply excludes 'self' from args; no exception handling or mutability introduced.  \nPONYTAIL / YAGNI: PASS – minor cleanup, no new abstractions or dependencies.  \nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.db.migrations.writer import OperationWriter\nfrom django.db.migrations.operations.fields import AlterField, RenameField\nfrom django.db import models\n\ndef test_alter_field_to_field_serialization():\n    \"\"\"Test that AlterField serialization correctly preserves to_field value.\"\"\"\n    op = AlterField(\n        model_name='modelb',\n        name='field_fk',\n        field=models.ForeignKey(\n            'testapp.ModelA',\n            blank=True,\n            null=True,\n            on_delete=models.CASCADE,\n            to_field='field_fixed'\n        )\n    )\n    writer = OperationWriter(op)\n    code, imports = writer.serialize()\n    code_str = '\\n'.join(code)\n    assert \"to_field='field_fixed'\" in code_str\n\ndef test_alter_field_with_related_name_serialization():\n    \"\"\"Test AlterField serialization with related_name kwarg.\"\"\"\n    op = AlterField(\n        model_name='modelb',\n        name='field_fk',\n        field=models.ForeignKey(\n            'testapp.ModelA',\n            blank=True,\n            null=True,\n            on_delete=models.CASCADE,\n            to_field='field_fixed',\n            related_name='b_set'\n        )\n    )\n    writer = OperationWriter(op)\n    code, imports = writer.serialize()\n    code_str = '\\n'.join(code)\n    assert \"to_field='field_fixed'\" in code_str\n    assert \"related_name='b_set'\" in code_str\n\ndef test_rename_field_serialization():\n    \"\"\"Test RenameField serialization preserves old_name and new_name.\"\"\"\n    op = RenameField(\n        model_name='modela',\n        old_name='field_wrong',\n        new_name='field_fixed'\n    )\n    writer = OperationWriter(op)\n    code, imports = writer.serialize()\n    code_str = '\\n'.join(code)\n    assert \"old_name='field_wrong'\" in code_str\n    assert \"new_name='field_fixed'\" in code_str",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..40dc732e48 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11910-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/writer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5232,
+        "matches_issue": 0.7578,
+        "safe_to_apply": 0.5311,
+        "composite": 0.703025,
+        "secrets_or_danger": 0.1051,
+        "logic_drift": 0.1934,
+        "flagged": false
+      },
+      "laya_combined": 0.703,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 210.15,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..8bec6ab47c 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11910-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/writer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5639,
+        "matches_issue": 0.8015,
+        "safe_to_apply": 0.5472,
+        "composite": 0.7281500000000001,
+        "secrets_or_danger": 0.086,
+        "logic_drift": 0.1696,
+        "flagged": false
+      },
+      "laya_combined": 0.7282,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.25,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..8bec6ab47c 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11910-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/writer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/writer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5639,
+        "matches_issue": 0.8015,
+        "safe_to_apply": 0.5472,
+        "composite": 0.7281500000000001,
+        "secrets_or_danger": 0.086,
+        "logic_drift": 0.1696,
+        "flagged": false
+      },
+      "laya_combined": 0.7282,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 180.12,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": false,
+    "patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261fb0..40dc732e48 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11910-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/writer.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/writer.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5232,
+      "matches_issue": 0.7578,
+      "safe_to_apply": 0.5311,
+      "composite": 0.703025,
+      "secrets_or_danger": 0.1051,
+      "logic_drift": 0.1934,
+      "flagged": false
+    },
+    "laya_combined": 0.703,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 210.15,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/writer.py b/django/db/migrations/writer.py\nindex 4918261..40dc732 100644\n--- a/django/db/migrations/writer.py\n+++ b/django/db/migrations/writer.py\n@@ -73,7 +73,8 @@ class OperationWriter:\n \n         imports = set()\n         name, args, kwargs = self.operation.deconstruct()\n-        operation_args = get_func_args(self.operation.__init__)\n+        operation_args = get_func_args(self.operation.__init__)[1:]\n+        # Exclude 'self' from the list of argument names returned by get_func_args\n \n         # See if this operation is in django.db.migrations. If it is,\n         # We can just use the fact we already have that imported,\n",
+  "offline_calls": 0
+}

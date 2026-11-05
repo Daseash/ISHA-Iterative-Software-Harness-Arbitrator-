@@ -1,0 +1,244 @@
+{
+  "instance_id": "django__django-15996",
+  "repo": "django/django",
+  "base_commit": "b30c0081d4d8a31ab7dc7f72a4c7099af606ef29",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653291.2772877
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653298.0757318
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653320.9404287
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653330.7664769
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653374.43027
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653430.7102084
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/serializer.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/serializer.py"
+      ],
+      "added_lines": 7,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791653213.8863018,
+  "elapsed_s": 224.92,
+  "plan": "def serialize(self):\n        enum_class = self.value.__class__\n        module = enum_class.__module__\n        try:\n            name = self.value.name\n        except AttributeError:\n            name = None\n        if name is None:\n            value_bits = [v for v in enum_class if v in self.value]\n            return (\n                \" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits),\n                {\"import %s\" % module},\n            )\n        return (\n            \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n            {\"import %s\" % module},\n        )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::BigIntegerField",
+      "symbols": [
+        "BigIntegerField",
+        "SmallIntegerField",
+        "PositiveIntegerField",
+        "AutoField"
+      ],
+      "line_range": [
+        2048,
+        2064
+      ],
+      "score": 0.671,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5906,
+        "vector": 0.6526,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: IntegerField; body matches report terms: integerfield, description, value, field)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::deserialize",
+      "symbols": [
+        "deserialize",
+        "_load_serializers",
+        "sort_dependencies",
+        "BadSerializer"
+      ],
+      "line_range": [
+        138,
+        148
+      ],
+      "score": 0.6714,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6549,
+        "vector": 0.5222,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: that, name, field)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::FloatField",
+      "symbols": [
+        "FloatField",
+        "DecimalField",
+        "IntegerField",
+        "bound_data"
+      ],
+      "line_range": [
+        345,
+        383
+      ],
+      "score": 0.6155,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3987,
+        "vector": 0.5486,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: IntegerField; body matches report terms: integerfield, that, default, value)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::default",
+      "symbols": [
+        "default",
+        "linenumbers",
+        "lower",
+        "make_list"
+      ],
+      "line_range": [
+        823,
+        827
+      ],
+      "score": 0.665,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4795,
+        "vector": 0.7929,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: value, given; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "main_help_text",
+        "execute"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.6076,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3609,
+        "vector": 0.6032,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: that, names, name, with)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "__setattr__",
+        "configure",
+        "_add_script_prefix"
+      ],
+      "line_range": [
+        89,
+        105
+      ],
+      "score": 0.603,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4181,
+        "vector": 0.4453,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: value, modified, name, case)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7550749999999999,
+  "laya_scores": {
+    "fix_quality": 1.5997,
+    "matches_issue": 0.7009,
+    "safe_to_apply": 0.7197,
+    "composite": 0.7550749999999999,
+    "secrets_or_danger": 0.2038,
+    "logic_drift": 0.3695,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No injection, credential, or unsafe execution risks introduced.\n- PERFORMANCE: PASS: Iterates over the enum class to decompose flags, which is bounded and negligible in cost.\n- ROBUSTNESS: PASS: Gracefully handles missing `.name` via AttributeError and correctly serializes bitwise combinations.\n- PONYTAIL / YAGNI: PASS: Directly solves the reported bug without adding unnecessary abstractions or dependencies.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import enum\nimport re\nfrom django.db import models\nfrom django.db.migrations.writer import EnumSerializer, MigrationWriter\n\n\nclass ColorFlag(enum.Flag):\n    RED = 1\n    GREEN = 2\n    BLUE = 4\n\n\ndef test_enum_flag_combination_serialization():\n    # Test that a combination of Enum flags (e.g. re.UNICODE | re.IGNORECASE)\n    # is correctly serialized instead of returning re.RegexFlag[None].\n    combined_flag = re.UNICODE | re.IGNORECASE\n    serializer = EnumSerializer(combined_flag)\n    serialized_string, imports = serializer.serialize()\n\n    # Verify that it produces an OR expression using individual flag names\n    assert \"re.RegexFlag[\" in serialized_string\n    assert \" | \" in serialized_string\n    assert \"UNICODE\" in serialized_string\n    assert \"IGNORECASE\" in serialized_string\n    assert \"import re\" in imports\n\n\ndef test_single_enum_flag_serialization():\n    # Edge case: A single enum flag value should still serialize normally.\n    serializer = EnumSerializer(re.UNICODE)\n    serialized_string, imports = serializer.serialize()\n\n    assert serialized_string == \"re.RegexFlag['UNICODE']\"\n    assert imports == {\"import re\"}\n\n\ndef test_standard_enum_serialization():\n    # Edge case: Standard (non-flag) Enum should serialize normally.\n    class SampleEnum(enum.Enum):\n        FIRST = 1\n        SECOND = 2\n\n    serializer = EnumSerializer(SampleEnum.FIRST)\n    serialized_string, imports = serializer.serialize()\n\n    assert \"SampleEnum['FIRST']\" in serialized_string\n    assert len(imports) == 1\n\n\ndef test_model_field_migration_writer_with_enum_flags():\n    # Edge case: Integration check ensuring MigrationWriter can serialize\n    # a model field default that uses combined flags without producing [None].\n    class DummyModel(models.Model):\n        regex_flags = models.IntegerField(default=re.UNICODE | re.IGNORECASE)\n\n        class Meta:\n            app_label = \"test_enums\"\n\n        def __str__(self):\n            return str(self.regex_flags)\n\n    field = DummyModel._meta.get_field(\"regex_flags\")\n    serialization, imports = MigrationWriter.serialize(field)\n\n    assert \"default=re.RegexFlag[\" in serialization\n    assert \"None\" not in serialization\n    assert \" | \" in serialization",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 38da1e6..e9cd698 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n+        try:\n+            name = self.value.name\n+        except AttributeError:\n+            name = None\n+        if name is None:\n+            value_bits = [v for v in enum_class if v in self.value]\n+            return (\" | \".join(\"%s.%s[%r]\" % (module, enum_class.__qualname__, v.name) for v in value_bits), {\"import %s\" % module})\n         return (\n             \"%s.%s[%r]\" % (module, enum_class.__qualname__, self.value.name),\n             {\"import %s\" % module},\n",
+  "offline_calls": 0
+}

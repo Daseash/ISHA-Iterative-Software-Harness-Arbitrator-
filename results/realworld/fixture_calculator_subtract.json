@@ -1,0 +1,22 @@
+{
+  "case": "fixture_calculator_subtract",
+  "resolved": true,
+  "stages": {
+    "baseline": {
+      "must_fail_passed": false,
+      "passed": 1,
+      "failed": 2
+    },
+    "patch_chars": 309,
+    "critic_verdict": "approved",
+    "critic_score": 0.82155,
+    "patch_applied": true,
+    "after": {
+      "must_pass_passed": true,
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "error": null,
+  "elapsed_s": 106.7
+}

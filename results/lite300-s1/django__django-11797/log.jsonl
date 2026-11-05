@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "django__django-11797", "ts": 1791398382.56418}
+{"event": "attempt", "n": 1, "ts": 1791398382.989592}
+{"event": "attempt", "n": 1, "ts": 1791398936.098638}
+{"event": "model", "ts": 1791398980.010179, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791399000.1479313, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791399033.7437224, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791399116.1201756, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791399145.368611, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791399463.060242, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791399477.4699106}

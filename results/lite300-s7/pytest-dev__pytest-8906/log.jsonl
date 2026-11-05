@@ -1,0 +1,15 @@
+{"event": "start", "instance_id": "pytest-dev__pytest-8906", "ts": 1791896777.526406}
+{"event": "attempt", "n": 1, "ts": 1791896777.7004602}
+{"event": "model", "ts": 1791896800.7385094, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791896803.0983016, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791896807.8365188, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791896811.1664157, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791896819.41671, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791896921.2595446, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896932.8655145, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896947.3609693, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896957.8025658, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896970.6513631, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896983.1490371, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791896999.7503955, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791897012.174916}

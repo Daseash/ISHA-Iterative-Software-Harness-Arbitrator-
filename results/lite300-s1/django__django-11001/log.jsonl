@@ -1,0 +1,20 @@
+{"event": "start", "instance_id": "django__django-11001", "ts": 1791277226.0645862}
+{"event": "attempt", "n": 1, "ts": 1791277227.48587}
+{"event": "model", "ts": 1791277287.6942205, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791277293.1958907, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791277506.3472471, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791277509.6876023, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791277740.1615226, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791278008.7310064, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791278247.6777582, "role": "coder", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1791278528.0830433, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791278552.577255, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in django/db/models/sql/compiler.py: @@ -358,6 +358,7 @@ — expected context not found in file: '            if not is_ref and self.ordering_parts.search(sql):' (git: error: corrupt patch at <stdin>:12\nerror: corrupt patch at <stdin>:12; sr: No SEARCH/REPLACE blocks found)", "ts": 1791278577.438454}
+{"event": "attempt", "n": 2, "ts": 1791278577.6823244}
+{"event": "model", "ts": 1791278602.9946039, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791278605.975223, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791278811.6097183, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1791278811.6229796, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791279048.4085567, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791279072.318193, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791279096.035672}

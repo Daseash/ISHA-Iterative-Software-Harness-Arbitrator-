@@ -1,0 +1,119 @@
+# ── External Agent Frameworks & Skills ─────────────────────────────────────
+.agents/
+.cursor/
+.opencode/
+.playwright-mcp/
+AGENTS.md
+plan.md
+**/plan.md
+
+# ── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ── Virtual environments ──────────────────────────────────────────────────
+venv/
+.venv/
+env/
+
+# ── Environment variables & Secrets ───────────────────────────────────────
+.env
+.env.*
+.tokens/
+*.secret
+**/secrets/
+
+# ── IDE ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Qdrant ────────────────────────────────────────────────────────────────
+qdrant_storage/
+
+# ── Git worktrees & checkouts ─────────────────────────────────────────────
+.worktrees/
+swebench_checkouts/
+live_repos/
+
+# ── OS ────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Pytest ────────────────────────────────────────────────────────────────
+.pytest_cache/
+
+# ── Runtime output (output/ directory) ────────────────────────────────────
+output/*.json
+output/*.jsonl
+output/*.txt
+output/prompts/
+output/sessions/
+data/cache/
+data/*.db
+data/*.db-wal
+data/*.db-shm
+!output/.gitkeep
+
+# ── Legacy root-level output (if any remain) ──────────────────────────────
+/approvals.jsonl
+/results.json
+/eval_results.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────
+*.log
+
+# Bench results: results/ stays deliberately TRACKED, because the reports and
+# per-instance meta.json are the evidence behind every published number and a
+# reviewer should be able to read them without re-running the harness.
+# What is ignored is the bulky raw material the reports are derived from:
+# full pytest dumps and harness working dirs run to megabytes per instance and
+# would bloat every clone for no analytical value.
+results/*/harness/logs/
+results/*/logs/
+results/harness_probe/logs/
+results/apply_failures/
+results/test-*
+results/smoke50-*
+results/*-rescue/
+results/*-c3/
+results/realworld/live/*/
+!results/realworld/live/live_candidates.json
+clean_critic.py
+
+# Master plan document (local only)
+plan.md
+**/plan.md
+
+# Scratch scripts and backups
+scratch/
+*.backup
+*.bak
+.vercel/
+website/.vercel/
+
+# Local databases and checkpoints
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+checkpoints.db
+
+# Local dataset builds, training scratch, and temporary runs
+dataset_build/
+dataset_build_clean/
+kaggle/
+runs/
+training/
+results_cloud_*/
+dist/
+build/
+*.egg-info/
+
+

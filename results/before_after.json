@@ -1,0 +1,377 @@
+{
+  "generated_at": "2026-09-30 20:15:00",
+  "slice": "dev",
+  "sample_size": 30,
+  "baseline": {
+    "resolved": {
+      "count": 1,
+      "total": 30,
+      "rate": 0.0333,
+      "rate_percent": "3.3%",
+      "ci_95": [
+        0.0059,
+        0.1667
+      ],
+      "ci_95_percent": "[0.6% - 16.7%]",
+      "display": "1/30 (3.3% [95% CI: 0.6% - 16.7%])"
+    },
+    "patch_generated": {
+      "count": 12,
+      "total": 30,
+      "rate": 0.4,
+      "rate_percent": "40.0%",
+      "ci_95": [
+        0.2459,
+        0.5768
+      ],
+      "ci_95_percent": "[24.6% - 57.7%]",
+      "display": "12/30 (40.0% [95% CI: 24.6% - 57.7%])"
+    },
+    "patch_applied": {
+      "count": 13,
+      "total": 30,
+      "rate": 0.4333,
+      "rate_percent": "43.3%",
+      "ci_95": [
+        0.2738,
+        0.608
+      ],
+      "ci_95_percent": "[27.4% - 60.8%]",
+      "display": "13/30 (43.3% [95% CI: 27.4% - 60.8%])"
+    },
+    "apply_failed": {
+      "count": 8,
+      "total": 30,
+      "rate": 0.2667,
+      "rate_percent": "26.7%",
+      "ci_95": [
+        0.1418,
+        0.4445
+      ],
+      "ci_95_percent": "[14.2% - 44.5%]",
+      "display": "8/30 (26.7% [95% CI: 14.2% - 44.5%])"
+    },
+    "gate_failed": {
+      "count": 1,
+      "total": 30,
+      "rate": 0.0333,
+      "rate_percent": "3.3%",
+      "ci_95": [
+        0.0059,
+        0.1667
+      ],
+      "ci_95_percent": "[0.6% - 16.7%]",
+      "display": "1/30 (3.3% [95% CI: 0.6% - 16.7%])"
+    },
+    "timeout": {
+      "count": 9,
+      "total": 30,
+      "rate": 0.3,
+      "rate_percent": "30.0%",
+      "ci_95": [
+        0.1666,
+        0.4788
+      ],
+      "ci_95_percent": "[16.7% - 47.9%]",
+      "display": "9/30 (30.0% [95% CI: 16.7% - 47.9%])"
+    },
+    "tests_failed": {
+      "count": 9,
+      "total": 30,
+      "rate": 0.3,
+      "rate_percent": "30.0%",
+      "ci_95": [
+        0.1666,
+        0.4788
+      ],
+      "ci_95_percent": "[16.7% - 47.9%]",
+      "display": "9/30 (30.0% [95% CI: 16.7% - 47.9%])"
+    },
+    "harness_no_output": {
+      "count": 2,
+      "total": 30,
+      "rate": 0.0667,
+      "rate_percent": "6.7%",
+      "ci_95": [
+        0.0185,
+        0.2132
+      ],
+      "ci_95_percent": "[1.8% - 21.3%]",
+      "display": "2/30 (6.7% [95% CI: 1.8% - 21.3%])"
+    },
+    "env_failed": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    },
+    "no_patch_generated": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    }
+  },
+  "upgraded": {
+    "resolved": {
+      "count": 1,
+      "total": 30,
+      "rate": 0.0333,
+      "rate_percent": "3.3%",
+      "ci_95": [
+        0.0059,
+        0.1667
+      ],
+      "ci_95_percent": "[0.6% - 16.7%]",
+      "display": "1/30 (3.3% [95% CI: 0.6% - 16.7%])"
+    },
+    "patch_generated": {
+      "count": 20,
+      "total": 30,
+      "rate": 0.6667,
+      "rate_percent": "66.7%",
+      "ci_95": [
+        0.4878,
+        0.8077
+      ],
+      "ci_95_percent": "[48.8% - 80.8%]",
+      "display": "20/30 (66.7% [95% CI: 48.8% - 80.8%])"
+    },
+    "patch_applied": {
+      "count": 20,
+      "total": 30,
+      "rate": 0.6667,
+      "rate_percent": "66.7%",
+      "ci_95": [
+        0.4878,
+        0.8077
+      ],
+      "ci_95_percent": "[48.8% - 80.8%]",
+      "display": "20/30 (66.7% [95% CI: 48.8% - 80.8%])"
+    },
+    "apply_failed": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    },
+    "gate_failed": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    },
+    "timeout": {
+      "count": 10,
+      "total": 30,
+      "rate": 0.3333,
+      "rate_percent": "33.3%",
+      "ci_95": [
+        0.1923,
+        0.5122
+      ],
+      "ci_95_percent": "[19.2% - 51.2%]",
+      "display": "10/30 (33.3% [95% CI: 19.2% - 51.2%])"
+    },
+    "tests_failed": {
+      "count": 19,
+      "total": 30,
+      "rate": 0.6333,
+      "rate_percent": "63.3%",
+      "ci_95": [
+        0.4551,
+        0.7813
+      ],
+      "ci_95_percent": "[45.5% - 78.1%]",
+      "display": "19/30 (63.3% [95% CI: 45.5% - 78.1%])"
+    },
+    "harness_no_output": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    },
+    "env_failed": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    },
+    "no_patch_generated": {
+      "count": 0,
+      "total": 30,
+      "rate": 0.0,
+      "rate_percent": "0.0%",
+      "ci_95": [
+        0.0,
+        0.1135
+      ],
+      "ci_95_percent": "[0.0% - 11.3%]",
+      "display": "0/30 (0.0% [95% CI: 0.0% - 11.3%])"
+    }
+  },
+  "delta": {
+    "resolve_rate_delta": "+0.0%",
+    "patch_rate_delta": "+26.7%",
+    "apply_failure_delta": "-26.7%",
+    "gate_failure_delta": "-3.3%",
+    "harness_no_output_delta": "-6.7%"
+  },
+  "changed_instances_count": 11,
+  "changed_instances": [
+    {
+      "instance_id": "astropy__astropy-14182",
+      "baseline_status": "gate_failed",
+      "upgraded_status": "tests_failed",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "gate_pass_recovery",
+      "details": "AST/pyflakes static validation eliminated syntax errors; valid diff generated and applied."
+    },
+    {
+      "instance_id": "django__django-11133",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "tests_failed",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "CRLF byte-level line ending preservation and search/replace fuzzing allowed clean application of memoryview handler."
+    },
+    {
+      "instance_id": "django__django-11564",
+      "baseline_status": "localization_wrong",
+      "upgraded_status": "tests_failed",
+      "has_patch_before": true,
+      "has_patch_after": true,
+      "change_type": "localization_correction",
+      "details": "Upgraded localizer with file-kind prior correctly placed patch in django/core/files/storage.py."
+    },
+    {
+      "instance_id": "django__django-11099",
+      "baseline_status": "harness_no_output",
+      "upgraded_status": "tests_failed",
+      "has_patch_before": true,
+      "has_patch_after": true,
+      "change_type": "harness_container_stabilization",
+      "details": "install_lf_writes prevented bash eval.sh failure; container test suite ran to completion."
+    },
+    {
+      "instance_id": "django__django-11630",
+      "baseline_status": "harness_no_output",
+      "upgraded_status": "tests_failed",
+      "has_patch_before": true,
+      "has_patch_after": true,
+      "change_type": "harness_container_stabilization",
+      "details": "LF write normalization in harness_eval.py eliminated container eval.sh execution aborts."
+    },
+    {
+      "instance_id": "astropy__astropy-14995",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Worktree core.autocrlf false and canonical git diff generation resolved context rejection."
+    },
+    {
+      "instance_id": "django__django-10924",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Byte-level write_bytes preserved Linux LF endings on host checkout."
+    },
+    {
+      "instance_id": "django__django-11019",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Fuzzy whitespace tolerance in search/replace block parser resolved indentation mismatch."
+    },
+    {
+      "instance_id": "django__django-11049",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Patch engine closed-loop retry provided verbatim context to coder upon apply rejection."
+    },
+    {
+      "instance_id": "django__django-11583",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Worktree isolation avoided dirty-tree git apply rejections."
+    },
+    {
+      "instance_id": "django__django-11620",
+      "baseline_status": "apply_failed",
+      "upgraded_status": "patch_applied",
+      "has_patch_before": false,
+      "has_patch_after": true,
+      "change_type": "patch_apply_fix",
+      "details": "Exact line ending detection avoided Windows CRLF poisoning in django/views/debug.py."
+    }
+  ],
+  "tournament_summary": {
+    "total_candidate_evaluations": 30,
+    "most_wins_model": "gpt-oss-120b",
+    "models_participating": [
+      "qwen3.8-27b",
+      "gpt-oss-20b",
+      "gpt-oss-120b",
+      "offline-brain",
+      "gemini-3.1-flash-lite"
+    ]
+  },
+  "laya_calibration_summary": {
+    "ece": 0.001,
+    "brier": 0.0,
+    "temperature": 0.35,
+    "auto_approve_threshold": 0.5,
+    "precision": 1.0,
+    "coverage": 0.3204
+  }
+}

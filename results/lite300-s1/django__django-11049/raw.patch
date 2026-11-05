@@ -1,0 +1,10 @@
+--- a/django/forms/fields.py
++++ b/django/forms/fields.py
+@@
+ class DurationField(Field):
+-    default_error_messages = {
+-        'invalid': _('Enter a duration in the format [DD] [HH:[MM:]]ss[.uuuuuu].'),
+-    }
++    default_error_messages = {
++        'invalid': _('Enter a duration in the format [DD] [[HH:]MM:]ss[.uuuuuu].'),
++    }

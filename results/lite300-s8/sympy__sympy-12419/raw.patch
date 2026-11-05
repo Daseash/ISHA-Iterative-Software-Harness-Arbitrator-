@@ -1,0 +1,14 @@
+diff --git a/sympy/matrices/expressions/matexpr.py b/sympy/matrices/expressions/matexpr.py
+index b4d759836e..2d3d7d111e 100644
+--- a/sympy/matrices/expressions/matexpr.py
++++ b/sympy/matrices/expressions/matexpr.py
+@@ -530,7 +530,8 @@ def conjugate(self):
+         return self
+ 
+     def _entry(self, i, j):
+-        return S.Zero
++        from sympy.functions.special.tensor_functions import KroneckerDelta
++        return KroneckerDelta(i, j)
+ 
+     def __nonzero__(self):
+         return False

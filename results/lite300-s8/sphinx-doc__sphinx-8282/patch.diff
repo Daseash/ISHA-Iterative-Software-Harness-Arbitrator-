@@ -1,0 +1,19 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index 978fd5d..d678e60 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -1461,10 +1461,12 @@ class ClassDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # type:
+                            self.fullname, exc)
+             return None
+ 
+-        if sig is None:
++        if self.options.noindex:
+             return None
+ 
+-        return stringify_signature(sig, show_return_annotation=False, **kwargs)
++        if self.env.config.autodoc_typehints == 'none':
++            kwargs.setdefault('show_annotation', False)
++        return self.format_signature(**kwargs)
+ 
+     def format_signature(self, **kwargs: Any) -> str:
+         if self.doc_as_attr:

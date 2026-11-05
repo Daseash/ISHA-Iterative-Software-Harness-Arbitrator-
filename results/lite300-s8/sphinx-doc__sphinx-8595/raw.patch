@@ -1,0 +1,13 @@
+diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py
+index d85d79617..3eb5a28af 100644
+--- a/sphinx/ext/autodoc/__init__.py
++++ b/sphinx/ext/autodoc/__init__.py
+@@ -644,6 +644,8 @@ class Documenter:
+         if not want_all:
+             if not self.options.members:
+                 return False, []  # type: ignore
++        elif '__all__' in self.object.__dict__:
++            members = []
+             # specific members given
+             selected = []
+             for name in self.options.members:  # type: str

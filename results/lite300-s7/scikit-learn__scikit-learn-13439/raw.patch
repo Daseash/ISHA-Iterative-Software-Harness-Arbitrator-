@@ -1,0 +1,14 @@
+diff --git a/sklearn/pipeline.py b/sklearn/pipeline.py
+index 7eaf9a46f0..cbcdae4206 100644
+--- a/sklearn/pipeline.py
++++ b/sklearn/pipeline.py
+@@ -52,6 +52,9 @@ class Pipeline(_BaseComposition):
+         chained, in the order in which they are chained, with the last object
+         an estimator.
+ 
++    def __len__(self):
++        return len(self.steps)
++
+     memory : None, str or object with the joblib.Memory interface, optional
+         Used to cache the fitted transformers of the pipeline. By default,
+         no caching is performed. If a string is given, it is the path to

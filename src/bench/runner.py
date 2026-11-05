@@ -1,0 +1,881 @@
+"""
+ISHA Resumable SWE-bench Runner — Phase 1 measurement.
+
+Design rules:
+
+  * **Checkpoint per instance.**  Everything lands in
+    ``results/<run_id>/<instance_id>/``; a re-run of the same ``run_id``
+    skips any instance whose ``meta.json`` says ``done``.
+  * **No gold patch / test patch during solving.**  Only the fields returned
+    by ``bench.dataset.agent_view`` are ever handed to the agent.
+  * **Backoff on rate limits.**  An instance that ends in an API failure is
+    retried with exponential backoff; providers already marked unavailable
+    are reset between instances so one quota blip does not kill the run.
+  * **Per-instance log folder.**  ``log.jsonl`` (step/model events),
+    ``patch.diff``, ``meta.json``, ``plan.md``.
+  * **Model audit.**  Every model call is recorded with its role, model and
+    position (primary vs fallback) so results are attributable.
+
+Usage:
+    python -m src.bench.runner --limit 30 --run-id baseline
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import json
+import os
+import re
+import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+RESULTS_DIR = ROOT / "results"
+
+# 1800 s: the old 900 s budget cost ~30% of instances to pure timeout on the
+# free-tier chain (backoff + chain-advance + multi-round coder retries).
+DEFAULT_INSTANCE_TIMEOUT = int(os.getenv("ISHA_BENCH_INSTANCE_TIMEOUT", "1800"))
+# Instances solved in parallel. 1 is the safe default (shared provider TPM
+# windows); raise when you hold multiple provider accounts.
+DEFAULT_WORKERS = int(os.getenv("ISHA_BENCH_WORKERS", "1"))
+DEFAULT_MAX_RETRIES = int(os.getenv("ISHA_BENCH_MAX_RETRIES", "2"))
+BASE_BACKOFF = float(os.getenv("ISHA_BENCH_BACKOFF", "20"))
+# Extra attempts granted only to instances whose diff would not apply.
+APPLY_RETRIES = int(os.getenv("ISHA_BENCH_APPLY_RETRIES", "1"))
+# Instances whose patch applied but failed the static gate (syntax / new
+# pyflakes errors) get one more attempt with the exact gate errors plus the
+# verbatim source around the failing lines fed back to the coder.
+SYNTAX_RETRIES = int(os.getenv("ISHA_BENCH_SYNTAX_RETRIES", "1"))
+# Instances that burned their whole timeout (usually rate-limit backoff, not
+# model work) get one fresh attempt instead of dying terminal.
+TIMEOUT_RETRIES = int(os.getenv("ISHA_BENCH_TIMEOUT_RETRIES", "1"))
+
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# ── Environment for a benchmark run ────────────────────────────────────────
+def apply_bench_env(
+    candidates: int | None = None,
+    verify: bool | None = None,
+) -> None:
+    """Turn on bench mode before any node reads the environment.
+
+    * ``ISHA_BENCH_MODE=1``  — no local pytest (the host has no environment
+      for these repos); patches are gated statically instead.
+    * confidence threshold 0 — there is no human in the loop during a
+      benchmark run, so the pre-patch human-escalation gate is disabled and
+      recorded instead of silently producing an empty patch.
+    * ``ISHA_CANDIDATES`` / ``ISHA_VERIFY`` — Phase 4/5 switches; defaults
+      respect ``.env`` (or 1 candidate baseline).
+    """
+    os.environ["ISHA_BENCH_MODE"] = "1"
+    os.environ.setdefault("ISHA_CONFIDENCE_THRESHOLD", "0")
+    os.environ.setdefault("ISHA_SANDBOX_MODE", "local")
+    os.environ.setdefault("ISHA_PROMPT_STATS", "1")
+    env_cand = os.getenv("ISHA_CANDIDATES", "1")
+    if candidates is not None:
+        os.environ["ISHA_CANDIDATES"] = str(max(1, candidates))
+    else:
+        os.environ["ISHA_CANDIDATES"] = env_cand
+    if verify is not None:
+        os.environ["ISHA_VERIFY"] = "1" if verify else "0"
+
+
+# ── Per-instance log folder ────────────────────────────────────────────────
+def instance_dir(run_dir: Path, instance_id: str) -> Path:
+    return run_dir / instance_id.replace("/", "__")
+
+
+_APPEND_LOCK = threading.Lock()
+
+
+def _benchmark_blacklist() -> set:
+    """AGENTS.md invariant #2: benchmark instance ids NEVER reach the RLVR
+    training tables. One source of truth: the real Lite benchmark file."""
+    global _BENCH_BLACKLIST
+    if _BENCH_BLACKLIST is None:
+        ids = set()
+        lite = ROOT / "data" / "swebench_lite.json"
+        try:
+            for row in json.loads(lite.read_text(encoding="utf-8")):
+                if isinstance(row, dict) and row.get("instance_id"):
+                    ids.add(row["instance_id"])
+        except Exception:
+            pass
+        _BENCH_BLACKLIST = ids
+    return _BENCH_BLACKLIST
+
+
+_BENCH_BLACKLIST: set | None = None
+
+
+def _record_flywheel(meta: dict, record: dict) -> None:
+    """Gap-12 flywheel glue: every sweep instance feeds the RLVR tables
+    (trajectories + auto DPO pairs) so the next build/cycle has fresh fuel.
+    Decontamination: instances inside the Lite benchmark file are dropped
+    BEFORE anything is written. Patch text here is the model's own output;
+    `resolved` carries the in-loop verification outcome, never the official
+    container truth (report.json remains the only ground truth for scores)."""
+    iid = record.get("instance_id", "")
+    if iid in _benchmark_blacklist():
+        return
+    from isha.memory.rlvr_flywheel import record_rlvr_outcome
+
+    db_path = os.environ.get("ISHA_MEMORY_DB") or str(ROOT / "data" / "memory.db")
+    candidates_payload = []
+    for idx, cand in enumerate(meta.get("candidates") or []):
+        if not isinstance(cand, dict):
+            continue
+        patch = cand.get("patch") or cand.get("diff") or cand.get("model_patch") or ""
+        critic = cand.get("critic") or cand.get("critic_scores") or {}
+        try:
+            composite = float(critic.get("composite") or cand.get("composite") or 0.0)
+        except (TypeError, ValueError):
+            composite = 0.0
+        candidates_payload.append({
+            "candidate_id": cand.get("id", idx),
+            "strategy": cand.get("strategy") or "",
+            "model": cand.get("model") or meta.get("model") or "",
+            "patch": (patch or "")[:8000],
+            "resolved": bool(cand.get("verified") or cand.get("passed") or cand.get("resolved")),
+            "repro_valid": int(cand.get("repro_valid", 1)) if cand.get("repro_valid") is not None else 1,
+            "fail_bucket": cand.get("failure_category") or meta.get("failure_category") or "unknown",
+            "critic_scores": critic if isinstance(critic, dict) else {},
+            "composite": composite,
+            "pytest_stderr": (cand.get("test_output") or cand.get("stderr") or "")[:1500],
+        })
+    if candidates_payload:
+        repo = str(meta.get("repo") or record.get("repo") or "")
+        record_rlvr_outcome(
+            instance_id=iid,
+            repo_org=repo.split("/")[-1].lower() if repo else "",
+            prompt_text=(record.get("problem_statement") or "")[:3000],
+            candidates_results=candidates_payload,
+            db_path=db_path,
+        )
+
+
+def _append(path: Path, payload: dict) -> None:
+    """Append one JSONL line. Lock-guarded: with workers>1 the parent thread
+    (attempt/timeout/model events) and the pool worker thread (LLM call-event
+    sink) append to the SAME log file concurrently — unlocked writes can
+    interleave mid-line and corrupt the JSONL."""
+    line = json.dumps(payload, ensure_ascii=False, default=str) + "\n"
+    with _APPEND_LOCK:
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(line)
+
+
+def load_checkpoint(path: Path) -> dict | None:
+    if not (path / "meta.json").is_file():
+        return None
+    try:
+        return json.loads((path / "meta.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def save_checkpoint(path: Path, meta: dict) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+    tmp = path / "meta.json.tmp"
+    tmp.write_text(json.dumps(meta, indent=2, ensure_ascii=False, default=str),
+                   encoding="utf-8")
+    tmp.replace(path / "meta.json")
+
+
+# ── Patch normalisation ────────────────────────────────────────────────────
+def canonical_patch(repo_path: str, raw_patch: str, instance_id: str = "") -> tuple[str, dict]:
+    """Apply the LLM diff to a clean checkout and read back ``git diff``.
+
+    The **regenerated** diff is what gets submitted: it is produced by git
+    from the actual tree, so the harness's own ``git apply`` on the same base
+    commit cannot fail on hunk offsets or context drift in the model's text.
+    If regeneration is unavailable the raw diff is kept.
+    """
+    from src.bench.gates import compile_gate
+    from src.tools.patch_engine import apply_patch, record_apply_failure, validate_patch
+    from src.tools.sandbox import cleanup_sandbox, make_sandbox
+
+    info: dict = {"applied": False, "message": "", "gates": {}, "regenerated": False}
+    if not raw_patch or raw_patch.startswith("["):
+        info["message"] = "no usable patch"
+        return "", info
+
+    sandbox = make_sandbox(repo_path)
+    try:
+        info["git_ready"] = _ensure_git(sandbox)
+        ok, message = apply_patch(sandbox, raw_patch)
+        # A "success" that carries per-hunk warnings is a PARTIAL apply: some
+        # file(s) of the diff landed, others did not.  Submitting the raw
+        # diff in that state (the only fallback path) ships hunks the base
+        # tree cannot accept, and the container's patcher errors out instead
+        # of running the tests.  Treat partial applies as failures so the
+        # apply-retry loop gets the verbatim-source feedback.
+        partial = ok and "Hunk failed" in message
+        info["applied"] = ok and not partial
+        info["message"] = message
+        if not ok or partial:
+            record_apply_failure(instance_id, 0, 0, raw_patch, message)
+            return "", info
+        gate = compile_gate(sandbox, raw_patch, baseline_repo=repo_path)
+        info["gates"] = gate.as_dict()
+        if not gate.ok:
+            info["message"] = "static gate failed: " + "; ".join(gate.errors)
+            return "", info
+        if info["git_ready"]:
+            regenerated = _git_diff(sandbox)
+            if regenerated.strip():
+                val_ok, val_msg = validate_patch(repo_path, regenerated)
+                info["validate_check_ok"] = val_ok
+                info["validate_check_msg"] = val_msg
+                if not val_ok:
+                    # P0-09: corrupt regen must submit empty, not corrupt diff.
+                    record_apply_failure(instance_id, 0, 0, regenerated, f"git apply --check failed: {val_msg}")
+                    info["regenerated"] = False
+                    return "", info
+                info["regenerated"] = True
+                return regenerated, info
+        info["regenerated"] = False
+        return raw_patch, info
+    finally:
+        cleanup_sandbox(sandbox)
+
+
+def _git_diff(repo_path: str) -> str:
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            ["git", "diff", "--no-color"],
+            cwd=repo_path,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=120,
+        )
+        return proc.stdout or ""
+    except Exception:
+        return ""
+
+
+def _ensure_git(root) -> bool:
+    """Make a plain sandbox copy diffable.
+
+    ``copy_repo`` deliberately drops ``.git`` (it is a scratch tree), but the
+    patch we submit has to be a *git-generated* diff or the harness's own
+    ``git apply`` can reject it on hunk offsets.  Initialising an empty repo
+    and committing the pristine tree costs a couple of seconds and gives us
+    exactly that guarantee.
+    """
+    import subprocess
+
+    root = Path(root)
+    if (root / ".git").exists():
+        return True
+    base = ["git", "-c", "user.email=isha@local", "-c", "user.name=isha"]
+    commands = [
+        ["git", "init", "-q"],
+        ["git", "config", "core.autocrlf", "false"],
+        ["git", "add", "-A"],
+        base + ["commit", "-qm", "isha base"],
+    ]
+    for cmd in commands:
+        try:
+            proc = subprocess.run(
+                cmd, cwd=str(root), capture_output=True, text=True,
+                encoding="utf-8", errors="replace", timeout=600,
+            )
+        except Exception:
+            return False
+        if proc.returncode != 0:
+            return False
+    return True
+
+
+def reset_checkout(repo_path: str) -> None:
+    import subprocess
+
+    # P0-09: hard-reset (was checkout+clean only, left staged/committed drift).
+    for cmd in (["git", "reset", "--hard", "HEAD"], ["git", "checkout", "--", "."], ["git", "clean", "-xfd"]):
+        try:
+            subprocess.run(cmd, cwd=repo_path, capture_output=True, timeout=300)
+        except Exception:
+            pass
+
+
+# ── One instance ───────────────────────────────────────────────────────────
+def _invoke_graph(record: dict, thread_id: str, notes: list[str] | None = None,
+                 sink=None) -> dict:
+    from src.agents.context import build_repo_context
+    from src.agents.graph import compiled_graph
+    from src.agents.state import AgentState
+    from src.config import clear_model_log, get_model_log, reset_call_events, set_call_event_sink
+
+    # AR-3: thread-local sinks do NOT propagate into pool worker threads, and
+    # pools reuse threads — so a stale sink from a previous attempt would
+    # cross-talk into this instance's log (or events would be silently lost).
+    # Reset the worker thread's TLS, then attach THIS attempt's sink here.
+    reset_call_events()
+    if sink is not None:
+        set_call_event_sink(sink)
+
+    repo_path = str(instance_checkout(record))
+    clear_model_log()
+    started = time.time()
+    state = AgentState(
+        issue_text=record["problem_statement"],
+        instance_id=record["instance_id"],
+        repo_path=repo_path,
+        repo_context=build_repo_context(record["problem_statement"], repo_path),
+        context_notes=list(notes or []),
+    )
+    out = compiled_graph.invoke(
+        state,
+        config={"configurable": {"thread_id": thread_id, "approval_mode": "auto"}},
+    )
+    result = AgentState(**out) if isinstance(out, dict) else out
+    return {
+        "state": result,
+        "model_log": get_model_log(),
+        "elapsed": round(time.time() - started, 2),
+    }
+
+
+def instance_checkout(record: dict) -> Path:
+    from src.bench.checkout import checkout_path
+
+    return checkout_path(record["instance_id"])
+
+
+def _apply_feedback(repo: Path, info: dict) -> str:
+    """Turn a failed apply into something the next attempt can actually use.
+
+    The dominant way a patch dies is a context line the model invented, so the
+    useful reply is the *verbatim* source around the failure — not another
+    abstract "try again".
+    """
+    message = str(info.get("message") or "")
+    if not message:
+        return ""
+    rel_match = re.search(r"Hunk failed in ([^:]+):", message)
+    rel = rel_match.group(1).strip() if rel_match else ""
+    wanted = ""
+    ctx_match = re.search(r"not found in file: (.+)$", message, re.S)
+    if ctx_match:
+        raw = ctx_match.group(1).strip()
+        try:
+            wanted = str(ast.literal_eval(raw))
+        except Exception:
+            wanted = raw.strip("'\"")
+
+    header = f"PREVIOUS PATCH DID NOT APPLY. {message[:400]}"
+    if not rel:
+        return header
+    target = repo / rel
+    if not target.is_file():
+        return header
+
+    try:
+        lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return header
+
+    idx = None
+    if wanted:
+        probe = wanted.rstrip()
+        idx = next(
+            (i for i, line in enumerate(lines) if line.rstrip() == probe), None
+        )
+    if idx is None:
+        head = "\n".join(f"{i + 1:5d}| {line}" for i, line in enumerate(lines[:80]))
+        return (
+            f"{header}\nThe context line {wanted[:160]!r} does not exist in "
+            f"{rel}. Do not invent it. The file starts:\n{head}"
+        )[:3800]
+    lo = max(0, idx - 30)
+    hi = min(len(lines), idx + 45)
+    body = "\n".join(f"{i + 1:5d}| {lines[i]}" for i in range(lo, hi))
+    return (
+        f"{header}\nVERBATIM SOURCE OF {rel} LINES {lo + 1}-{hi} — copy these "
+        f"lines character-for-character, changing only what the fix requires:\n{body}"
+    )[:3800]
+
+
+def _gate_feedback(repo: Path, info: dict) -> str:
+    """Turn a static-gate failure into feedback the next attempt can use."""
+    gates = info.get("gates") or {}
+    errors = list(gates.get("errors") or [])
+    message = str(info.get("message") or "")
+    if not errors and "static gate failed" in message:
+        errors = [message.replace("static gate failed: ", "")]
+    if not errors:
+        return ""
+    header = "PREVIOUS PATCH FAILED THE STATIC GATE. Exact errors:\n" + "\n".join(
+        f"  - {e}" for e in errors[:4]
+    ) + "\nReissue a complete corrected diff. Keep the same fix; only correct " \
+        "the broken syntax / the flagged names."
+    snippets = []
+    for err in errors[:2]:
+        # "<rel/path.py>: SyntaxError line 116: invalid syntax"
+        m = re.match(r"^(?P<file>[^:]+):.*line\s+(?P<line>\d+)", err)
+        if not m:
+            continue
+        rel = m.group("file").strip()
+        line = int(m.group("line"))
+        target = repo / rel
+        if not target.is_file():
+            continue
+        try:
+            lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        lo = max(0, line - 8)
+        hi = min(len(lines), line + 12)
+        body = "\n".join(f"{i + 1:5d}| {lines[i]}" for i in range(lo, hi))
+        snippets.append(
+            f"PRISTINE SOURCE OF {rel} LINES {lo + 1}-{hi} (the error is at "
+            f"line {line}) — copy these lines character-for-character, "
+            f"changing only what the fix requires:\n{body}"
+        )
+    out = header + ("\n\n" + "\n\n".join(snippets) if snippets else "")
+    return out[:3800]
+
+
+def run_instance(
+    record: dict,
+    path: Path,
+    timeout: int = DEFAULT_INSTANCE_TIMEOUT,
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    thread_id: str = "bench",
+) -> dict:
+    """Solve one instance, writing checkpoints as it goes.
+
+    Returns the final ``meta`` dict.  Re-entrant: a checkpoint marked ``done``
+    is returned untouched so the run resumes for free.
+    """
+    path.mkdir(parents=True, exist_ok=True)
+    log_path = path / "log.jsonl"
+    if not log_path.exists():
+        _append(log_path, {"event": "start", "instance_id": record["instance_id"],
+                           "ts": time.time()})
+
+    from src.config import reset_provider_state
+
+    # AR-3: the sink is attached inside the pool worker thread (see
+    # _invoke_graph) — setting it here would only arm the parent thread,
+    # which emits nothing. Pass it explicitly so events land in THIS log.
+    def _sink(ev: dict) -> None:
+        _append(log_path, ev)
+    attempt = 0
+    notes: list[str] = list(record.get("context_notes") or [])
+    meta: dict = {
+        "instance_id": record["instance_id"],
+        "repo": record["repo"],
+        "base_commit": record["base_commit"],
+        "status": "started",
+        "attempts": 0,
+        "failure_category": None,
+        "model_log": [],
+        "patch_info": {},
+        "started_at": time.time(),
+    }
+
+    while attempt <= max_retries:
+        attempt += 1
+        meta["attempts"] = attempt
+        reset_provider_state()
+        reset_checkout(str(instance_checkout(record)))
+
+        _append(log_path, {"event": "attempt", "n": attempt, "ts": time.time()})
+        pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="isha-bench")
+        future = pool.submit(_invoke_graph, record, f"{thread_id}-{attempt}", notes, _sink)
+        try:
+            outcome = future.result(timeout=timeout)
+        except FutureTimeout:
+            pool.shutdown(wait=False, cancel_futures=True)
+            if attempt <= TIMEOUT_RETRIES:
+                # Most free-tier timeouts are backoff-dominated: the attempt
+                # died inside rate-limit waits, not inside model work.  One
+                # fresh attempt under (hopefully) healthier quota is far
+                # cheaper than letting the instance die terminal.
+                _append(log_path, {"event": "timeout_retry", "attempt": attempt,
+                                   "ts": time.time()})
+                notes = (notes + [
+                    f"PREVIOUS ATTEMPT TIMED OUT AT {timeout}s, MOSTLY INSIDE "
+                    "RATE-LIMIT BACKOFF. Replan from scratch: keep the fix "
+                    "minimal, produce the complete diff in the earliest "
+                    "possible coder round, and do not iterate the patch text."
+                ])[-4:]
+                meta.update({"status": "retrying_after_timeout",
+                             "error": f"attempt {attempt} exceeded {timeout}s"})
+                save_checkpoint(path, meta)
+                continue
+            meta.update({
+                "status": "done",
+                "failure_category": "timeout",
+                "error": f"instance exceeded {timeout}s",
+                # was missing here -> live line printed 'NO PATCH in 0s'
+                "elapsed_s": round(time.time() - meta["started_at"], 2),
+            })
+            save_checkpoint(path, meta)
+            _append(log_path, {"event": "timeout", "attempt": attempt, "ts": time.time()})
+            return meta
+        except Exception as exc:  # noqa: BLE001 — recorded, never crashes the run
+            pool.shutdown(wait=False, cancel_futures=True)
+            if attempt > max_retries:
+                meta.update({
+                    "status": "done",
+                    "failure_category": "api_failure",
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "elapsed_s": round(time.time() - meta["started_at"], 2),
+                })
+                save_checkpoint(path, meta)
+                return meta
+            wait = BASE_BACKOFF * (2 ** (attempt - 1))
+            _append(log_path, {"event": "error", "attempt": attempt,
+                               "error": f"{type(exc).__name__}: {exc}",
+                               "backoff_s": wait, "ts": time.time()})
+            time.sleep(wait)
+            continue
+        else:
+            pool.shutdown(wait=False)
+
+        state = outcome["state"]
+        meta["model_log"] = outcome["model_log"]
+        meta["elapsed_s"] = outcome["elapsed"]
+        meta["plan"] = state.plan
+        meta["planner_confidence"] = state.planner_confidence
+        meta["localization"] = state.localization
+        meta["retry_count"] = state.retry_count
+        meta["critic_verdict"] = state.critic_verdict
+        meta["critic_score"] = state.critic_score
+        meta["laya_scores"] = state.laya_scores
+        meta["test_output"] = (state.test_output or "")[:2000]
+        meta["regression_test"] = state.regression_test
+        meta["escalation"] = state.escalation
+        meta["candidates"] = getattr(state, "candidates", []) or []
+        meta["selected_candidate"] = getattr(state, "selected_candidate", {}) or {}
+
+        for entry in outcome["model_log"]:
+            _append(log_path, {"event": "model", "ts": entry.get("timestamp"),
+                               "role": entry.get("role"), "model": entry.get("model"),
+                               "position": entry.get("position"),
+                               "note": entry.get("note", "")})
+
+        patch, info = canonical_patch(str(instance_checkout(record)), state.patch, instance_id=record["instance_id"])
+        meta["patch_info"] = info
+        meta["model_patch"] = patch
+        # Always keep the model's own text — it is the only way to see why a
+        # patch was rejected after the fact.
+        try:
+            (path / "raw.patch").write_text(state.patch or "", encoding="utf-8")
+        except OSError:
+            pass
+
+        offline = [e for e in outcome["model_log"] if e.get("position") == "offline"]
+        meta["offline_calls"] = len(offline)
+
+        if not patch:
+            meta["failure_category"] = _categorize_unsolved(meta, info)
+            if meta["failure_category"] == "api_failure" and attempt <= max_retries:
+                wait = BASE_BACKOFF * (2 ** (attempt - 1))
+                _append(log_path, {"event": "api_retry", "backoff_s": wait,
+                                   "ts": time.time()})
+                time.sleep(wait)
+                continue
+            # A patch the apply engine cannot place is the single largest
+            # bucket of wasted attempts; one retry carrying the *verbatim*
+            # source around the failure converts a good share of them.
+            if (meta["failure_category"] == "patch_apply_failed"
+                    and attempt <= APPLY_RETRIES):
+                feedback = _apply_feedback(instance_checkout(record), info)
+                if feedback:
+                    notes = (notes + [feedback])[-4:]
+                    _append(log_path, {"event": "apply_retry", "attempt": attempt,
+                                       "message": str(info.get("message", ""))[:300],
+                                       "ts": time.time()})
+                    continue
+            # A patch that applied but broke syntax (or added new pyflakes
+            # errors) is fixable: the coder saw the whole file, it just
+            # emitted a malformed edit.  Feed the exact gate errors plus the
+            # verbatim source around each failing line back and retry once.
+            if (meta["failure_category"] == "syntax_error"
+                    and attempt <= SYNTAX_RETRIES):
+                feedback = _gate_feedback(instance_checkout(record), info)
+                if feedback:
+                    notes = (notes + [feedback])[-4:]
+                    _append(log_path, {"event": "syntax_retry", "attempt": attempt,
+                                       "message": str(info.get("message", ""))[:300],
+                                       "ts": time.time()})
+                    continue
+        else:
+            meta["failure_category"] = None
+
+        (path / "patch.diff").write_text(patch or "", encoding="utf-8")
+        (path / "plan.md").write_text(
+            f"# {record['instance_id']}\n\n## Plan\n\n{state.plan}\n\n"
+            f"## Patch\n\n```diff\n{patch}\n```\n",
+            encoding="utf-8",
+        )
+        meta["status"] = "done"
+        save_checkpoint(path, meta)
+        _append(log_path, {"event": "finish", "status": "done",
+                           "has_patch": bool(patch), "ts": time.time()})
+        try:
+            from src.agents.fix_history import record_fix
+            state.patch = patch
+            state.instance_id = record["instance_id"]
+            record_fix(state)
+        except Exception:
+            pass
+        meta.setdefault("elapsed_s", round(time.time() - meta["started_at"], 2))
+        return meta
+
+    meta.setdefault("elapsed_s", round(time.time() - meta["started_at"], 2))
+    save_checkpoint(path, meta)
+    return meta
+
+
+def _categorize_unsolved(meta: dict, info: dict) -> str:
+    """First-pass category for an instance that produced no usable patch."""
+    if meta.get("failure_category") == "timeout":
+        return "timeout"
+    message = str(info.get("message", ""))
+    # P0-09: never mask an explicit no-confident-fix behind api_failure.
+    hay = f"{message} {meta.get('escalation', '')} {info.get('escalation', '')}".lower()
+    if "no confident fix" in hay or "no candidate survived" in hay:
+        return "no_confident_fix"
+    if "static gate failed" in message or "STATIC" in message:
+        return "syntax_error"
+    if not info.get("applied") and message not in ("", "no usable patch"):
+        return "patch_apply_failed"
+    if meta.get("offline_calls"):
+        return "api_failure"
+    if meta.get("escalation"):
+        if "no confident fix" in str(meta.get("escalation", "")).lower():
+            return "no_confident_fix"
+        return "api_failure"
+    if not meta.get("model_log"):
+        return "api_failure"
+    return "api_failure"
+
+
+# ── Driver ─────────────────────────────────────────────────────────────────
+def run_bench(
+    limit: int = 30,
+    run_id: str = "",
+    slice_mode: str = "head",
+    timeout: int = DEFAULT_INSTANCE_TIMEOUT,
+    max_retries: int = DEFAULT_MAX_RETRIES,
+    limit_instances: list[str] | None = None,
+    candidates: int | None = None,
+    verify: bool | None = None,
+    pre_filter: bool = True,
+    workers: int | None = None,
+    notes_file: str | Path | None = None,
+) -> Path:
+    """Run (or resume) the benchmark slice. Returns the run directory.
+
+    ``workers > 1`` solves instances in parallel threads; checkpoints keep
+    the run resumable either way.
+    """
+    from src.bench import dataset as ds
+    from src.bench.checkout import ensure_all
+
+    apply_bench_env(candidates=candidates, verify=verify)
+    run_id = run_id or time.strftime("run-%Y%m%d-%H%M%S")
+    run_dir = RESULTS_DIR / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    if limit_instances:
+        by_id = {r["instance_id"]: r for r in ds.load_records()}
+        records = [by_id[i] for i in limit_instances if i in by_id]
+    else:
+        records = ds.load_slice(limit, slice_mode)
+
+    if notes_file:
+        nf = Path(notes_file)
+        if nf.is_file():
+            try:
+                notes_map = json.loads(nf.read_text(encoding="utf-8"))
+                for r in records:
+                    if r["instance_id"] in notes_map:
+                        n_list = notes_map[r["instance_id"]]
+                        r["context_notes"] = n_list if isinstance(n_list, list) else [str(n_list)]
+                print(f"[bench] loaded test feedback notes for {len(notes_map)} instances from {nf.name}")
+            except Exception as exc:
+                print(f"[bench] warning: failed to load notes file {notes_file}: {exc}")
+
+    if pre_filter:
+        from src.bench.prefilter import filter_records
+
+        kept, dropped = filter_records(records)
+        for iid, reason in dropped:
+            path = instance_dir(run_dir, iid)
+            save_checkpoint(path, {
+                "instance_id": iid, "status": "done",
+                "failure_category": "prefiltered", "model_patch": "",
+                "skip_reason": reason, "model_log": [], "patch_info": {},
+            })
+            print(f"  [prefilter] {iid}: {reason}")
+        records = kept
+
+    ds.write_slice(run_id, records)
+    print(f"[bench] run={run_id} slice={len(records)} instances ({slice_mode}) "
+          f"candidates={os.environ.get('ISHA_CANDIDATES', '1')} "
+          f"verify={os.environ.get('ISHA_VERIFY', '1')}")
+
+    print("[bench] preparing checkouts ...")
+    ok, failures = ensure_all(records)
+    print(f"[bench] checkouts ready: {ok}/{len(records)} (failures: {len(failures)})")
+    # An instance whose tree could not be prepared would only burn its full
+    # timeout inside the graph — skip it explicitly and record why.
+    failed_checkouts = {str(f).split(":", 1)[0].strip() for f in failures}
+
+    total = len(records)
+    pending: list[tuple[int, dict, Path]] = []
+    for idx, record in enumerate(records, start=1):
+        path = instance_dir(run_dir, record["instance_id"])
+        done = load_checkpoint(path)
+        if done and done.get("status") == "done":
+            print(f"  [{idx}/{total}] {record['instance_id']} — skipped (checkpoint)")
+            continue
+        if record["instance_id"] in failed_checkouts:
+            save_checkpoint(path, {
+                "instance_id": record["instance_id"], "status": "done",
+                "failure_category": "checkout_failed", "model_patch": "",
+                "model_log": [], "patch_info": {},
+            })
+            print(f"  [{idx}/{total}] {record['instance_id']} — skipped (checkout failed)")
+            continue
+        pending.append((idx, record, path))
+
+    n_workers = max(1, workers if workers is not None else DEFAULT_WORKERS)
+    print_lock = threading.Lock()
+
+    def _solve_one(item: tuple[int, dict, Path]) -> None:
+        idx, record, path = item
+        with print_lock:
+            print(f"  [{idx}/{total}] {record['instance_id']} — solving ...", flush=True)
+        meta = run_instance(record, path, timeout=timeout, max_retries=max_retries,
+                            thread_id=f"{run_id}-{idx}")
+        try:
+            _record_flywheel(meta, record)
+        except Exception as flywheel_exc:  # noqa: BLE001
+            with print_lock:
+                print(f"      [flywheel] skipped ({type(flywheel_exc).__name__})", flush=True)
+        patch = (path / "patch.diff").read_text(encoding="utf-8") if (path / "patch.diff").is_file() else ""
+        with print_lock:
+            print(
+                f"      [{idx}/{total}] {record['instance_id']}"
+                f" -> {'patch' if patch.strip() else 'NO PATCH'}"
+                f"{' (' + meta['failure_category'] + ')' if meta.get('failure_category') else ''}"
+                f" in {meta.get('elapsed_s', 0)}s",
+                flush=True,
+            )
+
+    if not pending:
+        print(f"[bench] all {total} instances already checkpointed — nothing to do")
+    elif n_workers <= 1:
+        for item in pending:
+            _solve_one(item)
+    else:
+        print(f"[bench] solving {len(pending)} remaining instances with "
+              f"{n_workers} parallel workers")
+        with ThreadPoolExecutor(max_workers=n_workers, thread_name_prefix="isha-parallel") as pool:
+            for _ in pool.map(_solve_one, pending):
+                pass
+
+    write_predictions(run_dir, records)
+    return run_dir
+
+
+def write_predictions(run_dir: Path, records: list[dict] | None = None) -> Path:
+    """Build the official harness predictions file from the run's checkpoints."""
+    import os
+
+    # P0-14: quarantine toy offline patches (Calculator ladder) — exclude unless
+    # explicitly allowed. Offline output never fixes real django/sympy.
+    allow_offline = os.getenv("ISHA_ALLOW_OFFLINE", "0") == "1"
+    preds = []
+    skipped_offline = 0
+    for meta_path in sorted(run_dir.glob("*/meta.json")):
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if meta.get("status") != "done":
+            continue
+        if meta.get("offline_calls") and not allow_offline:
+            skipped_offline += 1
+            continue
+        # P0-09: real model id (was hardcoded "isha").
+        model_id = meta.get("model") or meta.get("model_name") or ""
+        if not model_id:
+            try:
+                for e in reversed(meta.get("model_log") or []):
+                    if e.get("role") == "coder" and e.get("model"):
+                        model_id = e["model"]
+                        break
+            except Exception:
+                pass
+        preds.append({
+            "instance_id": meta["instance_id"],
+            "model_patch": meta.get("model_patch", ""),
+            "model_name_or_path": model_id or "isha",
+        })
+    out = run_dir / "predictions.json"
+    out.write_text(json.dumps(preds, indent=2, ensure_ascii=False), encoding="utf-8")
+    if skipped_offline:
+        print(f"Quarantined {skipped_offline} offline-toy patch(es) (ISHA_ALLOW_OFFLINE=1 to include)")
+    return out
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="ISHA resumable SWE-bench runner")
+    parser.add_argument("--limit", type=int, default=30)
+    parser.add_argument("--run-id", type=str, default="")
+    parser.add_argument("--slice", choices=["head", "stratified", "ids", "dev", "final", "train"], default="head")
+    parser.add_argument("--timeout", type=int, default=DEFAULT_INSTANCE_TIMEOUT)
+    parser.add_argument("--max-retries", type=int, default=DEFAULT_MAX_RETRIES)
+    parser.add_argument("--instances", nargs="*", default=None)
+    parser.add_argument("--candidates", type=int, default=None,
+                        help="N candidates per issue (Phase 4); default 1")
+    parser.add_argument("--no-verify", action="store_true",
+                        help="skip repro verification inside the harness image")
+    parser.add_argument("--no-prefilter", action="store_true",
+                        help="run records the pre-filter would drop")
+    parser.add_argument("--workers", type=int, default=None,
+                        help="solve N instances in parallel (default 1: safe on "
+                             "shared provider TPM windows)")
+    parser.add_argument("--notes-file", type=str, default=None,
+                        help="path to JSON file mapping instance_id to feedback notes list")
+    args = parser.parse_args()
+
+    run_dir = run_bench(
+        limit=args.limit,
+        run_id=args.run_id,
+        slice_mode=args.slice,
+        timeout=args.timeout,
+        max_retries=args.max_retries,
+        limit_instances=args.instances,
+        candidates=args.candidates,
+        verify=False if args.no_verify else None,
+        pre_filter=not args.no_prefilter,
+        workers=args.workers,
+        notes_file=args.notes_file,
+    )
+    print(f"[bench] wrote {run_dir / 'predictions.json'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

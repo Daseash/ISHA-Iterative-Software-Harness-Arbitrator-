@@ -1,0 +1,7 @@
+--- a/src/_pytest/logging.py
++++ b/src/_pytest/logging.py
+@@ -17,3 +17,3 @@
+ 
+-DEFAULT_LOG_FORMAT = "%(filename)-25s %(lineno)4d %(levelname)-8s %(message)s"
++DEFAULT_LOG_FORMAT = "%(levelname)-8s %(name)s:%(filename)s:%(lineno)d %(message)s"
+ DEFAULT_LOG_DATE_FORMAT = "%H:%M:%S"

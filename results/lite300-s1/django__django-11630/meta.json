@@ -1,0 +1,413 @@
+{
+  "instance_id": "django__django-11630",
+  "repo": "django/django",
+  "base_commit": "65e86948b80262574058a94ccaae3a9b59c3faea",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395304.9308321
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395307.9261663
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395381.6207526
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395482.1307998
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395498.319816
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791395757.1751378
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 36,
+      "removed_lines": 0,
+      "warnings": [
+        "rewrite risk: 'check_model_db_table_unique' in 'django/db/models/fields/__init__.py' — the diff replaces 35/36 of its body (97%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791393471.6103947,
+  "error": "attempt 1 exceeded 1800s",
+  "elapsed_s": 492.33,
+  "plan": "def check_model_db_table_unique(app_configs=None, **kwargs):\n    \"\"\"\n    Ensure that no two models have the same database table name for the same database.\n    \"\"\"\n    from django.apps import apps\n    from itertools import chain\n    errors = []\n    if app_configs is None:\n        models = apps.get_models()\n    else:\n        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)\n    table_names_per_db = {alias: {} for alias in connections}\n    for model in models:\n        app_label = model._meta.app_label\n        model_name = model._meta.model_name\n        for alias in connections:\n            if router.allow_migrate(alias, app_label, model_name=model_name):\n                db_table = model._meta.db_table\n                if db_table in table_names_per_db[alias]:\n                    collided_model = table_names_per_db[alias][db_table]\n                    errors.append(Error(\n                        \"db_table '%s' is used by multiple models: %s.%s, %s.%s\" % (\n                            db_table,\n                            collided_model._meta.app_label,\n                            collided_model.__name__,\n                            model._meta.app_label,\n                            model.__name__\n                        ),\n                        hint=None,\n                        id='models.E028',\n                    ))\n                else:\n                    table_names_per_db[alias][db_table] = model\n    return errors",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "check",
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys"
+      ],
+      "line_range": [
+        135,
+        181
+      ],
+      "score": 0.6351,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5214,
+        "vector": 0.4977,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: name, db_table, error, table)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "__init__",
+        "main_help_text"
+      ],
+      "line_range": [
+        21,
+        30
+      ],
+      "score": 0.585,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.367,
+        "vector": 0.4025,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: name, names, with, that)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_backends",
+      "symbols": [
+        "_get_backends",
+        "_get_user_session_key",
+        "authenticate",
+        "login"
+      ],
+      "line_range": [
+        23,
+        35
+      ],
+      "score": 0.5801,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2975,
+        "vector": 0.506,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: then, have, back)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "serialize",
+        "_load_serializers",
+        "sort_dependencies"
+      ],
+      "line_range": [
+        36,
+        52
+      ],
+      "score": 0.5651,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2946,
+        "vector": 0.3867,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: error, used, this, when)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "to_locale",
+        "get_language_info",
+        "__getattr__"
+      ],
+      "line_range": [
+        42,
+        67
+      ],
+      "score": 0.5647,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2349,
+        "vector": 0.5081,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: name, have, django, with)"
+    },
+    {
+      "file": "django/contrib/messages/storage/base.py",
+      "symbol": "django/contrib/messages/storage/base.py::_get",
+      "symbols": [
+        "_get",
+        "_store",
+        "update",
+        "add"
+      ],
+      "line_range": [
+        82,
+        96
+      ],
+      "score": 0.5621,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3121,
+        "vector": 0.2842,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: then, back, error, used)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.78135,
+  "laya_scores": {
+    "fix_quality": 1.6101,
+    "matches_issue": 0.814,
+    "safe_to_apply": 0.7013,
+    "composite": 0.78135,
+    "secrets_or_danger": 0.3793,
+    "logic_drift": 0.3328,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "SECURITY: PASS - does not introduce injection, secrets exposure, path traversal, or unsafe eval/exec.\nPERFORMANCE: PASS - executes only during system checks, performs no DB queries, overhead is minimal.\nROBUSTNESS: PASS - no swallowed exceptions, mutable defaults, off‑by-one errors, or race conditions.\nPONYTAIL/YAGNI: PASS - adds needed validation for duplicate table names, not an unnecessary abstraction.\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.test import override_settings\nfrom django.apps import AppConfig\nfrom django.db import models\n\ntry:\n    from django.db.models.base import check_model_db_table_unique\nexcept ImportError:\n    from django.db.models import check_model_db_table_unique\n\n# Define a router for the main test\nclass TestRouter:\n    def allow_migrate(self, db, app_label, model_name=None, **hints):\n        if app_label == 'app1':\n            return db == 'default'\n        if app_label == 'app2':\n            return db == 'other'\n    return None\n\ndef test_duplicate_table_name_different_databases_no_error():\n    # Define the models and app configs\n    class App1Config(AppConfig):\n        name = 'app1'\n        def get_models(self):\n            return [ModelA]\n\n    class App2Config(AppConfig):\n        name = 'app2'\n        def get_models(self):\n            return [ModelB]\n\n    class ModelA(models.Model):\n        class Meta:\n            app_label = 'app1'\n            db_table = 'shared_table'\n\n    class ModelB(models.Model):\n        class Meta:\n            app_label = 'app2'\n            db_table = 'shared_table'\n\n    app1_config = App1Config('app1')\n    app2_config = App2Config('app2')\n\n    with override_settings(\n        DATABASES={\n            'default': {'ENGINE': 'django.db.backends.dummy'},\n            'other': {'ENGINE': 'django.db.backends.dummy'},\n        },\n        DATABASE_ROUTERS=[f'{__name__}.TestRouter']\n    ):\n        errors = check_model_db_table_unique(app_configs=[app1_config, app2_config])\n        assert errors == []\n\ndef test_no_models_no_error():\n    with override_settings(\n        DATABASES={\n            'default': {'ENGINE': 'django.db.backends.dummy'},\n        },\n        DATABASE_ROUTERS=[]\n    ):\n        errors = check_model_db_table_unique(app_configs=[])\n        assert errors == []\n\ndef test_one_model_no_error():\n    class App1Config(AppConfig):\n        name = 'app1'\n        def get_models(self):\n            return [ModelA]\n\n    class ModelA(models.Model):\n        class Meta:\n            app_label = 'app1'\n            db_table = 'shared_table'\n\n    app1_config = App1Config('app1')\n\n    with override_settings(\n        DATABASES={\n            'default': {'ENGINE': 'django.db.backends.dummy'},\n        },\n        DATABASE_ROUTERS=[]\n    ):\n        errors = check_model_db_table_unique(app_configs=[app1_config])\n        assert errors == []",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 94effe437f..e3a804ef1e 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -46,6 +46,42 @@ __all__ = [\n class Empty:\n     pass\n \n+def check_model_db_table_unique(app_configs=None, **kwargs):\n+    \"\"\"\n+    Ensure that no two models have the same database table name for the same database.\n+    \"\"\"\n+    from django.apps import apps\n+    from itertools import chain\n+    from django.db import connections, router\n+    errors = []\n+    if app_configs is None:\n+        models = apps.get_models()\n+    else:\n+        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)\n+    table_names_per_db = {alias: {} for alias in connections}\n+    for model in models:\n+        app_label = model._meta.app_label\n+        model_name = model._meta.model_name\n+        for alias in connections:\n+            if router.allow_migrate(alias, app_label, model_name=model_name):\n+                db_table = model._meta.db_table\n+                if db_table in table_names_per_db[alias]:\n+                    collided_model = table_names_per_db[alias][db_table]\n+                    errors.append(checks.Error(\n+                        \"db_table '%s' is used by multiple models: %s.%s, %s.%s\" % (\n+                            db_table,\n+                            collided_model._meta.app_label,\n+                            collided_model.__name__,\n+                            model._meta.app_label,\n+                            model.__name__\n+                        ),\n+                        hint=None,\n+                        id='models.E028',\n+                    ))\n+                else:\n+                    table_names_per_db[alias][db_table] = model\n+    return errors\n+\n \n class NOT_PROVIDED:\n     pass\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11630-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "added_lines": 36,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6101,
+        "matches_issue": 0.814,
+        "safe_to_apply": 0.7013,
+        "composite": 0.78135,
+        "secrets_or_danger": 0.3793,
+        "logic_drift": 0.3328,
+        "flagged": false
+      },
+      "laya_combined": 0.7813,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 197.72,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/core/checks/model_checks.py\n+++ b/django/core/checks/model_checks.py\n@@ -37,7 +37,7 @@\n         app_label = model._meta.app_label\n         model_name = model._meta.model_name\n         for alias in connections:\n-            if router.allow_migrate(alias, app_label, model_name=model_name):\n+            if router.allow_migrate(alias, app_label, model_name=model_name) and model._meta.managed:\n                 db_table = model._meta.db_table\n                 if db_table in table_names_per_db[alias]:\n                     collided_model = table_names_per_db[alias][db_table]",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11630-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/checks/model_checks.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4242,
+        "matches_issue": 0.7756,
+        "safe_to_apply": 0.5604,
+        "composite": 0.6900499999999999,
+        "secrets_or_danger": 0.2103,
+        "logic_drift": 0.2423,
+        "flagged": false
+      },
+      "laya_combined": 0.69,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.3,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1,5 +1,6 @@\n import itertools\n import logging\n import re\n+from itertools import chain\n from contextlib import contextmanager\n\n from django.apps import apps\n@@ -10,6 +11,7 @@ from django.db import connections, router\n from django.db.models import AutoField\n from django.db.models.constants import LOOKUP_SEP\n from django.db.models.deletion import Collector\n+from django.db.models.utils import make_model_tuple\n from django.db.models.options import Options\n from django.db.models.query import QuerySet\n from django.db.models.signals import post_init\n@@ -20,6 +22,7 @@ from django.utils.encoding import force_str\n from django.utils.functional import Promise\n from django.utils.text import capfirst\n from django.utils.translation import gettext_lazy as _\n+from django.utils.translation import ngettext_lazy\n\n logger = logging.getLogger('django.db.models')\n\n@@ -30,6 +33,7 @@ class Model(metaclass=ModelBase):\n     \"\"\"\n     def __init_subclass__(cls, **kwargs):\n         super().__init_subclass__(**kwargs)\n+        cls._meta = Options(cls)\n\n     def __init__(self, *args, **kwargs):\n         # Alias some things as locals to avoid repeat global lookups later.\n@@ -40,6 +44,7 @@ class Model(metaclass=ModelBase):\n         for prop in props:\n             object.__setattr__(self, prop, value)\n         if kwargs:\n+            property_names = opts._property_names\n             for prop, value in kwargs.items():\n                 if prop in property_names:\n                     object.__setattr__(self, prop, value)\n@@ -50,6 +55,7 @@ class Model(metaclass=ModelBase):\n                     raise TypeError(\n                         \"'%s' is an invalid keyword argument for this model\" % prop)\n                 setattr(self, prop, value)\n+            self._state.adding = False\n         self._state = ModelState()\n\n     # Some of the following magic methods are referenced in methods (like\n@@ -60,6 +66,7 @@ class Model(metaclass=ModelBase):\n     #\n     # Note that init() is not listed here, because subclasses that want to\n     # override init() need to call \"super().init();\", so it doesn't matter\n+    # whether it is explicitly protected or not.\n     __setattr__ = Model._setattr\n     __delattr__ = Model._delattr\n     __getstate__ = Model._get_state\n@@ -70,6 +77,7 @@ class Model(metaclass=ModelBase):\n     __eq__ = Model._get_eq\n     __hash__ = Model._get_hash\n\n+    def __str__(self):\n+        return '%s object (%s)' % (self.__class__.__name__, self.pk)\n\n     def __repr__(self):\n         return '<%s: %s>' % (self.__class__.__name__, self)\n@@ -80,6 +88,7 @@ class Model(metaclass=ModelBase):\n     def __reduce__(self):\n         return (\n             _recoverable,\n-            (self._meta.model, self.pk, self._state.db),\n+            (self._meta.model, self.pk, self._state.db),\n         )\n\n     def __init__(self, *args, **kwargs):\n@@ -90,6 +99,7 @@ class Model(metaclass=ModelBase):\n         # Alias some things as locals to avoid repeat global lookups later.\n         cls = self.__class__\n         opts = self._meta\n+        property_names = opts._property_names\n         _setattr = super().__setattr__\n         _state = self._state\n         _related_objects_cache = self._related_objects_cache\n@@ -100,6 +110,7 @@ class Model(metaclass=ModelBase):\n         for prop in props:\n             object.__setattr__(self, prop, value)\n         if kwargs:\n+            property_names = opts._property_names\n             for prop, value in kwargs.items():\n                 if prop in property_names:\n                     object.__setattr__(self, prop, value)\n@@ -110,6 +121,7 @@ class Model(metaclass=ModelBase):\n                     raise TypeError(\n                         \"'%s' is an invalid keyword argument for this model\" % prop)\n                 setattr(self, prop, value)\n+            self._state.adding = False\n         self._state = ModelState()\n\n     # Some of the following magic methods are referenced in methods (like\n@@ -120,6 +132,7 @@ class Model(metaclass=ModelBase):\n     #\n     # Note that init() is not listed here, because subclasses that want to\n     # override init() need to call \"super().init();\", so it doesn't matter\n+    # whether it is explicitly protected or not.\n     __setattr__ = Model._setattr\n     __delattr__ = Model._delattr\n     __getstate__ = Model._get_state\n@@ -130,6 +143,7 @@ class Model(metaclass=ModelBase):\n     __eq__ = Model._get_eq\n     __hash__ = Model._get_hash\n\n+    def __str__(self):\n+        return '%s object (%s)' % (self.__class__.__name__, self.pk)\n\n     def __repr__(self):\n         return '<%s: %s>' % (self.__class__.__name__, self)\n@@ -140,6 +154,7 @@ class Model(metaclass=ModelBase):\n     def __reduce__(self):\n         return (\n             _recoverable,\n-            (self._meta.model, self.pk, self._state.db),\n+            (self._meta.model, self.pk, self._state.db),\n         )\n\n     def __init__(self, *args, **kwargs):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 4",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 5",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 6",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 7",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 8",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 9",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 10",
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-109g3o2e\\django\\db\\models\\base.py: redefinition of unused 'chain' from line 11"
+      ],
+      "changed_files": [
+        "django/db/models/base.py"
+      ],
+      "added_lines": 17,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4653,
+        "matches_issue": 0.7916,
+        "safe_to_apply": 0.6194,
+        "composite": 0.7190749999999999,
+        "secrets_or_danger": 0.3895,
+        "logic_drift": 0.4834,
+        "flagged": false
+      },
+      "laya_combined": 0.7191,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 90.33,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": false,
+    "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 94effe437f..e3a804ef1e 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -46,6 +46,42 @@ __all__ = [\n class Empty:\n     pass\n \n+def check_model_db_table_unique(app_configs=None, **kwargs):\n+    \"\"\"\n+    Ensure that no two models have the same database table name for the same database.\n+    \"\"\"\n+    from django.apps import apps\n+    from itertools import chain\n+    from django.db import connections, router\n+    errors = []\n+    if app_configs is None:\n+        models = apps.get_models()\n+    else:\n+        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)\n+    table_names_per_db = {alias: {} for alias in connections}\n+    for model in models:\n+        app_label = model._meta.app_label\n+        model_name = model._meta.model_name\n+        for alias in connections:\n+            if router.allow_migrate(alias, app_label, model_name=model_name):\n+                db_table = model._meta.db_table\n+                if db_table in table_names_per_db[alias]:\n+                    collided_model = table_names_per_db[alias][db_table]\n+                    errors.append(checks.Error(\n+                        \"db_table '%s' is used by multiple models: %s.%s, %s.%s\" % (\n+                            db_table,\n+                            collided_model._meta.app_label,\n+                            collided_model.__name__,\n+                            model._meta.app_label,\n+                            model.__name__\n+                        ),\n+                        hint=None,\n+                        id='models.E028',\n+                    ))\n+                else:\n+                    table_names_per_db[alias][db_table] = model\n+    return errors\n+\n \n class NOT_PROVIDED:\n     pass\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-11630-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/__init__.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/__init__.py"
+    ],
+    "added_lines": 36,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6101,
+      "matches_issue": 0.814,
+      "safe_to_apply": 0.7013,
+      "composite": 0.78135,
+      "secrets_or_danger": 0.3793,
+      "logic_drift": 0.3328,
+      "flagged": false
+    },
+    "laya_combined": 0.7813,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0062,
+    "rank_reason": "logistic",
+    "elapsed_s": 197.72,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 94effe4..e3a804e 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -46,6 +46,42 @@ __all__ = [\n class Empty:\n     pass\n \n+def check_model_db_table_unique(app_configs=None, **kwargs):\n+    \"\"\"\n+    Ensure that no two models have the same database table name for the same database.\n+    \"\"\"\n+    from django.apps import apps\n+    from itertools import chain\n+    from django.db import connections, router\n+    errors = []\n+    if app_configs is None:\n+        models = apps.get_models()\n+    else:\n+        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)\n+    table_names_per_db = {alias: {} for alias in connections}\n+    for model in models:\n+        app_label = model._meta.app_label\n+        model_name = model._meta.model_name\n+        for alias in connections:\n+            if router.allow_migrate(alias, app_label, model_name=model_name):\n+                db_table = model._meta.db_table\n+                if db_table in table_names_per_db[alias]:\n+                    collided_model = table_names_per_db[alias][db_table]\n+                    errors.append(checks.Error(\n+                        \"db_table '%s' is used by multiple models: %s.%s, %s.%s\" % (\n+                            db_table,\n+                            collided_model._meta.app_label,\n+                            collided_model.__name__,\n+                            model._meta.app_label,\n+                            model.__name__\n+                        ),\n+                        hint=None,\n+                        id='models.E028',\n+                    ))\n+                else:\n+                    table_names_per_db[alias][db_table] = model\n+    return errors\n+\n \n class NOT_PROVIDED:\n     pass\n",
+  "offline_calls": 0
+}

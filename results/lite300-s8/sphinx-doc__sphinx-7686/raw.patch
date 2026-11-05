@@ -1,0 +1,11 @@
+--- sphinx/ext/autosummary/__init__.py
++++ sphinx/ext/autosummary/__init__.py
+@@ -367,6 +367,8 @@
+                 if doc.options.members and not doc.options.noindex:
+                     _, members = doc.get_object_members(want_all)
+                     for name, obj in members:
++                        if not doc.env.config.autosummary_imported_members and getattr(obj, '__module__', None) != real_name:
++                            continue
+                         qualname = real_name + '.' + name
+                         items.append((qualname, prefix, real_name, name))
+             except ImportError:

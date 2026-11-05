@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-14382",
+  "repo": "django/django",
+  "base_commit": "29345aecf6e8d53ccb3577a3762bb0c263f7558d",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535074.8765097
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535081.8805108
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535120.2165186
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535136.4635973
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535180.9704866
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535397.6263099
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791534989.211826,
+  "elapsed_s": 412.12,
+  "plan": "# Before\nself.validate_name(os.path.basename(target), 'directory')\n\n# After\nself.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/management/templates.py",
+      "symbol": "django/core/management/templates.py::validate_name",
+      "symbols": [
+        "validate_name",
+        "add_arguments",
+        "handle",
+        "handle_template"
+      ],
+      "line_range": [
+        211,
+        243
+      ],
+      "score": 0.7439,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.977,
+        "vector": 0.4555,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: name, make, valid, commanderror; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::CommandError",
+      "symbols": [
+        "CommandError",
+        "CommandParser",
+        "parse_args",
+        "handle_default_options"
+      ],
+      "line_range": [
+        21,
+        37
+      ],
+      "score": 0.7884,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.5626,
+        "vector": 0.3351,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: management, description, error, problem)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "load_command_class",
+        "get_commands",
+        "__init__"
+      ],
+      "line_range": [
+        23,
+        32
+      ],
+      "score": 0.7428,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.3985,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: name, management, path, directory)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_field_name",
+      "symbols": [
+        "_check_field_name",
+        "_check_backend_specific_checks",
+        "clone",
+        "to_python"
+      ],
+      "line_range": [
+        207,
+        238
+      ],
+      "score": 0.5569,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.329,
+        "vector": 0.247,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: name, valid, names, error)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "get_language_info",
+        "__getattr__",
+        "_get_number_value"
+      ],
+      "line_range": [
+        35,
+        62
+      ],
+      "score": 0.5532,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2472,
+        "vector": 0.3867,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: name, path, django, with)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_add_script_prefix",
+      "symbols": [
+        "_add_script_prefix",
+        "configure",
+        "__getattr__",
+        "Settings"
+      ],
+      "line_range": [
+        112,
+        124
+      ],
+      "score": 0.5312,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1885,
+        "vector": 0.3255,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: name, path, django, with)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import os\nimport pytest\nfrom django.core.management import CommandError\nfrom django.core.management.templates import TemplateCommand\n\nclass MockCommand(TemplateCommand):\n    def handle(self, *args, **options):\n        pass\n\ndef test_startapp_trailing_slash_reproduction():\n    \"\"\"\n    Test that providing a directory with a trailing slash correctly handles\n    the path and does not raise a CommandError for an empty identifier.\n    \"\"\"\n    cmd = MockCommand()\n    app_name = \"my_app\"\n    target_dir = \"my_app_dir/\"\n    \n    # This should pass without raising CommandError: '' is not a valid app directory.\n    # The fix ensures os.path.basename(target.rstrip(os.sep)) results in \"my_app_dir\"\n    # instead of \"\" (empty string).\n    try:\n        cmd.validate_name(os.path.basename(target_dir.rstrip(os.sep)), 'directory')\n    except CommandError as e:\n        pytest.fail(f\"validate_name raised CommandError unexpectedly: {e}\")\n\ndef test_startapp_valid_directory():\n    \"\"\"Verify that a normal directory string still works.\"\"\"\n    cmd = MockCommand()\n    cmd.validate_name(os.path.basename(\"normal_dir\".rstrip(os.sep)), 'directory')\n\ndef test_startapp_invalid_identifier():\n    \"\"\"Verify that an actually invalid name still raises a CommandError.\"\"\"\n    cmd = MockCommand()\n    # '0invalid' is not a valid python identifier\n    with pytest.raises(CommandError) as excinfo:\n        cmd.validate_name(os.path.basename(\"0invalid\".rstrip(os.sep)), 'directory')\n    assert \"not a valid\" in str(excinfo.value)\n\ndef test_startapp_multiple_trailing_slashes():\n    \"\"\"Verify that multiple trailing slashes are also handled correctly.\"\"\"\n    cmd = MockCommand()\n    target_dir = \"my_app_dir///\"\n    try:\n        cmd.validate_name(os.path.basename(target_dir.rstrip(os.sep)), 'directory')\n    except CommandError as e:\n        pytest.fail(f\"validate_name failed with multiple trailing slashes: {e}\")",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/core/management/templates.py\n+++ b/django/core/management/templates.py\n@@ -74,7 +74,7 @@\n         if target is None:\n             top_dir = os.path.join(os.getcwd(), name)\n         else:\n-            self.validate_name(os.path.basename(target), 'directory')\n+            self.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')\n             top_dir = os.path.abspath(os.path.expanduser(target))\n \n         if not os.path.exists(top_dir):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c1\\django\\core\\management\\templates.py: SyntaxError line 77: expected an indented block after 'if' statement on line 76"
+      ],
+      "changed_files": [
+        "django/core/management/templates.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6568,
+        "matches_issue": 0.872,
+        "safe_to_apply": 0.785,
+        "composite": 0.82845,
+        "secrets_or_danger": 0.1305,
+        "logic_drift": 0.1722,
+        "flagged": false
+      },
+      "laya_combined": 0.8285,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 128.18,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/core/management/templates.py\n+++ b/django/core/management/templates.py\n@@ -74,7 +74,7 @@\n         if target is None:\n             top_dir = os.path.join(os.getcwd(), name)\n         else:\n-            self.validate_name(os.path.basename(target), 'directory')\n+            self.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')\n             top_dir = os.path.abspath(os.path.expanduser(target))\n         if not os.path.exists(top_dir):\n             os.makedirs(top_dir)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c2\\django\\core\\management\\templates.py: SyntaxError line 77: expected an indented block after 'if' statement on line 76"
+      ],
+      "changed_files": [
+        "django/core/management/templates.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6568,
+        "matches_issue": 0.872,
+        "safe_to_apply": 0.785,
+        "composite": 0.82845,
+        "secrets_or_danger": 0.2901,
+        "logic_drift": 0.2169,
+        "flagged": false
+      },
+      "laya_combined": 0.8285,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 143.27,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/core/management/templates.py\n+++ b/django/core/management/templates.py\n@@ -74,7 +74,7 @@\n         if target is None:\n             top_dir = os.path.join(os.getcwd(), name)\n         else:\n-            self.validate_name(os.path.basename(target), 'directory')\n+            self.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')\n             top_dir = os.path.abspath(os.path.expanduser(target))\n \n         if not os.path.exists(top_dir):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c3\\django\\core\\management\\templates.py: SyntaxError line 77: expected an indented block after 'if' statement on line 76"
+      ],
+      "changed_files": [
+        "django/core/management/templates.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6568,
+        "matches_issue": 0.872,
+        "safe_to_apply": 0.785,
+        "composite": 0.82845,
+        "secrets_or_danger": 0.1305,
+        "logic_drift": 0.1722,
+        "flagged": false
+      },
+      "laya_combined": 0.8285,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 143.18,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/core/management/templates.py\n+++ b/django/core/management/templates.py\n@@ -74,7 +74,7 @@\n         if target is None:\n             top_dir = os.path.join(os.getcwd(), name)\n         else:\n-            self.validate_name(os.path.basename(target), 'directory')\n+            self.validate_name(os.path.basename(target.rstrip(os.sep)), 'directory')\n             top_dir = os.path.abspath(os.path.expanduser(target))\n \n         if not os.path.exists(top_dir):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14382-c1\\django\\core\\management\\templates.py: SyntaxError line 77: expected an indented block after 'if' statement on line 76"
+    ],
+    "changed_files": [
+      "django/core/management/templates.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.6568,
+      "matches_issue": 0.872,
+      "safe_to_apply": 0.785,
+      "composite": 0.82845,
+      "secrets_or_danger": 0.1305,
+      "logic_drift": 0.1722,
+      "flagged": false
+    },
+    "laya_combined": 0.8285,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0009,
+    "rank_reason": "logistic",
+    "elapsed_s": 128.18,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

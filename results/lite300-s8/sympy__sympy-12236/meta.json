@@ -1,0 +1,384 @@
+{
+  "instance_id": "sympy__sympy-12236",
+  "repo": "sympy/sympy",
+  "base_commit": "d60497958f6dea7f5e25bc41e9107a6a63694d01",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970044.6942644
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970048.5413635
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970059.6415708
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970062.1623092
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970089.1582177
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970224.2274752
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791970261.0341597
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sympy/strategies/tools.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sympy/strategies/tools.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:14"
+  },
+  "started_at": 1791970002.1112926,
+  "elapsed_s": 267.06,
+  "plan": "def subs(d, **kwargs):\n    if d:\n        rules = [rl.subs(k, v) for k, v in d.items()]\n        return top_down(do_one(*rules), **kwargs)\n    else:\n        return lambda x: x",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sympy/strategies/tools.py",
+      "symbol": "sympy/strategies/tools.py::subs",
+      "symbols": [
+        "subs",
+        "typed"
+      ],
+      "line_range": [
+        7,
+        24
+      ],
+      "score": 0.5562,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1736,
+        "vector": 0.5232,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: sympy; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/strategies/rl.py",
+      "symbol": "sympy/strategies/rl.py::subs",
+      "symbols": [
+        "subs",
+        "distribute",
+        "sort",
+        "subs_rl"
+      ],
+      "line_range": [
+        115,
+        123
+      ],
+      "score": 0.4872,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0573,
+        "vector": 0.1902,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: a; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sympy/printing/python.py",
+      "symbol": "sympy/printing/python.py::python",
+      "symbols": [
+        "python",
+        "__init__",
+        "PythonPrinter",
+        "_print_Function"
+      ],
+      "line_range": [
+        48,
+        89
+      ],
+      "score": 0.5287,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1946,
+        "vector": 0.2501,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: result, symbols, with, subs)"
+    },
+    {
+      "file": "sympy/utilities/mathml/__init__.py",
+      "symbol": "sympy/utilities/mathml/__init__.py::apply_xsl",
+      "symbols": [
+        "apply_xsl",
+        "c2p"
+      ],
+      "line_range": [
+        20,
+        42
+      ],
+      "score": 0.5176,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1093,
+        "vector": 0.3773,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: result, python, with, sympy)"
+    },
+    {
+      "file": "sympy/__init__.py",
+      "symbol": "sympy/__init__.py::enable_warnings",
+      "symbols": [
+        "enable_warnings",
+        "__sympy_debug"
+      ],
+      "line_range": [
+        28,
+        31
+      ],
+      "score": 0.5976,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4459,
+        "vector": 0.3426,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: default, sympy)"
+    },
+    {
+      "file": "sympy/tensor/array/__init__.py",
+      "symbol": "",
+      "symbols": [],
+      "line_range": [],
+      "score": 0.3124,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1436,
+        "vector": 0.2629,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (named in traceback)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7417750000000001,
+  "laya_scores": {
+    "fix_quality": 1.5125,
+    "matches_issue": 0.7935,
+    "safe_to_apply": 0.6611,
+    "composite": 0.7417750000000001,
+    "secrets_or_danger": 0.169,
+    "logic_drift": 0.6643,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS No security vulnerabilities or injection vectors introduced.\n- PERFORMANCE: PASS The list comprehension replaces `map` and `zip` cleanly without performance regressions.\n- ROBUSTNESS: PASS Replaces brittle unpacking with a clean list comprehension for dictionary items.\n- MINIMAL DIFF / YAGNI: PASS The changes directly address the bug without unnecessary scaffolding or abstractions.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sympy import symbols, Basic\nfrom sympy.strategies.tools import subs\n\ndef test_strategies_tools_subs_bug_reproduction():\n    \"\"\"\n    Reproduces the bug where `subs` in sympy.strategies.tools processes\n    rules incorrectly when multiple substitution pairs are provided,\n    because `map(rl.subs, *zip(*d.items()))` passes arguments incorrectly\n    to `rl.subs`.\n    \"\"\"\n    a = symbols('a', real=True)\n    t = symbols('t', real=True, negative=False)\n    bug = a * (-t + (-t + 1) * (2 * t - 1)) / (2 * t - 1)\n\n    # When substituting multiple items via strategies tools subs, \n    # previously it could fail or produce wrong results due to zip unpacking.\n    mapping = {a: 1}\n    subbed = subs(mapping)(bug)\n    \n    expected = (-t + (-t + 1)*(2*t - 1))/(2*t - 1)\n    assert subbed.cancel() == expected.cancel()\n\n\ndef test_strategies_tools_subs_empty_dict():\n    \"\"\"Test empty dictionary input to subs returns identity function.\"\"\"\n    expr = Basic(1, 2, 3)\n    assert subs({})(expr) is expr\n\n\ndef test_strategies_tools_subs_multiple_rules():\n    \"\"\"Test substitution with multiple key-value pairs.\"\"\"\n    x, y, z = symbols('x y z')\n    mapping = {x: y, y: z}\n    expr = x + y\n    # Simultaneous exact substitution (rules applied via do_one)\n    # With {x: y, y: z}, x becomes y, y becomes z.\n    result = subs(mapping)(expr)\n    assert result == y + z\n\n\ndef test_strategies_tools_subs_no_match():\n    \"\"\"Test substitution when keys do not exist in the expression.\"\"\"\n    x, y, z = symbols('x y z')\n    mapping = {x: y}\n    expr = z + 1\n    assert subs(mapping)(expr) == expr",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -22,7 +22,10 @@ def subs(d, **kwargs):\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        rules = [rl.subs(k, v) for k, v in d.items()]\n+        return top_down(do_one(*rules), **kwargs)\n     else:\n         return lambda x: x",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12236-c2",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/strategies/tools.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.4402,
+        "matches_issue": 0.8296,
+        "safe_to_apply": 0.7779,
+        "composite": 0.761925,
+        "secrets_or_danger": 0.1799,
+        "logic_drift": 0.7579,
+        "flagged": true
+      },
+      "laya_combined": 0.7619,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0056,
+      "rank_reason": "logistic",
+      "elapsed_s": 83.25,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -17,7 +17,7 @@\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        return top_down(do_one(*[rl.subs(a, b) for a, b in d.items()]), **kwargs)\n     else:\n         return lambda x: x",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12236-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/strategies/tools.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4546,
+        "matches_issue": 0.8241,
+        "safe_to_apply": 0.7823,
+        "composite": 0.76525,
+        "secrets_or_danger": 0.2674,
+        "logic_drift": 0.4914,
+        "flagged": false
+      },
+      "laya_combined": 0.7652,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0056,
+      "rank_reason": "logistic",
+      "elapsed_s": 71.63,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -21,7 +21,7 @@ def subs(d, **kwargs):\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        return top_down(do_one(*(rl.subs(k, v) for k, v in d.items())), **kwargs)\n     else:\n         return lambda x: x",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12236-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sympy/strategies/tools.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5111,
+        "matches_issue": 0.856,
+        "safe_to_apply": 0.8026,
+        "composite": 0.792425,
+        "secrets_or_danger": 0.1815,
+        "logic_drift": 0.7669,
+        "flagged": true
+      },
+      "laya_combined": 0.7924,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0055,
+      "rank_reason": "logistic",
+      "elapsed_s": 77.78,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash",
+    "substituted": true,
+    "patch": "--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -22,7 +22,10 @@ def subs(d, **kwargs):\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        rules = [rl.subs(k, v) for k, v in d.items()]\n+        return top_down(do_one(*rules), **kwargs)\n     else:\n         return lambda x: x",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sympy__sympy-12236-c2",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sympy/strategies/tools.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.4402,
+      "matches_issue": 0.8296,
+      "safe_to_apply": 0.7779,
+      "composite": 0.761925,
+      "secrets_or_danger": 0.1799,
+      "logic_drift": 0.7579,
+      "flagged": true
+    },
+    "laya_combined": 0.7619,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0056,
+    "rank_reason": "logistic",
+    "elapsed_s": 83.25,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sympy/strategies/tools.py b/sympy/strategies/tools.py\nindex 5160e0e..a6b284f 100644\n--- a/sympy/strategies/tools.py\n+++ b/sympy/strategies/tools.py\n@@ -18,7 +18,8 @@ def subs(d, **kwargs):\n     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))\n     \"\"\"\n     if d:\n-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)\n+        rules = [rl.subs(k, v) for k, v in d.items()]\n+        return top_down(do_one(*rules), **kwargs)\n     else:\n         return lambda x: x\n \n",
+  "offline_calls": 0
+}

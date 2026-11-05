@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "astropy__astropy-14182", "ts": 1791272214.873031}
+{"event": "attempt", "n": 1, "ts": 1791272214.9747453}
+{"event": "model", "ts": 1791272265.452564, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272268.1566916, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791272277.3537142, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272339.9805477, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272346.9687278, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272366.0962496, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791272381.807114}

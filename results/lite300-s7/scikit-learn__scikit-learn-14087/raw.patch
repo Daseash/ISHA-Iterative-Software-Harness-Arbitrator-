@@ -1,0 +1,13 @@
+diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py
+index 1999f1dae7..38b4763727 100644
+--- a/sklearn/linear_model/logistic.py
++++ b/sklearn/linear_model/logistic.py
+@@ -41,6 +41,8 @@ from ..metrics import get_scorer
+ 
+ # .. some helper functions for logistic_regression_path ..
+ def _intercept_dot(w, X, y):
++    if not isinstance(y, (int, float, np.number)):
++        y = y[:, np.newaxis]
+     """Computes y * np.dot(X, w).
+ 
+     It takes into consideration if the intercept should be fit or not.

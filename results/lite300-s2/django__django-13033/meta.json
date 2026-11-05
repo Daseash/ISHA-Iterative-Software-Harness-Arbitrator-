@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-13033",
+  "repo": "django/django",
+  "base_commit": "a59de6e89e8dc1f3e71c9a5a5bbceb373ea5247e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460218.8206582
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460223.890619
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460235.5655475
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460239.2571497
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460267.7520142
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460439.7012515
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/sql/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791460144.935293,
+  "elapsed_s": 302.55,
+  "plan": "### Step 1: Root Cause\nThe root cause is in how Django's SQL query builder resolves ordering on foreign key fields. When `order_by(\"record__root_id\")` is used, the ORM incorrectly interprets the trailing `_id` as part of the relation path rather than an attribute on the model. This triggers an unnecessary `JOIN` to the self-referencing model table to satisfy what it perceives as a request for a joined object's ID, rather than simply selecting the existing `root_id` foreign key field on the `OneModel` table. Furthermore, because it creates this extra join, the query inherits the default `ordering` defined in the `Meta` class of `OneModel` (`-id`), leading to the unexpected descending sort order.\n\n### Step 2: Exact Changes\nThe fix requires adjusting `django/db/models/sql/query.py` to prevent the unnecessary resolution of an `_id` suffix as a relational path when the field already exists as a concrete foreign key field on the current model.\n\n1.  **File:** `django/db/models/sql/query.py`\n    *   **Function:** `get_order_dir` (and potentially the logic within `add_ordering` that calls `names_to_path` / `resolve_expression`)\n    *   **Change:** Modify the logic that parses the ordering string. Specifically, within `add_ordering`, add a check before decomposing the path to see if the string (minus the potential `-_` prefix) corresponds directly to an existing field name on the model. If it matches a field that is a `ForeignKey` (or `OneToOneField`), do not force a `JOIN` to resolve the `_id` suffix, but instead use the `attname` of that field directly.\n\nThis prevents the query compiler from creating the redundant `LEFT OUTER JOIN` and subsequently avoids applying the `Meta` ordering of the joined model.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "django/db/models/sql/query.py::resolve_expression",
+      "symbols": [
+        "resolve_expression",
+        "add_ordering",
+        "add_extra",
+        "update_join_types"
+      ],
+      "line_range": [
+        1024,
+        1048
+      ],
+      "score": 0.7314,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8058,
+        "vector": 0.708,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: query; body matches report terms: model, select, need, field)"
+    },
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::__init__",
+      "symbols": [
+        "__init__",
+        "extra",
+        "__init__",
+        "_filter_or_exclude"
+      ],
+      "line_range": [
+        187,
+        202
+      ],
+      "score": 0.7,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7984,
+        "vector": 0.4618,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: query; body matches report terms: model, class, field, objects)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::BigAutoField",
+      "symbols": [
+        "BigAutoField",
+        "__init__",
+        "get_choices",
+        "BigIntegerField"
+      ],
+      "line_range": [
+        2441,
+        2449
+      ],
+      "score": 0.8462,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3803,
+        "vector": 0.4678,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: BigIntegerField; body matches report terms: class, field, bigintegerfield; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::clear_restricted_objects_from_queryset",
+      "symbols": [
+        "clear_restricted_objects_from_queryset",
+        "CASCADE",
+        "PROTECT",
+        "RESTRICT"
+      ],
+      "line_range": [
+        151,
+        158
+      ],
+      "score": 0.7048,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7484,
+        "vector": 0.5642,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: qs; body matches report terms: model, objects, queryset, filter)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::unregister_serializer",
+      "symbols": [
+        "unregister_serializer",
+        "get_serializer",
+        "get_deserializer",
+        "serialize"
+      ],
+      "line_range": [
+        85,
+        93
+      ],
+      "score": 0.644,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5224,
+        "vector": 0.5696,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: doesn, does, given, note)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_user_session_key",
+      "symbols": [
+        "_get_user_session_key",
+        "authenticate",
+        "login",
+        "logout"
+      ],
+      "line_range": [
+        55,
+        60
+      ],
+      "score": 0.5382,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2712,
+        "vector": 0.2114,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: model, need, meta, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.736525,
+  "laya_scores": {
+    "fix_quality": 1.5352,
+    "matches_issue": 0.7591,
+    "safe_to_apply": 0.6518,
+    "composite": 0.736525,
+    "secrets_or_danger": 0.0849,
+    "logic_drift": 0.4712,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, No input sanitization or execution issues introduced.\n- PERFORMANCE: RISK, String manipulation and metadata lookups within core SQL generation logic may increase overhead per query.\n- ROBUSTNESS: FAIL, The patch is syntactically malformed with misaligned indentation and placement inside the `get_group_by` method rather than the `order_by` resolution logic.\n- PONYTAIL / YAGNI: FAIL, This logic attempts to fix query ordering at the GROUP BY phase, which is conceptually incorrect and likely to cause side effects in other parts of the ORM.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.db.models import F\n\n# Models as defined in the bug report\nclass OneModel(models.Model):\n    class Meta:\n        app_label = \"test_app\"\n        ordering = (\"-id\",)\n    \n    id = models.BigAutoField(primary_key=True)\n    root = models.ForeignKey(\"OneModel\", on_delete=models.CASCADE, null=True)\n    oneval = models.BigIntegerField(null=True)\n\nclass TwoModel(models.Model):\n    class Meta:\n        app_label = \"test_app\"\n    \n    id = models.BigAutoField(primary_key=True)\n    record = models.ForeignKey(OneModel, on_delete=models.CASCADE)\n    twoval = models.BigIntegerField(null=True)\n\n@pytest.mark.django_db\ndef test_self_referencing_fk_ordering_bug():\n    \"\"\"\n    Reproduction: order_by('record__root_id') on a self-referencing FK\n    incorrectly triggers an extra JOIN and applies Meta ordering of the target.\n    \"\"\"\n    qs = TwoModel.objects.filter(record__oneval__in=[1, 2, 3])\n    qs = qs.order_by(\"record__root_id\")\n    \n    sql = str(qs.query)\n    \n    # Bug check: Should NOT have an extra join (T3) for the self-reference\n    # The erroneous query generated looks like: \n    # ... LEFT OUTER JOIN \"test_app_onemodel\" T3 ON (...)\n    assert 'LEFT OUTER JOIN' not in sql, f\"Unexpected JOIN found in query: {sql}\"\n    \n    # Bug check: Should NOT be ordered by T3.id (which is descending due to Meta)\n    # Expected ordering: ORDER BY \"test_app_onemodel\".\"root_id\" ASC\n    assert 'ORDER BY T3.\"id\"' not in sql, \"Query is incorrectly using joined table for ordering\"\n    assert 'ORDER BY \"test_app_onemodel\".\"root_id\" ASC' in sql\n\n@pytest.mark.django_db\ndef test_ordering_with_none_values():\n    \"\"\"Edge case: Ensure ordering works when the root_id is None (null).\"\"\"\n    o1 = OneModel.objects.create(oneval=1, root=None)\n    o2 = OneModel.objects.create(oneval=1, root=o1)\n    TwoModel.objects.create(record=o1)\n    TwoModel.objects.create(record=o2)\n    \n    # Should not raise exception when ordering nullable FK field\n    qs = TwoModel.objects.order_by(\"record__root_id\")\n    assert list(qs)\n\n@pytest.mark.django_db\ndef test_ordering_with_invalid_field_raises_error():\n    \"\"\"Edge case: Verify invalid field paths still raise FieldError.\"\"\"\n    with pytest.raises(Exception): # Django FieldError\n        TwoModel.objects.order_by(\"record__invalid_field_name\")\n\n@pytest.mark.django_db\ndef test_ordering_consistency_with_direct_id_reference():\n    \"\"\"Edge case: Verify that order_by('record__root__id') matches corrected behavior.\"\"\"\n    qs1 = TwoModel.objects.filter(record__oneval__in=[1, 2, 3]).order_by(\"record__root_id\")\n    qs2 = TwoModel.objects.filter(record__oneval__in=[1, 2, 3]).order_by(\"record__root__id\")\n    \n    # After fix, these should produce identical SQL structures (optimized version)\n    assert str(qs1.query) == str(qs2.query)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex d65141b834..ed21b5123a 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1946,6 +1946,15 @@ class Query(BaseExpression):\n         \"\"\"\n         Expand the GROUP BY clause required by the query.\n \n+                continue\n+            if isinstance(field, str) and field.lstrip('-').endswith('_id'):\n+                field_name = field.lstrip('-')[:-3]\n+                if field_name in self.get_meta().get_all_field_names():\n+                    field_object = self.get_meta().get_field(field_name)\n+                    if field_object.is_relation:\n+                        ordering.append(field)\n+                        continue\n+\n         This will usually be the set of all non-aggregate fields in the\n         return data. If the database backend supports grouping by the\n         primary key, and the query would be equivalent, the optimization\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13033-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5352,
+        "matches_issue": 0.7591,
+        "safe_to_apply": 0.6518,
+        "composite": 0.736525,
+        "secrets_or_danger": 0.0849,
+        "logic_drift": 0.4712,
+        "flagged": false
+      },
+      "laya_combined": 0.7365,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 69.2,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex d65141b834..8ff01801f0 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1907,6 +1907,15 @@ class Query(BaseExpression):\n                         stacklevel=3,\n                     )\n                     continue\n+            # If the field is a foreign key, allow ordering by the _id field\n+            # directly without creating a join.\n+            if isinstance(item, str):\n+                parts = item.lstrip('-').split(LOOKUP_SEP)\n+                if len(parts) > 1 and parts[-1] == 'id':\n+                    field = self.get_meta().get_field(parts[0])\n+                    if field.is_relation and field.attname == parts[-1]:\n+                        ordering.append(item)\n+                        continue\n                 if item == '?':\n                     continue\n                 if item.startswith('-'):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13033-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/sql/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6734,
+        "matches_issue": 0.7989,
+        "safe_to_apply": 0.6806,
+        "composite": 0.7882250000000001,
+        "secrets_or_danger": 0.21,
+        "logic_drift": 0.2723,
+        "flagged": false
+      },
+      "laya_combined": 0.7882,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 38.32,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1758,7 +1758,11 @@ class Query(BaseExpression):\n         if not ordering:\n             return\n         if isinstance(ordering, str):\n-            ordering = (ordering,)\n+            # If the field is a direct foreign key, don't resolve it as a relation.\n+            if ordering.lstrip('-') in self.get_meta().get_all_field_names():\n+                ordering = (ordering,)\n+            else:\n+                ordering = (ordering,)\n         for field in ordering:\n             if hasattr(field, 'resolve_expression'):\n                 self.order_by.append(field)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13033-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5768,
+        "matches_issue": 0.8048,
+        "safe_to_apply": 0.6449,
+        "composite": 0.7566249999999999,
+        "secrets_or_danger": 0.1233,
+        "logic_drift": 0.4314,
+        "flagged": false
+      },
+      "laya_combined": 0.7566,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0064,
+      "rank_reason": "logistic",
+      "elapsed_s": 81.29,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex d65141b834..ed21b5123a 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1946,6 +1946,15 @@ class Query(BaseExpression):\n         \"\"\"\n         Expand the GROUP BY clause required by the query.\n \n+                continue\n+            if isinstance(field, str) and field.lstrip('-').endswith('_id'):\n+                field_name = field.lstrip('-')[:-3]\n+                if field_name in self.get_meta().get_all_field_names():\n+                    field_object = self.get_meta().get_field(field_name)\n+                    if field_object.is_relation:\n+                        ordering.append(field)\n+                        continue\n+\n         This will usually be the set of all non-aggregate fields in the\n         return data. If the database backend supports grouping by the\n         primary key, and the query would be equivalent, the optimization\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13033-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/sql/query.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/sql/query.py"
+    ],
+    "added_lines": 9,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5352,
+      "matches_issue": 0.7591,
+      "safe_to_apply": 0.6518,
+      "composite": 0.736525,
+      "secrets_or_danger": 0.0849,
+      "logic_drift": 0.4712,
+      "flagged": false
+    },
+    "laya_combined": 0.7365,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 69.2,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex d65141b..ed21b51 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1946,6 +1946,15 @@ class Query(BaseExpression):\n         \"\"\"\n         Expand the GROUP BY clause required by the query.\n \n+                continue\n+            if isinstance(field, str) and field.lstrip('-').endswith('_id'):\n+                field_name = field.lstrip('-')[:-3]\n+                if field_name in self.get_meta().get_all_field_names():\n+                    field_object = self.get_meta().get_field(field_name)\n+                    if field_object.is_relation:\n+                        ordering.append(field)\n+                        continue\n+\n         This will usually be the set of all non-aggregate fields in the\n         return data. If the database backend supports grouping by the\n         primary key, and the query would be equivalent, the optimization\n",
+  "offline_calls": 0
+}

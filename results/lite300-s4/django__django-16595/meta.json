@@ -1,0 +1,385 @@
+{
+  "instance_id": "django__django-16595",
+  "repo": "django/django",
+  "base_commit": "f9fe062de5fc0896d6bbbf3f260b5c44473b3c77",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560637.8733256
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560645.3837936
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560659.430106
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560662.8856452
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560699.369788
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791560856.8275526
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/operations/fields.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/fields.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791560558.5884998,
+  "elapsed_s": 306.23,
+  "plan": "### Step 1: What is the root cause\nThe migration optimizer (`django.db.migrations.optimizer.MigrationOptimizer`) optimizes sequences of operations by having each operation implement a `reduce()` method. When multiple `AlterField` operations target the same model and field consecutively (e.g. `AlterField` followed by another `AlterField`), the `AlterField.reduce` method does not handle or recognize instances of `AlterField`. As a result, when an `AddField` and subsequent `AlterField`s are separated across different migrations or boundaries preventing their full joint optimization, consecutive `AlterField` operations are not reduced into a single final `AlterField`, leaving redundant intermediate field alterations.\n\n### Step 2: What exact changes to make\n- **File:** `django/db/migrations/operations/fields.py`\n- **Function:** `AlterField.reduce`\n- **What to change:** Add logic to handle cases where the subsequent operation is also an `AlterField` on the same model and field name. Specifically, check if `isinstance(operation, AlterField)` and `self.is_same_field_operation(operation)` are true, and if so, return `[operation]` to collapse the prior `AlterField` into the newer one.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/contrib/auth/migrations/0002_alter_permission_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0002_alter_permission_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        15
+      ],
+      "score": 0.7517,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1105,
+        "vector": 0.9713,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: migrations, models, model, charfield)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0003_alter_user_email_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0003_alter_user_email_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        17
+      ],
+      "score": 0.7241,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.11,
+        "vector": 0.743,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: migrations, models, model, operation)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0005_alter_user_last_login_null.py",
+      "symbol": "django/contrib/auth/migrations/0005_alter_user_last_login_null.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        17
+      ],
+      "score": 0.7282,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.11,
+        "vector": 0.7768,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: migrations, null, models, model)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0009_alter_user_last_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0009_alter_user_last_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        17
+      ],
+      "score": 0.7465,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.11,
+        "vector": 0.9293,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: migrations, models, model, charfield)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0010_alter_group_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0010_alter_group_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        15
+      ],
+      "score": 0.7475,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1103,
+        "vector": 0.9368,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: migrations, models, model, charfield)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0012_alter_user_first_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0012_alter_user_first_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        17
+      ],
+      "score": 0.7465,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.11,
+        "vector": 0.9293,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: migrations, models, model, charfield)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.578325,
+  "laya_scores": {
+    "fix_quality": 1.3709,
+    "matches_issue": 0.492,
+    "safe_to_apply": 0.4504,
+    "composite": 0.578325,
+    "secrets_or_danger": 0.1252,
+    "logic_drift": 0.2337,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS: No security implications in this migration optimization logic.\n- PERFORMANCE: PASS: Simple type check and method call running in linear time relative to operation count.\n- ROBUSTNESS: PASS: Correctly handles sequence reduction of redundant field alteration operations.\n- PONYTAIL / YAGNI: PASS: Directly implements the requested and expected behavior without extraneous scaffolding.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from django.db import migrations, models\nfrom django.db.migrations.optimizer import MigrationOptimizer\nimport pytest\n\n\ndef test_optimize_multiple_alter_field():\n    \"\"\"\n    Consecutive AlterField operations targeting the same model and field\n    should be reduced into a single final AlterField operation.\n    \"\"\"\n    operations = [\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True),\n        ),\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True, help_text=\"help\"),\n        ),\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True, help_text=\"help\", default=None),\n        ),\n    ]\n\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"books\")\n\n    assert len(optimized) == 1\n    assert isinstance(optimized[0], migrations.AlterField)\n    assert optimized[0].model_name == \"book\"\n    assert optimized[0].name == \"title\"\n    assert optimized[0].field.default is None\n    assert optimized[0].field.help_text == \"help\"\n\n\ndef test_optimize_alter_field_different_fields():\n    \"\"\"\n    AlterField operations targeting different fields on the same model should\n    not be reduced into each other.\n    \"\"\"\n    operations = [\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True),\n        ),\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"subtitle\",\n            field=models.CharField(max_length=128, null=True),\n        ),\n    ]\n\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"books\")\n\n    assert len(optimized) == 2\n    assert all(isinstance(op, migrations.AlterField) for op in optimized)\n    assert optimized[0].name == \"title\"\n    assert optimized[1].name == \"subtitle\"\n\n\ndef test_optimize_alter_field_different_models():\n    \"\"\"\n    AlterField operations targeting the same field name but on different models\n    should not be reduced into each other.\n    \"\"\"\n    operations = [\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True),\n        ),\n        migrations.AlterField(\n            model_name=\"magazine\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True, help_text=\"help\"),\n        ),\n    ]\n\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"books\")\n\n    assert len(optimized) == 2\n    assert optimized[0].model_name == \"book\"\n    assert optimized[1].model_name == \"magazine\"\n\n\ndef test_optimize_alter_field_interleaved_with_other_operation():\n    \"\"\"\n    An AlterField followed by an unrelated operation and another AlterField\n    on the same field should not be reduced across the boundary.\n    \"\"\"\n    operations = [\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True),\n        ),\n        migrations.CreateModel(\n            name=\"Author\",\n            fields=[(\"id\", models.AutoField(primary_key=True))],\n        ),\n        migrations.AlterField(\n            model_name=\"book\",\n            name=\"title\",\n            field=models.CharField(max_length=128, null=True, help_text=\"help\"),\n        ),\n    ]\n\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"books\")\n\n    # The CreateModel separates the two AlterFields, preventing reduction.\n    assert len(optimized) == 3\n    assert isinstance(optimized[0], migrations.AlterField)\n    assert isinstance(optimized[1], migrations.CreateModel)\n    assert isinstance(optimized[2], migrations.AlterField)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py\nindex cd3aab43ad..0b73723fd1 100644\n--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -247,6 +247,10 @@ class AlterField(FieldOperation):\n         return \"alter_%s_%s\" % (self.model_name_lower, self.name_lower)\n \n     def reduce(self, operation, app_label):\n+        if isinstance(operation, AlterField) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n         if isinstance(operation, RemoveField) and self.is_same_field_operation(\n             operation\n         ):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16595-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/fields.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/fields.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.3709,
+        "matches_issue": 0.492,
+        "safe_to_apply": 0.4504,
+        "composite": 0.578325,
+        "secrets_or_danger": 0.1252,
+        "logic_drift": 0.2337,
+        "flagged": false
+      },
+      "laya_combined": 0.5783,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0094,
+      "rank_reason": "logistic",
+      "elapsed_s": 77.0,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py\nindex cd3aab43ad..3bfec395b0 100644\n--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -192,7 +192,11 @@ class RemoveField(FieldOperation):\n             and operation.name_lower == self.model_name_lower\n         ):\n             return [operation]\n-        return super().reduce(operation, app_label)\n+        if isinstance(operation, self.__class__) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n+        return super().reduce(operation)\n \n \n class AlterField(FieldOperation):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16595-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/fields.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/fields.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.1721,
+        "matches_issue": 0.4623,
+        "safe_to_apply": 0.495,
+        "composite": 0.53235,
+        "secrets_or_danger": 0.1275,
+        "logic_drift": 0.3196,
+        "flagged": false
+      },
+      "laya_combined": 0.5323,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0091,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.2,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -236,2 +236,6 @@\n     def reduce(self, operation, app_label):\n+        if isinstance(operation, AlterField) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n         return (",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16595-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16595-c3\\django\\db\\migrations\\operations\\fields.py: SyntaxError line 348: invalid syntax"
+      ],
+      "changed_files": [
+        "django/db/migrations/operations/fields.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.3709,
+        "matches_issue": 0.492,
+        "safe_to_apply": 0.4504,
+        "composite": 0.578325,
+        "secrets_or_danger": 0.0942,
+        "logic_drift": 0.1844,
+        "flagged": false
+      },
+      "laya_combined": 0.5783,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0014,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.55,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": true,
+    "patch": "diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py\nindex cd3aab43ad..0b73723fd1 100644\n--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -247,6 +247,10 @@ class AlterField(FieldOperation):\n         return \"alter_%s_%s\" % (self.model_name_lower, self.name_lower)\n \n     def reduce(self, operation, app_label):\n+        if isinstance(operation, AlterField) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n         if isinstance(operation, RemoveField) and self.is_same_field_operation(\n             operation\n         ):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-16595-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/operations/fields.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/operations/fields.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.3709,
+      "matches_issue": 0.492,
+      "safe_to_apply": 0.4504,
+      "composite": 0.578325,
+      "secrets_or_danger": 0.1252,
+      "logic_drift": 0.2337,
+      "flagged": false
+    },
+    "laya_combined": 0.5783,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0094,
+    "rank_reason": "logistic",
+    "elapsed_s": 77.0,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/operations/fields.py b/django/db/migrations/operations/fields.py\nindex cd3aab4..0b73723 100644\n--- a/django/db/migrations/operations/fields.py\n+++ b/django/db/migrations/operations/fields.py\n@@ -247,6 +247,10 @@ class AlterField(FieldOperation):\n         return \"alter_%s_%s\" % (self.model_name_lower, self.name_lower)\n \n     def reduce(self, operation, app_label):\n+        if isinstance(operation, AlterField) and self.is_same_field_operation(\n+            operation\n+        ):\n+            return [operation]\n         if isinstance(operation, RemoveField) and self.is_same_field_operation(\n             operation\n         ):\n",
+  "offline_calls": 0
+}

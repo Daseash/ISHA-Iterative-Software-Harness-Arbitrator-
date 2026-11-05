@@ -1,0 +1,474 @@
+{
+  "instance_id": "pytest-dev__pytest-8906",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "69356d20cfee9a81972dcbf93d8caf9eabe113e8",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896800.7385094
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896803.0983016
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896807.8365188
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896811.1664157
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896819.41671
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896921.2595446
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896932.8655145
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896947.3609693
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896957.8025658
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896970.6513631
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896983.1490371
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791896999.7503955
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: src/_pytest/outcomes.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "src/_pytest/outcomes.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791896777.5276742,
+  "elapsed_s": 230.47,
+  "plan": "Step 1: The root cause\nThe `pytest.skip` function raises an error when called outside of a test execution context because it is primarily designed to be called within tests to skip them dynamically. While it supports an `allow_module_level=True` parameter to allow it to be used at the module scope, the default error message is generic and fails to inform the user about this specific opt-in mechanism, which leads to confusion. Additionally, as noted in the report, using `allow_module_level=True` is sometimes necessary for complex scenarios (like conditional imports that involve syntax incompatible with older Python versions) where simple markers (`pytestmark`) are insufficient.\n\nStep 2: What exact changes to make\n1.  Modify `src/_pytest/outcomes.py`:\n    *   Update the `skip` function to improve the error message when called outside a test. Specifically, if `allow_module_level` is `False` (the default), the error message should explicitly mention that `allow_module_level=True` can be passed to the function to permit module-level skipping.\n    *   Introduce a helper function `skip_module(reason: str)` in `src/_pytest/outcomes.py` that internally calls `skip(msg=reason, allow_module_level=True)`. This provides a cleaner, more discoverable API for users who need to skip modules.\n2.  Update the public API exposure in `src/_pytest/outcomes.py` (ensure `skip_module` is exported if necessary, usually by adding it to `__all__` or ensuring it is at the top level of the module).",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "src/_pytest/outcomes.py",
+      "symbol": "src/_pytest/outcomes.py::skip",
+      "symbols": [
+        "skip",
+        "__init__",
+        "__init__",
+        "exit"
+      ],
+      "line_range": [
+        124,
+        146
+      ],
+      "score": 0.7614,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8158,
+        "vector": 0.895,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: allow_module_level, msg; body matches report terms: like, mark, level, this; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "src/_pytest/skipping.py",
+      "symbol": "src/_pytest/skipping.py::evaluate_condition",
+      "symbols": [
+        "evaluate_condition",
+        "pytest_addoption",
+        "pytest_configure",
+        "Skip"
+      ],
+      "line_range": [
+        85,
+        159
+      ],
+      "score": 0.818,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4898,
+        "vector": 0.7335,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: mark; body matches report terms: mark, file, this, reason)"
+    },
+    {
+      "file": "src/_pytest/mark/__init__.py",
+      "symbol": "src/_pytest/mark/__init__.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_cmdline_main",
+        "KeywordMatcher",
+        "from_item"
+      ],
+      "line_range": [
+        74,
+        115
+      ],
+      "score": 0.581,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3099,
+        "vector": 0.4877,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: will, mark, which, python)"
+    },
+    {
+      "file": "src/_pytest/python.py",
+      "symbol": "src/_pytest/python.py::pytest_addoption",
+      "symbols": [
+        "pytest_addoption",
+        "pytest_generate_tests",
+        "pytest_configure",
+        "async_warn_and_skip"
+      ],
+      "line_range": [
+        83,
+        128
+      ],
+      "score": 0.5717,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4855,
+        "vector": 0.7736,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: file, used, python, function)"
+    },
+    {
+      "file": "src/_pytest/config/__init__.py",
+      "symbol": "src/_pytest/config/__init__.py::getoption",
+      "symbols": [
+        "getoption",
+        "ExitCode",
+        "ConftestImportFailure",
+        "console_main"
+      ],
+      "line_range": [
+        1495,
+        1518
+      ],
+      "score": 0.631,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5433,
+        "vector": 0.4182,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: skip; body matches report terms: pytest, skip, test, error)"
+    },
+    {
+      "file": "bench/skip.py",
+      "symbol": "bench/skip.py::test_foo",
+      "symbols": [
+        "test_foo"
+      ],
+      "line_range": [
+        7,
+        9
+      ],
+      "score": 0.8119,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1257,
+        "vector": 0.7125,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: pytest, skip, test; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.762,
+  "laya_scores": {
+    "fix_quality": 1.6017,
+    "matches_issue": 0.7777,
+    "safe_to_apply": 0.6686,
+    "composite": 0.762,
+    "secrets_or_danger": 0.1006,
+    "logic_drift": 0.3863,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport sys\nfrom _pytest.outcomes import skip, skip_module\n\ndef test_reproduce_skip_error_message():\n    \"\"\"\n    Reproduces the issue where calling pytest.skip() at module level \n    without allow_module_level=True raises an error that doesn't \n    explicitly guide the user to the correct fix.\n    \"\"\"\n    with pytest.raises(pytest.skip.Exception) as excinfo:\n        # This is the call that triggers the confusing error message\n        skip(\"Need to skip this module\")\n    \n    # Assert that the error message mentions the existence of allow_module_level\n    # This test will fail before the fix, as the current message is generic.\n    assert \"allow_module_level=True\" in str(excinfo.value)\n\ndef test_skip_module_api():\n    \"\"\"\n    Verifies that the new skip_module() API correctly skips the module.\n    \"\"\"\n    # This function should internally set allow_module_level=True\n    # and skip the test execution context.\n    with pytest.raises(pytest.skip.Exception) as excinfo:\n        skip_module(\"New skip_module API test\")\n    \n    # Verify the reason was passed through\n    assert \"New skip_module API test\" in str(excinfo.value)\n\n@pytest.mark.parametrize(\"invalid_input\", [None, 123])\ndef test_skip_invalid_types(invalid_input):\n    \"\"\"\n    Edge case: Ensure skip/skip_module handles non-string reasons \n    gracefully (if applicable) or maintains documented behavior.\n    \"\"\"\n    with pytest.raises(TypeError):\n        # Assuming reason is expected to be a string\n        skip(invalid_input, allow_module_level=True)\n\ndef test_skip_module_idempotency():\n    \"\"\"\n    Edge case: Ensure multiple calls to skip_module/skip(allow_module_level=True)\n    don't cause unexpected secondary errors.\n    \"\"\"\n    try:\n        skip_module(\"First call\")\n    except pytest.skip.Exception:\n        pass\n        \n    with pytest.raises(pytest.skip.Exception):\n        skip_module(\"Second call\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -134,7 +134,11 @@\n     \"\"\"\n     if not allow_module_level:\n         __tracebackhide__ = True\n-        raise UsageError(\"Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}`.\")\n+        raise UsageError(\"Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}` or pass `allow_module_level=True`.\")\n     raise Skipped(msg=msg, allow_module_level=allow_module_level)\n \n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n def fail(msg: str = \"\", pytrace: bool = True) -> \"NoReturn\":",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8906-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/outcomes.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/outcomes.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.7463,
+        "matches_issue": 0.831,
+        "safe_to_apply": 0.6957,
+        "composite": 0.81825,
+        "secrets_or_danger": 0.1131,
+        "logic_drift": 0.4996,
+        "flagged": false
+      },
+      "laya_combined": 0.8183,
+      "repro": {
+        "available": false,
+        "before_ok": null,
+        "after_ok": null,
+        "regressions": 0,
+        "reason": "image not present locally: swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8906:latest",
+        "repro_target": "",
+        "before_exit": null,
+        "after_exit": null
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 1.59,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -134,8 +134,14 @@\n     if not allow_module_level:\n         __tracebackhide__ = True\n-        raise UsageError(\n-            \"Using pytest.skip outside of a test is not allowed. \"\n-            \"To decorate a test function, use the @pytest.mark.skip or \"\n-            \"@pytest.mark.skipif decorators instead, and to skip a module \"\n-            \"use `pytestmark = pytest.mark.{skip,skipif}`.\"\n-        )\n+        raise UsageError(\"Using pytest.skip outside of a test is not allowed. \"\n+            \"To decorate a test function, use the @pytest.mark.skip or \"\n+            \"@pytest.mark.skipif decorators instead, and to skip a module \"\n+            \"use `pytestmark = pytest.mark.{skip,skipif}` or pass \"\n+            \"`allow_module_level=True` to skip().\")\n     raise Skipped(msg=msg, allow_module_level=allow_module_level)\n \n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n def xfail(msg: str = \"\") -> \"NoReturn\":",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8906-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/outcomes.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/outcomes.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 6,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7485,
+        "matches_issue": 0.8239,
+        "safe_to_apply": 0.7135,
+        "composite": 0.821475,
+        "secrets_or_danger": 0.1355,
+        "logic_drift": 0.4445,
+        "flagged": false
+      },
+      "laya_combined": 0.8215,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 2,
+        "after_exit": 2,
+        "after_output": "\n==================================== ERRORS ====================================\n_____________________ ERROR collecting test_isha_repro.py ______________________\nImportError while importing test module '/testbed/test_isha_repro.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/opt/miniconda3/envs/testbed/lib/python3.9/importlib/__init__.py:127: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntest_isha_repro.py:3: in <module>\n    from _pytest.outcomes import skip, skip_module\nE   ImportError: cannot import name 'skip_module' from '_pytest.outcomes' (/testbed/src/_pytest/outcomes.py)\n=========================== short test summary info ============================\nERROR test_isha_repro.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.02s\n\nerror: corrupt patch at line 25\nerror: corrupt patch at line 25\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 7.56,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/src/_pytest/outcomes.py b/src/_pytest/outcomes.py\nindex 2addf5572..eb91f09a0 100644\n--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -8,6 +8,11 @@ from typing import Optional\n from typing import Type\n from typing import TypeVar\n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n TYPE_CHECKING = False  # Avoid circular import through compat.\n \n if TYPE_CHECKING:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8906-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: src/_pytest/outcomes.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "src/_pytest/outcomes.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7687,
+        "matches_issue": 0.8352,
+        "safe_to_apply": 0.7314,
+        "composite": 0.833825,
+        "secrets_or_danger": 0.1335,
+        "logic_drift": 0.3661,
+        "flagged": false
+      },
+      "laya_combined": 0.8338,
+      "repro": {
+        "available": true,
+        "before_ok": true,
+        "after_ok": false,
+        "regressions": 0,
+        "reason": "patch does not make the repro test pass",
+        "repro_target": "test_isha_repro.py",
+        "before_exit": 2,
+        "after_exit": 2,
+        "after_output": "\n==================================== ERRORS ====================================\n_____________________ ERROR collecting test_isha_repro.py ______________________\nImportError while importing test module '/testbed/test_isha_repro.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/opt/miniconda3/envs/testbed/lib/python3.9/importlib/__init__.py:127: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\ntest_isha_repro.py:3: in <module>\n    from _pytest.outcomes import skip, skip_module\nE   ImportError: cannot import name 'skip_module' from '_pytest.outcomes' (/testbed/src/_pytest/outcomes.py)\n=========================== short test summary info ============================\nERROR test_isha_repro.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.02s\n\nwarning: src/_pytest/outcomes.py has type 100755, expected 100644\nerror: patch failed: src/_pytest/outcomes.py:8\nerror: src/_pytest/outcomes.py: patch does not apply\nerror: src/_pytest/outcomes.py: does not match index\n"
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 19.02,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -134,7 +134,11 @@\n     \"\"\"\n     if not allow_module_level:\n         __tracebackhide__ = True\n-        raise UsageError(\"Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}`.\")\n+        raise UsageError(\"Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}` or pass `allow_module_level=True`.\")\n     raise Skipped(msg=msg, allow_module_level=allow_module_level)\n \n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n def fail(msg: str = \"\", pytrace: bool = True) -> \"NoReturn\":",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\pytest-dev__pytest-8906-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: src/_pytest/outcomes.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "src/_pytest/outcomes.py"
+    ],
+    "added_lines": 6,
+    "removed_lines": 1,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.7463,
+      "matches_issue": 0.831,
+      "safe_to_apply": 0.6957,
+      "composite": 0.81825,
+      "secrets_or_danger": 0.1131,
+      "logic_drift": 0.4996,
+      "flagged": false
+    },
+    "laya_combined": 0.8183,
+    "repro": {
+      "available": false,
+      "before_ok": null,
+      "after_ok": null,
+      "regressions": 0,
+      "reason": "image not present locally: swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-8906:latest",
+      "repro_target": "",
+      "before_exit": null,
+      "after_exit": null
+    },
+    "regression_count": 0,
+    "combined_score": 0.0062,
+    "rank_reason": "logistic",
+    "elapsed_s": 1.59,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/src/_pytest/outcomes.py b/src/_pytest/outcomes.py\nindex 2addf55..eb91f09 100644\n--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -8,6 +8,11 @@ from typing import Optional\n from typing import Type\n from typing import TypeVar\n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n TYPE_CHECKING = False  # Avoid circular import through compat.\n \n if TYPE_CHECKING:\n",
+  "offline_calls": 2
+}

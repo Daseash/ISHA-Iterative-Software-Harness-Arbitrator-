@@ -1,0 +1,23 @@
+{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1791271382.6536999}
+{"event": "attempt", "n": 1, "ts": 1791271386.9551792}
+{"event": "model", "ts": 1791271421.2568104, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791271423.522093, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791271428.4417312, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271443.2722938, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271487.3544815, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271518.9976645, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271559.465925, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271600.0272198, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271674.7760425, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "apply_retry", "attempt": 1, "message": "Hunk failed in astropy/modeling/separable.py: @@ -216,11 +216,14 @@ def _cstack(comp): — expected context not found in file: '        for m in _linear_transpose(comp).values():' (git: error: corrupt patch at <stdin>:20\nerror: corrupt patch at <stdin>:20; sr: No SEARCH/REPLACE blocks found)", "ts": 1791271691.0686097}
+{"event": "attempt", "n": 2, "ts": 1791271691.1613705}
+{"event": "model", "ts": 1791271715.2944167, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791271717.4394855, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791271725.1153467, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271745.2494853, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271800.3539746, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791271986.6543875, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791272109.3307426, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272181.3781023, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791272199.1792233, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791272214.870927}

@@ -1,0 +1,24 @@
+diff --git a/src/requests/models.py b/src/requests/models.py
+index 17b39cd..69813de 100644
+--- a/src/requests/models.py
++++ b/src/requests/models.py
+@@ -213,7 +213,7 @@ class RequestEncodingMixin:
+                         (
+                             field.decode("utf-8")
+                             if isinstance(field, bytes)
+-                            else field,
++                            else (field if isinstance(field, str) else str(field)),
+                             v.encode("utf-8") if isinstance(v, str) else v,
+                         )
+                     )
+@@ -242,7 +242,10 @@ class RequestEncodingMixin:
+             else:
+                 fdata = fp
+ 
+-            rf = RequestField(name=k, data=fdata, filename=fn, headers=fh)
++            k_name = k.decode("utf-8") if isinstance(k, bytes) else (k if isinstance(k, str) else str(k))
++            if fn is not None and not isinstance(fn, (str, bytes)):
++                fn = str(fn)
++            rf = RequestField(name=k_name, data=fdata, filename=fn, headers=fh)
+             rf.make_multipart(content_type=ft)
+             new_fields.append(rf)

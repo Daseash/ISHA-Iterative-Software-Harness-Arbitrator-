@@ -1,0 +1,21 @@
+{"event": "start", "instance_id": "django__django-16229", "ts": 1791551603.2065089}
+{"event": "attempt", "n": 1, "ts": 1791551603.6146982}
+{"event": "model", "ts": 1791551652.9102693, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791551656.8100731, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791551664.4746912, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "model", "ts": 1791551667.2607877, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551676.6190476, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551694.9361043, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551726.0255516, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "model", "ts": 1791551756.4455261, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "api_retry", "backoff_s": 20.0, "ts": 1791551773.5925846}
+{"event": "attempt", "n": 2, "ts": 1791551794.0169926}
+{"event": "model", "ts": 1791551841.5782223, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791551846.6240482, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791551859.1307032, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "model", "ts": 1791551866.8079104, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551884.861599, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551915.9079072, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "model", "ts": 1791551944.0034182, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791551973.358895, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
+{"event": "finish", "status": "done", "has_patch": false, "ts": 1791551989.8172407}

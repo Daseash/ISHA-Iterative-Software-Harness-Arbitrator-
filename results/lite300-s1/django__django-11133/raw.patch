@@ -1,0 +1,11 @@
+--- a/django/http/response.py
++++ b/django/http/response.py
+@@ -307,6 +307,8 @@ class HttpResponse(HttpResponseBase):
+     @content.setter
+     def content(self, value):
+         # Consume iterators, convert to bytestring
++        if isinstance(value, memoryview):
++            value = bytes(value)
+         if not isinstance(value, (bytes, str)):
+             if hasattr(value, '__iter__'):
+                 value = b''.join(self.make_bytes(chunk) for chunk in value)

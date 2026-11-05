@@ -1,0 +1,371 @@
+{
+  "instance_id": "django__django-13315",
+  "repo": "django/django",
+  "base_commit": "36bc47069ce071e80c8129500de3b8664d2058a7",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461928.696596
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461934.9284225
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461959.2524214
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461999.8068995
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462026.2854493
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791462176.1497302
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791461855.7491794,
+  "elapsed_s": 325.56,
+  "plan": "def apply_limit_choices_to_to_formfield(formfield):\n    \"\"\"Apply limit_choices_to to the formfield's queryset if needed.\"\"\"\n    if hasattr(formfield, 'queryset') and hasattr(formfield, 'get_limit_choices_to'):\n        limit_choices_to = formfield.get_limit_choices_to()\n        if limit_choices_to is not None:\n            formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)\n            # Add .distinct() to ensure that joins used in complex_filter \n            # do not cause duplicate rows in the queryset results.\n            formfield.queryset = formfield.queryset.distinct()",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::model_to_dict",
+      "symbols": [
+        "model_to_dict",
+        "apply_limit_choices_to_to_formfield",
+        "ModelFormOptions",
+        "ModelFormMetaclass"
+      ],
+      "line_range": [
+        73,
+        97
+      ],
+      "score": 0.57,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: field, pass, object, form)"
+    },
+    {
+      "file": "django/contrib/contenttypes/fields.py",
+      "symbol": "django/contrib/contenttypes/fields.py::_check_object_id_field",
+      "symbols": [
+        "_check_object_id_field",
+        "GenericRel",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        95,
+        109
+      ],
+      "score": 0.4669,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6859,
+        "vector": 0.7949,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: field, object, foreignkey)"
+    },
+    {
+      "file": "django/shortcuts.py",
+      "symbol": "django/shortcuts.py::redirect",
+      "symbols": [
+        "redirect",
+        "get_object_or_404",
+        "render",
+        "_get_queryset"
+      ],
+      "line_range": [
+        23,
+        43
+      ],
+      "score": 0.5775,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2725,
+        "vector": 0.4948,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: with, pass, view)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::linenumbers",
+      "symbols": [
+        "linenumbers",
+        "stringfilter",
+        "stringformat",
+        "list_formatter"
+      ],
+      "line_range": [
+        191,
+        205
+      ],
+      "score": 0.5282,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1567,
+        "vector": 0.3254,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, form, join)"
+    },
+    {
+      "file": "django/core/cache/backends/db.py",
+      "symbol": "django/core/cache/backends/db.py::_base_delete_many",
+      "symbols": [
+        "_base_delete_many",
+        "_cull",
+        "has_key",
+        "get_many"
+      ],
+      "line_range": [
+        210,
+        229
+      ],
+      "score": 0.4904,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0,
+        "vector": 0.3367,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, join)"
+    },
+    {
+      "file": "django/contrib/admindocs/views.py",
+      "symbol": "django/contrib/admindocs/views.py::BaseAdminDocsView",
+      "symbols": [
+        "BaseAdminDocsView",
+        "dispatch",
+        "get_readable_field_data_type",
+        "ViewIndexView"
+      ],
+      "line_range": [
+        33,
+        51
+      ],
+      "score": 0.4718,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7252,
+        "vector": 0.7542,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: render, with, patch, view)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.forms import ModelChoiceField\nfrom django.db.models import Q\n\n# Setup models for reproduction\nclass Category(models.Model):\n    name = models.CharField(max_length=100)\n\nclass Product(models.Model):\n    name = models.CharField(max_length=100)\n    category = models.ForeignKey(Category, on_delete=models.CASCADE)\n\nclass Tag(models.Model):\n    name = models.CharField(max_length=100)\n    # Using a join in limit_choices_to to trigger the issue\n    product = models.ForeignKey(\n        Product, \n        on_delete=models.CASCADE,\n        limit_choices_to=Q(category__name='Electronics')\n    )\n\n@pytest.mark.django_db\ndef test_limit_choices_to_duplicates_reproduction():\n    \"\"\"\n    Test that ForeignKey limit_choices_to with joins creates duplicate\n    entries in the formfield's choices before the fix is applied.\n    \"\"\"\n    cat = Category.objects.create(name='Electronics')\n    # Create multiple products linked to the same category\n    p1 = Product.objects.create(name='P1', category=cat)\n    p2 = Product.objects.create(name='P2', category=cat)\n    \n    # Create tags that trigger multiple joins\n    Tag.objects.create(name='T1', product=p1)\n    Tag.objects.create(name='T2', product=p2)\n\n    # Get the formfield for the 'product' field on Tag\n    field = Tag._meta.get_field('product')\n    formfield = field.formfield()\n    \n    # Extract choices from the queryset\n    # In the bug state, the queryset will contain duplicate entries \n    # due to the join in Q(category__name='Electronics')\n    choices = list(formfield.choices)\n    \n    # Check if there are duplicates\n    # Since each product was related to the same category, the join \n    # causes the product to be listed multiple times in the queryset\n    assert len(choices) == len(set(choices)), f\"Duplicates found in choices: {choices}\"\n\n@pytest.mark.django_db\ndef test_limit_choices_to_no_join_no_duplicates():\n    \"\"\"\n    Ensure that a limit_choices_to without joins doesn't crash or behave \n    unexpectedly with the fix.\n    \"\"\"\n    class SimpleModel(models.Model):\n        name = models.CharField(max_length=10)\n\n    class RelatedModel(models.Model):\n        simple = models.ForeignKey(\n            SimpleModel, \n            on_delete=models.CASCADE,\n            limit_choices_to={'name': 'Valid'}\n        )\n\n    SimpleModel.objects.create(name='Valid')\n    formfield = RelatedModel._meta.get_field('simple').formfield()\n    assert len(formfield.choices) > 0\n\n@pytest.mark.django_db\ndef test_limit_choices_to_none_input():\n    \"\"\"\n    Ensure that None input for limit_choices_to is handled gracefully \n    (no filtering applied).\n    \"\"\"\n    class NoLimitModel(models.Model):\n        name = models.CharField(max_length=10)\n\n    class RelatedModel(models.Model):\n        simple = models.ForeignKey(\n            NoLimitModel, \n            on_delete=models.CASCADE,\n            limit_choices_to=None\n        )\n\n    NoLimitModel.objects.create(name='A')\n    NoLimitModel.objects.create(name='B')\n    \n    formfield = RelatedModel._meta.get_field('simple').formfield()\n    # Should contain all objects\n    assert len(formfield.choices) >= 2",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -107,6 +107,7 @@\n         limit_choices_to = formfield.get_limit_choices_to()\n         if limit_choices_to is not None:\n             formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)\n+            formfield.queryset = formfield.queryset.distinct()\n \n \n def model_to_dict(instance, fields=None, exclude=None):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c1\\django\\forms\\models.py: SyntaxError line 110: unmatched ')'"
+      ],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7219,
+        "matches_issue": 0.8125,
+        "safe_to_apply": 0.7173,
+        "composite": 0.8129249999999999,
+        "secrets_or_danger": 0.1238,
+        "logic_drift": 0.3529,
+        "flagged": false
+      },
+      "laya_combined": 0.8129,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 92.63,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -107,6 +107,7 @@\n         limit_choices_to = formfield.get_limit_choices_to()\n         if limit_choices_to is not None:\n             formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)\n+            formfield.queryset = formfield.queryset.distinct()\n \n \n def model_to_dict(instance, fields=None, exclude=None):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c2\\django\\forms\\models.py: SyntaxError line 110: unmatched ')'"
+      ],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7219,
+        "matches_issue": 0.8125,
+        "safe_to_apply": 0.7173,
+        "composite": 0.8129249999999999,
+        "secrets_or_danger": 0.1238,
+        "logic_drift": 0.3529,
+        "flagged": false
+      },
+      "laya_combined": 0.8129,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 94.06,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -107,6 +107,7 @@\n         limit_choices_to = formfield.get_limit_choices_to()\n         if limit_choices_to is not None:\n             formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)\n+            formfield.queryset = formfield.queryset.distinct()\n \n \n def model_to_dict(instance, fields=None, exclude=None):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c3\\django\\forms\\models.py: SyntaxError line 110: unmatched ')'"
+      ],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7219,
+        "matches_issue": 0.8125,
+        "safe_to_apply": 0.7173,
+        "composite": 0.8129249999999999,
+        "secrets_or_danger": 0.1238,
+        "logic_drift": 0.3529,
+        "flagged": false
+      },
+      "laya_combined": 0.8129,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 89.22,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -107,6 +107,7 @@\n         limit_choices_to = formfield.get_limit_choices_to()\n         if limit_choices_to is not None:\n             formfield.queryset = formfield.queryset.complex_filter(limit_choices_to)\n+            formfield.queryset = formfield.queryset.distinct()\n \n \n def model_to_dict(instance, fields=None, exclude=None):",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13315-c1\\django\\forms\\models.py: SyntaxError line 110: unmatched ')'"
+    ],
+    "changed_files": [
+      "django/forms/models.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.7219,
+      "matches_issue": 0.8125,
+      "safe_to_apply": 0.7173,
+      "composite": 0.8129249999999999,
+      "secrets_or_danger": 0.1238,
+      "logic_drift": 0.3529,
+      "flagged": false
+    },
+    "laya_combined": 0.8129,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.001,
+    "rank_reason": "logistic",
+    "elapsed_s": 92.63,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

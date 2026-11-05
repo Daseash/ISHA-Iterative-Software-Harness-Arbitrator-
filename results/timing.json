@@ -1,0 +1,1157 @@
+{
+  "astropy__astropy-12907": {
+    "status": "tests_failed",
+    "elapsed_s": 368.54,
+    "attempts": 1,
+    "start_ts": 1790611007.5261643,
+    "finish_ts": 1790611396.4509907,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611074.7640572
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790611150.6285284
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611257.4502306
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611378.4378865
+      }
+    ]
+  },
+  "astropy__astropy-14182": {
+    "status": "gate_failed",
+    "elapsed_s": 551.03,
+    "attempts": 1,
+    "start_ts": 1790611396.4651408,
+    "finish_ts": 1790611954.5371144,
+    "model_calls_count": 7,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611454.9431298
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611534.00819
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790611650.4061213
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790611780.3795228
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611903.6981893
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611924.025248
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611939.9321294
+      }
+    ]
+  },
+  "astropy__astropy-14365": {
+    "status": "tests_failed",
+    "elapsed_s": 98.76,
+    "attempts": 1,
+    "start_ts": 1790611954.5421884,
+    "finish_ts": 1790612062.5965185,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611996.4231882
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790611997.8139024
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612021.4631414
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612045.499577
+      }
+    ]
+  },
+  "astropy__astropy-14995": {
+    "status": "apply_failed",
+    "elapsed_s": 513.51,
+    "attempts": 1,
+    "start_ts": 1790612062.6117387,
+    "finish_ts": 1790612582.3902779,
+    "model_calls_count": 7,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612121.8185024
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612167.7286162
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612216.08603
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790612355.9730039
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790612503.362446
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612542.4799876
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612568.0990689
+      }
+    ]
+  },
+  "astropy__astropy-6938": {
+    "status": "tests_failed",
+    "elapsed_s": 84.97,
+    "attempts": 1,
+    "start_ts": 1790612582.3969162,
+    "finish_ts": 1790612673.318682,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612615.0948665
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612616.877943
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612647.6928113
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790612659.313821
+      }
+    ]
+  },
+  "astropy__astropy-7746": {
+    "status": "tests_failed",
+    "elapsed_s": 315.67,
+    "attempts": 1,
+    "start_ts": 1790667032.5108,
+    "finish_ts": 1790667360.9045486,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667062.243971
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667164.047033
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667276.7382555
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667344.8242698
+      }
+    ]
+  },
+  "django__django-10914": {
+    "status": "tests_failed",
+    "elapsed_s": 213.13,
+    "attempts": 1,
+    "start_ts": 1790613114.4836845,
+    "finish_ts": 1790613347.4479897,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613219.5037506
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613221.4695623
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613292.1763291
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613319.7830765
+      }
+    ]
+  },
+  "django__django-10924": {
+    "status": "apply_failed",
+    "elapsed_s": 420.4,
+    "attempts": 1,
+    "start_ts": 1790613347.4582844,
+    "finish_ts": 1790613804.0564444,
+    "model_calls_count": 7,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613406.2021194
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613417.4689534
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613460.2865307
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613508.6306725
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613582.6885352
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613707.054247
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790613759.8813756
+      }
+    ]
+  },
+  "django__django-11001": {
+    "status": "tests_failed",
+    "elapsed_s": 307.28,
+    "attempts": 1,
+    "start_ts": 1790666467.8821464,
+    "finish_ts": 1790667690.1835108,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667398.1805773
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667402.3067625
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790667527.1677458
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667660.2644787
+      }
+    ]
+  },
+  "django__django-11019": {
+    "status": "apply_failed",
+    "elapsed_s": 880.77,
+    "attempts": 1,
+    "start_ts": 1790614704.6877155,
+    "finish_ts": 1790615622.017044,
+    "model_calls_count": 8,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790614739.333619
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790614862.312179
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790614969.189457
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615091.3982143
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615231.9573677
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615372.1086538
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615522.852939
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790615577.4625013
+      }
+    ]
+  },
+  "django__django-11039": {
+    "status": "resolved",
+    "elapsed_s": 461.07,
+    "attempts": 1,
+    "start_ts": 1790615622.022339,
+    "finish_ts": 1790616111.5468557,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615807.445604
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790615912.3363156
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616037.8194983
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790616075.0463831
+      }
+    ]
+  },
+  "django__django-11049": {
+    "status": "apply_failed",
+    "elapsed_s": 800.8,
+    "attempts": 1,
+    "start_ts": 1790616111.5676916,
+    "finish_ts": 1790616934.5416112,
+    "model_calls_count": 7,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616272.0844786
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790616274.0383873
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616396.0944834
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616548.2953851
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616714.8553698
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790616874.2810018
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790616904.8729832
+      }
+    ]
+  },
+  "django__django-11099": {
+    "status": "harness_no_output",
+    "elapsed_s": 419.99,
+    "attempts": 1,
+    "start_ts": 1790616934.5440757,
+    "finish_ts": 1790617381.17833,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617094.189516
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617196.8355756
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617313.1507602
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790617346.70702
+      }
+    ]
+  },
+  "django__django-11133": {
+    "status": "apply_failed",
+    "elapsed_s": 883.54,
+    "attempts": 1,
+    "start_ts": 1790617381.1881907,
+    "finish_ts": 1790618284.0484426,
+    "model_calls_count": 7,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617534.6380808
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790617634.0997748
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617759.1582036
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790617915.8998146
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790618078.6347194
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790618226.8936768
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790618256.8816586
+      }
+    ]
+  },
+  "django__django-11179": {
+    "status": "tests_failed",
+    "elapsed_s": 286.4,
+    "attempts": 1,
+    "start_ts": 1790618284.0498323,
+    "finish_ts": 1790668016.4814994,
+    "model_calls_count": 6,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667744.408995
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667787.066115
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667834.8492446
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667889.569383
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667940.0873425
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790667968.883674
+      }
+    ]
+  },
+  "django__django-11283": {
+    "status": "tests_failed",
+    "elapsed_s": 469.05,
+    "attempts": 1,
+    "start_ts": 1790668016.4920094,
+    "finish_ts": 1790668505.8226633,
+    "model_calls_count": 6,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668085.8327937
+      },
+      {
+        "role": "planner",
+        "model": "gemini-3.1-flash-lite",
+        "position": "fallback 5",
+        "ts": 1790668249.1629612
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668313.0560765
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668363.3228748
+      },
+      {
+        "role": "coder",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668450.2763684
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668477.6252668
+      }
+    ]
+  },
+  "django__django-11422": {
+    "status": "apply_failed",
+    "elapsed_s": 825.87,
+    "attempts": 2,
+    "start_ts": 1790668505.8293295,
+    "finish_ts": 1790670062.0836027,
+    "model_calls_count": 14,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668569.175489
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790668602.6564155
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790668714.6319911
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790668856.6583061
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669001.5622256
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669141.231465
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790669171.052947
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669344.3704805
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669449.8482192
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669564.1731563
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669705.0171468
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669850.4142096
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790669991.1339006
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790670019.9460409
+      }
+    ]
+  },
+  "django__django-11564": {
+    "status": "tests_failed",
+    "elapsed_s": 432.28,
+    "attempts": 1,
+    "start_ts": 1790670062.0869138,
+    "finish_ts": 1790670524.8504612,
+    "model_calls_count": 4,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790670227.9726248
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790670331.6290298
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790670450.6766288
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790670486.3396327
+      }
+    ]
+  },
+  "django__django-11583": {
+    "status": "apply_failed",
+    "elapsed_s": 825.74,
+    "attempts": 2,
+    "start_ts": 1790670524.8603148,
+    "finish_ts": 1790672276.2501972,
+    "model_calls_count": 14,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790670705.2156126
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790670781.4213889
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790670896.4735394
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671036.5029051
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671175.6504185
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671314.923487
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790671398.3023446
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671581.4167287
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671686.3222077
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671802.0394015
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790671939.1319625
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672078.8329806
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672216.9488773
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790672245.5974
+      }
+    ]
+  },
+  "django__django-11620": {
+    "status": "apply_failed",
+    "elapsed_s": 754.52,
+    "attempts": 2,
+    "start_ts": 1790672276.2511222,
+    "finish_ts": 1790673960.0120125,
+    "model_calls_count": 14,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672437.198745
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672541.7480738
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672667.5474052
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672817.573637
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790672973.5218887
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673122.0189815
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790673149.4262393
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673326.4828572
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790673330.6547825
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673455.6483812
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673605.628487
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673754.1931493
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790673903.2293334
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790673929.699487
+      }
+    ]
+  },
+  "django__django-11630": {
+    "status": "harness_no_output",
+    "elapsed_s": 460.67,
+    "attempts": 2,
+    "start_ts": 1790673960.0130067,
+    "finish_ts": 1790675369.70691,
+    "model_calls_count": 11,
+    "model_calls": [
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674118.361164
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674224.4058232
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674349.5384972
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674501.3123956
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674651.0060747
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790674809.5622702
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790674838.5674343
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790675023.8557434
+      },
+      {
+        "role": "planner",
+        "model": "qwen3.8-27b",
+        "position": "primary",
+        "ts": 1790675041.0545294
+      },
+      {
+        "role": "coder",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790675180.513487
+      },
+      {
+        "role": "planner",
+        "model": "gpt-oss-120b",
+        "position": "fallback 1",
+        "ts": 1790675331.5157986
+      }
+    ]
+  },
+  "django__django-11742": {
+    "status": "timeout",
+    "elapsed_s": 900.43,
+    "attempts": 1,
+    "start_ts": 1790675369.7230308,
+    "finish_ts": 1790676270.1560507,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11797": {
+    "status": "timeout",
+    "elapsed_s": 900.53,
+    "attempts": 1,
+    "start_ts": 1790676270.1653585,
+    "finish_ts": 1790677170.698638,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11815": {
+    "status": "timeout",
+    "elapsed_s": 932.52,
+    "attempts": 1,
+    "start_ts": 1790677170.7023382,
+    "finish_ts": 1790678103.2209086,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11848": {
+    "status": "timeout",
+    "elapsed_s": 900.46,
+    "attempts": 1,
+    "start_ts": 1790678103.2227814,
+    "finish_ts": 1790679003.678891,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11905": {
+    "status": "timeout",
+    "elapsed_s": 900.53,
+    "attempts": 1,
+    "start_ts": 1790679003.6841483,
+    "finish_ts": 1790679904.213084,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11910": {
+    "status": "timeout",
+    "elapsed_s": 900.71,
+    "attempts": 1,
+    "start_ts": 1790679904.2149944,
+    "finish_ts": 1790680804.9297726,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11964": {
+    "status": "timeout",
+    "elapsed_s": 900.46,
+    "attempts": 1,
+    "start_ts": 1790680804.9365973,
+    "finish_ts": 1790681705.399329,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-11999": {
+    "status": "timeout",
+    "elapsed_s": 900.46,
+    "attempts": 1,
+    "start_ts": 1790681705.4023898,
+    "finish_ts": 1790682605.8616295,
+    "model_calls_count": 0,
+    "model_calls": []
+  },
+  "django__django-12113": {
+    "status": "timeout",
+    "elapsed_s": 900.46,
+    "attempts": 1,
+    "start_ts": 1790682605.863417,
+    "finish_ts": 1790683506.3248928,
+    "model_calls_count": 0,
+    "model_calls": []
+  }
+}

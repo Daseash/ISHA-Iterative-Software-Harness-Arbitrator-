@@ -1,0 +1,15 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 0c64748..1712f2e 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1422,6 +1422,10 @@ class DateTimeField(DateField):
+             value = timezone.make_aware(value, default_timezone)
+         return value
+ 
++    @property
++    def path(self):
++        return self._path() if callable(self._path) else self._path
++
+     def get_db_prep_value(self, value, connection, prepared=False):
+         # Casts datetimes into the format expected by the backend
+         if not prepared:

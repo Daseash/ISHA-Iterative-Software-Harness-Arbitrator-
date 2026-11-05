@@ -1,0 +1,13 @@
+diff --git a/sympy/printing/latex.py b/sympy/printing/latex.py
+index 1edc712358..3c259fdc94 100644
+--- a/sympy/printing/latex.py
++++ b/sympy/printing/latex.py
+@@ -466,7 +466,7 @@ def _print_Pow(self, expr):
+             return self._print_Mul(expr)
+         else:
+             if expr.base.is_Function:
+-                return self._print(expr.base, self._print(expr.exp))
++                return self._print(expr.base, exp=self._print(expr.exp))
+             else:
+                 if expr.is_commutative and expr.exp == -1:
+                     #solves issue 4129

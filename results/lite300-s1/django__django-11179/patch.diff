@@ -1,0 +1,14 @@
+diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py
+index 92fe4af..1a7e1bc 100644
+--- a/django/db/models/deletion.py
++++ b/django/db/models/deletion.py
+@@ -274,6 +274,9 @@ class Collector:
+         # Optimize for the case with a single obj and no dependencies
+         if len(self.data) == 1 and len(instances) == 1:
+             instance = list(instances)[0]
++            for model, instances in self.data.items():
++                for obj in instances:
++                    setattr(obj, model._meta.pk.attname, None)
+             if self.can_fast_delete(instance):
+                 with transaction.mark_for_rollback_on_error():
+                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)

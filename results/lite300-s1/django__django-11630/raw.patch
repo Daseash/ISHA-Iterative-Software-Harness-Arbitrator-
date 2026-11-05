@@ -1,0 +1,47 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 94effe437f..e3a804ef1e 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -46,6 +46,42 @@ __all__ = [
+ class Empty:
+     pass
+ 
++def check_model_db_table_unique(app_configs=None, **kwargs):
++    """
++    Ensure that no two models have the same database table name for the same database.
++    """
++    from django.apps import apps
++    from itertools import chain
++    from django.db import connections, router
++    errors = []
++    if app_configs is None:
++        models = apps.get_models()
++    else:
++        models = chain.from_iterable(app_configs.get_models() for app_config in app_configs)
++    table_names_per_db = {alias: {} for alias in connections}
++    for model in models:
++        app_label = model._meta.app_label
++        model_name = model._meta.model_name
++        for alias in connections:
++            if router.allow_migrate(alias, app_label, model_name=model_name):
++                db_table = model._meta.db_table
++                if db_table in table_names_per_db[alias]:
++                    collided_model = table_names_per_db[alias][db_table]
++                    errors.append(checks.Error(
++                        "db_table '%s' is used by multiple models: %s.%s, %s.%s" % (
++                            db_table,
++                            collided_model._meta.app_label,
++                            collided_model.__name__,
++                            model._meta.app_label,
++                            model.__name__
++                        ),
++                        hint=None,
++                        id='models.E028',
++                    ))
++                else:
++                    table_names_per_db[alias][db_table] = model
++    return errors
++
+ 
+ class NOT_PROVIDED:
+     pass

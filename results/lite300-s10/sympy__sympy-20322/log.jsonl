@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "sympy__sympy-20322", "ts": 1792998065.8414285}
+{"event": "attempt", "n": 1, "ts": 1792998066.9703498}
+{"event": "timeout_retry", "attempt": 1, "ts": 1792998427.626097}
+{"event": "attempt", "n": 2, "ts": 1792998428.5804498}
+{"event": "timeout", "attempt": 2, "ts": 1792998788.79999}
+{"ts": 1793000293.1219375, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793000339.924867, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793001650.8592913, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793001699.1927204, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1793009733.11438, "role": "coder", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}

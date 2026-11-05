@@ -1,0 +1,14 @@
+diff --git a/sympy/strategies/tools.py b/sympy/strategies/tools.py
+index 5160e0e..a6b284f 100644
+--- a/sympy/strategies/tools.py
++++ b/sympy/strategies/tools.py
+@@ -18,7 +18,8 @@ def subs(d, **kwargs):
+     Basic(4, Basic(2, 3), Basic(1, Basic(6, 7)))
+     """
+     if d:
+-        return top_down(do_one(*map(rl.subs, *zip(*d.items()))), **kwargs)
++        rules = [rl.subs(k, v) for k, v in d.items()]
++        return top_down(do_one(*rules), **kwargs)
+     else:
+         return lambda x: x
+ 

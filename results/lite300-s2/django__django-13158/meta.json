@@ -1,0 +1,400 @@
+{
+  "instance_id": "django__django-13158",
+  "repo": "django/django",
+  "base_commit": "7af8f4127397279d19ef7c7899e93018274e2f9b",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460547.932322
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460553.094417
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460568.1196156
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460570.754279
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460597.9198134
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460742.5271087
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791460473.202067,
+  "elapsed_s": 277.13,
+  "plan": "# In django/forms/models.py, within the ModelMultipleChoiceField class:\n\ndef clean(self, value):\n    if not value and not self.required:\n        return self.queryset.none()\n    # ... existing validation logic ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::construct_instance",
+      "symbols": [
+        "construct_instance",
+        "model_to_dict",
+        "modelform_factory",
+        "add_fields"
+      ],
+      "line_range": [
+        32,
+        70
+      ],
+      "score": 0.8742,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.716,
+        "vector": 0.7308,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: fields, form; body matches report terms: models, meta, model, form)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__str__",
+        "_check_null_allowed_for_primary_keys",
+        "_check_validators"
+      ],
+      "line_range": [
+        131,
+        177
+      ],
+      "score": 0.6393,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4015,
+        "vector": 0.7828,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: blank, null; body matches report terms: class, blank, null)"
+    },
+    {
+      "file": "tests/model_forms/models.py",
+      "symbol": "tests/model_forms/models.py::Article",
+      "symbols": [
+        "Article",
+        "Publication",
+        "Person",
+        "Category"
+      ],
+      "line_range": [
+        50,
+        73
+      ],
+      "score": 0.6271,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.6631,
+        "vector": 0.3068,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: Model; body matches report terms: class, models, blank, manytomanyfield; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/model_forms/tests.py",
+      "symbol": "tests/model_forms/tests.py::ArticleForm",
+      "symbols": [
+        "ArticleForm",
+        "ImageFileForm",
+        "OptionalImageFileForm",
+        "NoExtensionImageFileForm"
+      ],
+      "line_range": [
+        107,
+        112
+      ],
+      "score": 0.692,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.8824,
+        "vector": 0.6224,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; signature parameter matches report: ModelForm; body matches report terms: class, article, modelform, forms; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/many_to_many/models.py",
+      "symbol": "tests/many_to_many/models.py::Publication",
+      "symbols": [
+        "Publication",
+        "Article",
+        "Tag",
+        "User"
+      ],
+      "line_range": [
+        12,
+        21
+      ],
+      "score": 0.6566,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7436,
+        "vector": 0.4912,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; signature parameter matches report: Model; body matches report terms: class, models, meta, model; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/forms_tests/views.py",
+      "symbol": "tests/forms_tests/views.py::ArticleForm",
+      "symbols": [
+        "ArticleForm",
+        "Meta",
+        "ArticleFormView"
+      ],
+      "line_range": [
+        7,
+        14
+      ],
+      "score": 0.6596,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7204,
+        "vector": 0.5744,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; signature parameter matches report: ModelForm; body matches report terms: class, article, modelform, forms; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.59775,
+  "laya_scores": {
+    "fix_quality": 1.2832,
+    "matches_issue": 0.6124,
+    "safe_to_apply": 0.4954,
+    "composite": 0.59775,
+    "secrets_or_danger": 0.1222,
+    "logic_drift": 0.1984,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. No security implications identified.\n- PERFORMANCE: PASS. No significant impact on query performance or memory.\n- ROBUSTNESS: RISK. The condition `value != []` is brittle and may not cover other falsy iterables or types that should be treated as empty.\n- PONYTAIL / YAGNI: PASS. This is a targeted fix for specific behavior in form field validation.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django import forms\nfrom django.db import models\nfrom django.forms.models import ModelMultipleChoiceField\nfrom tests.many_to_many.models import Publication\n\n# The test needs to run within a Django environment. \n# This assumes the test runner has set up the database and models properly.\n\n@pytest.mark.django_db\ndef test_model_multiple_choice_union_empty_submission():\n    \"\"\"\n    Reproduce the bug: \n    When using .union() in a ModelMultipleChoiceField queryset, \n    submitting an empty value (no selection) results in all objects \n    being returned instead of an empty queryset.\n    \"\"\"\n    # Setup test data\n    p1 = Publication.objects.create(id=1)\n    p2 = Publication.objects.create(id=6)\n    \n    # Create the queryset using union\n    qs = Publication.objects.filter(id__lt=2).union(\n        Publication.objects.filter(id__gt=5)\n    )\n    \n    # Define the field\n    field = ModelMultipleChoiceField(queryset=qs, required=False)\n    \n    # Simulate empty form submission\n    result = field.clean([])\n    \n    # The fix ensures this is 0\n    assert result.count() == 0, f\"Expected 0 objects, but got {result.count()}\"\n\n@pytest.mark.django_db\ndef test_model_multiple_choice_with_valid_selection():\n    \"\"\"\n    Ensure that valid selections still work correctly when union is used.\n    \"\"\"\n    p1 = Publication.objects.create(id=1)\n    p6 = Publication.objects.create(id=6)\n    \n    qs = Publication.objects.filter(id__lt=2).union(\n        Publication.objects.filter(id__gt=5)\n    )\n    field = ModelMultipleChoiceField(queryset=qs, required=False)\n    \n    result = field.clean([p1.pk])\n    assert result.count() == 1\n    assert result.first() == p1\n\n@pytest.mark.django_db\ndef test_model_multiple_choice_required_field_raises_error():\n    \"\"\"\n    Ensure that required fields still raise ValidationError for empty inputs.\n    \"\"\"\n    qs = Publication.objects.filter(id__lt=2).union(\n        Publication.objects.filter(id__gt=5)\n    )\n    field = ModelMultipleChoiceField(queryset=qs, required=True)\n    \n    with pytest.raises(forms.ValidationError):\n        field.clean([])\n\n@pytest.mark.django_db\ndef test_model_multiple_choice_none_input():\n    \"\"\"\n    Ensure None input is handled gracefully (as empty).\n    \"\"\"\n    qs = Publication.objects.filter(id__lt=2).union(\n        Publication.objects.filter(id__gt=5)\n    )\n    field = ModelMultipleChoiceField(queryset=qs, required=False)\n    \n    result = field.clean(None)\n    assert result.count() == 0",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex ab611afca7..61a6edd801 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1322,7 +1322,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n         value = self.prepare_value(value)\n         if self.required and not value:\n             raise ValidationError(self.error_messages['required'], code='required')\n-        elif not self.required and not value:\n+        elif not self.required and not value and value != []:\n             return self.queryset.none()\n         if not isinstance(value, (list, tuple)):\n             raise ValidationError(\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13158-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.2832,
+        "matches_issue": 0.6124,
+        "safe_to_apply": 0.4954,
+        "composite": 0.59775,
+        "secrets_or_danger": 0.1222,
+        "logic_drift": 0.1984,
+        "flagged": false
+      },
+      "laya_combined": 0.5978,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 73.43,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex ab611afca7..61a6edd801 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1322,7 +1322,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n         value = self.prepare_value(value)\n         if self.required and not value:\n             raise ValidationError(self.error_messages['required'], code='required')\n-        elif not self.required and not value:\n+        elif not self.required and not value and value != []:\n             return self.queryset.none()\n         if not isinstance(value, (list, tuple)):\n             raise ValidationError(\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13158-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.2832,
+        "matches_issue": 0.6124,
+        "safe_to_apply": 0.4954,
+        "composite": 0.59775,
+        "secrets_or_danger": 0.1222,
+        "logic_drift": 0.1984,
+        "flagged": false
+      },
+      "laya_combined": 0.5978,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 70.83,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex ab611afca7..0cc3295317 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1323,7 +1323,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n         if self.required and not value:\n             raise ValidationError(self.error_messages['required'], code='required')\n         elif not self.required and not value:\n-            return self.queryset.none()\n+            return self.queryset.none() if hasattr(self.queryset, 'none') else self.queryset.filter(pk__in=[])\n         if not isinstance(value, (list, tuple)):\n             raise ValidationError(\n                 self.error_messages['invalid_list'],\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13158-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/models.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6059,
+        "matches_issue": 0.8371,
+        "safe_to_apply": 0.7444,
+        "composite": 0.7968500000000001,
+        "secrets_or_danger": 0.1102,
+        "logic_drift": 0.1389,
+        "flagged": false
+      },
+      "laya_combined": 0.7969,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0058,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.9,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex ab611afca7..61a6edd801 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1322,7 +1322,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n         value = self.prepare_value(value)\n         if self.required and not value:\n             raise ValidationError(self.error_messages['required'], code='required')\n-        elif not self.required and not value:\n+        elif not self.required and not value and value != []:\n             return self.queryset.none()\n         if not isinstance(value, (list, tuple)):\n             raise ValidationError(\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13158-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/forms/models.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/forms/models.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.2832,
+      "matches_issue": 0.6124,
+      "safe_to_apply": 0.4954,
+      "composite": 0.59775,
+      "secrets_or_danger": 0.1222,
+      "logic_drift": 0.1984,
+      "flagged": false
+    },
+    "laya_combined": 0.5978,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.008,
+    "rank_reason": "logistic",
+    "elapsed_s": 73.43,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/forms/models.py b/django/forms/models.py\nindex ab611af..61a6edd 100644\n--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -1322,7 +1322,7 @@ class ModelMultipleChoiceField(ModelChoiceField):\n         value = self.prepare_value(value)\n         if self.required and not value:\n             raise ValidationError(self.error_messages['required'], code='required')\n-        elif not self.required and not value:\n+        elif not self.required and not value and value != []:\n             return self.queryset.none()\n         if not isinstance(value, (list, tuple)):\n             raise ValidationError(\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,12 @@
+--- a/sklearn/neighbors/base.py
++++ b/sklearn/neighbors/base.py
+@@ -327,6 +327,9 @@
+         if n_neighbors is None:
+             n_neighbors = self.n_neighbors
+
++        if not isinstance(n_neighbors, (int, np.integer)):
++            raise TypeError("n_neighbors must be an integer, got %s" % type(n_neighbors))
++
+         if n_neighbors <= 0:
+             raise ValueError("Expected n_neighbors > 0. Got %d" % n_neighbors)
+         if n_neighbors > train_size:

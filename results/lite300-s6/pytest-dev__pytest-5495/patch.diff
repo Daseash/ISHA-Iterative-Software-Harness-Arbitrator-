@@ -1,0 +1,13 @@
+diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py
+index 762e5761d..eca7b21ee 100644
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -114,6 +114,8 @@ def isiterable(obj):
+ 
+ 
+ def assertrepr_compare(config, op, left, right):
++    if isinstance(left, bytes) and isinstance(right, bytes):
++        return None
+     """Return specialised explanations for some operators/operands"""
+     width = 80 - 15 - len(op) - 2  # 15 chars indentation, 1 space around op
+     left_repr = saferepr(left, maxsize=int(width // 2))

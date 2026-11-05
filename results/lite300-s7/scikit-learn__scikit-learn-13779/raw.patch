@@ -1,0 +1,9 @@
+--- a/sklearn/ensemble/voting.py
++++ b/sklearn/ensemble/voting.py
+@@ -30,3 +30,5 @@
+     """Private function used to fit an estimator within a job."""
+-    if sample_weight is not None:
++    if estimator is None:
++        return None
++    elif sample_weight is not None:
+         estimator.fit(X, y, sample_weight=sample_weight)

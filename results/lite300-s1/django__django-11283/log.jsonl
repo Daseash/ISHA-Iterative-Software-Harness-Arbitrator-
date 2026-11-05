@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "django__django-11283", "ts": 1791287400.898003}
+{"event": "attempt", "n": 1, "ts": 1791287401.2119455}
+{"event": "model", "ts": 1791287468.8333259, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791287474.2910426, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791287825.0781896, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791287829.6087942, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791287959.683996, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791288201.1852558, "role": "planner", "model": "gpt-oss-20b", "position": "fallback 2", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791288238.0102262}

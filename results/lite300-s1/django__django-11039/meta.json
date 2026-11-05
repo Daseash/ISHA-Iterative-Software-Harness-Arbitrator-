@@ -1,0 +1,243 @@
+{
+  "instance_id": "django__django-11039",
+  "repo": "django/django",
+  "base_commit": "d5276398046ce4a102776a1e67dcac2884d80dfe",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791281475.0825913
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791281481.7826383
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791281694.984168
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-20b",
+      "model_full": "groq/openai/gpt-oss-20b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791281898.3144047
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash",
+      "model_full": "gemini/gemini-3.5-flash",
+      "position": "fallback 4",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791282127.820296
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791282166.8895597
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/commands/sqlmigrate.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/commands/sqlmigrate.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791281410.3445568,
+  "elapsed_s": 764.91,
+  "plan": "# Show begin/end around output only for atomic migrations\n# and only if the database supports transactional DDL.\nself.output_transaction = migration.atomic and connection.features.can_rollback_ddl",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "django/db/transaction.py::savepoint",
+      "symbols": [
+        "savepoint",
+        "savepoint_rollback",
+        "savepoint_commit",
+        "get_rollback"
+      ],
+      "line_range": [
+        43,
+        51
+      ],
+      "score": 0.8546,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7004,
+        "vector": 0.6001,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: support, commit, point, connection)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::execute",
+      "symbols": [
+        "execute",
+        "main_help_text",
+        "get_commands",
+        "autocomplete"
+      ],
+      "line_range": [
+        301,
+        377
+      ],
+      "score": 0.5311,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1287,
+        "vector": 0.4495,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: only, test, point, that)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "db_check",
+        "db_type",
+        "rel_db_type"
+      ],
+      "line_range": [
+        304,
+        321
+      ],
+      "score": 0.5597,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2142,
+        "vector": 0.5093,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: consider, connection, based, features)"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::get_default_username",
+      "symbols": [
+        "get_default_username",
+        "create_permissions",
+        "get_system_username"
+      ],
+      "line_range": [
+        104,
+        145
+      ],
+      "score": 0.542,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1046,
+        "vector": 0.5905,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: doesn, that, existing, current)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "addslashes",
+        "urlizetrunc",
+        "dictsort"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5314,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1146,
+        "vector": 0.4398,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: only, wraps)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::ping_google",
+      "symbols": [
+        "ping_google",
+        "_urls",
+        "get_urls",
+        "GenericSitemap"
+      ],
+      "line_range": [
+        18,
+        29
+      ],
+      "score": 0.5239,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.043,
+        "vector": 0.5677,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: that, current)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7141000000000001,
+  "laya_scores": {
+    "fix_quality": 1.4808,
+    "matches_issue": 0.6975,
+    "safe_to_apply": 0.6781,
+    "composite": 0.7141000000000001,
+    "secrets_or_danger": 0.1364,
+    "logic_drift": 0.2388,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No changes to input handling, authentication, or execution of untrusted code.\n- PERFORMANCE: PASS - Adds a boolean check to existing logic, no new queries or loops introduced.\n- ROBUSTNESS: PASS - Correctly aligns `sqlmigrate` output logic with the actual capability of the database backend, preventing misleading transactional wrappers.\n- PONYTAIL / YAGNI: PASS - Minimal, targeted fix that reuses existing feature flags without adding unnecessary complexity.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "```python\nimport io\nimport re\nimport pytest\nfrom django.core import management\nfrom django.db import connections, DEFAULT_DB_ALIAS\nfrom django.core.management import call_command\nfrom django.core.exceptions import ImproperlyConfigured\n\n# --------------------------------------------------------------------------- #\n# Helpers\n# --------------------------------------------------------------------------- #\n\nclass DummyMigration:\n    \"\"\"A minimal migration object with an `atomic` flag.\"\"\"\n    def __init__(self, atomic=True):\n        self.atomic = atomic\n        self.name = \"0001_initial\"\n        self.app_label = \"dummyapp\"\n\nclass DummyExecutor:\n    \"\"\"\n    Stub for `django.db.migrations.executor.MigrationExecutor`.\n\n    It records every SQL string written during `apply_migration` so that the\n    command's output can be inspected.  All other attributes are no‑ops.\n    \"\"\"\n    def __init__(self, connection):\n        self.connection = connection\n        self.sql_records = []\n\n    def get_migration(self, app_label, migration_name):\n        # The real executor has a graph; we only need to return a dummy migration.\n        return DummyMigration(atomic=True)\n\n    def apply_migration(self, migration, plan, reverse_plan):\n        # Pretend to emit a single SQL statement.\n        self.sql_records.append(\"INSERT INTO dummy_table (id) VALUES (1);\")\n\n# --------------------------------------------------------------------------- #\n# Fixtures\n# --------------------------------------------------------------------------- #\n\n@pytest.fixture\ndef patch_executor(monkeypatch):\n    \"\"\"Replace the real MigrationExecutor with our stub.\"\"\"\n    monkeypatch.setattr(\n        \"django.db.migrations.executor.MigrationExecutor\",\n        DummyExecutor,\n    )\n    return DummyExecutor\n\n@pytest.fixture\ndef set_can_rollback(monkeypatch, request):\n    \"\"\"Patch connection.features.can_rollback_ddl according to the test param.\"\"\"\n    val = request.param\n    conn = connections[DEFAULT_DB_ALIAS]\n    monkeypatch.setattr(conn.features, \"can_rollback_ddl\", val, raising=False)\n\n# --------------------------------------------------------------------------- #\n# Tests\n# --------------------------------------------------------------------------- #\n\n@pytest.mark",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..6635944 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -55,8 +55,8 @@ class Command(BaseCommand):\n                 migration_name, app_label))\n         targets = [(app_label, migration.name)]\n \n-        # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        # Show begin/end around output for atomic migrations\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+  "offline_calls": 0
+}

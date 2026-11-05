@@ -1,0 +1,12 @@
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -105,4 +105,9 @@ def iter_all_python_module_files():
+     # aren't loaded on the fly.
+     keys = sorted(sys.modules)
+     modules = tuple(m for m in map(sys.modules.__getitem__, keys) if not isinstance(m, weakref.ProxyTypes))
+-    return itertools.islice
++    results = set(iter_modules_and_files(modules, frozenset(_error_files)))
++    if main_module := sys.modules.get('__main__'):
++        if main_file := getattr(main_module, '__file__', None):
++            results.add(pathlib.Path(main_file).resolve().absolute())
++    return frozenset(results)

@@ -1,0 +1,13 @@
+--- a/calculator.py
++++ b/calculator.py
+@@ -27,10 +27,9 @@ class Calculator:
+     def divide(self, a: float, b: float) -> float:
+         """Return the quotient of two numbers.
+ 
+-        BUG: no zero-division guard — raises ZeroDivisionError
+-        instead of ValueError('Cannot divide by zero').
+         """
+-        return a / b  # BUG: missing zero guard
++        if b == 0:
++            raise ValueError("Cannot divide by zero")
++        return a / b

@@ -1,0 +1,236 @@
+{
+  "instance_id": "django__django-15781",
+  "repo": "django/django",
+  "base_commit": "8d160f154f0240a423e83ffe0690e472f837373c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653550.96494
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653558.3070583
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653573.7199771
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653575.9389205
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653609.707854
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653656.2342346
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/base.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791653473.9864118,
+  "elapsed_s": 190.29,
+  "plan": "klas BaseCommand:\n     \"\"\"\n     The base class from which all management commands ultimately derive.\n     \"\"\"\n+    formatter_class = DjangoHelpFormatter\n     # Metadata about this command.\n     help = \"\"\n \n@@ -289,7 +290,7 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n+            formatter_class=getattr(self, \"formatter_class\", DjangoHelpFormatter),\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "load_command_class",
+        "get_commands",
+        "main_help_text"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.6933,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6259,
+        "vector": 0.7655,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: manage, that, management, name)"
+    },
+    {
+      "file": "django/core/management/commands/sqlflush.py",
+      "symbol": "django/core/management/commands/sqlflush.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments"
+      ],
+      "line_range": [
+        6,
+        29
+      ],
+      "score": 0.5837,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2413,
+        "vector": 0.6113,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: output, basecommand, arguments, class; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/commands/startapp.py",
+      "symbol": "django/core/management/commands/startapp.py::Command",
+      "symbols": [
+        "Command",
+        "handle"
+      ],
+      "line_range": [
+        4,
+        14
+      ],
+      "score": 0.575,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2568,
+        "vector": 0.5065,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: target, name, class, help; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/staticfiles/management/commands/runserver.py",
+      "symbol": "django/contrib/staticfiles/management/commands/runserver.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments",
+        "get_handler"
+      ],
+      "line_range": [
+        6,
+        36
+      ],
+      "score": 0.5968,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2553,
+        "vector": 0.6917,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: arguments, class, settings, help; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/sitemaps/management/commands/ping_google.py",
+      "symbol": "django/contrib/sitemaps/management/commands/ping_google.py::Command",
+      "symbols": [
+        "Command",
+        "add_arguments"
+      ],
+      "line_range": [
+        5,
+        16
+      ],
+      "score": 0.5807,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2549,
+        "vector": 0.5583,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: basecommand, arguments, with, class; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/admin_scripts/configured_dynamic_settings_manage.py",
+      "symbol": "tests/admin_scripts/configured_dynamic_settings_manage.py::Settings",
+      "symbols": [
+        "Settings",
+        "__getattr__",
+        "__dir__"
+      ],
+      "line_range": [
+        8,
+        17
+      ],
+      "score": 0.6149,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1305,
+        "vector": 0.5418,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: name, class"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.715025,
+  "laya_scores": {
+    "fix_quality": 1.5217,
+    "matches_issue": 0.6847,
+    "safe_to_apply": 0.6537,
+    "composite": 0.715025,
+    "secrets_or_danger": 0.2617,
+    "logic_drift": 0.4308,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security issues introduced by allowing a configurable help formatter class.\n- PERFORMANCE: PASS - Instantiating the formatter via a lambda adds negligible overhead during command parser setup.\n- ROBUSTNESS: PASS - Correctly preserves standard argument parsing behavior while allowing custom formatters.\n- PONYTAIL / YAGNI: PASS - Clean and minimal extension point fulfilling a valid customization need.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "from io import StringIO\nimport pytest\nfrom django.core.management.base import BaseCommand, DjangoHelpFormatter\n\n\nclass CustomFormatter(DjangoHelpFormatter):\n    pass\n\n\nclass CommandWithCustomFormatter(BaseCommand):\n    formatter_class = CustomFormatter\n    help = \"\"\"\n    Import a contract from tzkt.\n    Example usage:\n        ./manage.py tzkt_import 'Tezos Mainnet' KT1HTDtMBRCKoNHjfWEEvXneGQpCfPAt6BRe\n    \"\"\"\n\n    def handle(self, *args, **options):\n        pass\n\n\nclass CommandWithoutCustomFormatter(BaseCommand):\n    help = \"\"\"\n    Import a contract from tzkt.\n    Example usage:\n        ./manage.py tzkt_import 'Tezos Mainnet' KT1HTDtMBRCKoNHjfWEEvXneGQpCfPAt6BRe\n    \"\"\"\n\n    def handle(self, *args, **options):\n        pass\n\n\ndef test_custom_formatter_class_used():\n    \"\"\"\n    Test that a custom formatter_class defined on a management command is respected\n    by the argument parser. Before the fix, BaseCommand hardcoded DjangoHelpFormatter\n    instead of checking for a custom `formatter_class` attribute.\n    \"\"\"\n    cmd = CommandWithCustomFormatter()\n    parser = cmd.create_parser(\"manage.py\", \"tzkt_import\")\n    assert isinstance(parser.formatter_class, type)\n    assert issubclass(parser.formatter_class, CustomFormatter)\n\n\ndef test_default_formatter_class_used():\n    \"\"\"\n    Edge case: When no formatter_class is specified on the command,\n    it should default to DjangoHelpFormatter.\n    \"\"\"\n    cmd = CommandWithoutCustomFormatter()\n    parser = cmd.create_parser(\"manage.py\", \"tzkt_import\")\n    assert parser.formatter_class is DjangoHelpFormatter\n\n\ndef test_formatter_preserves_help_formatting():\n    \"\"\"\n    Edge case: Ensure help formatting output behaves correctly with custom formatters\n    and doesn't crash or strip essential structure when parsed.\n    \"\"\"\n    cmd = CommandWithCustomFormatter()\n    parser = cmd.create_parser(\"manage.py\", \"tzkt_import\")\n    stdout = StringIO()\n    parser.print_help(stdout)\n    help_output = stdout.getvalue()\n    assert \"Import a contract from tzkt.\" in help_output\n    assert \"Example usage:\" in help_output",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/core/management/base.py b/django/core/management/base.py\nindex d37d43d..6551788 100644\n--- a/django/core/management/base.py\n+++ b/django/core/management/base.py\n@@ -19,6 +19,7 @@ ALL_CHECKS = \"__all__\"\n \n class CommandError(Exception):\n     \"\"\"\n+    formatter_class = DjangoHelpFormatter\n     Exception class indicating a problem while executing a management\n     command.\n \n@@ -289,7 +290,7 @@ class BaseCommand:\n         parser = CommandParser(\n             prog=\"%s %s\" % (os.path.basename(prog_name), subcommand),\n             description=self.help or None,\n-            formatter_class=DjangoHelpFormatter,\n+            formatter_class=lambda prog: self.formatter_class(prog, max_help_position=20, width=None),\n             missing_args_message=getattr(self, \"missing_args_message\", None),\n             called_from_command_line=getattr(self, \"_called_from_command_line\", None),\n             **kwargs,\n",
+  "offline_calls": 0
+}

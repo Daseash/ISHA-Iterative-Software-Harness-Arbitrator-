@@ -1,0 +1,260 @@
+{
+  "instance_id": "django__django-17087",
+  "repo": "django/django",
+  "base_commit": "4a72da71001f154ea60906a2f74898d32b7322a7",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "patch_apply_failed",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652823.8450947
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652830.5713403
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652845.2222838
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652848.1929023
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652889.5648766
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791652965.8205657
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653042.4437153
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653122.895635
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791653171.082971
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "No hunks applied (git: error: No valid patches in input (allow with \"--allow-empty\")\nerror: No valid patches in input (allow with \"--allow-empty\"); sr: No SEARCH/REPLACE blocks found)",
+    "gates": {},
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791652198.5047686,
+  "elapsed_s": 428.53,
+  "plan": "def __repr__(self):\n        return f\"{self.__class__.__module__}.{self.__class__.__qualname__}.{self._name_}\"",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "__init__",
+        "contribute_to_class",
+        "CommaSeparatedIntegerField"
+      ],
+      "line_range": [
+        83,
+        86
+      ],
+      "score": 0.6892,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7334,
+        "vector": 0.5072,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: model_name; body matches report terms: model, model_name, name, field)"
+    },
+    {
+      "file": "django/db/models/enums.py",
+      "symbol": "django/db/models/enums.py::TextChoices",
+      "symbols": [
+        "TextChoices",
+        "__new__",
+        "Choices",
+        "__str__"
+      ],
+      "line_range": [
+        88,
+        92
+      ],
+      "score": 0.6041,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.213,
+        "vector": 0.8402,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: choices, last, value, name; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "sort_dependencies",
+        "register_serializer"
+      ],
+      "line_range": [
+        37,
+        54
+      ],
+      "score": 0.5935,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4328,
+        "vector": 0.3359,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: passed, error, used, class)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::RegexField",
+      "symbols": [
+        "RegexField",
+        "EmailField",
+        "URLField",
+        "GenericIPAddressField"
+      ],
+      "line_range": [
+        587,
+        613
+      ],
+      "score": 0.6259,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4641,
+        "vector": 0.499,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: CharField; body matches report terms: default, charfield, field, class)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::default",
+      "symbols": [
+        "default",
+        "stringfilter",
+        "urlencode",
+        "urlizetrunc"
+      ],
+      "line_range": [
+        838,
+        842
+      ],
+      "score": 0.7127,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2646,
+        "vector": 0.3257,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: value, given; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/model_fields/tests.py",
+      "symbol": "tests/model_fields/tests.py::AbstractModel",
+      "symbols": [
+        "AbstractModel",
+        "MyModel",
+        "FooBar",
+        "Base"
+      ],
+      "line_range": [
+        116,
+        121
+      ],
+      "score": 0.5925,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7629,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: Model; body matches report terms: models, model, field, class)"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "low_quality",
+  "critic_score": 0.175925,
+  "laya_scores": {
+    "fix_quality": 0.3003,
+    "matches_issue": 0.083,
+    "safe_to_apply": 0.3204,
+    "composite": 0.175925,
+    "secrets_or_danger": 0.0022,
+    "logic_drift": 0.029,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS (No security implications introduced)\n- PERFORMANCE: PASS (No performance impact)\n- ROBUSTNESS: PASS (Fixes an edge case in migration serialization for nested class methods)\n- PONYTAIL / YAGNI: PASS (Direct fix for a valid bug report)\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "FAILED: patch could not be applied — No hunks applied (git: ; sr: No SEARCH/REPLACE blocks found)",
+  "regression_test": "from django.db import models\nfrom django.db.models.fields import Field\nfrom django.utils.translation import gettext_lazy as _\n\n\ndef test_nested_class_method_as_field_default_repr():\n    \"\"\"\n    Class methods from nested classes used as Field.default should include\n    the full qualification of the nested class (e.g. Module.Model.NestedClass.method)\n    rather than dropping the parent model name.\n    \"\"\"\n    class Profile(models.Model):\n        class Capability(models.TextChoices):\n            BASIC = (\"BASIC\", \"Basic\")\n            PROFESSIONAL = (\"PROFESSIONAL\", \"Professional\")\n\n            @classmethod\n            def default(cls) -> list[str]:\n                return [cls.BASIC]\n\n        class Meta:\n            app_label = \"test_enums\"\n\n    field = Field(default=Profile.Capability.default)\n    # The repr of choices/methods used in migrations/field deconstruction\n    # or direct string representation should contain the full path including the model.\n    assert \"Profile.Capability.default\" in repr(Profile.Capability.default)\n\n\ndef test_standard_choices_class_method_default():\n    \"\"\"\n    Standard top-level TextChoices class method as default should deconstruct/repr correctly.\n    \"\"\"\n    class TopLevelChoices(models.TextChoices):\n        VAL = (\"VAL\", \"Value\")\n\n        @classmethod\n        def default_val(cls):\n            return cls.VAL\n\n    field = Field(default=TopLevelChoices.default_val)\n    assert \"TopLevelChoices.default_val\" in repr(TopLevelChoices.default_val)\n\n\ndef test_double_nested_class_method_default():\n    \"\"\"\n    Deeply nested classes (e.g. Model -> Nested1 -> Nested2) class method as default\n    should preserve all containing class/model names in its repr/qualification.\n    \"\"\"\n    class OuterModel(models.Model):\n        class LevelOne(models.TextChoices):\n            class LevelTwo(models.TextChoices):\n                CHOICE = (\"C\", \"Choice\")\n\n                @classmethod\n                def get_default(cls):\n                    return cls.CHOICE\n\n        class Meta:\n            app_label = \"test_enums\"\n\n    field = Field(default=OuterModel.LevelOne.LevelTwo.get_default)\n    repr_str = repr(OuterModel.LevelOne.LevelTwo.get_default)\n    assert \"OuterModel.LevelOne.LevelTwo.get_default\" in repr_str",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 0
+}

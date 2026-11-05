@@ -1,0 +1,12 @@
+diff --git a/lib/mpl_toolkits/mplot3d/art3d.py b/lib/mpl_toolkits/mplot3d/art3d.py
+index 8fe6e7a9c1..b740f369f9 100644
+--- a/lib/mpl_toolkits/mplot3d/art3d.py
++++ b/lib/mpl_toolkits/mplot3d/art3d.py
+@@ -514,6 +514,7 @@ class Path3DCollection(PathCollection):
+         super().__init__(*args, **kwargs)
+         self.set_3d_properties(zs, zdir)
+ 
++        self._facecolors2d = self._shade_colors(self._facecolors, self._face_zmean)
+     def draw(self, renderer):
+         with cbook._setattr_cm(self, _in_draw=True):
+             super().draw(renderer)

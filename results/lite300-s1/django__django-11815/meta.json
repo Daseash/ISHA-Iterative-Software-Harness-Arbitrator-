@@ -1,0 +1,403 @@
+{
+  "instance_id": "django__django-11815",
+  "repo": "django/django",
+  "base_commit": "e02f67ef2d03d48128e7a118bf75f0418e24e8ac",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399036.1735132
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399042.0306807
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399077.5401564
+    },
+    {
+      "role": "planner",
+      "model": "nemotron-3-super-120b-a12b:free",
+      "model_full": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399117.1302025
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399209.9069664
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791399507.8573334
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/serializer.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/serializer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791398935.6899197,
+  "elapsed_s": 578.7,
+  "plan": "Step 1: Root cause\nThe root cause is in the `EnumSerializer` class in `django/db/migrations/serializer.py`. When serializing an Enum instance for a migration, it currently uses the Enum's `value` attribute (which may be a translatable string) instead of the Enum's `name`. This causes generated migrations to embed the actual value (e.g., `'Good'`) rather than referencing the Enum member by its stable name (e.g., `'GOOD'`). When translation changes the value, the migration fails because the embedded string no longer matches any Enum member.\n\nStep 2: Exact changes\nFile: `django/db/migrations/serializer.py`\nChange the `EnumSerializer.serialize` method:\n- Replace `serializer_factory(self.value.value)` with `serializer_factory(self.value.name)`\n- Change the return statement from `return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports` to `return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports`\n\nThis ensures the migration references Enum members by name using the `[index]` syntax (e.g., `Status['GOOD']`) which remains valid regardless of translation of the Enum's value.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "contribute_to_class",
+        "CommaSeparatedIntegerField",
+        "contribute_to_class"
+      ],
+      "line_range": [
+        131,
+        177
+      ],
+      "score": 0.6488,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3786,
+        "vector": 0.9095,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: default, max_length, name; body matches report terms: name, max_length, valid, default)"
+    },
+    {
+      "file": "django/utils/translation/trans_real.py",
+      "symbol": "django/utils/translation/trans_real.py::translation",
+      "symbols": [
+        "translation",
+        "reset_cache",
+        "DjangoTranslation",
+        "__init__"
+      ],
+      "line_range": [
+        192,
+        201
+      ],
+      "score": 0.727,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7251,
+        "vector": 0.798,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: language, django, default, object; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "tests/queries/models.py",
+      "symbol": "tests/queries/models.py::Item",
+      "symbols": [
+        "Item",
+        "DumbCategory",
+        "Tag",
+        "Note"
+      ],
+      "line_range": [
+        100,
+        114
+      ],
+      "score": 0.6718,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3658,
+        "vector": 0.7295,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: Model; body matches report terms: charfield, modified, str__, models; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "tests/select_related_regress/models.py",
+      "symbol": "tests/select_related_regress/models.py::Item",
+      "symbols": [
+        "Item",
+        "Building",
+        "Device",
+        "Port"
+      ],
+      "line_range": [
+        111,
+        117
+      ],
+      "score": 0.6689,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3495,
+        "vector": 0.7295,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: Model; body matches report terms: charfield, str__, models, name; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "tests/defer_regress/models.py",
+      "symbol": "tests/defer_regress/models.py::Item",
+      "symbols": [
+        "Item",
+        "RelatedItem",
+        "Child",
+        "Leaf"
+      ],
+      "line_range": [
+        8,
+        17
+      ],
+      "score": 0.6596,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2268,
+        "vector": 0.8743,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: Model; body matches report terms: value, charfield, str__, models; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "tests/delete_regress/models.py",
+      "symbol": "tests/delete_regress/models.py::Item",
+      "symbols": [
+        "Item",
+        "Award",
+        "AwardNote",
+        "Person"
+      ],
+      "line_range": [
+        87,
+        90
+      ],
+      "score": 0.6445,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2099,
+        "vector": 0.7295,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: Model; body matches report terms: models, model, class; named, but usually the entry point — check below it"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.722175,
+  "laya_scores": {
+    "fix_quality": 1.4926,
+    "matches_issue": 0.76,
+    "safe_to_apply": 0.6361,
+    "composite": 0.722175,
+    "secrets_or_danger": 0.162,
+    "logic_drift": 0.4142,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No injection or credential risks introduced.\n- PERFORMANCE: PASS - Serializing the name instead of the value is functionally equivalent in performance.\n- ROBUSTNESS: PASS - Corrects a fragility where translated values broke migration integrity.\n- PONYTAIL / YAGNI: PASS - This is a necessary fix for Django's migration serialization logic.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db.migrations.serializer import Serializer\nfrom enum import Enum\n\ndef test_enum_serialization_uses_name_instead_of_value():\n    class Status(Enum):\n        GOOD = 'Good'\n        BAD = 'Bad'\n    \n    serializer = Serializer()\n    serialized, _ = serializer.serialize(Status.GOOD)\n    assert serialized.split('.')[-1] == \"Status['GOOD']\"\n\ndef test_enum_serialization_with_integer_value():\n    class Priority(Enum):\n        LOW = 1\n        MEDIUM = 2\n        HIGH = 3\n    \n    serializer = Serializer()\n    serialized, _ = serializer.serialize(Priority.LOW)\n    assert serialized.split('.')[-1] == \"Priority['LOW']\"\n\ndef test_enum_serialization_with_none_value():\n    class SpecialValue(Enum):\n        EMPTY = None\n        ZERO = 0\n    \n    serializer = Serializer()\n    serialized, _ = serializer.serialize(SpecialValue.EMPTY)\n    assert serialized.split('.')[-1] == \"SpecialValue['EMPTY']\"\n\ndef test_enum_serialization_with_empty_string_value():\n    class Status(Enum):\n        ACTIVE = ''\n        INACTIVE = 'X'\n    \n    serializer = Serializer()\n    serialized, _ = serializer.serialize(Status.ACTIVE)\n    assert serialized.split('.')[-1] == \"Status['ACTIVE']\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -107,7 +107,7 @@ class EnumSerializer(BaseSerializer):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n-        v_string, v_imports = serializer_factory(self.value.value).serialize()\n+        v_string, v_imports = serializer_factory(self.value.name).serialize()\n         imports = {'import %s' % module, *v_imports}\n-        return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports\n+        return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports\n \n \n class FloatSerializer(BaseSimpleSerializer):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xkf_ayh_",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/serializer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/serializer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4926,
+        "matches_issue": 0.76,
+        "safe_to_apply": 0.6361,
+        "composite": 0.722175,
+        "secrets_or_danger": 0.162,
+        "logic_drift": 0.4142,
+        "flagged": false
+      },
+      "laya_combined": 0.7222,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 138.39,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -107,6 +107,6 @@ class EnumSerializer(BaseSerializer):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n-        v_string, v_imports = serializer_factory(self.value.value).serialize()\n+        v_string, v_imports = serializer_factory(self.value.name).serialize()\n         imports = {'import %s' % module, *v_imports}\n-        return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports\n+        return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports\n \n \n class FloatSerializer(BaseSimpleSerializer):",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-ex0chj43",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/serializer.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/serializer.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4926,
+        "matches_issue": 0.76,
+        "safe_to_apply": 0.6361,
+        "composite": 0.722175,
+        "secrets_or_danger": 0.1605,
+        "logic_drift": 0.4171,
+        "flagged": false
+      },
+      "laya_combined": 0.7222,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 149.28,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -48,2 +48,7 @@ class BaseSimpleSerializer(BaseSerializer):\n \n+class ChoicesSerializer(BaseSerializer):\n+    def serialize(self):\n+        return serializer_factory(self.value.value).serialize()\n+\n+\n class DateTimeSerializer(BaseSerializer):\n@@ -281,2 +286,3 @@ class Serializer:\n         dict: DictionarySerializer,\n+        models.C",
+      "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-_d33js6r",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-_d33js6r\\django\\db\\migrations\\serializer.py: SyntaxError line 297: ':' expected after dictionary key"
+      ],
+      "changed_files": [
+        "django/db/migrations/serializer.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4735,
+        "matches_issue": 0.7224,
+        "safe_to_apply": 0.5696,
+        "composite": 0.691375,
+        "secrets_or_danger": 0.1542,
+        "logic_drift": 0.8309,
+        "flagged": true
+      },
+      "laya_combined": 0.6914,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 135.04,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -107,7 +107,7 @@ class EnumSerializer(BaseSerializer):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n-        v_string, v_imports = serializer_factory(self.value.value).serialize()\n+        v_string, v_imports = serializer_factory(self.value.name).serialize()\n         imports = {'import %s' % module, *v_imports}\n-        return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports\n+        return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports\n \n \n class FloatSerializer(BaseSimpleSerializer):",
+    "worktree": "C:\\Users\\Eashwar\\AppData\\Local\\Temp\\isha-sandbox-xkf_ayh_",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/serializer.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/serializer.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 2,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4926,
+      "matches_issue": 0.76,
+      "safe_to_apply": 0.6361,
+      "composite": 0.722175,
+      "secrets_or_danger": 0.162,
+      "logic_drift": 0.4142,
+      "flagged": false
+    },
+    "laya_combined": 0.7222,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 138.39,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py\nindex 27b5cbd..4622b0f 100644\n--- a/django/db/migrations/serializer.py\n+++ b/django/db/migrations/serializer.py\n@@ -120,9 +120,9 @@ class EnumSerializer(BaseSerializer):\n     def serialize(self):\n         enum_class = self.value.__class__\n         module = enum_class.__module__\n-        v_string, v_imports = serializer_factory(self.value.value).serialize()\n+        v_string, v_imports = serializer_factory(self.value.name).serialize()\n         imports = {'import %s' % module, *v_imports}\n-        return \"%s.%s(%s)\" % (module, enum_class.__name__, v_string), imports\n+        return \"%s.%s[%s]\" % (module, enum_class.__name__, v_string), imports\n \n \n class FloatSerializer(BaseSimpleSerializer):\n",
+  "offline_calls": 0
+}

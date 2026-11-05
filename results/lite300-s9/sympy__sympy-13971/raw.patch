@@ -1,0 +1,13 @@
+diff --git a/sympy/series/sequences.py b/sympy/series/sequences.py
+index 08f36df061..c96524bcee 100644
+--- a/sympy/series/sequences.py
++++ b/sympy/series/sequences.py
+@@ -193,7 +193,7 @@ def coeff_mul(self, other):
+ 
+         Notes
+         =====
+-
++        return r"%s\left[ %s \right]%s" % (
+         '*' defines multiplication of sequences with sequences only.
+         """
+         return Mul(self, other)

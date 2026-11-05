@@ -1,0 +1,11 @@
+--- a/astropy/modeling/separable.py
++++ b/astropy/modeling/separable.py
+@@ -115,7 +115,12 @@ def _separable(transform):
+         if transform.oper == '&':
+             mats = [_separable(item) for item in transform.operands]
+-            return np.hstack(mats)
++            mats = [np.vstack(m) if isinstance(m, list) else m for m in mats]
++            return np.hstack(mats)
+         elif transform.oper == '|':
+             mats = [_separable(item) for item in transform.operands]
+             return np.vstack(mats)

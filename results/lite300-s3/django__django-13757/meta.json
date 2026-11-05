@@ -1,0 +1,404 @@
+{
+  "instance_id": "django__django-13757",
+  "repo": "django/django",
+  "base_commit": "3f140dde51c0fe6c350acb7727bbe489a99f0632",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531383.4214745
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531390.9476361
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531404.6299338
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531407.6680925
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531449.9255147
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791531663.242944
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/json.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/json.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 4,
+      "warnings": [
+        "rewrite risk: 'KeyTransformIsNull' in 'django/db/models/fields/json.py' — the diff replaces 12/18 of its body (67%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue.",
+        "rewrite risk: 'as_sql' in 'django/db/models/fields/json.py' — the diff replaces 11/11 of its body (100%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791531309.7465549,
+  "elapsed_s": 361.46,
+  "plan": "Step 1: The root cause\nThe `KeyTransformIsNull` lookup, when used with `__isnull=True`, incorrectly relies on logic that checks only if the path extraction result is NULL in the database. On SQLite and Oracle, `JSON_EXTRACT` (or similar JSON path operators) returns `NULL` when the key is missing AND when the key exists but its value is JSON `null`. Consequently, `__isnull=True` returns both objects missing the key and objects where the key is present but set to `null`. The query needs to be updated to explicitly check that the key exists (using `JSON_TYPE` or similar) when `isnull=True` is requested, to differentiate between a missing key and a `null` value.\n\nStep 2: The exact changes\nModify `django/db/models/fields/json.py` in the `KeyTransformIsNull` class (which is likely implemented near the `KeyTransform` related logic). \n\n1.  Locate the `KeyTransformIsNull` class within `django/db/models/fields/json.py`.\n2.  Override the `as_sql` method for `KeyTransformIsNull`.\n3.  For SQLite and Oracle (checking `connection.vendor`), when `self.rhs` is `True`, the SQL should be updated to verify both the nullity of the value and the existence of the key.\n    *   For SQLite: Use `JSON_TYPE(column, path) IS NULL` (which covers both missing key and `null` value) or specifically check existence using `JSON_TYPE(column, path) IS NOT NULL` combined with `JSON_EXTRACT` results.\n    *   Since the current logic incorrectly treats `JSON_EXTRACT` returning `null` as a match for `__isnull=True`, the fix involves ensuring the generated SQL for `isnull=True` checks `JSON_TYPE(field, path) IS NULL` if we want to include both, or adjusting the filter to differentiate.\n    *   Specifically, `__isnull=True` should map to a SQL condition that checks if the key exists AND the value is null, or simply that the path does not exist. The existing bug is that it currently doesn't distinguish. I will change `as_sql` to append a check for key existence (e.g., `JSON_TYPE(field, path) IS NOT NULL`) when `self.rhs` is `False` (for `isnull=False`) and adjust it so `isnull=True` correctly identifies missing keys by ensuring the `JSON_TYPE` is indeed `NULL`.",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/db/models/fields/json.py",
+      "symbol": "django/db/models/fields/json.py::from_db_value",
+      "symbols": [
+        "from_db_value",
+        "DataContains",
+        "as_sql",
+        "ContainedBy"
+      ],
+      "line_range": [
+        75,
+        86
+      ],
+      "score": 0.6544,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4294,
+        "vector": 0.8088,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: sqlite, value, keytransform, json)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_field_name",
+      "symbols": [
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys",
+        "deconstruct",
+        "__lt__"
+      ],
+      "line_range": [
+        208,
+        239
+      ],
+      "score": 0.6008,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3559,
+        "vector": 0.5568,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: checks, that, lookup, with)"
+    },
+    {
+      "file": "django/contrib/postgres/fields/jsonb.py",
+      "symbol": "django/contrib/postgres/fields/jsonb.py::__init__",
+      "symbols": [
+        "__init__",
+        "JSONField",
+        "KeyTransform",
+        "KeyTextTransform"
+      ],
+      "line_range": [
+        26,
+        34
+      ],
+      "score": 0.5676,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2263,
+        "vector": 0.5085,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: keytransform, json)"
+    },
+    {
+      "file": "django/contrib/postgres/fields/hstore.py",
+      "symbol": "django/contrib/postgres/fields/hstore.py::to_python",
+      "symbols": [
+        "to_python",
+        "value_to_string",
+        "ValuesTransform",
+        "HStoreField"
+      ],
+      "line_range": [
+        40,
+        44
+      ],
+      "score": 0.5615,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2161,
+        "vector": 0.4786,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: value, json)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "to_locale",
+        "__getattr__",
+        "_get_number_value"
+      ],
+      "line_range": [
+        42,
+        69
+      ],
+      "score": 0.613,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1921,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: change, tests, using, have)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "execute",
+        "find_commands",
+        "fetch_command"
+      ],
+      "line_range": [
+        44,
+        77
+      ],
+      "score": 0.562,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2352,
+        "vector": 0.4849,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: value, also, that, this)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.7298500000000001,
+  "laya_scores": {
+    "fix_quality": 1.454,
+    "matches_issue": 0.7799,
+    "safe_to_apply": 0.6855,
+    "composite": 0.7298500000000001,
+    "secrets_or_danger": 0.4344,
+    "logic_drift": 0.6122,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, No change to input sanitization or execution context.\n- PERFORMANCE: PASS, Minimal overhead added to JSON field lookups.\n- ROBUSTNESS: FAIL, The proposed `as_sql` implementation incorrectly changes the query logic for non-null checks and relies on hardcoded JSON path syntax that may not align with base class expectations.\n- PONYTAIL / YAGNI: PASS, The change addresses a specific reported bug in JSON field handling.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.test import TestCase\nfrom tests.model_fields.models import NullableJSONModel\n\n@pytest.mark.django_db\ndef test_isnull_key_reproduction():\n    \"\"\"\n    Reproduce: __isnull=True should only match missing keys.\n    Currently on SQLite/Oracle, it incorrectly matches keys where value is JSON null.\n    \"\"\"\n    # Setup data\n    # Obj 0: {'j': 1}\n    # Obj 1: {'j': 'foo'}\n    # Obj 2: {'j': False}\n    # Obj 3: {} (Missing key)\n    # Obj 4: {'j': None} (JSON null)\n    objs = [\n        NullableJSONModel.objects.create(value={'j': 1}),\n        NullableJSONModel.objects.create(value={'j': 'foo'}),\n        NullableJSONModel.objects.create(value={'j': False}),\n        NullableJSONModel.objects.create(value={}),\n        NullableJSONModel.objects.create(value={'j': None}),\n    ]\n\n    # Only Obj 3 has the key 'j' missing. \n    # Obj 4 has the key 'j' present, but the value is JSON null.\n    # The bug: __isnull=True currently returns [Obj 3, Obj 4].\n    # Expected: [Obj 3].\n    qs = NullableJSONModel.objects.filter(value__j__isnull=True)\n    \n    assert list(qs) == [objs[3]]\n\n@pytest.mark.django_db\ndef test_isnull_false_edge_case():\n    \"\"\"\n    Ensure __isnull=False correctly retrieves objects where the key exists \n    and is NOT null.\n    \"\"\"\n    NullableJSONModel.objects.create(value={'a': 1})\n    NullableJSONModel.objects.create(value={'a': None})\n    NullableJSONModel.objects.create(value={})\n\n    # Should only return the one with {'a': 1}\n    qs = NullableJSONModel.objects.filter(value__a__isnull=False)\n    assert qs.count() == 1\n    assert qs[0].value == {'a': 1}\n\n@pytest.mark.django_db\ndef test_isnull_none_lookup_behavior():\n    \"\"\"\n    Verifying that filtering with None (implicitly __isnull=True) \n    handles JSON null correctly.\n    \"\"\"\n    NullableJSONModel.objects.create(value={'a': None})\n    \n    # value__a=None is often interpreted as __isnull=True in Django\n    # This ensures consistency for the explicit __isnull=True case\n    qs = NullableJSONModel.objects.filter(value__a=None)\n    \n    # If key 'a' is set to JSON null, it is technically NOT missing.\n    # This test ensures we don't accidentally match 'a': None when using lookup=None\n    # if the fix specifically differentiates key existence.\n    assert qs.count() == 0 \n\n@pytest.mark.django_db\ndef test_empty_json_field_behavior():\n    \"\"\"\n    Verify behavior when the JSON field itself is stored as NULL in the DB.\n    \"\"\"\n    NullableJSONModel.objects.create(value=None)\n    \n    # Field is null, so sub-key lookup should result in null/missing\n    qs = NullableJSONModel.objects.filter(value__missing_key__isnull=True)\n    assert qs.count() == 1",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py\nindex 29c6ff0926..ffb08a916f 100644\n--- a/django/db/models/fields/json.py\n+++ b/django/db/models/fields/json.py\n@@ -370,10 +370,16 @@ class KeyTransformIsNull(lookups.IsNull):\n             return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)\n         return super().as_sql(compiler, connection)\n \n-    def as_sqlite(self, compiler, connection):\n-        if not self.rhs:\n-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)\n-        return super().as_sql(compiler, connection)\n+    def as_sql(self, compiler, connection):\n+        if not connection.features.has_json_path_lookup:\n+            return super().as_sql(compiler, connection)\n+        if connection.vendor in {'sqlite', 'oracle'} and self.rhs:\n+            sql, params = self.lhs.as_sql(compiler, connection)\n+            return (\n+                \"(JSON_TYPE(%s, '$') IS NULL OR JSON_TYPE(%s, %s) IS NULL)\" % (sql, sql, \"%s\"),\n+                params + [self.lhs.key_name],\n+            )\n+        return self.lhs.as_sql(compiler, connection)\n \n \n class KeyTransformIn(lookups.In):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13757-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/json.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/json.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 4,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.454,
+        "matches_issue": 0.7799,
+        "safe_to_apply": 0.6855,
+        "composite": 0.7298500000000001,
+        "secrets_or_danger": 0.4344,
+        "logic_drift": 0.6122,
+        "flagged": false
+      },
+      "laya_combined": 0.7299,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 123.58,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/json.py\n+++ b/django/db/models/fields/json.py\n@@ -359,6 +359,12 @@ class KeyTransformIsNull(lookups.IsNull):\n     def as_sql(self, compiler, connection):\n         if connection.vendor in {'sqlite', 'oracle'} and self.rhs:\n-            return 'JSON_TYPE(%s, %s) IS NULL' % (\n-                *compiler.compile(self.lhs.lhs),\n-                self.lhs.json_path,\n-            )\n+            sql, params = compiler.compile(self.lhs.lhs)\n+            return 'JSON_TYPE(%s, %s) IS NULL' % (sql, self.lhs.json_path), params\n         return super().as_sql(compiler, connection)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13757-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/json.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 4,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5254,
+        "matches_issue": 0.7908,
+        "safe_to_apply": 0.6772,
+        "composite": 0.7483500000000001,
+        "secrets_or_danger": 0.1333,
+        "logic_drift": 0.3313,
+        "flagged": false
+      },
+      "laya_combined": 0.7484,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 125.66,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/json.py\n+++ b/django/db/models/fields/json.py\n@@ -334,6 +334,14 @@ class KeyTransformIsNull(lookups.IsNull):\n     def as_sql(self, compiler, connection):\n         if not connection.features.has_json_path_lookup:\n             return super().as_sql(compiler, connection)\n+        if connection.vendor in {'sqlite', 'oracle'} and self.rhs:\n+            sql, params = compiler.compile(self.lhs.lhs)\n+            return (\n+                \"(JSON_TYPE(%s, %s) IS NULL OR JSON_EXTRACT(%s, %s) IS NULL)\" % (\n+                    sql, self.lhs.json_path, sql, self.lhs.json_path,\n+                ),\n+                params * 2,\n+            )\n         return super().as_sql(compiler, connection)\n \n \n class KeyTransformIn(lookups.In):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13757-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/json.py"
+      ],
+      "added_lines": 8,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.595,
+        "matches_issue": 0.8037,
+        "safe_to_apply": 0.6898,
+        "composite": 0.772125,
+        "secrets_or_danger": 0.1295,
+        "logic_drift": 0.4457,
+        "flagged": false
+      },
+      "laya_combined": 0.7721,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 126.95,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py\nindex 29c6ff0926..ffb08a916f 100644\n--- a/django/db/models/fields/json.py\n+++ b/django/db/models/fields/json.py\n@@ -370,10 +370,16 @@ class KeyTransformIsNull(lookups.IsNull):\n             return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)\n         return super().as_sql(compiler, connection)\n \n-    def as_sqlite(self, compiler, connection):\n-        if not self.rhs:\n-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)\n-        return super().as_sql(compiler, connection)\n+    def as_sql(self, compiler, connection):\n+        if not connection.features.has_json_path_lookup:\n+            return super().as_sql(compiler, connection)\n+        if connection.vendor in {'sqlite', 'oracle'} and self.rhs:\n+            sql, params = self.lhs.as_sql(compiler, connection)\n+            return (\n+                \"(JSON_TYPE(%s, '$') IS NULL OR JSON_TYPE(%s, %s) IS NULL)\" % (sql, sql, \"%s\"),\n+                params + [self.lhs.key_name],\n+            )\n+        return self.lhs.as_sql(compiler, connection)\n \n \n class KeyTransformIn(lookups.In):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13757-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/json.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/json.py"
+    ],
+    "added_lines": 10,
+    "removed_lines": 4,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.454,
+      "matches_issue": 0.7799,
+      "safe_to_apply": 0.6855,
+      "composite": 0.7298500000000001,
+      "secrets_or_danger": 0.4344,
+      "logic_drift": 0.6122,
+      "flagged": false
+    },
+    "laya_combined": 0.7299,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0063,
+    "rank_reason": "logistic",
+    "elapsed_s": 123.58,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py\nindex 29c6ff0..ffb08a9 100644\n--- a/django/db/models/fields/json.py\n+++ b/django/db/models/fields/json.py\n@@ -370,10 +370,16 @@ class KeyTransformIsNull(lookups.IsNull):\n             return HasKey(self.lhs.lhs, self.lhs.key_name).as_oracle(compiler, connection)\n         return super().as_sql(compiler, connection)\n \n-    def as_sqlite(self, compiler, connection):\n-        if not self.rhs:\n-            return HasKey(self.lhs.lhs, self.lhs.key_name).as_sqlite(compiler, connection)\n-        return super().as_sql(compiler, connection)\n+    def as_sql(self, compiler, connection):\n+        if not connection.features.has_json_path_lookup:\n+            return super().as_sql(compiler, connection)\n+        if connection.vendor in {'sqlite', 'oracle'} and self.rhs:\n+            sql, params = self.lhs.as_sql(compiler, connection)\n+            return (\n+                \"(JSON_TYPE(%s, '$') IS NULL OR JSON_TYPE(%s, %s) IS NULL)\" % (sql, sql, \"%s\"),\n+                params + [self.lhs.key_name],\n+            )\n+        return self.lhs.as_sql(compiler, connection)\n \n \n class KeyTransformIn(lookups.In):\n",
+  "offline_calls": 0
+}

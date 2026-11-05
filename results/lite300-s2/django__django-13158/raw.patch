@@ -1,0 +1,13 @@
+diff --git a/django/forms/models.py b/django/forms/models.py
+index ab611afca7..61a6edd801 100644
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -1322,7 +1322,7 @@ class ModelMultipleChoiceField(ModelChoiceField):
+         value = self.prepare_value(value)
+         if self.required and not value:
+             raise ValidationError(self.error_messages['required'], code='required')
+-        elif not self.required and not value:
++        elif not self.required and not value and value != []:
+             return self.queryset.none()
+         if not isinstance(value, (list, tuple)):
+             raise ValidationError(

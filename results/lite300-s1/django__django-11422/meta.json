@@ -1,0 +1,252 @@
+{
+  "instance_id": "django__django-11422",
+  "repo": "django/django",
+  "base_commit": "df46b329e0900e9e4dc1d60816c1dce6dfc1094e",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791290082.1367233
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791290087.520759
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791290432.9549668
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 5",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791290738.8825316
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791299993.5929606
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300050.11542
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791300078.5639126
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/utils/autoreload.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/utils/autoreload.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791288238.029575,
+  "error": "attempt 1 exceeded 1800s",
+  "elapsed_s": 10048.17,
+  "plan": "# Modify django/utils/autoreload.py\n\ndef iter_all_python_module_files():\n    # ... existing implementation ...\n    keys = sorted(sys.modules)\n    modules = tuple(m for m in map(sys.modules.__getitem__, keys) if not isinstance(m, weakref.ProxyTypes))\n    results = set(iter_modules_and_files(modules, frozenset(_error_files)))\n    \n    # Add the main script to the watch list\n    main_module = sys.modules.get('__main__')\n    if main_module and hasattr(main_module, '__file__'):\n        results.add(Path(main_module.__file__).resolve().absolute())\n        \n    return frozenset(results)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/utils/autoreload.py",
+      "symbol": "django/utils/autoreload.py::iter_all_python_module_files",
+      "symbols": [
+        "iter_all_python_module_files",
+        "iter_modules_and_files",
+        "get_child_arguments",
+        "trigger_reload"
+      ],
+      "line_range": [
+        99,
+        108
+      ],
+      "score": 0.8996,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3923,
+        "vector": 0.888,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: file, python, reloading, this)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "__init__",
+        "fetch_command",
+        "autocomplete"
+      ],
+      "line_range": [
+        41,
+        74
+      ],
+      "score": 0.659,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5882,
+        "vector": 0.5583,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: install, manage, settings, with)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::LazySettings",
+      "symbols": [
+        "LazySettings",
+        "_setup",
+        "__setattr__",
+        "FILE_CHARSET"
+      ],
+      "line_range": [
+        42,
+        131
+      ],
+      "score": 0.6242,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5188,
+        "vector": 0.4126,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: environment, here, file, django_settings_module)"
+    },
+    {
+      "file": "tests/admin_scripts/configured_dynamic_settings_manage.py",
+      "symbol": "tests/admin_scripts/configured_dynamic_settings_manage.py::__getattr__",
+      "symbols": [
+        "__getattr__",
+        "__dir__"
+      ],
+      "line_range": [
+        9,
+        13
+      ],
+      "score": 0.6328,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1513,
+        "vector": 0.7127,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: settings"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::_get_sitemap_full_url",
+      "symbols": [
+        "_get_sitemap_full_url",
+        "Sitemap",
+        "get_urls",
+        "_urls"
+      ],
+      "line_range": [
+        30,
+        53
+      ],
+      "score": 0.5904,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1546,
+        "vector": 0.8897,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: install, main, auto, django"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::Trans",
+      "symbols": [
+        "Trans",
+        "__getattr__",
+        "ugettext_noop",
+        "ugettext"
+      ],
+      "line_range": [
+        41,
+        66
+      ],
+      "score": 0.567,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2609,
+        "vector": 0.4734,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: autoreload, file, will, utils"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "flagged",
+  "critic_score": 0.604575,
+  "laya_scores": {
+    "fix_quality": 1.2453,
+    "matches_issue": 0.609,
+    "safe_to_apply": 0.564,
+    "composite": 0.604575,
+    "secrets_or_danger": 0.1729,
+    "logic_drift": 0.2452,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns introduced.\n- PERFORMANCE: RISK - `iter_modules_and_files` triggers expensive filesystem operations (via `pkgutil` or similar heavy module iterators) on every file system event, causing O(N^2) CPU usage in large projects; the standard implementation uses lazy generators or static sets to avoid this.\n- ROBUSTNESS: PASS - Uses safe `getattr` and null checks; no race conditions introduced by the logic itself (though the reloader's existing timing issues remain, they are not made worse by this specific addition).\n- PONYTAIL / YAGNI: PASS - Addresses a specific bug regarding `manage.py` tracking; no unnecessary abstractions added.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import sys\nimport types\nfrom pathlib import Path\nimport pytest\nfrom django.utils import autoreload\n\ndef test_iter_all_python_module_files_includes_main():\n    \"\"\"\n    Reproduce bug: iter_all_python_module_files() should track the file \n    path of the '__main__' module.\n    \"\"\"\n    # Create a dummy main module\n    main_mod = types.ModuleType('__main__')\n    dummy_path = Path('/tmp/fake_manage.py').absolute()\n    main_mod.__file__ = str(dummy_path)\n    \n    # Mock sys.modules to contain our fake main\n    original_main = sys.modules.get('__main__')\n    sys.modules['__main__'] = main_mod\n    \n    try:\n        watched_files = autoreload.iter_all_python_module_files()\n        assert dummy_path in watched_files, \"The __main__ module file should be tracked by autoreload\"\n    finally:\n        if original_main:\n            sys.modules['__main__'] = original_main\n        else:\n            del sys.modules['__main__']\n\ndef test_iter_all_python_module_files_handles_no_main_file():\n    \"\"\"\n    Edge case: Ensure it doesn't crash if __main__ doesn't have a __file__ attribute.\n    \"\"\"\n    main_mod = types.ModuleType('__main__')\n    # No __file__ attribute\n    sys.modules['__main__'] = main_mod\n    \n    try:\n        # Should not raise AttributeError\n        watched_files = autoreload.iter_all_python_module_files()\n        assert isinstance(watched_files, frozenset)\n    finally:\n        del sys.modules['__main__']\n\ndef test_iter_all_python_module_files_handles_missing_main():\n    \"\"\"\n    Edge case: Ensure it doesn't crash if '__main__' is missing from sys.modules.\n    \"\"\"\n    original_main = sys.modules.pop('__main__', None)\n    try:\n        watched_files = autoreload.iter_all_python_module_files()\n        assert isinstance(watched_files, frozenset)\n    finally:\n        if original_main:\n            sys.modules['__main__'] = original_main\n\ndef test_iter_all_python_module_files_resolves_path():\n    \"\"\"\n    Edge case: Ensure paths are resolved (canonicalized) to avoid duplicates \n    between symlinks or relative paths.\n    \"\"\"\n    main_mod = types.ModuleType('__main__')\n    # Path with redundant segments\n    dummy_path = Path('./dir/../manage.py').absolute()\n    main_mod.__file__ = str(dummy_path)\n    \n    sys.modules['__main__'] = main_mod\n    try:\n        watched_files = autoreload.iter_all_python_module_files()\n        # The fix plan uses .resolve().absolute()\n        assert dummy_path.resolve() in watched_files\n    finally:\n        del sys.modules['__main__']",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 7ca0d68..543b3f0 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -103,7 +103,11 @@ def iter_all_python_module_files():\n     # aren't loaded on the fly.\n     keys = sorted(sys.modules)\n     modules = tuple(m for m in map(sys.modules.__getitem__, keys) if not isinstance(m, weakref.ProxyTypes))\n-    return iter_modules_and_files(modules, frozenset(_error_files))\n+    results = set(iter_modules_and_files(modules, frozenset(_error_files)))\n+    if main_module := sys.modules.get('__main__'):\n+        if main_file := getattr(main_module, '__file__', None):\n+            results.add(pathlib.Path(main_file).resolve().absolute())\n+    return frozenset(results)\n \n \n @functools.lru_cache(maxsize=1)\n",
+  "offline_calls": 0
+}

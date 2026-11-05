@@ -1,0 +1,17 @@
+--- a/src/_pytest/outcomes.py
++++ b/src/_pytest/outcomes.py
+@@ -134,7 +134,11 @@
+     """
+     if not allow_module_level:
+         __tracebackhide__ = True
+-        raise UsageError("Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}`.")
++        raise UsageError("Using pytest.skip outside of a test is not allowed. To decorate a test function, use the @pytest.mark.skip or @pytest.mark.skipif decorators instead, and to skip a module use `pytestmark = pytest.mark.{skip,skipif}` or pass `allow_module_level=True`.")
+     raise Skipped(msg=msg, allow_module_level=allow_module_level)
+ 
+ 
++def skip_module(msg: str = "") -> "NoReturn":
++    """Skip an entire module with the given message."""
++    return skip(msg=msg, allow_module_level=True)
++
++
+ def fail(msg: str = "", pytrace: bool = True) -> "NoReturn":

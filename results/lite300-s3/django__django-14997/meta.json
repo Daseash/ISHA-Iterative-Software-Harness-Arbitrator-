@@ -1,0 +1,359 @@
+{
+  "instance_id": "django__django-14997",
+  "repo": "django/django",
+  "base_commit": "0d4e575c96d408e0efb4dfd0cbfc864219776950",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539663.0415642
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539670.43898
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539686.9237113
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539693.3527408
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539729.1719158
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791539896.806548
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791539559.938002,
+  "elapsed_s": 341.05,
+  "plan": "### Step 1: What is the root cause\nThe issue arises because SQLite does not permit the `.` operator in index expressions (used by `UniqueConstraint` when referencing fields). When `AlterField` triggers a table remaking process in SQLite (which involves dropping and recreating the table and its associated indexes), Django attempts to recreate the existing `UniqueConstraint`. If the constraint is defined using `models.F('name')` or similar expressions, Django generates SQL that includes the `.` operator, causing SQLite to reject the operation with `OperationalError: the \".\" operator prohibited in index expressions`.\n\n### Step 2: What exact changes to make\nTo fix this, we need to modify the SQLite schema editor to ensure that when it recreates indexes for `UniqueConstraint` during table remaking, it properly handles expressions by stripping or transforming them into a format compatible with SQLite's index limitations.\n\n**File:** `django/db/backends/sqlite3/schema.py`\n\n**Function:** `_remake_table`\n\n**Changes:**\nLocate the logic inside `_remake_table` where the SQL for constraints is generated and applied. We must ensure that the `UniqueConstraint` processing identifies that SQLite doesn't support expression-based indexes using the `.` operator. We should modify the SQL generation logic to either exclude these constraints from the temporary table creation if they are invalid in SQLite or, preferably, ensure that the index creation SQL generated for SQLite respects its limitation on index expressions.\n\nSpecifically, in `_remake_table`, look for the iteration over constraints (or the call to `constraint.create_sql`). Add logic to filter or transform the expression if the backend is SQLite. Since SQLite does not support expressions in indexes, you should ensure that if a `UniqueConstraint` contains an `F()` expression, the SQL generation for that constraint is either bypassed or rendered in a way that is compatible with SQLite (e.g., using column names directly if the expression is simple, or skipping the constraint if it cannot be represented).\n\nGiven this is a deep backend integration, the specific fix involves ensuring `sqlite3.schema.DatabaseSchemaEditor` ignores or properly handles expressions in `UniqueConstraint` when building the `CREATE INDEX` or `CREATE TABLE` SQL statements during the `_remake_table` operation.",
+  "planner_confidence": 0.9,
+  "localization": [
+    {
+      "file": "django/db/utils.py",
+      "symbol": "django/db/utils.py::allow_migrate",
+      "symbols": [
+        "allow_migrate",
+        "OperationalError",
+        "DatabaseError",
+        "DataError"
+      ],
+      "line_range": [
+        271,
+        284
+      ],
+      "score": 0.7755,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1261,
+        "vector": 0.4076,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: app_label; body matches report terms: error, app_label, migrate)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::SlugField",
+      "symbols": [
+        "SlugField",
+        "_load_field",
+        "__init__",
+        "to_python"
+      ],
+      "line_range": [
+        2077,
+        2109
+      ],
+      "score": 0.8773,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4475,
+        "vector": 0.5865,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: CharField; body matches report terms: charfield, index, description, field; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::SlugField",
+      "symbols": [
+        "SlugField",
+        "__init__",
+        "clean",
+        "bound_data"
+      ],
+      "line_range": [
+        1191,
+        1200
+      ],
+      "score": 0.8223,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2718,
+        "vector": 0.4943,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; signature parameter matches report: CharField; body matches report terms: charfield, field, super, class; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/contenttypes/migrations/0002_remove_content_type_name.py",
+      "symbol": "django/contrib/contenttypes/migrations/0002_remove_content_type_name.py::Migration",
+      "symbols": [
+        "Migration",
+        "add_legacy_name"
+      ],
+      "line_range": [
+        14,
+        39
+      ],
+      "score": 0.7488,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1838,
+        "vector": 0.7944,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: charfield, alterfield, contenttypes, verbose_name; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0010_alter_group_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0010_alter_group_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        16
+      ],
+      "score": 0.7406,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1925,
+        "vector": 0.7083,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: charfield, alterfield, verbose_name, model_name; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/migrations/0012_alter_user_first_name_max_length.py",
+      "symbol": "django/contrib/auth/migrations/0012_alter_user_first_name_max_length.py::Migration",
+      "symbols": [
+        "Migration"
+      ],
+      "line_range": [
+        4,
+        16
+      ],
+      "score": 0.7343,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1923,
+        "vector": 0.656,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (named in the issue; body matches report terms: charfield, alterfield, verbose_name, model_name; named, but usually the entry point — check below it)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.db import connection, migrations, models\nfrom django.db.migrations.executor import MigrationExecutor\nfrom django.db.utils import OperationalError\n\n@pytest.mark.django_db\ndef test_unique_constraint_alter_field_crash():\n    \"\"\"\n    Reproduction of the bug where AlterField triggers a table remake in SQLite\n    which crashes when encountering UniqueConstraints with F() expressions.\n    \"\"\"\n    # Use the test connection\n    if connection.vendor != 'sqlite':\n        pytest.skip(\"This test is specific to SQLite\")\n\n    # Define operations for an initial state\n    operations = [\n        migrations.CreateModel(\n            name='Tag',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),\n                ('name', models.SlugField()),\n                ('value', models.CharField(max_length=200)),\n            ],\n        ),\n        migrations.AddConstraint(\n            model_name='tag',\n            constraint=models.UniqueConstraint(\n                models.F('name'), \n                models.F('value'), \n                name='unique_name_value'\n            ),\n        ),\n    ]\n\n    # Apply initial migration\n    with connection.schema_editor() as schema_editor:\n        for operation in operations:\n            operation.database_forwards('test_app', schema_editor, None, None)\n\n    # Perform the operation that triggers the crash: Altering field on table with constraint\n    alter_op = migrations.AlterField(\n        model_name='tag',\n        name='value',\n        field=models.CharField(max_length=150),\n    )\n\n    # This should not raise OperationalError: the \".\" operator prohibited in index expressions\n    with connection.schema_editor() as schema_editor:\n        alter_op.database_forwards('test_app', schema_editor, None, None)\n\n@pytest.mark.django_db\ndef test_unique_constraint_with_null_values():\n    \"\"\"\n    Ensure that unique constraints involving fields allow NULLs in SQLite \n    without causing issues during migration application.\n    \"\"\"\n    if connection.vendor != 'sqlite':\n        pytest.skip(\"SQLite only\")\n        \n    class NullableTag(models.Model):\n        name = models.CharField(max_length=50, null=True)\n        class Meta:\n            app_label = 'test_app'\n            constraints = [models.UniqueConstraint(fields=['name'], name='unique_null_name')]\n\n    with connection.schema_editor() as schema_editor:\n        schema_editor.create_model(NullableTag)\n        # Should be able to add records with NULL\n        with connection.cursor() as cursor:\n            cursor.execute(\"INSERT INTO test_app_nullabletag (name) VALUES (NULL)\")\n            cursor.execute(\"INSERT INTO test_app_nullabletag (name) VALUES (NULL)\")\n        schema_editor.delete_model(NullableTag)\n\n@pytest.mark.django_db\ndef test_invalid_constraint_declaration():\n    \"\"\"\n    Ensure that invalid constraints still raise appropriate errors.\n    \"\"\"\n    # A constraint referencing a non-existent field\n    invalid_constraint = models.UniqueConstraint(fields=['non_existent'], name='bad_constraint')\n    \n    with pytest.raises(Exception): # Django field lookup error\n        with connection.schema_editor() as schema_editor:\n            schema_editor.execute(\n                \"CREATE TABLE test_bad (id INTEGER PRIMARY KEY, val TEXT)\"\n            )\n            # This should fail naturally due to invalid field\n            schema_editor.add_constraint(\n                type('BadModel', (models.Model,), {'Meta': type('Meta', (), {'db_table': 'test_bad'})}),\n                invalid_constraint\n            )",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/backends/sqlite3/schema.py\n+++ b/django/db/backends/sqlite3/schema.py\n@@ -300,7 +300,10 @@\n             # If we have a unique constraint, we must drop it because SQLite\n             # doesn't support changing unique constraints.\n             if isinstance(constraint, models.UniqueConstraint):\n-                self.execute(self._delete_constraint_sql(model, constraint.name))\n+                # SQLite doesn't support expressions in indexes.\n+                if not any(isinstance(expr, models.expressions.F) for expr in constraint.expressions):\n+                    self.execute(self._delete_constraint_sql(model, constraint.name))\n+                else:\n+                    self.deferred_sql.append(self._create_constraint_sql(model, constraint))\n         # Create a new table with the updated schema.\n         self.create_model(new_model)\n         # Copy data from the old table to the new table.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/sqlite3/schema.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5997,
+        "matches_issue": 0.8147,
+        "safe_to_apply": 0.6853,
+        "composite": 0.7749249999999999,
+        "secrets_or_danger": 0.1271,
+        "logic_drift": 0.4342,
+        "flagged": false
+      },
+      "laya_combined": 0.7749,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 103.04,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/backends/sqlite3/schema.py\n+++ b/django/db/backends/sqlite3/schema.py\n@@ -301,6 +301,10 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):\n         # Create a new table with the same name, but with the new schema\n         self.create_model(model)\n         # Copy the data from the old table to the new table\n+        # SQLite doesn't support expressions in indexes.\n+        self.effective_constraints = [\n+            c for c in self.effective_constraints\n+            if not (isinstance(c, models.UniqueConstraint) and c.contains_expressions)\n+        ]\n         self.execute(\"INSERT INTO %s (%s) SELECT %s FROM %s\" % (\n             self.quote_name(model._meta.db_table),\n             \", \".join(self.quote_name(x) for x in columns),",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c2\\django\\db\\backends\\sqlite3\\schema.py: undefined name 'models'"
+      ],
+      "changed_files": [
+        "django/db/backends/sqlite3/schema.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6697,
+        "matches_issue": 0.7894,
+        "safe_to_apply": 0.6574,
+        "composite": 0.779125,
+        "secrets_or_danger": 0.16,
+        "logic_drift": 0.2331,
+        "flagged": false
+      },
+      "laya_combined": 0.7791,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 105.46,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/backends/sqlite3/schema.py\n+++ b/django/db/backends/sqlite3/schema.py\n@@ -300,7 +300,10 @@\n         # Create a new table with the updated schema.\n         self.execute(self.create_model_sql(model, create_fk=False))\n         # Copy the data from the old table to the new table.\n-        self.execute(\"INSERT INTO %s (%s) SELECT %s FROM %s\" % (\n+        self.execute(\"INSERT INTO %s (%s) SELECT %s FROM %s\" % (\n             self.quote_name(model._meta.db_table),\n             \", \".join(self.quote_name(x) for x in columns),\n             \", \".join(self.quote_name(x) for x in columns),\n             self.quote_name(temp_table_name),\n         ))\n+        # Drop constraints that use the \".\" operator in SQLite index expressions.\n+        constraints = [\n+            c for c in model._meta.constraints\n+            if not (isinstance(c, models.UniqueConstraint) and c.expressions)\n+        ]\n         # Drop the old table.\n         self.execute(self.sql_delete_table % {\"table\": self.quote_name(temp_table_name)})\n         # Rename the new table to the original table name.",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c3\\django\\db\\backends\\sqlite3\\schema.py: undefined name 'models'"
+      ],
+      "changed_files": [
+        "django/db/backends/sqlite3/schema.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5413,
+        "matches_issue": 0.7723,
+        "safe_to_apply": 0.6826,
+        "composite": 0.74905,
+        "secrets_or_danger": 0.3961,
+        "logic_drift": 0.3529,
+        "flagged": false
+      },
+      "laya_combined": 0.749,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 102.09,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/db/backends/sqlite3/schema.py\n+++ b/django/db/backends/sqlite3/schema.py\n@@ -300,7 +300,10 @@\n             # If we have a unique constraint, we must drop it because SQLite\n             # doesn't support changing unique constraints.\n             if isinstance(constraint, models.UniqueConstraint):\n-                self.execute(self._delete_constraint_sql(model, constraint.name))\n+                # SQLite doesn't support expressions in indexes.\n+                if not any(isinstance(expr, models.expressions.F) for expr in constraint.expressions):\n+                    self.execute(self._delete_constraint_sql(model, constraint.name))\n+                else:\n+                    self.deferred_sql.append(self._create_constraint_sql(model, constraint))\n         # Create a new table with the updated schema.\n         self.create_model(new_model)\n         # Copy data from the old table to the new table.",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14997-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/backends/sqlite3/schema.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.5997,
+      "matches_issue": 0.8147,
+      "safe_to_apply": 0.6853,
+      "composite": 0.7749249999999999,
+      "secrets_or_danger": 0.1271,
+      "logic_drift": 0.4342,
+      "flagged": false
+    },
+    "laya_combined": 0.7749,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0062,
+    "rank_reason": "logistic",
+    "elapsed_s": 103.04,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

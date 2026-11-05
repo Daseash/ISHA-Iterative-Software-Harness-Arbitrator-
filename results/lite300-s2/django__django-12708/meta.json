@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12708",
+  "repo": "django/django",
+  "base_commit": "447980e72ac01da1594dd3373a03ba40b7ee6f80",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791466872.8301485
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791466885.2347367
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791466905.7137165
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791466913.594184
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791466924.9017015
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791467218.5258288
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/backends/base/schema.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/backends/base/schema.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791466726.683834,
+  "elapsed_s": 497.3,
+  "plan": "# Locate the call to self._constraint_names\n    # Filter the results to only include indices and ignore unique constraints\n    constraints = self._constraint_names(model, columns, index=True)\n    # Filter out unique constraints from the list if they are present\n    # By ensuring that index=True specifically targets index-only constraints if supported,\n    # or manually filter by checking the type of constraint if possible.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/backends/base/schema.py",
+      "symbol": "django/db/backends/base/schema.py::_constraint_names",
+      "symbols": [
+        "_constraint_names",
+        "_delete_composed_index",
+        "_delete_constraint_sql",
+        "execute"
+      ],
+      "line_range": [
+        1142,
+        1171
+      ],
+      "score": 0.7106,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.7446,
+        "vector": 0.6622,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (private helper called by a symbol the report names; body matches report terms: with, uniq, index, result)"
+    },
+    {
+      "file": "django/db/backends/sqlite3/schema.py",
+      "symbol": "django/db/backends/sqlite3/schema.py::__enter__",
+      "symbols": [
+        "__enter__",
+        "quote_value",
+        "_is_referenced_by_fk_constraint",
+        "alter_db_table"
+      ],
+      "line_range": [
+        21,
+        33
+      ],
+      "score": 0.7724,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.645,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: here, schema, constraints)"
+    },
+    {
+      "file": "django/db/backends/postgresql/schema.py",
+      "symbol": "django/db/backends/postgresql/schema.py::_field_indexes_sql",
+      "symbols": [
+        "_field_indexes_sql",
+        "_create_like_index_sql",
+        "_alter_field",
+        "_create_index_sql"
+      ],
+      "line_range": [
+        40,
+        46
+      ],
+      "score": 0.6291,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.495,
+        "vector": 0.5031,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: indexes, create, index)"
+    },
+    {
+      "file": "django/db/migrations/writer.py",
+      "symbol": "django/db/migrations/writer.py::as_string",
+      "symbols": [
+        "as_string",
+        "basedir",
+        "serialize",
+        "MigrationWriter"
+      ],
+      "line_range": [
+        129,
+        200
+      ],
+      "score": 0.5935,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2907,
+        "vector": 0.5899,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: models, with, migrations, line)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "deconstruct",
+        "__reduce__",
+        "to_python"
+      ],
+      "line_range": [
+        320,
+        337
+      ],
+      "score": 0.5899,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3172,
+        "vector": 0.5466,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: side, base, feature, backends)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "fetch_command",
+        "autocomplete"
+      ],
+      "line_range": [
+        21,
+        30
+      ],
+      "score": 0.6031,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.35,
+        "vector": 0.5886,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: with, that, find)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.8069,
+  "laya_scores": {
+    "fix_quality": 1.6684,
+    "matches_issue": 0.8234,
+    "safe_to_apply": 0.7358,
+    "composite": 0.8069,
+    "secrets_or_danger": 0.1319,
+    "logic_drift": 0.3344,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No injection, secrets, or unsafe execution patterns introduced.\n- PERFORMANCE: FAIL - The patch calls `self._constraint_names(...)` inside the check, which executes a database query to introspect constraints; doing this inline during schema migration introspection adds unnecessary DB overhead compared to reusing the already-retrieved `meta_index_names`/`meta_constraint_names` or filtering in memory.\n- ROBUSTNESS: RISK - The logic `len([...]) != 1` assumes exactly one non-unique constraint exists; if `unique_together` and `index_together` share fields but have distinct names, it correctly filters, but if naming conventions vary, it may still raise ValueError or silently fail to filter, potentially leaving stale state.\n- PONYTAIL / YAGNI: PASS - No unrequested abstractions or dependencies; it is a targeted logic fix.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import connection, models\nfrom django.db.backends.base.schema import BaseDatabaseSchemaEditor\n\n# We define a test model that has both index_together and unique_together on the same fields.\nclass DualConstraintModel(models.Model):\n    field1 = models.IntegerField()\n    field2 = models.IntegerField()\n\n    class Meta:\n        app_label = 'test_app'\n        index_together = [['field1', 'field2']]\n        unique_together = [['field1', 'field2']]\n\n@pytest.mark.django_db\ndef test_delete_index_together_with_unique_together_fails():\n    \"\"\"\n    Reproduction test:\n    When index_together and unique_together exist on the same fields,\n    _delete_composed_index erroneously finds both constraints and crashes\n    with a ValueError due to receiving 2 constraints instead of 1.\n    \"\"\"\n    editor = connection.schema_editor()\n    model = DualConstraintModel\n    columns = ['field1', 'field2']\n    \n    # This should succeed, but currently triggers the ValueError because it \n    # finds both the unique constraint and the index constraint.\n    try:\n        editor._delete_composed_index(model, columns, {'index': True})\n    except ValueError as e:\n        if \"Found wrong number (2) of constraints\" in str(e):\n            pytest.fail(f\"Bug reproduced: {e}\")\n        raise\n\n@pytest.mark.django_db\ndef test_delete_index_on_single_field():\n    \"\"\"\n    Edge case: Ensure deleting an index on a single field that DOES NOT have\n    a unique_together constraint still works fine.\n    \"\"\"\n    class SingleIndexModel(models.Model):\n        f1 = models.IntegerField()\n        class Meta:\n            app_label = 'test_app'\n            index_together = [['f1']]\n\n    editor = connection.schema_editor()\n    # This should pass without error\n    editor._delete_composed_index(SingleIndexModel, ['f1'], {'index': True})\n\n@pytest.mark.django_db\ndef test_invalid_index_column_raises_error():\n    \"\"\"\n    Edge case: Ensure that if an index doesn't exist, it correctly handles \n    the absence of constraints (or raises the expected error).\n    \"\"\"\n    class NoIndexModel(models.Model):\n        f1 = models.IntegerField()\n        class Meta:\n            app_label = 'test_app'\n\n    editor = connection.schema_editor()\n    # Attempting to delete an index that was never created\n    with pytest.raises(ValueError):\n        editor._delete_composed_index(NoIndexModel, ['f1'], {'index': True})",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py\nindex 61f88401ab..e6a711269a 100644\n--- a/django/db/backends/base/schema.py\n+++ b/django/db/backends/base/schema.py\n@@ -407,7 +407,7 @@ class BaseDatabaseSchemaEditor:\n             model, columns, exclude=meta_constraint_names | meta_index_names,\n             **constraint_kwargs\n         )\n-        if len(constraint_names) != 1:\n+        if len([name for name in constraint_names if name not in self._constraint_names(model, [columns], unique=True)]) != 1:\n             raise ValueError(\"Found wrong number (%s) of constraints for %s(%s)\" % (\n                 len(constraint_names),\n                 model._meta.db_table,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12708-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/backends/base/schema.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/backends/base/schema.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6684,
+        "matches_issue": 0.8234,
+        "safe_to_apply": 0.7358,
+        "composite": 0.8069,
+        "secrets_or_danger": 0.1319,
+        "logic_drift": 0.3344,
+        "flagged": false
+      },
+      "laya_combined": 0.8069,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 71.67,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "offline-brain",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "[CODER ERROR] offline coder exhausted candidate edits",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12708-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.198,
+        "matches_issue": 0.5725,
+        "safe_to_apply": 0.3003,
+        "composite": 0.5177,
+        "secrets_or_danger": 0.0758,
+        "logic_drift": 0.0992,
+        "flagged": false
+      },
+      "laya_combined": 0.5177,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0015,
+      "rank_reason": "logistic",
+      "elapsed_s": 100.57,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "offline-brain",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "[CODER ERROR] offline coder exhausted candidate edits",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12708-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.198,
+        "matches_issue": 0.5725,
+        "safe_to_apply": 0.3003,
+        "composite": 0.5177,
+        "secrets_or_danger": 0.0758,
+        "logic_drift": 0.0992,
+        "flagged": false
+      },
+      "laya_combined": 0.5177,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0015,
+      "rank_reason": "logistic",
+      "elapsed_s": 97.77,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py\nindex 61f88401ab..e6a711269a 100644\n--- a/django/db/backends/base/schema.py\n+++ b/django/db/backends/base/schema.py\n@@ -407,7 +407,7 @@ class BaseDatabaseSchemaEditor:\n             model, columns, exclude=meta_constraint_names | meta_index_names,\n             **constraint_kwargs\n         )\n-        if len(constraint_names) != 1:\n+        if len([name for name in constraint_names if name not in self._constraint_names(model, [columns], unique=True)]) != 1:\n             raise ValueError(\"Found wrong number (%s) of constraints for %s(%s)\" % (\n                 len(constraint_names),\n                 model._meta.db_table,\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12708-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/backends/base/schema.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/backends/base/schema.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6684,
+      "matches_issue": 0.8234,
+      "safe_to_apply": 0.7358,
+      "composite": 0.8069,
+      "secrets_or_danger": 0.1319,
+      "logic_drift": 0.3344,
+      "flagged": false
+    },
+    "laya_combined": 0.8069,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 71.67,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py\nindex 61f8840..e6a7112 100644\n--- a/django/db/backends/base/schema.py\n+++ b/django/db/backends/base/schema.py\n@@ -407,7 +407,7 @@ class BaseDatabaseSchemaEditor:\n             model, columns, exclude=meta_constraint_names | meta_index_names,\n             **constraint_kwargs\n         )\n-        if len(constraint_names) != 1:\n+        if len([name for name in constraint_names if name not in self._constraint_names(model, [columns], unique=True)]) != 1:\n             raise ValueError(\"Found wrong number (%s) of constraints for %s(%s)\" % (\n                 len(constraint_names),\n                 model._meta.db_table,\n",
+  "offline_calls": 0
+}

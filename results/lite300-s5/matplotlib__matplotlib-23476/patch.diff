@@ -1,0 +1,7 @@
+--- a/lib/matplotlib/backends/backend_macosx.py
++++ b/lib/matplotlib/backends/backend_macosx.py
+@@ -39,3 +39,3 @@
+     def __init__(self, figure):
+-        super().__init__(figure=figure)
++        super().__init__(figure)
+         self._draw_pending = False

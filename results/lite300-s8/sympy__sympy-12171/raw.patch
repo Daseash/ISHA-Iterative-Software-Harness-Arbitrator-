@@ -1,0 +1,15 @@
+--- sympy/printing/mathematica.py
++++ sympy/printing/mathematica.py
+@@ -52,6 +52,12 @@
+     def _print_Function(self, expr):
+         return "%s[%s]" % (expr.func.__name__, self.stringify(expr.args, ", "))
+ 
++    def _print_Derivative(self, expr):
++        return "D[%s]" % (self.stringify(expr.args, ", "))
++
++    def _print_Float(self, expr):
++        res = str(expr)
++        return res.replace('e', '*^')
+ 
+ def mathematica_code(expr, **settings):
+     return MCodePrinter(settings).doprint(expr)

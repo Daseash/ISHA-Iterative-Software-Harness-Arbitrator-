@@ -1,0 +1,13 @@
+diff --git a/sympy/simplify/trigsimp.py b/sympy/simplify/trigsimp.py
+index 8ba346adbe..ae26abc4f2 100644
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -392,7 +392,7 @@ def analyse_gens(gens, hints):
+                         changed = True
+                         ourgens.update(p.exclude().gens)
+             # NOTE preserve order!
+-            realgens = [x for x in gens if x in ourgens]
++            realgens = [x for x in gens if x in ourgens or not x.free_symbols]
+             # The generators of the ideal have now been (implicitly) split
+             # into two groups: those involving ourgens and those that don't.
+             # Since we took the transitive closure above, these two groups

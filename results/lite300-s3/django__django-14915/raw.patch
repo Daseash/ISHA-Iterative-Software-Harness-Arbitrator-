@@ -1,0 +1,19 @@
+diff --git a/django/forms/models.py b/django/forms/models.py
+index 5dcf923c12..ccb88c7187 100644
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -163,6 +163,14 @@ def fields_for_model(model, fields=None, exclude=None, widgets=None,
+         if exclude and f.name in exclude:
+             continue
+ 
++    def __eq__(self, other):
++        if isinstance(other, ModelChoiceIteratorValue):
++            other = other.value
++        return self.value == other
++
++    def __hash__(self):
++        return hash(self.value)
++
+         kwargs = {}
+         if widgets and f.name in widgets:
+             kwargs['widget'] = widgets[f.name]

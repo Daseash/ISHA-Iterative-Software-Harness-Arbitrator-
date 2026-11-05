@@ -1,0 +1,16 @@
+diff --git a/src/_pytest/outcomes.py b/src/_pytest/outcomes.py
+index 2addf55..eb91f09 100644
+--- a/src/_pytest/outcomes.py
++++ b/src/_pytest/outcomes.py
+@@ -8,6 +8,11 @@ from typing import Optional
+ from typing import Type
+ from typing import TypeVar
+ 
++def skip_module(msg: str = "") -> "NoReturn":
++    """Skip an entire module with the given message."""
++    return skip(msg=msg, allow_module_level=True)
++
++
+ TYPE_CHECKING = False  # Avoid circular import through compat.
+ 
+ if TYPE_CHECKING:

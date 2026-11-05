@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "isha": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.mcp_server"
+      ],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
+

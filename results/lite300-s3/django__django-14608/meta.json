@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14608",
+  "repo": "django/django",
+  "base_commit": "7f33c1e22dbc34a7afae7967783725b10f1f13b1",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536631.7700994
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536638.8210397
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536652.927071
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536655.1473234
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536680.5162408
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536795.3010468
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/forms/formsets.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791536557.3074448,
+  "elapsed_s": 245.96,
+  "plan": "def non_form_errors(self):\n        \"\"\"\n        Return an ErrorList of errors that aren't associated with a particular\n        form in the formset.\n        \"\"\"\n        if self._non_form_errors is None:\n            self.full_clean()\n        return self.error_class(self._non_form_errors, error_class='nonform')",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/forms/formsets.py",
+      "symbol": "django/forms/formsets.py::errors",
+      "symbols": [
+        "errors",
+        "ManagementForm",
+        "clean",
+        "__init__"
+      ],
+      "line_range": [
+        301,
+        306
+      ],
+      "score": 0.4966,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9483,
+        "vector": 0.4959,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: forms, form, error; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/forms.py",
+      "symbol": "django/forms/forms.py::errors",
+      "symbols": [
+        "errors",
+        "__init__",
+        "order_fields",
+        "__repr__"
+      ],
+      "line_range": [
+        171,
+        176
+      ],
+      "score": 0.6993,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.725,
+        "vector": 0.567,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: form, error; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/boundfield.py",
+      "symbol": "django/forms/boundfield.py::errors",
+      "symbols": [
+        "errors",
+        "subwidgets",
+        "__getitem__",
+        "as_widget"
+      ],
+      "line_range": [
+        74,
+        79
+      ],
+      "score": 0.4294,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6537,
+        "vector": 0.5494,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: form, error, field, this; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/admin/options.py",
+      "symbol": "django/contrib/admin/options.py::formfield_for_choice_field",
+      "symbols": [
+        "formfield_for_choice_field",
+        "formfield_for_foreignkey",
+        "get_fields",
+        "lookup_allowed"
+      ],
+      "line_range": [
+        189,
+        206
+      ],
+      "score": 0.4268,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.5881,
+        "vector": 0.6652,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: form, field, custom, class)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringformat",
+      "symbols": [
+        "stringformat",
+        "_property_resolver",
+        "pprint",
+        "date"
+      ],
+      "line_range": [
+        237,
+        254
+      ],
+      "score": 0.5224,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1412,
+        "vector": 0.3092,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: form, error, document, this)"
+    },
+    {
+      "file": "tests/admin_inlines/models.py",
+      "symbol": "tests/admin_inlines/models.py::FootNote",
+      "symbols": [
+        "FootNote",
+        "ParentModelWithCustomPk",
+        "ChildModel1",
+        "ChildModel2"
+      ],
+      "line_range": [
+        211,
+        217
+      ],
+      "score": 0.4449,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0923,
+        "vector": 0.6404,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: field, added, class"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7962,
+  "laya_scores": {
+    "fix_quality": 1.7791,
+    "matches_issue": 0.743,
+    "safe_to_apply": 0.6627,
+    "composite": 0.7962,
+    "secrets_or_danger": 0.1709,
+    "logic_drift": 0.2018,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input handling or execution changes introduced.\n- PERFORMANCE: PASS, Minimal overhead added to error list instantiation.\n- ROBUSTNESS: PASS, Correctly utilizes the existing `error_class` parameter for styling.\n- PONYTAIL / YAGNI: PASS, Directly addresses the requested feature parity with forms.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.forms import Form, formset_factory\nfrom django.forms.utils import ErrorList\nfrom django.core.exceptions import ValidationError\n\nclass BaseForm(Form):\n    def clean(self):\n        raise ValidationError(\"Non-form error occurred\")\n\ndef test_non_form_errors_has_nonform_class():\n    \"\"\"\n    Test that non_form_errors() in a FormSet includes the 'nonform' CSS class.\n    This test reproduces the bug: it will fail if the class is missing.\n    \"\"\"\n    MyFormSet = formset_factory(BaseForm, extra=1)\n    # Trigger non-form errors by passing data that triggers FormSet.clean()\n    data = {\n        'form-TOTAL_FORMS': '1',\n        'form-INITIAL_FORMS': '0',\n    }\n    formset = MyFormSet(data)\n    formset.full_clean()\n    \n    errors = formset.non_form_errors()\n    assert isinstance(errors, ErrorList)\n    assert 'nonform' in errors.error_class\n\ndef test_non_form_errors_empty_no_class():\n    \"\"\"\n    Ensure that when there are no non-form errors, the error list returned\n    still behaves as expected (empty).\n    \"\"\"\n    MyFormSet = formset_factory(BaseForm, extra=1)\n    formset = MyFormSet()\n    formset.full_clean()\n    \n    errors = formset.non_form_errors()\n    assert len(errors) == 0\n\ndef test_non_form_errors_with_custom_error_list():\n    \"\"\"\n    Verify that the 'nonform' class is applied even when using a custom \n    ErrorList-like structure if the implementation supports it.\n    \"\"\"\n    class CustomErrorList(ErrorList):\n        pass\n\n    MyFormSet = formset_factory(BaseForm, extra=1)\n    formset = MyFormSet(error_class=CustomErrorList)\n    data = {\n        'form-TOTAL_FORMS': '1',\n        'form-INITIAL_FORMS': '0',\n    }\n    formset = MyFormSet(data, error_class=CustomErrorList)\n    formset.full_clean()\n    \n    errors = formset.non_form_errors()\n    assert isinstance(errors, CustomErrorList)\n    assert 'nonform' in errors.error_class",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex a89c35599f..bbb08a3376 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -295,7 +295,7 @@ class BaseFormSet:\n         \"\"\"\n         if self._non_form_errors is None:\n             self.full_clean()\n-        return self._non_form_errors\n+        return self.error_class(self._non_form_errors, error_class='nonform')\n \n     @property\n     def errors(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14608-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7791,
+        "matches_issue": 0.743,
+        "safe_to_apply": 0.6627,
+        "composite": 0.7962,
+        "secrets_or_danger": 0.1709,
+        "logic_drift": 0.2018,
+        "flagged": false
+      },
+      "laya_combined": 0.7962,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 9.48,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex a89c35599f..bbb08a3376 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -295,7 +295,7 @@ class BaseFormSet:\n         \"\"\"\n         if self._non_form_errors is None:\n             self.full_clean()\n-        return self._non_form_errors\n+        return self.error_class(self._non_form_errors, error_class='nonform')\n \n     @property\n     def errors(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14608-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7791,
+        "matches_issue": 0.743,
+        "safe_to_apply": 0.6627,
+        "composite": 0.7962,
+        "secrets_or_danger": 0.1709,
+        "logic_drift": 0.2018,
+        "flagged": false
+      },
+      "laya_combined": 0.7962,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 45.9,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex a89c35599f..bbb08a3376 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -295,7 +295,7 @@ class BaseFormSet:\n         \"\"\"\n         if self._non_form_errors is None:\n             self.full_clean()\n-        return self._non_form_errors\n+        return self.error_class(self._non_form_errors, error_class='nonform')\n \n     @property\n     def errors(self):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14608-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/forms/formsets.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/forms/formsets.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7791,
+        "matches_issue": 0.743,
+        "safe_to_apply": 0.6627,
+        "composite": 0.7962,
+        "secrets_or_danger": 0.1709,
+        "logic_drift": 0.2018,
+        "flagged": false
+      },
+      "laya_combined": 0.7962,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 45.82,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex a89c35599f..bbb08a3376 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -295,7 +295,7 @@ class BaseFormSet:\n         \"\"\"\n         if self._non_form_errors is None:\n             self.full_clean()\n-        return self._non_form_errors\n+        return self.error_class(self._non_form_errors, error_class='nonform')\n \n     @property\n     def errors(self):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14608-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/forms/formsets.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/forms/formsets.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.7791,
+      "matches_issue": 0.743,
+      "safe_to_apply": 0.6627,
+      "composite": 0.7962,
+      "secrets_or_danger": 0.1709,
+      "logic_drift": 0.2018,
+      "flagged": false
+    },
+    "laya_combined": 0.7962,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 9.48,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/forms/formsets.py b/django/forms/formsets.py\nindex a89c355..bbb08a3 100644\n--- a/django/forms/formsets.py\n+++ b/django/forms/formsets.py\n@@ -295,7 +295,7 @@ class BaseFormSet:\n         \"\"\"\n         if self._non_form_errors is None:\n             self.full_clean()\n-        return self._non_form_errors\n+        return self.error_class(self._non_form_errors, error_class='nonform')\n \n     @property\n     def errors(self):\n",
+  "offline_calls": 0
+}

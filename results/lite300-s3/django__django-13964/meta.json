@@ -1,0 +1,403 @@
+{
+  "instance_id": "django__django-13964",
+  "repo": "django/django",
+  "base_commit": "f39634ff229887bf7790c069d0c411b38494ca38",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544752.4520566
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544759.3111382
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544772.2690332
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544775.017083
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791544812.9239829
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791545069.3380241
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/related_descriptors.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791544675.1176536,
+  "elapsed_s": 401.33,
+  "plan": "def __set__(self, instance, value):\n        if instance is None:\n            raise AttributeError(\"%s must be accessed via instance\" % self.field.name)\n        \n        # ... existing implementation ...\n        \n        # Add logic to ensure that if 'value' is a model instance, \n        # we check if it has a PK, and if so, update the local field.\n        if value is not None and not isinstance(value, self.field.remote_field.model):\n            raise ValueError(...)\n        \n        # Logic to be added:\n        if value is not None:\n            # Sync the FK field value from the related object's PK\n            pk_val = value.pk\n            setattr(instance, self.field.attname, pk_val)\n            \n        instance.__dict__[self.field.name] = value",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/fields/related_descriptors.py",
+      "symbol": "django/db/models/fields/related_descriptors.py::Child",
+      "symbols": [
+        "Child",
+        "Child",
+        "Restaurant",
+        "Restaurant"
+      ],
+      "line_range": [
+        17,
+        19
+      ],
+      "score": 0.718,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7492,
+        "vector": 0.6728,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: Model; body matches report terms: class, model, related, foreignkey)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "CommaSeparatedIntegerField",
+        "EmailField",
+        "SlugField"
+      ],
+      "line_range": [
+        131,
+        177
+      ],
+      "score": 0.6398,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5128,
+        "vector": 0.5548,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: max_length, primary_key; body matches report terms: class, primary, auto, relation)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::CASCADE",
+      "symbols": [
+        "CASCADE",
+        "ProtectedError",
+        "RestrictedError",
+        "PROTECT"
+      ],
+      "line_range": [
+        23,
+        31
+      ],
+      "score": 0.7386,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8594,
+        "vector": 0.6147,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: model, field, fail, constraint; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/transaction.py",
+      "symbol": "django/db/transaction.py::atomic",
+      "symbols": [
+        "atomic",
+        "savepoint",
+        "savepoint_commit",
+        "set_rollback"
+      ],
+      "line_range": [
+        299,
+        308
+      ],
+      "score": 0.5985,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3537,
+        "vector": 0.5011,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: being, save, with; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "RegexField",
+        "EmailField",
+        "__init__"
+      ],
+      "line_range": [
+        211,
+        222
+      ],
+      "score": 0.5995,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3446,
+        "vector": 0.5277,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (signature parameter matches report: max_length; body matches report terms: empty, max_length)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::unregister_serializer",
+      "symbols": [
+        "unregister_serializer",
+        "serialize",
+        "deserialize",
+        "_load_serializers"
+      ],
+      "line_range": [
+        86,
+        94
+      ],
+      "score": 0.6093,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4397,
+        "vector": 0.4532,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: does, this, given)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7462,
+  "laya_scores": {
+    "fix_quality": 1.6637,
+    "matches_issue": 0.7593,
+    "safe_to_apply": 0.5618,
+    "composite": 0.7462,
+    "secrets_or_danger": 0.1383,
+    "logic_drift": 0.2646,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, Minimal overhead for attribute assignment.\n- ROBUSTNESS: RISK, This forces an eager sync of the foreign key field that may conflict with existing logic for unsaved related instances or deferred loading.\n- PONYTAIL / YAGNI: PASS, This is a direct fix for the described data loss issue.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import transaction, models\nfrom django.test import TestCase\n\n# Models definition for reproduction\nclass Product(models.Model):\n    sku = models.CharField(primary_key=True, max_length=50)\n\n    class Meta:\n        app_label = 'reproduce_app'\n\nclass Order(models.Model):\n    product = models.ForeignKey(Product, on_delete=models.CASCADE)\n\n    class Meta:\n        app_label = 'reproduce_app'\n\n@pytest.mark.django_db\nclass TestForeignKeyAssignmentBug(TestCase):\n    def test_fk_assignment_updates_pk_after_init(self):\n        \"\"\"\n        Reproduce: Parent does not see changes to non-numeric PK \n        if assigned before PK is set on child.\n        \"\"\"\n        with transaction.atomic():\n            order = Order()\n            order.product = Product()\n            order.product.sku = \"foo\"\n            order.product.save()\n            order.save()\n\n            # The bug: order.product_id is an empty string instead of \"foo\"\n            assert order.product_id == \"foo\", f\"Expected 'foo', got '{order.product_id}'\"\n            assert Order.objects.filter(product_id=\"foo\").exists()\n\n    def test_fk_assignment_none_value(self):\n        \"\"\"Edge case: assigning None to a foreign key should be allowed.\"\"\"\n        order = Order(product=Product.objects.create(sku=\"existing\"))\n        order.product = None\n        assert order.product is None\n        assert order.product_id is None\n\n    def test_fk_assignment_invalid_type(self):\n        \"\"\"Edge case: assigning an incorrect model type should raise ValueError.\"\"\"\n        order = Order()\n        with pytest.raises(ValueError):\n            order.product = \"NotAProductInstance\"\n\n    def test_fk_assignment_with_existing_instance(self):\n        \"\"\"Edge case: assigning an already saved instance works correctly.\"\"\"\n        p = Product.objects.create(sku=\"bar\")\n        order = Order()\n        order.product = p\n        order.save()\n        \n        assert order.product_id == \"bar\"\n        assert Order.objects.filter(product_id=\"bar\").exists()",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py\nindex 872a4c98dc..b3303b8740 100644\n--- a/django/db/models/fields/related_descriptors.py\n+++ b/django/db/models/fields/related_descriptors.py\n@@ -204,6 +204,9 @@ class ForwardManyToOneDescriptor:\n         \"\"\"\n         Set the related instance through the forward relation.\n \n+            if value is not None:\n+                # If we're setting the object, also update the PK field.\n+                setattr(instance, self.field.attname, value.pk)\n         With the example above, when setting ``child.parent = parent``:\n \n         - ``self`` is the descriptor managing the ``parent`` attribute\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13964-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related_descriptors.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6637,
+        "matches_issue": 0.7593,
+        "safe_to_apply": 0.5618,
+        "composite": 0.7462,
+        "secrets_or_danger": 0.1383,
+        "logic_drift": 0.2646,
+        "flagged": false
+      },
+      "laya_combined": 0.7462,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 135.01,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py\nindex 872a4c98dc..54afb1a1d1 100644\n--- a/django/db/models/fields/related_descriptors.py\n+++ b/django/db/models/fields/related_descriptors.py\n@@ -207,6 +207,9 @@ class ForwardManyToOneDescriptor:\n         With the example above, when setting ``child.parent = parent``:\n \n         - ``self`` is the descriptor managing the ``parent`` attribute\n+            if value is not None:\n+                # If the related object has a PK, update the local field.\n+                setattr(instance, self.field.attname, value.pk)\n         - ``instance`` is the ``child`` instance\n         - ``value`` is the ``parent`` instance on the right of the equal sign\n         \"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13964-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related_descriptors.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.6859,
+        "matches_issue": 0.775,
+        "safe_to_apply": 0.6482,
+        "composite": 0.777275,
+        "secrets_or_danger": 0.1391,
+        "logic_drift": 0.2503,
+        "flagged": false
+      },
+      "laya_combined": 0.7773,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 153.46,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/related_descriptors.py\n+++ b/django/db/models/fields/related_descriptors.py\n@@ -219,6 +219,8 @@\n         if value is not None and not isinstance(value, self.field.remote_field.model):\n             raise ValueError('Cannot assign \"%r\": \"%s.%s\" must be a \"%s\" instance.' % (\n                 value, instance._meta.object_name, self.field.name, self.field.remote_field.model._meta.object_name))\n+        if value is not None:\n+            setattr(instance, self.field.attname, value.pk)\n         instance.__dict__[self.field.name] = value\n \n     def get_object_reversely(self, related_instance):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13964-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13964-c1\\django\\db\\models\\fields\\related_descriptors.py: SyntaxError line 219: invalid syntax"
+      ],
+      "changed_files": [
+        "django/db/models/fields/related_descriptors.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5711,
+        "matches_issue": 0.6988,
+        "safe_to_apply": 0.6082,
+        "composite": 0.719525,
+        "secrets_or_danger": 0.2555,
+        "logic_drift": 0.3138,
+        "flagged": false
+      },
+      "laya_combined": 0.7195,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 160.08,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py\nindex 872a4c98dc..b3303b8740 100644\n--- a/django/db/models/fields/related_descriptors.py\n+++ b/django/db/models/fields/related_descriptors.py\n@@ -204,6 +204,9 @@ class ForwardManyToOneDescriptor:\n         \"\"\"\n         Set the related instance through the forward relation.\n \n+            if value is not None:\n+                # If we're setting the object, also update the PK field.\n+                setattr(instance, self.field.attname, value.pk)\n         With the example above, when setting ``child.parent = parent``:\n \n         - ``self`` is the descriptor managing the ``parent`` attribute\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13964-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/related_descriptors.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/related_descriptors.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.6637,
+      "matches_issue": 0.7593,
+      "safe_to_apply": 0.5618,
+      "composite": 0.7462,
+      "secrets_or_danger": 0.1383,
+      "logic_drift": 0.2646,
+      "flagged": false
+    },
+    "laya_combined": 0.7462,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0071,
+    "rank_reason": "logistic",
+    "elapsed_s": 135.01,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/related_descriptors.py b/django/db/models/fields/related_descriptors.py\nindex 872a4c9..b3303b8 100644\n--- a/django/db/models/fields/related_descriptors.py\n+++ b/django/db/models/fields/related_descriptors.py\n@@ -204,6 +204,9 @@ class ForwardManyToOneDescriptor:\n         \"\"\"\n         Set the related instance through the forward relation.\n \n+            if value is not None:\n+                # If we're setting the object, also update the PK field.\n+                setattr(instance, self.field.attname, value.pk)\n         With the example above, when setting ``child.parent = parent``:\n \n         - ``self`` is the descriptor managing the ``parent`` attribute\n",
+  "offline_calls": 0
+}

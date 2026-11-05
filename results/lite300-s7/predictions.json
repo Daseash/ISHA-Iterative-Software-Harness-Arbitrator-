@@ -1,0 +1,97 @@
+[
+  {
+    "instance_id": "pytest-dev__pytest-7490",
+    "model_patch": "diff --git a/src/_pytest/skipping.py b/src/_pytest/skipping.py\nindex 335e109..d1a1ad8 100644\n--- a/src/_pytest/skipping.py\n+++ b/src/_pytest/skipping.py\n@@ -238,7 +238,7 @@ def pytest_runtest_setup(item: Item) -> None:\n         item._store[skipped_by_mark_key] = True\n         skip(skipped.reason)\n \n-    if not item.config.option.runxfail:\n+    if not item.config.option.runxfail and item.get_closest_marker(\"xfail\"):\n         item._store[xfailed_key] = xfailed = evaluate_xfail_marks(item)\n         if xfailed and not xfailed.run:\n             xfail(\"[NOTRUN] \" + xfailed.reason)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8365",
+    "model_patch": "diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py\nindex 29c7e19..dadb6bd 100644\n--- a/src/_pytest/tmpdir.py\n+++ b/src/_pytest/tmpdir.py\n@@ -111,7 +111,9 @@ class TempPathFactory:\n         else:\n             from_env = os.environ.get(\"PYTEST_DEBUG_TEMPROOT\")\n             temproot = Path(from_env or tempfile.gettempdir()).resolve()\n+            import re\n             user = get_user() or \"unknown\"\n+            user = re.sub(r'[^\\w\\-]', '_', user)\n             # use a sub-directory in the temproot to speed-up\n             # make_numbered_dir() call\n             rootdir = temproot.joinpath(f\"pytest-of-{user}\")",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-8906",
+    "model_patch": "diff --git a/src/_pytest/outcomes.py b/src/_pytest/outcomes.py\nindex 2addf55..eb91f09 100644\n--- a/src/_pytest/outcomes.py\n+++ b/src/_pytest/outcomes.py\n@@ -8,6 +8,11 @@ from typing import Optional\n from typing import Type\n from typing import TypeVar\n \n+def skip_module(msg: str = \"\") -> \"NoReturn\":\n+    \"\"\"Skip an entire module with the given message.\"\"\"\n+    return skip(msg=msg, allow_module_level=True)\n+\n+\n TYPE_CHECKING = False  # Avoid circular import through compat.\n \n if TYPE_CHECKING:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "pytest-dev__pytest-9359",
+    "model_patch": "diff --git a/src/_pytest/_code/source.py b/src/_pytest/_code/source.py\nindex 6f54057c0..2ee83db2a 100644\n--- a/src/_pytest/_code/source.py\n+++ b/src/_pytest/_code/source.py\n@@ -203,8 +203,8 @@ def getstatementrange_ast(\n             pass\n \n     # The end might still point to a comment or empty line, correct it.\n-    while end:\n-        line = source.lines[end - 1].lstrip()\n+    while end > start:\n+        line = lines[end - 1].lstrip()\n         if line.startswith(\"#\") or not line:\n             end -= 1\n         else:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10297",
+    "model_patch": "diff --git a/sklearn/linear_model/ridge.py b/sklearn/linear_model/ridge.py\nindex 911c74ae3b..f0ea872713 100644\n--- a/sklearn/linear_model/ridge.py\n+++ b/sklearn/linear_model/ridge.py\n@@ -1089,6 +1089,7 @@ class _BaseRidgeCV(LinearModel):\n                  fit_intercept=True, normalize=False, scoring=None,\n                  cv=None, gcv_mode=None,\n                  store_cv_values=False):\n+        self.store_cv_values = store_cv_values\n         self.alphas = alphas\n         self.fit_intercept = fit_intercept\n         self.normalize = normalize",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-10508",
+    "model_patch": "diff --git a/sklearn/preprocessing/label.py b/sklearn/preprocessing/label.py\nindex 61b8d4a..48eedda 100644\n--- a/sklearn/preprocessing/label.py\n+++ b/sklearn/preprocessing/label.py\n@@ -93,6 +93,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):\n         self : returns an instance of self.\n         \"\"\"\n         y = column_or_1d(y, warn=True)\n+        if len(y) == 0:\n+            return np.array([], dtype=int)\n+\n         self.classes_ = np.unique(y)\n         return self",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-11040",
+    "model_patch": "diff --git a/sklearn/neighbors/base.py b/sklearn/neighbors/base.py\nindex 3e5e729..2d0636a 100644\n--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -327,6 +327,9 @@ class KNeighborsMixin(object):\n \n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n+        if not isinstance(n_neighbors, (int, np.integer)):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n \n         if X is not None:\n             query_is_train = False",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-12471",
+    "model_patch": "--- a/sklearn/preprocessing/_encoders.py\n+++ b/sklearn/preprocessing/_encoders.py\n@@ -113,3 +113,4 @@\n                     Xi = Xi.copy()\n+                    Xi = Xi.astype(object)\n                     Xi[~valid_mask] = self.categories_[i][0]\n             _, encoded = _encode(Xi, self.categories_[i], encode=True)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13241",
+    "model_patch": "diff --git a/sklearn/decomposition/kernel_pca.py b/sklearn/decomposition/kernel_pca.py\nindex bb91d0cbba..81fcd62724 100644\n--- a/sklearn/decomposition/kernel_pca.py\n+++ b/sklearn/decomposition/kernel_pca.py\n@@ -74,6 +74,11 @@ class KernelPCA(BaseEstimator, TransformerMixin, _UnstableOn32BitMixin):\n         When n_components is None, this parameter is ignored and components\n         with zero eigenvalues are removed regardless.\n \n+        # Flip signs relative to a deterministic reference point for each component\n+        max_abs_cols = np.argmax(np.abs(self.alphas_), axis=0)\n+        signs = np.sign(self.alphas_[max_abs_cols, range(self.alphas_.shape[1])])\n+        self.alphas_ *= signs\n+\n     random_state : int, RandomState instance or None, optional (default=None)\n         If int, random_state is the seed used by the random number generator;\n         If RandomState instance, random_state is the random number generator;",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13439",
+    "model_patch": "diff --git a/sklearn/pipeline.py b/sklearn/pipeline.py\nindex 7eaf9a46f0..cbcdae4206 100644\n--- a/sklearn/pipeline.py\n+++ b/sklearn/pipeline.py\n@@ -52,6 +52,9 @@ class Pipeline(_BaseComposition):\n         chained, in the order in which they are chained, with the last object\n         an estimator.\n \n+    def __len__(self):\n+        return len(self.steps)\n+\n     memory : None, str or object with the joblib.Memory interface, optional\n         Used to cache the fitted transformers of the pipeline. By default,\n         no caching is performed. If a string is given, it is the path to",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13497",
+    "model_patch": "diff --git a/sklearn/feature_selection/mutual_info_.py b/sklearn/feature_selection/mutual_info_.py\nindex d5d1b7fb59..7a760d1751 100644\n--- a/sklearn/feature_selection/mutual_info_.py\n+++ b/sklearn/feature_selection/mutual_info_.py\n@@ -247,7 +247,7 @@ def _estimate_mi(X, y, discrete_features='auto', discrete_target=False,\n     X, y = check_X_y(X, y, accept_sparse='csc', y_numeric=not discrete_target)\n     n_samples, n_features = X.shape\n \n-    if discrete_features == 'auto':\n+    if isinstance(discrete_features, str) and discrete_features == 'auto':\n         discrete_features = issparse(X)\n \n     if isinstance(discrete_features, bool):",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-13779",
+    "model_patch": "--- a/sklearn/ensemble/voting.py\n+++ b/sklearn/ensemble/voting.py\n@@ -30,3 +30,5 @@\n     \"\"\"Private function used to fit an estimator within a job.\"\"\"\n-    if sample_weight is not None:\n+    if estimator is None:\n+        return None\n+    elif sample_weight is not None:\n         estimator.fit(X, y, sample_weight=sample_weight)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14087",
+    "model_patch": "diff --git a/sklearn/linear_model/logistic.py b/sklearn/linear_model/logistic.py\nindex 1999f1dae7..38b4763727 100644\n--- a/sklearn/linear_model/logistic.py\n+++ b/sklearn/linear_model/logistic.py\n@@ -41,6 +41,8 @@ from ..metrics import get_scorer\n \n # .. some helper functions for logistic_regression_path ..\n def _intercept_dot(w, X, y):\n+    if not isinstance(y, (int, float, np.number)):\n+        y = y[:, np.newaxis]\n     \"\"\"Computes y * np.dot(X, w).\n \n     It takes into consideration if the intercept should be fit or not.",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-14983",
+    "model_patch": "diff --git a/sklearn/model_selection/_split.py b/sklearn/model_selection/_split.py\nindex c49a3ce6ae..d19bb62c79 100644\n--- a/sklearn/model_selection/_split.py\n+++ b/sklearn/model_selection/_split.py\n@@ -767,6 +767,9 @@ class TimeSeriesSplit(_BaseKFold):\n     TRAIN: [0 1 2 3] TEST: [4]\n     TRAIN: [0 1 2 3 4] TEST: [5]\n \n+    def __repr__(self):\n+        return _build_repr(self)\n+\n     Notes\n     -----\n     The training set has size ``i * n_samples // (n_splits + 1)\n@@ -822,6 +825,9 @@ class TimeSeriesSplit(_BaseKFold):\n                 yield (indices[:test_start],\n                        indices[test_start:test_start + test_size])\n \n+    def __repr__(self):\n+        return _build_repr(self)\n+\n \n class LeaveOneGroupOut(BaseCrossValidator):\n     \"\"\"Leave One Group Out cross-validator",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-15512",
+    "model_patch": "diff --git a/sklearn/cluster/_affinity_propagation.py b/sklearn/cluster/_affinity_propagation.py\nindex 4806afee90..a43e9e6799 100644\n--- a/sklearn/cluster/_affinity_propagation.py\n+++ b/sklearn/cluster/_affinity_propagation.py\n@@ -223,7 +223,7 @@ def affinity_propagation(S, preference=None, convergence_iter=15, max_iter=200,\n         warnings.warn(\"Affinity propagation did not converge, this model \"\n                       \"will not have any cluster centers.\", ConvergenceWarning)\n         labels = np.array([-1] * n_samples)\n-        cluster_centers_indices = []\n+        cluster_centers_indices = np.array([], dtype=int)\n \n     if return_n_iter:\n         return cluster_centers_indices, labels, it + 1",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25500",
+    "model_patch": "diff --git a/sklearn/calibration.py b/sklearn/calibration.py\nindex 2c4a33616d..34aadd2e9b 100644\n--- a/sklearn/calibration.py\n+++ b/sklearn/calibration.py\n@@ -760,7 +760,7 @@ class _CalibratedClassifier:\n                 # When binary, `predictions` consists only of predictions for\n                 # clf.classes_[1] but `pos_class_indices` = 0\n                 class_idx += 1\n-            proba[:, class_idx] = calibrator.predict(this_pred)\n+            proba[:, class_idx] = np.asarray(calibrator.predict(this_pred)).ravel()\n \n         # Normalize the probabilities\n         if n_classes == 2:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "scikit-learn__scikit-learn-25747",
+    "model_patch": "diff --git a/sklearn/utils/_set_output.py b/sklearn/utils/_set_output.py\nindex 335773c6af..4540f6cf3c 100644\n--- a/sklearn/utils/_set_output.py\n+++ b/sklearn/utils/_set_output.py\n@@ -54,7 +54,8 @@ def _wrap_in_pandas_container(\n \n     if isinstance(data_to_wrap, pd.DataFrame):\n         if columns is not None:\n-            data_to_wrap.columns = columns\n+            if len(columns) == len(data_to_wrap):\n+                data_to_wrap.columns = columns\n         if index is not None:\n             data_to_wrap.index = index\n         return data_to_wrap",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-10451",
+    "model_patch": "diff --git a/sphinx/ext/autodoc/__init__.py b/sphinx/ext/autodoc/__init__.py\nindex e16ab8ce5..4bea1e108 100644\n--- a/sphinx/ext/autodoc/__init__.py\n+++ b/sphinx/ext/autodoc/__init__.py\n@@ -1265,7 +1265,7 @@ class FunctionDocumenter(DocstringSignatureMixin, ModuleLevelDocumenter):  # typ\n                 (inspect.isroutine(member) and isinstance(parent, ModuleDocumenter)))\n \n     def format_args(self, **kwargs: Any) -> str:\n-        if self.config.autodoc_typehints in ('none', 'description'):\n+        if self.config.autodoc_typehints in ('both', 'description') and self.objpath[-1] != '__init__':\n             kwargs.setdefault('show_annotation', False)\n         if self.config.autodoc_typehints_format == \"short\":\n             kwargs.setdefault('unqualified_typehints', True)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "sphinx-doc__sphinx-11445",
+    "model_patch": "--- a/sphinx/util/rst.py\n+++ b/sphinx/util/rst.py\n@@ -74,7 +74,7 @@\n     if prolog:\n         pos = 0\n         for line in content:\n-            if docinfo_re.match(line):\n+            if docinfo_re.match(line) or (role_re := re.compile(':[a-zA-Z0-9_-]+:`.*?`')).match(line):\n                 pos += 1\n             else:\n                 break",
+    "model_name_or_path": "ISHA"
+  }
+]

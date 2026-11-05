@@ -1,0 +1,18 @@
+diff --git a/django/db/migrations/serializer.py b/django/db/migrations/serializer.py
+index 38da1e6..e9cd698 100644
+--- a/django/db/migrations/serializer.py
++++ b/django/db/migrations/serializer.py
+@@ -125,6 +125,13 @@ class EnumSerializer(BaseSerializer):
+     def serialize(self):
+         enum_class = self.value.__class__
+         module = enum_class.__module__
++        try:
++            name = self.value.name
++        except AttributeError:
++            name = None
++        if name is None:
++            value_bits = [v for v in enum_class if v in self.value]
++            return (" | ".join("%s.%s[%r]" % (module, enum_class.__qualname__, v.name) for v in value_bits), {"import %s" % module})
+         return (
+             "%s.%s[%r]" % (module, enum_class.__qualname__, self.value.name),
+             {"import %s" % module},

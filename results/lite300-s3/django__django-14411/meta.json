@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14411",
+  "repo": "django/django",
+  "base_commit": "fa4e963ee7e6876581b5432363603571839ba00c",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535505.9843147
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535513.0012975
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535550.0117216
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535584.3557189
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535610.815061
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791535767.4523466
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/auth/forms.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791535401.9171128,
+  "elapsed_s": 373.41,
+  "plan": "class ReadOnlyPasswordHashWidget(forms.Widget):\n    template_name = 'auth/widgets/read_only_password_hash.html'\n    read_only = True\n    use_fieldset = True  # Add this line\n\n    def get_context(self, name, value, attrs):\n        # ... existing implementation",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/forms.py",
+      "symbol": "django/contrib/auth/forms.py::ReadOnlyPasswordHashWidget",
+      "symbols": [
+        "ReadOnlyPasswordHashWidget",
+        "UserChangeForm",
+        "PasswordChangeForm",
+        "get_context"
+      ],
+      "line_range": [
+        33,
+        53
+      ],
+      "score": 0.6255,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3592,
+        "vector": 0.7139,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: label, text, widget)"
+    },
+    {
+      "file": "django/forms/boundfield.py",
+      "symbol": "django/forms/boundfield.py::as_text",
+      "symbols": [
+        "as_text",
+        "tag",
+        "label_tag",
+        "BoundWidget"
+      ],
+      "line_range": [
+        100,
+        105
+      ],
+      "score": 0.4178,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4847,
+        "vector": 0.8051,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: text, widget, input)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::widget_attrs",
+      "symbols": [
+        "widget_attrs",
+        "clean",
+        "BooleanField",
+        "DecimalField"
+      ],
+      "line_range": [
+        352,
+        364
+      ],
+      "score": 0.3805,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4548,
+        "vector": 0.557,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: widget, since, input)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "_property_resolver",
+        "json_script",
+        "linenumbers"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.6195,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3684,
+        "vector": 0.6446,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: which, attribute)"
+    },
+    {
+      "file": "tests/admin_views/models.py",
+      "symbol": "tests/admin_views/models.py::Article",
+      "symbols": [
+        "Article",
+        "Section",
+        "Chapter",
+        "CustomArticle"
+      ],
+      "line_range": [
+        34,
+        65
+      ],
+      "score": 0.4896,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2046,
+        "vector": 0.9378,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: description, text, admin)"
+    },
+    {
+      "file": "tests/fixtures_regress/models.py",
+      "symbol": "tests/fixtures_regress/models.py::WidgetProxy",
+      "symbols": [
+        "WidgetProxy",
+        "Person",
+        "RefToNKChild",
+        "__str__"
+      ],
+      "line_range": [
+        89,
+        93
+      ],
+      "score": 0.4289,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0748,
+        "vector": 0.4864,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: widget)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6586000000000001,
+  "laya_scores": {
+    "fix_quality": 1.4776,
+    "matches_issue": 0.6229,
+    "safe_to_apply": 0.5339,
+    "composite": 0.6586000000000001,
+    "secrets_or_danger": 0.1373,
+    "logic_drift": 0.2456,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, Minimal overhead for template rendering.\n- ROBUSTNESS: PASS, Corrects incorrect HTML attribute usage.\n- PONYTAIL / YAGNI: PASS, Necessary change to support Django's standard form rendering fieldsets.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django import forms\nfrom django.contrib.auth.forms import ReadOnlyPasswordHashWidget\n\ndef test_readonly_password_hash_widget_label_for_attribute():\n    \"\"\"\n    Reproduces the bug: ReadOnlyPasswordHashWidget renders a label with a 'for'\n    attribute, which is invalid as it points to a non-labelable element.\n    After the fix (use_fieldset = True), the widget should use a fieldset/legend\n    structure instead of a label with 'for'.\n    \"\"\"\n    widget = ReadOnlyPasswordHashWidget()\n    # Mocking a context where this widget is rendered\n    name = \"password\"\n    value = \"pbkdf2_sha256$260000$...\"\n\n    # Render the widget\n    output = widget.render(name, value)\n\n    # Assertions\n    # The 'for' attribute in a label should NOT be present if it's not pointing\n    # to an input.\n    assert 'for=\"id_password\"' not in output, \"Label should not have 'for' attribute for non-labelable widget\"\n    assert '<fieldset' in output or '<legend' in output, \"Widget should render as fieldset/legend\"\n\ndef test_readonly_password_hash_widget_empty_value():\n    \"\"\"\n    Edge case: Ensure behavior is consistent when password value is empty/None.\n    \"\"\"\n    widget = ReadOnlyPasswordHashWidget()\n    output = widget.render(\"password\", None)\n\n    assert 'for=\"id_password\"' not in output\n    assert \"No password set.\" in output\n\ndef test_readonly_password_hash_widget_invalid_hash():\n    \"\"\"\n    Edge case: Ensure widget handles invalid hash strings gracefully without\n    introducing a 'for' attribute.\n    \"\"\"\n    widget = ReadOnlyPasswordHashWidget()\n    output = widget.render(\"password\", \"invalid_hash_string\")\n\n    assert 'for=\"id_password\"' not in output\n    assert \"Invalid password format\" in output\n\ndef test_widget_use_fieldset_attribute():\n    \"\"\"\n    Verification of the fix plan: Ensure the attribute is set on the class.\n    \"\"\"\n    assert ReadOnlyPasswordHashWidget.use_fieldset is True",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex 20d8922799..99ad40de33 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -32,6 +32,7 @@ def _unicode_ci_compare(s1, s2):\n \n class ReadOnlyPasswordHashWidget(forms.Widget):\n     template_name = 'auth/widgets/read_only_password_hash.html'\n+    use_fieldset = True\n     read_only = True\n \n     def get_context(self, name, value, attrs):\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14411-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/forms.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4776,
+        "matches_issue": 0.6229,
+        "safe_to_apply": 0.5339,
+        "composite": 0.6586000000000001,
+        "secrets_or_danger": 0.1373,
+        "logic_drift": 0.2456,
+        "flagged": false
+      },
+      "laya_combined": 0.6586,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 7.46,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex 20d8922799..087b4250bf 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -33,6 +33,7 @@ def _unicode_ci_compare(s1, s2):\n class ReadOnlyPasswordHashWidget(forms.Widget):\n     template_name = 'auth/widgets/read_only_password_hash.html'\n     read_only = True\n+    use_fieldset = True\n \n     def get_context(self, name, value, attrs):\n         context = super().get_context(name, value, attrs)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14411-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/forms.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4776,
+        "matches_issue": 0.6229,
+        "safe_to_apply": 0.5339,
+        "composite": 0.6586000000000001,
+        "secrets_or_danger": 0.1186,
+        "logic_drift": 0.2158,
+        "flagged": false
+      },
+      "laya_combined": 0.6586,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 76.62,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex 20d8922799..087b4250bf 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -33,6 +33,7 @@ def _unicode_ci_compare(s1, s2):\n class ReadOnlyPasswordHashWidget(forms.Widget):\n     template_name = 'auth/widgets/read_only_password_hash.html'\n     read_only = True\n+    use_fieldset = True\n \n     def get_context(self, name, value, attrs):\n         context = super().get_context(name, value, attrs)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14411-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/auth/forms.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/auth/forms.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4776,
+        "matches_issue": 0.6229,
+        "safe_to_apply": 0.5339,
+        "composite": 0.6586000000000001,
+        "secrets_or_danger": 0.1186,
+        "logic_drift": 0.2158,
+        "flagged": false
+      },
+      "laya_combined": 0.6586,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.008,
+      "rank_reason": "logistic",
+      "elapsed_s": 68.47,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "groq/qwen/qwen3.8-27b",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": false,
+    "patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex 20d8922799..99ad40de33 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -32,6 +32,7 @@ def _unicode_ci_compare(s1, s2):\n \n class ReadOnlyPasswordHashWidget(forms.Widget):\n     template_name = 'auth/widgets/read_only_password_hash.html'\n+    use_fieldset = True\n     read_only = True\n \n     def get_context(self, name, value, attrs):\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14411-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/auth/forms.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/auth/forms.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.4776,
+      "matches_issue": 0.6229,
+      "safe_to_apply": 0.5339,
+      "composite": 0.6586000000000001,
+      "secrets_or_danger": 0.1373,
+      "logic_drift": 0.2456,
+      "flagged": false
+    },
+    "laya_combined": 0.6586,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.008,
+    "rank_reason": "logistic",
+    "elapsed_s": 7.46,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/auth/forms.py b/django/contrib/auth/forms.py\nindex 20d8922..99ad40d 100644\n--- a/django/contrib/auth/forms.py\n+++ b/django/contrib/auth/forms.py\n@@ -32,6 +32,7 @@ def _unicode_ci_compare(s1, s2):\n \n class ReadOnlyPasswordHashWidget(forms.Widget):\n     template_name = 'auth/widgets/read_only_password_hash.html'\n+    use_fieldset = True\n     read_only = True\n \n     def get_context(self, name, value, attrs):\n",
+  "offline_calls": 0
+}

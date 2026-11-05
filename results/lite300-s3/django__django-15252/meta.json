@@ -1,0 +1,398 @@
+{
+  "instance_id": "django__django-15252",
+  "repo": "django/django",
+  "base_commit": "361bb8f786f112ee275be136795c0b1ecefff928",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541294.9787493
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541303.491922
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541326.3093078
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541329.0977974
+    },
+    {
+      "role": "coder",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541366.937956
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791541526.48967
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/recorder.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/recorder.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791541210.4848306,
+  "elapsed_s": 324.04,
+  "plan": "from django.db import DatabaseError, models, router\n\n        # Inside MigrationRecorder:\n        def ensure_schema(self):\n            \"\"\"Ensure the table exists and has the correct schema.\"\"\"\n            # If the table's there, that's fine - we've never changed its schema\n            # in the codebase.\n            if self.has_table():\n                return\n            \n            # Check if we are allowed to migrate the 'migrations' app to this database\n            if not router.allow_migrate(self.connection.alias, 'migrations'):\n                return\n\n            # Make the table\n            try:\n                with self.connection.schema_editor() as editor:\n                    editor.create_model(self.Migration)\n            except DatabaseError as exc:\n                raise MigrationSchemaMissing(\"Unable to create the django_migrations table (%s)\" % exc)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/migrations/recorder.py",
+      "symbol": "django/db/migrations/recorder.py::ensure_schema",
+      "symbols": [
+        "ensure_schema",
+        "record_applied",
+        "MigrationRecorder",
+        "Migration"
+      ],
+      "line_range": [
+        59,
+        71
+      ],
+      "score": 0.5768,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3813,
+        "vector": 0.3044,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: never, create, table, there; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/migrations/executor.py",
+      "symbol": "django/db/migrations/executor.py::MigrationExecutor",
+      "symbols": [
+        "MigrationExecutor",
+        "__init__",
+        "migration_plan",
+        "_create_project_state"
+      ],
+      "line_range": [
+        10,
+        381
+      ],
+      "score": 0.6865,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.694,
+        "vector": 0.5666,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: allow_migrate, does, executor, record)"
+    },
+    {
+      "file": "django/db/backends/base/creation.py",
+      "symbol": "django/db/backends/base/creation.py::BaseDatabaseCreation",
+      "symbols": [
+        "BaseDatabaseCreation",
+        "create_test_db",
+        "set_as_test_mirror",
+        "serialize_db_to_string"
+      ],
+      "line_range": [
+        18,
+        342
+      ],
+      "score": 0.5987,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5011,
+        "vector": 0.2369,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: allow_migrate, called, does, using)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys",
+        "_check_backend_specific_checks"
+      ],
+      "line_range": [
+        132,
+        178
+      ],
+      "score": 0.6052,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4064,
+        "vector": 0.4883,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: default, provided, create, tables)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "call_command",
+        "ManagementUtility"
+      ],
+      "line_range": [
+        23,
+        32
+      ],
+      "score": 0.5856,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4362,
+        "vector": 0.2627,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: find, command, that, with)"
+    },
+    {
+      "file": "django/__init__.py",
+      "symbol": "django/__init__.py::setup",
+      "symbols": [
+        "setup"
+      ],
+      "line_range": [
+        8,
+        24
+      ],
+      "score": 0.7353,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0544,
+        "vector": 0.2222,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: django, this, first)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.730675,
+  "laya_scores": {
+    "fix_quality": 1.5537,
+    "matches_issue": 0.7197,
+    "safe_to_apply": 0.6493,
+    "composite": 0.730675,
+    "secrets_or_danger": 0.2158,
+    "logic_drift": 0.3964,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No changes to input handling or execution environment.\n- PERFORMANCE: PASS - Adds a simple check to the migration setup path; no measurable impact.\n- ROBUSTNESS: PASS - Correctly respects the project's multi-db router configuration, preventing unintended schema modification.\n- PONYTAIL / YAGNI: PASS - Necessary logic to align the recorder with established Django router patterns.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import connection, connections, router\nfrom django.db.migrations.recorder import MigrationRecorder\nfrom django.test import override_settings, TransactionTestCase\n\nclass DenyMigrateRouter:\n    \"\"\"A router that denies migrations for all databases except 'default'.\"\"\"\n    def allow_migrate(self, db, app_label, **hints):\n        return db == 'default'\n\n@pytest.mark.django_db\nclass TestMigrationRecorderRouter(TransactionTestCase):\n    databases = {'default', 'other'}\n\n    @override_settings(DATABASE_ROUTERS=['test_migrations.TestMigrationRecorderRouter.DenyMigrateRouter'])\n    def test_recorder_respects_router_on_ensure_schema(self):\n        \"\"\"\n        Reproduce bug: MigrationRecorder.ensure_schema() should not create \n        'django_migrations' table on databases where allow_migrate is False.\n        \"\"\"\n        other_conn = connections['other']\n        recorder = MigrationRecorder(other_conn)\n\n        # Ensure table doesn't exist initially\n        assert not recorder.has_table()\n\n        # This call should be ignored due to the router, \n        # but currently it attempts to create the table.\n        recorder.ensure_schema()\n\n        # The bug causes this to fail (table is created despite router)\n        assert not recorder.has_table(), \"Migration table should not be created on non-default DB\"\n\n    def test_recorder_has_table_boundary(self):\n        \"\"\"Edge case: ensure_schema works fine on the allowed database.\"\"\"\n        default_conn = connections['default']\n        recorder = MigrationRecorder(default_conn)\n        \n        recorder.ensure_schema()\n        assert recorder.has_table()\n\n    def test_recorder_invalid_connection_handling(self):\n        \"\"\"Edge case: ensure_schema behavior with None or invalid connection objects.\"\"\"\n        with pytest.raises(AttributeError):\n            # MigrationRecorder expects a connection object with .alias and .schema_editor\n            MigrationRecorder(None).ensure_schema()\n\n    def test_recorder_applied_migrations_on_denied_db(self):\n        \"\"\"Edge case: Ensure applied_migrations returns empty list for denied DBs.\"\"\"\n        other_conn = connections['other']\n        recorder = MigrationRecorder(other_conn)\n        \n        # Should not crash and should return empty sequence if table missing\n        assert list(recorder.applied_migrations()) == []",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/qwen/qwen3.8-27b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/recorder.py b/django/db/migrations/recorder.py\nindex 1a37c6b7d0..0f3db54882 100644\n--- a/django/db/migrations/recorder.py\n+++ b/django/db/migrations/recorder.py\n@@ -1,5 +1,5 @@\n from django.apps.registry import Apps\n-from django.db import DatabaseError, models\n+from django.db import DatabaseError, models, router\n from django.utils.functional import classproperty\n from django.utils.timezone import now\n \n@@ -62,6 +62,8 @@ class MigrationRecorder:\n         # in the codebase.\n         if self.has_table():\n             return\n+        if not router.allow_migrate(self.connection.alias, 'migrations'):\n+            return\n         # Make the table\n         try:\n             with self.connection.schema_editor() as editor:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15252-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/recorder.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/recorder.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5537,
+        "matches_issue": 0.7197,
+        "safe_to_apply": 0.6493,
+        "composite": 0.730675,
+        "secrets_or_danger": 0.2158,
+        "logic_drift": 0.3964,
+        "flagged": false
+      },
+      "laya_combined": 0.7307,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.54,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/migrations/recorder.py b/django/db/migrations/recorder.py\nindex 1a37c6b7d0..92e200d8d5 100644\n--- a/django/db/migrations/recorder.py\n+++ b/django/db/migrations/recorder.py\n@@ -1,5 +1,5 @@\n from django.apps.registry import Apps\n-from django.db import DatabaseError, models\n+from django.db import DatabaseError, models, router\n from django.utils.functional import classproperty\n from django.utils.timezone import now\n \n@@ -62,6 +62,9 @@ class MigrationRecorder:\n         # in the codebase.\n         if self.has_table():\n             return\n+        # Check if we are allowed to migrate the 'migrations' app to this database\n+        if not router.allow_migrate(self.connection.alias, 'migrations'):\n+            return\n         # Make the table\n         try:\n             with self.connection.schema_editor() as editor:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15252-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/recorder.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/recorder.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5545,
+        "matches_issue": 0.8007,
+        "safe_to_apply": 0.6964,
+        "composite": 0.7629,
+        "secrets_or_danger": 0.2307,
+        "logic_drift": 0.3403,
+        "flagged": false
+      },
+      "laya_combined": 0.7629,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 81.08,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/recorder.py b/django/db/migrations/recorder.py\nindex 1a37c6b7d0..8ed4d46556 100644\n--- a/django/db/migrations/recorder.py\n+++ b/django/db/migrations/recorder.py\n@@ -1,5 +1,5 @@\n from django.apps.registry import Apps\n-from django.db import DatabaseError, models\n+from django.db import DatabaseError, models, router\n from django.utils.functional import classproperty\n from django.utils.timezone import now\n \n@@ -62,6 +62,9 @@ class MigrationRecorder:\n         # in the codebase.\n         if self.has_table():\n             return\n+        # Make sure we have permission to migrate the migrations app\n+        if not router.allow_migrate(self.connection.alias, 'migrations'):\n+            return\n         # Make the table\n         try:\n             with self.connection.schema_editor() as editor:\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15252-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/recorder.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/recorder.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6855,
+        "matches_issue": 0.8448,
+        "safe_to_apply": 0.7135,
+        "composite": 0.8109500000000001,
+        "secrets_or_danger": 0.2249,
+        "logic_drift": 0.331,
+        "flagged": false
+      },
+      "laya_combined": 0.811,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 84.04,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "groq/qwen/qwen3.8-27b",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": false,
+    "patch": "diff --git a/django/db/migrations/recorder.py b/django/db/migrations/recorder.py\nindex 1a37c6b7d0..0f3db54882 100644\n--- a/django/db/migrations/recorder.py\n+++ b/django/db/migrations/recorder.py\n@@ -1,5 +1,5 @@\n from django.apps.registry import Apps\n-from django.db import DatabaseError, models\n+from django.db import DatabaseError, models, router\n from django.utils.functional import classproperty\n from django.utils.timezone import now\n \n@@ -62,6 +62,8 @@ class MigrationRecorder:\n         # in the codebase.\n         if self.has_table():\n             return\n+        if not router.allow_migrate(self.connection.alias, 'migrations'):\n+            return\n         # Make the table\n         try:\n             with self.connection.schema_editor() as editor:\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15252-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/recorder.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/recorder.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5537,
+      "matches_issue": 0.7197,
+      "safe_to_apply": 0.6493,
+      "composite": 0.730675,
+      "secrets_or_danger": 0.2158,
+      "logic_drift": 0.3964,
+      "flagged": false
+    },
+    "laya_combined": 0.7307,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.54,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/recorder.py b/django/db/migrations/recorder.py\nindex 1a37c6b..0f3db54 100644\n--- a/django/db/migrations/recorder.py\n+++ b/django/db/migrations/recorder.py\n@@ -1,5 +1,5 @@\n from django.apps.registry import Apps\n-from django.db import DatabaseError, models\n+from django.db import DatabaseError, models, router\n from django.utils.functional import classproperty\n from django.utils.timezone import now\n \n@@ -62,6 +62,8 @@ class MigrationRecorder:\n         # in the codebase.\n         if self.has_table():\n             return\n+        if not router.allow_migrate(self.connection.alias, 'migrations'):\n+            return\n         # Make the table\n         try:\n             with self.connection.schema_editor() as editor:\n",
+  "offline_calls": 0
+}

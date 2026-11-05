@@ -1,0 +1,253 @@
+{
+  "instance_id": "django__django-10914",
+  "repo": "django/django",
+  "base_commit": "e7fd69d051eaa67cb17f172a39b57253e9cb831a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274942.4955502
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791274945.6733892
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791275053.8952692
+    },
+    {
+      "role": "planner",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791275159.885968
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791275269.5414703
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791275397.4502249
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791275422.4699783
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/conf/global_settings.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/conf/global_settings.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791274889.9123635,
+  "elapsed_s": 532.03,
+  "plan": "--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@\n-#: Sets the default to, e.g., 0o644.\n-FILE_UPLOAD_PERMISSIONS = None\n+#: The default file permission bits to apply to uploaded files.\n+#:\n+:# If ``None`` (the historic default) Django left the file mode untouched,\n+:# which meant the temporary file created by ``tempfile.NamedTemporaryFile``\n+:# kept the restrictive ``0o600`` permissions on many platforms.  Setting the\n+:# default to ``0o644`` restores the expected, world‑readable permissions for\n+:# uploaded files unless the user overrides ``FILE_UPLOAD_PERMISSIONS`` in their\n+:# project settings.\n+FILE_UPLOAD_PERMISSIONS = 0o644",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::LazySettings",
+      "symbols": [
+        "LazySettings",
+        "_setup",
+        "configure",
+        "FILE_CHARSET"
+      ],
+      "line_range": [
+        42,
+        129
+      ],
+      "score": 0.5625,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2838,
+        "vector": 0.3875,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: here, file, default, warning)"
+    },
+    {
+      "file": "django/contrib/auth/models.py",
+      "symbol": "django/contrib/auth/models.py::PermissionManager",
+      "symbols": [
+        "PermissionManager",
+        "Permission",
+        "Group",
+        "UserManager"
+      ],
+      "line_range": [
+        23,
+        32
+      ],
+      "score": 0.6272,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4375,
+        "vector": 0.565,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: manage, turn, permission"
+    },
+    {
+      "file": "django/contrib/auth/management/__init__.py",
+      "symbol": "django/contrib/auth/management/__init__.py::_get_all_permissions",
+      "symbols": [
+        "_get_all_permissions",
+        "_get_builtin_permissions",
+        "create_permissions",
+        "get_system_username"
+      ],
+      "line_range": [
+        14,
+        20
+      ],
+      "score": 0.6189,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4181,
+        "vector": 0.5779,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: turn, permission, built, permissions"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::save_form_data",
+      "symbols": [
+        "save_form_data",
+        "_check_field_name",
+        "_check_null_allowed_for_primary_keys",
+        "select_format"
+      ],
+      "line_range": [
+        854,
+        856
+      ],
+      "score": 0.6157,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3751,
+        "vector": 0.6408,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: data; body matches report terms: data"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "linenumbers",
+        "stringformat",
+        "urlencode"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.5928,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.2327,
+        "vector": 0.7048,
+        "defs": 1.0
+      },
+      "reason": "body matches report terms: data, turn, which, used"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_backends",
+      "symbols": [
+        "_get_backends",
+        "_get_user_session_key",
+        "authenticate",
+        "login"
+      ],
+      "line_range": [
+        24,
+        36
+      ],
+      "score": 0.5718,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2622,
+        "vector": 0.5101,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: turn, configured, does"
+    }
+  ],
+  "retry_count": 1,
+  "critic_verdict": "approved",
+  "critic_score": 0.8516999999999999,
+  "laya_scores": {
+    "fix_quality": 1.7608,
+    "matches_issue": 0.8319,
+    "safe_to_apply": 0.8141,
+    "composite": 0.8516999999999999,
+    "secrets_or_danger": 0.2746,
+    "logic_drift": 0.3086,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - Explicitly setting permissions to 0o644 (rwxr-xr-x) is restrictive and does not introduce unsafe modes like 0o777 or executable bits for data files.\n- PERFORMANCE: PASS - Changing a setting value from `None` to an integer constant has no runtime performance impact.\n- ROBUSTNESS: PASS - This change fixes an inconsistency in file permissions regardless of the upload handler used, improving cross-platform consistency.\n- PONYTAIL / YAGNI: PASS - The patch is minimal and directly addresses the reported bug without adding unnecessary complexity.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import os\n\nimport pytest\nfrom django.core.files.storage import FileSystemStorage\nfrom django.core.files.uploadedfile import (\n    SimpleUploadedFile,\n    TemporaryUploadedFile,\n)\nfrom django.test import override_settings\n\n\n@pytest.fixture\ndef storage(tmp_path):\n    \"\"\"\n    Return a FileSystemStorage that writes into the temporary directory\n    provided by the ``tmp_path`` fixture.\n    \"\"\"\n    return FileSystemStorage(location=str(tmp_path))\n\n\ndef _file_mode(path):\n    \"\"\"Return the permission bits (e.g. 0o644) of *path*.\"\"\"\n    return os.stat(path).st_mode & 0o777\n\n\ndef test_default_file_upload_permissions_is_644(storage):\n    \"\"\"\n    The default ``FILE_UPLOAD_PERMISSIONS`` should be 0o644.\n    Before the fix the default is ``None`` and the file keeps the\n    restrictive 0o600 mode set by ``tempfile.NamedTemporaryFile``.\n    After the fix the storage must chmod the file to 0o644.\n    \"\"\"\n    # Create a TemporaryUploadedFile (uses tempfile.NamedTemporaryFile internally)\n    tmp = TemporaryUploadedFile(\n        name=\"test.txt\",\n        content_type=\"text/plain\",\n        size=11,\n        charset=\"utf-8\",\n    )\n    tmp.write(b\"hello world\")\n    tmp.seek(0)\n\n    saved_name = storage.save(\"test.txt\", tmp)\n    saved_path = storage.path(saved_name)\n\n    assert _file_mode(saved_path) == 0o644\n\n\ndef test_custom_permission_is_respected(storage):\n    \"\"\"\n    When ``FILE_UPLOAD_PERMISSIONS`` is explicitly set, that value must be\n    applied regardless of the default.\n    \"\"\"\n    with override_settings(FILE_UPLOAD_PERMISSIONS=0o600):\n        tmp = TemporaryUploadedFile(\n            name=\"custom.txt\",\n            content_type=\"text/plain\",\n            size=5,\n            charset=\"utf-8\",\n        )\n        tmp.write(b\"abcde\")\n        tmp.seek(0)\n\n        saved_name = storage.save(\"custom.txt\", tmp)\n        saved_path = storage.path(saved_name)\n\n        assert _file_mode(saved_path) == 0o600\n\n\ndef test_none_permission_keeps_original_mode(storage):\n    \"\"\"\n    If ``FILE_UPLOAD_PERMISSIONS`` is set to ``None`` (historical behaviour),\n    the file should retain the mode given by the temporary file (0o600).\n    \"\"\"\n    with override_settings(FILE_UPLOAD_PERMISSIONS=None):\n        tmp = TemporaryUploadedFile(\n            name=\"none.txt\",\n            content_type=\"text/plain\",\n            size=4,\n            charset=\"utf-8\",\n        )\n        tmp.write(b\"data\")\n        tmp.seek(0)\n\n        saved_name = storage.save(\"none.txt\", tmp)\n        saved_path = storage.path(saved_name)\n\n        assert _file_mode(saved_path) == 0o600\n\n\ndef test_in_memory_file_is_chmoded_to_default(storage):\n    \"\"\"\n    Even when the uploaded file is an in‑memory file (does not have a\n    ``temporary_file_path``), the storage must still apply the default\n    permission (0o644 after the fix).\n    \"\"\"\n    uploaded = SimpleUploadedFile(\"mem.txt\", b\"content\", content_type=\"text/plain\")\n    saved_name = storage.save(\"mem.txt\", uploaded)\n    saved_path = storage.path(saved_name)\n\n    assert _file_mode(saved_path) == 0o644",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "diff --git a/django/conf/global_settings.py b/django/conf/global_settings.py\nindex acee988..bdeec80 100644\n--- a/django/conf/global_settings.py\n+++ b/django/conf/global_settings.py\n@@ -304,7 +304,7 @@ FILE_UPLOAD_TEMP_DIR = None\n \n # The numeric mode to set newly-uploaded files to. The value should be a mode\n # you'd pass directly to os.chmod; see https://docs.python.org/library/os.html#files-and-directories.\n-FILE_UPLOAD_PERMISSIONS = None\n+FILE_UPLOAD_PERMISSIONS = 0o644\n \n # The numeric mode to assign to newly-created directories, when uploading files.\n # The value should be a mode as you'd pass to os.chmod;\n",
+  "offline_calls": 0
+}

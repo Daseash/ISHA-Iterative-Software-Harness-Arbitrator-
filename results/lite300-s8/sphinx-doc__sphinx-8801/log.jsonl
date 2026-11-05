@@ -1,0 +1,9 @@
+{"event": "start", "instance_id": "sphinx-doc__sphinx-8801", "ts": 1791960453.1720815}
+{"event": "attempt", "n": 1, "ts": 1791960453.3062692}
+{"event": "model", "ts": 1791960469.3778827, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960470.1861048, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791960474.7156682, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960478.3070235, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960486.9705775, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791960528.5416691, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791960541.4832046}

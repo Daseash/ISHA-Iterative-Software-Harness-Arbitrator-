@@ -1,0 +1,13 @@
+{"event": "start", "instance_id": "django__django-16873", "ts": 1791561604.6217275}
+{"event": "attempt", "n": 1, "ts": 1791561605.1896067}
+{"event": "attempt", "n": 1, "ts": 1791561851.5651035}
+{"event": "timeout_retry", "attempt": 1, "ts": 1791562351.5858068}
+{"event": "attempt", "n": 2, "ts": 1791562352.464382}
+{"event": "model", "ts": 1791562503.386479, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791562507.9629865, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791562515.0098078, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791562515.0341198, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791562538.9777424, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791562695.5081227, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791562769.7286687, "role": "planner", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791562812.378623}

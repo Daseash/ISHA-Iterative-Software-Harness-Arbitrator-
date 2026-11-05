@@ -1,0 +1,405 @@
+{
+  "instance_id": "django__django-13265",
+  "repo": "django/django",
+  "base_commit": "b2b0711b555fa292751763c2df4fe577c396f265",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461505.8583229
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461512.28905
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461526.0247552
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461530.458873
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461562.3818946
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461813.0809023
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791461431.0985923,
+  "elapsed_s": 389.61,
+  "plan": "### Step 1: Root Cause\nThe `order_with_respect_to` meta option in Django automatically adds an `_order` field to the model. When a migration contains an `AddIndex` operation that references `_order` and an `AlterOrderWithRespectTo` operation, the migration operations are executed in the order they appear in the list. If `AddIndex` comes before `AlterOrderWithRespectTo` in the generated migration file, the database schema operation fails because the `_order` column has not yet been created by the `AlterOrderWithRespectTo` logic (which happens during the model state transition and eventual schema application). Specifically, the migration framework does not automatically reorder these operations to ensure dependencies (like the existence of the `_order` column) are satisfied.\n\n### Step 2: Exact Changes\nThe fix involves ensuring that `AlterOrderWithRespectTo` (which triggers the creation of the `_order` field) is prioritized in the migration operation sequence if it is present alongside index operations.\n\n1.  **File:** `django/db/migrations/operations/models.py`\n    Modify the `AlterOrderWithRespectTo` operation class to implement the `reduce` method (or update the migration runner's dependency logic). However, a cleaner, more robust fix within the Django migration framework is to modify the migration autodetector to ensure that `AlterOrderWithRespectTo` operations that introduce the `_order` field are placed before `AddIndex` operations that depend on that field.\n\n    *   Locate `django/db/migrations/autodetector.py`.\n    *   Find the logic that sorts operations within `MigrationAutodetector.arrange_for_added_fields` or equivalent.\n    *   Ensure that `AlterOrderWithRespectTo` is treated as a dependency-creating operation for any `AddIndex` operation that lists `_order` in its `fields` attribute.\n\n    Alternatively, if editing the autodetector is too broad, ensure that when generating migrations for a model with `order_with_respect_to`, the `AlterOrderWithRespectTo` operation is hoisted to occur immediately after the initial `CreateModel` or `AddField` operations that define the base model, but before any `AddIndex` operations that might reference the `_order` field.\n\n    In practice, to fix the specific crash:\n    *   In `django/db/migrations/autodetector.py`, within the `generate_added_indexes` method, add a check: if an index includes `_order`, ensure it is not scheduled before the `AlterOrderWithRespectTo` operation is applied to the model state.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/migrations/operations/models.py",
+      "symbol": "django/db/migrations/operations/models.py::__init__",
+      "symbols": [
+        "__init__",
+        "references_model",
+        "references_model",
+        "references_field"
+      ],
+      "line_range": [
+        46,
+        61
+      ],
+      "score": 0.7468,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9739,
+        "vector": 0.4445,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: fields, name; body matches report terms: model, models, field, meta)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "__init__",
+        "set_attributes_from_name",
+        "contribute_to_class"
+      ],
+      "line_range": [
+        55,
+        58
+      ],
+      "score": 0.9135,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6829,
+        "vector": 0.3979,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: model_name; body matches report terms: model, field, model_name, meta)"
+    },
+    {
+      "file": "django/db/models/deletion.py",
+      "symbol": "django/db/models/deletion.py::get_del_batches",
+      "symbols": [
+        "get_del_batches",
+        "CASCADE",
+        "PROTECT",
+        "SET"
+      ],
+      "line_range": [
+        201,
+        213
+      ],
+      "score": 0.5688,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4196,
+        "vector": 0.1158,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: fields; body matches report terms: field, name, fields)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        211,
+        222
+      ],
+      "score": 0.5777,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3266,
+        "vector": 0.3834,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (signature parameter matches report: max_length; body matches report terms: max_length, null)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "register_serializer",
+        "deserialize",
+        "_load_serializers"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.5432,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2538,
+        "vector": 0.2894,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: when, error, class, serialize)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::_get",
+      "symbols": [
+        "_get",
+        "_get_sitemap_full_url",
+        "_location",
+        "ping_google"
+      ],
+      "line_range": [
+        75,
+        87
+      ],
+      "score": 0.5346,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.092,
+        "vector": 0.5553,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (signature parameter matches report: name; body matches report terms: error, name, code)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.749525,
+  "laya_scores": {
+    "fix_quality": 1.5889,
+    "matches_issue": 0.7636,
+    "safe_to_apply": 0.6456,
+    "composite": 0.749525,
+    "secrets_or_danger": 0.2611,
+    "logic_drift": 0.5194,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, no impact on security.\n- PERFORMANCE: PASS, minimal overhead for migration planning.\n- ROBUSTNESS: PASS, correctly reorders migration operations to resolve dependency issues with dynamically added fields.\n- PONYTAIL / YAGNI: PASS, necessary change to fix the reported ordering bug.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import migrations, models\nfrom django.db.migrations.loader import MigrationLoader\nfrom django.db.migrations.optimizer import MigrationOptimizer\nfrom django.db.migrations.operations.models import AddIndex, AlterOrderWithRespectTo\n\ndef test_alter_order_with_respect_to_index_dependency():\n    \"\"\"\n    Reproduction: Ensure that an AddIndex operation referencing '_order'\n    is correctly ordered after AlterOrderWithRespectTo.\n\n    If they remain in this order, the migration framework should reorder them\n    or the autodetector must prevent this sequence.\n    \"\"\"\n    operations = [\n        migrations.CreateModel(\n            name='LookImage',\n            fields=[('id', models.AutoField(primary_key=True))],\n        ),\n        migrations.AddIndex(\n            model_name='lookimage',\n            index=models.Index(fields=['look', '_order'], name='idx_look_order'),\n        ),\n        migrations.AlterOrderWithRespectTo(\n            name='lookimage',\n            order_with_respect_to='look',\n        ),\n    ]\n\n    # The optimizer should ideally reorder these to ensure dependencies are met.\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"app_label\")\n\n    # In the bug state, AddIndex(fields=['_order']) appears before AlterOrderWithRespectTo.\n    # In the fixed state, AlterOrderWithRespectTo must appear before AddIndex.\n    add_index_idx = next(i for i, op in enumerate(optimized) if isinstance(op, AddIndex))\n    alter_order_idx = next(i for i, op in enumerate(optimized) if isinstance(op, AlterOrderWithRespectTo))\n\n    assert alter_order_idx < add_index_idx, (\n        f\"AlterOrderWithRespectTo (index {alter_order_idx}) must come before \"\n        f\"AddIndex referencing _order (index {add_index_idx})\"\n    )\n\ndef test_add_index_does_not_require_reordering_if_no_order_field():\n    \"\"\"\n    Edge case: Ensure indexes not involving _order are not forced to follow\n    AlterOrderWithRespectTo if they don't depend on it.\n    \"\"\"\n    operations = [\n        migrations.AddIndex(\n            model_name='lookimage',\n            index=models.Index(fields=['created_at'], name='idx_created'),\n        ),\n        migrations.AlterOrderWithRespectTo(\n            name='lookimage',\n            order_with_respect_to='look',\n        ),\n    ]\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"app_label\")\n\n    # These operations are independent, so their relative order might be preserved\n    # unless they are explicitly collapsible.\n    assert len(optimized) == 2\n\ndef test_multiple_indexes_with_and_without_order():\n    \"\"\"\n    Edge case: Mixed indexes. Some rely on _order, others do not.\n    \"\"\"\n    operations = [\n        migrations.AddIndex(\n            model_name='lookimage',\n            index=models.Index(fields=['created_at'], name='idx_created'),\n        ),\n        migrations.AddIndex(\n            model_name='lookimage',\n            index=models.Index(fields=['look', '_order'], name='idx_look_order'),\n        ),\n        migrations.AlterOrderWithRespectTo(\n            name='lookimage',\n            order_with_respect_to='look',\n        ),\n    ]\n    optimizer = MigrationOptimizer()\n    optimized = optimizer.optimize(operations, \"app_label\")\n\n    # Locate index indices\n    idx_map = {type(op).__name__: i for i, op in enumerate(optimized)}\n    add_index_ops = [i for i, op in enumerate(optimized) if isinstance(op, AddIndex)]\n    alter_order_idx = next(i for i, op in enumerate(optimized) if isinstance(op, AlterOrderWithRespectTo))\n\n    # The AddIndex involving '_order' must be after AlterOrderWithRespectTo\n    for idx_op in optimized:\n        if isinstance(idx_op, AddIndex) and '_order' in idx_op.index.fields:\n            assert optimized.index(idx_op) > alter_order_idx",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex dddf7c679c..e0ad795819 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -28,9 +28,6 @@ class ModelOperation(Operation):\n     def name_lower(self):\n         return self.name.lower()\n \n-    def references_model(self, name, app_label):\n-        return name.lower() == self.name_lower\n-\n     def reduce(self, operation, app_label):\n         return (\n             super().reduce(operation, app_label) or\n@@ -578,6 +575,11 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n         self.order_with_respect_to = order_with_respect_to\n         super().__init__(name)\n \n+    def reduce(self, operation, app_label):\n+        if isinstance(operation, AddIndex) and self.references_model(operation.model_name, app_label):\n+            return [operation, self]\n+        return super().reduce(operation, app_label)\n+\n     def deconstruct(self):\n         kwargs = {\n             'name': self.name,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 3,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.5889,
+        "matches_issue": 0.7636,
+        "safe_to_apply": 0.6456,
+        "composite": 0.749525,
+        "secrets_or_danger": 0.2611,
+        "logic_drift": 0.5194,
+        "flagged": false
+      },
+      "laya_combined": 0.7495,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0067,
+      "rank_reason": "logistic",
+      "elapsed_s": 134.45,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -345,6 +345,11 @@ class AlterOrderWithRespectTo(ModelOperation):\n     def reduce(self, operation, app_label):\n         if isinstance(operation, AlterOrderWithRespectTo) and self.name_lower == operation.name_lower:\n             return [operation]\n+        if isinstance(operation, AddIndex) and self.name_lower == operation.model_name_lower:\n+            if '_order' in operation.index.fields:\n+                return [operation, self]\n         return super().reduce(operation, app_label)\n \n     def __init__(self, name, order_with_respect_to):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c3\\django\\db\\migrations\\operations\\models.py: SyntaxError line 345: invalid syntax"
+      ],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6535,
+        "matches_issue": 0.8251,
+        "safe_to_apply": 0.6407,
+        "composite": 0.779825,
+        "secrets_or_danger": 0.2219,
+        "logic_drift": 0.2858,
+        "flagged": false
+      },
+      "laya_combined": 0.7798,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 141.19,
+      "valid": false
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -390,6 +390,11 @@ class AlterOrderWithRespectTo(ModelOperation):\n     def state_forwards(self, app_label, state):\n         state.models[app_label, self.name_lower].options['order_with_respect_to'] = self.order_with_respect_to\n \n+    def reduce(self, operation, app_label):\n+        if isinstance(operation, AddIndex) and '_order' in operation.index.fields:\n+            return [operation, self]\n+        return super().reduce(operation, app_label)\n+\n     def database_forwards(self, app_label, schema_editor, from_state, to_state):\n         to_model = to_state.apps.get_model(app_label, self.name)\n         if self.allow_migrate_model(schema_editor.connection.alias, to_model):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c1\\django\\db\\migrations\\operations\\models.py: undefined name 'model'"
+      ],
+      "changed_files": [
+        "django/db/migrations/operations/models.py"
+      ],
+      "added_lines": 5,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6915,
+        "matches_issue": 0.7866,
+        "safe_to_apply": 0.623,
+        "composite": 0.7752749999999999,
+        "secrets_or_danger": 0.1849,
+        "logic_drift": 0.3597,
+        "flagged": false
+      },
+      "laya_combined": 0.7753,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 138.61,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex dddf7c679c..e0ad795819 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -28,9 +28,6 @@ class ModelOperation(Operation):\n     def name_lower(self):\n         return self.name.lower()\n \n-    def references_model(self, name, app_label):\n-        return name.lower() == self.name_lower\n-\n     def reduce(self, operation, app_label):\n         return (\n             super().reduce(operation, app_label) or\n@@ -578,6 +575,11 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n         self.order_with_respect_to = order_with_respect_to\n         super().__init__(name)\n \n+    def reduce(self, operation, app_label):\n+        if isinstance(operation, AddIndex) and self.references_model(operation.model_name, app_label):\n+            return [operation, self]\n+        return super().reduce(operation, app_label)\n+\n     def deconstruct(self):\n         kwargs = {\n             'name': self.name,\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13265-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/migrations/operations/models.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/migrations/operations/models.py"
+    ],
+    "added_lines": 5,
+    "removed_lines": 3,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.5889,
+      "matches_issue": 0.7636,
+      "safe_to_apply": 0.6456,
+      "composite": 0.749525,
+      "secrets_or_danger": 0.2611,
+      "logic_drift": 0.5194,
+      "flagged": false
+    },
+    "laya_combined": 0.7495,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0067,
+    "rank_reason": "logistic",
+    "elapsed_s": 134.45,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex dddf7c6..e0ad795 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -28,9 +28,6 @@ class ModelOperation(Operation):\n     def name_lower(self):\n         return self.name.lower()\n \n-    def references_model(self, name, app_label):\n-        return name.lower() == self.name_lower\n-\n     def reduce(self, operation, app_label):\n         return (\n             super().reduce(operation, app_label) or\n@@ -578,6 +575,11 @@ class AlterOrderWithRespectTo(ModelOptionOperation):\n         self.order_with_respect_to = order_with_respect_to\n         super().__init__(name)\n \n+    def reduce(self, operation, app_label):\n+        if isinstance(operation, AddIndex) and self.references_model(operation.model_name, app_label):\n+            return [operation, self]\n+        return super().reduce(operation, app_label)\n+\n     def deconstruct(self):\n         kwargs = {\n             'name': self.name,\n",
+  "offline_calls": 0
+}

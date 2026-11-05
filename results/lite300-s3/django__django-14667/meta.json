@@ -1,0 +1,406 @@
+{
+  "instance_id": "django__django-14667",
+  "repo": "django/django",
+  "base_commit": "6a970a8b4600eb91be25f38caed0a52269d6303d",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536920.6468706
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536927.774606
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536957.9627984
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791536967.2002738
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537014.7626238
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537168.8162906
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791537217.9815204
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791536835.9881647,
+  "elapsed_s": 389.86,
+  "plan": "### Step 1: Root Cause\nThe `QuerySet.defer()` method in Django fails to properly reset the `only` state (stored in the QuerySet's `deferred_loading` attribute) when it is called after `only()`. In Django's ORM, `only()` restricts the fields to be loaded, while `defer()` excludes fields. When chaining these methods, the internal logic for merging these states does not correctly identify that a previous `only()` restriction should be superseded or modified when `defer()` is invoked, causing the query to revert to selecting all fields (as if no restrictions were applied). Specifically, `QuerySet` methods that manipulate field selection need to ensure that the internal state representation of \"only\" vs \"defer\" remains consistent and additive in a way that respects the final state of the chain.\n\n### Step 2: Exact Changes\nThe fix involves updating the logic in `django/db/models/query.py` (specifically within the `QuerySet` class methods related to `only` and `defer`).\n\n1.  **File:** `django/db/models/query.py`\n2.  **Function:** `defer()` and `only()`\n3.  **Change:**\n    *   Ensure that when `defer()` is called, it correctly interacts with the existing `deferred_loading` state in the `Query`.\n    *   In the `defer` method, if the current state is `only` (where `self.query.deferred_loading[1]` is `True`), the logic should be updated to properly filter out the deferred fields from the \"only\" set rather than resetting or ignoring them. \n    *   Specifically, update the `defer` implementation to check if `self.query.deferred_loading` indicates an \"only\" mode. If it does, subtract the deferred fields from the set of included fields, maintaining the integrity of the selection list. \n    *   Similarly, verify that `only()` correctly clears or appropriately updates the state if it follows `defer()`.\n\nEssentially, the internal `query.add_deferred_loading` or the manual state modification in `defer()` needs to differentiate between a fresh query and one where specific fields have already been restricted via `only()`.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "django/db/models/base.py",
+      "symbol": "django/db/models/base.py::__repr__",
+      "symbols": [
+        "__repr__",
+        "__str__",
+        "_prepare",
+        "ModelStateFieldsCacheDescriptor"
+      ],
+      "line_range": [
+        43,
+        45
+      ],
+      "score": 0.6854,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4996,
+        "vector": 0.921,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: deferred, defer, field)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_load_field",
+      "symbols": [
+        "_load_field",
+        "_description",
+        "__str__",
+        "_check_field_name"
+      ],
+      "line_range": [
+        55,
+        58
+      ],
+      "score": 0.5959,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3567,
+        "vector": 0.5144,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: name, field, model)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::serialize",
+      "symbols": [
+        "serialize",
+        "deserialize",
+        "BadSerializer",
+        "sort_dependencies"
+      ],
+      "line_range": [
+        123,
+        132
+      ],
+      "score": 0.5593,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2609,
+        "vector": 0.4088,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: query, queryset, objects)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::to_locale",
+      "symbols": [
+        "to_locale",
+        "Trans",
+        "__getattr__",
+        "__mod__"
+      ],
+      "line_range": [
+        202,
+        217
+      ],
+      "score": 0.5397,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2029,
+        "vector": 0.3665,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: name, country, only, with)"
+    },
+    {
+      "file": "django/contrib/sitemaps/__init__.py",
+      "symbol": "django/contrib/sitemaps/__init__.py::get_domain",
+      "symbols": [
+        "get_domain",
+        "GenericSitemap",
+        "__init__",
+        "get_protocol"
+      ],
+      "line_range": [
+        139,
+        154
+      ],
+      "score": 0.5263,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.0,
+        "vector": 0.6773,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: doesn, objects, model)"
+    },
+    {
+      "file": "tests/admin_widgets/models.py",
+      "symbol": "tests/admin_widgets/models.py::Member",
+      "symbols": [
+        "Member",
+        "Band",
+        "Album",
+        "ReleaseEvent"
+      ],
+      "line_range": [
+        11,
+        20
+      ],
+      "score": 0.5196,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4705,
+        "vector": 0.7414,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: name, field, model)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6638250000000001,
+  "laya_scores": {
+    "fix_quality": 1.3703,
+    "matches_issue": 0.6988,
+    "safe_to_apply": 0.5862,
+    "composite": 0.6638250000000001,
+    "secrets_or_danger": 0.1167,
+    "logic_drift": 0.1738,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-sensitive APIs or inputs involved in field resolution logic.\n- PERFORMANCE: PASS - The patch corrects query generation logic without adding computational overhead.\n- ROBUSTNESS: PASS - Corrects the internal state management of `deferred_loading` to ensure consistent query behavior.\n- PONYTAIL / YAGNI: PASS - Minimal surgical fix addressing a specific bug in QuerySet chaining.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import models\nfrom django.test import TestCase\n\n# Model definition for reproduction\nclass Company(models.Model):\n    name = models.CharField(max_length=100)\n    trade_number = models.CharField(max_length=100)\n    country = models.CharField(max_length=100)\n\n    class Meta:\n        app_label = 'test_app'\n\nclass TestQuerySetDeferOnly(TestCase):\n    def test_defer_after_only_clears_field(self):\n        \"\"\"\n        Reproduce bug: Company.objects.only(\"name\").defer(\"name\") \n        should load only 'id', but currently loads all fields.\n        \"\"\"\n        qs = Company.objects.only(\"name\").defer(\"name\")\n        sql = str(qs.query)\n        # Should only contain id, not name, trade_number, or country\n        assert '\"name\"' not in sql\n        assert '\"trade_number\"' not in sql\n        assert '\"country\"' not in sql\n        assert '\"id\"' in sql\n\n    def test_multiple_defers_after_only(self):\n        \"\"\"\n        Reproduce bug: Company.objects.only(\"name\").defer(\"name\").defer(\"country\")\n        \"\"\"\n        qs = Company.objects.only(\"name\").defer(\"name\").defer(\"country\")\n        sql = str(qs.query)\n        assert '\"name\"' not in sql\n        assert '\"country\"' not in sql\n        assert '\"trade_number\"' not in sql\n        assert '\"id\"' in sql\n\n    def test_only_subset_then_defer(self):\n        \"\"\"\n        Edge case: Verify logic works when only() includes multiple fields \n        and defer() removes one of them.\n        \"\"\"\n        # Should result in just \"id\" and \"country\"\n        qs = Company.objects.only(\"name\", \"country\").defer(\"name\")\n        sql = str(qs.query)\n        assert '\"name\"' not in sql\n        assert '\"country\"' in sql\n        assert '\"id\"' in sql\n\n    def test_defer_non_existent_field(self):\n        \"\"\"\n        Edge case: Ensure invalid field usage raises FieldError as expected.\n        \"\"\"\n        with pytest.raises(Exception): # Django raises FieldError\n            Company.objects.only(\"name\").defer(\"non_existent_field\")\n\n    def test_only_after_defer_chain(self):\n        \"\"\"\n        Edge case: Chaining only() after defer() should redefine the selection.\n        \"\"\"\n        qs = Company.objects.defer(\"name\").only(\"country\")\n        sql = str(qs.query)\n        assert '\"name\"' not in sql\n        assert '\"country\"' in sql\n        assert '\"trade_number\"' not in sql",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1220,7 +1220,10 @@\n         clone = self._chain()\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n+        elif clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].update(fields)\n         else:\n             clone.query.add_deferred_loading(fields)\n         return clone",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c3",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c3\\django\\db\\models\\query.py: SyntaxError line 1224: expected an indented block after 'else' statement on line 1223"
+      ],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.4736,
+        "matches_issue": 0.7212,
+        "safe_to_apply": 0.6179,
+        "composite": 0.703175,
+        "secrets_or_danger": 0.2431,
+        "logic_drift": 0.4438,
+        "flagged": false
+      },
+      "laya_combined": 0.7032,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 98.4,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1330,7 +1330,10 @@ class QuerySet:\n         clone = self._chain()\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n-        else:\n+        elif clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].update(fields)\n+        else:\n             clone.query.add_deferred_loading(fields)\n         return clone\n \n@@ -1341,7 +1344,10 @@ class QuerySet:\n         \"\"\"\n         clone = self._chain()\n-        clone.query.add_immediate_loading(fields)\n+        if clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].difference_update(fields)\n+        else:\n+            clone.query.add_immediate_loading(fields)\n         return clone\n \n     def using(self, alias):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c1\\django\\db\\models\\query.py: SyntaxError line 1332: unterminated string literal (detected at line 1332)"
+      ],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 7,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2505,
+        "matches_issue": 0.6923,
+        "safe_to_apply": 0.5862,
+        "composite": 0.63225,
+        "secrets_or_danger": 0.1162,
+        "logic_drift": 0.475,
+        "flagged": false
+      },
+      "laya_combined": 0.6322,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 99.76,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1246,7 +1246,10 @@ class QuerySet:\n         clone = self._chain()\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n-        else:\n+        elif clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].update(fields)\n+        else:\n             clone.query.add_deferred_loading(fields)\n         return clone\n \n@@ -1265,7 +1268,10 @@ class QuerySet:\n         \"\"\"\n         clone = self._chain()\n-        clone.query.add_immediate_loading(fields)\n+        if clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].difference_update(fields)\n+        else:\n+            clone.query.add_immediate_loading(fields)\n         return clone\n \n     def using(self, alias):",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c2\\django\\db\\models\\query.py: SyntaxError line 1332: unterminated string literal (detected at line 1332)"
+      ],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 7,
+      "removed_lines": 2,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.2505,
+        "matches_issue": 0.6923,
+        "safe_to_apply": 0.5862,
+        "composite": 0.63225,
+        "secrets_or_danger": 0.1246,
+        "logic_drift": 0.5221,
+        "flagged": false
+      },
+      "laya_combined": 0.6322,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 98.12,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1220,7 +1220,10 @@\n         clone = self._chain()\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n+        elif clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].update(fields)\n         else:\n             clone.query.add_deferred_loading(fields)\n         return clone",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c3",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14667-c3\\django\\db\\models\\query.py: SyntaxError line 1224: expected an indented block after 'else' statement on line 1223"
+    ],
+    "changed_files": [
+      "django/db/models/query.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.4736,
+      "matches_issue": 0.7212,
+      "safe_to_apply": 0.6179,
+      "composite": 0.703175,
+      "secrets_or_danger": 0.2431,
+      "logic_drift": 0.4438,
+      "flagged": false
+    },
+    "laya_combined": 0.7032,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0011,
+    "rank_reason": "logistic",
+    "elapsed_s": 98.4,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 71a52fb..d06ec8e 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1220,6 +1220,8 @@ class QuerySet:\n         clone = self._chain()\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n+        elif clone.query.deferred_loading[1]:\n+            clone.query.deferred_loading[0].update(fields)\n         else:\n             clone.query.add_deferred_loading(fields)\n         return clone\n",
+  "offline_calls": 0
+}

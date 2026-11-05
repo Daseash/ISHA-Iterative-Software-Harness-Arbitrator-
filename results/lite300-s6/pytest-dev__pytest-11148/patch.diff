@@ -1,0 +1,12 @@
+diff --git a/src/_pytest/pathlib.py b/src/_pytest/pathlib.py
+index e43310ef0..ea7fd7c8a 100644
+--- a/src/_pytest/pathlib.py
++++ b/src/_pytest/pathlib.py
+@@ -348,6 +348,7 @@ def cleanup_candidates(root: Path, prefix: str, keep: int) -> Iterator[Path]:
+     max_delete = max_existing - keep
+     paths = find_prefixed(root, prefix)
+     paths, paths2 = itertools.tee(paths)
++    module.__package__ = modname.rpartition(".")[0]
+     numbers = map(parse_num, extract_suffixes(paths2, prefix))
+     for path, number in zip(paths, numbers):
+         if number <= max_delete:

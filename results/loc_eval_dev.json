@@ -1,0 +1,1018 @@
+{
+  "generated_at": "2026-09-30 18:36:20",
+  "limit": 30,
+  "mode": "dev",
+  "top_k": 8,
+  "scored": 30,
+  "skipped": 0,
+  "hit_rates": {
+    "hit@1": 0.4667,
+    "hit@3": 0.6,
+    "hit@5": 0.6333,
+    "hit@8": 0.6667
+  },
+  "function_hit_rates": {
+    "func_hit@1": 0.2,
+    "func_hit@3": 0.2333,
+    "func_hit@5": 0.3333,
+    "func_hit@8": 0.3667
+  },
+  "source_hit_rates": {
+    "hit@1": 0.4667,
+    "hit@3": 0.6,
+    "hit@5": 0.6333,
+    "hit@8": 0.6667
+  },
+  "mrr": 0.5353,
+  "func_mrr": 0.2431,
+  "elapsed_s": 524.5,
+  "rows": [
+    {
+      "instance_id": "astropy__astropy-14995",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "astropy/nddata/mixins/ndarithmetic.py",
+        "astropy/nddata/nddata_withmixins.py",
+        "astropy/nddata/nddata.py",
+        "astropy/__init__.py",
+        "astropy/io/votable/converters.py",
+        "astropy/nddata/__init__.py",
+        "astropy/version.py",
+        "astropy/modeling/functional_models.py"
+      ],
+      "top_symbols": [
+        "astropy/nddata/mixins/ndarithmetic.py::_arithmetic",
+        "astropy/nddata/nddata_withmixins.py::NDDataRef",
+        "astropy/nddata/nddata.py::__init__",
+        "astropy/__init__.py::Conf",
+        "astropy/io/votable/converters.py::_make_masked_array",
+        "astropy/nddata/__init__.py::Conf",
+        "astropy/version.py::split_version",
+        "astropy/modeling/functional_models.py::_parameter_units_for_data_units"
+      ],
+      "expected_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "expected_symbols": [
+        "_arithmetic_mask"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-11797",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/models/sql/query.py",
+        "django/db/models/query.py",
+        "django/contrib/auth/models.py",
+        "django/db/models/fields/__init__.py",
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/context_processors.py",
+        "django/utils/regex_helper.py",
+        "django/core/mail/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/models/sql/query.py::resolve_expression",
+        "django/db/models/query.py::_validate_values_are_expressions",
+        "django/contrib/auth/models.py::Permission",
+        "django/db/models/fields/__init__.py::__reduce__",
+        "django/contrib/auth/__init__.py::authenticate",
+        "django/contrib/auth/context_processors.py::auth",
+        "django/utils/regex_helper.py::get_quantifier",
+        "django/core/mail/__init__.py::send_mail"
+      ],
+      "expected_files": [
+        "django/db/models/lookups.py"
+      ],
+      "expected_symbols": [
+        "process_rhs"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-12470",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "django/db/models/fields/related_descriptors.py",
+        "django/db/models/fields/__init__.py",
+        "tests/queries/models.py",
+        "django/core/serializers/__init__.py",
+        "django/utils/translation/__init__.py",
+        "django/contrib/auth/management/__init__.py",
+        "tests/admin_views/models.py",
+        "django/contrib/auth/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/models/fields/related_descriptors.py::Parent",
+        "django/db/models/fields/__init__.py::get_choices",
+        "tests/queries/models.py::Child",
+        "django/core/serializers/__init__.py::BadSerializer",
+        "django/utils/translation/__init__.py::TranslatorCommentWarning",
+        "django/contrib/auth/management/__init__.py::get_default_username",
+        "tests/admin_views/models.py::Parent",
+        "django/contrib/auth/__init__.py::_get_user_session_key"
+      ],
+      "expected_files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "expected_symbols": [
+        "find_ordering_name"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "django__django-12589",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "django/db/models/sql/query.py",
+        "django/db/models/query.py",
+        "django/db/models/fields/__init__.py",
+        "django/db/utils.py",
+        "django/db/models/deletion.py",
+        "django/contrib/auth/models.py",
+        "django/utils/regex_helper.py",
+        "django/core/serializers/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/models/sql/query.py::resolve_expression",
+        "django/db/models/query.py::_validate_values_are_expressions",
+        "django/db/models/fields/__init__.py::__init__",
+        "django/db/utils.py::ProgrammingError",
+        "django/db/models/deletion.py::CASCADE",
+        "django/contrib/auth/models.py::Permission",
+        "django/utils/regex_helper.py::next_char",
+        "django/core/serializers/__init__.py::BadSerializer"
+      ],
+      "expected_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "expected_symbols": [
+        "set_group_by"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-12708",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "django/db/backends/base/schema.py",
+        "django/db/models/indexes.py",
+        "django/db/backends/sqlite3/schema.py",
+        "django/db/backends/postgresql/schema.py",
+        "django/db/migrations/writer.py",
+        "django/core/management/__init__.py",
+        "django/db/models/fields/__init__.py",
+        "django/core/serializers/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/backends/base/schema.py::_constraint_names",
+        "django/db/models/indexes.py::Index",
+        "django/db/backends/sqlite3/schema.py::__enter__",
+        "django/db/backends/postgresql/schema.py::_field_indexes_sql",
+        "django/db/migrations/writer.py::as_string",
+        "django/core/management/__init__.py::find_commands",
+        "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+        "django/core/serializers/__init__.py::BadSerializer"
+      ],
+      "expected_files": [
+        "django/db/backends/base/schema.py"
+      ],
+      "expected_symbols": [
+        "alter_index_together"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-13933",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "django/forms/models.py",
+        "django/forms/fields.py",
+        "django/template/defaultfilters.py",
+        "django/db/models/fields/__init__.py",
+        "django/utils/regex_helper.py",
+        "tests/forms_tests/tests/test_formsets.py",
+        "tests/admin_views/models.py",
+        "tests/null_queries/models.py"
+      ],
+      "top_symbols": [
+        "django/forms/models.py::ModelMultipleChoiceField",
+        "django/forms/fields.py::__init__",
+        "django/template/defaultfilters.py::stringformat",
+        "django/db/models/fields/__init__.py::__init__",
+        "django/utils/regex_helper.py::next_char",
+        "tests/forms_tests/tests/test_formsets.py::BaseFavoriteDrinksFormSet",
+        "tests/admin_views/models.py::Section",
+        "tests/null_queries/models.py::Inner"
+      ],
+      "expected_files": [
+        "django/forms/models.py"
+      ],
+      "expected_symbols": [
+        "to_python"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-14382",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/core/management/templates.py",
+        "django/core/management/base.py",
+        "django/core/management/__init__.py",
+        "django/db/models/fields/__init__.py",
+        "django/utils/translation/__init__.py",
+        "django/conf/__init__.py",
+        "django/contrib/admin/templatetags/admin_list.py",
+        "django/contrib/sitemaps/__init__.py"
+      ],
+      "top_symbols": [
+        "django/core/management/templates.py::validate_name",
+        "django/core/management/base.py::CommandError",
+        "django/core/management/__init__.py::find_commands",
+        "django/db/models/fields/__init__.py::_check_field_name",
+        "django/utils/translation/__init__.py::Trans",
+        "django/conf/__init__.py::_add_script_prefix",
+        "django/contrib/admin/templatetags/admin_list.py::ResultList",
+        "django/contrib/sitemaps/__init__.py::_get"
+      ],
+      "expected_files": [
+        "django/core/management/templates.py"
+      ],
+      "expected_symbols": [
+        "handle"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-15213",
+      "rank": 2,
+      "func_rank": null,
+      "source_rank": 2,
+      "top": [
+        "django/db/models/expressions.py",
+        "django/db/models/fields/__init__.py",
+        "django/core/serializers/__init__.py",
+        "django/template/defaultfilters.py",
+        "django/conf/__init__.py",
+        "django/core/management/__init__.py",
+        "django/contrib/auth/__init__.py",
+        "django/views/generic/__init__.py"
+      ],
+      "top_symbols": [
+        "django/db/models/expressions.py::__init__",
+        "django/db/models/fields/__init__.py::get_col",
+        "django/core/serializers/__init__.py::serialize",
+        "django/template/defaultfilters.py::_property_resolver",
+        "django/conf/__init__.py::__getattr__",
+        "django/core/management/__init__.py::autocomplete",
+        "django/contrib/auth/__init__.py::_get_backends",
+        "django/views/generic/__init__.py::GenericViewError"
+      ],
+      "expected_files": [
+        "django/db/models/fields/__init__.py"
+      ],
+      "expected_symbols": [
+        "formfield"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-15814",
+      "rank": 7,
+      "func_rank": null,
+      "source_rank": 7,
+      "top": [
+        "django/db/models/query.py",
+        "django/core/management/__init__.py",
+        "django/core/serializers/base.py",
+        "django/db/models/deletion.py",
+        "django/core/management/base.py",
+        "django/db/models/base.py",
+        "django/db/models/sql/query.py",
+        "django/template/base.py"
+      ],
+      "top_symbols": [
+        "django/db/models/query.py::_prepare_for_bulk_create",
+        "django/core/management/__init__.py::execute_from_command_line",
+        "django/core/serializers/base.py::__init__",
+        "django/db/models/deletion.py::add",
+        "django/core/management/base.py::run_from_argv",
+        "django/db/models/base.py::subclass_exception",
+        "django/db/models/sql/query.py::get_field_names_from_opts",
+        "django/template/base.py::__init__"
+      ],
+      "expected_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "expected_symbols": [
+        "deferred_to_data"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "django__django-15902",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "django/forms/formsets.py",
+        "django/db/models/fields/__init__.py",
+        "django/conf/__init__.py",
+        "django/utils/html.py",
+        "django/core/management/__init__.py",
+        "django/template/defaultfilters.py",
+        "django/contrib/auth/management/__init__.py",
+        "django/core/checks/messages.py"
+      ],
+      "top_symbols": [
+        "django/forms/formsets.py::ManagementForm",
+        "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+        "django/conf/__init__.py::__getattr__",
+        "django/utils/html.py::escape",
+        "django/core/management/__init__.py::get_commands",
+        "django/template/defaultfilters.py::stringformat",
+        "django/contrib/auth/management/__init__.py::get_default_username",
+        "django/core/checks/messages.py::__str__"
+      ],
+      "expected_files": [
+        "django/forms/formsets.py"
+      ],
+      "expected_symbols": [
+        "ManagementForm"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-25332",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "lib/matplotlib/pyplot.py",
+        "lib/matplotlib/figure.py",
+        "lib/matplotlib/__init__.py",
+        "setupext.py",
+        "lib/matplotlib/_api/__init__.py",
+        "lib/matplotlib/projections/__init__.py",
+        "lib/matplotlib/sphinxext/plot_directive.py",
+        "lib/matplotlib/testing/__init__.py"
+      ],
+      "top_symbols": [
+        "lib/matplotlib/pyplot.py::set_loglevel",
+        "lib/matplotlib/figure.py::__init__",
+        "lib/matplotlib/__init__.py::_get_version",
+        "setupext.py::_get_xdg_cache_dir",
+        "lib/matplotlib/_api/__init__.py::kwarg_error",
+        "lib/matplotlib/projections/__init__.py::get_projection_class",
+        "lib/matplotlib/sphinxext/plot_directive.py::mark_plot_labels",
+        "lib/matplotlib/testing/__init__.py::setup"
+      ],
+      "expected_files": [
+        "lib/matplotlib/cbook.py"
+      ],
+      "expected_symbols": [
+        "Grouper"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-26011",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "lib/matplotlib/axes/_base.py",
+        "lib/matplotlib/axes/__init__.py",
+        "lib/matplotlib/pyplot.py",
+        "lib/matplotlib/__init__.py",
+        "lib/matplotlib/_api/__init__.py",
+        "lib/matplotlib/projections/__init__.py",
+        "lib/matplotlib/testing/__init__.py",
+        "lib/matplotlib/testing/jpl_units/__init__.py"
+      ],
+      "top_symbols": [
+        "lib/matplotlib/axes/_base.py::axis",
+        "lib/matplotlib/axes/__init__.py::_SubplotBaseMeta",
+        "lib/matplotlib/pyplot.py::ticklabel_format",
+        "lib/matplotlib/__init__.py::_get_version",
+        "lib/matplotlib/_api/__init__.py::check_shape",
+        "lib/matplotlib/projections/__init__.py::ProjectionRegistry",
+        "lib/matplotlib/testing/__init__.py::setup",
+        "lib/matplotlib/testing/jpl_units/__init__.py::register"
+      ],
+      "expected_files": [
+        "lib/matplotlib/axis.py"
+      ],
+      "expected_symbols": [
+        "_set_lim"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "mwaskom__seaborn-3010",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "seaborn/_stats/regression.py",
+        "seaborn/_core/plot.py",
+        "seaborn/regression.py",
+        "seaborn/_core/groupby.py",
+        "seaborn/_marks/line.py",
+        "seaborn/_core/scales.py",
+        "seaborn/_oldcore.py",
+        "seaborn/relational.py"
+      ],
+      "top_symbols": [
+        "seaborn/_stats/regression.py::__call__",
+        "seaborn/_core/plot.py::_compute_stats",
+        "seaborn/regression.py::fit_poly",
+        "seaborn/_core/groupby.py::_reorder_columns",
+        "seaborn/_marks/line.py::_setup_lines",
+        "seaborn/_core/scales.py::InternalScale",
+        "seaborn/_oldcore.py::categorical_mapping",
+        "seaborn/relational.py::__init__"
+      ],
+      "expected_files": [
+        "seaborn/_stats/regression.py"
+      ],
+      "expected_symbols": [
+        "_fit_predict"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "pallets__flask-4045",
+      "rank": 1,
+      "func_rank": 5,
+      "source_rank": 1,
+      "top": [
+        "src/flask/blueprints.py",
+        "src/flask/scaffold.py",
+        "src/flask/app.py",
+        "src/flask/helpers.py",
+        "src/flask/debughelpers.py",
+        "src/flask/wrappers.py",
+        "src/flask/templating.py",
+        "docs/blueprints.rst"
+      ],
+      "top_symbols": [
+        "src/flask/blueprints.py::record",
+        "src/flask/scaffold.py::setupmethod",
+        "src/flask/app.py::name",
+        "src/flask/helpers.py::external_url_handler",
+        "src/flask/debughelpers.py::DebugFilesKeyError",
+        "src/flask/wrappers.py::Response",
+        "src/flask/templating.py::Environment",
+        "docs/blueprints.rst::_handle_api_error"
+      ],
+      "expected_files": [
+        "src/flask/blueprints.py"
+      ],
+      "expected_symbols": [
+        "__init__",
+        "add_url_rule"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "psf__requests-2674",
+      "rank": 3,
+      "func_rank": 5,
+      "source_rank": 3,
+      "top": [
+        "requests/packages/urllib3/exceptions.py",
+        "requests/exceptions.py",
+        "requests/adapters.py",
+        "requests/packages/urllib3/connectionpool.py",
+        "requests/packages/urllib3/util/timeout.py",
+        "requests/packages/urllib3/__init__.py",
+        "requests/packages/urllib3/poolmanager.py",
+        "requests/utils.py"
+      ],
+      "top_symbols": [
+        "requests/packages/urllib3/exceptions.py::ReadTimeoutError",
+        "requests/exceptions.py::Timeout",
+        "requests/adapters.py::init_poolmanager",
+        "requests/packages/urllib3/connectionpool.py::_get_conn",
+        "requests/packages/urllib3/util/timeout.py::from_float",
+        "requests/packages/urllib3/__init__.py::disable_warnings",
+        "requests/packages/urllib3/poolmanager.py::clear",
+        "requests/utils.py::get_encodings_from_content"
+      ],
+      "expected_files": [
+        "requests/adapters.py"
+      ],
+      "expected_symbols": [
+        "from",
+        "send"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "pydata__xarray-4248",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "xarray/core/merge.py",
+        "xarray/tests/test_groupby.py",
+        "xarray/core/dataset.py",
+        "xarray/core/computation.py",
+        "xarray/tests/test_formatting_html.py",
+        "xarray/core/dataarray.py",
+        "xarray/backends/api.py",
+        "xarray/core/alignment.py"
+      ],
+      "top_symbols": [
+        "xarray/core/merge.py::dataset_merge_method",
+        "xarray/tests/test_groupby.py::test_groupby_bins_timeseries",
+        "xarray/core/dataset.py::_persist_inplace",
+        "xarray/core/computation.py::where",
+        "xarray/tests/test_formatting_html.py::test_short_data_repr_html_non_str_keys",
+        "xarray/core/dataarray.py::_to_dataset_split",
+        "xarray/backends/api.py::to_netcdf",
+        "xarray/core/alignment.py::_broadcast_dataset"
+      ],
+      "expected_files": [
+        "xarray/core/formatting.py"
+      ],
+      "expected_symbols": [
+        "inline_variable_array_repr"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "pylint-dev__pylint-7114",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "pylint/__init__.py",
+        "pylint/lint/pylinter.py",
+        "pylint/pyreverse/inspector.py",
+        "pylint/checkers/base_checker.py",
+        "pylint/checkers/base/name_checker/checker.py",
+        "pylint/checkers/base/basic_checker.py",
+        "pylint/checkers/base/basic_error_checker.py",
+        "pylint/checkers/classes/class_checker.py"
+      ],
+      "top_symbols": [
+        "pylint/__init__.py::modify_sys_path",
+        "pylint/lint/pylinter.py::GetAstProtocol",
+        "pylint/pyreverse/inspector.py::interfaces",
+        "pylint/checkers/base_checker.py::BaseChecker",
+        "pylint/checkers/base/name_checker/checker.py::_get_properties",
+        "pylint/checkers/base/basic_checker.py::_BasicChecker",
+        "pylint/checkers/base/basic_error_checker.py::_get_break_loop_node",
+        "pylint/checkers/classes/class_checker.py::_is_trivial_super_delegation"
+      ],
+      "expected_files": [
+        "pylint/lint/expand_modules.py"
+      ],
+      "expected_symbols": [
+        "expand_modules"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5227",
+      "rank": 2,
+      "func_rank": null,
+      "source_rank": 2,
+      "top": [
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/logging.py",
+        "src/_pytest/python_api.py",
+        "src/_pytest/config/argparsing.py",
+        "src/_pytest/assertion/__init__.py",
+        "src/_pytest/python.py",
+        "src/_pytest/helpconfig.py",
+        "src/_pytest/pytester.py"
+      ],
+      "top_symbols": [
+        "src/_pytest/config/__init__.py::_prepareconfig",
+        "src/_pytest/logging.py::__init__",
+        "src/_pytest/python_api.py::raises",
+        "src/_pytest/config/argparsing.py::getgroup",
+        "src/_pytest/assertion/__init__.py::pytest_addoption",
+        "src/_pytest/python.py::pytest_pycollect_makeitem",
+        "src/_pytest/helpconfig.py::HelpAction",
+        "src/_pytest/pytester.py::preserve_module"
+      ],
+      "expected_files": [
+        "src/_pytest/logging.py"
+      ],
+      "expected_symbols": [
+        "from"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "pytest-dev__pytest-8906",
+      "rank": 4,
+      "func_rank": null,
+      "source_rank": 4,
+      "top": [
+        "src/_pytest/outcomes.py",
+        "src/_pytest/skipping.py",
+        "src/_pytest/mark/__init__.py",
+        "src/_pytest/python.py",
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/assertion/__init__.py",
+        "src/_pytest/python_api.py",
+        "bench/skip.py"
+      ],
+      "top_symbols": [
+        "src/_pytest/outcomes.py::skip",
+        "src/_pytest/skipping.py::evaluate_condition",
+        "src/_pytest/mark/__init__.py::pytest_addoption",
+        "src/_pytest/python.py::pytest_addoption",
+        "src/_pytest/config/__init__.py::getoption",
+        "src/_pytest/assertion/__init__.py::pytest_addoption",
+        "src/_pytest/python_api.py::_non_numeric_type_error",
+        "bench/skip.py::test_foo"
+      ],
+      "expected_files": [
+        "src/_pytest/python.py"
+      ],
+      "expected_symbols": [
+        "_importtestmodule"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "sklearn/linear_model/ridge.py",
+        "sklearn/linear_model/__init__.py",
+        "sklearn/__init__.py",
+        "sklearn/utils/__init__.py",
+        "sklearn/metrics/__init__.py",
+        "sklearn/ensemble/__init__.py",
+        "sklearn/externals/joblib/__init__.py",
+        "sklearn/_build_utils/__init__.py"
+      ],
+      "top_symbols": [
+        "sklearn/linear_model/ridge.py::__init__",
+        "sklearn/__init__.py::get_config",
+        "sklearn/utils/__init__.py::gen_batches",
+        "sklearn/_build_utils/__init__.py::maybe_cythonize_extensions"
+      ],
+      "expected_files": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "expected_symbols": [
+        "RidgeCV",
+        "RidgeClassifierCV"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11040",
+      "rank": 1,
+      "func_rank": 7,
+      "source_rank": 1,
+      "top": [
+        "sklearn/neighbors/base.py",
+        "sklearn/utils/validation.py",
+        "sklearn/utils/__init__.py",
+        "sklearn/preprocessing/data.py",
+        "sklearn/__init__.py",
+        "sklearn/__check_build/__init__.py",
+        "sklearn/_build_utils/__init__.py",
+        "sklearn/externals/joblib/__init__.py"
+      ],
+      "top_symbols": [
+        "sklearn/neighbors/base.py::__init__",
+        "sklearn/utils/validation.py::check_X_y",
+        "sklearn/utils/__init__.py::__init__",
+        "sklearn/preprocessing/data.py::fit",
+        "sklearn/__init__.py::setup_module",
+        "sklearn/__check_build/__init__.py::raise_build_error",
+        "sklearn/_build_utils/__init__.py::get_blas_info"
+      ],
+      "expected_files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "expected_symbols": [
+        "_fit",
+        "from"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-8273",
+      "rank": null,
+      "func_rank": 2,
+      "source_rank": null,
+      "top": [
+        "sphinx/builders/html/__init__.py",
+        "sphinx/environment/__init__.py",
+        "sphinx/domains/__init__.py",
+        "sphinx/directives/__init__.py",
+        "sphinx/ext/autodoc/__init__.py",
+        "sphinx/ext/napoleon/__init__.py",
+        "sphinx/transforms/__init__.py",
+        "sphinx/search/__init__.py"
+      ],
+      "top_symbols": [
+        "sphinx/builders/html/__init__.py::load",
+        "sphinx/environment/__init__.py::setup",
+        "sphinx/domains/__init__.py::ObjType",
+        "sphinx/directives/__init__.py::handle_signature",
+        "sphinx/ext/autodoc/__init__.py::members_set_option",
+        "sphinx/ext/napoleon/__init__.py::setup",
+        "sphinx/transforms/__init__.py::SphinxTransform",
+        "sphinx/search/__init__.py::SearchLanguage"
+      ],
+      "expected_files": [
+        "sphinx/builders/manpage.py"
+      ],
+      "expected_symbols": [
+        "from",
+        "setup",
+        "write"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "sympy__sympy-13146",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "sympy/simplify/simplify.py",
+        "sympy/core/evalf.py",
+        "sympy/utilities/mathml/__init__.py",
+        "sympy/__init__.py",
+        "sympy/stats/__init__.py",
+        "sympy/holonomic/__init__.py",
+        "sympy/combinatorics/__init__.py",
+        "sympy/sets/__init__.py"
+      ],
+      "top_symbols": [
+        "sympy/simplify/simplify.py::clear_coefficients",
+        "sympy/core/evalf.py::fastlog",
+        "sympy/utilities/mathml/__init__.py::apply_xsl",
+        "sympy/__init__.py::enable_warnings"
+      ],
+      "expected_files": [
+        "sympy/core/operations.py"
+      ],
+      "expected_symbols": [
+        "_eval_evalf"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "rank": null,
+      "func_rank": 4,
+      "source_rank": null,
+      "top": [
+        "sympy/core/numbers.py",
+        "sympy/core/mul.py",
+        "sympy/physics/units/__init__.py",
+        "sympy/functions/special/tensor_functions.py",
+        "sympy/plotting/pygletplot/plot_mode_base.py",
+        "sympy/core/power.py",
+        "sympy/tensor/array/__init__.py",
+        "sympy/core/__init__.py"
+      ],
+      "top_symbols": [
+        "sympy/core/numbers.py::_as_integer_ratio",
+        "sympy/core/mul.py::_eval_nseries",
+        "sympy/physics/units/__init__.py::find_unit",
+        "sympy/functions/special/tensor_functions.py::LeviCivita",
+        "sympy/plotting/pygletplot/plot_mode_base.py::_get_evaluator",
+        "sympy/core/power.py::_eval_as_leading_term"
+      ],
+      "expected_files": [
+        "sympy/core/mod.py"
+      ],
+      "expected_symbols": [
+        "doit"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "sympy__sympy-16106",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "sympy/printing/mathml.py",
+        "sympy/printing/printer.py",
+        "sympy/utilities/mathml/__init__.py",
+        "sympy/core/compatibility.py",
+        "sympy/categories/baseclasses.py",
+        "sympy/abc.py",
+        "sympy/__init__.py",
+        "sympy/utilities/pytest.py"
+      ],
+      "top_symbols": [
+        "sympy/printing/mathml.py::doprint",
+        "sympy/printing/printer.py::_print",
+        "sympy/utilities/mathml/__init__.py::apply_xsl",
+        "sympy/core/compatibility.py::u_decode",
+        "sympy/categories/baseclasses.py::domain",
+        "sympy/abc.py::clashing",
+        "sympy/__init__.py::enable_warnings",
+        "sympy/utilities/pytest.py::raises"
+      ],
+      "expected_files": [
+        "sympy/printing/mathml.py"
+      ],
+      "expected_symbols": [
+        "_print_Lambda"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "sympy__sympy-16281",
+      "rank": 1,
+      "func_rank": null,
+      "source_rank": 1,
+      "top": [
+        "sympy/printing/pretty/pretty.py",
+        "sympy/concrete/products.py",
+        "sympy/codegen/ast.py",
+        "isympy.py",
+        "release/fabfile.py",
+        "sympy/vector/tests/test_printing.py",
+        "sympy/physics/quantum/tests/test_printing.py",
+        "sympy/printing/pretty/tests/test_pretty.py"
+      ],
+      "top_symbols": [
+        "sympy/printing/pretty/pretty.py::pretty_print",
+        "sympy/concrete/products.py::_eval_is_zero",
+        "sympy/codegen/ast.py::decimal_dig",
+        "isympy.py::main",
+        "release/fabfile.py::prepare",
+        "sympy/vector/tests/test_printing.py::pretty",
+        "sympy/physics/quantum/tests/test_printing.py::pretty",
+        "sympy/printing/pretty/tests/test_pretty.py::pretty"
+      ],
+      "expected_files": [
+        "sympy/printing/pretty/pretty.py"
+      ],
+      "expected_symbols": [
+        "_print_Product"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "sympy__sympy-17022",
+      "rank": null,
+      "func_rank": null,
+      "source_rank": null,
+      "top": [
+        "sympy/printing/python.py",
+        "sympy/utilities/lambdify.py",
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/codegen/fnodes.py",
+        "sympy/plotting/experimental_lambdify.py",
+        "sympy/printing/fcode.py",
+        "sympy/core/sympify.py",
+        "sympy/strategies/branch/core.py"
+      ],
+      "top_symbols": [
+        "sympy/printing/python.py::PythonPrinter",
+        "sympy/utilities/lambdify.py::_lambdifygenerated",
+        "sympy/matrices/expressions/matexpr.py::GenericIdentity",
+        "sympy/codegen/fnodes.py::allocated",
+        "sympy/plotting/experimental_lambdify.py::lambdify",
+        "sympy/printing/fcode.py::__init__",
+        "sympy/core/sympify.py::_convert_numpy_types",
+        "sympy/strategies/branch/core.py::debug"
+      ],
+      "expected_files": [
+        "sympy/printing/pycode.py"
+      ],
+      "expected_symbols": [
+        "_print_MatrixBase"
+      ],
+      "in_top8": false
+    },
+    {
+      "instance_id": "sympy__sympy-22005",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "sympy/solvers/polysys.py",
+        "sympy/solvers/tests/test_polysys.py",
+        "sympy/printing/python.py",
+        "sympy/testing/pytest.py",
+        "sympy/physics/units/__init__.py",
+        "sympy/parsing/autolev/__init__.py",
+        "sympy/__init__.py",
+        "sympy/parsing/latex/__init__.py"
+      ],
+      "top_symbols": [
+        "sympy/solvers/polysys.py::_is_univariate",
+        "sympy/solvers/tests/test_polysys.py::test_solve_poly_system",
+        "sympy/printing/python.py::PythonPrinter",
+        "sympy/testing/pytest.py::raises",
+        "sympy/physics/units/__init__.py::find_unit",
+        "sympy/parsing/autolev/__init__.py::parse_autolev",
+        "sympy/__init__.py::enable_warnings",
+        "sympy/parsing/latex/__init__.py::parse_latex"
+      ],
+      "expected_files": [
+        "sympy/solvers/polysys.py"
+      ],
+      "expected_symbols": [
+        "_solve_reduced_system"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "sympy__sympy-23117",
+      "rank": 1,
+      "func_rank": 1,
+      "source_rank": 1,
+      "top": [
+        "sympy/tensor/array/ndim_array.py",
+        "sympy/tensor/array/dense_ndim_array.py",
+        "sympy/tensor/functions.py",
+        "sympy/codegen/fnodes.py",
+        "sympy/codegen/ast.py",
+        "sympy/unify/usympy.py",
+        "sympy/utilities/lambdify.py",
+        "sympy/core/sympify.py"
+      ],
+      "top_symbols": [
+        "sympy/tensor/array/ndim_array.py::_handle_ndarray_creation_inputs",
+        "sympy/tensor/array/dense_ndim_array.py::_new",
+        "sympy/tensor/functions.py::shape",
+        "sympy/codegen/fnodes.py::reshape",
+        "sympy/codegen/ast.py::_construct",
+        "sympy/unify/usympy.py::construct",
+        "sympy/utilities/lambdify.py::_recursive_to_string",
+        "sympy/core/sympify.py::_convert_numpy_types"
+      ],
+      "expected_files": [
+        "sympy/tensor/array/ndim_array.py"
+      ],
+      "expected_symbols": [
+        "__new__",
+        "_check_special_bounds",
+        "f"
+      ],
+      "in_top8": true
+    },
+    {
+      "instance_id": "sympy__sympy-23262",
+      "rank": 3,
+      "func_rank": null,
+      "source_rank": 3,
+      "top": [
+        "sympy/printing/python.py",
+        "sympy/codegen/ast.py",
+        "sympy/utilities/lambdify.py",
+        "sympy/printing/c.py",
+        "sympy/parsing/latex/__init__.py",
+        "sympy/utilities/mathml/__init__.py",
+        "sympy/physics/units/__init__.py",
+        "sympy/__init__.py"
+      ],
+      "top_symbols": [
+        "sympy/printing/python.py::PythonPrinter",
+        "sympy/codegen/ast.py::_mk_Tuple",
+        "sympy/utilities/lambdify.py::_lambdifygenerated",
+        "sympy/printing/c.py::get_math_macros",
+        "sympy/parsing/latex/__init__.py::parse_latex",
+        "sympy/utilities/mathml/__init__.py::apply_xsl",
+        "sympy/physics/units/__init__.py::find_unit",
+        "sympy/__init__.py::enable_warnings"
+      ],
+      "expected_files": [
+        "sympy/utilities/lambdify.py"
+      ],
+      "expected_symbols": [
+        "_recursive_to_string"
+      ],
+      "in_top8": true
+    }
+  ]
+}

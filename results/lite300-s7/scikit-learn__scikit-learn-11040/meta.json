@@ -1,0 +1,423 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-11040",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "96a02f3934952d486589dddd3f00b40d5a5ab5f2",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897975.5680768
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897977.8716598
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897982.796441
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791897999.9353085
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791898017.1862767
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791898213.3084252
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791898226.2207894
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791898248.505919
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sklearn/neighbors/base.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791897940.455079,
+  "elapsed_s": 316.34,
+  "plan": "Step 1: Root cause — load_data() does not validate operand types before computing.\nStep 2: Edit bench_covertype.py — in load_data(), apply: raise TypeError when either operand is not an int/float.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sklearn/utils/validation.py",
+      "symbol": "sklearn/utils/validation.py::check_X_y",
+      "symbols": [
+        "check_X_y",
+        "column_or_1d",
+        "_num_samples",
+        "_shape_repr"
+      ],
+      "line_range": [
+        568,
+        685
+      ],
+      "score": 0.5094,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.7672,
+        "vector": 0.9803,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: y; body matches report terms: message, might, this, validation)"
+    },
+    {
+      "file": "sklearn/preprocessing/data.py",
+      "symbol": "sklearn/preprocessing/data.py::fit",
+      "symbols": [
+        "fit",
+        "fit",
+        "fit",
+        "fit"
+      ],
+      "line_range": [
+        1052,
+        1077
+      ],
+      "score": 0.5606,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4823,
+        "vector": 0.6877,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; signature parameter matches report: y; body matches report terms: parameter, error, cannot, typeerror; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sklearn/utils/__init__.py",
+      "symbol": "sklearn/utils/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "Bunch",
+        "__setstate__",
+        "axis0_safe_slice"
+      ],
+      "line_range": [
+        50,
+        52
+      ],
+      "score": 0.5368,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1393,
+        "vector": 0.4747,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "sklearn/__init__.py",
+      "symbol": "sklearn/__init__.py::setup_module",
+      "symbols": [
+        "setup_module"
+      ],
+      "line_range": [
+        81,
+        94
+      ],
+      "score": 0.5922,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2848,
+        "vector": 0.6337,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: sklearn, sure, could, learn)"
+    },
+    {
+      "file": "sklearn/__check_build/__init__.py",
+      "symbol": "sklearn/__check_build/__init__.py::raise_build_error",
+      "symbols": [
+        "raise_build_error"
+      ],
+      "line_range": [
+        16,
+        31
+      ],
+      "score": 0.5754,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3143,
+        "vector": 0.432,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: this, error, sklearn, learn)"
+    },
+    {
+      "file": "sklearn/_build_utils/__init__.py",
+      "symbol": "sklearn/_build_utils/__init__.py::get_blas_info",
+      "symbols": [
+        "get_blas_info",
+        "atlas_not_found",
+        "maybe_cythonize_extensions",
+        "build_from_c_and_cpp_files"
+      ],
+      "line_range": [
+        19,
+        42
+      ],
+      "score": 0.5376,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2075,
+        "vector": 0.3391,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: this, should, that)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6525,
+  "laya_scores": {
+    "fix_quality": 1.4675,
+    "matches_issue": 0.611,
+    "safe_to_apply": 0.5315,
+    "composite": 0.6525,
+    "secrets_or_danger": 0.0892,
+    "logic_drift": 0.2945,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, no impact on security.\n- PERFORMANCE: PASS, negligible overhead for input validation.\n- ROBUSTNESS: PASS, prevents opaque Cython errors with clear Python-level exceptions.\n- MINIMAL DIFF / YAGNI: PASS, appropriate fix for the reported bug.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport numpy as np\nfrom sklearn.neighbors import NearestNeighbors\nfrom sklearn.datasets import make_blobs\n\ndef test_n_neighbors_float_init_repro():\n    \"\"\"Reproduce bug: NearestNeighbors fails when n_neighbors is a float.\"\"\"\n    X, _ = make_blobs(n_samples=10, n_features=2, random_state=42)\n    # This should ideally be caught by validation rather than crashing in C/Cython\n    neighbors = NearestNeighbors(n_neighbors=3.0)\n    neighbors.fit(X)\n    # The original bug report indicates this triggers the TypeError\n    neighbors.kneighbors(X)\n\ndef test_n_neighbors_float_method_call():\n    \"\"\"Verify that n_neighbors as a float in kneighbors() method is handled.\"\"\"\n    X, _ = make_blobs(n_samples=10, n_features=2, random_state=42)\n    neighbors = NearestNeighbors(n_neighbors=3)\n    neighbors.fit(X)\n    # The fix should ensure this also works/validates correctly\n    neighbors.kneighbors(X, n_neighbors=3.0)\n\ndef test_n_neighbors_invalid_type():\n    \"\"\"Verify that non-numeric types raise an appropriate TypeError.\"\"\"\n    X, _ = make_blobs(n_samples=10, n_features=2, random_state=42)\n    neighbors = NearestNeighbors()\n    neighbors.fit(X)\n    with pytest.raises(TypeError, match=\"n_neighbors must be an integer\"):\n        neighbors.kneighbors(X, n_neighbors=\"3\")\n\ndef test_n_neighbors_non_positive():\n    \"\"\"Verify boundary condition for invalid neighbor count (non-positive).\"\"\"\n    X, _ = make_blobs(n_samples=10, n_features=2, random_state=42)\n    neighbors = NearestNeighbors(n_neighbors=0)\n    # Often scikit-learn validation catches this as a ValueError\n    with pytest.raises(ValueError):\n        neighbors.fit(X)\n\ndef test_n_neighbors_greater_than_samples():\n    \"\"\"Verify boundary condition where requested neighbors > available samples.\"\"\"\n    X, _ = make_blobs(n_samples=5, n_features=2, random_state=42)\n    neighbors = NearestNeighbors(n_neighbors=10)\n    neighbors.fit(X)\n    with pytest.raises(ValueError, match=\"Expected n_neighbors <= n_samples\"):\n        neighbors.kneighbors(X)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -327,6 +327,9 @@\n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n\n+        if not isinstance(n_neighbors, (int, np.integer)):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n         if n_neighbors <= 0:\n             raise ValueError(\"Expected n_neighbors > 0. Got %d\" % n_neighbors)\n         if n_neighbors > train_size:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sklearn/neighbors/base.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.6838,
+        "matches_issue": 0.7178,
+        "safe_to_apply": 0.5672,
+        "composite": 0.7422000000000001,
+        "secrets_or_danger": 0.0851,
+        "logic_drift": 0.4277,
+        "flagged": false
+      },
+      "laya_combined": 0.7422,
+      "repro": {
+        "available": false,
+        "before_ok": null,
+        "after_ok": null,
+        "regressions": 0,
+        "reason": "image not present locally: swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest",
+        "repro_target": "",
+        "before_exit": null,
+        "after_exit": null
+      },
+      "regression_count": 0,
+      "combined_score": 0.0074,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.85,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -173,6 +173,9 @@\n         if n_neighbors is not None:\n+            if not isinstance(n_neighbors, (int, float)):\n+                raise TypeError(\"n_neighbors must be an integer or a float, \"\n+                                \"got %s.\" % type(n_neighbors))\n+            n_neighbors = int(n_neighbors)\n             self.n_neighbors = n_neighbors\n         elif not hasattr(self, 'n_neighbors'):\n             self.n_neighbors = 5",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c3\\sklearn\\neighbors\\base.py: SyntaxError line 173: expected an indented block after 'if' statement on line 172"
+      ],
+      "changed_files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6049,
+        "matches_issue": 0.7257,
+        "safe_to_apply": 0.5572,
+        "composite": 0.72195,
+        "secrets_or_danger": 0.0881,
+        "logic_drift": 0.2215,
+        "flagged": false
+      },
+      "laya_combined": 0.7219,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 36.45,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -140,6 +140,9 @@\n     def _check_weights(self, weights):\n         return _check_weights(weights)\n\n+    def _check_n_neighbors(self, n_neighbors):\n+        if n_neighbors is not None and not isinstance(n_neighbors, int):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n     def fit(self, X, y=None):\n         \"\"\"Fit the model using X as training data as input\n\n@@ -151,6 +154,7 @@\n         self._fit_X = check_array(X, accept_sparse='csr',\n                                   dtype=self._fit_X_dtype)\n         self._y = y\n+        self._check_n_neighbors(self.n_neighbors)\n         return self\n\n     def kneighbors(self, X=None, n_neighbors=None, return_distance=True):\n@@ -176,6 +180,7 @@\n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n\n+        self._check_n_neighbors(n_neighbors)\n         if n_neighbors > self._fit_X.shape[0]:\n             raise ValueError(\n                 \"Expected n_neighbors <= n_samples,  \"",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c2\\sklearn\\neighbors\\base.py: SyntaxError line 140: invalid syntax"
+      ],
+      "changed_files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5855,
+        "matches_issue": 0.7078,
+        "safe_to_apply": 0.5986,
+        "composite": 0.7229749999999999,
+        "secrets_or_danger": 0.1309,
+        "logic_drift": 0.4205,
+        "flagged": false
+      },
+      "laya_combined": 0.723,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0011,
+      "rank_reason": "logistic",
+      "elapsed_s": 38.67,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -327,6 +327,9 @@\n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n\n+        if not isinstance(n_neighbors, (int, np.integer)):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n         if n_neighbors <= 0:\n             raise ValueError(\"Expected n_neighbors > 0. Got %d\" % n_neighbors)\n         if n_neighbors > train_size:",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\scikit-learn__scikit-learn-11040-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sklearn/neighbors/base.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sklearn/neighbors/base.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.6838,
+      "matches_issue": 0.7178,
+      "safe_to_apply": 0.5672,
+      "composite": 0.7422000000000001,
+      "secrets_or_danger": 0.0851,
+      "logic_drift": 0.4277,
+      "flagged": false
+    },
+    "laya_combined": 0.7422,
+    "repro": {
+      "available": false,
+      "before_ok": null,
+      "after_ok": null,
+      "regressions": 0,
+      "reason": "image not present locally: swebench/sweb.eval.x86_64.scikit-learn_1776_scikit-learn-11040:latest",
+      "repro_target": "",
+      "before_exit": null,
+      "after_exit": null
+    },
+    "regression_count": 0,
+    "combined_score": 0.0074,
+    "rank_reason": "logistic",
+    "elapsed_s": 36.85,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sklearn/neighbors/base.py b/sklearn/neighbors/base.py\nindex 3e5e729..2d0636a 100644\n--- a/sklearn/neighbors/base.py\n+++ b/sklearn/neighbors/base.py\n@@ -327,6 +327,9 @@ class KNeighborsMixin(object):\n \n         if n_neighbors is None:\n             n_neighbors = self.n_neighbors\n+        if not isinstance(n_neighbors, (int, np.integer)):\n+            raise TypeError(\"n_neighbors must be an integer, got %s\" % type(n_neighbors))\n+\n \n         if X is not None:\n             query_is_train = False\n",
+  "offline_calls": 2
+}

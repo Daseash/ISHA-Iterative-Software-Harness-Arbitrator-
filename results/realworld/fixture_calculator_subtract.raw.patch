@@ -1,0 +1,11 @@
+--- a/calculator.py
++++ b/calculator.py
+@@ -18,8 +18,7 @@ class Calculator:
+     def subtract(self, a: float, b: float) -> float:
+         """Return the difference of two numbers.
+ 
+-        BUG: uses + instead of -
+-        """
+-        return a + b  # BUG: should be a - b
++        """
++        return a - b

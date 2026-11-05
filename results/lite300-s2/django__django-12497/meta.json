@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12497",
+  "repo": "django/django",
+  "base_commit": "a4881f5e5d7ee38b7e83301331a0b4962845ef8a",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456617.5198057
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456624.686212
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456642.291115
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456645.7886481
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456702.9521167
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791456947.665949
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/fields/related.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791456537.9371254,
+  "elapsed_s": 417.47,
+  "plan": "Step 1: The root cause\nThe error message hint is triggered by validation logic within the ManyToManyField configuration check (typically found in `django/db/models/fields/related.py` inside `ManyToManyField.check`). The current implementation incorrectly instructs users to use `ForeignKey` with `symmetrical` and `through` arguments, which are valid parameters for `ManyToManyField` but not `ForeignKey`. Additionally, `symmetrical=False` is no longer a requirement for recursive relationships with intermediary models since Django 3.0.\n\nStep 2: Exact changes to make\nLocate the `ManyToManyField.check` method (and specifically the validation logic handling the `through` model constraints) in `django/db/models/fields/related.py`. \n\nModify the `hint` parameter in the `checks.Error` or `checks.Warning` object related to the intermediary model validation. \n- Change `ForeignKey(...)` to `ManyToManyField(...)`.\n- Remove the `, symmetrical=False` part from the hint string, as it is obsolete.\n\nFile: `django/db/models/fields/related.py`\nLocate the code block containing the message:\n`hint=('If you want to create a recursive relationship, ' 'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").' % ...)`\n\nUpdate it to something like:\n`hint=('If you want to create a recursive relationship, ' 'use ManyToManyField(\"%s\", through=\"%s\").' % ...)`",
+  "planner_confidence": 0.95,
+  "localization": [
+    {
+      "file": "django/db/models/fields/related.py",
+      "symbol": "django/db/models/fields/related.py::OneToOneField",
+      "symbols": [
+        "OneToOneField",
+        "__init__",
+        "set_managed",
+        "_check_on_delete"
+      ],
+      "line_range": [
+        1027,
+        1076
+      ],
+      "score": 0.5075,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9922,
+        "vector": 0.4954,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (signature parameter matches report: ForeignKey; body matches report terms: there, field, description, since)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "_check_backend_specific_checks",
+        "_check_validators",
+        "_check_deprecation_details"
+      ],
+      "line_range": [
+        320,
+        337
+      ],
+      "score": 0.4278,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4985,
+        "vector": 0.8597,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: field, have, this, hint)"
+    },
+    {
+      "file": "django/db/models/fields/reverse_related.py",
+      "symbol": "django/db/models/fields/reverse_related.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "target_field",
+        "related_model"
+      ],
+      "line_range": [
+        260,
+        280
+      ],
+      "score": 0.4872,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.3096,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (signature parameter matches report: symmetrical, through; body matches report terms: field, with, through, model)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::stringfilter",
+      "symbols": [
+        "stringfilter",
+        "stringformat",
+        "truncatewords",
+        "_property_resolver"
+      ],
+      "line_range": [
+        35,
+        55
+      ],
+      "score": 0.51,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.153,
+        "vector": 0.1809,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: will, arguments, when)"
+    },
+    {
+      "file": "django/contrib/gis/utils/layermapping.py",
+      "symbol": "django/contrib/gis/utils/layermapping.py::check_unique",
+      "symbols": [
+        "check_unique",
+        "feature_kwargs",
+        "verify_ogr_field",
+        "verify_fk"
+      ],
+      "line_range": [
+        284,
+        297
+      ],
+      "score": 0.381,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.6704,
+        "vector": 0.1117,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: keyword, field, with, error)"
+    },
+    {
+      "file": "tests/m2m_through/models.py",
+      "symbol": "tests/m2m_through/models.py::Group",
+      "symbols": [
+        "Group",
+        "Membership",
+        "CustomMembership",
+        "TestNoDefaultsOrNulls"
+      ],
+      "line_range": [
+        17,
+        33
+      ],
+      "score": 0.4411,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.125,
+        "vector": 0.5264,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: field, manytomanyfield, through, model)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.7276250000000001,
+  "laya_scores": {
+    "fix_quality": 1.5664,
+    "matches_issue": 0.779,
+    "safe_to_apply": 0.5651,
+    "composite": 0.7276250000000001,
+    "secrets_or_danger": 0.292,
+    "logic_drift": 0.2897,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, No impact on performance.\n- ROBUSTNESS: PASS, Corrects an inaccurate error message and removes deprecated advice.\n- PONYTAIL / YAGNI: PASS, Necessary cleanup of existing error messaging.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.apps import apps\nfrom django.core import checks\nfrom django.db import models\nfrom django.db.models import ManyToManyField\nfrom django.test import TestCase\n\nclass M2MThroughErrorTest(TestCase):\n    \"\"\"\n    Test the error hint in ManyToManyField validation when using \n    intermediary models with more than 2 ForeignKeys.\n    \"\"\"\n\n    def test_m2m_hint_text_reproduction(self):\n        class ThroughModel(models.Model):\n            # 3 ForeignKeys trigger the error condition\n            f1 = models.ForeignKey('Target', models.CASCADE, related_name='f1')\n            f2 = models.ForeignKey('Target', models.CASCADE, related_name='f2')\n            f3 = models.ForeignKey('Target', models.CASCADE, related_name='f3')\n\n        class Target(models.Model):\n            m2m = ManyToManyField('Target', through=ThroughModel)\n\n        errors = Target.m2m.field.check()\n        \n        # Identify the specific error by ID (e.g., fields.E336)\n        error = next((e for e in errors if e.id == 'fields.E336'), None)\n        assert error is not None, \"Expected error fields.E336 not found\"\n        \n        # REPRODUCTION: This assertion fails before the fix\n        # The old hint contains \"ForeignKey\" and \"symmetrical=False\"\n        assert \"ManyToManyField\" in error.hint\n        assert \"ForeignKey\" not in error.hint\n        assert \"symmetrical=False\" not in error.hint\n\n    def test_edge_case_standard_m2m(self):\n        \"\"\"Standard M2M should not trigger the error.\"\"\"\n        class A(models.Model):\n            m2m = ManyToManyField('self')\n        \n        errors = A.m2m.field.check()\n        assert not any(e.id == 'fields.E336' for e in errors)\n\n    def test_edge_case_through_fields_defined(self):\n        \"\"\"If through_fields is set, it shouldn't trigger this specific hint.\"\"\"\n        class ThroughModel(models.Model):\n            a = models.ForeignKey('Target', models.CASCADE, related_name='a')\n            b = models.ForeignKey('Target', models.CASCADE, related_name='b')\n            c = models.ForeignKey('Target', models.CASCADE, related_name='c')\n\n        class Target(models.Model):\n            m2m = ManyToManyField('Target', through=ThroughModel, through_fields=('a', 'b'))\n\n        errors = Target.m2m.field.check()\n        # Should be valid configuration\n        assert not any(e.id == 'fields.E336' for e in errors)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex 8ddbb5ba68..e0f8f00322 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):\n                              \"through_fields keyword argument.\") % (self, from_model_name),\n                             hint=(\n                                 'If you want to create a recursive relationship, '\n-                                'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").'\n+                        'use ManyToManyField(\"%s\", through=\"%s\").'\n                             ) % (\n                                 RECURSIVE_RELATIONSHIP_CONSTANT,\n                                 relationship_model_name,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12497-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5664,
+        "matches_issue": 0.779,
+        "safe_to_apply": 0.5651,
+        "composite": 0.7276250000000001,
+        "secrets_or_danger": 0.292,
+        "logic_drift": 0.2897,
+        "flagged": false
+      },
+      "laya_combined": 0.7276,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 130.23,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex 8ddbb5ba68..e0f8f00322 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):\n                              \"through_fields keyword argument.\") % (self, from_model_name),\n                             hint=(\n                                 'If you want to create a recursive relationship, '\n-                                'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").'\n+                        'use ManyToManyField(\"%s\", through=\"%s\").'\n                             ) % (\n                                 RECURSIVE_RELATIONSHIP_CONSTANT,\n                                 relationship_model_name,\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12497-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/fields/related.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5664,
+        "matches_issue": 0.779,
+        "safe_to_apply": 0.5651,
+        "composite": 0.7276250000000001,
+        "secrets_or_danger": 0.292,
+        "logic_drift": 0.2897,
+        "flagged": false
+      },
+      "laya_combined": 0.7276,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0069,
+      "rank_reason": "logistic",
+      "elapsed_s": 127.2,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1071,7 +1071,7 @@\n             errors.append(\n                 checks.Error(\n                     'The intermediary model %s has more than one ForeignKey to %s, which is ambiguous '\n                     'with a ManyToManyField.' % (self.remote_field.through._meta.object_name, self.model._meta.object_name),\n-                    hint='If you want to create a recursive relationship, use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").' % (\n+                    hint='If you want to create a recursive relationship, use ManyToManyField(\"%s\", through=\"%s\").' % (\n                         RECURSIVE_RELATIONSHIP_CONSTANT, self.remote_field.through._meta.label,\n                     ),\n                     obj=self,",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12497-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/fields/related.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 0.8534,
+        "matches_issue": 0.7396,
+        "safe_to_apply": 0.6354,
+        "composite": 0.5570999999999999,
+        "secrets_or_danger": 0.1824,
+        "logic_drift": 0.3441,
+        "flagged": false
+      },
+      "laya_combined": 0.5571,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0061,
+      "rank_reason": "logistic",
+      "elapsed_s": 137.93,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex 8ddbb5ba68..e0f8f00322 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):\n                              \"through_fields keyword argument.\") % (self, from_model_name),\n                             hint=(\n                                 'If you want to create a recursive relationship, '\n-                                'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").'\n+                        'use ManyToManyField(\"%s\", through=\"%s\").'\n                             ) % (\n                                 RECURSIVE_RELATIONSHIP_CONSTANT,\n                                 relationship_model_name,\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12497-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/fields/related.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/fields/related.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5664,
+      "matches_issue": 0.779,
+      "safe_to_apply": 0.5651,
+      "composite": 0.7276250000000001,
+      "secrets_or_danger": 0.292,
+      "logic_drift": 0.2897,
+      "flagged": false
+    },
+    "laya_combined": 0.7276,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0069,
+    "rank_reason": "logistic",
+    "elapsed_s": 130.23,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex 8ddbb5b..e0f8f00 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):\n                              \"through_fields keyword argument.\") % (self, from_model_name),\n                             hint=(\n                                 'If you want to create a recursive relationship, '\n-                                'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").'\n+                        'use ManyToManyField(\"%s\", through=\"%s\").'\n                             ) % (\n                                 RECURSIVE_RELATIONSHIP_CONSTANT,\n                                 relationship_model_name,\n",
+  "offline_calls": 0
+}

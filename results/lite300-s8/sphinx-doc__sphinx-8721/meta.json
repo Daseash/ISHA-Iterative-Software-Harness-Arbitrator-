@@ -1,0 +1,403 @@
+{
+  "instance_id": "sphinx-doc__sphinx-8721",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "82ef497a8c88f0f6e50d84520e7276bfbf65025d",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960376.700376
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960377.5316517
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960395.558443
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960398.1299355
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960404.354362
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791960440.2266326
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/ext/viewcode.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/ext/viewcode.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791960354.8884554,
+  "elapsed_s": 93.15,
+  "plan": "if app.builder.name.startswith(\"epub\") and not app.builder.env.config.viewcode_enable_epub:\n        return",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "sphinx/ext/viewcode.py",
+      "symbol": "sphinx/ext/viewcode.py::_get_full_modname",
+      "symbols": [
+        "_get_full_modname",
+        "env_merge_info",
+        "missing_reference",
+        "get_module_filename"
+      ],
+      "line_range": [
+        35,
+        52
+      ],
+      "score": 0.6017,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3336,
+        "vector": 0.611,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: module, should, viewcode, sphinx)"
+    },
+    {
+      "file": "sphinx/builders/html/__init__.py",
+      "symbol": "sphinx/builders/html/__init__.py::load",
+      "symbols": [
+        "load",
+        "dump",
+        "init_css_files",
+        "init_js_files"
+      ],
+      "line_range": [
+        138,
+        151
+      ],
+      "score": 0.5632,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3337,
+        "vector": 0.2895,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: sphinx, info, version)"
+    },
+    {
+      "file": "sphinx/builders/latex/__init__.py",
+      "symbol": "sphinx/builders/latex/__init__.py::copy_support_files",
+      "symbols": [
+        "copy_support_files",
+        "default_latex_documents",
+        "setup",
+        "init_context"
+      ],
+      "line_range": [
+        380,
+        411
+      ],
+      "score": 0.5556,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2359,
+        "vector": 0.4306,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: context, make, info, extra)"
+    },
+    {
+      "file": "sphinx/domains/__init__.py",
+      "symbol": "sphinx/domains/__init__.py::resolve_xref",
+      "symbols": [
+        "resolve_xref",
+        "resolve_any_xref",
+        "Index",
+        "__init__"
+      ],
+      "line_range": [
+        318,
+        335
+      ],
+      "score": 0.5599,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3162,
+        "vector": 0.2991,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: should, even, sphinx, environment)"
+    },
+    {
+      "file": "sphinx/transforms/__init__.py",
+      "symbol": "sphinx/transforms/__init__.py::MoveModuleTargets",
+      "symbols": [
+        "MoveModuleTargets",
+        "AutoIndexUpgrader",
+        "ExtraTranslatableNodes",
+        "DoctreeReadEvent"
+      ],
+      "line_range": [
+        121,
+        141
+      ],
+      "score": 0.5635,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2523,
+        "vector": 0.4617,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: module, sphinx, default, python)"
+    },
+    {
+      "file": "sphinx/ext/autosummary/__init__.py",
+      "symbol": "sphinx/ext/autosummary/__init__.py::get_import_prefixes_from_env",
+      "symbols": [
+        "get_import_prefixes_from_env",
+        "setup",
+        "autosummary_table_visit_html",
+        "create_documenter"
+      ],
+      "line_range": [
+        604,
+        624
+      ],
+      "score": 0.5652,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1877,
+        "vector": 0.6103,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: module, context, environment, python)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.8095749999999999,
+  "laya_scores": {
+    "fix_quality": 1.7331,
+    "matches_issue": 0.8079,
+    "safe_to_apply": 0.6973,
+    "composite": 0.8095749999999999,
+    "secrets_or_danger": 0.2467,
+    "logic_drift": 0.3085,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS - No security-sensitive APIs, inputs, or credentials are touched by this check.\n- PERFORMANCE: PASS - Performs a simple string prefix and config lookup with no loop or query overhead.\n- ROBUSTNESS: PASS - Correctly guards page collection based on builder name and configuration without side effects.\n- MINIMAL DIFF / YAGNI: PASS - Minimal changes directly addressing the reported bug without unnecessary scaffolding.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.ext.viewcode import doctree_read\nfrom docutils import nodes\n\n\nclass MockBuilder:\n    def __init__(self, name, env):\n        self.name = name\n        self.env = env\n\n\nclass MockConfig:\n    def __init__(self, viewcode_enable_epub):\n        self.viewcode_enable_epub = viewcode_enable_epub\n\n\nclass MockEnv:\n    def __init__(self, viewcode_enable_epub):\n        self.config = MockConfig(viewcode_enable_epub)\n\n\nclass MockApp:\n    def __init__(self, builder_name, viewcode_enable_epub):\n        self.env = MockEnv(viewcode_enable_epub)\n        self.builder = MockBuilder(builder_name, self.env)\n\n\ndef test_viewcode_epub_disabled_skips_processing():\n    \"\"\"Test that viewcode skips processing when builder is epub and viewcode_enable_epub is False.\"\"\"\n    app = MockApp(\"epub\", viewcode_enable_epub=False)\n    doctree = nodes.document(settings=None)\n    \n    # When viewcode_enable_epub=False for an epub builder, it should return early\n    # without attaching `_viewcode_modules` to the environment.\n    doctree_read(app, doctree)\n    \n    assert not hasattr(app.builder.env, \"_viewcode_modules\")\n\n\ndef test_viewcode_epub_enabled_processes_modules():\n    \"\"\"Test that viewcode processes modules when builder is epub and viewcode_enable_epub is True.\"\"\"\n    app = MockApp(\"epub\", viewcode_enable_epub=True)\n    doctree = nodes.document(settings=None)\n    \n    doctree_read(app, doctree)\n    \n    assert hasattr(app.builder.env, \"_viewcode_modules\")\n\n\ndef test_viewcode_html_processes_modules():\n    \"\"\"Test that viewcode processes modules normally for html builders regardless of epub config.\"\"\"\n    app = MockApp(\"html\", viewcode_enable_epub=False)\n    doctree = nodes.document(settings=None)\n    \n    doctree_read(app, doctree)\n    \n    assert hasattr(app.builder.env, \"_viewcode_modules\")\n\n\ndef test_viewcode_singlehtml_skips_processing():\n    \"\"\"Test that singlehtml builder always skips viewcode processing.\"\"\"\n    app = MockApp(\"singlehtml\", viewcode_enable_epub=False)\n    doctree = nodes.document(settings=None)\n    \n    doctree_read(app, doctree)\n    \n    assert not hasattr(app.builder.env, \"_viewcode_modules\")",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\nindex a7d52a91c..3d90763db 100644\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -179,6 +179,8 @@ def should_generate_module_page(app: Sphinx, modname: str) -> bool:\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8721-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/ext/viewcode.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/viewcode.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7331,
+        "matches_issue": 0.8079,
+        "safe_to_apply": 0.6973,
+        "composite": 0.8095749999999999,
+        "secrets_or_danger": 0.2467,
+        "logic_drift": 0.3085,
+        "flagged": false
+      },
+      "laya_combined": 0.8096,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0063,
+      "rank_reason": "logistic",
+      "elapsed_s": 9.0,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\nindex a7d52a91c..9d3636aa4 100644\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -179,6 +179,8 @@ def should_generate_module_page(app: Sphinx, modname: str) -> bool:\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.builder.env.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8721-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: sphinx/ext/viewcode.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/ext/viewcode.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.8222,
+        "matches_issue": 0.8718,
+        "safe_to_apply": 0.8051,
+        "composite": 0.874775,
+        "secrets_or_danger": 0.3121,
+        "logic_drift": 0.2887,
+        "flagged": false
+      },
+      "laya_combined": 0.8748,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0056,
+      "rank_reason": "logistic",
+      "elapsed_s": 12.12,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8721-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "no-op patch: the diff only reformats the lines it touches (identical code on both sides once whitespace and comments are ignored) — it cannot fix anything, so change the actual logic"
+      ],
+      "changed_files": [
+        "sphinx/ext/viewcode.py"
+      ],
+      "added_lines": 0,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5618,
+        "matches_issue": 0.7997,
+        "safe_to_apply": 0.7755,
+        "composite": 0.78425,
+        "secrets_or_danger": 0.1377,
+        "logic_drift": 0.1922,
+        "flagged": false
+      },
+      "laya_combined": 0.7843,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 5.23,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\nindex a7d52a91c..3d90763db 100644\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -179,6 +179,8 @@ def should_generate_module_page(app: Sphinx, modname: str) -> bool:\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8721-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: sphinx/ext/viewcode.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/ext/viewcode.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.7331,
+      "matches_issue": 0.8079,
+      "safe_to_apply": 0.6973,
+      "composite": 0.8095749999999999,
+      "secrets_or_danger": 0.2467,
+      "logic_drift": 0.3085,
+      "flagged": false
+    },
+    "laya_combined": 0.8096,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0063,
+    "rank_reason": "logistic",
+    "elapsed_s": 9.0,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/ext/viewcode.py b/sphinx/ext/viewcode.py\nindex a7d52a9..3d90763 100644\n--- a/sphinx/ext/viewcode.py\n+++ b/sphinx/ext/viewcode.py\n@@ -179,6 +179,8 @@ def should_generate_module_page(app: Sphinx, modname: str) -> bool:\n \n \n def collect_pages(app: Sphinx) -> Generator[Tuple[str, Dict[str, Any], str], None, None]:\n+    if app.builder.name.startswith('epub') and not app.config.viewcode_enable_epub:\n+        return\n     env = app.builder.env\n     if not hasattr(env, '_viewcode_modules'):\n         return\n",
+  "offline_calls": 0
+}

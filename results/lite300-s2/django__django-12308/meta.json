@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-12308",
+  "repo": "django/django",
+  "base_commit": "2e0f04507b17362239ba49830d26fec504d46978",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455188.5251606
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455200.1636808
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455232.2501643
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455242.7658749
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455277.9618158
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791455582.7994344
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/contrib/admin/utils.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791455035.9646285,
+  "elapsed_s": 554.65,
+  "plan": "from django.db.models import JSONField\n# ...\nif isinstance(field, JSONField):\n    import json\n    return json.dumps(value)",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/admin/utils.py",
+      "symbol": "django/contrib/admin/utils.py::display_for_field",
+      "symbols": [
+        "display_for_field",
+        "prepare_lookup_value",
+        "quote",
+        "display_for_value"
+      ],
+      "line_range": [
+        380,
+        404
+      ],
+      "score": 0.5956,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3338,
+        "vector": 0.5175,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; body matches report terms: contrib, django, special, admin; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::JSONField",
+      "symbols": [
+        "JSONField",
+        "to_python",
+        "to_python",
+        "DurationField"
+      ],
+      "line_range": [
+        1226,
+        1278
+      ],
+      "score": 0.6331,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3991,
+        "vector": 0.6943,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: values, valid, dumps, json; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/postgres/fields/jsonb.py",
+      "symbol": "django/contrib/postgres/fields/jsonb.py::JSONField",
+      "symbols": [
+        "JSONField",
+        "KeyTransform",
+        "__init__",
+        "KeyTextTransform"
+      ],
+      "line_range": [
+        13,
+        24
+      ],
+      "score": 0.6033,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3419,
+        "vector": 0.5654,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: contrib, django, json; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__reduce__",
+      "symbols": [
+        "__reduce__",
+        "get_pk_value_on_save",
+        "validators",
+        "db_type"
+      ],
+      "line_range": [
+        550,
+        569
+      ],
+      "score": 0.6104,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5506,
+        "vector": 0.2313,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: values, example, case)"
+    },
+    {
+      "file": "django/core/signing.py",
+      "symbol": "django/core/signing.py::dumps",
+      "symbols": [
+        "dumps",
+        "loads",
+        "JSONSerializer",
+        "dumps"
+      ],
+      "line_range": [
+        93,
+        126
+      ],
+      "score": 0.6059,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.3685,
+        "vector": 0.5316,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: django, valid, json; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::fetch_command",
+      "symbols": [
+        "fetch_command",
+        "execute",
+        "call_command",
+        "autocomplete"
+      ],
+      "line_range": [
+        215,
+        246
+      ],
+      "score": 0.6566,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6473,
+        "vector": 0.4151,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: django, call, directly, admin)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.6801,
+  "laya_scores": {
+    "fix_quality": 1.4389,
+    "matches_issue": 0.6918,
+    "safe_to_apply": 0.5897,
+    "composite": 0.6801,
+    "secrets_or_danger": 0.3785,
+    "logic_drift": 0.287,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, no changes to execution flow or input sanitization.\n- PERFORMANCE: PASS, minimal overhead for a single field transformation in admin view.\n- ROBUSTNESS: PASS, leverages existing Django `prepare_value` logic which correctly handles JSON serialization and invalid input.\n- PONYTAIL / YAGNI: PASS, correctly uses existing framework utilities to resolve the display inconsistency.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nimport json\nfrom django.db import models\nfrom django.contrib.admin.utils import display_for_field\n\n# Reproduction test for JSONField display issue\ndef test_display_for_jsonfield_returns_json_string():\n    \"\"\"\n    Test that display_for_field returns a valid JSON string for a dict value,\n    rather than the Python representation (e.g., {'foo': 'bar'}).\n    \"\"\"\n    field = models.JSONField()\n    value = {\"foo\": \"bar\"}\n    \n    output = display_for_field(value, field, empty_value_display='')\n    \n    # The bug is that it currently returns \"{'foo': 'bar'}\" (Python string)\n    # The expected behavior is '{\"foo\": \"bar\"}' (Valid JSON)\n    assert output == '{\"foo\": \"bar\"}'\n\n# Edge case: Empty dictionary\ndef test_display_for_jsonfield_empty_dict():\n    field = models.JSONField()\n    value = {}\n    \n    output = display_for_field(value, field, empty_value_display='')\n    assert output == '{}'\n\n# Edge case: Numeric and Boolean values\ndef test_display_for_jsonfield_primitives():\n    field = models.JSONField()\n    \n    assert display_for_field(123, field, '') == '123'\n    assert display_for_field(True, field, '') == 'true'\n    assert display_for_field(None, field, '') == 'null'\n\n# Edge case: Nested structures\ndef test_display_for_jsonfield_nested():\n    field = models.JSONField()\n    value = {\"a\": [1, 2, {\"b\": \"c\"}]}\n    \n    output = display_for_field(value, field, '')\n    # Ensure it's valid JSON (double quotes for keys/strings)\n    assert output == '{\"a\": [1, 2, {\"b\": \"c\"}]}'",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex e4ddc8f017..f8339e4d29 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -379,6 +379,9 @@ def help_text_for_field(name, model):\n \n def display_for_field(value, field, empty_value_display):\n     from django.contrib.admin.templatetags.admin_list import _boolean_icon\n+    if isinstance(field, models.JSONField):\n+        from django.forms.fields import JSONField\n+        return JSONField().prepare_value(value)\n \n     if getattr(field, 'flatchoices', None):\n         return dict(field.flatchoices).get(value, empty_value_display)\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12308-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/admin/utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.4389,
+        "matches_issue": 0.6918,
+        "safe_to_apply": 0.5897,
+        "composite": 0.6801,
+        "secrets_or_danger": 0.3785,
+        "logic_drift": 0.287,
+        "flagged": false
+      },
+      "laya_combined": 0.6801,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 164.88,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -380,6 +380,9 @@\n     elif isinstance(field, models.FileField) and value:\n         return format_html('<a href=\"{}\">{}</a>', value.url, value)\n     else:\n+        from django.db.models import JSONField\n+        if isinstance(field, JSONField):\n+            return field.prepare_value(value)\n         return display_for_value(value, empty_value_display)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12308-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6518,
+        "matches_issue": 0.7762,
+        "safe_to_apply": 0.6579,
+        "composite": 0.771475,
+        "secrets_or_danger": 0.1356,
+        "logic_drift": 0.1473,
+        "flagged": false
+      },
+      "laya_combined": 0.7715,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 134.6,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -380,6 +380,9 @@\n     elif isinstance(field, models.FileField) and value:\n         return format_html('<a href=\"{}\">{}</a>', value.url, value)\n     else:\n+        if isinstance(field, models.JSONField):\n+            import json\n+            return json.dumps(value)\n         return display_for_value(value, empty_value_display)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12308-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/admin/utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.671,
+        "matches_issue": 0.7831,
+        "safe_to_apply": 0.6626,
+        "composite": 0.779175,
+        "secrets_or_danger": 0.0995,
+        "logic_drift": 0.1245,
+        "flagged": false
+      },
+      "laya_combined": 0.7792,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0065,
+      "rank_reason": "logistic",
+      "elapsed_s": 147.85,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.6,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": false,
+    "patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex e4ddc8f017..f8339e4d29 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -379,6 +379,9 @@ def help_text_for_field(name, model):\n \n def display_for_field(value, field, empty_value_display):\n     from django.contrib.admin.templatetags.admin_list import _boolean_icon\n+    if isinstance(field, models.JSONField):\n+        from django.forms.fields import JSONField\n+        return JSONField().prepare_value(value)\n \n     if getattr(field, 'flatchoices', None):\n         return dict(field.flatchoices).get(value, empty_value_display)\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-12308-c3",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/admin/utils.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/admin/utils.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.4389,
+      "matches_issue": 0.6918,
+      "safe_to_apply": 0.5897,
+      "composite": 0.6801,
+      "secrets_or_danger": 0.3785,
+      "logic_drift": 0.287,
+      "flagged": false
+    },
+    "laya_combined": 0.6801,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0072,
+    "rank_reason": "logistic",
+    "elapsed_s": 164.88,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex e4ddc8f..f8339e4 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -379,6 +379,9 @@ def help_text_for_field(name, model):\n \n def display_for_field(value, field, empty_value_display):\n     from django.contrib.admin.templatetags.admin_list import _boolean_icon\n+    if isinstance(field, models.JSONField):\n+        from django.forms.fields import JSONField\n+        return JSONField().prepare_value(value)\n \n     if getattr(field, 'flatchoices', None):\n         return dict(field.flatchoices).get(value, empty_value_display)\n",
+  "offline_calls": 0
+}

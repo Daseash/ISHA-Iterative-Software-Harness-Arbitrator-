@@ -1,0 +1,7 @@
+--- a/sympy/integrals/intpoly.py
++++ b/sympy/integrals/intpoly.py
+@@ -594,3 +594,3 @@
+     if separate:
+-        return list(poly_dict.values())
++        return [poly_dict[key] for key in sorted(poly_dict.keys(), key=str)]
+     return poly_dict

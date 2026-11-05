@@ -1,0 +1,14 @@
+diff --git a/sklearn/preprocessing/label.py b/sklearn/preprocessing/label.py
+index 61b8d4a..48eedda 100644
+--- a/sklearn/preprocessing/label.py
++++ b/sklearn/preprocessing/label.py
+@@ -93,6 +93,9 @@ class LabelEncoder(BaseEstimator, TransformerMixin):
+         self : returns an instance of self.
+         """
+         y = column_or_1d(y, warn=True)
++        if len(y) == 0:
++            return np.array([], dtype=int)
++
+         self.classes_ = np.unique(y)
+         return self
+ 

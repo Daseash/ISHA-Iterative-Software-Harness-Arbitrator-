@@ -1,0 +1,14 @@
+diff --git a/django/db/models/options.py b/django/db/models/options.py
+index f027a74976..9e3fe0cc40 100644
+--- a/django/db/models/options.py
++++ b/django/db/models/options.py
+@@ -155,6 +155,9 @@ class Options:
+         self.model_name = self.object_name.lower()
+         self.verbose_name = camel_case_to_spaces(self.object_name)
+ 
++        if self.ordering is None and not self.proxy and self.parents:
++            self.ordering = list(self.parents.keys())[0]._meta.ordering
++
+         # Store the original user-defined values for each option,
+         # for use when serializing the model definition
+         self.original_attrs = {}

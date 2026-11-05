@@ -1,0 +1,15 @@
+diff --git a/xarray/core/formatting.py b/xarray/core/formatting.py
+index 28eaae5f..b17cbdae 100644
+--- a/xarray/core/formatting.py
++++ b/xarray/core/formatting.py
+@@ -104,7 +104,9 @@ def format_timestamp(t):
+         datetime_str = str(t)
+ 
+     try:
+-        date_str, time_str = datetime_str.split()
++        units = var.attrs.get("units", None)
++        if units:
++            first_col += f", in {units}"
+     except ValueError:
+         # catch NaT and others that don't split nicely
+         return datetime_str

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "isha": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.mcp_server"
+      ],
+      "cwd": "/path/to/ISHA/isha-agent",
+      "env": {
+        "ISHA_MODE": "hybrid",
+        "PYTHONUTF8": "1"
+      }
+    }
+  }
+}
+

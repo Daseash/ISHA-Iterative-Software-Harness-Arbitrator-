@@ -1,0 +1,10 @@
+{"event": "start", "instance_id": "scikit-learn__scikit-learn-10508", "ts": 1791897486.6482613}
+{"event": "attempt", "n": 1, "ts": 1791897486.8414776}
+{"event": "model", "ts": 1791897517.9336112, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791897520.0491343, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791897527.1365514, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791897527.9270854, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791897542.736737, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791897613.4549773, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791897637.009633, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791897650.3159847}

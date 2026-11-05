@@ -1,0 +1,408 @@
+{
+  "instance_id": "django__django-15819",
+  "repo": "django/django",
+  "base_commit": "877c800f255ccaa7abde1fb944de45d1616f5cc9",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549112.5999687
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549116.8392892
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549162.2949114
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549169.064139
+    },
+    {
+      "role": "coder",
+      "model": "gpt-oss-120b",
+      "model_full": "groq/openai/gpt-oss-120b",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549257.8365707
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791549475.254352
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied via git apply --3way",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/contrib/gis/management/commands/inspectdb.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": false,
+    "git_ready": true
+  },
+  "started_at": 1791549016.2171593,
+  "elapsed_s": 466.49,
+  "plan": "# In django/core/management/commands/inspectdb.py\n# Inside the field loop:\nif field_type in ['ForeignKey', 'OneToOneField', 'ManyToManyField']:\n    # Determine the target model\n    # Check if this model/target_model pair has been seen before\n    # If yes, add: related_name='{field_name}' to the field_params",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/gis/management/commands/inspectdb.py",
+      "symbol": "django/contrib/gis/management/commands/inspectdb.py::Command",
+      "symbols": [
+        "Command",
+        "get_field_type"
+      ],
+      "line_range": [
+        4,
+        18
+      ],
+      "score": 0.5898,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0791,
+        "vector": 1.0,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: inspectdb, module, table)"
+    },
+    {
+      "file": "django/db/models/fields/related.py",
+      "symbol": "django/db/models/fields/related.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        98,
+        103
+      ],
+      "score": 0.5234,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.9397,
+        "vector": 0.7371,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: related_name; body matches report terms: related, related_name)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__str__",
+      "symbols": [
+        "__str__",
+        "_check_null_allowed_for_primary_keys",
+        "get_col",
+        "cached_col"
+      ],
+      "line_range": [
+        240,
+        249
+      ],
+      "score": 0.5676,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2434,
+        "vector": 0.5145,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: fields, model, models)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::find_commands",
+      "symbols": [
+        "find_commands",
+        "get_commands",
+        "load_command_class",
+        "fetch_command"
+      ],
+      "line_range": [
+        29,
+        41
+      ],
+      "score": 0.5327,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1856,
+        "vector": 0.3442,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: with, module, command)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::_load_serializers",
+      "symbols": [
+        "_load_serializers",
+        "sort_dependencies",
+        "BadSerializer",
+        "deserialize"
+      ],
+      "line_range": [
+        149,
+        166
+      ],
+      "score": 0.5442,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2804,
+        "vector": 0.2428,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, this, module)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::_setup",
+      "symbols": [
+        "_setup",
+        "USE_L10N",
+        "__setattr__",
+        "__init__"
+      ],
+      "line_range": [
+        63,
+        80
+      ],
+      "score": 0.5176,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1493,
+        "vector": 0.294,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: used, this, module)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.760275,
+  "laya_scores": {
+    "fix_quality": 1.6402,
+    "matches_issue": 0.756,
+    "safe_to_apply": 0.6449,
+    "composite": 0.760275,
+    "secrets_or_danger": 0.181,
+    "logic_drift": 0.2472,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, No input sanitization issues introduced; this is a metadata generation helper.\n- PERFORMANCE: PASS, Minimal impact; string formatting occurs only during initial model inspection.\n- ROBUSTNESS: FAIL, The implementation injects literal quotes into the field parameters which will cause syntax errors in generated code.\n- PONYTAIL / YAGNI: PASS, This is a requested feature to solve a specific, recurring Django model generation bug.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "```python\n\"\"\"\nTests that reproduce the bug where inspectdb does not generate\nrelated_name on the same relation links, causing E304 clash errors.\n\nThe fix should ensure that when a model has multiple fields that are\nForeignKey/OneToOneField/ManyToManyField pointing to the same target model,\nthe generated field code includes related_name='{field_name}' for the\nduplicate relations.\n\"\"\"\nimport os\nimport sys\nimport tempfile\nimport textwrap\n\nimport pytest\n\n# Ensure Django settings are configured before importing inspectdb internals.\nimport django\nfrom django.conf import settings\n\nif not settings.configured:\n    settings.configure(\n        DATABASES={\n            \"default\": {\n                \"ENGINE\": \"django.db.backends.sqlite3\",\n                \"NAME\": \":memory:\",\n            }\n        },\n        INSTALLED_APPS=[\n            \"django.contrib.contenttypes\",\n            \"django.contrib.auth\",\n        ],\n        DEFAULT_AUTO_FIELD=\"django.db.models.AutoField\",\n    )\n    django.setup()\n\n\ndef _build_schema_fields(rows):\n    \"\"\"\n    Helper: given a list of table-info rows (each a dict with 'name',\n    'type_code', etc.), mimic what inspectdb would iterate over.\n    We call get_field_type for each row to obtain the generated field\n    declaration string.\n    \"\"\"\n    from django.core.management.commands.inspectdb import Command\n\n    cmd = Command()\n\n    # We need a fake connection whose introspection returns our 'rows'.\n    class FakeIntrospection:\n        def get_table_list(self, cursor):\n            return []\n\n        def get_table_options(self, cursor, table_name):\n            return {}\n\n        def get_field_type(self, data_type, description):\n            # Map dummy type codes to Django field types.\n            mapping = {\n                \"integer\": (\"IntegerField\", {}),\n                \"AutoField\": (\"AutoField\", {}),\n                \"char200\": (\"CharField\", {\"max_length\": 200}),\n                \"boolean\": (\"BooleanField\", {}),\n                \"text\": (\"TextField\", {}),\n                # Foreign key types are handled specially via columns\n            }\n            if data_type in mapping:\n                return mapping[data_type]\n            return (\"CharField\", {\"max_length\": 100})\n\n    class FakeConnection:\n        def __init__(self):\n            self.introspection = FakeIntrospection()\n            self.vendor = \"sqlite\"\n            self.features = None\n\n    fake_conn = FakeConnection()\n\n    # We need to simulate the columns dict that get_field_type processes.\n    # In inspectdb, get_field_type is called per column. The column dict\n    # has keys: 'name', 'type_code' (sqlite), 'is_not_nullable', etc.\n    # For FK detection, inspectdb checks the 'type_code' mapping or uses\n    # the column list from get_columns. Let's look at how foreign keys\n    # are detected.\n\n    # In the current Django inspectdb, foreign keys are detected by checking\n    # the column's \"type_code\" against the database's FOREIGN_KEY_TYPES or\n    # by examining 'related_table' in the column info. Let's read the\n    # actual implementation to understand.\n\n    # For now, we test by calling get_field_type directly with a row\n    # that represents a foreign key.\n    results = []\n    for row in rows:\n        field_type, field_params, field_notes = cmd.get_field_type(\n            fake_conn, \"auth_user\", row\n        )\n        # Build the field declaration string\n        params_str = \", \".join(\n            f\"{k}={v!r}\" for k, v in field_params.items()\n        )\n        decl = f\"field = models.{field_type}({params_str})\" if params_str else f\"field = models.{field_type}()\"\n        results.append((row[\"name\"], decl, field_params))\n    return results\n\n\ndef test_reproduce_missing_related_name_on_duplicate_foreign_keys():\n    \"\"\"\n    Reproduction: A table has two columns that are both foreign keys to\n    the same target table. The generated model code must include\n    related_name on at least one (the second) of them to avoid E304.\n\n    This test MUST FAIL before the fix and PASS after.\n    \"\"\"\n    from django.core.management.commands.inspectdb import Command\n\n    cmd = Command()\n\n    class FakeIntrospection:\n        def get_table_list(self, cursor):\n            return []\n\n        def get_columns(self, cursor, table_name):\n            return []\n\n    class FakeConnection:\n        def __init__(self):\n            self.introspection = FakeIntrospection()\n            self.vendor = \"sqlite\"\n            self.features = None\n\n    fake_conn = FakeConnection()\n\n    # Simulate two integer FK columns pointing to the same target.\n    # In sqlite introspection, columns that are FKs have their type_code\n    # and a 'related_table' key sometimes. Let's check the real get_field_type.\n    #\n    # Looking at inspectdb.py source: get_field_type checks\n    # column['type_code'] against FOREIGN_KEY_TYPES for each backend,\n    # or checks if the column name is in a list of known FK columns.\n    #\n    # The cleanest way to test is to call the method that processes columns\n    # into field parameters. Let's read how the command builds the model.\n\n    # Since the exact internal mechanism varies, let's test via the\n    # render_modelmethod: we monkeypatch get_field_type to simulate two\n    # FK columns to the same model and verify related_name appears.\n\n    # Alternative: directly test the logic by simulating what the\n    # fixed code does. The fix adds related_name when a (source_model,\n    # target_model) pair is seen more than once.\n\n    # Let's construct a scenario where get_field_type is called twice\n    # with FK metadata for the same target, and check that the second\n    # call's result includes related_name.\n\n    # Simulate: column 'manager_ptr' FK to auth_user, column 'developer_ptr'\n    # FK to auth_user.\n\n    calls = []\n\n    def fake_get_field_type(self, connection, table_name, row):\n        \"\"\"Simulate get_field_type that returns ForeignKey for certain rows.\"\"\"\n        col_name = row[\"name\"]\n        if col_name in (\"manager_ptr\", \"developer_ptr\"):\n            # Simulate foreign key detection\n            target_table = \"auth_user\"\n            related_name = None\n\n            calls.append((col_name, target_table))\n\n            # The FIX: track (table_name -> target_table) pairs and\n            # if this pair was seen before, add related_name.\n            # But we're testing the ACTUAL code, so just return what\n            # the real code would.\n            pass\n\n        # Default: return a simple field\n        return (\"CharField\", {\"max_length\": 100}, [])\n\n    # We can't easily mock at the right level without knowing internals.\n    # Let's instead write a test that exercises the full flow:\n    # call the method that processes a table's columns and generates\n    # the model string, then check for related_name.\n\n    # In Django's inspectdb, the key method is `get_table_sql` or it\n    # builds the model in `get_model_sql`. Let's find it.\n\n    # After inspecting, the relevant method is `get_model_sql` which\n    # iterates columns and calls `get_field_type` for each.\n\n    # Let's call get_model_sql with a fake connection where the\n    # introspection returns two FK columns to the same table.\n\n    class FakeColumn:\n        pass\n\n    class FakeIntrospection2:\n        def get_table_list(self, cursor):\n            return [\"people\"]\n\n        def get_columns(self, cursor, table_name):\n            # Return two FK columns to auth_user\n            return [\n                {\n                    \"name\": \"manager_ptr\",\n                    \"type_code\": \"integer\",\n                    \"is_not_nullable\": True,\n                    \"column_hash\": None,\n                    \"related_table\": \"auth_user\",\n                },\n                {\n                    \"name\": \"developer_ptr\",\n                    \"type_code\": \"integer\",\n                    \"is_not_nullable\": True,\n                    \"column_hash\": None,\n                    \"related_table\": \"auth_user\",\n                },\n                {\n                    \"name\": \"name\",\n                    \"type_code\": \"char200\",\n                    \"is_not_nullable\": False,\n                    \"column_hash\": None,\n                },\n            ]\n\n        def get_table_options(self, cursor, table_name):\n            return {}\n\n    fake_conn2 = FakeConnection.__new__(FakeConnection)\n    fake_conn2.introspection = FakeIntrospection2()\n    fake_conn2.vendor = \"sqlite\"\n    fake_conn2.features = None\n\n    # get_model_sql may not exist by that name. Let's check.\n    # In recent Django, the method is `get_table_sql` or the command's\n    # `handle` calls `get_model_sql`? Let's just check dir.\n\n    # Fallback: test by directly verifying that if we simulate the\n    # duplicate detection logic, the fix produces related_name.\n    # Since we need a test that fails now, let's check",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "groq/openai/gpt-oss-120b",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/contrib/gis/management/commands/inspectdb.py b/django/contrib/gis/management/commands/inspectdb.py\nindex 1bcc1a0793..afbbfe2677 100644\n--- a/django/contrib/gis/management/commands/inspectdb.py\n+++ b/django/contrib/gis/management/commands/inspectdb.py\n@@ -15,4 +15,8 @@ class Command(InspectDBCommand):\n                 table_name, row\n             )\n             field_params.update(geo_params)\n+        # Add a related_name for foreign key-like fields to avoid reverse accessor clashes\n+        if field_type in (\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"):\n+            # Use the column name (first element of the description tuple) as the related_name\n+            field_params[\"related_name\"] = f\"'{row[0]}'\"\n         return field_type, field_params, field_notes\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/contrib/gis/management/commands/inspectdb.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/contrib/gis/management/commands/inspectdb.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6402,
+        "matches_issue": 0.756,
+        "safe_to_apply": 0.6449,
+        "composite": 0.760275,
+        "secrets_or_danger": 0.181,
+        "logic_drift": 0.2472,
+        "flagged": false
+      },
+      "laya_combined": 0.7603,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0068,
+      "rank_reason": "logistic",
+      "elapsed_s": 41.42,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/core/management/commands/inspectdb.py\n+++ b/django/core/management/commands/inspectdb.py\n@@ -107,6 +107,7 @@ class Command(BaseCommand):\n         # 'unique_together' in Meta, and 'related_name' for relationships.\n         # 'unique_together' is a list of lists.\n         unique_together = []\n+        relations = {}\n         # 'constraints' is a dict of constraint names and their definitions.\n         constraints = {}\n         # 'indexes' is a dict of index names and their definitions.\n@@ -216,6 +217,11 @@ class Command(BaseCommand):\n                     field_type = \"ManyToManyField\"\n                     field_params[\"to\"] = rel_to\n \n+                if field_type in [\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"]:\n+                    if (model_name, rel_to) in relations:\n+                        field_params[\"related_name\"] = f\"{att_name}_set\"\n+                    relations[(model_name, rel_to)] = True\n+\n                 if field_type == \"ForeignKey\":\n                     field_params[\"on_delete\"] = \"models.DO_NOTHING\"",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'field_type'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'model_name'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'rel_to'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'att_name'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'field_params'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'model_name'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: undefined name 'rel_to'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c3\\django\\core\\management\\commands\\inspectdb.py: local variable 'relations' is assigned to but never used"
+      ],
+      "changed_files": [
+        "django/core/management/commands/inspectdb.py"
+      ],
+      "added_lines": 6,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6784,
+        "matches_issue": 0.816,
+        "safe_to_apply": 0.6776,
+        "composite": 0.7929999999999999,
+        "secrets_or_danger": 0.348,
+        "logic_drift": 0.3913,
+        "flagged": false
+      },
+      "laya_combined": 0.793,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.001,
+      "rank_reason": "logistic",
+      "elapsed_s": 141.27,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/core/management/commands/inspectdb.py\n+++ b/django/core/management/commands/inspectdb.py\n@@ -107,6 +107,7 @@\n         # 'table_name': [list of column names]\n         table_to_model_names = {}\n         # 'table_name': [list of field names]\n         table_to_field_names = {}\n+        # 'model_name': { 'target_model': [list of field_names] }\n+        model_to_relations = {}\n \n         for table_name in tables:\n             # ... (existing code)\n@@ -176,6 +177,14 @@\n                     field_type = \"ForeignKey\"\n                     field_params[\"to\"] = rel_to\n \n+                if field_type in [\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"]:\n+                    relations = model_to_relations.setdefault(model_name, {})\n+                    related_fields = relations.setdefault(rel_to, [])\n+                    if related_fields:\n+                        field_params[\"related_name\"] = f\"{att_name}_set\"\n+                    related_fields.append(att_name)\n+\n                 field_type, field_params, field_notes = self.get_field_type(\n                     connection, table_name, row\n                 )",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c2\\django\\core\\management\\commands\\inspectdb.py: SyntaxError line 59: unexpected indent"
+      ],
+      "changed_files": [
+        "django/core/management/commands/inspectdb.py"
+      ],
+      "added_lines": 9,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.6646,
+        "matches_issue": 0.8432,
+        "safe_to_apply": 0.7069,
+        "composite": 0.803675,
+        "secrets_or_danger": 0.1887,
+        "logic_drift": 0.3612,
+        "flagged": false
+      },
+      "laya_combined": 0.8037,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 137.61,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "groq/openai/gpt-oss-120b",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/contrib/gis/management/commands/inspectdb.py b/django/contrib/gis/management/commands/inspectdb.py\nindex 1bcc1a0793..afbbfe2677 100644\n--- a/django/contrib/gis/management/commands/inspectdb.py\n+++ b/django/contrib/gis/management/commands/inspectdb.py\n@@ -15,4 +15,8 @@ class Command(InspectDBCommand):\n                 table_name, row\n             )\n             field_params.update(geo_params)\n+        # Add a related_name for foreign key-like fields to avoid reverse accessor clashes\n+        if field_type in (\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"):\n+            # Use the column name (first element of the description tuple) as the related_name\n+            field_params[\"related_name\"] = f\"'{row[0]}'\"\n         return field_type, field_params, field_notes\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15819-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/contrib/gis/management/commands/inspectdb.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/contrib/gis/management/commands/inspectdb.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6402,
+      "matches_issue": 0.756,
+      "safe_to_apply": 0.6449,
+      "composite": 0.760275,
+      "secrets_or_danger": 0.181,
+      "logic_drift": 0.2472,
+      "flagged": false
+    },
+    "laya_combined": 0.7603,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0068,
+    "rank_reason": "logistic",
+    "elapsed_s": 41.42,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/contrib/gis/management/commands/inspectdb.py b/django/contrib/gis/management/commands/inspectdb.py\nindex 1bcc1a0793..afbbfe2677 100644\n--- a/django/contrib/gis/management/commands/inspectdb.py\n+++ b/django/contrib/gis/management/commands/inspectdb.py\n@@ -15,4 +15,8 @@ class Command(InspectDBCommand):\n                 table_name, row\n             )\n             field_params.update(geo_params)\n+        # Add a related_name for foreign key-like fields to avoid reverse accessor clashes\n+        if field_type in (\"ForeignKey\", \"OneToOneField\", \"ManyToManyField\"):\n+            # Use the column name (first element of the description tuple) as the related_name\n+            field_params[\"related_name\"] = f\"'{row[0]}'\"\n         return field_type, field_params, field_notes\n",
+  "offline_calls": 0
+}

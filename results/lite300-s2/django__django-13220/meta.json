@@ -1,0 +1,406 @@
+{
+  "instance_id": "django__django-13220",
+  "repo": "django/django",
+  "base_commit": "16218c20606d8cd89c5393970c83da04598a3e04",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460845.7194812
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460850.421126
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460860.9399636
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460882.5372963
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791460905.8717742
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791461062.7991443
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/exceptions.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/exceptions.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 0,
+      "warnings": [
+        "rewrite risk: 'RequestAborted' in 'django/core/exceptions.py' — the diff replaces 10/14 of its body (71%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue.",
+        "rewrite risk: '__eq__' in 'django/core/exceptions.py' — the diff replaces 9/10 of its body (90%). A broad rewrite of one function is the shape that silently breaks tests that used to pass; prefer the smallest change that fixes the issue."
+      ]
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791460777.3535578,
+  "elapsed_s": 293.51,
+  "plan": "def __eq__(self, other):\n        if not isinstance(other, ValidationError):\n            return NotImplemented\n        # Compare error_dict, error_list, code, and params.\n        # Ensure error_list is compared in an order-independent way if necessary,\n        # though standard equality for internal structures might suffice \n        # depending on current storage.\n        return (\n            self.error_dict == other.error_dict and\n            self.error_list == other.error_list and\n            self.code == other.code and\n            self.params == other.params\n        )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "_load_serializers",
+        "sort_dependencies",
+        "serialize"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.5543,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2905,
+        "vector": 0.3057,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: allows, allow, this, raised)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::_check_null_allowed_for_primary_keys",
+      "symbols": [
+        "_check_null_allowed_for_primary_keys",
+        "_check_backend_specific_checks",
+        "deconstruct",
+        "__eq__"
+      ],
+      "line_range": [
+        320,
+        337
+      ],
+      "score": 0.6528,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5314,
+        "vector": 0.6246,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: field, allow, which, have)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::load_command_class",
+      "symbols": [
+        "load_command_class",
+        "get_commands",
+        "fetch_command",
+        "execute"
+      ],
+      "line_range": [
+        31,
+        40
+      ],
+      "score": 0.6146,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5507,
+        "vector": 0.2659,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: errors, allow, raised)"
+    },
+    {
+      "file": "django/core/cache/__init__.py",
+      "symbol": "django/core/cache/__init__.py::DefaultCacheProxy",
+      "symbols": [
+        "DefaultCacheProxy",
+        "__eq__",
+        "CacheHandler"
+      ],
+      "line_range": [
+        90,
+        112
+      ],
+      "score": 0.5504,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2925,
+        "vector": 0.2692,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: other, allows, allow, this)"
+    },
+    {
+      "file": "django/core/mail/__init__.py",
+      "symbol": "django/core/mail/__init__.py::send_mail",
+      "symbols": [
+        "send_mail",
+        "send_mass_mail",
+        "get_connection"
+      ],
+      "line_range": [
+        38,
+        63
+      ],
+      "score": 0.5575,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2784,
+        "vector": 0.3575,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: field, other, this, method)"
+    },
+    {
+      "file": "django/template/defaultfilters.py",
+      "symbol": "django/template/defaultfilters.py::_property_resolver",
+      "symbols": [
+        "_property_resolver",
+        "get_digit",
+        "stringfilter",
+        "slugify"
+      ],
+      "line_range": [
+        466,
+        491
+      ],
+      "score": 0.5567,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.1426,
+        "vector": 0.5925,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: other, most, have, last)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.8359749999999999,
+  "laya_scores": {
+    "fix_quality": 1.7717,
+    "matches_issue": 0.8389,
+    "safe_to_apply": 0.7333,
+    "composite": 0.8359749999999999,
+    "secrets_or_danger": 0.1084,
+    "logic_drift": 0.3719,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS, No impact on security.\n- PERFORMANCE: PASS, Simple attribute comparison is O(1) or O(N) relative to error count.\n- ROBUSTNESS: FAIL, The implementation does not satisfy the stated requirement of being order-independent for `error_list`.\n- PONYTAIL / YAGNI: PASS, This adds requested utility to core exception handling.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.core.exceptions import ValidationError\n\ndef test_validation_error_equality_reproduction():\n    \"\"\"\n    REPRODUCTION: ValidationErrors with identical messages should be equal.\n    Currently, this fails because ValidationError does not implement __eq__.\n    \"\"\"\n    e1 = ValidationError(\"Invalid value\")\n    e2 = ValidationError(\"Invalid value\")\n    \n    # This will fail in the current state (returns False because they are different objects)\n    assert e1 == e2\n\ndef test_validation_error_inequality():\n    \"\"\"\n    Ensure ValidationErrors with different messages are not equal.\n    \"\"\"\n    e1 = ValidationError(\"Error A\")\n    e2 = ValidationError(\"Error B\")\n    \n    assert e1 != e2\n\ndef test_validation_error_with_codes_and_params():\n    \"\"\"\n    Ensure errors with identical codes and params are considered equal.\n    \"\"\"\n    e1 = ValidationError(\"Invalid\", code=\"invalid\", params={\"value\": 1})\n    e2 = ValidationError(\"Invalid\", code=\"invalid\", params={\"value\": 1})\n    \n    assert e1 == e2\n\ndef test_validation_error_type_mismatch():\n    \"\"\"\n    Ensure ValidationError does not raise an error when compared to a different type,\n    but returns NotImplemented (standard behavior) or False.\n    \"\"\"\n    e1 = ValidationError(\"Error\")\n    assert e1 != \"Error\"\n    assert e1 != 123\n\ndef test_validation_error_nested_dict_equality():\n    \"\"\"\n    Ensure complex ValidationErrors (dictionaries of errors) are compared correctly.\n    \"\"\"\n    e1 = ValidationError({\"field1\": [\"error1\"], \"field2\": [\"error2\"]})\n    e2 = ValidationError({\"field1\": [\"error1\"], \"field2\": [\"error2\"]})\n    \n    assert e1 == e2",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/exceptions.py b/django/core/exceptions.py\nindex dc084b8692..1b4d472816 100644\n--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -67,6 +67,16 @@ class RequestAborted(Exception):\n     \"\"\"The request was closed before it was completed, or timed out.\"\"\"\n     pass\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        return (\n+            self.error_dict == other.error_dict and\n+            self.error_list == other.error_list and\n+            self.code == other.code and\n+            self.params == other.params\n+        )\n+\n \n class PermissionDenied(Exception):\n     \"\"\"The user did not have permission to do that\"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/exceptions.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/exceptions.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.7717,
+        "matches_issue": 0.8389,
+        "safe_to_apply": 0.7333,
+        "composite": 0.8359749999999999,
+        "secrets_or_danger": 0.1084,
+        "logic_drift": 0.3719,
+        "flagged": false
+      },
+      "laya_combined": 0.836,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 54.06,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/exceptions.py b/django/core/exceptions.py\nindex dc084b8692..78f41f8afa 100644\n--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -77,6 +77,16 @@ class ViewDoesNotExist(Exception):\n     \"\"\"The requested view does not exist\"\"\"\n     pass\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        return (\n+            self.error_dict == other.error_dict and\n+            self.error_list == other.error_list and\n+            self.code == other.code and\n+            self.params == other.params\n+        )\n+\n \n class MiddlewareNotUsed(Exception):\n     \"\"\"This middleware is not used in this server configuration\"\"\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/exceptions.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/exceptions.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 0,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.7717,
+        "matches_issue": 0.8389,
+        "safe_to_apply": 0.7333,
+        "composite": 0.8359749999999999,
+        "secrets_or_danger": 0.0852,
+        "logic_drift": 0.2796,
+        "flagged": false
+      },
+      "laya_combined": 0.836,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.006,
+      "rank_reason": "logistic",
+      "elapsed_s": 55.62,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -143,6 +143,15 @@\n         else:\n             self.error_list = [ValidationError(message, code=code, params=params)]\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        return (\n+            self.error_dict == other.error_dict and\n+            self.error_list == other.error_list and\n+            self.code == other.code and\n+            self.params == other.params\n+        )\n+\n     @property\n     def message_dict(self):\n         # ... (existing code)",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c1\\django\\core\\exceptions.py: undefined name 'message'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c1\\django\\core\\exceptions.py: undefined name 'message'",
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c1\\django\\core\\exceptions.py: undefined name 'message'"
+      ],
+      "changed_files": [
+        "django/core/exceptions.py"
+      ],
+      "added_lines": 10,
+      "removed_lines": 0,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.7717,
+        "matches_issue": 0.8389,
+        "safe_to_apply": 0.7333,
+        "composite": 0.8359749999999999,
+        "secrets_or_danger": 0.1123,
+        "logic_drift": 0.3189,
+        "flagged": false
+      },
+      "laya_combined": 0.836,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 61.52,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+    "substituted": true,
+    "patch": "diff --git a/django/core/exceptions.py b/django/core/exceptions.py\nindex dc084b8692..1b4d472816 100644\n--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -67,6 +67,16 @@ class RequestAborted(Exception):\n     \"\"\"The request was closed before it was completed, or timed out.\"\"\"\n     pass\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        return (\n+            self.error_dict == other.error_dict and\n+            self.error_list == other.error_list and\n+            self.code == other.code and\n+            self.params == other.params\n+        )\n+\n \n class PermissionDenied(Exception):\n     \"\"\"The user did not have permission to do that\"\"\"\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13220-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/exceptions.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/exceptions.py"
+    ],
+    "added_lines": 10,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.7717,
+      "matches_issue": 0.8389,
+      "safe_to_apply": 0.7333,
+      "composite": 0.8359749999999999,
+      "secrets_or_danger": 0.1084,
+      "logic_drift": 0.3719,
+      "flagged": false
+    },
+    "laya_combined": 0.836,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.006,
+    "rank_reason": "logistic",
+    "elapsed_s": 54.06,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/exceptions.py b/django/core/exceptions.py\nindex dc084b8..1b4d472 100644\n--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -67,6 +67,16 @@ class RequestAborted(Exception):\n     \"\"\"The request was closed before it was completed, or timed out.\"\"\"\n     pass\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        return (\n+            self.error_dict == other.error_dict and\n+            self.error_list == other.error_list and\n+            self.code == other.code and\n+            self.params == other.params\n+        )\n+\n \n class PermissionDenied(Exception):\n     \"\"\"The user did not have permission to do that\"\"\"\n",
+  "offline_calls": 0
+}

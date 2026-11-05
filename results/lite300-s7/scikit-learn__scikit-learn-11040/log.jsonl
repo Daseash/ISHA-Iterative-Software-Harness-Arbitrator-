@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "scikit-learn__scikit-learn-11040", "ts": 1791897940.4540439}
+{"event": "attempt", "n": 1, "ts": 1791897940.6263714}
+{"event": "model", "ts": 1791897975.5680768, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791897977.8716598, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1791897982.796441, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791897999.9353085, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791898017.1862767, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791898213.3084252, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: ServiceUnavailableError; gemini-3.5-flash-lite: skipped (model quota exhausted); gemini-3.8-flash: skipped (model quota exhausted); gemini-3.5-flash: skipped (model quota exhausted)"}
+{"event": "model", "ts": 1791898226.2207894, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791898248.505919, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791898261.9454563}

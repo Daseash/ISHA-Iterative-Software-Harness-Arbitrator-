@@ -1,0 +1,25 @@
+--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py
++++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py
+@@
+-        Permission.objects.filter(
+-            permissions_query,
+-            content_type=old_content_type,
+-        ).update(content_type=new_content_type)
++        if old_content_type == new_content_type:
++            continue
++        for permission in Permission.objects.filter(
++            permissions_query,
++            content_type=old_content_type,
++        ):
++            try:
++                new_permission = Permission.objects.get(
++                    codename=permission.codename,
++                    content_type=new_content_type,
++                )
++            except Permission.DoesNotExist:
++                permission.content_type = new_content_type
++                permission.save(update_fields=['content_type'])
++            else:
++                new_permission.user_set.add(*permission.user_set.all())
++                new_permission.group_set.add(*permission.group_set.all())
++                permission.delete()

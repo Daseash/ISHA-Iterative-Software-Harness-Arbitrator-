@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-13658",
+  "repo": "django/django",
+  "base_commit": "0773837e15bb632afffb6848a58c59a791008fa1",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464500.3428023
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464505.4817753
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464515.8272693
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464528.624488
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 2",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464558.7481163
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791464746.929434
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/core/management/__init__.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/core/management/__init__.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791464417.6771626,
+  "elapsed_s": 336.84,
+  "plan": "parser = CommandParser(\n      prog=self.prog_name,\n      usage='%(prog)s subcommand [options] [args]',\n      add_help=False,\n      allow_abbrev=False,\n  )",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "get_actions",
+        "execute_from_command_line",
+        "find_commands"
+      ],
+      "line_range": [
+        188,
+        194
+      ],
+      "score": 0.7924,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 1.0,
+        "vector": 0.8113,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: argv; body matches report terms: settings, django, argv, main__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/management/base.py",
+      "symbol": "django/core/management/base.py::create_parser",
+      "symbols": [
+        "create_parser",
+        "add_arguments",
+        "print_help",
+        "run_from_argv"
+      ],
+      "line_range": [
+        275,
+        322
+      ],
+      "score": 0.8713,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.7547,
+        "vector": 0.6263,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (signature parameter matches report: prog_name; body matches report terms: settings, django, description, parse)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        1005,
+        1009
+      ],
+      "score": 0.5837,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3553,
+        "vector": 0.4153,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: args, init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "SettingsReference"
+      ],
+      "line_range": [
+        45,
+        48
+      ],
+      "score": 0.5664,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.348,
+        "vector": 0.2867,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: name, init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/utils/translation/__init__.py",
+      "symbol": "django/utils/translation/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "Trans",
+        "__getattr__",
+        "ugettext_noop"
+      ],
+      "line_range": [
+        233,
+        236
+      ],
+      "score": 0.5439,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.27,
+        "vector": 0.2616,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (named in the issue; body matches report terms: init__; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_get_backends",
+      "symbols": [
+        "_get_backends",
+        "_get_user_session_key",
+        "authenticate",
+        "login"
+      ],
+      "line_range": [
+        24,
+        36
+      ],
+      "score": 0.5367,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2324,
+        "vector": 0.2798,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: settings, have, path, properly)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.81985,
+  "laya_scores": {
+    "fix_quality": 1.6369,
+    "matches_issue": 0.8336,
+    "safe_to_apply": 0.8089,
+    "composite": 0.81985,
+    "secrets_or_danger": 0.2636,
+    "logic_drift": 0.2462,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS, No input validation or execution concerns introduced.\n- PERFORMANCE: PASS, Negligible overhead for passing an existing string to the constructor.\n- ROBUSTNESS: PASS, Corrects an inconsistency in how the program name is handled, improving reliability.\n- PONYTAIL / YAGNI: PASS, This is a direct fix for an existing logic gap.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import sys\nimport pytest\nfrom django.core.management import ManagementUtility\n\ndef test_management_utility_prog_name_usage():\n    \"\"\"\n    Test that ManagementUtility uses self.prog_name in CommandParser\n    rather than defaulting to sys.argv[0].\n    \"\"\"\n    custom_prog = \"custom_django_script\"\n    # We pass a custom argv where argv[0] is not the current process name\n    argv = [custom_prog, \"help\"]\n    \n    utility = ManagementUtility(argv=argv)\n    \n    # Access the internal parser to verify it uses the passed prog name\n    # The fix ensures this attribute was set during initialization\n    assert utility.parser.prog == custom_prog\n\ndef test_management_utility_with_none_in_argv0():\n    \"\"\"\n    Edge case: Ensure it works when argv[0] is None, \n    as mentioned in the issue description regarding embedded environments.\n    \"\"\"\n    # Simulate an environment where sys.argv[0] might be None\n    # ManagementUtility should handle it gracefully by setting prog_name\n    argv = [None, \"help\"]\n    \n    # This should not raise an error when initializing\n    utility = ManagementUtility(argv=argv)\n    \n    # Should default to basename of None (often 'None') or handle gracefully\n    assert utility.prog_name is not None\n    assert utility.parser.prog == utility.prog_name\n\ndef test_management_utility_path_basename():\n    \"\"\"\n    Edge case: Ensure prog_name is the basename of the provided path,\n    not the full path itself.\n    \"\"\"\n    argv = [\"/usr/local/bin/django-admin\", \"version\"]\n    utility = ManagementUtility(argv=argv)\n    \n    assert utility.prog_name == \"django-admin\"\n    assert utility.parser.prog == \"django-admin\"\n\ndef test_management_utility_main_py_normalization():\n    \"\"\"\n    Edge case: Ensure that if the prog_name is '__main__.py',\n    it is normalized to 'python -m django'.\n    \"\"\"\n    argv = [\"__main__.py\", \"check\"]\n    utility = ManagementUtility(argv=argv)\n    \n    assert utility.prog_name == \"python -m django\"\n    assert utility.parser.prog == \"python -m django\"",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/__init__.py b/django/core/management/__init__.py\nindex 1ba093e51f..e411e86348 100644\n--- a/django/core/management/__init__.py\n+++ b/django/core/management/__init__.py\n@@ -344,7 +344,7 @@ class ManagementUtility:\n         # Preprocess options to extract --settings and --pythonpath.\n         # These options could affect the commands that are available, so they\n         # must be processed early.\n-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n+        parser = CommandParser(prog=self.prog_name, usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n         parser.add_argument('--settings')\n         parser.add_argument('--pythonpath')\n         parser.add_argument('args', nargs='*')  # catch-all\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13658-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/__init__.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6369,
+        "matches_issue": 0.8336,
+        "safe_to_apply": 0.8089,
+        "composite": 0.81985,
+        "secrets_or_danger": 0.2636,
+        "logic_drift": 0.2462,
+        "flagged": false
+      },
+      "laya_combined": 0.8198,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 18.71,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/core/management/__init__.py b/django/core/management/__init__.py\nindex 1ba093e51f..e411e86348 100644\n--- a/django/core/management/__init__.py\n+++ b/django/core/management/__init__.py\n@@ -344,7 +344,7 @@ class ManagementUtility:\n         # Preprocess options to extract --settings and --pythonpath.\n         # These options could affect the commands that are available, so they\n         # must be processed early.\n-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n+        parser = CommandParser(prog=self.prog_name, usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n         parser.add_argument('--settings')\n         parser.add_argument('--pythonpath')\n         parser.add_argument('args', nargs='*')  # catch-all\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13658-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/__init__.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6369,
+        "matches_issue": 0.8336,
+        "safe_to_apply": 0.8089,
+        "composite": 0.81985,
+        "secrets_or_danger": 0.2636,
+        "logic_drift": 0.2462,
+        "flagged": false
+      },
+      "laya_combined": 0.8198,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 88.0,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/core/management/__init__.py b/django/core/management/__init__.py\nindex 1ba093e51f..e411e86348 100644\n--- a/django/core/management/__init__.py\n+++ b/django/core/management/__init__.py\n@@ -344,7 +344,7 @@ class ManagementUtility:\n         # Preprocess options to extract --settings and --pythonpath.\n         # These options could affect the commands that are available, so they\n         # must be processed early.\n-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n+        parser = CommandParser(prog=self.prog_name, usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n         parser.add_argument('--settings')\n         parser.add_argument('--pythonpath')\n         parser.add_argument('args', nargs='*')  # catch-all\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13658-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/core/management/__init__.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/core/management/__init__.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6369,
+        "matches_issue": 0.8336,
+        "safe_to_apply": 0.8089,
+        "composite": 0.81985,
+        "secrets_or_danger": 0.2636,
+        "logic_drift": 0.2462,
+        "flagged": false
+      },
+      "laya_combined": 0.8198,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0057,
+      "rank_reason": "logistic",
+      "elapsed_s": 79.18,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/core/management/__init__.py b/django/core/management/__init__.py\nindex 1ba093e51f..e411e86348 100644\n--- a/django/core/management/__init__.py\n+++ b/django/core/management/__init__.py\n@@ -344,7 +344,7 @@ class ManagementUtility:\n         # Preprocess options to extract --settings and --pythonpath.\n         # These options could affect the commands that are available, so they\n         # must be processed early.\n-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n+        parser = CommandParser(prog=self.prog_name, usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n         parser.add_argument('--settings')\n         parser.add_argument('--pythonpath')\n         parser.add_argument('args', nargs='*')  # catch-all\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-13658-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/core/management/__init__.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/core/management/__init__.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.6369,
+      "matches_issue": 0.8336,
+      "safe_to_apply": 0.8089,
+      "composite": 0.81985,
+      "secrets_or_danger": 0.2636,
+      "logic_drift": 0.2462,
+      "flagged": false
+    },
+    "laya_combined": 0.8198,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0057,
+    "rank_reason": "logistic",
+    "elapsed_s": 18.71,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/core/management/__init__.py b/django/core/management/__init__.py\nindex 1ba093e..e411e86 100644\n--- a/django/core/management/__init__.py\n+++ b/django/core/management/__init__.py\n@@ -344,7 +344,7 @@ class ManagementUtility:\n         # Preprocess options to extract --settings and --pythonpath.\n         # These options could affect the commands that are available, so they\n         # must be processed early.\n-        parser = CommandParser(usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n+        parser = CommandParser(prog=self.prog_name, usage='%(prog)s subcommand [options] [args]', add_help=False, allow_abbrev=False)\n         parser.add_argument('--settings')\n         parser.add_argument('--pythonpath')\n         parser.add_argument('args', nargs='*')  # catch-all\n",
+  "offline_calls": 0
+}

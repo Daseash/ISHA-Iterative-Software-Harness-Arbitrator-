@@ -1,0 +1,398 @@
+{
+  "instance_id": "sphinx-doc__sphinx-8474",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "3ea1ec84cc610f7a9f4f6b354e264565254923ff",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959455.5509691
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959473.083115
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959486.542337
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959497.6035502
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959519.084191
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959674.7823496
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791959693.5095096
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: sphinx/builders/singlehtml.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "sphinx/builders/singlehtml.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 3,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": false,
+    "validate_check_msg": "error: corrupt patch at <stdin>:17"
+  },
+  "started_at": 1791959433.423906,
+  "elapsed_s": 267.76,
+  "plan": "### Step 1: Root Cause\nWhen Sphinx v3.3 introduced or adjusted numref/fignumber handling for tables or figures in builders like `singlehtml` and `latex`, the singlehtml builder (`SingleFileHTMLBuilder` in `sphinx/builders/singlehtml.py`) implements `assemble_toc_fignumbers` to remap `env.toc_fignumbers`. However, when figure types like `'table'` (or other figures) are gathered, the mapping or alias structure used in `assemble_toc_fignumbers` or how table numbers are looked up causes a mismatch where the builder fails to correctly map the figure types/keys to the master document, leading to the warning:\n`WARNING: no number is assigned for table:`\nSpecifically, `assemble_toc_fignumbers` creates an alias mapping using `\"%s/%s\" % (docname, figtype)`, but when resolving or looking up fignumbers for `singlehtml` or `latex`, table figure types or their corresponding numbering entries are not correctly retrieved or aggregated, or table elements are treated differently from standard figures (e.g. `figtype` vs table numbering setup).\n\n### Step 2: Exact Changes to Make\n\n1. **File:** `sphinx/builders/singlehtml.py`\n   - **Function:** `SingleFileHTMLBuilder.assemble_toc_fignumbers`\n   - **What to change:** Ensure that `assemble_toc_fignumbers` properly aggregates and maps all figure types (including tables, which use `'table'` as `figtype`) under the master doc so that the remapped fignumbers structure matches what the HTML/LaTeX writers expect when resolving table numbers in `singlehtml` and `latex` builds. Specifically, verify how `toc_fignumbers` entries are structured for tables (which might be stored under `table` or standard figure types) and ensure `new_fignumbers` maps `figtype` correctly.\n\n2. **File:** `sphinx/environment/adapters/indexentries.py` or wherever `toc_fignumbers` / numref is resolved for tables in latex/singlehtml (check `sphinx/writers/latex.py` or environment domain table numbering adapters if applicable).\n   - If tables are tracked separately from figures in environments (e.g., `env.toc_fignumbers` vs table numbering), ensure table types are correctly handled in `assemble_toc_fignumbers()` and related LaTeX/HTML translators.",
+  "planner_confidence": 0.85,
+  "localization": [
+    {
+      "file": "sphinx/builders/singlehtml.py",
+      "symbol": "sphinx/builders/singlehtml.py::assemble_toc_secnumbers",
+      "symbols": [
+        "assemble_toc_secnumbers",
+        "assemble_toc_fignumbers",
+        "setup",
+        "SingleFileHTMLBuilder"
+      ],
+      "line_range": [
+        86,
+        103
+      ],
+      "score": 0.5243,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.4331,
+        "vector": 0.4876,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: there, related, sphinx, singlehtml)"
+    },
+    {
+      "file": "sphinx/writers/latex.py",
+      "symbol": "sphinx/writers/latex.py::LaTeXWriter",
+      "symbols": [
+        "LaTeXWriter",
+        "translate",
+        "get_colspec",
+        "format_docclass"
+      ],
+      "line_range": [
+        73,
+        102
+      ],
+      "score": 0.4807,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2306,
+        "vector": 0.5466,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: warning, sphinx, latex, warnings)"
+    },
+    {
+      "file": "sphinx/writers/html.py",
+      "symbol": "sphinx/writers/html.py::__init__",
+      "symbols": [
+        "__init__",
+        "get_secnumber",
+        "add_fignumber",
+        "append_fignumber"
+      ],
+      "line_range": [
+        89,
+        114
+      ],
+      "score": 0.4832,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.1964,
+        "vector": 0.6385,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: warning, sphinx, singlehtml, table)"
+    },
+    {
+      "file": "sphinx/jinja2glue.py",
+      "symbol": "sphinx/jinja2glue.py::_todim",
+      "symbols": [
+        "_todim",
+        "SphinxFileSystemLoader",
+        "init",
+        "_slice_index"
+      ],
+      "line_range": [
+        43,
+        60
+      ],
+      "score": 0.5352,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.121,
+        "vector": 0.4582,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: change, changed, following)"
+    },
+    {
+      "file": "sphinx/testing/fixtures.py",
+      "symbol": "sphinx/testing/fixtures.py::app",
+      "symbols": [
+        "app",
+        "make",
+        "sphinx_test_tempdir",
+        "make_app"
+      ],
+      "line_range": [
+        143,
+        162
+      ],
+      "score": 0.5432,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.0871,
+        "vector": 0.5952,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: warning, sphinx, build)"
+    },
+    {
+      "file": "tests/test_build_latex.py",
+      "symbol": "tests/test_build_latex.py::compile_latex_document",
+      "symbols": [
+        "compile_latex_document",
+        "skip_if_requested",
+        "test_build_latex_doc",
+        "test_writer"
+      ],
+      "line_range": [
+        54,
+        75
+      ],
+      "score": 0.4574,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.3634,
+        "vector": 0.9942,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: latex, like, table"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.6385749999999999,
+  "laya_scores": {
+    "fix_quality": 1.4071,
+    "matches_issue": 0.6616,
+    "safe_to_apply": 0.4856,
+    "composite": 0.6385749999999999,
+    "secrets_or_danger": 0.6702,
+    "logic_drift": 0.3181,
+    "flagged": true,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS - No changes to input handling or execution context.\n- PERFORMANCE: PASS - Efficiency remains equivalent to the original logic.\n- ROBUSTNESS: RISK - The change from docname-scoped keys to global type-scoped keys may cause collisions if different documents have the same ID for a table.\n- MINIMAL DIFF / YAGNI: PASS - The changes are focused strictly on resolving the reported issue.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom sphinx.testing.util import SphinxTestApp\n\n\n@pytest.mark.parametrize('builder_name', ['singlehtml', 'latex'])\ndef test_numref_table_no_warning(app_factory, make_app, builder_name, shared_datadir):\n    \"\"\"\n    Test that building with singlehtml or latex builders does not generate\n    'WARNING: no number is assigned for table:' when using numbered tables (numref).\n    \"\"\"\n    # Create a minimal sphinx project with a table and numref enabled\n    app = make_app(\n        builder_name=builder_name,\n        srcdir=shared_datadir / 'numref-table',\n    )\n    app.build()\n\n    # Check warnings via the warning log stream if captured, or ensure app.warninglogger/status\n    warnings = app.warningiserror  # Or inspect log records\n    # Specifically, check that no warning matching \"no number is assigned for table\" was emitted\n    log_records = app.warning.log_records if hasattr(app, 'warning') else []\n    for record in app.env.app.warninglogger.events if hasattr(app.env, 'app') else []:\n        pass\n\n    # Standard Sphinx test apps store warnings in warning.getvalue() if standard warning handler is used\n    warning_output = app._warning.getvalue() if hasattr(app, '_warning') else ''\n    assert 'no number is assigned for table' not in warning_output\n\n\n@pytest.mark.parametrize('builder_name', ['singlehtml', 'latex'])\ndef test_numref_multiple_tables_and_figures(make_app, shared_datadir, builder_name):\n    \"\"\"\n    Edge case: Multiple tables and figures combined in a single-file/latex build\n    to ensure all respective figtypes ('table', 'figure', etc.) are correctly mapped\n    without dropping or misaligning indices in assemble_toc_fignumbers.\n    \"\"\"\n    app = make_app(\n        builder_name=builder_name,\n        srcdir=shared_datadir / 'numref-multiple',\n    )\n    app.build()\n    warning_output = app._warning.getvalue() if hasattr(app, '_warning') else ''\n    assert 'no number is assigned for table' not in warning_output\n    assert 'no number is assigned for figure' not in warning_output\n\n\n@pytest.mark.parametrize('builder_name', ['singlehtml', 'latex'])\ndef test_numref_table_without_caption(make_app, shared_datadir, builder_name):\n    \"\"\"\n    Edge case: Tables without explicit captions or tables in sub-documents\n    referenced via toctree trees in singlehtml/latex builds.\n    \"\"\"\n    app = make_app(\n        builder_name=builder_name,\n        srcdir=shared_datadir / 'numref-subdoc-table',\n    )\n    app.build()\n    warning_output = app._warning.getvalue() if hasattr(app, '_warning') else ''\n    assert 'no number is assigned for table' not in warning_output",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash-lite",
+      "substituted": true,
+      "patch": "--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -106,9 +106,8 @@\n         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8474-c1",
+      "apply_ok": true,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/builders/singlehtml.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 3,
+      "repair_rounds": 3,
+      "laya": {
+        "fix_quality": 1.4071,
+        "matches_issue": 0.6616,
+        "safe_to_apply": 0.4856,
+        "composite": 0.6385749999999999,
+        "secrets_or_danger": 0.2946,
+        "logic_drift": 0.3164,
+        "flagged": false
+      },
+      "laya_combined": 0.6386,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 37.11,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.5-flash",
+      "substituted": true,
+      "patch": "--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -107,9 +107,8 @@\n         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8474-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/builders/singlehtml.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4071,
+        "matches_issue": 0.6616,
+        "safe_to_apply": 0.4856,
+        "composite": 0.6385749999999999,
+        "secrets_or_danger": 0.6667,
+        "logic_drift": 0.3151,
+        "flagged": true
+      },
+      "laya_combined": 0.6386,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 136.14,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -107,9 +107,7 @@\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8474-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "sphinx/builders/singlehtml.py"
+      ],
+      "added_lines": 2,
+      "removed_lines": 3,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.4071,
+        "matches_issue": 0.6616,
+        "safe_to_apply": 0.4856,
+        "composite": 0.6385749999999999,
+        "secrets_or_danger": 0.3992,
+        "logic_drift": 0.3134,
+        "flagged": false
+      },
+      "laya_combined": 0.6386,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0079,
+      "rank_reason": "logistic",
+      "elapsed_s": 22.66,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "gemini/gemini-3.5-flash-lite",
+    "substituted": true,
+    "patch": "--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -106,9 +106,8 @@\n         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\sphinx-doc__sphinx-8474-c1",
+    "apply_ok": true,
+    "apply_message": "",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "sphinx/builders/singlehtml.py"
+    ],
+    "added_lines": 2,
+    "removed_lines": 3,
+    "repair_rounds": 3,
+    "laya": {
+      "fix_quality": 1.4071,
+      "matches_issue": 0.6616,
+      "safe_to_apply": 0.4856,
+      "composite": 0.6385749999999999,
+      "secrets_or_danger": 0.2946,
+      "logic_drift": 0.3164,
+      "flagged": false
+    },
+    "laya_combined": 0.6386,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0079,
+    "rank_reason": "logistic",
+    "elapsed_s": 37.11,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/sphinx/builders/singlehtml.py b/sphinx/builders/singlehtml.py\nindex d8ab978..8ac8366 100644\n--- a/sphinx/builders/singlehtml.py\n+++ b/sphinx/builders/singlehtml.py\n@@ -115,10 +115,9 @@ class SingleFileHTMLBuilder(StandaloneHTMLBuilder):\n         # {'foo': {'figure': {'id2': (2,), 'id1': (1,)}}, 'bar': {'figure': {'id1': (3,)}}}\n         for docname, fignumlist in self.env.toc_fignumbers.items():\n             for figtype, fignums in fignumlist.items():\n-                alias = \"%s/%s\" % (docname, figtype)\n-                new_fignumbers.setdefault(alias, {})\n+                new_fignumbers.setdefault(figtype, {})\n                 for id, fignum in fignums.items():\n-                    new_fignumbers[alias][id] = fignum\n+                    new_fignumbers[figtype][id] = fignum\n \n         return {self.config.master_doc: new_fignumbers}\n \n",
+  "offline_calls": 0
+}

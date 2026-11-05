@@ -1,0 +1,246 @@
+{
+  "instance_id": "django__django-16139",
+  "repo": "django/django",
+  "base_commit": "d559cb02da30f74debbb1fc3a46de0df134d2d80",
+  "status": "done",
+  "attempts": 2,
+  "failure_category": "api_failure",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551481.3509288
+    },
+    {
+      "role": "planner",
+      "model": "qwen3.8-27b",
+      "model_full": "groq/qwen/qwen3.8-27b",
+      "position": "fallback 1 [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551485.1735175
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551492.8711758
+    },
+    {
+      "role": "planner",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551496.9833565
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551519.3741841
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551545.8812025
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551571.390167
+    },
+    {
+      "role": "coder",
+      "model": "offline-brain",
+      "model_full": "offline-brain",
+      "position": "offline",
+      "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError",
+      "thread": "isha-bench_0",
+      "timestamp": 1791551597.3159342
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791551235.2272992,
+  "elapsed_s": 164.94,
+  "plan": "Step 1: Root cause — __init__() computes the wrong expression — the arithmetic operator does not match the documented behaviour in the report.\nStep 2: Edit config.py — in __init__(), apply: replace the return expression with the operator the report expects.",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/contrib/auth/forms.py",
+      "symbol": "django/contrib/auth/forms.py::UserChangeForm",
+      "symbols": [
+        "UserChangeForm",
+        "UserCreationForm",
+        "ReadOnlyPasswordHashField",
+        "__init__"
+      ],
+      "line_range": [
+        147,
+        173
+      ],
+      "score": 0.7487,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.8468,
+        "vector": 0.7253,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: ModelForm; body matches report terms: href, class, label, format; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/utils/dateformat.py",
+      "symbol": "django/utils/dateformat.py::__init__",
+      "symbols": [
+        "__init__",
+        "g",
+        "Formatter",
+        "G"
+      ],
+      "line_range": [
+        55,
+        67
+      ],
+      "score": 0.7236,
+      "signals": {
+        "seed": 0.45,
+        "bm25": 0.2021,
+        "vector": 0.5468,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; body matches report terms: format, init__, instance, form; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/forms/models.py",
+      "symbol": "django/forms/models.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "modelform_factory",
+        "pk_is_not_editable"
+      ],
+      "line_range": [
+        1340,
+        1351
+      ],
+      "score": 0.6767,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4771,
+        "vector": 0.895,
+        "defs": 1.0
+      },
+      "reason": "named in the issue; signature parameter matches report: to_field; body matches report terms: init__, instance, kwargs, to_field; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::__init__",
+      "symbols": [
+        "__init__",
+        "__init__",
+        "__init__",
+        "__init__"
+      ],
+      "line_range": [
+        179,
+        202
+      ],
+      "score": 0.6289,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4106,
+        "vector": 0.6769,
+        "defs": 0.0
+      },
+      "reason": "named in the issue; body matches report terms: init__, help_text; named, but usually the entry point — check below it"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::unregister_serializer",
+      "symbols": [
+        "unregister_serializer",
+        "serialize",
+        "deserialize",
+        "get_serializer"
+      ],
+      "line_range": [
+        91,
+        99
+      ],
+      "score": 0.6197,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3755,
+        "vector": 0.6739,
+        "defs": 0.0
+      },
+      "reason": "signature parameter matches report: format; body matches report terms: format, this, form"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::_clean_credentials",
+      "symbols": [
+        "_clean_credentials",
+        "_get_user_session_key",
+        "authenticate",
+        "login"
+      ],
+      "line_range": [
+        42,
+        56
+      ],
+      "score": 0.6173,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.3929,
+        "vector": 0.6176,
+        "defs": 0.0
+      },
+      "reason": "body matches report terms: ending, password, user"
+    }
+  ],
+  "retry_count": 3,
+  "critic_verdict": "approved",
+  "critic_score": 0.563225,
+  "laya_scores": {
+    "fix_quality": 1.3279,
+    "matches_issue": 0.4619,
+    "safe_to_apply": 0.4631,
+    "composite": 0.563225,
+    "secrets_or_danger": 0.0758,
+    "logic_drift": 0.0992,
+    "flagged": false,
+    "guardrail_findings": []
+  },
+  "test_output": "FAILED: no patch to apply",
+  "regression_test": "from calculator import Calculator\n\n\ndef test_repro_reports_bug():\n    \"\"\"Reproduces the reported bug: must pass only after the fix.\"\"\"\n    calc = Calculator()\n    assert calc.default_auto_field(5, 3) == 2",
+  "escalation": "",
+  "candidates": [],
+  "selected_candidate": {},
+  "model_patch": "",
+  "offline_calls": 6
+}

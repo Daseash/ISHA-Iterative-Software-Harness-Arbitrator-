@@ -1,0 +1,12 @@
+{"event": "start", "instance_id": "django__django-11179", "ts": 1791285795.5233784}
+{"event": "attempt", "n": 1, "ts": 1791285795.8225667}
+{"event": "model", "ts": 1791285856.6329627, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791285862.1170046, "role": "planner", "model": "qwen3.8-27b", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1791286206.0403445, "role": "planner", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791286208.6647034, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1791286333.495335, "role": "coder", "model": "gpt-oss-120b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1791286696.2924387, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 5", "note": ""}
+{"event": "model", "ts": 1791286991.2251217, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (6 models): qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; qwen3.8-27b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-120b: RateLimitError; gpt-oss-20b: ValueError; gemini-3.8-flash: ServiceUnavailableError; gemini-3.5-flash: ServiceUnavailableError; gemini-3.1-flash-lite: ServiceUnavailableError"}
+{"event": "model", "ts": 1791287330.1613097, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 4", "note": ""}
+{"event": "model", "ts": 1791287366.0287547, "role": "planner", "model": "qwen3.8-27b", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1791287400.8840783}

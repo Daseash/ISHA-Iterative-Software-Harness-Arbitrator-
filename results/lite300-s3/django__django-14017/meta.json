@@ -1,0 +1,401 @@
+{
+  "instance_id": "django__django-14017",
+  "repo": "django/django",
+  "base_commit": "466920f6d726eee90d5566e0a9948e92b33a122e",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533409.9259317
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533416.7186582
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533435.2613366
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533437.7477908
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533455.640857
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791533576.6038659
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query_utils.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791533336.7916503,
+  "elapsed_s": 247.86,
+  "plan": "def _combine(self, other, conn):\n    if not isinstance(other, Q):\n        # Allow expressions to be combined with Q objects\n        from django.db.models.expressions import Expression\n        if isinstance(other, Expression):\n            return Q(other) & self if conn == self.AND else Q(other) | self\n        raise TypeError(other)\n    ...",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/query_utils.py",
+      "symbol": "django/db/models/query_utils.py::_combine",
+      "symbols": [
+        "_combine",
+        "__init__",
+        "Q",
+        "__and__"
+      ],
+      "line_range": [
+        42,
+        60
+      ],
+      "score": 0.6185,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.5148,
+        "vector": 0.373,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; private helper called by a symbol the report names; body matches report terms: isinstance, empty, ignore, just; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/expressions.py",
+      "symbol": "django/db/models/expressions.py::_combine",
+      "symbols": [
+        "_combine",
+        "__and__",
+        "__invert__",
+        "Exists"
+      ],
+      "line_range": [
+        58,
+        66
+      ],
+      "score": 0.6589,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 0.4696,
+        "vector": 0.7629,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: conn, combine, other; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "deserialize",
+        "sort_dependencies",
+        "serialize"
+      ],
+      "line_range": [
+        37,
+        53
+      ],
+      "score": 0.7061,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.8543,
+        "vector": 0.3959,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: call, here, there)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::get_commands",
+      "symbols": [
+        "get_commands",
+        "fetch_command",
+        "autocomplete",
+        "execute"
+      ],
+      "line_range": [
+        44,
+        77
+      ],
+      "score": 0.6779,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.684,
+        "vector": 0.5157,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: pairs, call, exists, django)"
+    },
+    {
+      "file": "django/conf/__init__.py",
+      "symbol": "django/conf/__init__.py::__repr__",
+      "symbols": [
+        "__repr__",
+        "configure",
+        "_setup",
+        "__getattr__"
+      ],
+      "line_range": [
+        56,
+        63
+      ],
+      "score": 0.658,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4178,
+        "vector": 0.9048,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: code, empty, module, other)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::get_col",
+      "symbols": [
+        "get_col",
+        "cached_col",
+        "__lt__",
+        "__reduce__"
+      ],
+      "line_range": [
+        394,
+        402
+      ],
+      "score": 0.6219,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.4386,
+        "vector": 0.5601,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: django, expressions, models)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "approved",
+  "critic_score": 0.738375,
+  "laya_scores": {
+    "fix_quality": 1.5387,
+    "matches_issue": 0.7549,
+    "safe_to_apply": 0.6599,
+    "composite": 0.738375,
+    "secrets_or_danger": 0.1674,
+    "logic_drift": 0.342,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "PASS",
+      "review": "- SECURITY: PASS. The patch performs a type check against `Expression` and does not introduce unsafe execution.\n- PERFORMANCE: PASS. The added overhead is a single `isinstance` check and minimal object instantiation.\n- ROBUSTNESS: PASS. Corrects the non-commutative behavior of `Q` objects by enabling support for `Expression` types.\n- PONYTAIL / YAGNI: PASS. The import is appropriately deferred and the change directly addresses the reported bug.\n\nVERDICT: PASS"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db.models import Q, Exists, OuterRef, Model, IntegerField\nfrom django.db.models.expressions import Expression\nfrom django.db import models\n\n# Minimal model for reproduction\nclass Product(models.Model):\n    id = models.IntegerField(primary_key=True)\n\n    class Meta:\n        app_label = 'test_app'\n\ndef test_q_and_exists_repro():\n    \"\"\"\n    Reproduces the TypeError when Q(...) & Exists(...) is called.\n    \"\"\"\n    exists_obj = Exists(Product.objects.all())\n    # This should not raise TypeError\n    result = Q() & exists_obj\n    assert isinstance(result, Q)\n\ndef test_q_or_exists():\n    \"\"\"\n    Checks that commutative property applies to OR as well.\n    \"\"\"\n    exists_obj = Exists(Product.objects.all())\n    # Should work for OR as well\n    result = Q() | exists_obj\n    assert isinstance(result, Q)\n\ndef test_q_and_invalid_type():\n    \"\"\"\n    Ensures that invalid types still raise the expected TypeError.\n    \"\"\"\n    with pytest.raises(TypeError):\n        Q() & \"invalid_type\"\n\ndef test_q_and_expression_nesting():\n    \"\"\"\n    Edge case: ensure combined Q objects correctly preserve expression data.\n    \"\"\"\n    exists_obj = Exists(Product.objects.all())\n    q_obj = Q(id=1)\n    \n    combined = q_obj & exists_obj\n    \n    # Verify both children exist in the resulting Q object\n    assert any(isinstance(child, Exists) for child in combined.children)\n    assert any(child == ('id', 1) for child in combined.children)",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c957ffa564..84c4a8fa85 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -41,6 +41,9 @@ class Q(tree.Node):\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n+            from django.db.models.expressions import Expression\n+            if isinstance(other, Expression):\n+                return Q(other) & self if conn == self.AND else Q(other) | self\n             raise TypeError(other)\n \n         # If the other Q() is empty, ignore it and just use `self`.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14017-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 3,
+      "removed_lines": 0,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.5387,
+        "matches_issue": 0.7549,
+        "safe_to_apply": 0.6599,
+        "composite": 0.738375,
+        "secrets_or_danger": 0.1674,
+        "logic_drift": 0.342,
+        "flagged": false
+      },
+      "laya_combined": 0.7384,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 8.27,
+      "valid": true
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c957ffa564..0011dccdfe 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -41,10 +41,13 @@ class Q(tree.Node):\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n+            from django.db.models.expressions import Expression\n+            if isinstance(other, Expression):\n+                return Q(other) & self if conn == self.AND else Q(other) | self\n             raise TypeError(other)\n \n         # If the other Q() is empty, ignore it and just use `self`.\n-        if not other:\n+        if not other.children:\n             _, args, kwargs = self.deconstruct()\n             return type(self)(*args, **kwargs)\n         # Or if this Q is empty, ignore it and just use `other`.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14017-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4586,
+        "matches_issue": 0.7744,
+        "safe_to_apply": 0.6966,
+        "composite": 0.7323999999999999,
+        "secrets_or_danger": 0.173,
+        "logic_drift": 0.5359,
+        "flagged": false
+      },
+      "laya_combined": 0.7324,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 40.22,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c957ffa564..0011dccdfe 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -41,10 +41,13 @@ class Q(tree.Node):\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n+            from django.db.models.expressions import Expression\n+            if isinstance(other, Expression):\n+                return Q(other) & self if conn == self.AND else Q(other) | self\n             raise TypeError(other)\n \n         # If the other Q() is empty, ignore it and just use `self`.\n-        if not other:\n+        if not other.children:\n             _, args, kwargs = self.deconstruct()\n             return type(self)(*args, **kwargs)\n         # Or if this Q is empty, ignore it and just use `other`.\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14017-c3",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query_utils.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query_utils.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.4586,
+        "matches_issue": 0.7744,
+        "safe_to_apply": 0.6966,
+        "composite": 0.7323999999999999,
+        "secrets_or_danger": 0.173,
+        "logic_drift": 0.5359,
+        "flagged": false
+      },
+      "laya_combined": 0.7324,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0062,
+      "rank_reason": "logistic",
+      "elapsed_s": 41.43,
+      "valid": true
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c957ffa564..84c4a8fa85 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -41,6 +41,9 @@ class Q(tree.Node):\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n+            from django.db.models.expressions import Expression\n+            if isinstance(other, Expression):\n+                return Q(other) & self if conn == self.AND else Q(other) | self\n             raise TypeError(other)\n \n         # If the other Q() is empty, ignore it and just use `self`.\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-14017-c1",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/query_utils.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/query_utils.py"
+    ],
+    "added_lines": 3,
+    "removed_lines": 0,
+    "repair_rounds": 0,
+    "laya": {
+      "fix_quality": 1.5387,
+      "matches_issue": 0.7549,
+      "safe_to_apply": 0.6599,
+      "composite": 0.738375,
+      "secrets_or_danger": 0.1674,
+      "logic_drift": 0.342,
+      "flagged": false
+    },
+    "laya_combined": 0.7384,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0066,
+    "rank_reason": "logistic",
+    "elapsed_s": 8.27,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query_utils.py b/django/db/models/query_utils.py\nindex c957ffa..84c4a8f 100644\n--- a/django/db/models/query_utils.py\n+++ b/django/db/models/query_utils.py\n@@ -41,6 +41,9 @@ class Q(tree.Node):\n \n     def _combine(self, other, conn):\n         if not isinstance(other, Q):\n+            from django.db.models.expressions import Expression\n+            if isinstance(other, Expression):\n+                return Q(other) & self if conn == self.AND else Q(other) | self\n             raise TypeError(other)\n \n         # If the other Q() is empty, ignore it and just use `self`.\n",
+  "offline_calls": 0
+}

@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-10-16 13:14:01",
+  "method": "Logistic regression combiner with temperature scaling on held-out validation split",
+  "labels_source": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\data\\laya_labels.jsonl",
+  "n_total": 546,
+  "n_train": 366,
+  "n_val": 180,
+  "temperature": 0.55,
+  "val_ece_raw": 0.0742,
+  "val_ece_scaled": 0.0214,
+  "val_brier_raw": 0.0399,
+  "val_brier_scaled": 0.0328,
+  "threshold_balanced": 0.93,
+  "balanced_accuracy": 0.9333,
+  "threshold_auto_approve_90_precision": 0.04,
+  "validation_precision": 1.0,
+  "validation_coverage": 0.2167,
+  "per_org_90_precision": {
+    "django": {
+      "n": 285,
+      "positives": 95,
+      "threshold": 0.93,
+      "precision": 1.0,
+      "coverage": 0.3333
+    },
+    "matplotlib": {
+      "n": 87,
+      "positives": 12,
+      "threshold": 0.04,
+      "precision": 1.0,
+      "coverage": 0.069
+    },
+    "pytest-dev": {
+      "n": 51,
+      "positives": 6,
+      "threshold": 0.03,
+      "precision": 0.1818,
+      "coverage": 0.4314
+    }
+  },
+  "weights": {
+    "laya_fix_quality": -0.0416,
+    "laya_matches_issue": -0.1877,
+    "laya_safe_to_apply": -0.0169,
+    "gate_ok": 0.6765,
+    "repro_ok": 3.3306,
+    "regression_count": -0.9923,
+    "diff_size": 0.0227,
+    "files_changed": -0.0564
+  },
+  "bias": -2.3467
+}

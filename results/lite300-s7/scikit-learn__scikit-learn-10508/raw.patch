@@ -1,0 +1,12 @@
+--- a/sklearn/preprocessing/label.py
++++ b/sklearn/preprocessing/label.py
+@@ -131,6 +131,9 @@
+         check_is_fitted(self, 'classes_')
+         y = column_or_1d(y, warn=True)
+
++        if len(y) == 0:
++            return np.array([], dtype=int)
++
+         classes = np.unique(y)
+         if len(np.intersect1d(classes, self.classes_)) < len(classes):
+             diff = np.setdiff1d(classes, self.classes_)

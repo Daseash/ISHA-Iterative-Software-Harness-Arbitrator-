@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/_pylab_helpers.py b/lib/matplotlib/_pylab_helpers.py
+index 24fcb81fc9..238dfda55c 100644
+--- a/lib/matplotlib/_pylab_helpers.py
++++ b/lib/matplotlib/_pylab_helpers.py
+@@ -29,7 +29,7 @@ class Gcf:
+         end.
+     """
+ 
+-    figs = OrderedDict()
++    figs = {}
+ 
+     @classmethod
+     def get_fig_manager(cls, num):

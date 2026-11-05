@@ -1,0 +1,13 @@
+diff --git a/django/contrib/auth/management/__init__.py b/django/contrib/auth/management/__init__.py
+index 0b5a982617..e87d080f8c 100644
+--- a/django/contrib/auth/management/__init__.py
++++ b/django/contrib/auth/management/__init__.py
+@@ -90,7 +90,7 @@ def create_permissions(
+     all_perms = set(
+         Permission.objects.using(using)
+         .filter(
+-            content_type__in=ctypes,
++            content_type__in=ctypes
+         )
+         .values_list("content_type", "codename")
+     )

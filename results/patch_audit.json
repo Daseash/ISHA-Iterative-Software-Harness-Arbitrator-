@@ -1,0 +1,709 @@
+{
+  "run_dirs": [
+    "smoke50",
+    "smoke50-r1",
+    "smoke50-r2"
+  ],
+  "total": 50,
+  "flagged": 27,
+  "rows": [
+    {
+      "instance_id": "astropy__astropy-12907",
+      "flags": [
+        "weak_critic:0.48"
+      ],
+      "rescore": true,
+      "critic": 0.4767,
+      "added": 8,
+      "removed": 0,
+      "files": [
+        "astropy/modeling/separable.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-10914",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.85425,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "django/conf/global_settings.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-10924",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.8167,
+      "added": 2,
+      "removed": 0,
+      "files": [
+        "django/db/models/fields/files.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11001",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.6718,
+      "added": 3,
+      "removed": 1,
+      "files": [
+        "django/db/models/sql/compiler.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11019",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.629125,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "django/forms/widgets.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11039",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7220000000000001,
+      "added": 2,
+      "removed": 1,
+      "files": [
+        "django/core/management/commands/sqlmigrate.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11049",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7071000000000001,
+      "added": 2,
+      "removed": 2,
+      "files": [
+        "django/db/models/fields/__init__.py",
+        "django/forms/fields.py"
+      ],
+      "warnings": [],
+      "run": "smoke50-r1",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11099",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.577825,
+      "added": 6,
+      "removed": 2,
+      "files": [
+        "django/contrib/auth/validators.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11133",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.8486,
+      "added": 2,
+      "removed": 0,
+      "files": [
+        "django/http/response.py"
+      ],
+      "warnings": [],
+      "run": "smoke50-r2",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11179",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.811125,
+      "added": 4,
+      "removed": 0,
+      "files": [
+        "django/db/models/deletion.py"
+      ],
+      "warnings": [],
+      "run": "smoke50-r1",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11283",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7045499999999999,
+      "added": 16,
+      "removed": 2,
+      "files": [
+        "django/contrib/auth/migrations/0011_update_proxy_permissions.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11422",
+      "flags": [
+        "red:timeout"
+      ],
+      "rescore": true,
+      "critic": null,
+      "run": "smoke50-r2",
+      "failure_category": "timeout"
+    },
+    {
+      "instance_id": "django__django-11564",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.8014249999999999,
+      "added": 7,
+      "removed": 0,
+      "files": [
+        "django/templatetags/static.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11583",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.6482749999999999,
+      "added": 13,
+      "removed": 3,
+      "files": [
+        "django/utils/autoreload.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11620",
+      "flags": [
+        "red:timeout"
+      ],
+      "rescore": true,
+      "critic": null,
+      "run": "smoke50-r2",
+      "failure_category": "timeout"
+    },
+    {
+      "instance_id": "django__django-11630",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.6838,
+      "added": 10,
+      "removed": 4,
+      "files": [
+        "django/core/checks/model_checks.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "django__django-11742",
+      "flags": [
+        "red:syntax_error"
+      ],
+      "rescore": true,
+      "critic": 0.762675,
+      "run": "smoke50-r2",
+      "failure_category": "syntax_error"
+    },
+    {
+      "instance_id": "django__django-11797",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.8400000000000001,
+      "added": 7,
+      "removed": 0,
+      "files": [
+        "django/db/models/sql/query.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-18869",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7767000000000001,
+      "added": 8,
+      "removed": 0,
+      "files": [
+        "lib/matplotlib/__init__.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-22711",
+      "flags": [
+        "weak_critic:0.49"
+      ],
+      "rescore": true,
+      "critic": 0.49024999999999996,
+      "added": 2,
+      "removed": 2,
+      "files": [
+        "lib/matplotlib/widgets.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-22835",
+      "flags": [
+        "red:timeout"
+      ],
+      "rescore": true,
+      "critic": null,
+      "run": "smoke50-r2",
+      "failure_category": "timeout"
+    },
+    {
+      "instance_id": "matplotlib__matplotlib-23299",
+      "flags": [
+        "red:syntax_error"
+      ],
+      "rescore": true,
+      "critic": 0.7483,
+      "run": "smoke50-r2",
+      "failure_category": "syntax_error"
+    },
+    {
+      "instance_id": "mwaskom__seaborn-2848",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7027,
+      "added": 3,
+      "removed": 0,
+      "files": [
+        "seaborn/_core/data.py"
+      ],
+      "warnings": [],
+      "run": "smoke50-r2",
+      "failure_category": null
+    },
+    {
+      "instance_id": "pallets__flask-4045",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.838175,
+      "added": 4,
+      "removed": 0,
+      "files": [
+        "src/flask/blueprints.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "psf__requests-1963",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.779875,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "requests/sessions.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "pydata__xarray-3364",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7341,
+      "added": 15,
+      "removed": 0,
+      "files": [
+        "xarray/core/concat.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "pylint-dev__pylint-5859",
+      "flags": [
+        "red:patch_apply_failed"
+      ],
+      "rescore": true,
+      "critic": 0.70195,
+      "run": "smoke50-r2",
+      "failure_category": "patch_apply_failed"
+    },
+    {
+      "instance_id": "pytest-dev__pytest-11143",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.5973,
+      "added": 2,
+      "removed": 0,
+      "files": [
+        "src/_pytest/assertion/rewrite.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "pytest-dev__pytest-11148",
+      "flags": [
+        "import_hallucination:pmxbot"
+      ],
+      "rescore": true,
+      "critic": 0.7368250000000001,
+      "added": 6,
+      "removed": 0,
+      "files": [
+        "src/_pytest/assertion/__init__.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "pytest-dev__pytest-5103",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7981750000000001,
+      "added": 14,
+      "removed": 0,
+      "files": [
+        "src/_pytest/assertion/util.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.7073,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10508",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.727925,
+      "added": 4,
+      "removed": 0,
+      "files": [
+        "sklearn/preprocessing/label.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10949",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7404249999999999,
+      "added": 10,
+      "removed": 0,
+      "files": [
+        "sklearn/utils/validation.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-11040",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.6535,
+      "added": 10,
+      "removed": 0,
+      "files": [
+        "sklearn/neighbors/base.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10325",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.6646000000000001,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-10451",
+      "flags": [
+        "red:timeout"
+      ],
+      "rescore": true,
+      "critic": null,
+      "run": "smoke50",
+      "failure_category": "timeout"
+    },
+    {
+      "instance_id": "sphinx-doc__sphinx-11445",
+      "flags": [
+        "red:timeout"
+      ],
+      "rescore": true,
+      "critic": null,
+      "run": "smoke50",
+      "failure_category": "timeout"
+    },
+    {
+      "instance_id": "sympy__sympy-11400",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7542500000000001,
+      "added": 5,
+      "removed": 0,
+      "files": [
+        "sympy/printing/ccode.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-11870",
+      "flags": [
+        "red:syntax_error"
+      ],
+      "rescore": true,
+      "critic": 0.5013749999999999,
+      "run": "smoke50",
+      "failure_category": "syntax_error"
+    },
+    {
+      "instance_id": "sympy__sympy-11897",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.5428,
+      "added": 2,
+      "removed": 0,
+      "files": [
+        "sympy/printing/latex.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-12171",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.691275,
+      "added": 8,
+      "removed": 0,
+      "files": [
+        "sympy/printing/mathematica.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-12236",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.575475,
+      "added": 5,
+      "removed": 1,
+      "files": [
+        "sympy/strategies/tools.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-12419",
+      "flags": [
+        "weak_critic:0.45"
+      ],
+      "rescore": true,
+      "critic": 0.45222500000000004,
+      "added": 2,
+      "removed": 4,
+      "files": [
+        "sympy/matrices/expressions/matexpr.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-12454",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.6072500000000001,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "sympy/matrices/matrices.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-12481",
+      "flags": [
+        "red:patch_apply_failed"
+      ],
+      "rescore": true,
+      "critic": 0.629325,
+      "run": "smoke50",
+      "failure_category": "patch_apply_failed"
+    },
+    {
+      "instance_id": "sympy__sympy-13031",
+      "flags": [
+        "red:patch_apply_failed"
+      ],
+      "rescore": true,
+      "critic": 0.619775,
+      "run": "smoke50",
+      "failure_category": "patch_apply_failed"
+    },
+    {
+      "instance_id": "sympy__sympy-13043",
+      "flags": [
+        "micro_patch"
+      ],
+      "rescore": true,
+      "critic": 0.72705,
+      "added": 1,
+      "removed": 1,
+      "files": [
+        "sympy/integrals/intpoly.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-13146",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.7504000000000001,
+      "added": 3,
+      "removed": 0,
+      "files": [
+        "sympy/simplify/simplify.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-13177",
+      "flags": [],
+      "rescore": false,
+      "critic": 0.6884750000000001,
+      "added": 2,
+      "removed": 1,
+      "files": [
+        "sympy/core/mod.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    },
+    {
+      "instance_id": "sympy__sympy-13437",
+      "flags": [
+        "micro_patch",
+        "weak_critic:0.43"
+      ],
+      "rescore": true,
+      "critic": 0.43315,
+      "added": 2,
+      "removed": 0,
+      "files": [
+        "sympy/functions/combinatorial/numbers.py"
+      ],
+      "warnings": [],
+      "run": "smoke50",
+      "failure_category": null
+    }
+  ],
+  "rescore_ids": [
+    "django__django-11422",
+    "django__django-11620",
+    "matplotlib__matplotlib-22835",
+    "sphinx-doc__sphinx-10451",
+    "sphinx-doc__sphinx-11445",
+    "sympy__sympy-13437"
+  ]
+}

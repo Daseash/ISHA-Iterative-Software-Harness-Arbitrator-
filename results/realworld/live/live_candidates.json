@@ -1,0 +1,86 @@
+[
+  {
+    "name": "live_more-itertools_1284",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\more-itertools-1284",
+    "issue": "### Description\n\nTesting a key against a `bucket` — with `in`, or by selecting a bucket that turns out to be empty — permanently adds that key to the keys returned by iterating the bucket. The key is reported even though no item ever had it, and even though `in` says it is not there.\n\n```python\n>>> from more_itertools import bucket\n>>> s = bucket(['a1', 'b1', 'a2'], key=lambda x: x[0])\n>>> 'c' in s\nFalse\n>>> sorted(s)\n['a', 'b', 'c']          # expected ['a', 'b']\n>>> list(s['c'])\n[]\n```\n\nSo `'c' in s` is `False` while `'c' in list(s)` is `True`, for the same object at the same moment.\n\nSelecting the bucket directly does it too, with no membership test involved:\n\n```python\n>>> s = bucket(['a1', 'b1'], key=lambda x: x[0])\n>>> list(s['zzz'])\n[]\n>>> sorted(s)\n['a', 'b', 'zzz']\n```\n\nA `validator` does not help — it only filters which keys can be invented:\n\n```python\n>>> s = bucket(['a1', 'b1'], key=lambda x: x[0], validator=lambda k: k in {'a', 'b', 'c'})\n>>> 'c' in s\nFalse\n>>> sorted(s)\n['a', 'b', 'c']\n```\n\nThe docstring's own example is affected. `sorted(list(s))` is documented as \"Get the keys\", and one membership test changes the answer:\n\n```python\n>>> iterable = ['a1', 'b1', 'c1', 'a2', 'b2', 'c2', 'b3']\n>>> s = bucket(iterable, key=lambda x: x[0])\n>>> 'd' in s\nFalse\n>>> sorted(list(s))\n['a', 'b', 'c', 'd']     # documented as ['a', 'b', 'c']\n```\n\nEach miss is sticky and they accumulate, so a lookup-heavy loop can leave the key list mostly phantoms:\n\n```python\n>>> s = bucket(['a1'], key=lambda x: x[0])\n>>> for k in ('q', 'r', 's'):\n...     _ = k in s\n>>> sorted(s)\n['a', 'q', 'r', 's']\n>>> {k: list(s[k]) for k in sorted(s)}\n{'a': [], 'q': [], 'r': [], 's': []}\n```\n\n### Cause\n\n`_cache` is a `defaultdict(deque)`, and `_get_values` begins by *reading* it:\n\n```python\ndef _get_values(self, value):\n    while True:\n        # If we've cached some items that match the target value, emit\n        # the first one and evict it from the cache.\n        if self._cache[value]:          # <- a read that creates the entry\n```\n\nOn a miss that read inserts an empty `deque` under `value`. `__iter__` then reports whatever keys `_cache` holds:\n\n```python\nreturn iter(self._cache)\n```\n\nso the empty entry is indistinguishable from a real key. `__contains__` routes through `_get_values` as well, which is why a plain `in` test is enough to trigger it.\n\n`__iter__` was added later than the cache (#371, for #370), so the two have simply never agreed on what a key is.\n\n### Expected behaviour\n\nIterating a `bucket` should yield only keys that at least one item actually had. `k in s` and `k in list(s)` should agree.\n\nI have a fix and tests ready and will open a PR referencing this issue. It makes `_cache` a plain `dict` so a lookup cannot insert, and registers a key only where an item is actually seen. The existing `test_list` case — where a key whose items were fully consumed through `s[key]` must still be listed — keeps working, since that key is registered when its first item is produced rather than by the lookup itself.\n\nFound by machine analysis while probing for invariant mismatches, not by hitting it in production.\n",
+    "must_fail": "test_live_repro.py",
+    "must_pass": "test_live_repro.py",
+    "_provenance": {
+      "repo_url": "https://github.com/more-itertools/more-itertools",
+      "pre_fix_commit": "b2f3aff7633057d234ec9186c18a53f4df306d08",
+      "fix_commit": "3ea9b009b19db0e01a83d51cee43e9935c0d657f",
+      "fix_pr": "https://github.com/more-itertools/more-itertools/pull/1285",
+      "verified_failing_output": "FFF                                                                      [100%]\n================================== FAILURES ==================================="
+    }
+  },
+  {
+    "name": "live_more-itertools_1275",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\more-itertools-1275",
+    "issue": "`reversed(numeric_range(...))` can change the values and length of a floating-point range. It also raises `OverflowError` for valid ranges that start at a datetime limit.\n\nReproduced on Python 3.13.13 / Windows with master at `9ed3dbb0ae527230cd156d91d0af305478558fba`:\n\n```python\nfrom more_itertools import numeric_range\n\nvalues = numeric_range(0.0, 1.0, 0.1)\nforward = list(values)\nbackward = list(reversed(values))\n\nprint(len(forward), len(backward))\n# 10 11\n\nprint(backward[-1])\n# -0.09999999999999998\n\nassert backward == forward[::-1]  # fails\n```\n\nReverse iteration should produce exactly the original ten values in reverse order. The additional negative value lies outside the range, and several of the other values differ from those produced by forward iteration.\n\nA related endpoint problem appears with datetimes:\n\n```python\nfrom datetime import datetime, timedelta\nfrom more_itertools import numeric_range\n\nvalues = numeric_range(\n    datetime.min,\n    datetime.min + timedelta(days=2),\n    timedelta(days=1),\n)\nprint(list(values))\n# [datetime.datetime(1, 1, 1, 0, 0), datetime.datetime(1, 1, 2, 0, 0)]\n\nprint(list(reversed(values)))\n# OverflowError: date value out of range\n```\n\nThe expected reverse sequence contains January 2 followed by January 1. Descending ranges starting at `datetime.max` have the corresponding overflow.\n\n`__reversed__` currently constructs a new range using the final value as its start and `self._start - self._step` as its stop. That arithmetic can change floating-point values and move the stop beyond datetime's representable limits. Reading the original range's indexes in descending order appears to address both cases while preserving lazy iteration.\n\nThis report was prepared and reproduced with OpenAI Codex at the account owner's request.\n",
+    "must_fail": "test_live_repro.py",
+    "must_pass": "test_live_repro.py",
+    "_provenance": {
+      "repo_url": "https://github.com/more-itertools/more-itertools",
+      "pre_fix_commit": "3ea9b009b19db0e01a83d51cee43e9935c0d657f",
+      "fix_commit": "8a930acd4fa0222af8209ae84806c18f260ee9a3",
+      "fix_pr": "https://github.com/more-itertools/more-itertools/pull/1276",
+      "verified_failing_output": "FFF                                                                      [100%]\n================================== FAILURES ==================================="
+    }
+  },
+  {
+    "name": "live_more-itertools_1277",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\more-itertools-1277",
+    "issue": "`zip_broadcast()` calls `iter(obj)` to decide whether an argument is a scalar, discards that iterator, then calls `iter(obj)` again to consume the input. This opens an iterable twice. An input that permits only one opening works with `zip()` but fails with `zip_broadcast()`:\n\n```python\nfrom more_itertools import zip_broadcast\n\nclass SingleUseIterable:\n    def __init__(self):\n        self.opened = False\n\n    def __iter__(self):\n        if self.opened:\n            raise RuntimeError('input already opened')\n        self.opened = True\n        return iter([1, 2])\n\nprint(list(zip(SingleUseIterable(), ['label', 'label'])))\n# [(1, 'label'), (2, 'label')]\n\nprint(list(zip_broadcast(SingleUseIterable(), 'label')))\n# RuntimeError: input already opened\n```\n\nExpected: `[(1, 'label'), (2, 'label')]`, without reopening the source. This also happens with empty inputs and with `strict=True`.\n\nReproduced on Linux with CPython 3.14.2 at commit `9ed3dbb0ae527230cd156d91d0af305478558fba`. Retaining the iterator obtained during scalar detection fixes the reproduction while preserving the configured scalar types and strict length checks. A patch with regression coverage is ready.\n",
+    "must_fail": "test_live_repro.py",
+    "must_pass": "test_live_repro.py",
+    "_provenance": {
+      "repo_url": "https://github.com/more-itertools/more-itertools",
+      "pre_fix_commit": "9ed3dbb0ae527230cd156d91d0af305478558fba",
+      "fix_commit": "4ebeea3e569388911a0bec740092f3cf996d79f3",
+      "fix_pr": "https://github.com/more-itertools/more-itertools/pull/1278",
+      "verified_failing_output": "FFF                                                                      [100%]\n================================== FAILURES ==================================="
+    }
+  },
+  {
+    "name": "live_pre-commit_3706",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\pre-commit",
+    "issue": "### search you tried in the issue tracker\n\nmerge / conflict / duplicate\n\n### describe your issue\n\nHello,\n\nFirst of all, thank you for your work. The tool helps to organize development workflows a lot. Here is an issue I have encountered:\n\nI'm using `pre-commit` manually to run lints and checks over my code during development workflow. In particular running it during rebases when conflicts arisen. I found `pre-commit` to duplicate file names if they are in conflicted state. Some tools misbehaves in case.\n\nHere is a minimal reproducible scenario using git stash conflict:\n\n```sh\n$ git init .\n$ touch README.md\n$ git add README.md \n$ git commit -am \"initial state\"\n[master (root-commit) 53eaf48] initial state\n 1 file changed, 0 insertions(+), 0 deletions(-)\n create mode 100644 README.md\n$ pre-commit run --all-files --verbose\necho.....................................................................Passed\n- hook id: echo\n- duration: 0s\n\nREADME.md\n\n$ echo 'right' > ./README.md \n$ git stash\nSaved working directory and index state WIP on master: 53eaf48 initial state\n$ echo 'left' > ./README.md \n$ git add README.md \n$ git stash pop\nAuto-merging README.md\nCONFLICT (content): Merge conflict in README.md\nRecorded preimage for 'README.md'\nOn branch master\nUnmerged paths:\n  (use \"git restore --staged <file>...\" to unstage)\n  (use \"git add <file>...\" to mark resolution)\n\tboth modified:   README.md\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n\t.pre-commit-config.yaml\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nThe stash entry is kept in case you need it again.\n$ pre-commit run --all-files --verbose\necho.....................................................................Passed\n- hook id: echo\n- duration: 0s\n\nREADME.md README.md README.md\n```\n\nIt would be nice if `pre-commit` could de-duplicate file list prior to feeding it to tools being invoked. Workarounds are welcome.\n\n\n### pre-commit --version\n\npre-commit 4.6.0\n\n### .pre-commit-config.yaml\n\n```yaml\nrepos:\n  - repo: local\n    hooks:\n    - id: echo\n      name: echo\n      entry: echo\n      language: system\n```\n\n### ~/.cache/pre-commit/pre-commit.log (if present)\n\n-",
+    "must_fail": "test_live_repro.py",
+    "must_pass": "test_live_repro.py",
+    "_provenance": {
+      "repo_url": "https://github.com/pre-commit/pre-commit",
+      "pre_fix_commit": "1558d06e3d9e5f495cd97ccaefe937b7c44ead70",
+      "fix_commit": "766e550cd31defcb6096a96735c9de299b0eb301",
+      "fix_pr": "https://github.com/pre-commit/pre-commit/pull/3727",
+      "verified_failing_output": "F                                                                        [100%]\n================================== FAILURES ==================================="
+    }
+  },
+  {
+    "name": "live_black_5463",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\black",
+    "issue": "**Describe the bug**\n\nif you put `# fmt: skip` after an element inside brackets and that element is a ternary like `a + b if c else d` black drops the comma after it\n\nwith default settings it fails with INTERNAL ERROR (not equivalent to the source) so the file cant be formatted at all\nwith `--fast` its worse, black writes the file and the tuple turns into a call so the code throws a TypeError once that line runs\n\n**To Reproduce**\n\ntake this code\n\n```python\nx = (\n    a + b if c else d,  # fmt: skip\n    (e),\n)\n```\n\nand run it with default args\n\n```sh\n$ black file.py\n```\n\nthe resulting error is\n\n> error: cannot format file.py: INTERNAL ERROR: Black 26.5.1 on Python (CPython) 3.14.4 produced code that is not equivalent to the source.  Please report a bug on https://github.com/psf/black/issues.  This diff might be helpful: /tmp/blk_....log\n\nwith `black --fast file.py` it writes this instead\n\n```python\nx = (\n    (\n        a + b if c else d,  # fmt: skip\n    )(e),\n)\n```\n\nwith `a = b = 1`, `c = True`, `d = 0`, `e = 5` the original gives `(2, 5)` and the formatted one raises `TypeError: 'tuple' object is not callable`\n\nsame thing happens with `a.b if c else d` or `f(x) if c else d` or a comparison in the first branch, and inside lists sets dict values call args subscripts and `return (...)` too. a couple of those (a dict value, or when the next element isnt wrapped in parens) give unparseable output instead of the call\n\nplain `a if c else d` works fine and so does `a + b,  # fmt: skip` without the ternary\n\n**Expected behavior**\n\nthe skipped line stays as it is and the tuple stays a tuple\n\n**Environment**\n\n- Black's version: 26.5.1 (compiled: yes) from pypi, also reproduces on main at a7c2368\n- OS and Python version: Linux (WSL2) / Python 3.14.4\n\n**Additional context**\n\nlooks like `_generate_ignored_nodes_from_fmt_skip` in `src/black/comments.py` collapses `a + b` into its `arith_expr` parent but stops one level before the ternary (`test`) node, so the ignored list ends up holding the children of `test` plus the comma from the outer tuple. the standalone comment then gets inserted inside `test` and the comma is gone from the tuple, and `visit_test` later wraps that node in invisible parens which become the `)(`\n\nit also reproduces on the commit right before #5429 so its not from that change. i have a fix with a regression test and will open a PR for it\n",
+    "must_fail": "tests/test_format.py::test_simple_format[fmtskip_conditional_in_brackets]",
+    "must_pass": "tests/test_format.py::test_simple_format[fmtskip_conditional_in_brackets]",
+    "_provenance": {
+      "repo_url": "https://github.com/psf/black",
+      "pre_fix_commit": "6aba61865bc1b35c605fb9989d9461036ae5bca9",
+      "fix_commit": "994ef7eeb18172178552daa1f36f001d156ad583",
+      "fix_pr": "https://github.com/psf/black/pull/5464",
+      "verified_failing_output": "F                                                                        [100%]\n================================== FAILURES ==================================="
+    }
+  },
+  {
+    "name": "live_marshmallow_3016",
+    "repo_path": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\results\\realworld\\live\\marshmallow",
+    "issue": "`validate.URL` rejects an absolute URL whose fragment follows an empty path with no query:\n\n```python\nfrom marshmallow import validate\nvalidate.URL()(\"https://example.com#frag\")   # ValidationError: Not a valid URL.\n```\n\nAdding a path or a query makes it pass (`https://example.com/#frag`, `https://example.com?a=1#frag`), so only the bare-host + fragment case is affected. Per RFC 3986 a fragment may follow an empty path, and anchor links to a domain root (`https://example.com#section`) are common and valid.\n\nThe tail regex after the host allowed `/`, `/…` or `?…`, but a `#fragment` could only appear inside the path/query part. This adds `#` to the set of characters that may introduce the URL tail. As a consequence a bare `#frag` is now also accepted in relative mode, which matches the existing handling of a bare `?query` and is an RFC 3986 same-document reference.\n\n### Testing\n\nAdded cases to the existing parametrized URL tests in `tests/test_validate.py` (absolute `#fragment` / `user@host#fragment`, and a bare `#frag` in both relative lists). Full test suite passes (`1188 passed`); `ruff check`/`ruff format` clean.\n\n---\nUsed AI assistance on this; I reviewed and tested the change myself.",
+    "must_fail": "test_live_repro.py",
+    "must_pass": "test_live_repro.py",
+    "_provenance": {
+      "repo_url": "https://github.com/marshmallow-code/marshmallow",
+      "pre_fix_commit": "3207be31474530f7c0685dfbd7b4faca5b35fbf5",
+      "fix_commit": "902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+      "fix_pr": "https://github.com/marshmallow-code/marshmallow/pull/3016",
+      "verified_failing_output": "FF..                                                                     [100%]\n================================== FAILURES ==================================="
+    }
+  }
+]

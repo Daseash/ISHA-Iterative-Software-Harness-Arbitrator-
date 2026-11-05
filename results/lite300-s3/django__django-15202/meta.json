@@ -1,0 +1,369 @@
+{
+  "instance_id": "django__django-15202",
+  "repo": "django/django",
+  "base_commit": "4fd3044ca0135da903a70dfb66992293f529ecf1",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": "no_confident_fix",
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540693.8566337
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540700.8979726
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540721.1154792
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540725.2754514
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "fallback 1",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540743.300346
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.1-flash-lite",
+      "model_full": "gemini/gemini-3.1-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791540846.188682
+    }
+  ],
+  "patch_info": {
+    "applied": false,
+    "message": "no usable patch",
+    "gates": {},
+    "regenerated": false
+  },
+  "started_at": 1791540612.3030384,
+  "elapsed_s": 237.89,
+  "plan": "try:\n                    scheme, netloc, path, query, fragment = urlsplit(value)\n                except ValueError:\n                    raise ValidationError(self.message, code=self.code, params={'value': value})",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/core/validators.py",
+      "symbol": "django/core/validators.py::__call__",
+      "symbols": [
+        "__call__",
+        "__call__",
+        "__call__",
+        "validate_ipv4_address"
+      ],
+      "line_range": [
+        41,
+        50
+      ],
+      "score": 0.7742,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.5574,
+        "vector": 0.7071,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (body matches report terms: invalid, call, call__, validationerror)"
+    },
+    {
+      "file": "django/forms/fields.py",
+      "symbol": "django/forms/fields.py::clean",
+      "symbols": [
+        "clean",
+        "URLField",
+        "clean",
+        "clean"
+      ],
+      "line_range": [
+        144,
+        153
+      ],
+      "score": 1.0,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.6281,
+        "vector": 0.7201,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #2 (named in the issue; body matches report terms: validationerror, run_validators, validators; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::clean",
+      "symbols": [
+        "clean",
+        "URLField",
+        "_check_validators",
+        "to_python"
+      ],
+      "line_range": [
+        664,
+        674
+      ],
+      "score": 0.932,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.6112,
+        "vector": 0.7018,
+        "defs": 1.0
+      },
+      "reason": "llm_rerank #3 (named in the issue; body matches report terms: run_validators, validators; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/gis/forms/fields.py",
+      "symbol": "django/contrib/gis/forms/fields.py::clean",
+      "symbols": [
+        "clean",
+        "to_python",
+        "GeometryField",
+        "has_changed"
+      ],
+      "line_range": [
+        62,
+        86
+      ],
+      "score": 0.6775,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.3314,
+        "vector": 0.3723,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (named in the issue; body matches report terms: invalid, validationerror; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/contrib/gis/db/models/fields.py",
+      "symbol": "django/contrib/gis/db/models/fields.py::LineStringField",
+      "symbols": [
+        "LineStringField",
+        "MultiLineStringField",
+        "RasterField",
+        "PointField"
+      ],
+      "line_range": [
+        292,
+        298
+      ],
+      "score": 0.7349,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.4583,
+        "vector": 0.5858,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: description, forms, line)"
+    },
+    {
+      "file": "django/contrib/auth/validators.py",
+      "symbol": "django/contrib/auth/validators.py::ASCIIUsernameValidator",
+      "symbols": [
+        "ASCIIUsernameValidator",
+        "UnicodeUsernameValidator"
+      ],
+      "line_range": [
+        9,
+        17
+      ],
+      "score": 0.6258,
+      "signals": {
+        "seed": 1.0,
+        "bm25": 0.2199,
+        "vector": 0.1732,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: validators)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": null,
+  "critic_score": 0.0,
+  "laya_scores": {},
+  "test_output": "NO CONFIDENT FIX: all candidates rejected by gates/verification",
+  "regression_test": "import pytest\nfrom django.forms import URLField\nfrom django.core.exceptions import ValidationError\n\ndef test_urlfield_clean_invalid_ipv6_raises_validation_error():\n    \"\"\"\n    Reproduction of the bug where URLField.clean() raises ValueError \n    instead of ValidationError for certain malformed inputs.\n    \"\"\"\n    field = URLField()\n    # The input '////]@N.AN' triggers a ValueError in urlsplit \n    # inside the validator logic.\n    with pytest.raises(ValidationError) as excinfo:\n        field.clean('////]@N.AN')\n    \n    # Verify the code is consistent with expected URL validation failures\n    assert excinfo.value.code == 'invalid'\n\ndef test_urlfield_empty_input():\n    \"\"\"Verify that empty inputs are handled correctly (should raise required error if required).\"\"\"\n    field = URLField(required=True)\n    with pytest.raises(ValidationError) as excinfo:\n        field.clean('')\n    assert excinfo.value.code == 'required'\n\ndef test_urlfield_none_input():\n    \"\"\"Verify that None input is handled correctly.\"\"\"\n    field = URLField(required=True)\n    with pytest.raises(ValidationError) as excinfo:\n        field.clean(None)\n    assert excinfo.value.code == 'required'\n\ndef test_urlfield_invalid_scheme():\n    \"\"\"Verify that an obviously invalid URL still raises ValidationError.\"\"\"\n    field = URLField()\n    with pytest.raises(ValidationError) as excinfo:\n        field.clean('not-a-url')\n    assert excinfo.value.code == 'invalid'",
+  "escalation": "no confident fix",
+  "candidates": [
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -114,7 +114,10 @@\n         if not value:\n             return\n         try:\n-            scheme, netloc, path, query, fragment = urlsplit(value)\n+            try:\n+                scheme, netloc, path, query, fragment = urlsplit(value)\n+            except ValueError:\n+                raise ValidationError(self.message, code=self.code, params={'value': value})\n         except ValueError:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         try:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c1",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c1\\django\\core\\validators.py: SyntaxError line 117: expected an indented block after 'try' statement on line 116"
+      ],
+      "changed_files": [
+        "django/core/validators.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5683,
+        "matches_issue": 0.8482,
+        "safe_to_apply": 0.7727,
+        "composite": 0.7973,
+        "secrets_or_danger": 0.1919,
+        "logic_drift": 0.3282,
+        "flagged": false
+      },
+      "laya_combined": 0.7973,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 50.08,
+      "valid": false
+    },
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": false,
+      "patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -127,7 +127,10 @@\n         if not value:\n             return\n         try:\n-            scheme, netloc, path, query, fragment = urlsplit(value)\n+            try:\n+                scheme, netloc, path, query, fragment = urlsplit(value)\n+            except ValueError:\n+                raise ValidationError(self.message, code=self.code, params={'value': value})\n         except ValueError:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         try:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c2",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c2\\django\\core\\validators.py: SyntaxError line 117: expected an indented block after 'try' statement on line 116"
+      ],
+      "changed_files": [
+        "django/core/validators.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5683,
+        "matches_issue": 0.8482,
+        "safe_to_apply": 0.7727,
+        "composite": 0.7973,
+        "secrets_or_danger": 0.1894,
+        "logic_drift": 0.3179,
+        "flagged": false
+      },
+      "laya_combined": 0.7973,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 52.69,
+      "valid": false
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.1-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -114,7 +114,10 @@\n         if self.schemes and scheme not in self.schemes:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         try:\n-            scheme, netloc, path, query, fragment = urlsplit(value)\n+            try:\n+                scheme, netloc, path, query, fragment = urlsplit(value)\n+            except ValueError:\n+                raise ValidationError(self.message, code=self.code, params={'value': value})\n         except ValueError:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         if not netloc:",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": false,
+      "gate_errors": [
+        "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c3\\django\\core\\validators.py: SyntaxError line 117: expected an indented block after 'try' statement on line 116"
+      ],
+      "changed_files": [
+        "django/core/validators.py"
+      ],
+      "added_lines": 4,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.5683,
+        "matches_issue": 0.8482,
+        "safe_to_apply": 0.7727,
+        "composite": 0.7973,
+        "secrets_or_danger": 0.1521,
+        "logic_drift": 0.3885,
+        "flagged": false
+      },
+      "laya_combined": 0.7973,
+      "repro": {},
+      "regression_count": 0,
+      "combined_score": 0.0009,
+      "rank_reason": "logistic",
+      "elapsed_s": 60.87,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "model": "gemini/gemini-3.1-flash-lite",
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "substituted": true,
+    "patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -114,7 +114,10 @@\n         if not value:\n             return\n         try:\n-            scheme, netloc, path, query, fragment = urlsplit(value)\n+            try:\n+                scheme, netloc, path, query, fragment = urlsplit(value)\n+            except ValueError:\n+                raise ValidationError(self.message, code=self.code, params={'value': value})\n         except ValueError:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         try:",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c1",
+    "apply_ok": false,
+    "apply_message": "",
+    "gate_ok": false,
+    "gate_errors": [
+      "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-15202-c1\\django\\core\\validators.py: SyntaxError line 117: expected an indented block after 'try' statement on line 116"
+    ],
+    "changed_files": [
+      "django/core/validators.py"
+    ],
+    "added_lines": 4,
+    "removed_lines": 1,
+    "repair_rounds": 2,
+    "laya": {
+      "fix_quality": 1.5683,
+      "matches_issue": 0.8482,
+      "safe_to_apply": 0.7727,
+      "composite": 0.7973,
+      "secrets_or_danger": 0.1919,
+      "logic_drift": 0.3282,
+      "flagged": false
+    },
+    "laya_combined": 0.7973,
+    "repro": {},
+    "regression_count": 0,
+    "combined_score": 0.0009,
+    "rank_reason": "logistic",
+    "elapsed_s": 50.08,
+    "valid": false
+  },
+  "model_patch": "",
+  "offline_calls": 0
+}

@@ -1,0 +1,399 @@
+{
+  "instance_id": "django__django-17051",
+  "repo": "django/django",
+  "base_commit": "b7a17b0ea0a2061bae752a3a2292007d41825814",
+  "status": "done",
+  "attempts": 1,
+  "failure_category": null,
+  "model_log": [
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563136.6070607
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary [cached]",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563141.1817796
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563150.4017303
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563153.2660344
+    },
+    {
+      "role": "coder",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563173.9260333
+    },
+    {
+      "role": "planner",
+      "model": "gemini-3.5-flash-lite",
+      "model_full": "gemini/gemini-3.5-flash-lite",
+      "position": "primary",
+      "note": "",
+      "thread": "isha-bench_0",
+      "timestamp": 1791563295.6694477
+    }
+  ],
+  "patch_info": {
+    "applied": true,
+    "message": "Applied patch to: django/db/models/query.py",
+    "gates": {
+      "ok": true,
+      "errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "warnings": []
+    },
+    "regenerated": true,
+    "git_ready": true,
+    "validate_check_ok": true,
+    "validate_check_msg": ""
+  },
+  "started_at": 1791563084.8007739,
+  "elapsed_s": 218.24,
+  "plan": "if ignore_conflicts or update_conflicts:\n    returning_fields = []",
+  "planner_confidence": -1.0,
+  "localization": [
+    {
+      "file": "django/db/models/query.py",
+      "symbol": "django/db/models/query.py::bulk_create",
+      "symbols": [
+        "bulk_create",
+        "abulk_create",
+        "_batched_insert",
+        "BaseIterable"
+      ],
+      "line_range": [
+        726,
+        733
+      ],
+      "score": 0.5341,
+      "signals": {
+        "seed": 0.0,
+        "bm25": 1.0,
+        "vector": 0.7006,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #1 (named in the issue; signature parameter matches report: unique_fields, update_conflicts, update_fields; body matches report terms: ignore_conflicts, update, unique_fields, conflicts; named, but usually the entry point — check below it)"
+    },
+    {
+      "file": "django/db/models/fields/__init__.py",
+      "symbol": "django/db/models/fields/__init__.py::check",
+      "symbols": [
+        "check",
+        "_check_db_default",
+        "_check_db_comment",
+        "_check_null_allowed_for_primary_keys"
+      ],
+      "line_range": [
+        270,
+        282
+      ],
+      "score": 0.637,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.288,
+        "vector": 1.0,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #2 (body matches report terms: keys, valid, allow, primary)"
+    },
+    {
+      "file": "django/core/serializers/__init__.py",
+      "symbol": "django/core/serializers/__init__.py::BadSerializer",
+      "symbols": [
+        "BadSerializer",
+        "serialize",
+        "_load_serializers",
+        "unregister_serializer"
+      ],
+      "line_range": [
+        37,
+        54
+      ],
+      "score": 0.5584,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1974,
+        "vector": 0.5334,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #3 (body matches report terms: this, allow, when)"
+    },
+    {
+      "file": "django/contrib/auth/__init__.py",
+      "symbol": "django/contrib/auth/__init__.py::authenticate",
+      "symbols": [
+        "authenticate",
+        "_get_user_session_key",
+        "get_user_model",
+        "update_session_auth_hash"
+      ],
+      "line_range": [
+        66,
+        95
+      ],
+      "score": 0.5559,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.1715,
+        "vector": 0.5671,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #4 (body matches report terms: valid, with, this, allow)"
+    },
+    {
+      "file": "django/core/management/__init__.py",
+      "symbol": "django/core/management/__init__.py::fetch_command",
+      "symbols": [
+        "fetch_command",
+        "autocomplete",
+        "get_commands",
+        "load_command_class"
+      ],
+      "line_range": [
+        246,
+        277
+      ],
+      "score": 0.5539,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.182,
+        "vector": 0.5285,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #5 (body matches report terms: with, instance, django, allow)"
+    },
+    {
+      "file": "django/contrib/contenttypes/management/__init__.py",
+      "symbol": "django/contrib/contenttypes/management/__init__.py::RenameContentType",
+      "symbols": [
+        "RenameContentType",
+        "_rename",
+        "get_contenttypes_and_models",
+        "create_contenttypes"
+      ],
+      "line_range": [
+        5,
+        45
+      ],
+      "score": 0.5537,
+      "signals": {
+        "seed": 0.7,
+        "bm25": 0.2614,
+        "vector": 0.361,
+        "defs": 0.0
+      },
+      "reason": "llm_rerank #6 (body matches report terms: update, with, instance, objects)"
+    }
+  ],
+  "retry_count": 0,
+  "critic_verdict": "flagged",
+  "critic_score": 0.662125,
+  "laya_scores": {
+    "fix_quality": 1.3869,
+    "matches_issue": 0.7107,
+    "safe_to_apply": 0.5509,
+    "composite": 0.662125,
+    "secrets_or_danger": 0.1163,
+    "logic_drift": 0.2239,
+    "flagged": false,
+    "guardrail_findings": [],
+    "checklist": {
+      "verdict": "BLOCK",
+      "review": "- SECURITY: PASS: No injection vectors, credentials, or unsafe execution introduced.\n- PERFORMANCE: PASS: Avoids unnecessary query overhead and does not introduce unbounded loops.\n- ROBUSTNESS: FAIL: Modifying `ignore_conflicts or update_conflicts` to suppress returning fields globally breaks databases that do not support RETURNING clauses with upserts.\n- PONYTAIL / YAGNI: PASS: The change directly addresses the requested feature without unnecessary abstractions.\n\nVERDICT: BLOCK"
+    }
+  },
+  "test_output": "PASSED\n[bench mode] patch applies and passes ast/py_compile/pyflakes gates; dynamic tests are executed by the official SWE-bench harness.",
+  "regression_test": "import pytest\nfrom django.db import connection\nfrom django.db.models import IntegerField, Model\nfrom .models import Article  # Assuming a standard test model exists or we define one inline if supported.\n\n\nclass BulkCreateIdTestModel(Model):\n    name = IntegerField(unique=True)\n    value = IntegerField()\n\n    class Meta:\n        app_label = \"queries\"\n        db_table = \"test_bulk_create_update_conflicts_id\"\n\n\n@pytest.mark.django_db\nclass TestBulkCreateUpdateConflictsIds:\n    def test_bulk_create_update_conflicts_returns_ids(self):\n        if connection.vendor != \"postgresql\":\n            pytest.skip(\"Test relies on PostgreSQL ON CONFLICT RETURNING behavior\")\n\n        # Initial create\n        obj1 = BulkCreateIdTestModel(name=1, value=10)\n        created = BulkCreateIdTestModel.objects.bulk_create([obj1])\n        assert created[0].pk is not None\n        original_pk = created[0].pk\n\n        # Bulk create with update_conflicts=True should still populate primary keys on returned objects\n        obj2 = BulkCreateIdTestModel(name=1, value=20)\n        updated = BulkCreateIdTestModel.objects.bulk_create(\n            [obj2],\n            update_conflicts=True,\n            unique_fields=[\"name\"],\n            update_fields=[\"value\"],\n        )\n\n        assert len(updated) == 1\n        assert updated[0].pk is not None\n        assert updated[0].pk == original_pk\n        assert updated[0].value == 20\n\n    def test_bulk_create_ignore_conflicts_does_not_return_ids(self):\n        if connection.vendor != \"postgresql\":\n            pytest.skip(\"Test relies on PostgreSQL backend behavior\")\n\n        # When ignore_conflicts=True, returning IDs can be problematic or unsupported for ignored rows,\n        # so they should remain unpopulated/None.\n        obj = BulkCreateIdTestModel(name=2, value=100)\n        created = BulkCreateIdTestModel.objects.bulk_create([obj], ignore_conflicts=True)\n        # Depending on whether the row was inserted or ignored, ignore_conflicts clears returning_fields.\n        # Let's verify standard ignore_conflicts behavior.\n        assert len(created) == 1\n\n    def test_bulk_create_update_conflicts_multiple_rows(self):\n        if connection.vendor != \"postgresql\":\n            pytest.skip(\"Test relies on PostgreSQL ON CONFLICT RETURNING behavior\")\n\n        BulkCreateIdTestModel.objects.bulk_create([\n            BulkCreateIdTestModel(name=10, value=100),\n            BulkCreateIdTestModel(name=20, value=200),\n        ])\n\n        # Upsert mix of existing and new/updated\n        objs = [\n            BulkCreateIdTestModel(name=10, value=111),\n            BulkCreateIdTestModel(name=20, value=222),\n            BulkCreateIdTestModel(name=30, value=300),\n        ]\n        results = BulkCreateIdTestModel.objects.bulk_create(\n            objs,\n            update_conflicts=True,\n            unique_fields=[\"name\"],\n            update_fields=[\"value\"],\n        )\n\n        assert len(results) == 3\n        for obj in results:\n            assert obj.pk is not None\n\n    def test_bulk_create_update_conflicts_empty_list(self):\n        # Edge case: empty list input should return an empty list without error\n        results = BulkCreateIdTestModel.objects.bulk_create(\n            [],\n            update_conflicts=True,\n            unique_fields=[\"name\"],\n            update_fields=[\"value\"],\n        )\n        assert results == []",
+  "escalation": "",
+  "candidates": [
+    {
+      "index": 2,
+      "strategy": "call_site_aware",
+      "temperature": 0.35,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "gemini/gemini-3.1-flash-lite",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 5ac2407ea3..62385f495a 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -677,7 +677,7 @@ class QuerySet(AltersData):\n                 \"ignore_conflicts and update_conflicts are mutually exclusive.\"\n             )\n         db_features = connections[self.db].features\n-        if ignore_conflicts:\n+        if ignore_conflicts or update_conflicts:\n             if not db_features.supports_ignore_conflicts:\n                 raise NotSupportedError(\n                     \"This database backend does not support ignoring conflicts.\"\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-17051-c2",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 1,
+      "laya": {
+        "fix_quality": 1.3869,
+        "matches_issue": 0.7107,
+        "safe_to_apply": 0.5509,
+        "composite": 0.662125,
+        "secrets_or_danger": 0.1163,
+        "logic_drift": 0.2239,
+        "flagged": false
+      },
+      "laya_combined": 0.6621,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0072,
+      "rank_reason": "logistic",
+      "elapsed_s": 62.5,
+      "valid": true
+    },
+    {
+      "index": 1,
+      "strategy": "coder_default",
+      "temperature": 0.2,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "groq/qwen/qwen3.8-27b",
+      "substituted": true,
+      "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 5ac2407ea3..534ecf30b8 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -672,7 +672,7 @@ class QuerySet(AltersData):\n     def _check_bulk_create_options(\n         self, ignore_conflicts, update_conflicts, update_fields, unique_fields\n     ):\n-        if ignore_conflicts and update_conflicts:\n+        if ignore_conflicts:\n             raise ValueError(\n                 \"ignore_conflicts and update_conflicts are mutually exclusive.\"\n             )\n",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-17051-c1",
+      "apply_ok": true,
+      "apply_message": "Applied patch to: django/db/models/query.py",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [
+        "django/db/models/query.py"
+      ],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 0,
+      "laya": {
+        "fix_quality": 1.6767,
+        "matches_issue": 0.7941,
+        "safe_to_apply": 0.6266,
+        "composite": 0.7743500000000001,
+        "secrets_or_danger": 0.1246,
+        "logic_drift": 0.2764,
+        "flagged": false
+      },
+      "laya_combined": 0.7744,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0066,
+      "rank_reason": "logistic",
+      "elapsed_s": 11.77,
+      "valid": true
+    },
+    {
+      "index": 3,
+      "strategy": "root_cause_first",
+      "temperature": 0.6,
+      "model": "gemini/gemini-3.5-flash-lite",
+      "requested_model": "openrouter/nvidia/nemotron-3-super-120b-a12b:free",
+      "substituted": true,
+      "patch": "--- django/db/models/query.py\n+++ django/db/models/query.py\n@@ -737,3 +737,3 @@\n         with_rows = (\n-            not ignore_conflicts\n+            not ignore_conflicts and not update_conflicts\n             and connection.features.can_return_rows_from_bulk_insert",
+      "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-17051-c3",
+      "apply_ok": false,
+      "apply_message": "",
+      "gate_ok": true,
+      "gate_errors": [],
+      "changed_files": [],
+      "added_lines": 1,
+      "removed_lines": 1,
+      "repair_rounds": 2,
+      "laya": {
+        "fix_quality": 1.384,
+        "matches_issue": 0.7088,
+        "safe_to_apply": 0.5962,
+        "composite": 0.67225,
+        "secrets_or_danger": 0.0896,
+        "logic_drift": 0.2306,
+        "flagged": false
+      },
+      "laya_combined": 0.6723,
+      "repro": {
+        "available": false,
+        "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+      },
+      "regression_count": 0,
+      "combined_score": 0.0071,
+      "rank_reason": "logistic",
+      "elapsed_s": 66.95,
+      "valid": false
+    }
+  ],
+  "selected_candidate": {
+    "index": 2,
+    "strategy": "call_site_aware",
+    "temperature": 0.35,
+    "model": "gemini/gemini-3.5-flash-lite",
+    "requested_model": "gemini/gemini-3.1-flash-lite",
+    "substituted": true,
+    "patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 5ac2407ea3..62385f495a 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -677,7 +677,7 @@ class QuerySet(AltersData):\n                 \"ignore_conflicts and update_conflicts are mutually exclusive.\"\n             )\n         db_features = connections[self.db].features\n-        if ignore_conflicts:\n+        if ignore_conflicts or update_conflicts:\n             if not db_features.supports_ignore_conflicts:\n                 raise NotSupportedError(\n                     \"This database backend does not support ignoring conflicts.\"\n",
+    "worktree": "C:\\Users\\Eashwar\\ISHA\\isha-agent\\swebench_checkouts\\.worktrees\\django__django-17051-c2",
+    "apply_ok": true,
+    "apply_message": "Applied patch to: django/db/models/query.py",
+    "gate_ok": true,
+    "gate_errors": [],
+    "changed_files": [
+      "django/db/models/query.py"
+    ],
+    "added_lines": 1,
+    "removed_lines": 1,
+    "repair_rounds": 1,
+    "laya": {
+      "fix_quality": 1.3869,
+      "matches_issue": 0.7107,
+      "safe_to_apply": 0.5509,
+      "composite": 0.662125,
+      "secrets_or_danger": 0.1163,
+      "logic_drift": 0.2239,
+      "flagged": false
+    },
+    "laya_combined": 0.6621,
+    "repro": {
+      "available": false,
+      "reason": "docker unavailable: failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified."
+    },
+    "regression_count": 0,
+    "combined_score": 0.0072,
+    "rank_reason": "logistic",
+    "elapsed_s": 62.5,
+    "valid": true,
+    "beat": 2
+  },
+  "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex 5ac2407..62385f4 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -677,7 +677,7 @@ class QuerySet(AltersData):\n                 \"ignore_conflicts and update_conflicts are mutually exclusive.\"\n             )\n         db_features = connections[self.db].features\n-        if ignore_conflicts:\n+        if ignore_conflicts or update_conflicts:\n             if not db_features.supports_ignore_conflicts:\n                 raise NotSupportedError(\n                     \"This database backend does not support ignoring conflicts.\"\n",
+  "offline_calls": 0
+}
