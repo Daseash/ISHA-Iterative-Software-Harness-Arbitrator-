@@ -725,9 +725,85 @@ def localize(
             else:
                 cand.reason = "retrieval"
     ranked.sort(key=lambda c: c.score, reverse=True)
+    ranked = specialist_rerank(
+        issue_text, ranked, top_n=min(len(ranked), max(top_k, 8))
+    )
     if os.getenv("ISHA_LOC_ENABLE_LLM_RERANK", "1") == "1":
         ranked = llm_rerank(issue_text, ranked, top_n=min(len(ranked), max(top_k, 6)))
     return ranked[:top_k]
+
+
+_SPECIALIST_SUITE = None
+
+
+def _local_rerank_enabled() -> bool:
+    """Node 1 is explicit opt-in.
+
+    The v1 checkpoint was trained with a patch preview on the positive side of
+    every pair, so it learned "contains a diff" rather than file relevance.
+    It stays wired for the v2 retrain but never auto-activates: downloading
+    279 MB inside a unit test is also unacceptable.  ``ISHA_LOCAL_RERANK=1``
+    enables it; ``ISHA_LOCAL_RERANK=0`` (or offline mode) disables it.
+    """
+    if os.getenv("ISHA_FORCE_OFFLINE") == "1":
+        return False
+    return os.getenv("ISHA_LOCAL_RERANK", "0").strip() == "1"
+
+
+def specialist_rerank(
+    issue_text: str,
+    candidates: list[Candidate],
+    top_n: int = 8,
+) -> list[Candidate]:
+    """Node 1: reorder the top candidates with the local INT8 cross-encoder.
+
+    Only the order changes — the calibrated hybrid ``score`` is preserved so
+    downstream confidence thresholds keep their original meaning.  Every
+    failure path returns the input order unchanged.
+    """
+    if len(candidates) <= 1 or not _local_rerank_enabled():
+        return candidates
+
+    global _SPECIALIST_SUITE
+    try:
+        if _SPECIALIST_SUITE is None:
+            from src.models.specialist_onnx import ISHASpecialistSuite
+
+            _SPECIALIST_SUITE = ISHASpecialistSuite()
+        pool = candidates[:top_n]
+        payload = [
+            {
+                "path": c.file,
+                "ast_summary": " ".join(c.symbols[:8]) or c.symbol,
+                "normalized_rag_score": c.score,
+            }
+            for c in pool
+        ]
+        ranked = _SPECIALIST_SUITE.rerank_files(
+            issue_text, payload, top_k=len(payload)
+        )
+        by_file = {c.file: c for c in pool}
+        out: list[Candidate] = []
+        for item in ranked:
+            cand = by_file.get(item["path"])
+            if cand is None:
+                continue
+            prob = float(item.get("rerank_prob", 0.0))
+            cand.scores["local_rerank"] = prob
+            cand.reason = (
+                f"local_rerank p={prob:.3f}" + (f" | {cand.reason}" if cand.reason else "")
+            )
+            out.append(cand)
+        seen = {c.file for c in out}
+        out.extend(c for c in candidates if c.file not in seen)
+        return out
+    except Exception as exc:
+        print(
+            f"[localizer] local rerank unavailable ({exc.__class__.__name__}: {exc}) "
+            "— keeping retrieval order",
+            file=sys.stderr,
+        )
+        return candidates
 
 
 def llm_rerank(

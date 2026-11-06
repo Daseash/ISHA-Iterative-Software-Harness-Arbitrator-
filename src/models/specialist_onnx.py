@@ -1,9 +1,10 @@
 """Local ONNX specialist suite: Nodes 1, 5b and 9 without any API keys.
 
 The three INT8 ONNX models are pulled from the Hugging Face Hub on first use
-and cached under ``models_cache/``.  All heavy dependencies (optimum,
-transformers, numpy, joblib) are imported lazily so importing this module (and
-running the rest of the test suite) never requires them.
+and cached under ``models_cache/``.  Inference runs through ``onnxruntime``
+directly (no ``optimum`` dependency); ``transformers``, ``numpy`` and
+``joblib`` are imported lazily so importing this module (and running the rest
+of the test suite) never requires them.
 
 Environment:
     ISHA_HUB_USER       Hub account that owns the published repos
@@ -83,14 +84,23 @@ class ISHASpecialistSuite:
             return self._models[key], self._tokenizers[key]
 
         # Resolve the cache first so ISHA_FORCE_OFFLINE gets its explicit
-        # RuntimeError even on machines without optimum/transformers installed.
+        # RuntimeError even on machines without transformers/onnxruntime.
         local_dir = self._ensure_local(key)
 
-        from optimum.onnxruntime import ORTModelForSequenceClassification
+        import onnxruntime as ort
         from transformers import AutoTokenizer
 
+        graph = Path(local_dir) / "model.onnx"
+        if not graph.exists():
+            graphs = sorted(Path(local_dir).glob("*.onnx"))
+            if not graphs:
+                raise FileNotFoundError(f"[specialist:{key}] no .onnx file in {local_dir}")
+            graph = graphs[0]
+
         self._tokenizers[key] = AutoTokenizer.from_pretrained(local_dir)
-        self._models[key] = ORTModelForSequenceClassification.from_pretrained(local_dir)
+        self._models[key] = ort.InferenceSession(
+            str(graph), providers=["CPUExecutionProvider"]
+        )
 
         if key == "laya":
             platt_file = Path(local_dir) / "platt_calibrator.joblib"
@@ -99,6 +109,23 @@ class ISHASpecialistSuite:
 
                 self._platt = joblib.load(platt_file)
         return self._models[key], self._tokenizers[key]
+
+    @staticmethod
+    def _run(model, encoded) -> "object":
+        """Run a session, feeding exactly the tensor names the graph declares."""
+        import numpy as np
+
+        feeds = {}
+        for spec in model.get_inputs():
+            value = encoded.get(spec.name)
+            if value is None and spec.name == "token_type_ids":
+                value = np.zeros_like(encoded["input_ids"])
+            if value is None:
+                raise ValueError(
+                    f"tokenizer produced no tensor for ONNX input {spec.name!r}"
+                )
+            feeds[spec.name] = np.asarray(value, dtype=np.int64)
+        return np.asarray(model.run(None, feeds)[0])
 
     def warmup(self) -> dict[str, str]:
         """Download/load every specialist; returns repo ids for logging."""
@@ -135,7 +162,7 @@ class ISHASpecialistSuite:
             max_length=512,
             return_tensors="np",
         )
-        logits = np.asarray(model(**inputs).logits).reshape(-1)
+        logits = self._run(model, inputs).reshape(-1)
         probs = 1.0 / (1.0 + np.exp(-logits))
         for cand, prob in zip(ast_candidates, probs):
             cand["rerank_prob"] = float(prob)
@@ -168,7 +195,7 @@ class ISHASpecialistSuite:
             f"[STDERR]:\n{pytest_stderr[:1000]}"
         )
         inputs = tok(text, truncation=True, max_length=512, return_tensors="np")
-        logits = np.asarray(model(**inputs).logits).reshape(-1)
+        logits = self._run(model, inputs).reshape(-1)
         exp_l = np.exp(logits - np.max(logits))
         prob_valid = float((exp_l / exp_l.sum())[1])
         return prob_valid >= 0.50
@@ -181,7 +208,7 @@ class ISHASpecialistSuite:
         model, tok = self._load("laya")
         text = f"[ISSUE]: {issue_text[:1200]}\n[DIFF]:\n{candidate_diff[:2000]}"
         inputs = tok(text, truncation=True, max_length=512, return_tensors="np")
-        logits = np.asarray(model(**inputs).logits).reshape(-1)
+        logits = self._run(model, inputs).reshape(-1)
         p = 1.0 / (1.0 + np.exp(-logits))
         fix_q, match_q, safe_q, danger_q, drift_q = [float(x) for x in p[:5]]
 

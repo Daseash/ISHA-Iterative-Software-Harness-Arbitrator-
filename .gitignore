@@ -105,6 +105,9 @@ website/.vercel/
 *.db-shm
 checkpoints.db
 
+# Downloaded ONNX specialist weights (re-fetched from the Hub on first use)
+models_cache/
+
 # Local dataset builds, training scratch, and temporary runs
 dataset_build/
 dataset_build_clean/
