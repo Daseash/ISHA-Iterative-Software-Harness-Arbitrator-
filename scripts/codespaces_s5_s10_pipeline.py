@@ -1,17 +1,16 @@
 """
-ISHA Codespaces S5 to S10 Pipeline — Patch Generation & Official Docker Evaluation
+ISHA Codespaces Master Pipeline — Full 300-Instance (S1 to S10) Patch Generation & Official Docker Evaluation
 
-Runs the best improvement loop across Sessions 5 through 10:
-  1. 3-Candidate Tournament (--candidates 3) across diverse strategies
-     (minimal_diff, root_cause_first, call_site_aware).
+Runs the complete 300-instance evaluation loop across all 10 SWE-bench Lite sessions (S1 to S10):
+  1. 4-Candidate Tournament with newly trained ISHA-Coder-7B-DPO.
   2. AST static compiler gates + in-loop feedback repair.
   3. Official Docker harness evaluation in Codespace's native Docker engine.
   4. Automatic scoreboard calculation via scripts/score.py.
 
 Usage in Codespace:
     python scripts/codespaces_s5_s10_pipeline.py
-    python scripts/codespaces_s5_s10_pipeline.py --sessions lite300-s5 lite300-s6
     python scripts/codespaces_s5_s10_pipeline.py --eval-only
+    python scripts/codespaces_s5_s10_pipeline.py --sessions lite300-s1 lite300-s2
 """
 
 import argparse
@@ -30,6 +29,10 @@ LOG_DIR = Path(tempfile.gettempdir()) / "isha_pipeline_logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGET_SESSIONS = [
+    "lite300-s1",
+    "lite300-s2",
+    "lite300-s3",
+    "lite300-s4",
     "lite300-s5",
     "lite300-s6",
     "lite300-s7",
