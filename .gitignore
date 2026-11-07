@@ -109,6 +109,7 @@ checkpoints.db
 models_cache/
 
 # Local dataset builds, training scratch, and temporary runs
+submission/
 dataset_build/
 dataset_build_clean/
 kaggle/
