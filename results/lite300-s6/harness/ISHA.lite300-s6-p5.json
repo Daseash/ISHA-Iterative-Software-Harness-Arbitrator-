@@ -1,0 +1,72 @@
+{
+    "total_instances": 4,
+    "submitted_instances": 27,
+    "completed_instances": 4,
+    "resolved_instances": 0,
+    "unresolved_instances": 4,
+    "infra_failure_instances": 0,
+    "ambiguous_failure_instances": 1,
+    "empty_patch_instances": 0,
+    "error_instances": 0,
+    "completed_ids": [
+        "psf__requests-2317",
+        "psf__requests-3362",
+        "pydata__xarray-4493",
+        "pytest-dev__pytest-5103"
+    ],
+    "incomplete_ids": [],
+    "empty_patch_ids": [],
+    "submitted_ids": [
+        "psf__requests-1963",
+        "psf__requests-2148",
+        "psf__requests-2317",
+        "psf__requests-3362",
+        "psf__requests-863",
+        "pydata__xarray-3364",
+        "pydata__xarray-4094",
+        "pydata__xarray-4248",
+        "pydata__xarray-4493",
+        "pylint-dev__pylint-5859",
+        "pylint-dev__pylint-6506",
+        "pylint-dev__pylint-7080",
+        "pylint-dev__pylint-7114",
+        "pylint-dev__pylint-7228",
+        "pylint-dev__pylint-7993",
+        "pytest-dev__pytest-11143",
+        "pytest-dev__pytest-11148",
+        "pytest-dev__pytest-5103",
+        "pytest-dev__pytest-5221",
+        "pytest-dev__pytest-5227",
+        "pytest-dev__pytest-5413",
+        "pytest-dev__pytest-5495",
+        "pytest-dev__pytest-5692",
+        "pytest-dev__pytest-6116",
+        "pytest-dev__pytest-7168",
+        "pytest-dev__pytest-7220",
+        "pytest-dev__pytest-7432"
+    ],
+    "resolved_ids": [],
+    "unresolved_ids": [
+        "psf__requests-2317",
+        "psf__requests-3362",
+        "pydata__xarray-4493",
+        "pytest-dev__pytest-5103"
+    ],
+    "infra_failure_ids": [],
+    "ambiguous_failure_ids": [
+        "pytest-dev__pytest-5103"
+    ],
+    "failure_reasons": {
+        "pytest-dev__pytest-5103": "no_tests_collected"
+    },
+    "error_ids": [],
+    "schema_version": 2,
+    "unstopped_instances": 0,
+    "unstopped_containers": [],
+    "unremoved_images": [
+        "swebench/sweb.eval.x86_64.psf_1776_requests-2317:latest",
+        "swebench/sweb.eval.x86_64.psf_1776_requests-3362:latest",
+        "swebench/sweb.eval.x86_64.pydata_1776_xarray-4493:latest",
+        "swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-5103:latest"
+    ]
+}
