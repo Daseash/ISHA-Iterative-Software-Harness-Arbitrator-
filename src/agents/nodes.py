@@ -553,6 +553,34 @@ def build_coder_prompt(state: AgentState, strategy: str | None = None,
             "Ensure exact 4-space Python indentation and that all blocks are correctly closed.\n"
         )
 
+    # Targeted traceback guidance for common failure modes
+    test_out = state.test_output or ""
+    if "TypeError" in test_out:
+        retry_hint += (
+            "\n\nCRITICAL TYPEERROR DETECTED IN TEST SUITE:\n"
+            "- If the error states 'object of type X has no len()', you MUST implement `def __len__(self):` on class X (Class Anchoring).\n"
+            "- If the error is 'object of type NoneType has no len()', check `if val is None:` before calling len(val) (Guard Clause Completeness).\n"
+            "- Ensure exact return types (do not return None instead of a tuple/list/string or vice versa).\n"
+        )
+    if "AttributeError" in test_out:
+        retry_hint += (
+            "\n\nCRITICAL ATTRIBUTEERROR DETECTED IN TEST SUITE:\n"
+            "- The test tried to access a missing attribute or method.\n"
+            "- Insert the method or property directly into the EXACT target class (Universal Invariant 1: Class Anchoring), NOT an outer helper.\n"
+        )
+    if "AssertionError" in test_out:
+        retry_hint += (
+            "\n\nCRITICAL ASSERTIONERROR DETECTED IN TEST SUITE:\n"
+            "- The test assertion failed. Review the expected value vs returned value in the traceback above.\n"
+            "- Check for off-by-one errors, edge-case conditions, or mathematical formula mismatches.\n"
+        )
+    if "sympy" in (getattr(state, "instance_id", "") or "").lower() or "sympy" in (getattr(state, "repo_path", "") or "").lower():
+        retry_hint += (
+            "\n\nSYMPY DOMAIN INVARIANT:\n"
+            "- In Python 3.8+, AST node comparisons must preserve Constant vs Name syntax (`ast.Constant(value=False)` vs `ast.Name(id='False')`).\n"
+            "- Do not break symbolic expression trees with string manipulation; preserve expression node types.\n"
+        )
+
     # M-2 Grounding: If previous attempt failed on git apply or hunk context mismatch,
     # strictly mandate verbatim copying of context lines from the actual files.
     apply_failed = (

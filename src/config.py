@@ -21,6 +21,7 @@ import sys
 import threading
 import time
 import warnings
+from collections import defaultdict
 
 # Suppress internal background worker and third-party library warnings
 warnings.filterwarnings("ignore")
@@ -82,9 +83,9 @@ PLANNER_CHAIN = _parse_chain(
 )
 
 CODER_CHAIN = _parse_chain(
-    "ISHA_CODER_MODEL", "gemini/gemini-3.5-flash-lite",
+    "ISHA_CODER_MODEL", "gemini/gemini-3.8-flash",
     "ISHA_CODER_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.8-flash",
+    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.5-flash",
 )
 
 LOCALIZER_CHAIN = _parse_chain(
@@ -197,8 +198,43 @@ def _next_from_pool(pool: list, lock: threading.Lock, counter_name: str) -> str 
         return pool[0]
 
 
-def get_next_groq_key() -> str | None:
-    return _next_from_pool(_groq_key_pool, _groq_key_lock, "groq")
+_dead_groq_keys = set()
+_dead_groq_keys_by_model: dict = defaultdict(set)
+_groq_key_death_time: dict = {}
+
+
+def get_next_groq_key(model: str = "") -> str | None:
+    """Return next active Groq API key in round-robin order, isolating quota per-model."""
+    global _groq_key_counter
+    with _groq_key_lock:
+        now = time.time()
+        dead = _dead_groq_keys_by_model[model] if model else _dead_groq_keys
+        revived = [k for k in list(dead) if (now - _groq_key_death_time.get((k, model), 0.0)) > 60]
+        for k in revived:
+            dead.remove(k)
+            _groq_key_death_time.pop((k, model), None)
+        active = [k for k in _groq_key_pool if k not in dead]
+        if not active:
+            active = _groq_key_pool
+        if not active:
+            return None
+        _groq_key_counter += 1
+        return active[_groq_key_counter % len(active)]
+
+
+def mark_groq_key_dead(key: str, model: str = "") -> bool:
+    """Mark a Groq key as rate-limited/exhausted."""
+    with _groq_key_lock:
+        if model:
+            _dead_groq_keys_by_model[model].add(key)
+            _groq_key_death_time[(key, model)] = time.time()
+            active = [k for k in _groq_key_pool if k not in _dead_groq_keys_by_model[model]]
+            return len(active) > 0
+        else:
+            _dead_groq_keys.add(key)
+            _groq_key_death_time[(key, "")] = time.time()
+            active = [k for k in _groq_key_pool if k not in _dead_groq_keys]
+            return len(active) > 0
 
 
 def get_next_openrouter_key() -> str | None:
@@ -793,6 +829,9 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                             if mark_gemini_key_dead(active_gemini_key, model):
                                 # Successfully marked key dead for this model, other keys remain — retry call immediately
                                 continue
+                        if provider == "groq" and _gkey:
+                            if mark_groq_key_dead(_gkey, model):
+                                continue
                         # Per-model quota — kill the model, not the provider
                         _dead_models.add(model)
                         print(
@@ -932,6 +971,15 @@ def reset_provider_state() -> None:
     transient quota error would poison the rest of the run.
     """
     _dead_providers.clear()
+    _dead_models.clear()
+    with _gemini_key_lock:
+        _dead_gemini_keys.clear()
+        _dead_gemini_keys_by_model.clear()
+        _key_death_time.clear()
+    with _groq_key_lock:
+        _dead_groq_keys.clear()
+        _dead_groq_keys_by_model.clear()
+        _groq_key_death_time.clear()
 
 
 def provider_dead() -> list:

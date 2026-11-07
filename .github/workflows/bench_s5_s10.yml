@@ -106,5 +106,6 @@ jobs:
         run: |
           git add results/ data/slices/
           git commit -m "chore(bench): auto-sync S5-S10 patches & Docker eval [skip ci]" || echo "No changes to commit"
-          git pull --rebase origin main || true
+          git fetch origin main || true
+          git rebase -X theirs origin/main || git rebase --abort || true
           git push origin main || echo "Push skipped or no new changes"
