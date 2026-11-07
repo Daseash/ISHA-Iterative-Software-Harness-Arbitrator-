@@ -1,0 +1,24 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 4038859cfa..01744fc2e9 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1478,6 +1478,11 @@ class Model(metaclass=ModelBase):
+                         id='models.E006',
+                     )
+                 )
++            if index.contains_expressions:
++                for expression in index.expressions:
++                    references.update(
++                        expression.get_source_expressions()
++                    )
+             used_fields[f.name] = f
+             used_fields[f.attname] = f
+ 
+@@ -1511,6 +1516,7 @@ class Model(metaclass=ModelBase):
+     @classmethod
+     def _check_model_name_db_lookup_clashes(cls):
+         errors = []
++        references = set()
+         model_name = cls.__name__
+         if model_name.startswith('_') or model_name.endswith('_'):
+             errors.append(
