@@ -1,0 +1,11 @@
+--- a/django/contrib/sessions/backends/base.py
++++ b/django/contrib/sessions/backends/base.py
+@@ -125,7 +125,7 @@ class SessionBase:
+             return signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)
+         # RemovedInDjango40Warning: when the deprecation ends, handle here
+         # exceptions similar to what _legacy_decode() does now.
+-        except Exception:
++        except (signing.BadSignature, Exception):
+             return self._legacy_decode(session_data)
+
+     def _legacy_encode(self, session_dict):

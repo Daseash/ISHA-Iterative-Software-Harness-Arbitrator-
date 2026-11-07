@@ -1,0 +1,12 @@
+diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py
+index 397146a354..6b06363e30 100644
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -832,6 +832,7 @@ class ForeignKey(ForeignObject):
+         self.db_constraint = db_constraint
+ 
+     def check(self, **kwargs):
++        qs = self.remote_field.model._default_manager.all()
+         return [
+             *super().check(**kwargs),
+             *self._check_on_delete(),

@@ -1,0 +1,13 @@
+diff --git a/django/contrib/auth/tokens.py b/django/contrib/auth/tokens.py
+index 93e2d71af2..cd6323139e 100644
+--- a/django/contrib/auth/tokens.py
++++ b/django/contrib/auth/tokens.py
+@@ -89,7 +89,7 @@ class PasswordResetTokenGenerator:
+         invalidates the token.
+ 
+         Running this data through salted_hmac() prevents password cracking
+-        attempts using the reset token, provided the secret isn't compromised.
++        # attempts using the reset token, provided the secret isn't compromised.
+         """
+         # Truncate microseconds so that tokens are consistent even if the
+         # database doesn't support microseconds.

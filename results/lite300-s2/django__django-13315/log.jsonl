@@ -1,9 +1,19 @@
-{"event": "start", "instance_id": "django__django-13315", "ts": 1791461855.7409787}
-{"event": "attempt", "n": 1, "ts": 1791461856.2453854}
-{"event": "model", "ts": 1791461928.696596, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791461934.9284225, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791461959.2524214, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791461999.8068995, "role": "planner", "model": "gemini-3.1-flash-lite", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791462026.2854493, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "fallback 2", "note": ""}
-{"event": "model", "ts": 1791462176.1497302, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1791462181.8126264}
+{"event": "start", "instance_id": "django__django-13315", "ts": 1794051387.6475186}
+{"event": "attempt", "n": 1, "ts": 1794051387.9482403}
+{"ts": 1794051417.5067377, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794051419.5719042, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794051425.6397884, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794051425.640226, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794051425.678918, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794051425.6791687, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794051437.6565769, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794051570.5760317, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "model", "ts": 1794051419.5303237, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794051424.0917814, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794051425.64021, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1794051425.6791553, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1794051441.1253328, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794051446.6541011, "role": "repro", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794051470.145092, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794051571.3509943, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794051573.5084026}
