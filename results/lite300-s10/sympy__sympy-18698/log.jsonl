@@ -1,12 +1,14 @@
-{"event": "start", "instance_id": "sympy__sympy-18698", "ts": 1792997341.1521668}
-{"event": "attempt", "n": 1, "ts": 1792997344.4115732}
-{"ts": 1792997673.479297, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792997675.9764154, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792997704.4263437}
-{"event": "attempt", "n": 2, "ts": 1792997705.1645916}
-{"event": "timeout", "attempt": 2, "ts": 1792998065.7442172}
-{"ts": 1792998099.7804592, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792998146.0247564, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792998217.1056163, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1792998263.588245, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793009301.162221, "role": "coder", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "start", "instance_id": "sympy__sympy-18698", "ts": 1794080671.2323136}
+{"event": "attempt", "n": 1, "ts": 1794080674.4640276}
+{"ts": 1794080907.8512526, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794080907.8516908, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794080907.9456866, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794080907.9459596, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794080965.8753889, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794081026.199839, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794081034.4679978}
+{"event": "attempt", "n": 2, "ts": 1794081034.5867298}
+{"event": "timeout", "attempt": 2, "ts": 1794081394.8272128}
+{"ts": 1794081726.2648525, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794081862.6420674, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794088044.3963785, "role": "coder", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}

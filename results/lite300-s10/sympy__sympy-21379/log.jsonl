@@ -1,11 +1,13 @@
-{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1792999511.9801145}
-{"event": "attempt", "n": 1, "ts": 1792999514.321597}
-{"event": "timeout_retry", "attempt": 1, "ts": 1792999875.9053686}
-{"event": "attempt", "n": 2, "ts": 1792999880.5322013}
-{"event": "timeout", "attempt": 2, "ts": 1793000242.9020402}
-{"ts": 1793004671.0890543, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793004689.759679, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793006298.9053698, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793006353.647215, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793007844.129649, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1793007901.5327086, "role": "planner", "model": "gpt-oss-120b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1794082849.431751}
+{"event": "attempt", "n": 1, "ts": 1794082850.0183237}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794083210.2020342}
+{"event": "attempt", "n": 2, "ts": 1794083217.5642867}
+{"event": "timeout", "attempt": 2, "ts": 1794083581.8276224}
+{"ts": 1794087042.6408353, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794087534.3947659, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794089712.6684105, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794089729.0812464, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794089984.0226197, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794089998.9264586, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794091358.8805573, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794091644.8439143, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
