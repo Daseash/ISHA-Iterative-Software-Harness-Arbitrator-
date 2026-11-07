@@ -1,0 +1,14 @@
+diff --git a/lib/matplotlib/pyplot.py b/lib/matplotlib/pyplot.py
+index 2a0c34a71b..79d1b415da 100644
+--- a/lib/matplotlib/pyplot.py
++++ b/lib/matplotlib/pyplot.py
+@@ -167,6 +167,9 @@ def uninstall_repl_displayhook():
+ 
+ 
+ draw_all = _pylab_helpers.Gcf.draw_all
++if "seaborn-colorblind" not in style.library:
++    style.library["seaborn-colorblind"] = style.library["seaborn-v0_8-colorblind"]
++
+ 
+ 
+ @_copy_docstring_and_deprecators(matplotlib.set_loglevel)

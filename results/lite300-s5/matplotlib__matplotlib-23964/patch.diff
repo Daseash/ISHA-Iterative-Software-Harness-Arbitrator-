@@ -1,0 +1,13 @@
+diff --git a/lib/matplotlib/backends/backend_ps.py b/lib/matplotlib/backends/backend_ps.py
+index f209e811f1..6d9ac84ec7 100644
+--- a/lib/matplotlib/backends/backend_ps.py
++++ b/lib/matplotlib/backends/backend_ps.py
+@@ -671,6 +671,8 @@ grestore
+         self.set_color(*gc.get_rgb())
+ 
+         for ps_name, xs_names in stream:
++            if ps_name is None:
++                continue
+             self.set_font(ps_name, prop.get_size_in_points(), False)
+             thetext = "\n".join(f"{x:g} 0 m /{name:s} glyphshow"
+                                 for x, name in xs_names)

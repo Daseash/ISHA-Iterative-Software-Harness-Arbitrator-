@@ -1,0 +1,15 @@
+diff --git a/lib/matplotlib/artist.py b/lib/matplotlib/artist.py
+index 1f33b9d3ec..65d05a226d 100644
+--- a/lib/matplotlib/artist.py
++++ b/lib/matplotlib/artist.py
+@@ -1277,6 +1277,10 @@ class Artist:
+     def format_cursor_data(self, data):
+         """
+         Return a string representation of *data*.
++                except ValueError:
++                    # Fallback for BoundaryNorm: use nearest boundary value
++                    boundaries = self.norm.boundaries
++                    neighbors = np.interp(values, boundaries[:-1], boundaries[1:])
+ 
+         .. note::
+             This method is intended to be overridden by artist subclasses.

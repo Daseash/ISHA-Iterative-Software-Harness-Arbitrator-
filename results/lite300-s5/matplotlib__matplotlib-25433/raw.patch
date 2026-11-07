@@ -1,0 +1,24 @@
+diff --git a/lib/matplotlib/widgets.py b/lib/matplotlib/widgets.py
+index ebe5da43e2..34319e2dae 100644
+--- a/lib/matplotlib/widgets.py
++++ b/lib/matplotlib/widgets.py
+@@ -179,6 +179,11 @@ class Button(AxesWidget):
+         label : str
+             The button text.
+         image : array-like or PIL Image
++        if self._disconnect_cid is not None:
++            self.canvas.mpl_disconnect(self._disconnect_cid)
++            self._disconnect_cid = None
++
++        self._disconnect_cid = self.canvas.mpl_connect('button_press_event', self._onclick)
+             The image to place in the button, if not *None*.  The parameter is
+             directly forwarded to `~matplotlib.axes.Axes.imshow`.
+         color : color
+@@ -213,6 +218,7 @@ class Button(AxesWidget):
+         ax.set_yticks([])
+         self.color = color
+         self.hovercolor = hovercolor
++        self._disconnect_cid = None
+ 
+     def _click(self, event):
+         if self.ignore(event) or event.inaxes != self.ax or not self.eventson:
