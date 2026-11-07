@@ -1,0 +1,44 @@
+diff --git a/django/core/cache/backends/filebased.py b/django/core/cache/backends/filebased.py
+index 631da49444..6ef596fde4 100644
+--- a/django/core/cache/backends/filebased.py
++++ b/django/core/cache/backends/filebased.py
+@@ -82,7 +82,12 @@ class FileBasedCache(BaseCache):
+         if not fname.startswith(self._dir) or not os.path.exists(fname):
+             return False
+         try:
+-            os.remove(fname)
++            with open(fname, "rb") as f:
++                locks.lock(f, locks.LOCK_EX)
++                try:
++                    os.remove(fname)
++                finally:
++                    locks.unlock(f)
+         except FileNotFoundError:
+             # The file may have been removed by another process.
+             return False
+@@ -92,7 +97,11 @@ class FileBasedCache(BaseCache):
+         fname = self._key_to_file(key, version)
+         if os.path.exists(fname):
+             with open(fname, "rb") as f:
+-                return not self._is_expired(f)
++                locks.lock(f, locks.LOCK_SH)
++                try:
++                    return not self._is_expired(f)
++                finally:
++                    locks.unlock(f)
+         return False
+ 
+     def _cull(self):
+@@ -149,7 +158,11 @@ class FileBasedCache(BaseCache):
+         Take an open cache file `f` and delete it if it's expired.
+         """
+         try:
+-            exp = pickle.load(f)
++            locks.lock(f, locks.LOCK_EX)
++            try:
++                exp = pickle.load(f)
++            finally:
++                locks.unlock(f)
+         except EOFError:
+             exp = 0  # An empty file is considered expired.
+         if exp is not None and exp < time.time():

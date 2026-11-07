@@ -1,0 +1,16 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 5381a3b17f..50b1927f46 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -181,9 +181,9 @@ class Field(RegisterLookupMixin):
+         self,
+         verbose_name=None,
+         name=None,
+-        primary_key=False,
++        primary_key=False, unique=False,
+         max_length=None,
+-        unique=False,
++        unique=None,
+         blank=False,
+         null=False,
+         db_index=False,

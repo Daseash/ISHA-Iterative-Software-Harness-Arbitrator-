@@ -1,21 +1,19 @@
-{"event": "start", "instance_id": "django__django-16139", "ts": 1791551235.2268598}
-{"event": "attempt", "n": 1, "ts": 1791551235.7269526}
-{"event": "model", "ts": 1791551296.347403, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
-{"event": "model", "ts": 1791551300.2200384, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791551308.1369429, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "model", "ts": 1791551312.385683, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551335.4551046, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551361.4058907, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "model", "ts": 1791551385.9219248, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551411.667663, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "api_retry", "backoff_s": 20.0, "ts": 1791551417.9001908}
-{"event": "attempt", "n": 2, "ts": 1791551438.2557762}
-{"event": "model", "ts": 1791551481.3509288, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791551485.1735175, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
-{"event": "model", "ts": 1791551492.8711758, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted); qwen3.8-27b: RateLimitError; nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "model", "ts": 1791551496.9833565, "role": "planner", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551519.3741841, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551545.8812025, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "model", "ts": 1791551571.390167, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): gemini-3.1-flash-lite: skipped (model quota exhausted)"}
-{"event": "model", "ts": 1791551597.3159342, "role": "coder", "model": "offline-brain", "position": "offline", "note": "chain exhausted (4 models): qwen3.8-27b: RateLimitError; gemini-3.1-flash-lite: skipped (model quota exhausted); nemotron-3-super-120b-a12b:free: RateLimitError"}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1791551603.2057397}
+{"event": "start", "instance_id": "django__django-16139", "ts": 1794057173.4578388}
+{"event": "attempt", "n": 1, "ts": 1794057173.7296326}
+{"ts": 1794057239.760049, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794057242.4923632, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794057259.0993688, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794057259.0998023, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794057259.154876, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794057259.1551318, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794057273.408857, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794057426.373485, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "model", "ts": 1794057242.437455, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794057242.9397295, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794057259.099786, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1794057259.1551187, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
+{"event": "model", "ts": 1794057275.332818, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794057279.2414641, "role": "repro", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794057314.1877112, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794057426.8666103, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794057429.1125035}

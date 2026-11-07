@@ -1,0 +1,12 @@
+diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py
+index 2c0527d2b7..59c925e1f8 100644
+--- a/django/db/models/fields/related.py
++++ b/django/db/models/fields/related.py
+@@ -105,6 +105,7 @@ class RelatedField(FieldCacheMixin, Field):
+         **kwargs,
+     ):
+         self._related_name = related_name
++        self._related_name_is_reverse = related_name and related_name.startswith('+')
+         self._related_query_name = related_query_name
+         self._limit_choices_to = limit_choices_to
+         super().__init__(**kwargs)

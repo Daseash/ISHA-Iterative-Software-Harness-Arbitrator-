@@ -1,1 +1,13 @@
-[CODER ERROR] offline coder exhausted candidate edits
+diff --git a/django/forms/models.py b/django/forms/models.py
+index 35ecdc1c0d..d58ad41854 100644
+--- a/django/forms/models.py
++++ b/django/forms/models.py
+@@ -356,6 +356,8 @@ class BaseModelForm(BaseForm, AltersData):
+             self.instance = instance
+             object_data = model_to_dict(instance, opts.fields, opts.exclude)
+         # if initial was provided, it should override the values from instance
++        if initial is not None:
++            object_data.update(initial)
+         if initial is not None:
+             object_data.update(initial)
+         # self._validate_unique will be set to True by BaseModelForm.clean().

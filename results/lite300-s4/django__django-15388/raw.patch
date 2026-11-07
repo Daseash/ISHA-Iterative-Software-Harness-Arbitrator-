@@ -1,0 +1,12 @@
+diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+index 583c2be647..8ceb4b0c75 100644
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -127,6 +127,7 @@ def iter_modules_and_files(modules, extra_files):
+         if not isinstance(module, ModuleType):
+             continue
+         if module.__name__ == '__main__':
++            continue
+             # __main__ (usually manage.py) doesn't always have a __spec__ set.
+             # Handle this by falling back to using __file__, resolved below.
+             # See https://docs.python.org/reference/import.html#main-spec

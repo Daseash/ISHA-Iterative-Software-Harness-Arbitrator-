@@ -1,1 +1,14 @@
-[CODER ERROR] offline coder exhausted candidate edits
+diff --git a/django/core/serializers/__init__.py b/django/core/serializers/__init__.py
+index 480c54b79b..87c170f384 100644
+--- a/django/core/serializers/__init__.py
++++ b/django/core/serializers/__init__.py
+@@ -133,6 +133,9 @@ def serialize(format, queryset, **options):
+     s = get_serializer(format)()
+     s.serialize(queryset, **options)
+     return s.getvalue()
++    if isinstance(value, enum.Flag):
++        return ' | '.join([f"{self.enum.__name__}.{c.name}" for c in enum._decompose(value)])
++
+ 
+ 
+ def deserialize(format, stream_or_string, **options):
