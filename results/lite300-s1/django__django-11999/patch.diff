@@ -1,0 +1,18 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index ee45bb941e..ee0f80a4de 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -762,6 +762,13 @@ class Field(RegisterLookupMixin):
+             # such fields can't be deferred (we don't have a check for this).
+             if not getattr(cls, self.attname, None):
+                 setattr(cls, self.attname, self.descriptor_class(self))
++            if not hasattr(cls, 'get_%s_display' % self.name):
++                def get_FOO_display(self):
++                    try:
++                        return self.get_FOO_display()
++                    except AttributeError:
++                        return dict(self.choices).get(getattr(self, self.attname), '')
++                setattr(cls, 'get_%s_display' % self.name, get_FOO_display)
+         if self.choices is not None:
+             setattr(cls, 'get_%s_display' % self.name,
+                     partialmethod(cls._get_FIELD_display, field=self))

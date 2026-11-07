@@ -1,10 +1,12 @@
-{"event": "start", "instance_id": "django__django-11620", "ts": 1791304271.655069}
-{"event": "attempt", "n": 1, "ts": 1791304276.7279644}
-{"event": "timeout_retry", "attempt": 1, "ts": 1791306076.742212}
-{"event": "attempt", "n": 2, "ts": 1791306077.003934}
-{"event": "error", "attempt": 2, "error": "KeyError: 'approval'", "backoff_s": 40.0, "ts": 1791307430.5983157}
-{"event": "attempt", "n": 3, "ts": 1791307470.8686142}
-{"event": "attempt", "n": 1, "ts": 1791389870.7035291}
-{"event": "timeout_retry", "attempt": 1, "ts": 1791391670.7178109}
-{"event": "attempt", "n": 2, "ts": 1791391671.0339396}
-{"event": "timeout", "attempt": 2, "ts": 1791393471.2961557}
+{"event": "start", "instance_id": "django__django-11620", "ts": 1794047338.3823314}
+{"event": "attempt", "n": 1, "ts": 1794047338.663338}
+{"ts": 1794047499.531073, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "model", "ts": 1794047431.2240872, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "model", "ts": 1794047476.6160023, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794047492.7416823, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794047499.5310628, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1794047520.09011, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794047525.2330875, "role": "repro", "model": "gpt-oss-120b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794047544.4682436, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794047621.170181, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794047623.4218378}

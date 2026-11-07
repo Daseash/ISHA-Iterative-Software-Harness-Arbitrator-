@@ -1,6 +1,13 @@
-{"event": "start", "instance_id": "django__django-11848", "ts": 1791441356.097449}
-{"event": "attempt", "n": 1, "ts": 1791441367.4595125}
-{"event": "attempt", "n": 1, "ts": 1791441541.9015756}
-{"event": "timeout_retry", "attempt": 1, "ts": 1791442141.9133675}
-{"event": "attempt", "n": 2, "ts": 1791442142.2824237}
-{"event": "timeout", "attempt": 2, "ts": 1791442742.3121634}
+{"event": "start", "instance_id": "django__django-11848", "ts": 1794049006.738856}
+{"event": "attempt", "n": 1, "ts": 1794049007.0545104}
+{"ts": 1794049070.2171996, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794049071.9488645, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "model", "ts": 1794049050.5891614, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794049053.0397186, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794049070.2171917, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1794049071.9488454, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1794049092.383535, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794049097.9526722, "role": "repro", "model": "gpt-oss-120b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794049123.5681195, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794049208.016598, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794049210.1381311}

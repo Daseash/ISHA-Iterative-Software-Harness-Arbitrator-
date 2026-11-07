@@ -1,0 +1,13 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index 8e55bd092d..81158ab010 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1706,6 +1706,8 @@ class Query(BaseExpression):
+             filter_expr = (filter_lhs, OuterRef(filter_rhs))
+         elif isinstance(filter_rhs, F):
+             filter_expr = (filter_lhs, OuterRef(filter_rhs.name))
++        elif isinstance(filter_rhs, F):
++            filter_expr = (filter_lhs, OuterRef(filter_rhs.name))
+         # Generate the inner query.
+         query = Query(self.model)
+         query._filtered_relations = self._filtered_relations

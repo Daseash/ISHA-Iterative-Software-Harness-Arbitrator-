@@ -1,10 +1,17 @@
-{"event": "start", "instance_id": "django__django-11797", "ts": 1791398382.56418}
-{"event": "attempt", "n": 1, "ts": 1791398382.989592}
-{"event": "attempt", "n": 1, "ts": 1791398936.098638}
-{"event": "model", "ts": 1791398980.010179, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
-{"event": "model", "ts": 1791399000.1479313, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary [cached]", "note": ""}
-{"event": "model", "ts": 1791399033.7437224, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791399116.1201756, "role": "planner", "model": "nemotron-3-super-120b-a12b:free", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791399145.368611, "role": "coder", "model": "qwen3.8-27b", "position": "primary", "note": ""}
-{"event": "model", "ts": 1791399463.060242, "role": "coder", "model": "gemini-3.1-flash-lite", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1791399477.4699106}
+{"event": "start", "instance_id": "django__django-11797", "ts": 1794048343.805212}
+{"event": "attempt", "n": 1, "ts": 1794048344.0935063}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794048704.0941033}
+{"event": "attempt", "n": 2, "ts": 1794048704.1981738}
+{"ts": 1794048747.8908968, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794048793.0164716, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794048806.9496047, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794048808.1966872, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "model", "ts": 1794048747.8908725, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1794048793.016458, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1794048806.9495964, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1794048808.1966708, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "note": ""}
+{"event": "model", "ts": 1794048828.7852657, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794048833.8922005, "role": "repro", "model": "gpt-oss-120b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794048859.3852432, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794049004.555759, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794049006.7380114}

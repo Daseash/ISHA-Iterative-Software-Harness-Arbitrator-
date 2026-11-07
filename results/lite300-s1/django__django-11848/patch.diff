@@ -1,0 +1,13 @@
+diff --git a/django/utils/http.py b/django/utils/http.py
+index 572cfb4347..8053114608 100644
+--- a/django/utils/http.py
++++ b/django/utils/http.py
+@@ -176,7 +176,7 @@ def parse_http_date(date):
+     try:
+         year = int(m.group('year'))
+         if year < 100:
+-            if year < 70:
++            if year < (datetime.datetime.utcnow().year % 100) - 50:
+                 year += 2000
+             else:
+                 year += 1900

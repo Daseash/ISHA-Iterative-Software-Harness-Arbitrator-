@@ -1,0 +1,22 @@
+diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py
+index 2154a46320..d61ead9fef 100644
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -184,11 +184,15 @@ class RegexPattern(CheckURLMixin):
+     def _compile(self, regex):
+         """Compile and return the given regular expression."""
+         try:
+-            return re.compile(regex)
++            compiled = re.compile(regex)
+         except re.error as e:
+             raise ImproperlyConfigured(
+-                '"%s" is not a valid regular expression: %s' % (regex, e)
++                'Failed compiling ^%s: %s' % (regex, e)
+             )
++        return compiled
++
++    def _match(self, path):
++        return self._regex.match(path)
+ 
+     def __str__(self):
+         return str(self._regex)

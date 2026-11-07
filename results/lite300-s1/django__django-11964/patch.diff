@@ -1,0 +1,21 @@
+--- a/django/db/models/enums.py
++++ b/django/db/models/enums.py
+@@ -6,6 +6,7 @@
+ import enum
+
+ from django.utils.functional import Promise
++from django.utils.functional import Promise
+
+ __all__ = ['Choices', 'IntegerChoices', 'TextChoices']
+
+@@ -13,6 +14,10 @@
+     """A metaclass for creating a enum choices."""
+
+     def __new__(metacls, classname, bases, classdict):
++        def __str__(self):
++            return str(self.value)
++
++        classdict['__str__'] = __str__
+         labels = []
+         for key in classdict._member_names:
+             value = classdict[key]
