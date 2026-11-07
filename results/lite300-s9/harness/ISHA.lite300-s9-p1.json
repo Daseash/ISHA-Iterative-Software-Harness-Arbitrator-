@@ -1,0 +1,51 @@
+{
+    "total_instances": 4,
+    "submitted_instances": 10,
+    "completed_instances": 4,
+    "resolved_instances": 0,
+    "unresolved_instances": 4,
+    "infra_failure_instances": 0,
+    "ambiguous_failure_instances": 0,
+    "empty_patch_instances": 0,
+    "error_instances": 0,
+    "completed_ids": [
+        "sympy__sympy-13915",
+        "sympy__sympy-14308",
+        "sympy__sympy-14396",
+        "sympy__sympy-15308"
+    ],
+    "incomplete_ids": [],
+    "empty_patch_ids": [],
+    "submitted_ids": [
+        "sympy__sympy-13915",
+        "sympy__sympy-13971",
+        "sympy__sympy-14308",
+        "sympy__sympy-14317",
+        "sympy__sympy-14396",
+        "sympy__sympy-14774",
+        "sympy__sympy-14817",
+        "sympy__sympy-15308",
+        "sympy__sympy-15346",
+        "sympy__sympy-16106"
+    ],
+    "resolved_ids": [],
+    "unresolved_ids": [
+        "sympy__sympy-13915",
+        "sympy__sympy-14308",
+        "sympy__sympy-14396",
+        "sympy__sympy-15308"
+    ],
+    "infra_failure_ids": [],
+    "ambiguous_failure_ids": [],
+    "failure_reasons": {},
+    "error_ids": [],
+    "schema_version": 2,
+    "unstopped_instances": 0,
+    "unstopped_containers": [],
+    "unremoved_images": [
+        "swebench/sweb.eval.x86_64.sympy_1776_sympy-13915:latest",
+        "swebench/sweb.eval.x86_64.sympy_1776_sympy-14308:latest",
+        "swebench/sweb.eval.x86_64.sympy_1776_sympy-14396:latest",
+        "swebench/sweb.eval.x86_64.sympy_1776_sympy-15308:latest"
+    ]
+}
