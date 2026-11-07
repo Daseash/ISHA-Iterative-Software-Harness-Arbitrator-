@@ -1,20 +1,12 @@
-{"event": "start", "instance_id": "sympy__sympy-15678", "ts": 1794062550.7378874}
-{"event": "attempt", "n": 1, "ts": 1794062552.2418542}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794062913.820255}
-{"event": "attempt", "n": 2, "ts": 1794062918.3736653}
-{"event": "timeout", "attempt": 2, "ts": 1794063279.069101}
-{"ts": 1794064672.4043593, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794064681.00351, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794065354.8978586, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794065355.116117, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794065358.3432317, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794065540.9847572, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794065541.1916296, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794065542.905014, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794065543.1256583, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794066150.690541, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794066298.3434103, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794066298.4922738, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794066299.288988, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794066299.376595, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794066842.2924104, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "start", "instance_id": "sympy__sympy-15678", "ts": 1794072116.8685882}
+{"event": "attempt", "n": 1, "ts": 1794072123.2460208}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794072483.5224473}
+{"event": "attempt", "n": 2, "ts": 1794072484.3471255}
+{"event": "timeout", "attempt": 2, "ts": 1794072844.7079928}
+{"ts": 1794074843.6728644, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794074844.559002, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794075734.1367893, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794075734.9159105, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794076235.7575305, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794076532.4513907, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"ts": 1794077249.439767, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
