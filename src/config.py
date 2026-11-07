@@ -285,11 +285,11 @@ def get_next_gemini_key(model: str = "") -> str | None:
     with _gemini_key_lock:
         _check_and_reload_keys_from_env()
         now = time.time()
-        # Cooldown check: if a key died > 120s ago, revive it in case quota was rolling-window
+        # Cooldown check: if a key died > 25s ago, revive it in case quota was rolling-window
         dead_for_model = _dead_gemini_keys_by_model[model] if model else _dead_gemini_keys
         revived = [
             k for k in list(dead_for_model)
-            if (now - _key_death_time.get((k, model), 0.0)) > 120
+            if (now - _key_death_time.get((k, model), 0.0)) > 25
         ]
         for k in revived:
             dead_for_model.remove(k)
@@ -301,7 +301,10 @@ def get_next_gemini_key(model: str = "") -> str | None:
             # Fall back to any pool key if all died for this model
             active = [k for k in _gemini_key_pool if k not in _dead_gemini_keys]
             if not active:
-                return None
+                # Never hard-fail: round-robin back through the full pool
+                active = _gemini_key_pool
+        if not active:
+            return None
         _gemini_key_counter += 1
         return active[_gemini_key_counter % len(active)]
 
@@ -469,8 +472,11 @@ def _provider(model: str) -> str:
 def _quota_fatal(exc: Exception) -> bool:
     """Account quota/billing exhausted for THIS model (not a transient RPM/TPM window)."""
     msg = str(exc).lower()
-    # If the error explicitly mentions per-minute or per-day sliding window, it's transient
-    if any(m in msg for m in ("per minute", "per_minute", "queries per minute", "requests per minute", "tpm", "rpm")):
+    # Gemini "check quota" or "resource has been exhausted" is standard 15-RPM burst limit, NOT account fatal
+    if "check quota" in msg or "resource has been exhausted" in msg or "resource_exhausted" in msg:
+        return False
+    # If the error explicitly mentions per-minute or per-day sliding window or try again, it's transient
+    if any(m in msg for m in ("per minute", "per_minute", "queries per minute", "requests per minute", "tpm", "rpm", "try again in")):
         return False
     return type(exc).__name__ == "RateLimitError" and any(
         h in msg for h in _QUOTA_HINTS
@@ -579,7 +585,8 @@ def _set_cached_llm(model: str, prompt: str, temperature: float | None, response
 
 def _advance_on_rate_limit() -> bool:
     """Should a 429 advance the chain instead of sleeping and retrying?"""
-    if os.getenv("ISHA_RATE_LIMIT_WAIT", "").strip() in ("1", "true", "yes"):
+    # Default to FALSE (sleep and wait out short rate-limit windows so we produce valid patches instead of empty ones)
+    if os.getenv("ISHA_RATE_LIMIT_WAIT", "1").strip().lower() in ("1", "true", "yes"):
         return False
     return True
 
