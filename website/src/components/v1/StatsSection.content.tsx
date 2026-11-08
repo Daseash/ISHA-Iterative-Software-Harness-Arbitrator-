@@ -12,7 +12,6 @@ import {
   Terminal,
   Copy,
   Check,
-  FileCode,
   Flame,
   ArrowRight,
 } from "lucide-react";
@@ -152,61 +151,88 @@ export const StatsSection: React.FC = () => {
     },
   ];
 
-  // 6-Stage Autonomous Architecture Pipeline from README.md & user_prompt_spec.md
+  // 9-Node Autonomous Architecture Pipeline from AGENTS.md & PR_BODY.md
   const architectureStages = [
     {
-      id: "stage-1",
+      id: "node-1",
       number: "01",
-      title: "Ingestion & AST Map",
-      badge: "BM25 + Tree-Sitter",
-      desc: "Localizes candidate files using hybrid lexical retrieval and ranks target functions via symbol_target AST parsing instead of whole-repo hallucination.",
+      title: "5D Localization",
+      badge: "bge-reranker-base (ONNX) + Gemini 3.8 Flash",
+      desc: "Performs 5D multi-pass semantic and symbol localization across full repositories, ranking target functions and classes without context window overflow.",
       metric: "Hit@8 Recall: 66.7% (MRR 0.535)",
       icon: Layers,
     },
     {
-      id: "stage-2",
+      id: "node-2",
       number: "02",
-      title: "TDD Test Synthesis",
-      badge: "Red-to-Green Verification",
+      title: "Decomposer",
+      badge: "Qwen 2.5 Coder 32B @ 500 tok/s LPU",
+      desc: "Ultra-high-speed semantic decomposition of complex issue descriptions into atomic requirement graphs and failure boundary specs.",
+      metric: "< 1.2s Parse Latency @ 500 tok/s",
+      icon: Zap,
+    },
+    {
+      id: "node-3",
+      number: "03",
+      title: "Plan Architect",
+      badge: "Groq / OpenAI GPT-OSS 120B",
+      desc: "Deep architectural reasoning that generates structured repair plans, edge-case hypotheses, and regression risk matrices prior to code modification.",
+      metric: "Structured 4-Phase Strategy Plan",
+      icon: Terminal,
+    },
+    {
+      id: "node-4",
+      number: "04",
+      title: "Confidence Gate",
+      badge: "Local AST Math + LocReranker (<2ms)",
+      desc: "Deterministic mathematical confidence gate operating in <2ms. Evaluates symbol localization depth and gates execution before invoking downstream models.",
+      metric: "< 2ms Gate Latency (Zero Cloud Cost)",
+      icon: Cpu,
+    },
+    {
+      id: "node-5",
+      number: "05",
+      title: "Repro Test Gen",
+      badge: "DeepSeek-R1 Distill Llama 70B (RED)",
       desc: "Synthesizes an isolated reproduction test that MUST fail on existing unfixed code before any repair begins. If the test cannot fail, it is rejected.",
-      metric: "Guaranteed Red State Reproduction",
+      metric: "Guaranteed Red-State Baseline",
       icon: Flame,
     },
     {
-      id: "stage-3",
-      number: "03",
-      title: "Parallel Tournament",
-      badge: "3 Git Worktrees",
-      desc: "Spawns 3 parallel candidate agents across isolated .worktrees/. Candidate 1 pursues direct surgical fix, Candidate 2 defensive boundary checks, Candidate 3 alternative caller fixes.",
-      metric: "Zero Working Tree Branch Pollution",
+      id: "node-6",
+      number: "06",
+      title: "Tournament",
+      badge: "Codestral + Gemini 3.8 + GPT-OSS",
+      desc: "Generates 3 diverse repair branches across strategies: minimal_diff (Mistral Codestral), call_site_aware (Gemini 3.8 Flash), and root_cause_first (GPT-OSS 120B).",
+      metric: "3 Parallel Diverse Hypotheses",
       icon: GitBranch,
     },
     {
-      id: "stage-4",
-      number: "04",
-      title: "Minimal Churn Arbitrator",
-      badge: "AST + Assertion Gate",
-      desc: "Runs reproduction tests inside sandboxes. Compares candidate AST diffs, selects the minimal syntax-validated patch that turns tests green with zero regressions.",
-      metric: "0.0% Static Syntax / AST Errors",
+      id: "node-7",
+      number: "07",
+      title: "AST Syntax Gate",
+      badge: "Python AST Strict Compilation",
+      desc: "Performs rigorous static AST compilation and validation. Rejects candidate patches with syntax errors, indentation drifts, or illegal symbol modifications.",
+      metric: "0.0% Syntax / Parse Failures",
       icon: ShieldCheck,
     },
     {
-      id: "stage-5",
-      number: "05",
-      title: "LAYA Calibrated Gate",
-      badge: "ECE = 0.0010 (T=0.35)",
-      desc: "Temperature-scaled logistic combiner over 315 real developer labels. Evaluates repro status, blast radius, and AST safety to decide Auto-Approve vs Senior Human Review.",
-      metric: "100.0% Auto-Approve Precision",
-      icon: Sparkles,
+      id: "node-8",
+      number: "08",
+      title: "Docker Pytest",
+      badge: "Official SWE-bench Docker Harness (GREEN)",
+      desc: "Executes reproduction tests inside isolated Docker containers. Verifies the candidate turns the red test green with zero regressions across repository test suites.",
+      metric: "100% Docker-Verified Execution",
+      icon: CheckCircle2,
     },
     {
-      id: "stage-6",
-      number: "06",
-      title: "Security & Atomic Apply",
-      badge: "CRLF Safe + Secret Scan",
-      desc: "Enforces secret-leak scanning, cross-platform LF line ending normalization, and atomic git patch application with automatic fuzz-context recovery.",
-      metric: "0/30 Host Diff Apply Failures",
-      icon: FileCode,
+      id: "node-9",
+      number: "09",
+      title: "LAYA Arbitrator",
+      badge: "Platt Calibrated Logistic (P_solve ≥ 0.65)",
+      desc: "Evaluates candidate diff churn, test status, and AST safety to compute P_solve. Auto-approves patches exceeding calibrated probability threshold.",
+      metric: "ECE = 0.0214 | Brier = 0.0395",
+      icon: Sparkles,
     },
   ];
 
@@ -405,24 +431,24 @@ export const StatsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* 6-STAGE AUTONOMOUS PIPELINE (PROJECT ARCHITECTURE DEEP-DIVE) */}
+        {/* 9-NODE AUTONOMOUS PIPELINE (PROJECT ARCHITECTURE DEEP-DIVE) */}
         <div className="rounded-3xl bg-[#F9F7EF] dark:bg-black border border-neutral-300 dark:border-neutral-800 p-6 sm:p-10 shadow-2xl shadow-neutral-900/10 dark:shadow-black/70 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-neutral-300 dark:border-neutral-800">
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-red-600 dark:text-red-500">
-                TDD Red-to-Green Execution Engine
+                100% Zero-Cost Cloud Mesh State Machine
               </span>
               <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-black dark:text-[#F9F7EF] mt-1">
-                Autonomous SWE Architecture
+                9-Node Autonomous SWE Architecture
               </h3>
             </div>
             <span className="px-3 py-1 rounded-full bg-red-600/10 dark:bg-red-500/15 text-red-600 dark:text-red-500 font-mono text-xs font-bold self-start sm:self-auto">
-              6 STAGES · ZERO HOST POLLUTION
+              9 NODES · $0.00 INFERENCE · 0 GB VRAM
             </span>
           </div>
 
           {/* Stage selection badges */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2">
             {architectureStages.map((stage, idx) => {
               const Icon = stage.icon;
               const isSelected = activeStage === idx;
