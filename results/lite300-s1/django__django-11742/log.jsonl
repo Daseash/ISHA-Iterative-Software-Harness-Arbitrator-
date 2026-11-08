@@ -1,10 +1,9 @@
-{"event": "start", "instance_id": "django__django-11742", "ts": 1794047623.4226353}
-{"event": "attempt", "n": 1, "ts": 1794047623.7040203}
-{"ts": 1794047815.2597027, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794047983.7045894}
-{"event": "attempt", "n": 2, "ts": 1794047983.8031757}
-{"ts": 1794048027.5839646, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794048032.565359, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794048095.9160414, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794048141.0303912, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794048343.8050299}
+{"event": "start", "instance_id": "django__django-11742", "ts": 1794131510.0631216}
+{"event": "attempt", "n": 1, "ts": 1794131510.7797797}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794131870.787686}
+{"event": "attempt", "n": 2, "ts": 1794131870.8592625}
+{"ts": 1794132097.7617226, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794132147.7410245, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794132230.8606205}
+{"ts": 1794132238.1946936, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794132287.7190096, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

@@ -1,11 +1,10 @@
-{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1794045894.8503835}
-{"event": "attempt", "n": 1, "ts": 1794045897.9625564}
-{"ts": 1794046038.715719, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794046083.8175495, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794046257.9631376}
-{"event": "attempt", "n": 2, "ts": 1794046257.9820638}
-{"ts": 1794046330.0258238, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794046375.1218793, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794046429.3063068, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794046474.3951936, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794046617.9840393}
+{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1794130066.6130679}
+{"event": "attempt", "n": 1, "ts": 1794130069.2743797}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794130429.2750392}
+{"event": "attempt", "n": 2, "ts": 1794130429.2924352}
+{"ts": 1794130563.3560104, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794130633.4123597, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794130658.4311137, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794130789.2937129}
+{"ts": 1794130847.9283004, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794130847.950784, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}

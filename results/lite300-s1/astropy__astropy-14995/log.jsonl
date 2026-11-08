@@ -1,11 +1,8 @@
-{"event": "start", "instance_id": "astropy__astropy-14995", "ts": 1794046618.0165486}
-{"event": "attempt", "n": 1, "ts": 1794046618.361179}
-{"ts": 1794046757.2434337, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794046802.3405788, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794046978.3619516}
-{"event": "attempt", "n": 2, "ts": 1794046978.3805819}
-{"ts": 1794047052.462092, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794047052.830416, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794047063.16212, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794047108.255251, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794047338.3820963}
+{"event": "start", "instance_id": "astropy__astropy-14995", "ts": 1794130789.3417058}
+{"event": "attempt", "n": 1, "ts": 1794130789.481853}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794131149.4875264}
+{"event": "attempt", "n": 2, "ts": 1794131149.990561}
+{"ts": 1794131443.29188, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794131452.9679842, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794131452.9990592, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794131510.0307868}
