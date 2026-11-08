@@ -1,12 +1,8 @@
-{"event": "start", "instance_id": "sympy__sympy-15678", "ts": 1794072116.8685882}
-{"event": "attempt", "n": 1, "ts": 1794072123.2460208}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794072483.5224473}
-{"event": "attempt", "n": 2, "ts": 1794072484.3471255}
-{"event": "timeout", "attempt": 2, "ts": 1794072844.7079928}
-{"ts": 1794074843.6728644, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794074844.559002, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794075734.1367893, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794075734.9159105, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794076235.7575305, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794076532.4513907, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794077249.439767, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "start", "instance_id": "sympy__sympy-15678", "ts": 1794134430.6664298}
+{"event": "attempt", "n": 1, "ts": 1794134431.2032428}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794134791.503127}
+{"event": "attempt", "n": 2, "ts": 1794134791.8601086}
+{"event": "timeout", "attempt": 2, "ts": 1794135152.8200963}
+{"ts": 1794136274.3895683, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794136618.3991024, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794137042.5324733, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}

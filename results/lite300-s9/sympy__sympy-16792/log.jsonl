@@ -1,9 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-16792", "ts": 1794073566.3732271}
-{"event": "attempt", "n": 1, "ts": 1794073567.2096481}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794073927.4970205}
-{"event": "attempt", "n": 2, "ts": 1794073928.0719368}
-{"event": "timeout", "attempt": 2, "ts": 1794074288.4485035}
-{"ts": 1794078003.8245628, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794078010.8861146, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794078775.3666852, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794078788.4295607, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "start", "instance_id": "sympy__sympy-16792", "ts": 1794136604.5157483}
+{"event": "attempt", "n": 1, "ts": 1794136605.353497}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794136966.2489839}
+{"event": "attempt", "n": 2, "ts": 1794136966.9068928}
+{"event": "timeout", "attempt": 2, "ts": 1794137327.2539651}
+{"ts": 1794140235.2027662, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794140294.0652528, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794141061.0421913, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794141128.206746, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794141476.5198407, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794141532.5923622, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
