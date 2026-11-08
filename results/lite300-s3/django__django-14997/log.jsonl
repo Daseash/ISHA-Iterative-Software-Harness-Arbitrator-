@@ -1,18 +1,11 @@
-{"event": "start", "instance_id": "django__django-14997", "ts": 1794054456.9811835}
-{"event": "attempt", "n": 1, "ts": 1794054457.3112307}
-{"ts": 1794054525.7406554, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794054528.3362646, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794054545.7972112, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794054545.797575, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794054545.909718, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794054545.9099588, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794054558.7231069, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"event": "model", "ts": 1794054528.221636, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
-{"event": "model", "ts": 1794054529.4248037, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
-{"event": "model", "ts": 1794054545.7975616, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
-{"event": "model", "ts": 1794054545.9099498, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "note": ""}
-{"event": "model", "ts": 1794054562.1698668, "role": "planner", "model": "codestral-latest", "position": "fallback 2", "note": ""}
-{"event": "model", "ts": 1794054571.6053247, "role": "repro", "model": "codestral-latest", "position": "fallback 2", "note": ""}
-{"event": "model", "ts": 1794054600.6860693, "role": "coder", "model": "gemini-3.5-flash-lite", "position": "primary", "note": ""}
-{"event": "model", "ts": 1794054733.5069668, "role": "coder", "model": "codestral-latest", "position": "primary", "note": ""}
-{"event": "finish", "status": "done", "has_patch": false, "ts": 1794054736.676471}
+{"event": "start", "instance_id": "django__django-14997", "ts": 1794133556.3979802}
+{"event": "attempt", "n": 1, "ts": 1794133559.1574547}
+{"ts": 1794133912.3433805, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794133919.158081}
+{"event": "attempt", "n": 2, "ts": 1794133919.2229042}
+{"ts": 1794133958.2822645, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794134084.9242887, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794134130.436207, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794134236.983787, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794134279.2242777}
+{"ts": 1794134327.4023807, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
