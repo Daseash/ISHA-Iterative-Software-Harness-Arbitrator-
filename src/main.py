@@ -305,32 +305,68 @@ def main() -> int:
     flagged = result.critic_verdict == "flagged"
 
     should_apply = args.apply or getattr(args, "pr", False)
+
+    # Interactive Human Gate: if neither --apply nor --pr was explicitly passed,
+    # and we are running in an interactive terminal, prompt the user for action.
+    is_interactive = sys.stdin.isatty() if hasattr(sys.stdin, "isatty") else False
+    if not should_apply and not args.multi and passed and result.patch and (not flagged or result.approved is True) and is_interactive:
+        print("\n" + "=" * 70)
+        print("  🎉 FIX VERIFIED GREEN & PASSED ALL TESTS (0 regressions)")
+        print("=" * 70)
+        print("  How would you like to proceed with this fix?")
+        print("    [1] Open a GitHub Pull Request  (Recommended: branch + commit + push + PR)")
+        print("    [2] Apply patch directly to local working tree")
+        print("    [3] Keep in sandbox only (do not touch repository)")
+        print("-" * 70)
+        try:
+            choice = input("  Select action [1/2/3] (default: 1): ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            choice = "3"
+
+        if choice in {"1", "pr", "p", "y", "yes", ""}:
+            should_apply = True
+            setattr(args, "pr", True)
+        elif choice in {"2", "apply", "a"}:
+            should_apply = True
+            args.apply = True
+        else:
+            print("  [sandbox] Patch retained in sandbox. Repository unchanged.")
+
     if should_apply and not args.multi and passed and result.patch and (not flagged or result.approved is True):
         from src.tools.patch_engine import apply_patch
         from src.tools.git_manager import create_branch, commit_fix, push_branch, create_pull_request
         import time
+        import re
 
-        branch_name = f"isha-fix/{int(time.time())}"
+        clean_issue = " ".join(issue.split())
+        slug = re.sub(r"[^a-zA-Z0-9]+", "-", clean_issue.lower()).strip("-")[:25]
+        suffix = int(time.time()) % 100000
+        branch_name = f"isha-fix/{slug}-{suffix}" if slug else f"isha-fix/{int(time.time())}"
+
+        repo_path = str(Path(args.repo).resolve())
         if getattr(args, "pr", False):
-            create_branch(args.repo, branch_name)
+            create_branch(repo_path, branch_name)
 
-        ok, message = apply_patch(args.repo, result.patch)
+        ok, message = apply_patch(repo_path, result.patch)
         print(f"\n  --apply: {'OK' if ok else 'FAILED'} — {message}")
 
         if ok and getattr(args, "pr", False):
-            commit_title = f"fix: {issue[:60]}"
-            commit_ok = commit_fix(args.repo, f"{commit_title}\n\nAutomated by ISHA")
+            commit_title = f"fix: {clean_issue[:60]}"
+            commit_ok = commit_fix(repo_path, f"{commit_title}\n\nAutomated by ISHA")
             if commit_ok:
-                print(f"  [git] committed fix to branch '{branch_name}'")
-                push_ok, push_out = push_branch(args.repo, branch_name)
+                print(f"  [git] Committed fix to branch '{branch_name}'")
+                push_ok, push_out = push_branch(repo_path, branch_name)
                 if push_ok:
-                    print(f"  [git] pushed branch '{branch_name}' to origin")
-                    pr_ok, pr_msg = create_pull_request(args.repo, commit_title, pr_doc, branch_name)
-                    print(f"  [PR] {pr_msg}")
+                    print(f"  [git] Pushed branch '{branch_name}' to origin")
+                    pr_ok, pr_msg = create_pull_request(repo_path, commit_title, pr_doc, branch_name)
+                    if pr_ok:
+                        print(f"  [PR]  🎉 Pull Request ready: {pr_msg}")
+                    else:
+                        print(f"  [PR]  {pr_msg}")
                 else:
-                    print(f"  [git] push notice: {push_out}")
+                    print(f"  [git] Push notice (check credentials): {push_out}")
             else:
-                print("  [git] note: no diff needed to commit or branch already clean")
+                print("  [git] Notice: No changes needed to commit or branch already clean.")
 
     # Tidy up scratch sandboxes created during the run.
     import tempfile

@@ -119,7 +119,7 @@ def create_pull_request(repo_path: str, title: str, body: str, branch: str = "")
     # 2. Try GITHUB_TOKEN API
     token = os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
     remote_url = get_remote_url(repo_path)
-    m = re.search(r"github\.com[:/]([^/]+)/([^/.]+)", remote_url)
+    m = re.search(r"github\.com[:/]([^/]+)/([^/]+?)(?:\.git)?$", remote_url)
     if token and m:
         owner, repo = m.group(1), m.group(2)
         try:
