@@ -1,15 +1,9 @@
-{"event": "start", "instance_id": "sympy__sympy-19007", "ts": 1794080671.233163}
-{"event": "attempt", "n": 1, "ts": 1794080674.4656284}
-{"ts": 1794080946.9595013, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794080968.1116319, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794080968.112486, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794080968.1896808, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794080968.1901267, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794081025.7560077, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794081029.290947, "role": "repro", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794081034.4679294}
-{"event": "attempt", "n": 2, "ts": 1794081034.586397}
-{"event": "timeout", "attempt": 2, "ts": 1794081394.8694851}
-{"ts": 1794081722.579743, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
-{"ts": 1794081859.919623, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794082145.2136955, "role": "planner", "model": "gemini-3.8-flash", "position": "skipped", "outcome": "skipped", "note": "model quota exhausted"}
+{"event": "start", "instance_id": "sympy__sympy-19007", "ts": 1794148536.775425}
+{"event": "attempt", "n": 1, "ts": 1794148537.0026627}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794148897.00329}
+{"event": "attempt", "n": 2, "ts": 1794148897.022255}
+{"ts": 1794149252.673463, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794149257.023328}
+{"ts": 1794149299.3669252, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794149344.2565947, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794149391.4518251, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

@@ -42651,5 +42651,39 @@
     "laya_score": 0.791625,
     "won_selection": false,
     "timestamp": 1794067194.290678
+  },
+  {
+    "instance_id": "sympy__sympy-13895",
+    "candidate_index": 3,
+    "strategy": "root_cause_first",
+    "temperature": 0.2,
+    "requested_model": "groq/openai/gpt-oss-120b",
+    "model_used": "groq/openai/gpt-oss-120b",
+    "substituted": false,
+    "patch_applied": false,
+    "gate_passed": false,
+    "repro_passed": false,
+    "regression_count": 0,
+    "diff_size": 13,
+    "laya_score": 0.7106750000000001,
+    "won_selection": false,
+    "timestamp": 1794132538.7498796
+  },
+  {
+    "instance_id": "sympy__sympy-18698",
+    "candidate_index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "model_used": "mistral/codestral-latest",
+    "substituted": true,
+    "patch_applied": true,
+    "gate_passed": true,
+    "repro_passed": false,
+    "regression_count": 0,
+    "diff_size": 3,
+    "laya_score": 0.643025,
+    "won_selection": true,
+    "timestamp": 1794150280.9303124
   }
 ]
