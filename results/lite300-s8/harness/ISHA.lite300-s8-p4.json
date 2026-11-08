@@ -1,6 +1,6 @@
 {
     "total_instances": 4,
-    "submitted_instances": 29,
+    "submitted_instances": 27,
     "completed_instances": 4,
     "resolved_instances": 0,
     "unresolved_instances": 4,
@@ -9,10 +9,10 @@
     "empty_patch_instances": 0,
     "error_instances": 0,
     "completed_ids": [
+        "sphinx-doc__sphinx-8435",
         "sphinx-doc__sphinx-8474",
         "sympy__sympy-11897",
-        "sympy__sympy-12171",
-        "sympy__sympy-13437"
+        "sympy__sympy-12171"
     ],
     "incomplete_ids": [],
     "empty_patch_ids": [],
@@ -24,7 +24,6 @@
         "sphinx-doc__sphinx-8282",
         "sphinx-doc__sphinx-8435",
         "sphinx-doc__sphinx-8474",
-        "sphinx-doc__sphinx-8506",
         "sphinx-doc__sphinx-8595",
         "sphinx-doc__sphinx-8627",
         "sphinx-doc__sphinx-8713",
@@ -37,7 +36,6 @@
         "sympy__sympy-12419",
         "sympy__sympy-12454",
         "sympy__sympy-12481",
-        "sympy__sympy-13031",
         "sympy__sympy-13043",
         "sympy__sympy-13146",
         "sympy__sympy-13177",
@@ -49,10 +47,10 @@
     ],
     "resolved_ids": [],
     "unresolved_ids": [
+        "sphinx-doc__sphinx-8435",
         "sphinx-doc__sphinx-8474",
         "sympy__sympy-11897",
-        "sympy__sympy-12171",
-        "sympy__sympy-13437"
+        "sympy__sympy-12171"
     ],
     "infra_failure_ids": [],
     "ambiguous_failure_ids": [],
@@ -62,9 +60,9 @@
     "unstopped_instances": 0,
     "unstopped_containers": [],
     "unremoved_images": [
+        "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8435:latest",
         "swebench/sweb.eval.x86_64.sphinx-doc_1776_sphinx-8474:latest",
         "swebench/sweb.eval.x86_64.sympy_1776_sympy-11897:latest",
-        "swebench/sweb.eval.x86_64.sympy_1776_sympy-12171:latest",
-        "swebench/sweb.eval.x86_64.sympy_1776_sympy-13437:latest"
+        "swebench/sweb.eval.x86_64.sympy_1776_sympy-12171:latest"
     ]
 }
