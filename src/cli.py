@@ -50,6 +50,84 @@ def _which(name: str) -> str | None:
     return shutil.which(name)
 
 
+def ensure_api_keys(force: bool = False) -> bool:
+    """Prompt user for missing API keys in terminal if none are configured."""
+    has_key = any(os.getenv(k) for k in [
+        "GEMINI_API_KEY", "GOOGLE_API_KEY", "GROQ_API_KEY",
+        "MISTRAL_API_KEY", "OPENROUTER_API_KEY", "CEREBRAS_API_KEY",
+    ])
+    if has_key and not force:
+        return True
+
+    # Check if running in an interactive terminal
+    if not sys.stdin.isatty() and not force:
+        return bool(has_key)
+
+    print("\n" + "=" * 70)
+    print("  🚀 Welcome to ISHA (Iterative Software Harness & Arbitrator)")
+    print("  100% Zero-Cost Autonomous SWE Agent (0 GB Local VRAM Needed)")
+    print("=" * 70)
+    if has_key and force:
+        print("Existing API keys detected. Enter new values to update or Enter to keep:")
+    else:
+        print("No API keys detected in your environment or .env file.")
+        print("ISHA uses free-tier cloud models. Please provide at least one key:\n")
+        print("  1. Google Gemini (Recommended, Free: https://aistudio.google.com/)")
+        print("  2. Groq LPU Key   (500 tok/s, Free:  https://console.groq.com/keys)")
+        print("  3. Mistral API    (Optional, Free:   https://console.mistral.ai/)")
+    print("-" * 70)
+
+    try:
+        cur_gemini = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY", "")
+        hint_gemini = f" [current: ...{cur_gemini[-4:]}]" if cur_gemini else ""
+        gemini = input(f"Enter GEMINI_API_KEY{hint_gemini} (press Enter to skip): ").strip()
+
+        cur_groq = os.getenv("GROQ_API_KEY", "")
+        hint_groq = f" [current: ...{cur_groq[-4:]}]" if cur_groq else ""
+        groq = input(f"Enter GROQ_API_KEY{hint_groq} (press Enter to skip): ").strip()
+
+        cur_mistral = os.getenv("MISTRAL_API_KEY", "")
+        hint_mistral = f" [current: ...{cur_mistral[-4:]}]" if cur_mistral else ""
+        mistral = input(f"Enter MISTRAL_API_KEY{hint_mistral} (press Enter to skip): ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print("\n[setup] Setup cancelled.")
+        return bool(has_key)
+
+    env_path = ROOT / ".env"
+    existing_text = env_path.read_text(encoding="utf-8") if env_path.is_file() else ""
+    saved = []
+
+    def _set_env_key(key: str, val: str) -> None:
+        nonlocal existing_text
+        os.environ[key] = val
+        if f"{key}=" in existing_text:
+            import re
+            existing_text = re.sub(rf"^{key}=.*$", f"{key}={val}", existing_text, flags=re.MULTILINE)
+        else:
+            existing_text += f"\n{key}={val}\n"
+        saved.append(key)
+
+    if gemini:
+        _set_env_key("GEMINI_API_KEY", gemini)
+        _set_env_key("GOOGLE_API_KEY", gemini)
+    if groq:
+        _set_env_key("GROQ_API_KEY", groq)
+    if mistral:
+        _set_env_key("MISTRAL_API_KEY", mistral)
+
+    if saved:
+        env_path.write_text(existing_text.strip() + "\n", encoding="utf-8")
+        print(f"\n[setup] Saved {', '.join(saved)} to {env_path.name}!")
+        print("[setup] You're all set to use ISHA.\n" + "=" * 70 + "\n")
+        return True
+    elif has_key:
+        print("\n[setup] Retained existing API keys.\n" + "=" * 70 + "\n")
+        return True
+    else:
+        print("\n[setup] No keys configured. Running in offline/diagnostic mode.\n" + "=" * 70 + "\n")
+        return False
+
+
 def _run(cmd: list[str], timeout: int = 45) -> tuple[int, str]:
     try:
         proc = subprocess.run(
@@ -386,6 +464,7 @@ def clone_github_repo(url: str) -> str:
 
 # ── fix ────────────────────────────────────────────────────────────────────
 def cmd_fix(args: argparse.Namespace) -> int:
+    ensure_api_keys()
     from src.main import main as fix_main
 
     repo = args.repo or args.repo_pos
@@ -489,6 +568,9 @@ def _parser() -> argparse.ArgumentParser:
 
     doctor = sub.add_parser("doctor", help="environment self-check")
     doctor.set_defaults(func=cmd_doctor)
+
+    setup = sub.add_parser("setup", aliases=["init"], help="interactively configure free-tier cloud API keys")
+    setup.set_defaults(func=lambda args: 0 if ensure_api_keys(force=True) else 1)
 
     ui = sub.add_parser("ui", help="launch the Streamlit dashboard")
     ui.add_argument("--port", type=int, default=8501)
