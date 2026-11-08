@@ -524,7 +524,7 @@ def _backoff_wait(exc: Exception, attempt: int) -> int:
     match = re.search(r"try again in ([0-9]+(?:\.[0-9]+)?)s", str(exc), re.I)
     if match:
         return int(float(match.group(1)) + 2)
-    return min(_BACKOFF_SECONDS * attempt, 120)
+    return min(15 * attempt, 45)
 
 
 # A TPM window is shared by every model on a provider.  Recording it means a
@@ -902,7 +902,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     )
                     time.sleep(wait)
                     continue
-                if wait > 20:
+                if wait > 60:
                     print(
                         f"[model] {role}: {_short_name(model)} wait {wait}s too long "
                         f"— advancing to next model in fallback chain",

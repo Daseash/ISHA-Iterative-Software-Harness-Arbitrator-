@@ -151,7 +151,9 @@ def sync_session_to_git(session_name: str) -> None:
                 cwd=str(ROOT),
                 timeout=45,
             )
-            log(f"Successfully committed {session_name} locally!")
+            subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(ROOT), timeout=45)
+            subprocess.run(["git", "push", "origin", "main"], cwd=str(ROOT), timeout=60)
+            log(f"Successfully committed and pushed {session_name} to origin main!")
     except Exception as e:
         log(f"Git commit notice for {session_name}: {e}")
 
