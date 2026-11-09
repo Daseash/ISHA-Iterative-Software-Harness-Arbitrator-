@@ -170,12 +170,43 @@ def evaluate(
     if instances:
         target_set = set(instances)
         instance_ids = [i for i in instance_ids if i in target_set]
-    if not instance_ids:
-        report = _empty_report(len(preds))
-        _write_report(run_dir, report)
-        return report
 
+    # Skip instances that are already officially resolved in Docker (saves hours and prevents regressions)
     eval_id = run_eval_id or run_dir.name
+    existing_resolved = set()
+    h_report = run_dir / "harness_report.json"
+    if h_report.is_file():
+        try:
+            rep_data = json.loads(h_report.read_text(encoding="utf-8"))
+            existing_resolved.update(rep_data.get("resolved_ids", []))
+        except Exception:
+            pass
+    h_dir = run_dir / "harness"
+    if h_dir.is_dir():
+        for hf in h_dir.glob("*.json"):
+            try:
+                rep_data = json.loads(hf.read_text(encoding="utf-8"))
+                existing_resolved.update(rep_data.get("resolved_ids", []))
+            except Exception:
+                pass
+
+    if os.getenv("ISHA_EVAL_FORCE_ALL", "0") != "1" and existing_resolved:
+        skipped_resolved = [i for i in instance_ids if i in existing_resolved]
+        if skipped_resolved:
+            print(
+                f"Preserving {len(skipped_resolved)} already-resolved instance(s) "
+                f"(skipping redundant Docker re-eval): {sorted(skipped_resolved)}",
+                flush=True,
+            )
+            instance_ids = [i for i in instance_ids if i not in existing_resolved]
+
+    if not instance_ids:
+        print("All submitted patches are already resolved or empty. Loading existing report...", flush=True)
+        report = load_official_report(run_dir, eval_id)
+        if not report:
+            report = _empty_report(len(preds))
+            _write_report(run_dir, report)
+        return report
     report_dir = run_dir / "harness"
     report_dir.mkdir(parents=True, exist_ok=True)
 
