@@ -32,7 +32,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
     { name: "HOME", href: "/#hero", badge: "01" },
     { name: "ABOUT", href: "/#about", badge: "02" },
     { name: "WORKSPACE", href: "/#workspace", badge: "03" },
-    { name: "CLI", href: "/#cli", badge: "04" },
+    { name: "GET ISHA", href: "/#cli", badge: "04" },
     { name: "FIX", href: "/fix", badge: "05" },
     ...(!hideStats ? [{ name: "STATS", href: "/stats", badge: "06" }] : []),
     ...(!hideGithub
@@ -205,21 +205,7 @@ export const Navbar_001: React.FC<NavbarProps> = ({
                   </a>
                 </div>
 
-                {/* Bottom Segmented Pill Row: PB | EN | ES | FR style */}
-                <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-neutral-900/90 dark:bg-neutral-200/80 border border-neutral-800 dark:border-neutral-300/80 text-center font-mono text-[10px] font-black uppercase text-neutral-400 dark:text-neutral-600">
-                  <span className="py-1 rounded-lg bg-red-600 text-white shadow-sm">
-                    SWE
-                  </span>
-                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
-                    AST
-                  </span>
-                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
-                    TDD
-                  </span>
-                  <span className="py-1 hover:text-white dark:hover:text-neutral-900 transition-colors">
-                    V0.3
-                  </span>
-                </div>
+
               </motion.div>
             )}
           </AnimatePresence>

@@ -117,7 +117,7 @@ export const CliSection: React.FC = () => {
               ) : (
                 <>
                   <Copy className="w-4 h-4 stroke-[3]" />
-                  <span>{activeTab === "mcp-ide" ? "COPY JSON" : "COPY COMMAND"}</span>
+                  <span>COPY</span>
                 </>
               )}
             </button>
