@@ -146,7 +146,7 @@ export const CliSection: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-950/60 px-2.5 py-0.5 rounded-md">
+                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500">
                         Step 1
                       </span>
                       <h3 className="text-lg sm:text-xl font-black text-neutral-950 dark:text-neutral-100 tracking-tight">
@@ -185,7 +185,7 @@ export const CliSection: React.FC = () => {
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-950/60 px-2.5 py-0.5 rounded-md">
+                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500">
                         Step 2
                       </span>
                       <h3 className="text-lg sm:text-xl font-black text-neutral-950 dark:text-neutral-100 tracking-tight">
@@ -228,7 +228,7 @@ export const CliSection: React.FC = () => {
                     <div className="pl-12">
                       <span className="text-red-600 dark:text-red-500 font-black">&quot;cwd&quot;</span>
                       <span className="text-neutral-900 dark:text-neutral-100 font-bold">: </span>
-                      <span className="text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-950/60 px-2 py-0.5 rounded font-black">&quot;&lt;path-to-downloaded-isha-agent-folder&gt;&quot;</span>
+                      <span className="text-red-600 dark:text-red-500 font-black">&quot;&lt;path-to-downloaded-isha-agent-folder&gt;&quot;</span>
                     </div>
                     <div className="pl-8 text-neutral-900 dark:text-neutral-100 font-bold">&#125;</div>
                     <div className="pl-4 text-neutral-900 dark:text-neutral-100 font-bold">&#125;</div>
@@ -245,7 +245,7 @@ export const CliSection: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-950/60 px-2.5 py-0.5 rounded-md">
+                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500">
                         Step 1
                       </span>
                       <h3 className="text-lg sm:text-xl font-black text-neutral-950 dark:text-neutral-100 tracking-tight">
@@ -282,7 +282,7 @@ export const CliSection: React.FC = () => {
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500 bg-red-100 dark:bg-red-950/60 px-2.5 py-0.5 rounded-md">
+                      <span className="font-mono text-xs font-black uppercase tracking-widest text-red-600 dark:text-red-500">
                         Step 2
                       </span>
                       <h3 className="text-lg sm:text-xl font-black text-neutral-950 dark:text-neutral-100 tracking-tight">
