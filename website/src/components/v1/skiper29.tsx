@@ -114,7 +114,7 @@ export function Skiper29() {
       href: "#about",
     },
     {
-      title: "CLI",
+      title: "GET ISHA",
       href: "#cli",
     },
     {
