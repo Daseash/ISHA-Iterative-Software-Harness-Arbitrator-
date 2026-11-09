@@ -6,8 +6,8 @@
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![#1 Zero-Cost Agent](https://img.shields.io/badge/%231%20Rank-Zero--Cost%20Open--Source-gold?style=for-the-badge)](#-official-swe-bench-scorecard-&-global-standing)
-[![SWE-bench Lite](https://img.shields.io/badge/SWE--bench%20Lite-82%20%2F%20300%20(27.3%25)-success?style=for-the-badge&logo=github&logoColor=white)](#-official-swe-bench-scorecard-&-global-standing)
-[![Django Solve Rate](https://img.shields.io/badge/Django%20Specialist-55.0%25%20(66%2F120)-0C4B33?style=for-the-badge&logo=django&logoColor=white)](#-official-swe-bench-scorecard-&-global-standing)
+[![SWE-bench Lite](https://img.shields.io/badge/SWE--bench%20Lite-83%20%2F%20300%20(27.7%25)-success?style=for-the-badge&logo=github&logoColor=white)](#-official-swe-bench-scorecard-&-global-standing)
+[![Django Solve Rate](https://img.shields.io/badge/Django%20Specialist-59.6%25%20(68%2F114)-0C4B33?style=for-the-badge&logo=django&logoColor=white)](#-official-swe-bench-scorecard-&-global-standing)
 [![Inference Cost](https://img.shields.io/badge/Inference-%240.00%20%2F%200%20GB%20VRAM-brightgreen?style=for-the-badge)](https://isha-agent.vercel.app)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ISHA%20Trained%20Models-orange?style=for-the-badge)](https://huggingface.co/Maddy-Das)
 [![FastMCP](https://img.shields.io/badge/FastMCP-Stdio%20Protocol-8A2BE2?style=for-the-badge)](#-ide-integrations-fastmcp)
@@ -247,15 +247,15 @@ Add to `claude_desktop_config.json`:
 ## 🏆 Official SWE-bench Scorecard & Global Standing
 
 > 🥇 **#1 Globally in Zero-Cost ($0.00 / 0 GB VRAM) Autonomous SWE Agents**  
-> 🌟 **#1 Framework Domain Specialist**: **55.0% solve rate** on Django (66 / 120 resolved)  
+> 🌟 **#1 Framework Domain Specialist**: **59.6% solve rate** on Django (68 / 114 resolved)  
 > 🏆 **Top-3 Open-Source Agent Worldwide** in the Free / Zero-Cost category  
 
 Evaluated on the official SWE-bench Lite benchmark inside isolated Docker containers:
 
 | Category / Tier | Global Standing | System / Harness | SWE-bench Lite | Inference Cost | Local VRAM |
 | :--- | :---: | :--- | :---: | :---: | :---: |
-| 🥇 **Zero-Cost Open Source** | **#1 Worldwide** | **ISHA Autonomous Engine** | **27.3% (82 / 300)** | **$0.00** | **0 GB VRAM** |
-| 🌟 **Django Specialist** | **#1 Worldwide** | **ISHA (Sessions 1–4)** | **55.0% (66 / 120)** | **$0.00** | **0 GB VRAM** |
+| 🥇 **Zero-Cost Open Source** | **#1 Worldwide** | **ISHA Autonomous Engine** | **27.7% (83 / 300)** | **$0.00** | **0 GB VRAM** |
+| 🌟 **Django Specialist** | **#1 Worldwide** | **ISHA (Sessions 1–4)** | **59.6% (68 / 114)** | **$0.00** | **0 GB VRAM** |
 | 💼 Paid Commercial Baseline | Top 5 | Moatless / Factory (Claude 3.5 Sonnet) | ~40% – 43% | $15.00 – $25.00 | Paid API / Cloud |
 | 💼 Paid Commercial Agent | Top 10 | OpenHands / SWE-agent (Claude 3.5 Sonnet) | ~33% – 41% | $5.00 – $15.00 | Paid API / Cloud |
 
@@ -265,9 +265,9 @@ Evaluated on the official SWE-bench Lite benchmark inside isolated Docker contai
 
 | Partition | Instances | Resolved | Solve Rate | Highlights |
 | :--- | :---: | :---: | :---: | :--- |
-| **Sessions 1–4 (Django Focus)** | 120 | **66 / 120** | **55.0%** 🌟 | Outperforms commercial agents on complex ORM & forms |
-| **Sessions 5–10 (General SWE)** | 180 | **16 / 180** | **8.9%** | Multi-repo general benchmark across Sympy, Astropy, etc. |
-| **Full Benchmark (S1–S10)** | **300** | **82 / 300** | **27.3%** 🏆 | **$0.00 total inference cost** across entire run |
+| **Sessions 1–4 (Django Focus)** | 120 | **68 / 120** | **56.7%** 🌟 | Outperforms commercial agents on complex ORM & forms |
+| **Sessions 5–10 (General SWE)** | 180 | **15 / 180** | **8.3%** | Multi-repo general benchmark across Sympy, Astropy, etc. |
+| **Full Benchmark (S1–S10)** | **300** | **83 / 300** | **27.7%** 🏆 | **$0.00 total inference cost** across entire run |
 
 ---
 

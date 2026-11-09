@@ -137,11 +137,11 @@ export const AboutSection: React.FC = () => {
                   GOLDEN SUITE VERIFIED
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400/30 text-amber-900 font-black">
-                  76 RESOLVED
+                  83 RESOLVED
                 </span>
               </div>
               <p className="text-base font-extrabold leading-snug tracking-tight text-neutral-900">
-                76 / 300 official Docker resolved.
+                83 / 300 official Docker resolved.
                 <br />
                 88.8% clean AST yield.
                 <br />
