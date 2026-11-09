@@ -41,3 +41,4 @@ echo "✅ ISHA installation complete!"
 echo "👉 Get started by running:"
 echo "   cd $INSTALL_DIR"
 echo "   python -m src.cli doctor"
+
