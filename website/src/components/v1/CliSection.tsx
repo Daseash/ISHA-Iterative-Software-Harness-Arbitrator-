@@ -4,13 +4,11 @@ import { sounds } from "../../utils/sound";
 import { ScrollHighlight } from "./ScrollHighlight";
 
 export const CliSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"pip" | "curl" | "git" | "mcp">("pip");
+  const [activeTab, setActiveTab] = useState<"curl" | "mcp">("curl");
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: `# 1. Clone repository & install dependencies\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git isha-agent\ncd isha-agent && pip install -r requirements.txt\n\n# 2. Run system diagnostics & health check\npython -m src.cli doctor\n\n# 3. Solve a bug and create a PR\npython -m src.cli fix . --issue "Fix bug..." --pr`,
     curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
-    git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\npython -m src.cli doctor\n\n# Launch Web Dashboard\npython -m src.cli ui`,
     mcp: `# Step 1: Clone repository & enter directory\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git isha-agent\ncd isha-agent && pip install -r requirements.txt\n\n# Step 2: Under the hood of MCP, the connection is 100% identical:\n\n# 1) FOR ALL CLI AGENTS (Claude Code, Gemini CLI, Terminal Agents):\nclaude mcp add isha -- python -m src.mcp_server\n\n# 2) FOR ALL IDEs & DESKTOP APPS (Cursor, VS Code, Claude Desktop, Windsurf, Zed):\n# Note: "cwd" stands for Current Working Directory (the path to your downloaded isha-agent folder)\n{\n  "mcpServers": {\n    "isha": {\n      "command": "python",\n      "args": ["-m", "src.mcp_server"],\n      "cwd": "<path-to-downloaded-isha-agent-folder>"\n    }\n  }\n}`,
   };
 
@@ -44,16 +42,6 @@ export const CliSection: React.FC = () => {
               <Terminal className="w-6 h-6 text-black dark:text-[#F9F7EF] stroke-[3]" />
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setActiveTab("pip")}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
-                    activeTab === "pip"
-                      ? "bg-black text-[#F9F7EF] dark:bg-[#F9F7EF] dark:text-black shadow-md"
-                      : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
-                  }`}
-                >
-                  PIP (PYPI)
-                </button>
-                <button
                   onClick={() => setActiveTab("curl")}
                   className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
                     activeTab === "curl"
@@ -64,16 +52,6 @@ export const CliSection: React.FC = () => {
                   CURL
                 </button>
                 <button
-                  onClick={() => setActiveTab("git")}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
-                    activeTab === "git"
-                      ? "bg-black text-[#F9F7EF] dark:bg-[#F9F7EF] dark:text-black shadow-md"
-                      : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
-                  }`}
-                >
-                  GITHUB
-                </button>
-                <button
                   onClick={() => setActiveTab("mcp")}
                   className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
                     activeTab === "mcp"
@@ -81,7 +59,7 @@ export const CliSection: React.FC = () => {
                       : "bg-neutral-200/80 dark:bg-neutral-900 text-black dark:text-[#F9F7EF] hover:bg-neutral-300 dark:hover:bg-neutral-800"
                   }`}
                 >
-                  MCP (IDE)
+                  MCP (IDE & CLI)
                 </button>
               </div>
             </div>
