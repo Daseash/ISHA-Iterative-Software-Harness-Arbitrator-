@@ -159,17 +159,51 @@ def sync_session_to_git(session_name: str) -> None:
 
 
 def run_docker_evaluation(session_name: str, workers: int = 2) -> None:
-    """Run official SWE-bench evaluation container harness."""
+    """Run official SWE-bench evaluation container harness, evaluating only new or unresolved instances."""
     pred_path = ROOT / "results" / session_name / "predictions.json"
     if not pred_path.is_file():
         log(f"No predictions.json found for {session_name}. Skipping evaluation.")
         return
 
-    log(f"Starting official Docker harness evaluation for {session_name} (workers={workers})...")
+    run_dir = ROOT / "results" / session_name
+    already_completed = set()
+    h_report = run_dir / "harness_report.json"
+    if h_report.is_file():
+        try:
+            d = json.loads(h_report.read_text(encoding="utf-8"))
+            already_completed.update(d.get("completed_ids", []))
+        except Exception:
+            pass
+    h_dir = run_dir / "harness"
+    if h_dir.is_dir():
+        for f in h_dir.glob("*.json"):
+            try:
+                d = json.loads(f.read_text(encoding="utf-8"))
+                already_completed.update(d.get("completed_ids", []))
+            except Exception:
+                pass
+
+    preds = []
+    try:
+        preds = json.loads(pred_path.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    all_pred_ids = [p["instance_id"] for p in preds if (p.get("model_patch") or "").strip()]
+
+    # Target only instances that have non-empty patches and have not yet been evaluated
+    eval_targets = [inst for inst in all_pred_ids if inst not in already_completed]
+
+    if not eval_targets:
+        log(f"All {len(all_pred_ids)} instances in {session_name} have already been evaluated! Skipping redundant Docker testbed.")
+        sync_session_to_git(session_name)
+        return
+
+    log(f"Targeting {len(eval_targets)} un-evaluated instance(s) in {session_name} for Docker evaluation (workers={workers}): {eval_targets}")
     cmd = [
         PYTHON, "-m", "src.bench.harness_eval",
         "--run-id", session_name,
         "--max-workers", str(workers),
+        "--instances", *eval_targets,
     ]
     subprocess.run(cmd, cwd=str(ROOT))
     log(f"Docker evaluation complete for {session_name}!")
