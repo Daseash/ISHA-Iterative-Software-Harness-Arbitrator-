@@ -165,11 +165,9 @@ Every attempt and failure is vectorized into an on-disk SQLite semantic ledger (
 ```bash
 # Clone the repository
 git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
-cd ISHA-Iterative-Software-Harness-Arbitrator-
-pip install -e ".[dev]"
-
-# Or install directly via pip
-pip install isha
+cd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ### 2. Configure Environment
@@ -197,50 +195,56 @@ isha fix . --issue "Fix ZeroDivisionError in calculate_total" --apply
 
 ---
 
-## 🔌 IDE Integrations (FastMCP)
+## 🔌 IDE & CLI Integrations (FastMCP)
 
 ISHA exposes 5 native MCP tools (`isha_status`, `isha_localize`, `isha_tournament`, `isha_verify_patch`, `isha_solve`) over stdio.
 
-> 💬 **Natural Language Workflow**: In **Cursor**, **Claude Code**, or **Claude Desktop**, simply type:  
+> 💬 **Natural Language Workflow**: In **Cursor**, **Claude Code**, **Claude Desktop**, or **VS Code**, simply type:  
 > *"ISHA, check my repository at `./backend` and fix the KeyError when headers are empty."*  
 > ISHA runs autonomously in the background and delivers a verified, regression-tested diff.
 
-### Claude Code
+---
+
+### Setup Instructions
+
+Under the hood of the Model Context Protocol, the connection process is 100% identical across all tools. It only breaks down into two simple categories:
+
+#### Step 1: Clone the Repository
+```bash
+git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
+cd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent
+pip install -r requirements.txt
+```
+
+#### Step 2: Connect via MCP
+
+##### 1. For All Terminal & CLI Agents
+**Supported Agents**: Claude Code, Gemini CLI, Terminal Agents  
+Run directly from inside the downloaded `isha-agent` folder:
 ```bash
 claude mcp add isha -- python -m src.mcp_server
 ```
 
-### Cursor IDE
-Add to `.cursor/mcp.json`:
+##### 2. For All IDEs & Desktop Apps
+**Supported IDEs & Apps**: Cursor, VS Code (Roo Code / Cline / Continue), Claude Desktop, Windsurf, Zed, Antigravity  
+Add this standard configuration to your editor's MCP settings file (e.g. `.cursor/mcp.json` or `claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "isha": {
       "command": "python",
       "args": ["-m", "src.mcp_server"],
-      "cwd": "<absolute-path-to-isha-agent>"
+      "cwd": "<path-to-downloaded-isha-agent-folder>"
     }
   }
 }
 ```
 
-### Claude Desktop
-Add to `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "isha": {
-      "command": "python",
-      "args": ["-m", "src.mcp_server"],
-      "cwd": "<absolute-path-to-isha-agent>",
-      "env": {
-        "ISHA_MODE": "hybrid",
-        "PYTHONUTF8": "1"
-      }
-    }
-  }
-}
-```
+> 💡 **What is `cwd`?**  
+> `cwd` stands for **Current Working Directory**. Replace `<path-to-downloaded-isha-agent-folder>` with the absolute path to where you cloned/downloaded `isha-agent` on your machine:  
+> * **Windows**: `"C:\\projects\\ISHA\\isha-agent"` *(use double backslashes `\\`)*  
+> * **Mac / Linux**: `"/Users/yourname/projects/ISHA/isha-agent"`  
+> *(Run `pwd` inside the `isha-agent` folder to copy your exact path).*
 
 ---
 

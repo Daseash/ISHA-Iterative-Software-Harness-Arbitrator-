@@ -8,10 +8,10 @@ export const CliSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: `# Install ISHA globally\npip install isha\n\n# Solve a bug and create a GitHub PR\nisha fix https://github.com/org/repo --issue "Fix bug..." --pr\n\n# Open visual web dashboard\nisha ui`,
+    pip: `# 1. Clone repository & install dependencies\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\ncd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent && pip install -r requirements.txt\n\n# 2. Run system diagnostics & health check\npython -m src.cli doctor\n\n# 3. Solve a bug and create a PR\npython -m src.cli fix . --issue "Fix bug..." --pr`,
     curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
-    git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\nisha doctor\n\n# Launch Web Dashboard\nisha ui`,
-    mcp: `# 1. Start FastMCP stdio server\nisha-mcp\n\n# 2. Add to Claude Desktop / Cursor / Antigravity (mcp_config.json):\n{\n  "mcpServers": {\n    "isha": {\n      "command": "isha-mcp"\n    }\n  }\n}\n\n# Exposes: isha_solve, isha_localize, isha_tournament, isha_verify_patch`,
+    git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\npython -m src.cli doctor\n\n# Launch Web Dashboard\npython -m src.cli ui`,
+    mcp: `# Step 1: Clone repository & enter directory\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\ncd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent && pip install -r requirements.txt\n\n# Step 2: Under the hood of MCP, the connection is 100% identical:\n\n# 1) FOR ALL CLI AGENTS (Claude Code, Gemini CLI, Terminal Agents):\nclaude mcp add isha -- python -m src.mcp_server\n\n# 2) FOR ALL IDEs & DESKTOP APPS (Cursor, VS Code, Claude Desktop, Windsurf, Zed):\n# Note: "cwd" stands for Current Working Directory (the path to your downloaded isha-agent folder)\n{\n  "mcpServers": {\n    "isha": {\n      "command": "python",\n      "args": ["-m", "src.mcp_server"],\n      "cwd": "<path-to-downloaded-isha-agent-folder>"\n    }\n  }\n}`,
   };
 
   const handleCopy = () => {
