@@ -275,7 +275,7 @@ export const HoverMember: React.FC<HoverMemberProps> = ({
 export const DemoSkiper6: React.FC = () => {
   const teamMembers: TeamMember[] = [
     {
-      name: "CLI",
+      name: "GET ISHA",
       image: "/eyes.jpg",
       role: "Autonomous Terminal & Batch Execution Engine",
       link: "#cli",

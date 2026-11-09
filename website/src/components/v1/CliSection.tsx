@@ -53,7 +53,7 @@ export const CliSection: React.FC = () => {
       <div className="max-w-5xl mx-auto space-y-10">
         <div className="text-center">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-black dark:text-[#F9F7EF]">
-            COMMAND LINE INTERFACE
+            GET ISHA
           </h2>
           <p className="mt-3 text-sm sm:text-base font-bold text-neutral-600 dark:text-neutral-400">
             Autonomous SWE-bench runner deployable via{" "}
