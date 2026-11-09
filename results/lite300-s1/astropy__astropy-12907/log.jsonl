@@ -1,10 +1,11 @@
-{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1794130066.6130679}
-{"event": "attempt", "n": 1, "ts": 1794130069.2743797}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794130429.2750392}
-{"event": "attempt", "n": 2, "ts": 1794130429.2924352}
-{"ts": 1794130563.3560104, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794130633.4123597, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794130658.4311137, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794130789.2937129}
-{"ts": 1794130847.9283004, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794130847.950784, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "astropy__astropy-12907", "ts": 1794213141.448704}
+{"event": "attempt", "n": 1, "ts": 1794213143.4654555}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794213503.4659567}
+{"event": "attempt", "n": 2, "ts": 1794213503.4848664}
+{"ts": 1794213504.5733244, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213549.9950266, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213618.5277514, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213663.9119103, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213762.8812802, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213853.2367556, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794213863.5371878}
