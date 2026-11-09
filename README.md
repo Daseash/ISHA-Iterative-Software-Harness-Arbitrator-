@@ -164,8 +164,8 @@ Every attempt and failure is vectorized into an on-disk SQLite semantic ledger (
 ### 1. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git
-cd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent
+git clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git isha-agent
+cd isha-agent
 pip install -r requirements.txt
 pip install -e .
 ```

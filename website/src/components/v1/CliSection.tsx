@@ -8,10 +8,10 @@ export const CliSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const commands = {
-    pip: `# 1. Clone repository & install dependencies\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\ncd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent && pip install -r requirements.txt\n\n# 2. Run system diagnostics & health check\npython -m src.cli doctor\n\n# 3. Solve a bug and create a PR\npython -m src.cli fix . --issue "Fix bug..." --pr`,
+    pip: `# 1. Clone repository & install dependencies\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git isha-agent\ncd isha-agent && pip install -r requirements.txt\n\n# 2. Run system diagnostics & health check\npython -m src.cli doctor\n\n# 3. Solve a bug and create a PR\npython -m src.cli fix . --issue "Fix bug..." --pr`,
     curl: `curl -sSL https://raw.githubusercontent.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-/main/install.sh | bash`,
     git: `# Direct install from GitHub\npip install git+https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\n\n# Run environment health check\npython -m src.cli doctor\n\n# Launch Web Dashboard\npython -m src.cli ui`,
-    mcp: `# Step 1: Clone repository & enter directory\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git\ncd ISHA-Iterative-Software-Harness-Arbitrator-/isha-agent && pip install -r requirements.txt\n\n# Step 2: Under the hood of MCP, the connection is 100% identical:\n\n# 1) FOR ALL CLI AGENTS (Claude Code, Gemini CLI, Terminal Agents):\nclaude mcp add isha -- python -m src.mcp_server\n\n# 2) FOR ALL IDEs & DESKTOP APPS (Cursor, VS Code, Claude Desktop, Windsurf, Zed):\n# Note: "cwd" stands for Current Working Directory (the path to your downloaded isha-agent folder)\n{\n  "mcpServers": {\n    "isha": {\n      "command": "python",\n      "args": ["-m", "src.mcp_server"],\n      "cwd": "<path-to-downloaded-isha-agent-folder>"\n    }\n  }\n}`,
+    mcp: `# Step 1: Clone repository & enter directory\ngit clone https://github.com/Daseash/ISHA-Iterative-Software-Harness-Arbitrator-.git isha-agent\ncd isha-agent && pip install -r requirements.txt\n\n# Step 2: Under the hood of MCP, the connection is 100% identical:\n\n# 1) FOR ALL CLI AGENTS (Claude Code, Gemini CLI, Terminal Agents):\nclaude mcp add isha -- python -m src.mcp_server\n\n# 2) FOR ALL IDEs & DESKTOP APPS (Cursor, VS Code, Claude Desktop, Windsurf, Zed):\n# Note: "cwd" stands for Current Working Directory (the path to your downloaded isha-agent folder)\n{\n  "mcpServers": {\n    "isha": {\n      "command": "python",\n      "args": ["-m", "src.mcp_server"],\n      "cwd": "<path-to-downloaded-isha-agent-folder>"\n    }\n  }\n}`,
   };
 
   const handleCopy = () => {
@@ -26,10 +26,7 @@ export const CliSection: React.FC = () => {
       <div className="max-w-5xl mx-auto space-y-10">
         <div className="text-center">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-black dark:text-[#F9F7EF]">
-            COMMAND LINE{" "}
-            <ScrollHighlight variant="round" color="coral">
-              INTERFACE
-            </ScrollHighlight>
+            COMMAND LINE INTERFACE
           </h2>
           <p className="mt-3 text-sm sm:text-base font-bold text-neutral-600 dark:text-neutral-400">
             Autonomous SWE-bench runner deployable via{" "}
