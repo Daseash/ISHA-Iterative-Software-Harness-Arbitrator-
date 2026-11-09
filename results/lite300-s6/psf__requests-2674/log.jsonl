@@ -1,2 +1,9 @@
-{"event": "start", "instance_id": "psf__requests-2674", "ts": 1794162353.7862935}
-{"event": "attempt", "n": 1, "ts": 1794162356.864484}
+{"event": "start", "instance_id": "psf__requests-2674", "ts": 1794211043.594256}
+{"event": "attempt", "n": 1, "ts": 1794211046.9442625}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794211406.9448035}
+{"event": "attempt", "n": 2, "ts": 1794211406.9541352}
+{"ts": 1794211547.2529893, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794211688.8358269, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794211766.9552383}
+{"ts": 1794211797.8722281, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794211906.5867393, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

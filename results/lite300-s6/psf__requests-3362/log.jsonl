@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "psf__requests-3362", "ts": 1794211767.0092268}
+{"event": "attempt", "n": 1, "ts": 1794211767.029762}
+{"ts": 1794212122.3998702, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794212127.0303004}
+{"event": "attempt", "n": 2, "ts": 1794212127.0394273}
+{"ts": 1794212174.7701845, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794212212.7924097, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794212265.108852, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794212311.3404143, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794212401.73404, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794212487.0405848}

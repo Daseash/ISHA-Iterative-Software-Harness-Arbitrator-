@@ -42685,5 +42685,22 @@
     "laya_score": 0.643025,
     "won_selection": true,
     "timestamp": 1794150280.9303124
+  },
+  {
+    "instance_id": "psf__requests-2674",
+    "candidate_index": 1,
+    "strategy": "coder_default",
+    "temperature": 0.2,
+    "requested_model": "groq/qwen/qwen3.8-27b",
+    "model_used": "mistral/codestral-latest",
+    "substituted": true,
+    "patch_applied": true,
+    "gate_passed": true,
+    "repro_passed": false,
+    "regression_count": 0,
+    "diff_size": 12,
+    "laya_score": 0.8468499999999999,
+    "won_selection": true,
+    "timestamp": 1794212613.1648133
   }
 ]
