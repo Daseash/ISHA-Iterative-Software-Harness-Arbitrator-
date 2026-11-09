@@ -1,11 +1,8 @@
-{"event": "start", "instance_id": "django__django-14997", "ts": 1794133556.3979802}
-{"event": "attempt", "n": 1, "ts": 1794133559.1574547}
-{"ts": 1794133912.3433805, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794133919.158081}
-{"event": "attempt", "n": 2, "ts": 1794133919.2229042}
-{"ts": 1794133958.2822645, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794134084.9242887, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794134130.436207, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794134236.983787, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794134279.2242777}
-{"ts": 1794134327.4023807, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "django__django-14997", "ts": 1794215888.9973927}
+{"event": "attempt", "n": 1, "ts": 1794215891.0807831}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794216251.0813262}
+{"event": "attempt", "n": 2, "ts": 1794216251.1564379}
+{"ts": 1794216430.7099042, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794216552.5445838, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794216611.1575427}
+{"ts": 1794216766.1436079, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
