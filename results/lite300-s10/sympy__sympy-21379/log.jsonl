@@ -1,0 +1,6 @@
+{"event": "start", "instance_id": "sympy__sympy-21379", "ts": 1794207959.8696172}
+{"event": "attempt", "n": 1, "ts": 1794207960.6693523}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794208321.002703}
+{"event": "attempt", "n": 2, "ts": 1794208322.827488}
+{"event": "timeout", "attempt": 2, "ts": 1794208685.453068}
+{"ts": 1794212479.469586, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

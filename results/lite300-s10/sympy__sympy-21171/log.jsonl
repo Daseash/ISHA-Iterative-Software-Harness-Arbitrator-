@@ -1,2 +1,7 @@
-{"event": "start", "instance_id": "sympy__sympy-21171", "ts": 1794152150.9168386}
-{"event": "attempt", "n": 1, "ts": 1794152151.6202025}
+{"event": "start", "instance_id": "sympy__sympy-21171", "ts": 1794207236.173903}
+{"event": "attempt", "n": 1, "ts": 1794207236.7870064}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794207596.9275086}
+{"event": "attempt", "n": 2, "ts": 1794207598.8844142}
+{"event": "timeout", "attempt": 2, "ts": 1794207959.7634776}
+{"ts": 1794210860.814343, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794212005.7189407, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

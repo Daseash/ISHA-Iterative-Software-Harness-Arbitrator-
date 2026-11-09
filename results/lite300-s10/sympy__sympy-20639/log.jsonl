@@ -1,5 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-20639", "ts": 1794151423.9487026}
-{"event": "attempt", "n": 1, "ts": 1794151426.2036548}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794151786.8016016}
-{"event": "attempt", "n": 2, "ts": 1794151788.419054}
-{"event": "timeout", "attempt": 2, "ts": 1794152148.739445}
+{"event": "start", "instance_id": "sympy__sympy-20639", "ts": 1794206506.646634}
+{"event": "attempt", "n": 1, "ts": 1794206509.480994}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794206875.149482}
+{"event": "attempt", "n": 2, "ts": 1794206875.8064473}
+{"event": "timeout", "attempt": 2, "ts": 1794207236.1033466}
+{"ts": 1794209004.3444946, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794209054.4745514, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794209716.5580955, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794209769.6597507, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794210269.3771586, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794210318.527753, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
