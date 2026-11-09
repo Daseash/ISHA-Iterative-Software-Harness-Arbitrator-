@@ -1,8 +1,5 @@
-{"event": "start", "instance_id": "sympy__sympy-17630", "ts": 1794139505.1561685}
-{"event": "attempt", "n": 1, "ts": 1794139506.1286592}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794139866.1758583}
-{"event": "attempt", "n": 2, "ts": 1794139869.598937}
-{"event": "timeout", "attempt": 2, "ts": 1794140229.806109}
-{"ts": 1794143680.701164, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794145291.1185, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794145397.9306295, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "sympy__sympy-17630", "ts": 1794221877.1102502}
+{"event": "attempt", "n": 1, "ts": 1794221878.1373925}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794222240.443942}
+{"event": "attempt", "n": 2, "ts": 1794222241.5076928}
+{"event": "timeout", "attempt": 2, "ts": 1794222601.6834028}

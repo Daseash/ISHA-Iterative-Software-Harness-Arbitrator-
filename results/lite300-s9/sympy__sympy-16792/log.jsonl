@@ -1,11 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-16792", "ts": 1794136604.5157483}
-{"event": "attempt", "n": 1, "ts": 1794136605.353497}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794136966.2489839}
-{"event": "attempt", "n": 2, "ts": 1794136966.9068928}
-{"event": "timeout", "attempt": 2, "ts": 1794137327.2539651}
-{"ts": 1794140235.2027662, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794140294.0652528, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794141061.0421913, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794141128.206746, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794141476.5198407, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794141532.5923622, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "sympy__sympy-16792", "ts": 1794218977.449565}
+{"event": "attempt", "n": 1, "ts": 1794218978.2190626}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794219338.3122988}
+{"event": "attempt", "n": 2, "ts": 1794219340.8168557}
+{"event": "timeout", "attempt": 2, "ts": 1794219703.041802}
+{"ts": 1794221222.8502316, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794221279.005569, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794222173.1593354, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794222221.6412206, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794222495.7212474, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794222562.5760093, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}

@@ -1,9 +1,11 @@
-{"event": "start", "instance_id": "sympy__sympy-13895", "ts": 1794130818.3970463}
-{"event": "attempt", "n": 1, "ts": 1794130821.4804232}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794131181.4860957}
-{"event": "attempt", "n": 2, "ts": 1794131181.5743275}
-{"ts": 1794131286.2406557, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794131453.721553, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794131493.6418443, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794131493.6687124, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794131541.6062365}
+{"event": "start", "instance_id": "sympy__sympy-13895", "ts": 1794213194.4353642}
+{"event": "attempt", "n": 1, "ts": 1794213197.0334496}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794213557.0340142}
+{"event": "attempt", "n": 2, "ts": 1794213557.0524876}
+{"ts": 1794213611.0498543, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213661.3878725, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213725.9951046, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213771.4015014, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794213917.0535922}
+{"ts": 1794213928.728796, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794213978.3310277, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
