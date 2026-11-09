@@ -1,11 +1,9 @@
-{"event": "start", "instance_id": "sphinx-doc__sphinx-8506", "ts": 1794142957.3717406}
-{"event": "attempt", "n": 1, "ts": 1794142960.0385356}
-{"event": "timeout_retry", "attempt": 1, "ts": 1794143320.0392733}
-{"event": "attempt", "n": 2, "ts": 1794143320.0575225}
-{"ts": 1794143340.9622107, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794143356.2839975, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794143417.9518566, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794143463.4847682, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
-{"ts": 1794143601.5843875, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
-{"event": "timeout", "attempt": 2, "ts": 1794143680.0589514}
-{"ts": 1794143692.785032, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "start", "instance_id": "sphinx-doc__sphinx-8506", "ts": 1794216977.5154307}
+{"event": "attempt", "n": 1, "ts": 1794216979.3511503}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794217339.3515978}
+{"event": "attempt", "n": 2, "ts": 1794217339.3689744}
+{"ts": 1794217435.877404, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794217481.2826045, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794217603.023162, "role": "planner", "model": "codestral-latest", "position": "fallback 2 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794217648.4568837, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794217699.3716516}
