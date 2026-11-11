@@ -118,10 +118,6 @@ export function Skiper29() {
       href: "#cli",
     },
     {
-      title: "WORKSPACE",
-      href: "#workspace",
-    },
-    {
       title: "FIX",
       href: "/fix",
     },

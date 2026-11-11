@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEventListener } from "usehooks-ts";
 import { ThemeToggleButton1 } from "./skiper4";
+import { sounds } from "../../utils/sound";
 
 export interface NavItem {
   name: string;
@@ -27,14 +28,39 @@ export const Navbar_001: React.FC<NavbarProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [logoVariant, setLogoVariant] = useState<"dot" | "title">(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search);
+      return p.get("logo") === "1" || p.get("logo") === "dot" ? "dot" : "title";
+    }
+    return "title";
+  });
+
+  const toggleLogoVariant = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    sounds.playClick();
+    const next = logoVariant === "dot" ? "title" : "dot";
+    setLogoVariant(next);
+    if (typeof window !== "undefined") {
+      const icon = document.getElementById("dynamic-favicon") as HTMLLinkElement;
+      if (icon) icon.href = next === "title" ? "/favicon-clean.svg?v=3" : "/favicon-dot.svg?v=3";
+      document.title =
+        next === "title"
+          ? "Isha · Iterative Software Harness Arbitrator"
+          : "isha. · Iterative Software Harness Arbitrator";
+      const u = new URL(window.location.href);
+      u.searchParams.set("logo", next === "title" ? "2" : "1");
+      window.history.replaceState(null, "", u.toString());
+    }
+  };
 
   const navItems: NavItem[] = [
     { name: "HOME", href: "/#hero", badge: "01" },
     { name: "ABOUT", href: "/#about", badge: "02" },
-    { name: "WORKSPACE", href: "/#workspace", badge: "03" },
-    { name: "GET ISHA", href: "/#cli", badge: "04" },
-    { name: "FIX", href: "/fix", badge: "05" },
-    ...(!hideStats ? [{ name: "STATS", href: "/stats", badge: "06" }] : []),
+    { name: "GET ISHA", href: "/#cli", badge: "03" },
+    { name: "FIX", href: "/fix", badge: "04" },
+    ...(!hideStats ? [{ name: "STATS", href: "/stats", badge: "05" }] : []),
     ...(!hideGithub
       ? [
           {
@@ -129,13 +155,22 @@ export const Navbar_001: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between w-full">
             <a
               href="/"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2.5 group cursor-pointer"
+              onClick={toggleLogoVariant}
+              title="Click to toggle between isha. and Isha"
+              className="flex items-center gap-1.5 group cursor-pointer"
             >
-              <div className="h-3 w-3 rounded-full bg-red-600 transition-transform group-hover:scale-125 duration-300 shadow-sm shrink-0" />
-              <span className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white dark:text-neutral-900 group-hover:text-red-500 transition-colors">
-                ISHA
-              </span>
+              {logoVariant === "title" ? (
+                <div className="flex items-center gap-1">
+                  <span className="text-xl sm:text-2xl font-black tracking-tight text-white dark:text-neutral-900 group-hover:text-red-500 transition-colors">
+                    Isha
+                  </span>
+                  <div className="h-2 w-2 rounded-full bg-red-600 mb-2 transition-transform group-hover:scale-125 duration-300 shadow-sm shrink-0" />
+                </div>
+              ) : (
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-white dark:text-neutral-900 group-hover:text-red-500 transition-colors">
+                  isha<span className="text-red-600">.</span>
+                </span>
+              )}
             </a>
 
             <button

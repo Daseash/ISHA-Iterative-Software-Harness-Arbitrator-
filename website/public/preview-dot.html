@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon-dot.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>isha. · Iterative Software Harness Arbitrator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,900&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background-color: #F9F7EF;
+        color: #09090b;
+        font-family: 'Bricolage Grotesque', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2.5rem 1.5rem;
+      }
+      .tab-notice {
+        background: #09090b;
+        color: #fff;
+        padding: 0.75rem 1.25rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-family: 'JetBrains Mono', monospace;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      }
+      .tab-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #dc2626;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      .pill-header {
+        background: #09090b;
+        color: #F9F7EF;
+        border-radius: 999px;
+        padding: 0.6rem 1.25rem 0.6rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        margin-bottom: 3.5rem;
+      }
+      .brand-text {
+        font-size: 1.45rem;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        display: flex;
+        align-items: baseline;
+      }
+      .period { color: #dc2626; }
+      .menu-btn {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        color: #8e8e96;
+      }
+      .card {
+        background: #ffffff;
+        border: 1px solid #e6e3d5;
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        text-align: center;
+        max-width: 620px;
+        width: 100%;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.04);
+      }
+      .huge-title {
+        font-size: 5rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        margin-bottom: 1rem;
+      }
+      .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        color: #64748b;
+        font-weight: 800;
+        margin-bottom: 2rem;
+        display: block;
+      }
+      .switch-link {
+        display: inline-block;
+        margin-top: 2rem;
+        padding: 0.65rem 1.25rem;
+        background: #09090b;
+        color: #F9F7EF;
+        text-decoration: none;
+        border-radius: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        font-weight: 800;
+        transition: transform 0.15s;
+      }
+      .switch-link:hover { transform: translateY(-2px); }
+    </style>
+  </head>
+  <body>
+    <div class="tab-notice">
+      <div class="tab-dot"></div>
+      <span>LOOK UP AT YOUR CHROME TAB &uarr; Notice the new favicon &amp; title: "isha."</span>
+    </div>
+
+    <!-- Live Floating Navbar Pill Simulation -->
+    <div class="pill-header">
+      <div class="brand-text">
+        isha<span class="period">.</span>
+      </div>
+      <div class="menu-btn">MENU</div>
+    </div>
+
+    <div class="card">
+      <span class="tag">DESIGN OPTION 01 &bull; LOWERCASE WITH RED PERIOD</span>
+      <div class="huge-title">
+        isha<span style="color:#dc2626;">.</span>
+      </div>
+      <p style="color:#64748b; font-size: 1rem; font-weight: 600; line-height: 1.5;">
+        Exact Bricolage Grotesque 900 lowercase with the assertive crimson period. Active in your Chrome tab favicon and title right now.
+      </p>
+
+      <a href="/preview-title.html" class="switch-link">Switch to Option 2: Isha &rarr;</a>
+    </div>
+  </body>
+</html>
+

@@ -13,6 +13,32 @@ interface FixPageProps {
 export const FixPage: React.FC<FixPageProps> = () => {
   const [copied, setCopied] = useState(false);
   const [cliFlavor, setCliFlavor] = useState<"pip" | "mcp" | "pnpm">("pip");
+  const [logoVariant, setLogoVariant] = useState<"dot" | "title">(() => {
+    if (typeof window !== "undefined") {
+      const p = new URLSearchParams(window.location.search);
+      return p.get("logo") === "1" || p.get("logo") === "dot" ? "dot" : "title";
+    }
+    return "title";
+  });
+
+  const toggleLogoVariant = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    sounds.playClick();
+    const next = logoVariant === "dot" ? "title" : "dot";
+    setLogoVariant(next);
+    if (typeof window !== "undefined") {
+      const icon = document.getElementById("dynamic-favicon") as HTMLLinkElement;
+      if (icon) icon.href = next === "title" ? "/favicon-clean.svg?v=3" : "/favicon-dot.svg?v=3";
+      document.title =
+        next === "title"
+          ? "Isha · Iterative Software Harness Arbitrator"
+          : "isha. · Iterative Software Harness Arbitrator";
+      const u = new URL(window.location.href);
+      u.searchParams.set("logo", next === "title" ? "2" : "1");
+      window.history.replaceState(null, "", u.toString());
+    }
+  };
 
   const pipCommand = "pip install isha && isha fix .";
   const mcpCommand = "isha-mcp";
@@ -50,20 +76,67 @@ export const FixPage: React.FC<FixPageProps> = () => {
     <main className="relative w-full h-screen min-h-screen bg-[#F9F7EF] dark:bg-black overflow-hidden select-none transition-colors duration-300 flex flex-col justify-between">
       {/* ================= TOP NAVIGATION BAR ================= */}
       <header className="w-full flex items-center justify-between px-6 sm:px-10 py-5 z-20 shrink-0 border-b border-neutral-200/60 dark:border-neutral-900">
-        {/* Back to Home Button with enlarged branding */}
+        {/* Back to Home Button with clean brand typography (no black background) */}
         <div className="flex items-center gap-3">
           <a
             href="/"
             onClick={handleNavigateHome}
             className="group flex items-center gap-3.5 text-neutral-900 hover:text-black dark:text-neutral-100 dark:hover:text-white transition-colors cursor-pointer"
           >
-            <div className="w-12 h-12 rounded-full flex items-center justify-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm group-hover:scale-105 transition-transform">
-              <ArrowLeft className="w-6 h-6 text-red-600 stroke-[2.5]" />
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm group-hover:scale-105 group-hover:border-neutral-300 dark:group-hover:border-neutral-700 transition-all shrink-0">
+              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 stroke-[2.5] group-hover:-translate-x-0.5 transition-transform" />
             </div>
-            <div className="flex items-center gap-2 font-black text-2xl sm:text-3xl tracking-tight">
-              <span>ISHA</span>
-              <span className="text-neutral-400 dark:text-neutral-600">/</span>
-              <span className="text-red-600 uppercase font-black">FIX</span>
+
+            {/* Clean Brand Typography without dark background */}
+            <div className="flex items-center gap-2 sm:gap-2.5 font-black text-2xl sm:text-3xl tracking-tight select-none">
+              {logoVariant === "title" ? (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={toggleLogoVariant}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleLogoVariant(e as unknown as React.MouseEvent);
+                    }
+                  }}
+                  aria-label="Logo: Isha with red node. Click or press Enter to toggle variant."
+                  title="Option 2: Isha · Click to toggle logo"
+                  className="flex items-center gap-1 cursor-pointer group/logo outline-none focus-visible:ring-1 focus-visible:ring-red-500 rounded"
+                >
+                  <span className="text-neutral-950 dark:text-white group-hover/logo:text-red-600 transition-colors">
+                    Isha
+                  </span>
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-600 mb-2.5 shrink-0 group-hover/logo:scale-125 transition-transform duration-300 shadow-sm" />
+                </div>
+              ) : (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={toggleLogoVariant}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleLogoVariant(e as unknown as React.MouseEvent);
+                    }
+                  }}
+                  aria-label="Logo: isha with red period. Click or press Enter to toggle variant."
+                  title="Option 1: isha. · Click to toggle logo"
+                  className="flex items-center cursor-pointer group/logo outline-none focus-visible:ring-1 focus-visible:ring-red-500 rounded"
+                >
+                  <span className="text-neutral-950 dark:text-white group-hover/logo:text-red-600 transition-colors">
+                    isha<span className="text-red-600">.</span>
+                  </span>
+                </div>
+              )}
+
+              <span className="text-neutral-400 dark:text-neutral-600 font-light select-none">
+                /
+              </span>
+
+              <span className="text-red-600 font-mono font-black uppercase">
+                FIX
+              </span>
             </div>
           </a>
         </div>

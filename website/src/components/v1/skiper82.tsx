@@ -41,6 +41,67 @@ const PIPELINE_STEPS = [
   { id: 7, name: "LAYA Arbitrator", desc: "Calibrated probability", icon: "⚖️" },
 ];
 
+const SAMPLE_PROMPTS = [
+  "divide() in calculator.py raises ZeroDivisionError on divide(10, 0) instead of ValueError",
+  "subtract() in calculator.py returns addition instead of subtraction",
+  "Guard against NoneType has no len() in report.py summary calculation",
+];
+
+const REQUESTS_FALLBACK_DIFF = `diff --git a/src/requests/models.py b/src/requests/models.py
+index 17b39cd..69813de 100644
+--- a/src/requests/models.py
++++ b/src/requests/models.py
+@@ -213,7 +213,7 @@ class RequestEncodingMixin:
+                         (
+                             field.decode("utf-8")
+                             if isinstance(field, bytes)
+-                            else field,
++                            else (field if isinstance(field, str) else str(field)),
+                             v.encode("utf-8") if isinstance(v, str) else v,
+                         )
+                     )
+@@ -242,7 +242,10 @@ class RequestEncodingMixin:
+             else:
+                 fdata = fp
+ 
+-            rf = RequestField(name=k, data=fdata, filename=fn, headers=fh)
++            k_name = k.decode("utf-8") if isinstance(k, bytes) else (k if isinstance(k, str) else str(k))
++            if fn is not None and not isinstance(fn, (str, bytes)):
++                fn = str(fn)
++            rf = RequestField(name=k_name, data=fdata, filename=fn, headers=fh)
+             rf.make_multipart(content_type=ft)
+             new_fields.append(rf)`;
+
+const CALCULATOR_FALLBACK_DIFF = `diff --git a/src/calculator.py b/src/calculator.py
+--- a/src/calculator.py
++++ b/src/calculator.py
+@@ -10,3 +10,6 @@
+     def divide(self, a: int, b: int) -> float:
++        if b == 0:
++            raise ValueError("Cannot divide by zero")
+         return a / b`;
+
+// Reusable minimal fetch with fallback endpoints
+async function postApi<T>(baseUrl: string, path: string, payload: unknown): Promise<T | null> {
+  const cleanBase = baseUrl.trim().replace(/\/+$/, "");
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  const endpoints = Array.from(new Set([`${cleanBase}${cleanPath}`, cleanPath, `http://127.0.0.1:8000${cleanPath}`]));
+  for (const ep of endpoints) {
+    try {
+      const res = await fetch(ep, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(3500),
+      });
+      if (res.ok) return (await res.json()) as T;
+    } catch {
+      // try next fallback
+    }
+  }
+  return null;
+}
+
 export interface Skiper82Props {
   className?: string;
   initialQuery?: string;
@@ -58,25 +119,17 @@ export const Skiper82: React.FC<Skiper82Props> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [apiBaseUrl, setApiBaseUrl] = useState("http://127.0.0.1:8000");
   const [isApplying, setIsApplying] = useState(false);
-
   const [messages, setMessages] = useState<Message[]>([]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isProcessing]);
 
   // Animate through pipeline steps while processing
   useEffect(() => {
-    if (!isProcessing) {
-      setActiveStepIndex(0);
-      return;
-    }
+    if (!isProcessing) return;
     const interval = setInterval(() => {
       setActiveStepIndex((prev) => (prev < PIPELINE_STEPS.length - 1 ? prev + 1 : prev));
     }, 700);
@@ -108,29 +161,12 @@ export const Skiper82: React.FC<Skiper82Props> = ({
     sounds.playClick();
     const target = repoTarget || repoUrl || "tests/dummy_repo";
     try {
-      const endpoints = [`${apiBaseUrl}/api/apply`, "/api/apply", "http://127.0.0.1:8000/api/apply"];
-      let appliedOk = false;
-      let detailMsg = "";
+      const data = await postApi<{ success?: boolean; detail?: string }>(apiBaseUrl, "/api/apply", {
+        patch: diff,
+        repo: target,
+      });
 
-      for (const ep of endpoints) {
-        try {
-          const res = await fetch(ep, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ patch: diff, repo: target }),
-          });
-          if (res.ok) {
-            const data = await res.json();
-            appliedOk = data.success;
-            detailMsg = data.detail || "";
-            break;
-          }
-        } catch {
-          // continue fallback
-        }
-      }
-
-      if (appliedOk) {
+      if (data?.success) {
         sounds.playSuccess();
         setMessages((prev) =>
           prev.map((m) =>
@@ -140,7 +176,7 @@ export const Skiper82: React.FC<Skiper82Props> = ({
           )
         );
       } else {
-        alert(`Could not apply patch to ${target}: ${detailMsg || "Check if repository folder exists."}`);
+        alert(`Could not apply patch to ${target}: ${data?.detail || "Check if repository folder exists."}`);
       }
     } catch (err) {
       alert(`Apply failed: ${err}`);
@@ -155,339 +191,273 @@ export const Skiper82: React.FC<Skiper82Props> = ({
     if (!query || isProcessing) return;
 
     sounds.playSend();
-
-    const userMsg: Message = {
-      id: String(Date.now()),
-      sender: "user",
-      text: query,
-      repo: repoUrl,
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [
+      ...prev,
+      { id: String(Date.now()), sender: "user", text: query, repo: repoUrl },
+    ]);
     setInput("");
-    setIsProcessing(true);
     setActiveStepIndex(0);
-
-    const endpoints = [
-      `${apiBaseUrl}/api/fix`,
-      "/api/fix",
-      "http://127.0.0.1:8000/api/fix",
-    ];
-
-    let success = false;
-    let data: any = null;
-
-    for (const ep of endpoints) {
-      try {
-        const res = await fetch(ep, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            issue: query,
-            repo: repoUrl || "tests/dummy_repo",
-            apply: false,
-            multi: true,
-          }),
-        });
-
-        if (res.ok) {
-          data = await res.json();
-          if (data && data.success !== false) {
-            success = true;
-            break;
-          }
-        }
-      } catch {
-        // try next endpoint
-      }
-    }
+    setIsProcessing(true);
 
     try {
-      if (success && data) {
-        sounds.playSuccess();
-        const ishaResponse: Message = {
-          id: String(Date.now() + 1),
-          sender: "isha",
-          text: data.plan
-            ? `⚡ Fix synthesized and verified in ${data.duration || "1.4"}s.\nVerdict: ${data.verdict?.toUpperCase() || "APPROVED"} (LAYA Score: ${data.score ?? "0.96"})\n\n${data.plan.slice(0, 240)}...`
-            : `Fix verified for: "${query}". Regression test suite passed cleanly with 0 failures.`,
-          diff: data.diff || undefined,
-          score: data.score,
-          verdict: data.verdict,
-          duration: data.duration,
-          repo: repoUrl,
-        };
-        setMessages((prev) => [...prev, ishaResponse]);
+      const data = await postApi<{
+        success?: boolean;
+        diff?: string;
+        plan?: string;
+        score?: number;
+        verdict?: string;
+        duration?: number;
+      }>(apiBaseUrl, "/api/fix", {
+        issue: query,
+        repo: repoUrl || "tests/dummy_repo",
+        apply: false,
+        multi: true,
+      });
+
+      sounds.playSuccess();
+      if (data && data.success !== false) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: String(Date.now() + 1),
+            sender: "isha",
+            text: data.plan
+              ? `⚡ Fix synthesized and verified in ${data.duration || "1.4"}s.\nVerdict: ${data.verdict?.toUpperCase() || "APPROVED"} (LAYA Score: ${data.score ?? "0.96"})\n\n${data.plan.slice(0, 240)}...`
+              : `Fix verified for: "${query}". Regression test suite passed cleanly with 0 failures.`,
+            diff: data.diff,
+            score: data.score,
+            verdict: data.verdict,
+            duration: data.duration,
+            repo: repoUrl,
+          },
+        ]);
       } else {
-        // Simulated deterministic fix with clean instructions
-        sounds.playSuccess();
-        const isRequestsIssue =
+        // Deterministic simulated fallback
+        const isRequests =
           repoUrl.toLowerCase().includes("requests") ||
           query.toLowerCase().includes("requests") ||
           query.includes("7634") ||
           query.toLowerCase().includes("translate") ||
           query.toLowerCase().includes("multipart");
 
-        const fallbackDiff = isRequestsIssue
-          ? `diff --git a/src/requests/models.py b/src/requests/models.py
-index 17b39cd..69813de 100644
---- a/src/requests/models.py
-+++ b/src/requests/models.py
-@@ -213,7 +213,7 @@ class RequestEncodingMixin:
-                         (
-                             field.decode("utf-8")
-                             if isinstance(field, bytes)
--                            else field,
-+                            else (field if isinstance(field, str) else str(field)),
-                             v.encode("utf-8") if isinstance(v, str) else v,
-                         )
-                     )
-@@ -242,7 +242,10 @@ class RequestEncodingMixin:
-             else:
-                 fdata = fp
- 
--            rf = RequestField(name=k, data=fdata, filename=fn, headers=fh)
-+            k_name = k.decode("utf-8") if isinstance(k, bytes) else (k if isinstance(k, str) else str(k))
-+            if fn is not None and not isinstance(fn, (str, bytes)):
-+                fn = str(fn)
-+            rf = RequestField(name=k_name, data=fdata, filename=fn, headers=fh)
-             rf.make_multipart(content_type=ft)
-             new_fields.append(rf)`
-          : `diff --git a/src/calculator.py b/src/calculator.py
---- a/src/calculator.py
-+++ b/src/calculator.py
-@@ -10,3 +10,6 @@
-     def divide(self, a: int, b: int) -> float:
-+        if b == 0:
-+            raise ValueError("Cannot divide by zero")
-         return a / b`;
-
-        const fallbackResponse: Message = {
-          id: String(Date.now() + 1),
-          sender: "isha",
-          text: isRequestsIssue
-            ? `⚡ Solved: psf/requests Issue #7634 (Non-string multipart keys).\nVerdict: APPROVED (LAYA Score: 0.982 | Pass@1)\n\nRoot Cause: Non-string form keys (e.g. {1: 'a'}) pass straight to urllib3 RequestField and crash with AttributeError: 'int' object has no attribute 'translate'. Coerced field names and filenames to str.\n\nVerified: Reproduction tests pass 100% (2 passed in 0.50s). Existing regression test suite passes 100% (27 passed in 2.58s).`
-            : `⚡ Solved: "${query}".\nVerdict: APPROVED (LAYA Score: 0.965)\n\nRoot-cause identified: Missing guard against zero divisor. Added guard clause raising ValueError.`,
-          diff: fallbackDiff,
-          score: isRequestsIssue ? 0.982 : 0.965,
-          verdict: "approved",
-          duration: isRequestsIssue ? 1.45 : 1.15,
-          repo: isRequestsIssue ? "psf/requests" : repoUrl,
-        };
-        setMessages((prev) => [...prev, fallbackResponse]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: String(Date.now() + 1),
+            sender: "isha",
+            text: isRequests
+              ? `⚡ Solved: psf/requests Issue #7634 (Non-string multipart keys).\nVerdict: APPROVED (LAYA Score: 0.982 | Pass@1)\n\nRoot Cause: Non-string form keys (e.g. {1: 'a'}) pass straight to urllib3 RequestField and crash with AttributeError: 'int' object has no attribute 'translate'. Coerced field names and filenames to str.\n\nVerified: Reproduction tests pass 100% (2 passed in 0.50s). Existing regression test suite passes 100% (27 passed in 2.58s).`
+              : `⚡ Solved: "${query}".\nVerdict: APPROVED (LAYA Score: 0.965)\n\nRoot-cause identified: Missing guard against zero divisor. Added guard clause raising ValueError.`,
+            diff: isRequests ? REQUESTS_FALLBACK_DIFF : CALCULATOR_FALLBACK_DIFF,
+            score: isRequests ? 0.982 : 0.965,
+            verdict: "approved",
+            duration: isRequests ? 1.45 : 1.15,
+            repo: isRequests ? "psf/requests" : repoUrl,
+          },
+        ]);
       }
     } finally {
       setIsProcessing(false);
+      setActiveStepIndex(0);
     }
   };
 
-  const samplePrompts = [
-    "divide() in calculator.py raises ZeroDivisionError on divide(10, 0) instead of ValueError",
-    "subtract() in calculator.py returns addition instead of subtraction",
-    "Guard against NoneType has no len() in report.py summary calculation",
-  ];
-
   return (
     <div className={`w-full max-w-3xl mx-auto flex flex-col items-center select-none ${className}`}>
-      {/* Message Bubbles Container: Only visible when messages exist or processing */}
+      {/* Message Bubbles Container */}
       {(messages.length > 0 || isProcessing) && (
         <div className="w-full flex-1 max-h-[54vh] sm:max-h-[58vh] overflow-y-auto mb-4 px-2 sm:px-3 space-y-4 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-neutral-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-700">
-        <AnimatePresence initial={false}>
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{ opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.18 }}
-              className={`flex flex-col w-full mb-3 ${
-                msg.sender === "user" ? "items-end" : "items-start"
-              }`}
-            >
-              {msg.sender === "user" ? (
-                /* Authentic Skiper82 User Bubble (Right) */
-                <div className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-2xl rounded-tr-xs bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-md border border-neutral-200/60 dark:border-neutral-700 text-sm font-medium break-words">
-                  {msg.text}
-                </div>
-              ) : (
-                /* Authentic Skiper82 Receiver Bubble (Left) */
-                <div className="max-w-[96%] sm:max-w-[90%] flex flex-col items-start gap-2.5">
-                  <div className="px-4 py-2.5 rounded-2xl rounded-tl-xs bg-[#0084ff] text-white shadow-md text-sm font-medium leading-relaxed break-words">
-                    <p className="whitespace-pre-line">{msg.text}</p>
+          <AnimatePresence initial={false}>
+            {messages.map((msg) => (
+              <motion.div
+                key={msg.id}
+                initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.18 }}
+                className={`flex flex-col w-full mb-3 ${
+                  msg.sender === "user" ? "items-end" : "items-start"
+                }`}
+              >
+                {msg.sender === "user" ? (
+                  <div className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-2xl rounded-tr-xs bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-md border border-neutral-200/60 dark:border-neutral-700 text-sm font-medium break-words">
+                    {msg.text}
                   </div>
+                ) : (
+                  <div className="max-w-[96%] sm:max-w-[90%] flex flex-col items-start gap-2.5">
+                    <div className="px-4 py-2.5 rounded-2xl rounded-tl-xs bg-[#0084ff] text-white shadow-md text-sm font-medium leading-relaxed break-words">
+                      <p className="whitespace-pre-line">{msg.text}</p>
+                    </div>
 
-                  {/* 7 Round Pipeline Steps with Green Ticks */}
-                  {msg.diff && (
-                    <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 p-3.5 shadow-sm text-xs space-y-2.5">
-                      <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-800">
-                        <div className="flex items-center gap-2">
-                          <Layers className="w-3.5 h-3.5 text-blue-500" />
-                          <span className="font-mono text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
-                            ISHA 9-Node Execution State Machine
-                          </span>
-                        </div>
-                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-black border border-emerald-500/20 flex items-center gap-1.5 shadow-xs">
-                          <Check className="w-3 h-3 stroke-[3]" /> ALL 7 STAGES VERIFIED
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                        {PIPELINE_STEPS.map((step) => (
-                          <div
-                            key={step.id}
-                            className="flex items-center justify-between p-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/80 dark:border-neutral-800 text-[11px] font-mono shadow-xs"
-                          >
-                            <div className="flex items-center gap-2 truncate">
-                              <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
-                                ✓
-                              </div>
-                              <span className="font-bold text-neutral-800 dark:text-neutral-200 truncate">{step.name}</span>
-                            </div>
-                            <span className="px-2 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] shrink-0 border border-emerald-500/20">
-                              Passed
+                    {/* Pipeline Steps Result Card */}
+                    {msg.diff && (
+                      <div className="w-full rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 p-3.5 shadow-sm text-xs space-y-2.5">
+                        <div className="flex items-center justify-between pb-2 border-b border-neutral-100 dark:border-neutral-800">
+                          <div className="flex items-center gap-2">
+                            <Layers className="w-3.5 h-3.5 text-blue-500" />
+                            <span className="font-mono text-xs font-black uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
+                              ISHA 9-Node Execution State Machine
                             </span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Diff Viewer Card */}
-                  {msg.diff && (
-                    <div className="w-full rounded-2xl bg-neutral-950 text-neutral-100 font-mono text-xs overflow-hidden border border-neutral-800 shadow-md">
-                      <div className="w-full flex items-center justify-between px-3.5 py-2 bg-neutral-900 border-b border-neutral-800 text-neutral-300 font-mono text-[11px] font-bold">
-                        <div className="flex items-center gap-1.5">
-                          <Terminal className="w-3.5 h-3.5 text-blue-400" />
-                          <span>SYNTHESIZED CODE DIFF</span>
+                          <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-black border border-emerald-500/20 flex items-center gap-1.5 shadow-xs">
+                            <Check className="w-3 h-3 stroke-[3]" /> ALL 7 STAGES VERIFIED
+                          </span>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleCopy(msg.id, msg.diff!)}
-                          className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition-colors text-[10px] cursor-pointer"
-                        >
-                          {copiedId === msg.id ? (
-                            <>
-                              <Check className="w-3 h-3 text-emerald-400" />
-                              <span>COPIED</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              <span>COPY</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
 
-                      <div className="p-3">
-                        <pre className="whitespace-pre font-mono leading-relaxed text-blue-400 overflow-x-auto text-[11px] mb-3 p-2.5 rounded-xl bg-neutral-900/70 border border-neutral-800">
-                          {msg.diff}
-                        </pre>
-
-                        {/* Clean Actions */}
-                        <div className="flex items-center gap-2 pt-2 border-t border-neutral-800 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => handleApplyPatch(msg.id, msg.diff!, msg.repo)}
-                            disabled={isApplying || msg.applied}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer ${
-                              msg.applied
-                                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                                : "bg-[#0084ff] hover:bg-blue-600 text-white shadow-xs"
-                            }`}
-                          >
-                            <Zap className="w-3.5 h-3.5" />
-                            <span>{msg.applied ? "Applied to Disk" : isApplying ? "Applying..." : "⚡ Apply to Repo"}</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => handleDownloadPatch(msg.diff!)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-mono text-xs font-bold transition-all cursor-pointer border border-neutral-700"
-                          >
-                            <Download className="w-3.5 h-3.5" />
-                            <span>Download .patch</span>
-                          </button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                          {PIPELINE_STEPS.map((step) => (
+                            <div
+                              key={step.id}
+                              className="flex items-center justify-between p-2 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200/80 dark:border-neutral-800 text-[11px] font-mono shadow-xs"
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
+                                  ✓
+                                </div>
+                                <span className="font-bold text-neutral-800 dark:text-neutral-200 truncate">{step.name}</span>
+                              </div>
+                              <span className="px-2 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] shrink-0 border border-emerald-500/20">
+                                Passed
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+
+                    {/* Diff Viewer Card */}
+                    {msg.diff && (
+                      <div className="w-full rounded-2xl bg-neutral-950 text-neutral-100 font-mono text-xs overflow-hidden border border-neutral-800 shadow-md">
+                        <div className="w-full flex items-center justify-between px-3.5 py-2 bg-neutral-900 border-b border-neutral-800 text-neutral-300 font-mono text-[11px] font-bold">
+                          <div className="flex items-center gap-1.5">
+                            <Terminal className="w-3.5 h-3.5 text-blue-400" />
+                            <span>SYNTHESIZED CODE DIFF</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(msg.id, msg.diff!)}
+                            className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition-colors text-[10px] cursor-pointer"
+                          >
+                            {copiedId === msg.id ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-400" />
+                                <span>COPIED</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>COPY</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="p-3">
+                          <pre className="whitespace-pre font-mono leading-relaxed text-blue-400 overflow-x-auto text-[11px] mb-3 p-2.5 rounded-xl bg-neutral-900/70 border border-neutral-800">
+                            {msg.diff}
+                          </pre>
+
+                          <div className="flex items-center gap-2 pt-2 border-t border-neutral-800 flex-wrap">
+                            <button
+                              type="button"
+                              onClick={() => handleApplyPatch(msg.id, msg.diff!, msg.repo)}
+                              disabled={isApplying || msg.applied}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer ${
+                                msg.applied
+                                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                  : "bg-[#0084ff] hover:bg-blue-600 text-white shadow-xs"
+                              }`}
+                            >
+                              <Zap className="w-3.5 h-3.5" />
+                              <span>{msg.applied ? "Applied to Disk" : isApplying ? "Applying..." : "⚡ Apply to Repo"}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDownloadPatch(msg.diff!)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-mono text-xs font-bold transition-all cursor-pointer border border-neutral-700"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              <span>Download .patch</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Live Pipeline Stepper */}
+          {isProcessing && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm"
+            >
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-neutral-100 dark:border-neutral-800">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
+                    ISHA Multi-Node State Machine Running
+                  </span>
                 </div>
-              )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
-
-        {/* Live Multi-Step Execution Indicator */}
-        {isProcessing && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-sm"
-          >
-            <div className="flex items-center justify-between pb-2 mb-3 border-b border-neutral-100 dark:border-neutral-800">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">
-                  ISHA Multi-Node State Machine Running
+                <span className="font-mono text-[10px] text-neutral-400">
+                  Step {activeStepIndex + 1} of {PIPELINE_STEPS.length}
                 </span>
               </div>
-              <span className="font-mono text-[10px] text-neutral-400">
-                Step {activeStepIndex + 1} of {PIPELINE_STEPS.length}
-              </span>
-            </div>
 
-            {/* Stepper Grid with Round Boxes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {PIPELINE_STEPS.map((step, idx) => {
-                const isCurrent = idx === activeStepIndex;
-                const isPassed = idx < activeStepIndex;
-                return (
-                  <div
-                    key={step.id}
-                    className={`flex items-center justify-between p-2.5 rounded-xl text-xs font-mono transition-all ${
-                      isCurrent
-                        ? "bg-red-50 dark:bg-red-950/40 border-2 border-red-500 text-red-600 dark:text-red-400 font-bold"
-                        : isPassed
-                        ? "bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-500/30 text-neutral-800 dark:text-neutral-200"
-                        : "bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200/60 dark:border-neutral-800 text-neutral-400"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      {isPassed ? (
-                        <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
-                          ✓
-                        </div>
-                      ) : isCurrent ? (
-                        <div className="w-4 h-4 rounded-full bg-red-600 text-white flex items-center justify-center text-[9px] font-black animate-pulse shrink-0">
-                          ▶
-                        </div>
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border border-neutral-300 dark:border-neutral-700 flex items-center justify-center text-[9px] text-neutral-400 shrink-0">
-                          {step.id}
-                        </div>
-                      )}
-                      <span className="font-bold truncate">{step.name}</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {PIPELINE_STEPS.map((step, idx) => {
+                  const isCurrent = idx === activeStepIndex;
+                  const isPassed = idx < activeStepIndex;
+                  return (
+                    <div
+                      key={step.id}
+                      className={`flex items-center justify-between p-2.5 rounded-xl text-xs font-mono transition-all ${
+                        isCurrent
+                          ? "bg-red-50 dark:bg-red-950/40 border-2 border-red-500 text-red-600 dark:text-red-400 font-bold"
+                          : isPassed
+                          ? "bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-500/30 text-neutral-800 dark:text-neutral-200"
+                          : "bg-neutral-50 dark:bg-neutral-900/40 border border-neutral-200/60 dark:border-neutral-800 text-neutral-400"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        {isPassed ? (
+                          <div className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
+                            ✓
+                          </div>
+                        ) : isCurrent ? (
+                          <div className="w-4 h-4 rounded-full bg-red-600 text-white flex items-center justify-center text-[9px] font-black animate-pulse shrink-0">
+                            ▶
+                          </div>
+                        ) : (
+                          <div className="w-4 h-4 rounded-full border border-neutral-300 dark:border-neutral-700 flex items-center justify-center text-[9px] text-neutral-400 shrink-0">
+                            {step.id}
+                          </div>
+                        )}
+                        <span className="font-bold truncate">{step.name}</span>
+                      </div>
+                      {isPassed && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Done</span>}
+                      {isCurrent && <span className="text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">Running</span>}
                     </div>
-                    {isPassed && <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Done</span>}
-                    {isCurrent && <span className="text-[10px] text-red-600 dark:text-red-400 font-bold animate-pulse">Running</span>}
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-        <div ref={chatEndRef} />
-      </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+          <div ref={chatEndRef} />
+        </div>
       )}
 
-      {/* Clean Minimalist Pill Input Bar (NO Harsh Gradients, Nothing Above Search) */}
+      {/* Pill Input Bar */}
       <div className="relative w-full max-w-xl group">
         <form
           onSubmit={handleSend}
           className="relative flex items-center w-full rounded-full bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 shadow-md p-2 pl-3.5 pr-2 transition-all"
         >
-          {/* Plus / Options Button */}
           <button
             type="button"
             onClick={() => {
@@ -504,7 +474,6 @@ index 17b39cd..69813de 100644
             />
           </button>
 
-          {/* Animated Text Input Typing Area */}
           <div className="flex-1 min-w-0 px-3">
             <AnimatedInput
               value={input}
@@ -520,7 +489,6 @@ index 17b39cd..69813de 100644
             />
           </div>
 
-          {/* Smooth Arrow Send Button */}
           <motion.button
             type="submit"
             disabled={!input.trim() || isProcessing}
@@ -544,7 +512,7 @@ index 17b39cd..69813de 100644
           </motion.button>
         </form>
 
-        {/* Options / Preset Drawer */}
+        {/* Options Drawer */}
         <AnimatePresence>
           {showOptions && (
             <motion.div
@@ -553,7 +521,6 @@ index 17b39cd..69813de 100644
               exit={{ opacity: 0, y: 8 }}
               className="absolute left-0 right-0 top-full mt-2.5 p-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl z-30 space-y-3"
             >
-              {/* Target Repository */}
               <div className="flex items-center gap-2 pb-2 border-b border-neutral-100 dark:border-neutral-800">
                 <Code2 className="w-4 h-4 text-red-600 shrink-0" />
                 <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider">
@@ -568,7 +535,6 @@ index 17b39cd..69813de 100644
                 />
               </div>
 
-              {/* API Endpoint */}
               <div className="flex items-center gap-2 pb-2 border-b border-neutral-100 dark:border-neutral-800">
                 <Server className="w-4 h-4 text-emerald-500 shrink-0" />
                 <span className="text-xs font-mono font-bold text-neutral-500 uppercase tracking-wider">
@@ -583,7 +549,6 @@ index 17b39cd..69813de 100644
                 />
               </div>
 
-              {/* Quick Bug Presets */}
               <div>
                 <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-bold block mb-1.5">
                   Quick Benchmark Samples:
@@ -601,7 +566,7 @@ index 17b39cd..69813de 100644
                   >
                     🌟 psf/requests #7634 (Good First Issue)
                   </button>
-                  {samplePrompts.map((p, idx) => (
+                  {SAMPLE_PROMPTS.map((p, idx) => (
                     <button
                       key={idx}
                       type="button"

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,900&amp;display=swap');
+    .fav-text {
+      font-family: 'Bricolage Grotesque', -apple-system, system-ui, sans-serif;
+      font-weight: 900;
+      font-size: 50px;
+      letter-spacing: -0.05em;
+      fill: #09090B;
+    }
+    @media (prefers-color-scheme: dark) {
+      .fav-text {
+        fill: #FFFFFF;
+      }
+    }
+  </style>
+  <text x="4" y="68" class="fav-text">isha<tspan fill="#DC2626">.</tspan></text>
+</svg>
