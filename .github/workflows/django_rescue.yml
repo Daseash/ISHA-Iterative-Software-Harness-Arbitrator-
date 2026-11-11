@@ -1,0 +1,114 @@
+name: ISHA Django 90+ Rescue Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: "Batch to run: 1, 2, 3, 4 (or leave blank to run all 4)"
+        required: false
+        default: "1"
+      candidates:
+        description: "Tournament candidates per instance (default: 3)"
+        required: true
+        default: "3"
+      workers:
+        description: "Parallel tournament generation workers (default: 1)"
+        required: true
+        default: "1"
+      eval_workers:
+        description: "Parallel Docker evaluation containers (default: 2)"
+        required: true
+        default: "2"
+      eval_only:
+        description: "Skip patch generation and run Docker eval only"
+        type: boolean
+        required: false
+        default: false
+      gen_only:
+        description: "Only run patch generation and skip Docker eval"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  rescue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 360
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git Author
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Free Disk Space for Docker
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo docker system prune -a -f || true
+          df -h
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Run Django Rescue Pipeline
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_API_KEYS: ${{ secrets.GROQ_API_KEYS }}
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          MISTRAL_API_KEYS: ${{ secrets.MISTRAL_API_KEYS }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ISHA_CANDIDATES: ${{ inputs.candidates }}
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.batch }}" ]; then
+            ARGS="$ARGS --batch ${{ inputs.batch }}"
+          fi
+          if [ "${{ inputs.eval_only }}" = "true" ]; then
+            ARGS="$ARGS --eval-only"
+          fi
+          if [ "${{ inputs.gen_only }}" = "true" ]; then
+            ARGS="$ARGS --gen-only"
+          fi
+          python scripts/codespaces_django_rescue.py \
+            --candidates ${{ inputs.candidates }} \
+            --workers ${{ inputs.workers }} \
+            --eval-workers ${{ inputs.eval_workers }} \
+            $ARGS
+
+      - name: Commit & Push Results
+        if: always()
+        run: |
+          git add results/ data/slices/ || true
+          git commit -m "chore(bench): record Django rescue results [skip ci]" || true
+          git pull --rebase origin main || true
+          git push origin main || true
+
+      - name: Archive Benchmark Results Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: django-rescue-results-${{ github.run_id }}
+          path: |
+            results/django-res-*
+            results/golden/
