@@ -459,9 +459,9 @@ _BACKOFF_SECONDS = 40  # Groq free-tier TPM windows are ~30-60s
 def _call_budget() -> float:
     """Wall-clock seconds one chain call may spend before moving on."""
     try:
-        return float(os.getenv("ISHA_CALL_BUDGET", "300"))
+        return float(os.getenv("ISHA_CALL_BUDGET", "600"))
     except ValueError:
-        return 300.0
+        return 600.0
 
 
 def _provider(model: str) -> str:
@@ -859,9 +859,41 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     break
                 if _model_fatal(e):
                     break  # this model is unusable — next chain entry
+
+                # ── Priority 1: Key Rotation on Rate Limits ────────────────
+                # Before checking retry counters or sleeping, immediately rotate
+                # to any available fresh keys in the active pool!
+                if _is_rate_limit(e):
+                    if provider == "gemini" and active_gemini_key:
+                        if mark_gemini_key_dead(active_gemini_key, model):
+                            print(
+                                f"[config] Gemini key {active_gemini_key[:12]}... hit rate limit "
+                                f"— immediately rotating to next Gemini key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
+                    if provider == "groq" and _gkey:
+                        if mark_groq_key_dead(_gkey, model):
+                            print(
+                                f"[config] Groq key {_gkey[:12]}... hit rate limit "
+                                f"— immediately rotating to next Groq key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
+                    if provider in ("mistral", "codestral") and _mkey:
+                        _next_m = get_next_mistral_key()
+                        if _next_m and _next_m != _mkey:
+                            print(
+                                f"[config] Mistral key {_mkey[:12]}... hit rate limit "
+                                f"— immediately rotating to next Mistral key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
+
                 if attempts >= _MAX_ATTEMPTS or not _retryable(e):
                     break
-                # transient (rate limit / timeout / 5xx) — back off, retry
+
+                # ── Priority 2: Cooldown Backoff (Only when ALL keys exhausted) ──
                 wait = _backoff_wait(e, attempts)
                 if time.monotonic() - call_started > _call_budget():
                     print(
@@ -871,52 +903,19 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     )
                     break
                 if _is_rate_limit(e):
-                    if provider == "gemini" and active_gemini_key:
-                        if mark_gemini_key_dead(active_gemini_key, model):
-                            print(
-                                f"[config] Gemini key {active_gemini_key[:12]}... hit rate limit "
-                                f"— immediately switching to next Gemini key without delay",
-                                file=sys.stderr,
-                            )
-                            continue
-                    if provider == "groq" and _gkey:
-                        if mark_groq_key_dead(_gkey, model):
-                            print(
-                                f"[config] Groq key {_gkey[:12]}... hit rate limit "
-                                f"— immediately switching to next Groq key without delay",
-                                file=sys.stderr,
-                            )
-                            continue
-                    if provider in ("mistral", "codestral") and _mkey:
-                        _next_m = get_next_mistral_key()
-                        if _next_m and _next_m != _mkey:
-                            print(
-                                f"[config] Mistral key {_mkey[:12]}... hit rate limit "
-                                f"— immediately switching to next Mistral key without delay",
-                                file=sys.stderr,
-                            )
-                            continue
-                    # A TPM/RPM window clears itself, and every model on the
-                    # provider shares it — advancing would just burn the whole
-                    # chain in seconds.  Wait (exponential, capped) and retry
-                    # THIS model instead.
+                    # All keys in pool are exhausted for this provider, must sleep
                     wait = min(wait, 60)
                     _note_rate_limit(provider, wait)
                     if _advance_on_rate_limit():
-                        # A measurement run is throughput-bound: a 40-60s
-                        # sleep per call is most of the instance budget, and
-                        # the fallback is warm.  Record the window so later
-                        # calls skip this provider outright, then move on.
                         print(
-                            f"[model] {role}: {_short_name(model)} rate limited "
-                            f"— marking '{provider}' rate-limited for {wait:.0f}s "
-                            f"and advancing",
+                            f"[model] {role}: all keys for '{provider}' rate limited — "
+                            f"advancing to next model in chain",
                             file=sys.stderr,
                         )
                         break
                     print(
-                        f"[model] {role}: {_short_name(model)} rate limited — "
-                        f"backoff {wait}s (attempt {attempts}/{_MAX_ATTEMPTS})",
+                        f"[model] {role}: all keys rate limited — backoff {wait:.0f}s "
+                        f"(attempt {attempts}/{_MAX_ATTEMPTS})",
                         file=sys.stderr,
                     )
                     time.sleep(wait)
