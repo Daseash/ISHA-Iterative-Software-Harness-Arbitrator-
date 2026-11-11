@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "django__django-11910", "ts": 1794396160.6414704}
+{"event": "attempt", "n": 1, "ts": 1794396161.0069878}
+{"ts": 1794396416.0659976, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794396461.735255, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794396521.0075157}
+{"event": "attempt", "n": 2, "ts": 1794396521.0984743}
+{"ts": 1794396617.8105187, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794396663.4078596, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794396724.3525412, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794396814.8912091, "role": "planner", "model": "qwen3.8-27b", "position": "fallback 1 [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794396881.5002918}

@@ -1,0 +1,11 @@
+{"event": "start", "instance_id": "django__django-11848", "ts": 1794395440.186539}
+{"event": "attempt", "n": 1, "ts": 1794395440.5409458}
+{"ts": 1794395654.1551409, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794395654.1937594, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout_retry", "attempt": 1, "ts": 1794395800.5470123}
+{"event": "attempt", "n": 2, "ts": 1794395800.6399977}
+{"ts": 1794395844.0654535, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794395844.1011813, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794395858.8516123, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794395858.8892782, "role": "planner", "model": "gemini-3.8-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "timeout", "attempt": 2, "ts": 1794396160.6412275}
