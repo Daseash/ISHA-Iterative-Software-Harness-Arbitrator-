@@ -774,6 +774,8 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     )
                     break
             active_gemini_key = None
+            _gkey = None
+            _mkey = None
             try:
                 kwargs = dict(
                     model=model,
@@ -874,6 +876,23 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                             print(
                                 f"[config] Gemini key {active_gemini_key[:12]}... hit rate limit "
                                 f"— immediately switching to next Gemini key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
+                    if provider == "groq" and _gkey:
+                        if mark_groq_key_dead(_gkey, model):
+                            print(
+                                f"[config] Groq key {_gkey[:12]}... hit rate limit "
+                                f"— immediately switching to next Groq key without delay",
+                                file=sys.stderr,
+                            )
+                            continue
+                    if provider in ("mistral", "codestral") and _mkey:
+                        _next_m = get_next_mistral_key()
+                        if _next_m and _next_m != _mkey:
+                            print(
+                                f"[config] Mistral key {_mkey[:12]}... hit rate limit "
+                                f"— immediately switching to next Mistral key without delay",
                                 file=sys.stderr,
                             )
                             continue

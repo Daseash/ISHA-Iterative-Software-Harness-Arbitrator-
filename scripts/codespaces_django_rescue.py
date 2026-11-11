@@ -72,7 +72,7 @@ def get_session_stats(session_name: str) -> tuple[int, int]:
     return completed, clean
 
 
-def run_patch_generation(session_name: str, timeout: int = 360, candidates: int = 3, workers: int = 1) -> bool:
+def run_patch_generation(session_name: str, timeout: int = 900, candidates: int = 3, workers: int = 1) -> bool:
     """Run multi-candidate tournament patch generation on this session."""
     slice_file = ROOT / "data" / "slices" / f"{session_name}.json"
     if not slice_file.is_file():
@@ -199,6 +199,7 @@ def main() -> None:
     parser.add_argument("--workers", type=int, default=1, help="Parallel worker threads for tournament generation")
     parser.add_argument("--eval-workers", type=int, default=2, help="Parallel Docker evaluation containers")
     parser.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default: 3)")
+    parser.add_argument("--timeout", type=int, default=900, help="Per-instance tournament timeout (default: 900s)")
     args = parser.parse_args()
 
     sessions = [f"django-res-{args.batch}"] if args.batch else RESCUE_SESSIONS
@@ -211,7 +212,7 @@ def main() -> None:
         log(f"         PROCESSING: {session}")
         log(f"==========================================")
         if not args.eval_only:
-            run_patch_generation(session, candidates=args.candidates, workers=args.workers)
+            run_patch_generation(session, timeout=args.timeout, candidates=args.candidates, workers=args.workers)
 
         if docker_ok and not args.gen_only:
             run_docker_evaluation(session, workers=args.eval_workers)
