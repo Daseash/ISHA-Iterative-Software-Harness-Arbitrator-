@@ -77,33 +77,33 @@ def _parse_chain(primary_env: str, primary_default: str,
 
 
 PLANNER_CHAIN = _parse_chain(
-    "ISHA_PLANNER_MODEL", "gemini/gemini-3.8-flash",
+    "ISHA_PLANNER_MODEL", "gemini/gemini-3.5-flash",
     "ISHA_PLANNER_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,groq/openai/gpt-oss-120b",
+    "groq/openai/gpt-oss-120b,mistral/codestral-latest,gemini/gemini-3.8-flash,groq/qwen/qwen3.8-27b",
 )
 
 CODER_CHAIN = _parse_chain(
-    "ISHA_CODER_MODEL", "gemini/gemini-3.8-flash",
+    "ISHA_CODER_MODEL", "gemini/gemini-3.5-flash",
     "ISHA_CODER_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.5-flash",
+    "mistral/codestral-latest,groq/qwen/qwen3.8-27b,groq/openai/gpt-oss-120b,gemini/gemini-3.8-flash",
 )
 
 LOCALIZER_CHAIN = _parse_chain(
     "ISHA_LOCALIZER_MODEL", "gemini/gemini-3.5-flash-lite",
     "ISHA_LOCALIZER_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,gemini/gemini-3.8-flash",
+    "gemini/gemini-3.5-flash,groq/qwen/qwen3.8-27b",
 )
 
 CRITIC_CHAIN = _parse_chain(
-    "ISHA_CRITIC_MODEL", "gemini/gemini-3.8-flash",
+    "ISHA_CRITIC_MODEL", "gemini/gemini-3.5-flash",
     "ISHA_CRITIC_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,groq/openai/gpt-oss-120b",
+    "groq/openai/gpt-oss-120b,mistral/codestral-latest,groq/qwen/qwen3.8-27b",
 )
 
 REPRO_CHAIN = _parse_chain(
     "ISHA_REPRO_MODEL", "groq/openai/gpt-oss-120b",
     "ISHA_REPRO_FALLBACKS",
-    "groq/qwen/qwen3.8-27b,mistral/codestral-latest,gemini/gemini-3.8-flash",
+    "mistral/codestral-latest,groq/qwen/qwen3.8-27b,gemini/gemini-3.5-flash",
 )
 
 # self-hosted: all roles resolve to the Modal-served ISHA-Coder-7B-DPO.
@@ -130,7 +130,7 @@ REPRO_FALLBACKS = REPRO_CHAIN[1:]
 
 # Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
 CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/qwen/qwen3.8-27b")
-CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "gemini/gemini-3.8-flash")
+CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "gemini/gemini-3.5-flash")
 CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "groq/openai/gpt-oss-120b")
 
 # Architecture defaults: 3 diverse tournament candidates by default
