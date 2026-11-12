@@ -1,0 +1,22 @@
+diff --git a/django/views/debug.py b/django/views/debug.py
+index e6b7d4d821..e7f877b55c 100644
+--- a/django/views/debug.py
++++ b/django/views/debug.py
+@@ -88,8 +88,15 @@ class SafeExceptionReporterFilter:
+         try:
+             if self.hidden_settings.search(key):
+                 cleansed = self.cleansed_substitute
+-            elif isinstance(value, dict):
+-                cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            if isinstance(value, dict):
++                return {k: self.cleanse_setting(k, v) for k, v in value.items()}
++            if isinstance(value, (list, tuple, set)):
++                cleaned = [self.cleanse_setting(key, item) for item in value]
++                if isinstance(value, tuple):
++                    return tuple(cleaned)
++                if isinstance(value, set):
++                    return set(cleaned)
++                return cleaned
+             else:
+                 cleansed = value
+         except TypeError:

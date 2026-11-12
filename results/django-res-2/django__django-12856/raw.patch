@@ -1,0 +1,41 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 7bb3fa4706..64c97d5285 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -1,9 +1,36 @@
+ import copy
+ import inspect
+ import warnings
++from django.core.exceptions import FieldDoesNotExist
+ from functools import partialmethod
+ from itertools import chain
+ 
++def _check_local_fields(cls, fields, option_name):
++    errors = []
++    for field_name in fields:
++        try:
++            field = cls._meta.get_field(field_name)
++        except FieldDoesNotExist:
++            errors.append(
++                checks.Error(
++                    "'%s' refers to the non-existent field '%s'."
++                    % (option_name, field_name),
++                    obj=cls,
++                    id='models.E012',
++                )
++            )
++        else:
++            if field.many_to_many:
++                errors.append(
++                    checks.Error(
++                        "'%s' refers to a many-to-many field '%s', but many-to-many fields aren't allowed."
++                        % (option_name, field_name),
++                        obj=cls,
++                        id='models.E013',
++                    )
++                )
++    return errors
++
+ import django
+ from django.apps import apps
+ from django.conf import settings

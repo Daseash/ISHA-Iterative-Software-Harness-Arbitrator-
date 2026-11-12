@@ -1,0 +1,7 @@
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -760,3 +760,3 @@ class Field(RegisterLookupMixin):
+         cls._meta.add_field(self, private=private_only)
+-        if self.choices:
++        if self.choices and not hasattr(cls, 'get_%s_display' % self.name):
+             setattr(cls, 'get_%s_display' % self.name,

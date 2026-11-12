@@ -1,0 +1,62 @@
+[
+  {
+    "instance_id": "django__django-12700",
+    "model_patch": "diff --git a/django/views/debug.py b/django/views/debug.py\nindex e6b7d4d821..e7f877b55c 100644\n--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -88,8 +88,15 @@ class SafeExceptionReporterFilter:\n         try:\n             if self.hidden_settings.search(key):\n                 cleansed = self.cleansed_substitute\n-            elif isinstance(value, dict):\n-                cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            if isinstance(value, dict):\n+                return {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            if isinstance(value, (list, tuple, set)):\n+                cleaned = [self.cleanse_setting(key, item) for item in value]\n+                if isinstance(value, tuple):\n+                    return tuple(cleaned)\n+                if isinstance(value, set):\n+                    return set(cleaned)\n+                return cleaned\n             else:\n                 cleansed = value\n         except TypeError:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12308",
+    "model_patch": "diff --git a/django/contrib/admin/utils.py b/django/contrib/admin/utils.py\nindex e4ddc8f017..3b2a4beefb 100644\n--- a/django/contrib/admin/utils.py\n+++ b/django/contrib/admin/utils.py\n@@ -394,8 +394,10 @@ def display_for_field(value, field, empty_value_display):\n         return formats.localize(value)\n     elif isinstance(field, models.DecimalField):\n         return formats.number_format(value, field.decimal_places)\n+    elif isinstance(field, models.JSONField):\n+        return json.dumps(value)\n     elif isinstance(field, (models.IntegerField, models.FloatField)):\n-        return formats.number_format(value)\n+        return value\n     elif isinstance(field, models.FileField) and value:\n         return format_html('<a href=\"{}\">{}</a>', value.url, value)\n     else:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12497",
+    "model_patch": "diff --git a/django/db/models/fields/related.py b/django/db/models/fields/related.py\nindex 8ddbb5ba68..36e7a73495 100644\n--- a/django/db/models/fields/related.py\n+++ b/django/db/models/fields/related.py\n@@ -1309,7 +1309,7 @@ class ManyToManyField(RelatedField):\n                              \"through_fields keyword argument.\") % (self, from_model_name),\n                             hint=(\n                                 'If you want to create a recursive relationship, '\n-                                'use ForeignKey(\"%s\", symmetrical=False, through=\"%s\").'\n+                                'ManyToManyField(\"%s\", through=\"%s\").'\n                             ) % (\n                                 RECURSIVE_RELATIONSHIP_CONSTANT,\n                                 relationship_model_name,\ndiff --git a/tests/invalid_models_tests/test_relative_fields.py b/tests/invalid_models_tests/test_relative_fields.py\nindex 24f27168c2..e82c84d773 100644\n--- a/tests/invalid_models_tests/test_relative_fields.py\n+++ b/tests/invalid_models_tests/test_relative_fields.py\n@@ -151,8 +151,8 @@ class RelativeFieldTests(SimpleTestCase):\n                 \"which foreign key Django should use via the through_fields \"\n                 \"keyword argument.\",\n                 hint=(\n-                    'If you want to create a recursive relationship, use '\n-                    'ForeignKey(\"self\", symmetrical=False, through=\"AmbiguousRelationship\").'\n+                    \"If you want to create a recursive relationship, use \"\n+                    'ManyToManyField(\"self\", through=\"Relationship\").'\n                 ),\n                 obj=field,\n                 id='fields.E335',",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12589",
+    "model_patch": "diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py\nindex 84960d77e1..7072b27446 100644\n--- a/django/db/models/expressions.py\n+++ b/django/db/models/expressions.py\n@@ -1263,7 +1263,7 @@ class Window(Expression):\n         return '<%s: %s>' % (self.__class__.__name__, self)\n \n     def get_group_by_cols(self, alias=None):\n-        return []\n+        return self.source.get_group_by_cols(alias=alias)\n \n \n class WindowFrame(Expression):",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12286",
+    "model_patch": "diff --git a/django/core/checks/translation.py b/django/core/checks/translation.py\nindex 138ed07ff8..31b66c5409 100644\n--- a/django/core/checks/translation.py\n+++ b/django/core/checks/translation.py\n@@ -1,5 +1,6 @@\n from django.conf import settings\n-from django.utils.translation.trans_real import language_code_re\n+from django.utils.translation.trans_real import check_for_language, language_code_re\n+\n \n from . import Error, Tags, register\n \n@@ -55,7 +56,6 @@ def check_setting_languages_bidi(app_configs, **kwargs):\n @register(Tags.translation)\n def check_language_settings_consistent(app_configs, **kwargs):\n     \"\"\"Error if language settings are not consistent with each other.\"\"\"\n-    available_tags = {i for i, _ in settings.LANGUAGES} | {'en-us'}\n     if settings.LANGUAGE_CODE not in available_tags:\n         return [E004]\n     return []",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12708",
+    "model_patch": "diff --git a/django/db/backends/base/schema.py b/django/db/backends/base/schema.py\nindex 61f88401ab..6ad5ea93d5 100644\n--- a/django/db/backends/base/schema.py\n+++ b/django/db/backends/base/schema.py\n@@ -159,6 +159,8 @@ class BaseDatabaseSchemaEditor:\n             definition, extra_params = self.column_sql(model, field)\n             if definition is None:\n                 continue\n+            if bool(constraint['unique']) != bool(unique):\n+                continue\n             # Check constraints can go on the column SQL here.\n             db_params = field.db_parameters(connection=self.connection)\n             if db_params['check']:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12908",
+    "model_patch": "diff --git a/django/db/models/query.py b/django/db/models/query.py\nindex e0eeccefa6..9ccf254473 100644\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1020,6 +1020,7 @@ class QuerySet:\n \n     def select_for_update(self, nowait=False, skip_locked=False, of=()):\n         \"\"\"\n+        self._not_support_combined_queries('distinct')\n         Return a new QuerySet instance that will select objects with a\n         FOR UPDATE lock.\n         \"\"\"",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13158",
+    "model_patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -49,11 +49,11 @@ def construct_instance(form, instance, fields=None, exclude=None):\n             continue\n         # Leave defaults for fields that aren't in POST data, except for\n         # checkbox inputs because they don't appear in POST data if not checked.\n         if (\n             f.has_default() and\n             form[f.name].field.widget.value_omitted_from_data(form.data, form.files, form.add_prefix(f.name)) and\n-            cleaned_data.get(f.name) in form[f.name].field.empty_values\n+            (cleaned_data.get(f.name) in form[f.name].field.empty_values)\n         ):\n             continue\n         # Defer saving file-type fields until after the other fields, so a\n         # callable upload_to can use the values from other fields.\n         if isinstance(f, models.FileField):",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11999",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex ee45bb9..32526a8 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -862,7 +862,7 @@ class Field(RegisterLookupMixin):\n \n     def _get_flatchoices(self):\n         \"\"\"Flattened version of choices tuple.\"\"\"\n-        if self.choices is None:\n+        if self.choices and not hasattr(cls, 'get_%s_display' % self.name):\n             return []\n         flat = []\n         for choice, value in self.choices:",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13033",
+    "model_patch": "diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py\nindex d65141b834..8b2346e158 100644\n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1021,8 +1021,21 @@ class Query(BaseExpression):\n         self.append_annotation_mask([alias])\n         self.annotations[alias] = annotation\n \n+    def _get_field_from_name(self, opts, name):\n+        try:\n+            field = opts.get_field(name)\n+        except FieldDoesNotExist:\n+            if name.endswith('_id'):\n+                try:\n+                    field = opts.get_field(name[:-3])\n+                except FieldDoesNotExist:\n+                    pass\n+                else:\n+                    if field.is_relation:\n+                        return field\n+        return field\n     def resolve_expression(self, query, *args, **kwargs):\n-        clone = self.clone()\n+        return super().resolve_expression(query)\n         # Subqueries need to use a different set of aliases than the outer query.\n         clone.bump_prefix(query)\n         clone.subquery = True",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13028",
+    "model_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1124,3 +1124,3 @@ class Query(BaseExpression):\n         \"\"\"Raise an error if expression cannot be used in a WHERE clause.\"\"\"\n-        if not getattr(expression, 'filterable', True):\n+        if hasattr(expression, 'resolve_expression') and not getattr(expression, 'filterable', True):\n             raise NotSupportedError(",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-12856",
+    "model_patch": "diff --git a/django/db/models/base.py b/django/db/models/base.py\nindex 7bb3fa4706..64c97d5285 100644\n--- a/django/db/models/base.py\n+++ b/django/db/models/base.py\n@@ -1,9 +1,36 @@\n import copy\n import inspect\n import warnings\n+from django.core.exceptions import FieldDoesNotExist\n from functools import partialmethod\n from itertools import chain\n \n+def _check_local_fields(cls, fields, option_name):\n+    errors = []\n+    for field_name in fields:\n+        try:\n+            field = cls._meta.get_field(field_name)\n+        except FieldDoesNotExist:\n+            errors.append(\n+                checks.Error(\n+                    \"'%s' refers to the non-existent field '%s'.\"\n+                    % (option_name, field_name),\n+                    obj=cls,\n+                    id='models.E012',\n+                )\n+            )\n+        else:\n+            if field.many_to_many:\n+                errors.append(\n+                    checks.Error(\n+                        \"'%s' refers to a many-to-many field '%s', but many-to-many fields aren't allowed.\"\n+                        % (option_name, field_name),\n+                        obj=cls,\n+                        id='models.E013',\n+                    )\n+                )\n+    return errors\n+\n import django\n from django.apps import apps\n from django.conf import settings",
+    "model_name_or_path": "ISHA"
+  }
+]

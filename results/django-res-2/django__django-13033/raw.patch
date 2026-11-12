@@ -1,0 +1,27 @@
+diff --git a/django/db/models/sql/query.py b/django/db/models/sql/query.py
+index d65141b834..8b2346e158 100644
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1021,8 +1021,21 @@ class Query(BaseExpression):
+         self.append_annotation_mask([alias])
+         self.annotations[alias] = annotation
+ 
++    def _get_field_from_name(self, opts, name):
++        try:
++            field = opts.get_field(name)
++        except FieldDoesNotExist:
++            if name.endswith('_id'):
++                try:
++                    field = opts.get_field(name[:-3])
++                except FieldDoesNotExist:
++                    pass
++                else:
++                    if field.is_relation:
++                        return field
++        return field
+     def resolve_expression(self, query, *args, **kwargs):
+-        clone = self.clone()
++        return super().resolve_expression(query)
+         # Subqueries need to use a different set of aliases than the outer query.
+         clone.bump_prefix(query)
+         clone.subquery = True

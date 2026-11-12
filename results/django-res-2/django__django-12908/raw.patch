@@ -1,0 +1,12 @@
+diff --git a/django/db/models/query.py b/django/db/models/query.py
+index e0eeccefa6..9ccf254473 100644
+--- a/django/db/models/query.py
++++ b/django/db/models/query.py
+@@ -1020,6 +1020,7 @@ class QuerySet:
+ 
+     def select_for_update(self, nowait=False, skip_locked=False, of=()):
+         """
++        self._not_support_combined_queries('distinct')
+         Return a new QuerySet instance that will select objects with a
+         FOR UPDATE lock.
+         """

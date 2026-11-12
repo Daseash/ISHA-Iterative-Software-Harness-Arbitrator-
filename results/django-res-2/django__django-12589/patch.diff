@@ -1,0 +1,13 @@
+diff --git a/django/db/models/expressions.py b/django/db/models/expressions.py
+index 84960d77e1..7072b27446 100644
+--- a/django/db/models/expressions.py
++++ b/django/db/models/expressions.py
+@@ -1263,7 +1263,7 @@ class Window(Expression):
+         return '<%s: %s>' % (self.__class__.__name__, self)
+ 
+     def get_group_by_cols(self, alias=None):
+-        return []
++        return self.source.get_group_by_cols(alias=alias)
+ 
+ 
+ class WindowFrame(Expression):

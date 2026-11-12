@@ -1,0 +1,13 @@
+{"event": "start", "instance_id": "django__django-13158", "ts": 1794495000.1178708}
+{"event": "attempt", "n": 1, "ts": 1794495000.3211577}
+{"ts": 1794495135.1371658, "role": "planner", "model": "gemini-3.6-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"ts": 1794495135.176265, "role": "planner", "model": "gemini-3.6-flash", "position": "primary [cached]", "outcome": "ok", "note": "cache hit"}
+{"event": "model", "ts": 1794495065.21454, "role": "planner", "model": "gemini-3.6-flash", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794495121.9757936, "role": "planner", "model": "gemini-3.6-flash", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794495135.13715, "role": "planner", "model": "gemini-3.6-flash", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1794495135.1762516, "role": "planner", "model": "gemini-3.6-flash", "position": "primary [cached]", "note": ""}
+{"event": "model", "ts": 1794495406.5870836, "role": "planner", "model": "gemini-3.6-flash", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794495411.0602329, "role": "repro", "model": "gpt-oss-120b", "position": "primary", "note": ""}
+{"event": "model", "ts": 1794496008.6678421, "role": "coder", "model": "gemini-3.5-flash", "position": "fallback 1", "note": ""}
+{"event": "model", "ts": 1794496481.8280325, "role": "planner", "model": "gemini-3.6-flash", "position": "primary", "note": ""}
+{"event": "finish", "status": "done", "has_patch": true, "ts": 1794496484.3851333}
