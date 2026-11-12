@@ -29,6 +29,11 @@ on:
         type: boolean
         required: false
         default: false
+      force:
+        description: "Force regeneration of unverified instances even if patch exists"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   rescue:
@@ -93,6 +98,9 @@ jobs:
           fi
           if [ "${{ inputs.gen_only }}" = "true" ]; then
             ARGS="$ARGS --gen-only"
+          fi
+          if [ "${{ inputs.force }}" = "true" ]; then
+            ARGS="$ARGS --force"
           fi
           python scripts/codespaces_django_rescue.py \
             --candidates ${{ inputs.candidates }} \

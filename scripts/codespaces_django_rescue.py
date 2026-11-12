@@ -72,7 +72,7 @@ def get_session_stats(session_name: str) -> tuple[int, int]:
     return completed, clean
 
 
-def run_patch_generation(session_name: str, timeout: int = 1800, candidates: int = 3, workers: int = 1) -> bool:
+def run_patch_generation(session_name: str, timeout: int = 1800, candidates: int = 3, workers: int = 1, force: bool = False) -> bool:
     """Run multi-candidate tournament patch generation on this session."""
     slice_file = ROOT / "data" / "slices" / f"{session_name}.json"
     if not slice_file.is_file():
@@ -84,11 +84,17 @@ def run_patch_generation(session_name: str, timeout: int = 1800, candidates: int
     log(f"=== {session_name}: {completed}/{len(instances)} completed, {clean} patches generated ===")
 
     run_dir = ROOT / "results" / session_name
+    golden_dir = ROOT / "results" / "golden"
     unpatched = []
     for inst in instances:
-        p_dir = run_dir / inst.replace("/", "__")
+        p_name = inst.replace("/", "__")
+        p_dir = run_dir / p_name
+        golden_diff = golden_dir / p_name / "patch.diff"
+        if golden_diff.is_file() and golden_diff.read_text(encoding="utf-8", errors="ignore").strip():
+            log(f"Skipping {inst} (already golden resolved)")
+            continue
         diff = p_dir / "patch.diff"
-        if not diff.is_file() or not diff.read_text(encoding="utf-8", errors="ignore").strip():
+        if force or not diff.is_file() or not diff.read_text(encoding="utf-8", errors="ignore").strip():
             unpatched.append(inst)
             if p_dir.is_dir():
                 shutil.rmtree(p_dir, ignore_errors=True)
@@ -196,6 +202,7 @@ def main() -> None:
     parser.add_argument("--batch", type=int, choices=[1, 2, 3, 4], help="Run a specific batch (1-4)")
     parser.add_argument("--eval-only", action="store_true", help="Skip generation, only run Docker eval")
     parser.add_argument("--gen-only", action="store_true", help="Only run generation, skip Docker eval")
+    parser.add_argument("--force", action="store_true", help="Force regeneration of unverified instances even if patch.diff exists")
     parser.add_argument("--workers", type=int, default=1, help="Parallel worker threads for tournament generation")
     parser.add_argument("--eval-workers", type=int, default=2, help="Parallel Docker evaluation containers")
     parser.add_argument("--candidates", type=int, default=3, help="Tournament candidates (default: 3)")
@@ -212,7 +219,7 @@ def main() -> None:
         log(f"         PROCESSING: {session}")
         log(f"==========================================")
         if not args.eval_only:
-            run_patch_generation(session, timeout=args.timeout, candidates=args.candidates, workers=args.workers)
+            run_patch_generation(session, timeout=args.timeout, candidates=args.candidates, workers=args.workers, force=args.force)
 
         if docker_ok and not args.gen_only:
             run_docker_evaluation(session, workers=args.eval_workers)
