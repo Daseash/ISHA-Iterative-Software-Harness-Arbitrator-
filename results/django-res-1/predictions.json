@@ -1,0 +1,47 @@
+[
+  {
+    "instance_id": "django__django-11179",
+    "model_patch": "diff --git a/django/db/models/deletion.py b/django/db/models/deletion.py\nindex 92fe4affb9..880eac26f1 100644\n--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -274,6 +274,12 @@ class Collector:\n         # Optimize for the case with a single obj and no dependencies\n         if len(self.data) == 1 and len(instances) == 1:\n             instance = list(instances)[0]\n+            if self.can_fast_delete(instance):\n+                with transaction.mark_for_rollback_on_error():\n+                    del_query.delete(using)\n+                instance.pk = None\n+                return 0, {}\n+            instance = list(instances)[0]\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11797",
+    "model_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1023,6 +1023,7 @@ class Query(BaseExpression):\n                 not self.select_for_update):\n             clone.clear_ordering(True)\n         clone.where.resolve_expression(query, *args, **kwargs)\n+        clone.group_by = self.group_by\n         for key, value in clone.annotations.items():\n             resolved = value.resolve_expression(query, *args, **kwargs)\n             if hasattr(resolved, 'external_aliases'):",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11283",
+    "model_patch": "--- a/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n+++ b/django/contrib/auth/migrations/0011_update_proxy_permissions.py\n@@ -23,7 +23,10 @@ def update_proxy_model_permissions(apps, schema_editor, reverse=False):\n         old_content_type = proxy_content_type if reverse else concrete_content_type\n         new_content_type = concrete_content_type if reverse else proxy_content_type\n         Permission.objects.filter(\n             permissions_query,\n             content_type=old_content_type,\n-        ).update(content_type=new_content_type)\n+        ).exclude(\n+            content_type=new_content_type,\n+            codename__in=Permission.objects.filter(content_type=new_content_type).values_list('codename', flat=True),\n+        ).update(content_type=new_content_type)\n \n \n def revert_proxy_model_permissions(apps, schema_editor):",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11564",
+    "model_patch": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import quote, urljoin\n \n from django import template\n+from django.urls import get_script_prefix\n from django.apps import apps\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -38,7 +39,7 @@ class PrefixNode(template.Node):\n         try:\n             from django.conf import settings\n         except ImportError:\n-            prefix = ''\n+            prefix = get_script_prefix()\n         else:\n             prefix = iri_to_uri(getattr(settings, name, ''))\n         return prefix",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11630",
+    "model_patch": "diff --git a/django/core/checks/model_checks.py b/django/core/checks/model_checks.py\nindex 5c2266ca1d..651d95e3d7 100644\n--- a/django/core/checks/model_checks.py\n+++ b/django/core/checks/model_checks.py\n@@ -5,6 +5,8 @@ from itertools import chain\n \n from django.apps import apps\n from django.core.checks import Error, Tags, register\n+from django.conf import settings\n+from django.db import router\n \n \n @register(Tags.models)\n@@ -19,7 +21,15 @@ def check_all_models(app_configs=None, **kwargs):\n         models = chain.from_iterable(app_config.get_models() for app_config in app_configs)\n     for model in models:\n         if model._meta.managed and not model._meta.proxy:\n-            db_table_models[model._meta.db_table].append(model._meta.label)\n+            # Determine the databases this model may be created on according to\n+            # the project's database routers.\n+            possible_dbs = {\n+                alias for alias in settings.DATABASES\n+                if router.allow_migrate(alias, model)\n+            }\n+            db_table_models[model._meta.db_table].append(\n+                (model._meta.label, possible_dbs)\n+            )\n         if not inspect.ismethod(model.check):\n             errors.append(\n                 Error(\n@@ -35,12 +45,20 @@ def check_all_models(app_configs=None, **kwargs):\n             indexes[model_index.name].append(model._meta.label)\n         for model_constraint in model._meta.constraints:\n             constraints[model_constraint.name].append(model._meta.label)\n-    for db_table, model_labels in db_table_models.items():\n-        if len(model_labels) != 1:\n+    for db_table, model_info in db_table_models.items():\n+        if len(model_info) <= 1:\n+            continue\n+        conflict_labels = []\n+        for i, (label_i, dbs_i) in enumerate(model_info):\n+            for label_j, dbs_j in model_info[i + 1:]:\n+                if dbs_i & dbs_j:\n+                    conflict_labels.extend([label_i, label_j])\n+        conflict_labels = list(dict.fromkeys(conflict_labels))\n+        if conflict_labels:\n             errors.append(\n                 Error(\n-                    \"db_table '%s' is used by multiple models: %s.\"\n-                    % (db_table, ', '.join(db_table_models[db_table])),\n+                    \"db_table '%s' is used by multiple models that may share a database: %s.\"\n+                    % (db_table, ', '.join(conflict_labels)),\n                     obj=db_table,\n                     id='models.E028',\n                 )",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11620",
+    "model_patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 2154a46320..685fc8b699 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -1,6 +1,7 @@\n \"\"\"\n This module converts requested URLs to callback view functions.\n \n+import functools\n URLResolver is the main class here. Its resolve() method takes a URL (as\n a string) and returns a ResolverMatch object which provides access to all\n attributes of the resolved URL match.",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11019",
+    "model_patch": "diff --git a/django/forms/widgets.py b/django/forms/widgets.py\nindex 02aa32b207..b85b06134f 100644\n--- a/django/forms/widgets.py\n+++ b/django/forms/widgets.py\n@@ -138,7 +138,7 @@ class Media:\n                 # Add path to combined_list since it doesn't exist.\n                 combined_list.insert(last_insert_index, path)\n             else:\n-                if index > last_insert_index:\n+                if index > last_insert_index and index < len(list_1):\n                     warnings.warn(\n                         'Detected duplicate Media files in an opposite order:\\n'\n                         '%s\\n%s' % (combined_list[last_insert_index], combined_list[index]),",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11422",
+    "model_patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 7ca0d68fae..cc7adf0a0d 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -96,6 +96,8 @@ def ensure_echo_on():\n             signal.signal(signal.SIGTTOU, old_handler)\n \n \n+        if f is None and m.__name__ == '__main__':\n+            f = sys.argv[0]\n def iter_all_python_module_files():\n     # This is a hot path during reloading. Create a stable sorted list of\n     # modules based on the module name and pass it to iter_modules_and_files().",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-11964",
+    "model_patch": "diff --git a/django/db/models/enums.py b/django/db/models/enums.py\nindex bbe362a6ab..ec0cc6c2bf 100644\n--- a/django/db/models/enums.py\n+++ b/django/db/models/enums.py\n@@ -60,7 +60,8 @@ class ChoicesMeta(enum.EnumMeta):\n \n class Choices(enum.Enum, metaclass=ChoicesMeta):\n     \"\"\"Class for creating enumerated choices.\"\"\"\n-    pass\n+    def __str__(self):\n+        return str(self.value)\n \n \n class IntegerChoices(int, Choices):",
+    "model_name_or_path": "ISHA"
+  }
+]

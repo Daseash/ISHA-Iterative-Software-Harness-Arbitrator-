@@ -1,0 +1,55 @@
+diff --git a/django/core/checks/model_checks.py b/django/core/checks/model_checks.py
+index 5c2266ca1d..651d95e3d7 100644
+--- a/django/core/checks/model_checks.py
++++ b/django/core/checks/model_checks.py
+@@ -5,6 +5,8 @@ from itertools import chain
+ 
+ from django.apps import apps
+ from django.core.checks import Error, Tags, register
++from django.conf import settings
++from django.db import router
+ 
+ 
+ @register(Tags.models)
+@@ -19,7 +21,15 @@ def check_all_models(app_configs=None, **kwargs):
+         models = chain.from_iterable(app_config.get_models() for app_config in app_configs)
+     for model in models:
+         if model._meta.managed and not model._meta.proxy:
+-            db_table_models[model._meta.db_table].append(model._meta.label)
++            # Determine the databases this model may be created on according to
++            # the project's database routers.
++            possible_dbs = {
++                alias for alias in settings.DATABASES
++                if router.allow_migrate(alias, model)
++            }
++            db_table_models[model._meta.db_table].append(
++                (model._meta.label, possible_dbs)
++            )
+         if not inspect.ismethod(model.check):
+             errors.append(
+                 Error(
+@@ -35,12 +45,20 @@ def check_all_models(app_configs=None, **kwargs):
+             indexes[model_index.name].append(model._meta.label)
+         for model_constraint in model._meta.constraints:
+             constraints[model_constraint.name].append(model._meta.label)
+-    for db_table, model_labels in db_table_models.items():
+-        if len(model_labels) != 1:
++    for db_table, model_info in db_table_models.items():
++        if len(model_info) <= 1:
++            continue
++        conflict_labels = []
++        for i, (label_i, dbs_i) in enumerate(model_info):
++            for label_j, dbs_j in model_info[i + 1:]:
++                if dbs_i & dbs_j:
++                    conflict_labels.extend([label_i, label_j])
++        conflict_labels = list(dict.fromkeys(conflict_labels))
++        if conflict_labels:
+             errors.append(
+                 Error(
+-                    "db_table '%s' is used by multiple models: %s."
+-                    % (db_table, ', '.join(db_table_models[db_table])),
++                    "db_table '%s' is used by multiple models that may share a database: %s."
++                    % (db_table, ', '.join(conflict_labels)),
+                     obj=db_table,
+                     id='models.E028',
+                 )

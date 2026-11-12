@@ -1,0 +1,12 @@
+diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py
+index 2154a46320..685fc8b699 100644
+--- a/django/urls/resolvers.py
++++ b/django/urls/resolvers.py
+@@ -1,6 +1,7 @@
+ """
+ This module converts requested URLs to callback view functions.
+ 
++import functools
+ URLResolver is the main class here. Its resolve() method takes a URL (as
+ a string) and returns a ResolverMatch object which provides access to all
+ attributes of the resolved URL match.

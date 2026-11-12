@@ -1,0 +1,13 @@
+diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py
+index 7ca0d68fae..cc7adf0a0d 100644
+--- a/django/utils/autoreload.py
++++ b/django/utils/autoreload.py
+@@ -96,6 +96,8 @@ def ensure_echo_on():
+             signal.signal(signal.SIGTTOU, old_handler)
+ 
+ 
++        if f is None and m.__name__ == '__main__':
++            f = sys.argv[0]
+ def iter_all_python_module_files():
+     # This is a hot path during reloading. Create a stable sorted list of
+     # modules based on the module name and pass it to iter_modules_and_files().

@@ -1,0 +1,10 @@
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -1023,6 +1023,7 @@ class Query(BaseExpression):
+                 not self.select_for_update):
+             clone.clear_ordering(True)
+         clone.where.resolve_expression(query, *args, **kwargs)
++        clone.group_by = self.group_by
+         for key, value in clone.annotations.items():
+             resolved = value.resolve_expression(query, *args, **kwargs)
+             if hasattr(resolved, 'external_aliases'):
