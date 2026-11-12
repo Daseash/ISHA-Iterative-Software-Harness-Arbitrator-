@@ -781,7 +781,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
                     num_retries=0,
-                    timeout=45,
+                    timeout=int(os.getenv("ISHA_MODEL_TIMEOUT", "120")),
                 )
                 if temperature is not None:
                     kwargs["temperature"] = temperature
@@ -860,14 +860,15 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                 if _model_fatal(e):
                     break  # this model is unusable — next chain entry
 
-                # ── Priority 1: Key Rotation on Rate Limits ────────────────
+                # ── Priority 1: Key Rotation on Rate Limits & Transient Errors ──
                 # Before checking retry counters or sleeping, immediately rotate
                 # to any available fresh keys in the active pool!
-                if _is_rate_limit(e):
+                is_transient_overload = _is_rate_limit(e) or "503" in str(e) or "timeout" in str(e).lower()
+                if is_transient_overload:
                     if provider == "gemini" and active_gemini_key:
                         if mark_gemini_key_dead(active_gemini_key, model):
                             print(
-                                f"[config] Gemini key {active_gemini_key[:12]}... hit rate limit "
+                                f"[config] Gemini key {active_gemini_key[:12]}... hit {err_name} "
                                 f"— immediately rotating to next Gemini key without delay",
                                 file=sys.stderr,
                             )
@@ -875,7 +876,7 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     if provider == "groq" and _gkey:
                         if mark_groq_key_dead(_gkey, model):
                             print(
-                                f"[config] Groq key {_gkey[:12]}... hit rate limit "
+                                f"[config] Groq key {_gkey[:12]}... hit {err_name} "
                                 f"— immediately rotating to next Groq key without delay",
                                 file=sys.stderr,
                             )
@@ -884,13 +885,21 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                         _next_m = get_next_mistral_key()
                         if _next_m and _next_m != _mkey:
                             print(
-                                f"[config] Mistral key {_mkey[:12]}... hit rate limit "
+                                f"[config] Mistral key {_mkey[:12]}... hit {err_name} "
                                 f"— immediately rotating to next Mistral key without delay",
                                 file=sys.stderr,
                             )
                             continue
 
-                if attempts >= _MAX_ATTEMPTS or not _retryable(e):
+                max_provider_attempts = max(
+                    _MAX_ATTEMPTS,
+                    len(_gemini_key_pool) if provider == "gemini" else (
+                        len(_groq_key_pool) if provider == "groq" else (
+                            len(_mistral_key_pool) if provider in ("mistral", "codestral") else _MAX_ATTEMPTS
+                        )
+                    )
+                )
+                if attempts >= max_provider_attempts or not _retryable(e):
                     break
 
                 # ── Priority 2: Cooldown Backoff (Only when ALL keys exhausted) ──

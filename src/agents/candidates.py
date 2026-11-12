@@ -479,7 +479,7 @@ def generate_candidates(
                 )
 
             # P0-08: single shared deadline (was N*220s sequential +30s fallback).
-            cand_budget = float(os.getenv("ISHA_CANDIDATE_TIMEOUT", "220"))
+            cand_budget = float(os.getenv("ISHA_CANDIDATE_TIMEOUT", "900"))
             deadline = time.time() + cand_budget
             candidates = []
             for f in futures:

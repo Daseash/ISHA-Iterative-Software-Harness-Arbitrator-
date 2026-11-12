@@ -79,6 +79,10 @@ jobs:
           MISTRAL_API_KEYS: ${{ secrets.MISTRAL_API_KEYS }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           ISHA_CANDIDATES: ${{ inputs.candidates }}
+          ISHA_MODEL_TIMEOUT: "120"
+          ISHA_CANDIDATE_TIMEOUT: "900"
+          ISHA_CALL_BUDGET: "600"
+          ISHA_RATE_LIMIT_WAIT: "0"
         run: |
           ARGS=""
           if [ -n "${{ inputs.batch }}" ]; then
