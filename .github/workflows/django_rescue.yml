@@ -80,8 +80,6 @@ jobs:
           GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_API_KEYS: ${{ secrets.GROQ_API_KEYS }}
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
-          MISTRAL_API_KEYS: ${{ secrets.MISTRAL_API_KEYS }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           ISHA_CANDIDATES: ${{ inputs.candidates }}
           ISHA_MODEL_TIMEOUT: "120"
