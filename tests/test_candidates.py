@@ -64,7 +64,7 @@ def test_seed_patch_adopted_by_candidate_1_only():
         assert cands[0].strategy == "coder_default"
         # Candidate 2 receives a fresh patch and its assigned model
         assert cands[1].strategy == "call_site_aware"
-        assert cands[1].model == CANDIDATE_2_MODEL
+        assert cands[1].model == strategy_models()["call_site_aware"]
 
 
 def test_candidate_model_env_override(monkeypatch):
