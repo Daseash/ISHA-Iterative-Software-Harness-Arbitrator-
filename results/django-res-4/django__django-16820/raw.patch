@@ -1,0 +1,15 @@
+diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py
+index b89b6b511b..f8b94fa628 100644
+--- a/django/db/migrations/operations/models.py
++++ b/django/db/migrations/operations/models.py
+@@ -30,6 +30,10 @@ class ModelOperation(Operation):
+         return name.lower() == self.name_lower
+ 
+     def reduce(self, operation, app_label):
++        if isinstance(operation, CreateModel) and self.name_lower == operation.name_lower:
++            # The index_together option is deprecated and handled via Meta.indexes
++            # when the model is created, so this operation can be omitted.
++            return []
+         return super().reduce(operation, app_label) or self.can_reduce_through(
+             operation, app_label
+         )

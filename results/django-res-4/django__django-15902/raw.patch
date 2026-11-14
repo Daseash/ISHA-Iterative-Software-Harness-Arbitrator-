@@ -1,0 +1,12 @@
+diff --git a/django/forms/formsets.py b/django/forms/formsets.py
+index 3adbc6979a..f9d94466ac 100644
+--- a/django/forms/formsets.py
++++ b/django/forms/formsets.py
+@@ -27,6 +27,7 @@ DEFAULT_MAX_NUM = 1000
+ 
+ class ManagementForm(Form):
+     """
++    template_name = "django/forms/div.html"
+     Keep track of how many form instances are displayed on the page. If adding
+     new forms via JavaScript, you should increment the count field of this form
+     as well.

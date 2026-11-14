@@ -1,0 +1,15 @@
+diff --git a/django/core/management/commands/inspectdb.py b/django/core/management/commands/inspectdb.py
+index f33bcbdccf..1e37a37dd9 100644
+--- a/django/core/management/commands/inspectdb.py
++++ b/django/core/management/commands/inspectdb.py
+@@ -342,6 +342,10 @@ class Command(BaseCommand):
+                 field_params["max_digits"] = row.precision
+                 field_params["decimal_places"] = row.scale
+ 
++        # Auto‑generate a related_name for ForeignKey fields to avoid reverse accessor name clashes.
++        if field_type == "ForeignKey" and "related_name" not in field_params:
++            col_name = getattr(row, "name", None) or getattr(row, "column", None) or ""
++            field_params["related_name"] = f"'{col_name}'"
+         return field_type, field_params, field_notes
+ 
+     def get_meta(
