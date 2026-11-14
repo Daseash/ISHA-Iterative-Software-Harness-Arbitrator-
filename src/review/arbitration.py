@@ -42,6 +42,16 @@ def peek_attempts(thread_id: str) -> list:
         return list(_LEDGER.get(thread_id, []))
 
 
+def clear_ledger(thread_id: str | None = None) -> None:
+    """Clear memory ledger for a specific thread or reset completely."""
+    with _LOCK:
+        if thread_id:
+            _LEDGER.pop(thread_id, None)
+        else:
+            _LEDGER.clear()
+
+
+
 def _as_dict(item) -> dict:
     if isinstance(item, dict):
         return item

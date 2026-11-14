@@ -300,7 +300,7 @@ pytest tests/test_veto.py tests/test_patch_engine.py tests/test_server_security.
 ```text
 ISHA-Iterative-Software-Harness-Arbitrator-/
 ├── src/
-│   ├── agents/          # Multi-candidate tournament (Cand 1–4) & Karpathy Council
+│   ├── agents/          # Multi-candidate tournament (Cand 1–4) & State Graph
 │   ├── approval/        # LAYA calibrated probability gate (ECE <= 0.0010)
 │   ├── bench/           # Official SWE-bench Docker evaluation harness
 │   ├── gateway/         # Unified model router (ISHA_MODE=hybrid|self-hosted|cloud)
