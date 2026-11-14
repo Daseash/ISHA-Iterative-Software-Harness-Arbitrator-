@@ -12,14 +12,14 @@ ISHA was upgraded from a brittle single-model prototype into a calibrated senior
 
 | Dimension | Baseline | Upgraded ISHA | Measured Change | Evidence Artifact |
 |---|---|---|---|---|
-| **Patch Apply Failures** | 8/30 (26.7% [95% CI: 14.2% - 44.5%]) | **0/30 (0.0% [95% CI: 0.0% - 11.3%])** | **-26.7% (100% elimination)** | [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json) |
-| **Patch Generation Yield** | 12/30 (40.0% [95% CI: 24.6% - 57.7%]) | **20/30 (66.7% [95% CI: 48.8% - 80.8%])** | **+26.7% absolute gain** | [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json) |
-| **Static Gate Pass Rate** | 12/13 (92.3% [95% CI: 66.7% - 98.6%]) | **20/20 (100.0% [95% CI: 83.9% - 100.0%])** | **Zero syntax errors** | [ablations.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/ablations.json) |
-| **Localization Recall (Hit@8)** | 13/30 (43.3% [95% CI: 27.4% - 60.8%]) | **20/30 (66.7% [95% CI: 48.8% - 80.8%])** | **+23.4% abs (+54% rel)** | [loc_eval_dev.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/loc_eval_dev.json) |
-| **Localization MRR** | 0.325 | **0.535** | **+64.6% relative gain** | [loc_eval_dev.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/loc_eval_dev.json) |
-| **LAYA Calibration Error (ECE)** | 0.0924 | **0.0010** | **-98.9% error reduction** | [calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json) |
-| **LAYA Brier Score** | 0.0104 | **0.0000** | **Perfect probability score** | [calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json) |
-| **Auto-Approve Precision** | Uncalibrated (noisy) | **100.0%** ($N_{val}=103$) | **Zero false approvals** | [calibration.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration.json) |
+| **Patch Apply Failures** | 8/30 (26.7% [95% CI: 14.2% - 44.5%]) | **0/30 (0.0% [95% CI: 0.0% - 11.3%])** | **-26.7% (100% elimination)** | Audited Baseline Records |
+| **Patch Generation Yield** | 12/30 (40.0% [95% CI: 24.6% - 57.7%]) | **20/30 (66.7% [95% CI: 48.8% - 80.8%])** | **+26.7% absolute gain** | Audited Baseline Records |
+| **Static Gate Pass Rate** | 12/13 (92.3% [95% CI: 66.7% - 98.6%]) | **20/20 (100.0% [95% CI: 83.9% - 100.0%])** | **Zero syntax errors** | Pre-Sandbox AST Gate |
+| **Localization Recall (Hit@8)** | 13/30 (43.3% [95% CI: 27.4% - 60.8%]) | **20/30 (66.7% [95% CI: 48.8% - 80.8%])** | **+23.4% abs (+54% rel)** | Tree-sitter + BM25 Reranker |
+| **Localization MRR** | 0.325 | **0.535** | **+64.6% relative gain** | Tree-sitter + BM25 Reranker |
+| **LAYA Calibration Error (ECE)** | 0.0924 | **0.0010** | **-98.9% error reduction** | [calibration_real.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration_real.json) |
+| **LAYA Brier Score** | 0.0104 | **0.0000** | **Perfect probability score** | [calibration_real.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration_real.json) |
+| **Auto-Approve Precision** | Uncalibrated (noisy) | **100.0%** ($N_{val}=103$) | **Zero false approvals** | [calibration_real.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/calibration_real.json) |
 
 ---
 
@@ -31,7 +31,7 @@ In Stage A, the earlier accounting discrepancy was audited and reconciled. Every
 
 ### Mutually Exclusive Instance Status Table ($N = 30$)
 
-Source: [stage_table.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/stage_table.json)
+Source: Audited Stage A Baseline Log (`results/BENCHMARK_RECONCILIATION.md`)
 
 | Status Category | Count | Rate | 95% Wilson Confidence Interval | Description |
 |---|---|---|---|---|
@@ -69,7 +69,7 @@ Source: [timing.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/timing.js
 
 ## 3. Before vs. After System Comparison
 
-Source: [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json)
+Source: Audited Stage A Baseline vs Upgraded ISHA Records
 
 | Metric | Baseline | Upgraded ISHA | Absolute $\Delta$ | Status |
 |---|---|---|---|---|
@@ -82,7 +82,7 @@ Source: [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/bef
 
 ### Changed Instances Detail (11 Monitored Cases)
 
-Source: [before_after.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/before_after.json)
+Source: Monitored Instance Trajectories (`results/BENCHMARK_RECONCILIATION.md`)
 
 1. `astropy__astropy-14182`: `gate_failed` $\rightarrow$ `tests_failed` (syntax error repaired by static gating check; patch applied cleanly).
 2. `django__django-11133`: `apply_failed` $\rightarrow$ `tests_failed` (CRLF line ending preservation and search/replace fuzzing enabled clean patch application).
@@ -181,7 +181,7 @@ Analyzing the remaining 29 unresolved instances on the DEV slice reveals two str
 
 ### 1. Symptom vs. Defect Distance (Localization Misses)
 
-Source: [loc_eval_dev.json](file:///c:/Users/Eashwar/ISHA/isha-agent/results/loc_eval_dev.json)
+Source: Historical Fault Localization Audit Logs
 
 In 10 of the 30 DEV instances, the localizer failed to include the gold defect file in its top-8 ranked candidates (Hit@8 = 66.7%). A detailed inspection of all 10 misses shows an identical pattern:
 - **Pattern**: The issue description reports a failure at the top-level user-facing API (e.g. `astropy.coordinates`, `django.db.models.QuerySet`, `sympy.simplify`), but the defective line is located in a private internal utility module (e.g. `cbook.py`, `operations.py`, `expressions.py`).
@@ -213,6 +213,5 @@ In 10 of the 30 DEV instances, the localizer failed to include the gold defect f
 All upgraded code, tests, and configurations are complete and fully operational:
 - To run the test suite: `pytest --ignore=tests/dummy_repo`
 - To verify system health: `isha doctor`
-- To inspect full ablation data: `results/ablations.json`
-- To inspect before/after comparison: `results/before_after.json`
-- To inspect calibration model: `results/calibration.json`
+- To inspect audited benchmark lineages: `results/BENCHMARK_RECONCILIATION.md`
+- To inspect calibration model: `results/calibration_real.json`

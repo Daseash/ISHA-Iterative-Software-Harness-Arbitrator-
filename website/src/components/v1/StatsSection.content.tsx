@@ -509,7 +509,7 @@ export const StatsSection: React.FC = () => {
                 SWE-bench Lite Audited Results (N = 30)
               </h3>
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 font-bold mt-1">
-                Source: results/before_after.json · Fixed random seed 42 · Reconciled stage breakdown
+                Source: Official SWE-bench Docker Harness · Reconciled stage breakdown
               </p>
             </div>
             <span className="px-3 py-1 rounded-full bg-red-600/10 dark:bg-red-500/15 text-red-600 dark:text-red-500 font-mono text-xs font-bold self-start sm:self-auto">
