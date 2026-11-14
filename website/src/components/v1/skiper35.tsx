@@ -14,20 +14,20 @@ export const defaultItems: Skiper35Item[] = [
   {
     id: "swebench-sessions",
     title: "SWE-bench Lite (S1–S10)",
-    metric: "73.3% Peak • 27.7% Total",
+    metric: "73.3% Peak • 28.7% Total",
     detail: {
       id: "swebench-sessions",
       category: "OFFICIAL BENCHMARK LADDER",
       badgeText: "73.3% PEAK LEADER",
       title: "SWE-bench Lite: Session-Wise Breakdown (S1–S10)",
-      metric: "73.3% Peak • 27.7% Total",
+      metric: "73.3% Peak • 28.7% Total",
       summary:
-        "Official Docker container resolution across all 10 slices of SWE-bench Lite (30 tasks/slice, 300 total). Session 4 reached a peak resolution rate of 73.3% (22/30), with S1–S4 combined achieving 56.7% (68/120) and the full Lite-300 suite reaching 27.7% (83/300).",
+        "Official Docker container resolution across all 10 slices of SWE-bench Lite (30 tasks/slice, 300 total). Session 4 reached a peak resolution rate of 73.3% (22/30), with S1–S4 combined achieving 58.3% (70/120) and the full Lite-300 suite reaching 28.7% (86/300).",
       chartType: "sessions",
       metricCards: [
         { label: "S4 Leaderboard Peak", value: "73.3%", detail: "22 / 30 Docker Verified" },
-        { label: "S1–S4 Combined", value: "56.7%", detail: "68 / 120 Slice Tasks" },
-        { label: "Full Lite-300 Total", value: "27.7%", detail: "83 / 300 Resolved Quota" },
+        { label: "S1–S4 Combined", value: "58.3%", detail: "70 / 120 Slice Tasks" },
+        { label: "Full Lite-300 Total", value: "28.7%", detail: "86 / 300 Resolved Quota" },
       ],
       highlights: [
         "S4 peak 73.3% audited in official Docker containers",
@@ -40,23 +40,23 @@ export const defaultItems: Skiper35Item[] = [
   {
     id: "repo-suites",
     title: "Repo Suites: Django, SymPy, ...",
-    metric: "66 Django • 3 SymPy • 78 Total",
+    metric: "70 Django • 3 SymPy • 86 Total",
     detail: {
       id: "repo-suites",
       category: "REPOSITORY ECOSYSTEMS & TYPES",
-      badgeText: "78 TOTAL RESOLVED",
+      badgeText: "86 TOTAL RESOLVED",
       title: "Repository Suites: Django, SymPy, Pytest, Matplotlib, Sphinx, Requests",
-      metric: "68 Django • 3 SymPy • 83 Total",
+      metric: "70 Django • 3 SymPy • 86 Total",
       summary:
-        "Official Docker container resolutions categorized by software framework and mathematical domain. Features 68 resolved Django instances across ORM query compilers, migrations, and form widgets; 3 SymPy instances across symbolic calculus and branch cuts; 2 Pytest framework fixes; 1 Matplotlib 2D rendering patch; 2 Sphinx doc trees; 2 Requests HTTP connection pooling; and 5 Scikit-Learn / Seaborn fixes.",
+        "Official Docker container resolutions categorized by software framework and mathematical domain. Features 70 resolved Django instances across ORM query compilers, migrations, and form widgets; 3 SymPy instances across symbolic calculus and branch cuts; 2 Pytest framework fixes; 1 Matplotlib 2D rendering patch; 2 Sphinx doc trees; 2 Requests HTTP connection pooling; and 6 Scikit-Learn / Seaborn fixes.",
       chartType: "repos",
       metricCards: [
-        { label: "Django Web Framework", value: "68 Resolved", detail: "59.6% solve rate (68/114)" },
+        { label: "Django Web Framework", value: "70 Resolved", detail: "61.4% solve rate (70/114)" },
         { label: "SymPy Computer Algebra", value: "3 Resolved", detail: "Symbolic calculus & branches" },
-        { label: "Pytest, Matplotlib & Others", value: "12 Resolved", detail: "Sphinx, Requests, Seaborn, Sklearn" },
+        { label: "Pytest, Matplotlib & Others", value: "13 Resolved", detail: "Sphinx, Requests, Seaborn, Sklearn" },
       ],
       highlights: [
-        "Django: 68 official Docker resolved (59.6% record solve rate)",
+        "Django: 70 official Docker resolved (61.4% record solve rate)",
         "SymPy: complex hyperbolic branch cuts & polynomial simplification",
         "Pytest AST rewriting & Matplotlib Gouraud triangulation verified green",
       ],

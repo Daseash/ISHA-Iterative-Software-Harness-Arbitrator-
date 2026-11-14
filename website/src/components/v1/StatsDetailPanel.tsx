@@ -345,8 +345,8 @@ export const StatsDetailPanel: React.FC<{ data: StatsDetailData }> = ({ data }) 
                     <p className="text-sm font-bold">Full Lite-300 Single Source of Truth</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-mono font-black text-red-600 dark:text-red-400">27.7%</span>
-                    <p className="text-[10px] font-mono text-neutral-500">83 / 300 Resolved</p>
+                    <span className="text-xl font-mono font-black text-red-600 dark:text-red-400">28.7%</span>
+                    <p className="text-[10px] font-mono text-neutral-500">86 / 300 Resolved</p>
                   </div>
                 </div>
               </div>

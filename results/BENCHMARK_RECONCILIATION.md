@@ -13,7 +13,7 @@ The variation in reported totals reflects the progressive evaluation stages of t
 | **Stage A Baseline**<br>([REPORT.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/REPORT.md#L30-L45)) | 2026-09-30 | 30-instance test slice (`django`) | • Single-candidate unconstrained generation<br>• Pre-tournament, pre-LAYA<br>• Windows CRLF patch apply bugs | **1 / 30** | 3.3% | `results/REPORT.md` (Stage A Audit) |
 | **Interim Campaign Snapshot**<br>([progress.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/progress.md#L861-L880)) | 2026-10-14 | Sessions 1–6 complete;<br>Sessions 7–10 queued | • LangGraph 9-node state machine<br>• 3-strategy worktree tournament<br>• AST compilation gates active | **72 / 232** | 31.0% (eval)<br>24.0% (total) | `results/lite300-s1` .. `s6`<br>`harness_report.json` |
 | **Submission Frozen Milestone**<br>([SUBMIT_RUNBOOK.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/SUBMIT_RUNBOOK.md#L1-L8)) | 2026-10-18 | Sessions 1–8 complete<br>(pre-submission payload) | • S1–S6 (72 resolved) + S8 Docker (4 resolved)<br>• `all_preds.jsonl` lint passed (227 valid rows)<br>• Dedicated model routing per domain | **76 / 300** | 25.33% | `results/all_preds.jsonl`<br>`results/lite300-s8/harness_report.json` |
-| **Audited Final Total**<br>([README.md](file:///c:/Users/Eashwar/ISHA/README.md#L106-L123)) | 2026-11-15 | Full S1–S10 + targeted rescue passes | • Full multi-model cloud mesh ($0.00 / 0 GB VRAM)<br>• S7 (2) + S9 (1) + S4-r2 & Django rescues (4)<br>• LAYA calibrated gate ($ECE = 0.0010$) | **83 / 300** | **27.67%** | `report.json` archives<br>`checkpoints.db` |
+| **Audited Final Total**<br>([README.md](file:///c:/Users/Eashwar/ISHA/README.md#L106-L123)) | 2026-11-15 | Full S1–S10 + targeted rescue passes | • Full multi-model cloud mesh ($0.00 / 0 GB VRAM)<br>• S7 (2) + S9 (1) + S4-r2 & Django rescues (7)<br>• LAYA calibrated gate ($ECE = 0.0010$) | **86 / 300** | **28.67%** | `report.json` archives<br>`checkpoints.db` |
 
 ---
 
@@ -40,14 +40,15 @@ The variation in reported totals reflects the progressive evaluation stages of t
    ──────────────────────────────────────────────────────────
    Total Frozen Milestone = 76 / 300 (25.33%)
         │
-        ▼ (+7 additional resolutions from Session 7, Session 9, and rescue evaluation)
-[Audited Global Full Total: 83/300] (README.md:6)
+        ▼ (+10 additional resolutions from Session 7, Session 9, and rescue batches 1-4)
+[Audited Global Full Total: 86/300] (README.md:6)
    • S1–S8 Total: 76
    • Session 7:   +2 (scikit-learn__scikit-learn-12471, scikit-learn__scikit-learn-13496)
    • Session 9:   +1 (sympy__sympy-14774)
-   • Rescues/r2:  +4 (django__django-13028, django__django-11964 rescue-v4, django__django-15400, django__django-11049)
+   • Rescues/r2:  +7 (django__django-13028, django__django-11964, django__django-11049, django__django-11583, django__django-15400, pytest-dev__pytest-11143, psf__requests-7634)
    ──────────────────────────────────────────────────────────
-   Grand Total Audited = 83 / 300 (27.67%)
+   Grand Total Audited = 86 / 300 (28.67%)
+   Django Total Audited = 70 / 114 (61.4% record solve rate)
 ```
 
 ---
