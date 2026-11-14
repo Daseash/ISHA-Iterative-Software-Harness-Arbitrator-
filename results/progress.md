@@ -860,6 +860,8 @@ State found on disk (the plan.md board was stale — this file + results/ won):
 
 ## SWE-bench Lite 300 Audited Final Verdict — 2026-10-14
 
+> **Historical Milestone Note**: This table records the interim campaign snapshot as of 2026-10-14 (Sessions 1–6 complete = 72 resolved / 232 evaluated). For complete evolution to 76/300 (post-Session 8) and 82/300 (final audited), see [BENCHMARK_RECONCILIATION.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/BENCHMARK_RECONCILIATION.md).
+
 Every number below is drawn from official Docker container execution (`report.json`) and AST compilation verification logs:
 
 ### 1. Multi-Session Scorecard

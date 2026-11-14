@@ -7,7 +7,6 @@ import pytest
 from unittest.mock import patch
 
 from src.config import (
-    get_next_mistral_key,
     get_next_cerebras_key,
     _next_from_pool,
     REPRO_CHAIN,
@@ -18,13 +17,11 @@ from src.agents.candidates import DEFAULT_STRATEGY_MODELS, strategy_models
 
 
 def test_cloud_strategy_model_defaults():
-    """Verify that tournament strategies map to their designated cloud models."""
+    """Verify that tournament strategies map to their designated cloud models (3-Candidate Tournament)."""
     models = strategy_models()
-    assert "groq/qwen" in models["minimal_diff"] or "mistral/codestral" in models["minimal_diff"]
-    assert "gemini" in models["call_site_aware"] or "groq" in models["call_site_aware"]
-    assert models["root_cause_first"] == "groq/openai/gpt-oss-120b"
-    assert models["defensive_fix"] == "mistral/codestral-latest"
-    assert "gemini" in models["cross_file_audit"] or "groq" in models["cross_file_audit"]
+    assert "groq" in models["minimal_diff"]
+    assert "gemini" in models["call_site_aware"]
+    assert "dpo" in models["trained_dpo"] or "isha-coder" in models["trained_dpo"]
 
 
 def test_repro_chain_configuration():
@@ -51,15 +48,15 @@ def test_sticky_replan_model():
         assert payload["assigned_model"] != ""
 
 
-def test_mistral_cerebras_key_rotation():
-    """Verify round-robin key rotation for Mistral and Cerebras providers."""
+def test_cerebras_key_rotation():
+    """Verify round-robin key rotation for Cerebras provider."""
     import threading
     lock = threading.Lock()
     pool = ["key_a", "key_b", "key_c"]
-    k1 = _next_from_pool(pool, lock, "mistral")
-    k2 = _next_from_pool(pool, lock, "mistral")
-    k3 = _next_from_pool(pool, lock, "mistral")
-    k4 = _next_from_pool(pool, lock, "mistral")
+    k1 = _next_from_pool(pool, lock, "cerebras")
+    k2 = _next_from_pool(pool, lock, "cerebras")
+    k3 = _next_from_pool(pool, lock, "cerebras")
+    k4 = _next_from_pool(pool, lock, "cerebras")
     assert k1 != k2
     assert [k1, k2, k3] == ["key_b", "key_c", "key_a"]
     assert k4 == "key_b"

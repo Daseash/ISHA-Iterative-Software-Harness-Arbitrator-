@@ -1,9 +1,9 @@
 # A-1 SUBMISSION RUNBOOK (owner, ~10 minutes, browser needed)
 
-> Payload: `isha-agent/results/all_preds.jsonl` — **213 rows, LINT PASS**
+> Payload: `isha-agent/results/all_preds.jsonl` — **227 rows, LINT PASS**
 > (verify fresh before submitting: `python isha-agent/scripts/lint_all_preds.py` → expect `LINT PASS`)
 > Ground-truth context: bundle dedup prefers graded > resolved > longest (P2-04);
-> Docker-audited score today: 76/300 (report.json-proven). The run will re-grade
+> Docker-audited score: 76/300 (S1–S8 frozen milestone; see [BENCHMARK_RECONCILIATION.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/BENCHMARK_RECONCILIATION.md)). The run will re-grade
 > all rows on SWE-bench's own servers and publish the official score.
 
 ## Steps

@@ -7,8 +7,8 @@ Targeting all 48 unresolved Django instances in SWE-bench Lite across 4 isolated
   - django-res-4 (12 instances)
 
 Features:
-  - Multi-candidate tournament (Mistral Codestral, Groq GPT-OSS 120B / Qwen 2.5 Coder, Gemini 3.8 Flash)
-  - Round-robin API key rotation across 4 Groq keys, 9 Gemini keys, and 3 Mistral keys
+  - 3-candidate tournament (Groq GPT-OSS 120B / Qwen 2.5 Coder, Gemini 3.8 Flash, and Trained DPO Model)
+  - Round-robin API key rotation across Groq and Gemini key pools
   - Pre-sandbox AST Compilation Gate (<2ms)
   - Official Docker harness evaluation in Codespaces native Docker daemon
   - Automatic golden log harvesting and score consolidation

@@ -54,7 +54,7 @@ def ensure_api_keys(force: bool = False) -> bool:
     """Prompt user for missing API keys in terminal if none are configured."""
     has_key = any(os.getenv(k) for k in [
         "GEMINI_API_KEY", "GOOGLE_API_KEY", "GROQ_API_KEY",
-        "MISTRAL_API_KEY", "OPENROUTER_API_KEY", "CEREBRAS_API_KEY",
+        "OPENROUTER_API_KEY", "CEREBRAS_API_KEY",
     ])
     if has_key and not force:
         return True
@@ -74,7 +74,6 @@ def ensure_api_keys(force: bool = False) -> bool:
         print("ISHA uses free-tier cloud models. Please provide at least one key:\n")
         print("  1. Google Gemini (Recommended, Free: https://aistudio.google.com/)")
         print("  2. Groq LPU Key   (500 tok/s, Free:  https://console.groq.com/keys)")
-        print("  3. Mistral API    (Optional, Free:   https://console.mistral.ai/)")
     print("-" * 70)
 
     try:
@@ -85,10 +84,6 @@ def ensure_api_keys(force: bool = False) -> bool:
         cur_groq = os.getenv("GROQ_API_KEY", "")
         hint_groq = f" [current: ...{cur_groq[-4:]}]" if cur_groq else ""
         groq = input(f"Enter GROQ_API_KEY{hint_groq} (press Enter to skip): ").strip()
-
-        cur_mistral = os.getenv("MISTRAL_API_KEY", "")
-        hint_mistral = f" [current: ...{cur_mistral[-4:]}]" if cur_mistral else ""
-        mistral = input(f"Enter MISTRAL_API_KEY{hint_mistral} (press Enter to skip): ").strip()
     except (EOFError, KeyboardInterrupt):
         print("\n[setup] Setup cancelled.")
         return bool(has_key)
@@ -112,8 +107,6 @@ def ensure_api_keys(force: bool = False) -> bool:
         _set_env_key("GOOGLE_API_KEY", gemini)
     if groq:
         _set_env_key("GROQ_API_KEY", groq)
-    if mistral:
-        _set_env_key("MISTRAL_API_KEY", mistral)
 
     if saved:
         env_path.write_text(existing_text.strip() + "\n", encoding="utf-8")

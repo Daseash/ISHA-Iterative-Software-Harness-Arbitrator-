@@ -1,7 +1,7 @@
 """
 ISHA Key Pool Management — Multi-key rotation, quota isolation, and cooldown revival.
 
-Maintains thread-safe rotating pools across multiple providers (Gemini, Groq, Mistral,
+Maintains thread-safe rotating pools across multiple providers (Gemini, Groq,
 OpenRouter, Cerebras). Tracks per-model rate limits and revives keys after cooldown.
 """
 
@@ -34,7 +34,7 @@ _env_last_mtime: float = 0.0
 
 GOOGLE_API_KEY = _gemini_key_pool[0] if _gemini_key_pool else None
 
-# Groq/OpenRouter/Mistral/Cerebras pools
+# Groq/OpenRouter/Cerebras pools
 _groq_keys_raw = os.getenv("GROQ_API_KEYS") or os.getenv("GROQ_API_KEY") or ""
 _groq_key_pool = [k.strip() for k in _groq_keys_raw.split(",") if k.strip()]
 _groq_key_lock = threading.Lock()
@@ -45,11 +45,6 @@ _openrouter_key_pool = [k.strip() for k in _openrouter_keys_raw.split(",") if k.
 _openrouter_key_lock = threading.Lock()
 _openrouter_key_counter = 0
 
-_mistral_keys_raw = os.getenv("MISTRAL_API_KEYS") or os.getenv("MISTRAL_API_KEY") or ""
-_mistral_key_pool = [k.strip() for k in _mistral_keys_raw.split(",") if k.strip()]
-_mistral_key_lock = threading.Lock()
-_mistral_key_counter = 0
-
 _cerebras_keys_raw = os.getenv("CEREBRAS_API_KEYS") or os.getenv("CEREBRAS_API_KEY") or ""
 _cerebras_key_pool = [k.strip() for k in _cerebras_keys_raw.split(",") if k.strip()]
 _cerebras_key_lock = threading.Lock()
@@ -57,16 +52,16 @@ _cerebras_key_counter = 0
 
 GROQ_API_KEY = _groq_key_pool[0] if _groq_key_pool else None
 OPENROUTER_API_KEY = _openrouter_key_pool[0] if _openrouter_key_pool else None
-MISTRAL_API_KEY = _mistral_key_pool[0] if _mistral_key_pool else None
+MISTRAL_API_KEY = None
 CEREBRAS_API_KEY = _cerebras_key_pool[0] if _cerebras_key_pool else None
 
-LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY or MISTRAL_API_KEY or CEREBRAS_API_KEY)
+LLM_ENABLED = bool(GOOGLE_API_KEY or GROQ_API_KEY or OPENROUTER_API_KEY or CEREBRAS_API_KEY)
 OFFLINE_MODE = (not LLM_ENABLED) or os.getenv("ISHA_FORCE_OFFLINE", "0") == "1"
 
 
 def _next_from_pool(pool: list, lock: threading.Lock, counter_name: str) -> str | None:
     """Round-robin pick from a key pool."""
-    global _groq_key_counter, _openrouter_key_counter, _mistral_key_counter, _cerebras_key_counter
+    global _groq_key_counter, _openrouter_key_counter, _cerebras_key_counter
     if not pool:
         return None
     with lock:
@@ -76,9 +71,6 @@ def _next_from_pool(pool: list, lock: threading.Lock, counter_name: str) -> str 
         elif counter_name == "openrouter":
             _openrouter_key_counter += 1
             return pool[_openrouter_key_counter % len(pool)]
-        elif counter_name == "mistral":
-            _mistral_key_counter += 1
-            return pool[_mistral_key_counter % len(pool)]
         elif counter_name == "cerebras":
             _cerebras_key_counter += 1
             return pool[_cerebras_key_counter % len(pool)]
@@ -129,7 +121,7 @@ def get_next_openrouter_key() -> str | None:
 
 
 def get_next_mistral_key() -> str | None:
-    return _next_from_pool(_mistral_key_pool, _mistral_key_lock, "mistral")
+    return None
 
 
 def get_next_cerebras_key() -> str | None:
@@ -138,7 +130,7 @@ def get_next_cerebras_key() -> str | None:
 
 def _check_and_reload_keys_from_env() -> None:
     """Dynamically re-read .env if changed on disk, adding any newly added keys."""
-    global _gemini_key_pool, _mistral_key_pool, _cerebras_key_pool, _env_last_mtime
+    global _gemini_key_pool, _cerebras_key_pool, _env_last_mtime
     env_file = ROOT / ".env"
     if not env_file.is_file():
         return
@@ -161,8 +153,6 @@ def _check_and_reload_keys_from_env() -> None:
                     f"[config] Reloaded {len(fresh_keys)} Gemini keys into active pool",
                     file=sys.stderr,
                 )
-            mraw = os.getenv("MISTRAL_API_KEYS") or os.getenv("MISTRAL_API_KEY") or ""
-            _mistral_key_pool = [k.strip() for k in mraw.split(",") if k.strip()]
             craw = os.getenv("CEREBRAS_API_KEYS") or os.getenv("CEREBRAS_API_KEY") or ""
             _cerebras_key_pool = [k.strip() for k in craw.split(",") if k.strip()]
     except Exception:

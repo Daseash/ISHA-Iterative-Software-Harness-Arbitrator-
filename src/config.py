@@ -79,13 +79,13 @@ def _parse_chain(primary_env: str, primary_default: str,
 PLANNER_CHAIN = _parse_chain(
     "ISHA_PLANNER_MODEL", "gemini/gemini-3.6-flash",
     "ISHA_PLANNER_FALLBACKS",
-    "gemini/gemini-3.5-flash,groq/openai/gpt-oss-120b,mistral/codestral-latest,gemini/gemini-3.5-flash-lite,groq/qwen/qwen3.8-27b",
+    "gemini/gemini-3.5-flash,groq/openai/gpt-oss-120b,gemini/gemini-3.5-flash-lite,groq/qwen/qwen3.8-27b",
 )
 
 CODER_CHAIN = _parse_chain(
     "ISHA_CODER_MODEL", "gemini/gemini-3.6-flash",
     "ISHA_CODER_FALLBACKS",
-    "gemini/gemini-3.5-flash,mistral/codestral-latest,groq/openai/gpt-oss-120b,groq/qwen/qwen3.8-27b,gemini/gemini-3.5-flash-lite",
+    "gemini/gemini-3.5-flash,groq/openai/gpt-oss-120b,groq/qwen/qwen3.8-27b,gemini/gemini-3.5-flash-lite",
 )
 
 LOCALIZER_CHAIN = _parse_chain(
@@ -97,13 +97,13 @@ LOCALIZER_CHAIN = _parse_chain(
 CRITIC_CHAIN = _parse_chain(
     "ISHA_CRITIC_MODEL", "gemini/gemini-3.6-flash",
     "ISHA_CRITIC_FALLBACKS",
-    "gemini/gemini-3.5-flash,groq/openai/gpt-oss-120b,mistral/codestral-latest,groq/qwen/qwen3.8-27b",
+    "gemini/gemini-3.5-flash,groq/openai/gpt-oss-120b,groq/qwen/qwen3.8-27b",
 )
 
 REPRO_CHAIN = _parse_chain(
     "ISHA_REPRO_MODEL", "groq/openai/gpt-oss-120b",
     "ISHA_REPRO_FALLBACKS",
-    "mistral/codestral-latest,groq/qwen/qwen3.8-27b,gemini/gemini-3.5-flash",
+    "groq/qwen/qwen3.8-27b,gemini/gemini-3.5-flash",
 )
 
 # self-hosted: all roles resolve to the Modal-served ISHA-Coder-7B-DPO.
@@ -128,10 +128,13 @@ PLANNER_FALLBACKS = PLANNER_CHAIN[1:]
 CODER_FALLBACKS = CODER_CHAIN[1:]
 REPRO_FALLBACKS = REPRO_CHAIN[1:]
 
-# Candidate models for Multi-Model Arbitration (Phase 4 / Ensemble Mode)
-CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "gemini/gemini-3.6-flash")
-CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "groq/qwen/qwen3.8-27b")
-CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "groq/openai/gpt-oss-120b")
+# Candidate models for Multi-Model Arbitration (Phase 4 / 3-Candidate Tournament)
+# Candidate 1: Groq (high-speed AST reasoning / surgical diff)
+# Candidate 2: Gemini (deep context & call-site propagation)
+# Candidate 3: Our trained model (DPO specialist / container invariants)
+CANDIDATE_1_MODEL = os.getenv("ISHA_CANDIDATE_1_MODEL", "groq/openai/gpt-oss-120b")
+CANDIDATE_2_MODEL = os.getenv("ISHA_CANDIDATE_2_MODEL", "gemini/gemini-3.8-flash")
+CANDIDATE_3_MODEL = os.getenv("ISHA_CANDIDATE_3_MODEL", "openai/isha-coder-7b-dpo")
 
 # Architecture defaults: 3 diverse tournament candidates by default
 DEFAULT_CANDIDATES = int(os.getenv("ISHA_CANDIDATES", "3"))
@@ -144,7 +147,6 @@ from src.key_pools import (
     GOOGLE_API_KEY,
     GROQ_API_KEY,
     OPENROUTER_API_KEY,
-    MISTRAL_API_KEY,
     CEREBRAS_API_KEY,
     LLM_ENABLED,
     OFFLINE_MODE,
@@ -162,19 +164,17 @@ from src.key_pools import (
     _groq_key_death_time,
     _openrouter_key_pool,
     _openrouter_key_lock,
-    _mistral_key_pool,
-    _mistral_key_lock,
     _cerebras_key_pool,
     _cerebras_key_lock,
     get_next_gemini_key,
     mark_gemini_key_dead,
     get_next_groq_key,
     mark_groq_key_dead,
-    get_next_mistral_key,
     get_next_openrouter_key,
     get_next_cerebras_key,
     _check_and_reload_keys_from_env,
     _rotate_gemini_key,
+    _next_from_pool,
     reset_key_pools,
 )
 
@@ -645,13 +645,6 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                     _okey = get_next_openrouter_key()
                     if _okey:
                         kwargs["api_key"] = _okey
-                elif provider in ("mistral", "codestral"):
-                    _mkey = get_next_mistral_key()
-                    if _mkey:
-                        kwargs["api_key"] = _mkey
-                    elif not os.getenv("MISTRAL_API_KEY"):
-                        errors.append(f"{_short_name(model)}: skipped (no MISTRAL_API_KEY)")
-                        break
                 elif provider == "cerebras":
                     _ckey = get_next_cerebras_key()
                     if _ckey:
@@ -728,22 +721,10 @@ def _call_chain(chain: list, role: str, prompt: str, temperature: float | None =
                                 file=sys.stderr,
                             )
                             continue
-                    if provider in ("mistral", "codestral") and _mkey:
-                        _next_m = get_next_mistral_key()
-                        if _next_m and _next_m != _mkey:
-                            print(
-                                f"[config] Mistral key {_mkey[:12]}... hit {err_name} "
-                                f"— immediately rotating to next Mistral key without delay",
-                                file=sys.stderr,
-                            )
-                            continue
-
                 max_provider_attempts = max(
                     _MAX_ATTEMPTS,
                     len(_gemini_key_pool) if provider == "gemini" else (
-                        len(_groq_key_pool) if provider == "groq" else (
-                            len(_mistral_key_pool) if provider in ("mistral", "codestral") else _MAX_ATTEMPTS
-                        )
+                        len(_groq_key_pool) if provider == "groq" else _MAX_ATTEMPTS
                     )
                 )
                 if attempts >= max_provider_attempts or not _retryable(e):
@@ -810,11 +791,12 @@ def call_repro(prompt: str, temperature: float | None = None) -> str:
 
 
 STRATEGY_FALLBACK_MODELS: dict[str, list[str]] = {
-    "gemini/gemini-3.6-flash": ["gemini/gemini-3.5-flash", "mistral/codestral-latest"],
-    "gemini/gemini-3.5-flash": ["gemini/gemini-3.6-flash", "mistral/codestral-latest"],
-    "groq/qwen/qwen3.8-27b": ["mistral/codestral-latest", "gemini/gemini-3.6-flash"],
-    "groq/openai/gpt-oss-120b": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.6-flash"],
-    "mistral/codestral-latest": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.6-flash"],
+    "gemini/gemini-3.8-flash": ["gemini/gemini-3.6-flash", "gemini/gemini-3.5-flash", "groq/openai/gpt-oss-120b"],
+    "gemini/gemini-3.6-flash": ["gemini/gemini-3.8-flash", "gemini/gemini-3.5-flash", "groq/openai/gpt-oss-120b"],
+    "gemini/gemini-3.5-flash": ["gemini/gemini-3.8-flash", "gemini/gemini-3.6-flash", "groq/qwen/qwen3.8-27b"],
+    "groq/openai/gpt-oss-120b": ["groq/qwen/qwen3.8-27b", "gemini/gemini-3.8-flash"],
+    "groq/qwen/qwen3.8-27b": ["groq/openai/gpt-oss-120b", "gemini/gemini-3.8-flash"],
+    "openai/isha-coder-7b-dpo": ["groq/openai/gpt-oss-120b", "gemini/gemini-3.8-flash"],
 }
 
 

@@ -459,3 +459,8 @@ def run_issue(issue_text: str, repo_path: str | None = None, thread_id: str | No
     if isinstance(result, dict):
         result = AgentState(**result)
     return result
+
+
+# Backward-compatible alias for MCP server and external callers
+run_agent = run_issue
+

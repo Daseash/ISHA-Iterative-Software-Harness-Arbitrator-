@@ -358,9 +358,9 @@ with st.sidebar:
     st.markdown("### ⚔️ Tournament Config")
     st.markdown(
         """<div style="font-size: 0.8rem; color: #94a3b8; line-height: 1.5; background: rgba(255,255,255,0.03); padding: 0.7rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 0.8rem;">
-        🌿 <b>Strategy A</b>: Minimal Diff (Mistral Codestral)<br>
+        🌿 <b>Strategy A</b>: Minimal Diff (Groq / GPT-OSS 120B)<br>
         🌿 <b>Strategy B</b>: Call-Site Aware (Gemini 3.8 Flash)<br>
-        🌿 <b>Strategy C</b>: Root-Cause First (GPT-OSS 120B)<br>
+        🌿 <b>Strategy C</b>: Invariant Hardened (Trained DPO Model)<br>
         <i>All candidates are gated by AST syntax and Docker pytest before LAYA arbitration.</i>
         </div>""",
         unsafe_allow_html=True,

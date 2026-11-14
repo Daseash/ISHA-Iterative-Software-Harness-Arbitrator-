@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# We test Groq, Mistral, OpenRouter, and Gemini
+# We test Groq, Gemini, and OpenRouter
 import litellm
 litellm.suppress_debug_info = True
 
@@ -38,27 +38,6 @@ def test_groq_key(key: str, model: str = "groq/openai/gpt-oss-120b"):
             return "AUTH_FAILED", dt, f"{err_type}: {err_msg}"
         return "ERROR", dt, f"{err_type}: {err_msg}"
 
-def test_mistral_key(key: str, model: str = "mistral/codestral-latest"):
-    t0 = time.time()
-    try:
-        r = litellm.completion(
-            model=model,
-            messages=[{"role": "user", "content": "Respond strictly with: PONG"}],
-            api_key=key,
-            timeout=10,
-        )
-        dt = round(time.time() - t0, 2)
-        txt = r.choices[0].message.content.strip().replace("\n", " ")[:35]
-        return "WORKING", dt, txt
-    except Exception as e:
-        dt = round(time.time() - t0, 2)
-        err_type = type(e).__name__
-        err_msg = str(e).replace("\n", " ")[:120]
-        if "RateLimitError" in err_type or "429" in err_msg or "rate limit" in err_msg.lower():
-            return "RATE_LIMITED", dt, f"{err_type}: {err_msg}"
-        if "AuthenticationError" in err_type or "401" in err_msg:
-            return "AUTH_FAILED", dt, f"{err_type}: {err_msg}"
-        return "ERROR", dt, f"{err_type}: {err_msg}"
 
 def test_gemini_key_rest(key: str, model: str = "gemini-2.5-flash"):
     # Direct REST call to Google generative language endpoint to avoid litellm proxy artifacts
@@ -122,15 +101,7 @@ def main():
         status, dt, note = test_groq_key(k)
         print(f"  Key #{i} [{mask_key(k)}]: [{status}] ({dt}s) -> {note}")
 
-    # 2. Mistral Keys
-    mistral_raw = os.getenv("MISTRAL_API_KEYS") or os.getenv("MISTRAL_API_KEY") or ""
-    mistral_keys = [k.strip() for k in mistral_raw.split(",") if k.strip()]
-    print(f"\n[2] MISTRAL KEYS ({len(mistral_keys)} keys configured)")
-    for i, k in enumerate(mistral_keys, 1):
-        status, dt, note = test_mistral_key(k)
-        print(f"  Key #{i} [{mask_key(k)}]: [{status}] ({dt}s) -> {note}")
-
-    # 3. Gemini Keys
+    # 2. Gemini Keys
     gemini_raw = os.getenv("GEMINI_API_KEYS") or os.getenv("GOOGLE_API_KEY") or ""
     gemini_keys = [k.strip() for k in gemini_raw.split(",") if k.strip()]
     print(f"\n[3] GOOGLE GEMINI KEYS ({len(gemini_keys)} keys configured)")

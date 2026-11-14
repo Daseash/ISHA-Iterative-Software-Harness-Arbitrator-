@@ -27,7 +27,7 @@ An enterprise-grade autonomous software engineering agent that resolves real-wor
 | :--- | :--- | :--- |
 | **Execution** | Blind, single-shot token generation on live files | **Deterministic 9-Node State Machine** in isolated Git worktrees |
 | **Verification (TDD)** | Hopeful guessing without tests | **Mandatory RED $\rightarrow$ GREEN Cycle**: fixes only synthesized failing proofs |
-| **Candidate Search** | Single greedy output | **4-Way Multi-Model Tournament** (`minimal_diff` vs `call_site` vs `root_cause` vs `invariant_hardened` DPO Coder) |
+| **Candidate Search** | Single greedy output | **3-Way Multi-Model Tournament** (`minimal_diff` [Groq] vs `call_site` [Gemini] vs `trained_dpo` [Trained DPO Coder]) |
 | **Syntax Gate** | Terminal trial-and-error | **Pre-sandbox AST Compilation Gate** (<2ms syntax/indentation check) |
 | **Regression Proof** | Simulated or unverified | **Ground-truth pytest** execution inside isolated Docker containers |
 | **Decision Logic** | Uncalibrated LLM confidence | **Platt-Calibrated LAYA Arbitrator** ($ECE \le 0.0010$, $P_{\text{solve}} \ge 0.65$) |
@@ -59,13 +59,12 @@ flowchart TD
     end
 
     subgraph Tournament ["Phase GREEN — Parallel Candidate Tournament"]
-        RedGate -- "Yes (Proven Bug)" --> N6A["Candidate 1: Minimal Diff\n(Qwen 3.8 / Mistral)"]
-        RedGate -- "Yes (Proven Bug)" --> N6B["Candidate 2: Root-Cause First\n(GPT-OSS 120B)"]
-        RedGate -- "Yes (Proven Bug)" --> N6C["Candidate 3: Call-Site Aware\n(Gemini 3.8 Flash)"]
-        RedGate -- "Yes (Proven Bug)" --> N6D["Candidate 4: Invariant Hardened\n(isha-qwen2.5-coder-7b-dpo)"]
+        RedGate -- "Yes (Proven Bug)" --> N6A["Candidate 1: Minimal Diff\n(Groq / GPT-OSS 120B)"]
+        RedGate -- "Yes (Proven Bug)" --> N6B["Candidate 2: Call-Site Aware\n(Gemini 3.8 Flash)"]
+        RedGate -- "Yes (Proven Bug)" --> N6C["Candidate 3: Invariant Hardened\n(isha-qwen2.5-coder-7b-dpo)"]
     end
 
-    N6A & N6B & N6C & N6D --> ASTGate{"Pre-Sandbox AST Gate\nSyntax & Imports Valid?"}
+    N6A & N6B & N6C --> ASTGate{"Pre-Sandbox AST Gate\nSyntax & Imports Valid?"}
     ASTGate -- "Malformed Syntax" --> RepairAST["AST Auto-Aligner (<2ms)"]
     RepairAST --> ASTGate
 
@@ -101,7 +100,7 @@ All specialist models are hosted on the Hugging Face Hub under [`Maddy-Das`](htt
 
 | Model Repository | Node / Role | Architecture & Training | Precision & Size | Inference Latency | Hugging Face Hub Link |
 | :--- | :--- | :--- | :---: | :---: | :--- |
-| **`isha-qwen2.5-coder-7b-dpo`** | **Node 6 / Cand 4**<br>Invariant Coder | Direct Preference Optimization (DPO) on 1,842 SWE-bench trajectories; enforces Python container invariants & minimal diff | Full FP16 safetensors (15.2 GB)<br>LoRA Adapter (152 MB) | <1.8s (vLLM / Serverless) | [🤗 `Maddy-Das/isha-qwen2.5-coder-7b-dpo`](https://huggingface.co/Maddy-Das/isha-qwen2.5-coder-7b-dpo)<br>[🤗 `Maddy-Das/isha-qwen2.5-coder-7b-dpo-lora`](https://huggingface.co/Maddy-Das/isha-qwen2.5-coder-7b-dpo-lora) |
+| **`isha-qwen2.5-coder-7b-dpo`** | **Node 6 / Cand 3**<br>Invariant Coder | Direct Preference Optimization (DPO) on 1,842 SWE-bench trajectories; enforces Python container invariants & minimal diff | Full FP16 safetensors (15.2 GB)<br>LoRA Adapter (152 MB) | <1.8s (vLLM / Serverless) | [🤗 `Maddy-Das/isha-qwen2.5-coder-7b-dpo`](https://huggingface.co/Maddy-Das/isha-qwen2.5-coder-7b-dpo)<br>[🤗 `Maddy-Das/isha-qwen2.5-coder-7b-dpo-lora`](https://huggingface.co/Maddy-Das/isha-qwen2.5-coder-7b-dpo-lora) |
 | **`isha-loc-reranker-v1-int8-onnx`** | **Node 1**<br>Fault Reranker | BAAI/bge-reranker-base fine-tuned on SWE-bench defect call-sites and symbol hierarchies | INT8 Quantized ONNX (110 MB) | <25ms (CPU `onnxruntime`) | [🤗 `Maddy-Das/isha-loc-reranker-v1-int8-onnx`](https://huggingface.co/Maddy-Das/isha-loc-reranker-v1-int8-onnx) |
 | **`isha-redgate-v1-int8-onnx`** | **Node 5b**<br>Test Verifier | DistilBERT binary classifier trained on True RED vs flaky reproduction tests | INT8 Quantized ONNX (90 MB) | <15ms (CPU `onnxruntime`) | [🤗 `Maddy-Das/isha-redgate-v1-int8-onnx`](https://huggingface.co/Maddy-Das/isha-redgate-v1-int8-onnx) |
 | **`isha-laya-verifier-v1-int8-onnx`** | **Node 9**<br>Platt Arbitrator | 5-head neural verifier + Platt probability calibration ($ECE \le 0.0010$) | INT8 Quantized ONNX (160 MB) | <10ms (CPU `onnxruntime`) | [🤗 `Maddy-Das/isha-laya-verifier-v1-int8-onnx`](https://huggingface.co/Maddy-Das/isha-laya-verifier-v1-int8-onnx) |
@@ -222,7 +221,7 @@ pip install -r requirements.txt
 **Supported Agents**: Claude Code, Gemini CLI, Terminal Agents  
 Run directly from inside the downloaded `isha-agent` folder:
 ```bash
-claude mcp add isha -- python -m src.mcp_server
+claude mcp add isha -e GEMINI_API_KEY=AIzaSy... -e GROQ_API_KEY=gsk_... -- python -m src.mcp_server
 ```
 
 ##### 2. For All IDEs & Desktop Apps
@@ -234,7 +233,11 @@ Add this standard configuration to your editor's MCP settings file (e.g. `.curso
     "isha": {
       "command": "python",
       "args": ["-m", "src.mcp_server"],
-      "cwd": "<path-to-downloaded-isha-agent-folder>"
+      "cwd": "<path-to-downloaded-isha-agent-folder>",
+      "env": {
+        "GEMINI_API_KEY": "AIzaSy...",
+        "GROQ_API_KEY": "gsk_..."
+      }
     }
   }
 }
@@ -245,6 +248,54 @@ Add this standard configuration to your editor's MCP settings file (e.g. `.curso
 > * **Windows**: `"C:\\projects\\ISHA\\isha-agent"` *(use double backslashes `\\`)*  
 > * **Mac / Linux**: `"/Users/yourname/projects/ISHA/isha-agent"`  
 > *(Run `pwd` inside the `isha-agent` folder to copy your exact path).*
+
+---
+
+### 🔑 How to Add API Keys for MCP (Zero-Cost Free Tier)
+
+> ⚠️ **Why MCP won't prompt for keys in chat**:  
+> MCP communicates over standard input/output (`stdio`) using structured JSON-RPC. A server cannot use interactive terminal prompts (like `input()`) over stdio without breaking the JSON-RPC pipe and freezing your editor. Therefore, keys must be provided via environment configuration.
+
+If no keys are configured, ISHA safely falls back to **Offline Diagnostic Mode**:
+* ✅ `isha_localize` (Tree-sitter AST, BM25, caller graphs) works 100% locally with 0 keys.
+* ✅ `isha_verify_patch` (Docker & local pytest execution) works 100% locally.
+* ❌ `isha_tournament` and `isha_solve` require at least one free cloud key to reason about and synthesize code patches.
+
+#### Where to Configure Your Keys:
+
+##### Method A: In Your Editor's MCP Config (`env` object — Recommended)
+Add the keys under the `"env"` key in your MCP JSON configuration:
+```json
+{
+  "mcpServers": {
+    "isha": {
+      "command": "python",
+      "args": ["-m", "src.mcp_server"],
+      "cwd": "/path/to/isha-agent",
+      "env": {
+        "GEMINI_API_KEY": "your-free-gemini-key",
+        "GROQ_API_KEY": "your-free-groq-key"
+      }
+    }
+  }
+}
+```
+
+##### Method B: In the `isha-agent/.env` File
+ISHA automatically loads `.env` on launch. Create or edit `.env` inside the `isha-agent/` directory:
+```env
+# Free Google AI Studio Key (Recommended): https://aistudio.google.com/
+GEMINI_API_KEY=AIzaSy...
+
+# Free Groq LPU Key (500 tok/s): https://console.groq.com/keys
+GROQ_API_KEY=gsk_...
+```
+
+##### 🔍 How to Verify Keys Are Active Over MCP:
+Ask your host assistant in chat:
+> *"Run isha_status to check if keys are configured."*  
+ISHA will respond with `"gemini_active_keys": <count>` and `"status": "ready"`.
+
 
 ---
 
@@ -300,7 +351,7 @@ pytest tests/test_veto.py tests/test_patch_engine.py tests/test_server_security.
 ```text
 ISHA-Iterative-Software-Harness-Arbitrator-/
 ├── src/
-│   ├── agents/          # Multi-candidate tournament (Cand 1–4) & State Graph
+│   ├── agents/          # Multi-candidate tournament (Cand 1–3) & State Graph
 │   ├── approval/        # LAYA calibrated probability gate (ECE <= 0.0010)
 │   ├── bench/           # Official SWE-bench Docker evaluation harness
 │   ├── gateway/         # Unified model router (ISHA_MODE=hybrid|self-hosted|cloud)

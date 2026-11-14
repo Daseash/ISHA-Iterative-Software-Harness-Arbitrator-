@@ -2,7 +2,7 @@
 ISHA Codespaces Master Pipeline — Full 300-Instance (S1 to S10) Patch Generation & Official Docker Evaluation
 
 Runs the complete 300-instance evaluation loop across all 10 SWE-bench Lite sessions (S1 to S10):
-  1. 4-Candidate Tournament with newly trained ISHA-Coder-7B-DPO.
+  1. 3-Candidate Tournament (Groq, Gemini, and trained ISHA-Coder-7B-DPO).
   2. AST static compiler gates + in-loop feedback repair.
   3. Official Docker harness evaluation in Codespace's native Docker engine.
   4. Automatic scoreboard calculation via scripts/score.py.

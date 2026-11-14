@@ -25,6 +25,8 @@ ISHA was upgraded from a brittle single-model prototype into a calibrated senior
 
 ## 2. Baseline Reconciliation & Mutually Exclusive Stage Table
 
+> **Historical Scope Note**: This section documents the early Stage A baseline evaluation (September 30, 2026: 1/30 resolved) prior to the 9-node LangGraph multi-candidate tournament, LAYA calibration, and POSIX line-ending fixes. For the multi-session evolution from 1/30 → 72/232 → 76/300 → 82/300, see [BENCHMARK_RECONCILIATION.md](file:///c:/Users/Eashwar/ISHA/isha-agent/results/BENCHMARK_RECONCILIATION.md).
+
 In Stage A, the earlier accounting discrepancy was audited and reconciled. Every instance in the 30-instance evaluation is mapped to exactly one mutually exclusive status category.
 
 ### Mutually Exclusive Instance Status Table ($N = 30$)

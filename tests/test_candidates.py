@@ -17,13 +17,13 @@ def test_strategy_models_has_three_distinct_models():
     models = strategy_models()
     assert models["minimal_diff"] in (CANDIDATE_1_MODEL, DEFAULT_STRATEGY_MODELS["minimal_diff"])
     assert models["call_site_aware"] in (CANDIDATE_2_MODEL, DEFAULT_STRATEGY_MODELS["call_site_aware"])
-    assert models["root_cause_first"] in (CANDIDATE_3_MODEL, DEFAULT_STRATEGY_MODELS["root_cause_first"])
+    assert models["trained_dpo"] in (CANDIDATE_3_MODEL, DEFAULT_STRATEGY_MODELS["trained_dpo"])
 
     # The 3 core candidate models must not all be identical
     unique_models = {
         models["minimal_diff"],
         models["call_site_aware"],
-        models["root_cause_first"],
+        models["trained_dpo"],
     }
     assert len(unique_models) == 3, f"Expected 3 distinct models, got {unique_models}"
 

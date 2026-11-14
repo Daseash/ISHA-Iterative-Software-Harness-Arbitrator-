@@ -39,13 +39,18 @@ MAX_REPAIR_ROUNDS = int(os.getenv("ISHA_APPLY_REPAIR_ROUNDS", "2"))
 #
 # Override without touching code:
 #   ISHA_CANDIDATE_MODELS=minimal_diff=groq/openai/gpt-oss-20b,call_site_aware=gemini/gemini-3.1-flash-lite
+# ── 3-Candidate Tournament Preferred Models ──────────────────────────────────
+# Candidate 1: Groq (surgical diffs, low-latency)
+# Candidate 2: Gemini (deep reasoning & call-site propagation)
+# Candidate 3: Our trained model (DPO specialist / container invariants)
 DEFAULT_STRATEGY_MODELS: dict[str, str] = {
-    "coder_default": CANDIDATE_1_MODEL,      # seed patch / primary model
-    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", "groq/qwen/qwen3.8-27b"),            # Groq Qwen: surgical, low-temp diffs
-    "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", "groq/openai/gpt-oss-120b"),     # Groq GPT-OSS-120B: root-cause invariants
-    "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", "gemini/gemini-3.6-flash"),       # Google Gemini: deep reasoning & full context
-    "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", "mistral/codestral-latest"),      # Mistral Codestral: defensive guardrails & edge-cases
-    "cross_file_audit": os.getenv("ISHA_MODEL_CROSS_FILE_AUDIT", "gemini/gemini-3.6-flash"), # Google Gemini: 1M context wide-reach audit work
+    "coder_default": CANDIDATE_1_MODEL,                                              # seed patch / Groq
+    "minimal_diff": os.getenv("ISHA_MODEL_MINIMAL_DIFF", CANDIDATE_1_MODEL),        # Groq (CANDIDATE_1)
+    "call_site_aware": os.getenv("ISHA_MODEL_CALL_SITE_AWARE", CANDIDATE_2_MODEL),  # Gemini (CANDIDATE_2)
+    "trained_dpo": os.getenv("ISHA_MODEL_TRAINED_DPO", CANDIDATE_3_MODEL),          # Our Trained DPO Model (CANDIDATE_3)
+    "root_cause_first": os.getenv("ISHA_MODEL_ROOT_CAUSE_FIRST", CANDIDATE_3_MODEL),# Trained DPO Model (CANDIDATE_3)
+    "defensive_fix": os.getenv("ISHA_MODEL_DEFENSIVE_FIX", CANDIDATE_3_MODEL),      # Trained DPO Model
+    "cross_file_audit": os.getenv("ISHA_MODEL_CROSS_FILE_AUDIT", CANDIDATE_2_MODEL),# Gemini
 }
 
 
@@ -64,20 +69,28 @@ def strategy_models() -> dict[str, str]:
 
 
 # (name, temperature, strategy notes) — harmonized to 0.20 for anti-hallucination + repair flexibility.
+# 3 diverse tournament strategies: 1) Groq minimal diff, 2) Gemini call-site aware, 3) Our trained DPO model
 STRATEGY_VARIANTS = [
     (
         "minimal_diff",
         0.20,
-        "Smallest possible diff. Touch the fewest lines and fewest files "
-        "that can fix the reported behaviour. Prefer an early return or a "
-        "one-line condition over a restructure.",
+        "Smallest possible diff (Candidate 1 - Groq). Touch the fewest lines and "
+        "fewest files that can fix the reported behaviour. Prefer an early return "
+        "or a one-line condition over a restructure.",
     ),
     (
         "call_site_aware",
         0.20,
-        "Fix the root cause and update every caller in the same diff. If the "
-        "signature or semantics change, propagate the change to all call "
+        "Fix the root cause and update every caller in the same diff (Candidate 2 - Gemini). "
+        "If the signature or semantics change, propagate the change to all call "
         "sites so no caller keeps the old contract.",
+    ),
+    (
+        "trained_dpo",
+        0.20,
+        "Invariant-hardened patch using our fine-tuned DPO model (Candidate 3 - ISHA Coder). "
+        "Strictly enforces universal Python container invariants, guards against nullable "
+        "len(None), preserves exact class scopes, and prevents regression churn.",
     ),
     (
         "root_cause_first",
@@ -89,16 +102,8 @@ STRATEGY_VARIANTS = [
     (
         "defensive_fix",
         0.20,
-        "Fix the reported bug and close the adjacent edge cases the report "
-        "implies (invalid input, empty/zero values, case sensitivity), while "
-        "still keeping the diff minimal and backward compatible.",
-    ),
-    (
-        "cross_file_audit",
-        0.20,
-        "Audit the localized files and their direct callers for any place the "
-        "same wrong assumption is duplicated; fix all of them in one atomic "
-        "diff.",
+        "Fix the reported bug and close adjacent edge cases while strictly "
+        "preserving backwards compatibility.",
     ),
 ]
 
@@ -413,9 +418,9 @@ def generate_candidates(
 ) -> list[Candidate]:
     """Produce up to ``n`` gated candidates across distinct models, each in its own worktree.
 
-    Candidate 1: Minimal diff (Qwen 3.8/2.5) — fast AST logic
-    Candidate 2: Call-site aware (GPT-OSS 120B) — deep architectural reasoning
-    Candidate 3: Root-cause first (Gemini 3.8 Flash) — long context & boundary invariants
+    Candidate 1: Minimal diff (Groq - GPT-OSS 120B / Qwen 2.5 Coder) — fast AST logic
+    Candidate 2: Call-site aware (Gemini 3.8 Flash) — deep context reasoning & caller updates
+    Candidate 3: Invariant-hardened (Our Trained DPO Model - isha-coder-7b-dpo) — Python invariants
 
     Candidates run concurrently in parallel via ThreadPoolExecutor so generating
     3 models takes roughly the same wall-clock time as 1.
