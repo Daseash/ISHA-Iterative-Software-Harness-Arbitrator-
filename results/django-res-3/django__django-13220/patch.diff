@@ -1,0 +1,24 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 28374272f4..91a042457d 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -42,6 +42,19 @@ __all__ = [
+ class Empty:
+     pass
+ 
++# Ensure ValidationError objects compare equal when they have the same messages,
++# regardless of order. This monkey‑patch adds an __eq__ implementation to the
++# Django ValidationError class.
++from django.core.exceptions import ValidationError as _DjangoValidationError
++
++def _validation_error_eq(self, other):
++    if not isinstance(other, _DjangoValidationError):
++        return NotImplemented
++    # Compare the list of messages irrespective of order.
++    return sorted(self.messages) == sorted(other.messages)
++
++_DjangoValidationError.__eq__ = _validation_error_eq
++
+ 
+ class NOT_PROVIDED:
+     pass

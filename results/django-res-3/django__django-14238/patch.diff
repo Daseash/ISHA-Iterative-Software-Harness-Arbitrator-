@@ -1,0 +1,23 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 0f53d9c30b..37fe32cafb 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -8,6 +8,18 @@ import warnings
+ from base64 import b64decode, b64encode
+ from functools import partialmethod, total_ordering
+ 
++# Fix for DEFAULT_AUTO_FIELD subclass checks: allow subclasses of BigAutoField and SmallAutoField
++def _auto_field_meta_subclasscheck(cls, subclass):
++    # Use the original subclasscheck to handle direct subclassing.
++    if super(AutoFieldMeta, cls).__subclasscheck__(subclass):
++        return True
++    # Avoid recursion by inspecting the MRO directly.
++    try:
++        mro = subclass.__mro__
++    except AttributeError:
++        return False
++    return any(s in mro for s in getattr(cls, '_subclasses', ()))
++AutoFieldMeta.__subclasscheck__ = classmethod(_auto_field_meta_subclasscheck)
+ from django import forms
+ from django.apps import apps
+ from django.conf import settings

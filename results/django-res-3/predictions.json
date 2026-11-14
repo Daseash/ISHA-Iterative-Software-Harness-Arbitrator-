@@ -1,0 +1,42 @@
+[
+  {
+    "instance_id": "django__django-14667",
+    "model_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -746,3 +746,3 @@ class Query(ALIASED_REL_RE):\n         field_names, defer = self.deferred_loading\n-        if not field_names:\n+        if not field_names and defer:\n             return",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13321",
+    "model_patch": "diff --git a/django/contrib/sessions/backends/base.py b/django/contrib/sessions/backends/base.py\nindex 187e14b1b7..3854784f5f 100644\n--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -141,6 +141,8 @@ class SessionBase:\n                 raise SuspiciousSession(\"Session data corrupted\")\n             else:\n                 return self.serializer().loads(serialized)\n+        except Exception:\n+            return {}\n         except Exception as e:\n             # ValueError, SuspiciousOperation, unpickling exceptions. If any of\n             # these happen, just return an empty dictionary (an empty session).",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-14238",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 0f53d9c30b..37fe32cafb 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -8,6 +8,18 @@ import warnings\n from base64 import b64decode, b64encode\n from functools import partialmethod, total_ordering\n \n+# Fix for DEFAULT_AUTO_FIELD subclass checks: allow subclasses of BigAutoField and SmallAutoField\n+def _auto_field_meta_subclasscheck(cls, subclass):\n+    # Use the original subclasscheck to handle direct subclassing.\n+    if super(AutoFieldMeta, cls).__subclasscheck__(subclass):\n+        return True\n+    # Avoid recursion by inspecting the MRO directly.\n+    try:\n+        mro = subclass.__mro__\n+    except AttributeError:\n+        return False\n+    return any(s in mro for s in getattr(cls, '_subclasses', ()))\n+AutoFieldMeta.__subclasscheck__ = classmethod(_auto_field_meta_subclasscheck)\n from django import forms\n from django.apps import apps\n from django.conf import settings",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13220",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 28374272f4..91a042457d 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -42,6 +42,19 @@ __all__ = [\n class Empty:\n     pass\n \n+# Ensure ValidationError objects compare equal when they have the same messages,\n+# regardless of order. This monkey\u2011patch adds an __eq__ implementation to the\n+# Django ValidationError class.\n+from django.core.exceptions import ValidationError as _DjangoValidationError\n+\n+def _validation_error_eq(self, other):\n+    if not isinstance(other, _DjangoValidationError):\n+        return NotImplemented\n+    # Compare the list of messages irrespective of order.\n+    return sorted(self.messages) == sorted(other.messages)\n+\n+_DjangoValidationError.__eq__ = _validation_error_eq\n+\n \n class NOT_PROVIDED:\n     pass",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-14155",
+    "model_patch": "diff --git a/django/urls/resolvers.py b/django/urls/resolvers.py\nindex 9b00e24509..4f99ce2c4a 100644\n--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -31,6 +31,10 @@ from .utils import get_callable\n \n class ResolverMatch:\n     def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n+        while isinstance(func, functools.partial):\n+            args = func.args + tuple(args)\n+            kwargs = {**(func.keywords or {}), **kwargs}\n+            func = func.func\n         self.func = func\n         self.args = args\n         self.kwargs = kwargs",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-14999",
+    "model_patch": "diff --git a/django/db/migrations/operations/models.py b/django/db/migrations/operations/models.py\nindex 982816be3a..ada134351c 100644\n--- a/django/db/migrations/operations/models.py\n+++ b/django/db/migrations/operations/models.py\n@@ -321,12 +321,13 @@ class RenameModel(ModelOperation):\n         if self.allow_migrate_model(schema_editor.connection.alias, new_model):\n             old_model = from_state.apps.get_model(app_label, self.old_name)\n             # Move the main table\n-            schema_editor.alter_db_table(\n-                new_model,\n-                old_model._meta.db_table,\n-                new_model._meta.db_table,\n-            )\n-            # Alter the fields pointing to us\n+            if old_model._meta.db_table != new_model._meta.db_table:\n+                schema_editor.alter_db_table(\n+                    new_model,\n+                    old_model._meta.db_table,\n+                    new_model._meta.db_table,\n+                )\n+            # Alter the M2M fields that point to us\n             for related_object in old_model._meta.related_objects:\n                 if related_object.related_model == old_model:\n                     model = new_model",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13265",
+    "model_patch": "diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py\nindex 89e2dceeaf..08f81280e9 100644\n--- a/django/db/migrations/autodetector.py\n+++ b/django/db/migrations/autodetector.py\n@@ -180,14 +180,17 @@ class MigrationAutodetector:\n         # Generate field operations\n         self.generate_renamed_fields()\n         self.generate_removed_fields()\n+        # Ensure AlterOrderWithRespectTo runs before any index operations that may\n+        # reference the automatically created ``_order`` field.\n+        self.generate_altered_order_with_respect_to()\n         self.generate_added_fields()\n         self.generate_altered_fields()\n         self.generate_altered_unique_together()\n         self.generate_altered_index_together()\n         self.generate_added_indexes()\n         self.generate_added_constraints()\n-        self.generate_altered_db_table()\n-        self.generate_altered_order_with_respect_to()\n+        self.generate_altered_index_together()\n+        # ``AlterOrderWithRespectTo`` has been moved earlier; original call removed.\n \n         self._sort_migrations()\n         self._build_migration_list(graph)",
+    "model_name_or_path": "ISHA"
+  },
+  {
+    "instance_id": "django__django-13401",
+    "model_patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex 28374272f4..17064ce130 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -514,13 +514,16 @@ class Field(RegisterLookupMixin):\n         return self.__class__(*args, **kwargs)\n \n     def __eq__(self, other):\n-        # Needed for @total_ordering\n+        # Doing -- Dynamic type check --\n         if isinstance(other, Field):\n-            return self.creation_counter == other.creation_counter\n+            return (\n+                self.creation_counter == other.creation_counter and\n+                getattr(self, 'model', None) == getattr(other, 'model', None)\n+            )\n         return NotImplemented\n \n     def __lt__(self, other):\n-        # This is needed because bisect does not take a comparison function.\n+        # This is needed because\n         if isinstance(other, Field):\n             return self.creation_counter < other.creation_counter\n         return NotImplemented",
+    "model_name_or_path": "ISHA"
+  }
+]

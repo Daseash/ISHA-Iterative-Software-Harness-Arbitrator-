@@ -1,0 +1,7 @@
+--- a/django/db/models/sql/query.py
++++ b/django/db/models/sql/query.py
+@@ -746,3 +746,3 @@ class Query(ALIASED_REL_RE):
+         field_names, defer = self.deferred_loading
+-        if not field_names:
++        if not field_names and defer:
+             return

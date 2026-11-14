@@ -1,0 +1,24 @@
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index 28374272f4..17064ce130 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -514,13 +514,16 @@ class Field(RegisterLookupMixin):
+         return self.__class__(*args, **kwargs)
+ 
+     def __eq__(self, other):
+-        # Needed for @total_ordering
++        # Doing -- Dynamic type check --
+         if isinstance(other, Field):
+-            return self.creation_counter == other.creation_counter
++            return (
++                self.creation_counter == other.creation_counter and
++                getattr(self, 'model', None) == getattr(other, 'model', None)
++            )
+         return NotImplemented
+ 
+     def __lt__(self, other):
+-        # This is needed because bisect does not take a comparison function.
++        # This is needed because
+         if isinstance(other, Field):
+             return self.creation_counter < other.creation_counter
+         return NotImplemented

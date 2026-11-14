@@ -1,0 +1,24 @@
+diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py
+index 89e2dceeaf..08f81280e9 100644
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -180,14 +180,17 @@ class MigrationAutodetector:
+         # Generate field operations
+         self.generate_renamed_fields()
+         self.generate_removed_fields()
++        # Ensure AlterOrderWithRespectTo runs before any index operations that may
++        # reference the automatically created ``_order`` field.
++        self.generate_altered_order_with_respect_to()
+         self.generate_added_fields()
+         self.generate_altered_fields()
+         self.generate_altered_unique_together()
+         self.generate_altered_index_together()
+         self.generate_added_indexes()
+         self.generate_added_constraints()
+-        self.generate_altered_db_table()
+-        self.generate_altered_order_with_respect_to()
++        self.generate_altered_index_together()
++        # ``AlterOrderWithRespectTo`` has been moved earlier; original call removed.
+ 
+         self._sort_migrations()
+         self._build_migration_list(graph)
