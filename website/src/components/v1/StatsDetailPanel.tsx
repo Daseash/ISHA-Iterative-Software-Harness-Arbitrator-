@@ -48,9 +48,9 @@ const sessionsData = [
 // 2. BASELINE SOTA COMPARISON DATA
 const baselinesData = [
   { name: "ISHA (S4 Peak Leaderboard)", rate: 70.0, cost: "$0.00", highlight: true, badge: "Peak SOTA" },
-  { name: "ISHA (Sessions 1–4 Combined)", rate: 55.0, cost: "$0.00", highlight: true, badge: "Audited 120 Slice" },
+  { name: "ISHA (Sessions 1–4 Combined)", rate: 58.3, cost: "$0.00", highlight: true, badge: "Audited 120 Slice" },
+  { name: "ISHA (Full Lite-300 Suite)", rate: 28.7, cost: "$0.00", highlight: true, badge: "Total 300 Denom" },
   { name: "Aider (Claude 3.5 Sonnet)", rate: 26.3, cost: "~$1.20", highlight: false },
-  { name: "ISHA (Full Lite-300 Suite)", rate: 25.3, cost: "$0.00", highlight: true, badge: "Total 300 Denom" },
   { name: "AutoCodeRover", rate: 22.0, cost: "~$4.00", highlight: false },
   { name: "SWE-agent + Claude 3.5", rate: 18.0, cost: "~$2.50", highlight: false },
   { name: "Devin (Official Launch Baseline)", rate: 13.86, cost: "$30.00+", highlight: false },
@@ -84,11 +84,11 @@ const reposData = [
   {
     repo: "django/django",
     name: "Django Web Framework",
-    resolved: 66,
-    pct: 84.6,
+    resolved: 70,
+    pct: 81.4,
     domains: "ORM, query compilers, migrations, form widgets, HTTP request memoryviews, URL routing",
-    sampleIds: ["django-11099", "django-11133", "django-10914", "django-11039", "django-11283"],
-    badge: "66 RESOLVED",
+    sampleIds: ["django-11099", "django-11133", "django-10914", "django-11039", "django-11964", "django-13028"],
+    badge: "70 RESOLVED",
     color: "from-emerald-600 to-teal-500",
   },
   {
@@ -319,8 +319,8 @@ export const StatsDetailPanel: React.FC<{ data: StatsDetailData }> = ({ data }) 
                     <p className="text-sm font-bold">Cherry-Picked 120-Task Slice</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-mono font-black text-amber-600 dark:text-amber-400">55.0%</span>
-                    <p className="text-[10px] font-mono text-neutral-500">66 / 120 Resolved</p>
+                    <span className="text-xl font-mono font-black text-amber-600 dark:text-amber-400">58.3%</span>
+                    <p className="text-[10px] font-mono text-neutral-500">70 / 120 Resolved</p>
                   </div>
                 </div>
 
@@ -358,7 +358,7 @@ export const StatsDetailPanel: React.FC<{ data: StatsDetailData }> = ({ data }) 
         {data.chartType === "repos" && (
           <div className="w-full h-full flex flex-col justify-between">
             <div className="flex items-center justify-between pb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs font-mono font-bold text-neutral-500">
-              <span>REPOSITORY SUITES (78 TOTAL RESOLVED)</span>
+              <span>REPOSITORY SUITES (86 TOTAL RESOLVED)</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-black">OFFICIAL DOCKER</span>
             </div>
 

@@ -33,7 +33,7 @@ export const StatsSection: React.FC = () => {
       value: "70.0%",
       delta: "21/30 DOCKER VERIFIED",
       label: "SWE-BENCH LITE (SESSION 4)",
-      detail: "66/120 combined across S1-S4 (55.0% official resolution rate)",
+      detail: "70/120 combined across S1-S4 + Rescues (58.3% official resolution rate)",
       icon: TrendingUp,
     },
     {

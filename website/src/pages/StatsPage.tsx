@@ -21,12 +21,12 @@ export const statsProjects: Project[] = [
   {
     id: "django-suite",
     name: "Django Web Framework",
-    description: "66 verified Docker resolutions across Django ORM & migrations.",
+    description: "70 verified Docker resolutions across Django ORM & migrations.",
     badge: "ORM & Query Compilers",
     bgColor: "#059669", // Rich Emerald Green
     image: "/images/stats/django.svg",
-    date: "66 Resolved",
-    metric: "84.6% of Resolved Quota",
+    date: "70 Resolved",
+    metric: "61.4% Solve Rate (70/114)",
     auditProof: "python scripts/score.py (scans results/**/report.json by repo)",
   },
   {
